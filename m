@@ -2,182 +2,94 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9394C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF954C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB90621D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C2B21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599773319;
+	bh=r5CcSmnxz9R5t91tIgmwzv7faYaArtgahnyKSQWc5hw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=kUDDtFNktJhmiFreIGyF8WWCIURh99fMXSKxgnP5zzgSg4L8lzCPnBupNGd48riyC
+	 lQUSs/jFaPjbiyUCtMeIZYuOcQvHcZEhrjFxj9d0GOj9ApG7uPUmsZHtQgrlfdvG00
+	 3odRXZYchFNMEgDcEXwwo1vFvLsqRKiUlj6liKxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgIJV20 (ORCPT
+        id S1728018AbgIJV2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:28:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11790 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731050AbgIJOEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:04:11 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AEE2D8B54C6333E5C923;
-        Thu, 10 Sep 2020 22:03:41 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 10 Sep 2020 22:03:31 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-Subject: [PATCH net v1] hinic: fix rewaking txq after netif_tx_disable
-Date:   Thu, 10 Sep 2020 22:04:40 +0800
-Message-ID: <20200910140440.20361-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Sep 2020 17:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731048AbgIJODs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:03:48 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8378221F1;
+        Thu, 10 Sep 2020 14:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599746561;
+        bh=r5CcSmnxz9R5t91tIgmwzv7faYaArtgahnyKSQWc5hw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y40bQZ401rDeUT0ggae3yuJXfwdjFn/QCdxjv+EnvnjeP2wMMjvCocV9gEsiqx8Li
+         7jiGyjdw4POeDoNJhWtPSQCGLhWaG4irLqegmi+yfJ14VUWxlc+1n4iBQAGUpharLl
+         +yH8d+nJPaDo+jvvva5htc2M+C+7YXx1WnD3gEAg=
+Date:   Thu, 10 Sep 2020 07:02:41 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux F2FS Dev Mailing List 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] small bug fixes for 5.9
+Message-ID: <20200910140241.GA487602@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling hinic_close in hinic_set_channels, all queues are
-stopped after netif_tx_disable, but some queue may be rewaken in
-free_tx_poll by mistake while drv is handling tx irq. If one queue
-is rewaken core may call hinic_xmit_frame to send pkt after
-netif_tx_disable within a short time which may results in accessing
-memory that has been already freed in hinic_close. So we call
-napi_disable before netif_tx_disable in hinic_close to fix this bug.
+Hi Linus,
 
-Fixes: 2eed5a8b614b ("hinic: add set_channels ethtool_ops support")
-Signed-off-by: Luo bin <luobin9@huawei.com>
----
-V0~V1:
-- call napi_disable before netif_tx_disable instead of judging whether
-  the netdev is in down state before waking txq in free_tx_poll to fix
-  this bug
+Could you please consider this pull reqeuest having some critical bug fixes?
 
- .../net/ethernet/huawei/hinic/hinic_main.c    | 24 +++++++++++++++++++
- drivers/net/ethernet/huawei/hinic/hinic_tx.c  | 20 ++++------------
- 2 files changed, 28 insertions(+), 16 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 501056fd32ee..28581bd8ce07 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -174,6 +174,24 @@ static int create_txqs(struct hinic_dev *nic_dev)
- 	return err;
- }
- 
-+static void enable_txqs_napi(struct hinic_dev *nic_dev)
-+{
-+	int num_txqs = hinic_hwdev_num_qps(nic_dev->hwdev);
-+	int i;
-+
-+	for (i = 0; i < num_txqs; i++)
-+		napi_enable(&nic_dev->txqs[i].napi);
-+}
-+
-+static void disable_txqs_napi(struct hinic_dev *nic_dev)
-+{
-+	int num_txqs = hinic_hwdev_num_qps(nic_dev->hwdev);
-+	int i;
-+
-+	for (i = 0; i < num_txqs; i++)
-+		napi_disable(&nic_dev->txqs[i].napi);
-+}
-+
- /**
-  * free_txqs - Free the Logical Tx Queues of specific NIC device
-  * @nic_dev: the specific NIC device
-@@ -400,6 +418,8 @@ int hinic_open(struct net_device *netdev)
- 		goto err_create_txqs;
- 	}
- 
-+	enable_txqs_napi(nic_dev);
-+
- 	err = create_rxqs(nic_dev);
- 	if (err) {
- 		netif_err(nic_dev, drv, netdev,
-@@ -484,6 +504,7 @@ int hinic_open(struct net_device *netdev)
- 	}
- 
- err_create_rxqs:
-+	disable_txqs_napi(nic_dev);
- 	free_txqs(nic_dev);
- 
- err_create_txqs:
-@@ -497,6 +518,9 @@ int hinic_close(struct net_device *netdev)
- 	struct hinic_dev *nic_dev = netdev_priv(netdev);
- 	unsigned int flags;
- 
-+	/* Disable txq napi firstly to aviod rewaking txq in free_tx_poll */
-+	disable_txqs_napi(nic_dev);
-+
- 	down(&nic_dev->mgmt_lock);
- 
- 	flags = nic_dev->flags;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index a97498ee6914..2b418b568767 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -745,18 +745,6 @@ static int free_tx_poll(struct napi_struct *napi, int budget)
- 	return budget;
- }
- 
--static void tx_napi_add(struct hinic_txq *txq, int weight)
--{
--	netif_napi_add(txq->netdev, &txq->napi, free_tx_poll, weight);
--	napi_enable(&txq->napi);
--}
--
--static void tx_napi_del(struct hinic_txq *txq)
--{
--	napi_disable(&txq->napi);
--	netif_napi_del(&txq->napi);
--}
--
- static irqreturn_t tx_irq(int irq, void *data)
- {
- 	struct hinic_txq *txq = data;
-@@ -790,7 +778,7 @@ static int tx_request_irq(struct hinic_txq *txq)
- 
- 	qp = container_of(sq, struct hinic_qp, sq);
- 
--	tx_napi_add(txq, nic_dev->tx_weight);
-+	netif_napi_add(txq->netdev, &txq->napi, free_tx_poll, nic_dev->tx_weight);
- 
- 	hinic_hwdev_msix_set(nic_dev->hwdev, sq->msix_entry,
- 			     TX_IRQ_NO_PENDING, TX_IRQ_NO_COALESC,
-@@ -807,14 +795,14 @@ static int tx_request_irq(struct hinic_txq *txq)
- 	if (err) {
- 		netif_err(nic_dev, drv, txq->netdev,
- 			  "Failed to set TX interrupt coalescing attribute\n");
--		tx_napi_del(txq);
-+		netif_napi_del(&txq->napi);
- 		return err;
- 	}
- 
- 	err = request_irq(sq->irq, tx_irq, 0, txq->irq_name, txq);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to request Tx irq\n");
--		tx_napi_del(txq);
-+		netif_napi_del(&txq->napi);
- 		return err;
- 	}
- 
-@@ -826,7 +814,7 @@ static void tx_free_irq(struct hinic_txq *txq)
- 	struct hinic_sq *sq = txq->sq;
- 
- 	free_irq(sq->irq, txq);
--	tx_napi_del(txq);
-+	netif_napi_del(&txq->napi);
- }
- 
- /**
--- 
-2.17.1
+The following changes since commit 34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8:
 
+  Merge tag 'linux-kselftest-5.9-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest (2020-09-08 11:56:47 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-5.9-rc5
+
+for you to fetch changes up to 20d0a107fb35f37578b919f62bd474d6d358d579:
+
+  f2fs: Return EOF on unaligned end of file DIO read (2020-09-08 20:31:33 -0700)
+
+----------------------------------------------------------------
+f2fs-for-5.9-rc5
+
+This introduces some bug fixes including 1) SMR drive fix, 2) infinite loop
+when building free node ids, 3) EOF at DIO read.
+
+----------------------------------------------------------------
+Gabriel Krisman Bertazi (1):
+      f2fs: Return EOF on unaligned end of file DIO read
+
+Sahitya Tummala (1):
+      f2fs: fix indefinite loop scanning for free nid
+
+Shin'ichiro Kawasaki (1):
+      f2fs: Fix type of section block count variables
+
+ fs/f2fs/data.c    | 3 +++
+ fs/f2fs/node.c    | 3 +++
+ fs/f2fs/segment.c | 8 ++++----
+ 3 files changed, 10 insertions(+), 4 deletions(-)
