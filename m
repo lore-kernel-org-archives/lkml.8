@@ -2,138 +2,236 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA616C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14265C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 570CD20795
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31482078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599723344;
+	bh=aAENchbACXwky89jNsRNg/ClfcJwS6TJ6K4IQrXNUQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=euyfWRt3U5MB7gPQKN18MhtMCuvEvFQRacihKIrLftLG3nSNvKRxOK39Uwd0VMGW7
+	 nBFjiTNL8OxKE/PFDOr9OCaG31c6gbeIaS0DtfnIkGDKpd7iYWRmRUKU6OMnlp8UhA
+	 tYDswjWtx/e623Bl2ySZoIBt6JDsEbC/eEXFawFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgIJHcY (ORCPT
+        id S1730068AbgIJHfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:32:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59368 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbgIJHcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:32:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C5650B339;
-        Thu, 10 Sep 2020 07:32:30 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 09:32:13 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Rik van Riel <riel@surriel.com>, Zi Yan <ziy@nvidia.com>,
-        Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Message-ID: <20200910073213.GC28354@dhcp22.suse.cz>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908143503.GE26850@dhcp22.suse.cz>
- <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
- <20200909070445.GA7348@dhcp22.suse.cz>
- <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
- <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
+        Thu, 10 Sep 2020 03:35:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33216 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729135AbgIJHff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 03:35:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x77so3053527lfa.0;
+        Thu, 10 Sep 2020 00:35:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fshanOoZEbXfh2wzkzEbd7aeXs9RjWFS3jNx1xf0WE4=;
+        b=RqTDOp4XG5wM03koJZFVVKn+WvFeYg5N0/Ss0VXAH3zJYHwcPIaoMaBVy8sbZhawqu
+         HL712snAUnx7gZaTFtHmQmUN2gEhy0YPgE/NG8A+V4W704N/WXl/dYq/K05Xz5vciyTy
+         L4JO3yLPRwLreIDiYdV80NUV8MEUIXoUNY7nH5cEM39taM/vLOq6d/DrRzRYhDXYtP0Q
+         itI7YB7Q/b8w6ETGnTxMFSSTadtZ2THtUcmEm0P4dv4/a/UC7X0Pwf1V8YG8sLCIikoQ
+         ztNwFkXdLSoM1Iv+YgDA/xGpPOO1uAZf/Tao/DZCLVVYg8uIYrONBCbClmLiUWnSEfix
+         LiLQ==
+X-Gm-Message-State: AOAM531F/UsqqcXrn74sXWM+oAxikRNdUHtJaQZDNUk0+ZDeLQaNe03P
+        Oit9J0ejiOqbCHCZCp8XCUg=
+X-Google-Smtp-Source: ABdhPJy8m6LygSl7HMxtzakpu88W+WmiS92wExIdiFB7dR3zHltDxVhPBhP4S8n5sk57q1OAjc7E7g==
+X-Received: by 2002:a19:d95:: with SMTP id 143mr3361008lfn.4.1599723332027;
+        Thu, 10 Sep 2020 00:35:32 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id v14sm1140974lfe.79.2020.09.10.00.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 00:35:31 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kGH79-0005dT-10; Thu, 10 Sep 2020 09:35:27 +0200
+Date:   Thu, 10 Sep 2020 09:35:27 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] serial: core: fix console port-lock regression
+Message-ID: <20200910073527.GC24441@localhost>
+References: <20200909143101.15389-1-johan@kernel.org>
+ <20200909143101.15389-3-johan@kernel.org>
+ <20200909154815.GD1891694@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
+In-Reply-To: <20200909154815.GD1891694@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Vlastimil and Mel - the whole email thread starts
- http://lkml.kernel.org/r/20200902180628.4052244-1-zi.yan@sent.com
- but this particular subthread has diverged a bit and you might find it
- interesting]
-
-On Wed 09-09-20 15:43:55, David Hildenbrand wrote:
-> On 09.09.20 15:19, Rik van Riel wrote:
-> > On Wed, 2020-09-09 at 09:04 +0200, Michal Hocko wrote:
-> >> On Tue 08-09-20 10:41:10, Rik van Riel wrote:
-> >>> On Tue, 2020-09-08 at 16:35 +0200, Michal Hocko wrote:
-> >>>
-> >>>> A global knob is insufficient. 1G pages will become a very
-> >>>> precious
-> >>>> resource as it requires a pre-allocation (reservation). So it
-> >>>> really
-> >>>> has
-> >>>> to be an opt-in and the question is whether there is also some
-> >>>> sort
-> >>>> of
-> >>>> access control needed.
-> >>>
-> >>> The 1GB pages do not require that much in the way of
-> >>> pre-allocation. The memory can be obtained through CMA,
-> >>> which means it can be used for movable 4kB and 2MB
-> >>> allocations when not
-> >>> being used for 1GB pages.
-> >>
-> >> That CMA has to be pre-reserved, right? That requires a
-> >> configuration.
+On Wed, Sep 09, 2020 at 06:48:15PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 09, 2020 at 04:31:01PM +0200, Johan Hovold wrote:
+> > Fix the port-lock initialisation regression introduced by commit
+> > a3cb39d258ef ("serial: core: Allow detach and attach serial device for
+> > console") by making sure that the lock is again initialised during
+> > console setup.
 > > 
-> > To some extent, yes.
+> > The console may be registered before the serial controller has been
+> > probed in which case the port lock needs to be initialised during
+> > console setup by a call to uart_set_options(). The console-detach
+> > changes introduced a regression in several drivers by effectively
+> > removing that initialisation by not initialising the lock when the port
+> > is used as a console (which is always the case during console setup).
 > > 
-> > However, because that pool can be used for movable
-> > 4kB and 2MB
-> > pages as well as for 1GB pages, it would be easy to just set
-> > the size of that pool to eg. 1/3 or even 1/2 of memory for every
-> > system.
+> > Add back the early lock initialisation and instead use a new
+> > console-reinit flag to handle the case where a console is being
+> > re-attached through sysfs.
 > > 
-> > It isn't like the pool needs to be the exact right size. We
-> > just need to avoid the "highmem problem" of having too little
-> > memory for kernel allocations.
-> > 
+> > The question whether the console-detach interface should have been added
+> > in the first place is left for another discussion.
 > 
-> I am not sure I like the trend towards CMA that we are seeing, reserving
-> huge buffers for specific users (and eventually even doing it
-> automatically).
+> It was discussed in [1]. TL;DR: OMAP would like to keep runtime PM available
+> for UART while at the same time we disable it for kernel consoles in
+> bedb404e91bb.
 > 
-> What we actually want is ZONE_MOVABLE with relaxed guarantees, such that
-> anybody who requires large, unmovable allocations can use it.
+> [1]: https://lists.openwall.net/linux-kernel/2018/09/29/65
+
+Yeah, I remember that. My fear is just that the new interface opens up a
+can of worms as it removes the earlier assumption that the console would
+essentially never be deregistered without really fixing all those
+drivers, and core functions, written under that assumption. Just to
+mention a few issues; we have drivers enabling clocks and other
+resources during console setup which can now be done repeatedly, and
+several drivers whose setup callbacks are marked __init and will oops
+the minute you reattach the console. And what about power management
+which was the reason for wanting this on OMAP in the first place; tty
+core never calls shutdown() for a console port, not even when it's been
+detached using the new interface.
+
+I know, the console setup is all a mess, but this still seems a little
+rushed to me. I'm even inclined to suggest a revert until the above and
+similar issues have been addressed properly rather keeping a known buggy
+interface.
+
+> > Note that the console-enabled check in uart_set_options() is not
+> > redundant because of kgdboc, which can end up reinitialising an already
+> > enabled console (see commit 42b6a1baa3ec ("serial_core: Don't
+> > re-initialize a previously initialized spinlock.")).
 > 
-> I once played with the idea of having ZONE_PREFER_MOVABLE, which
-> a) Is the primary choice for movable allocations
-> b) Is allowed to contain unmovable allocations (esp., gigantic pages)
-> c) Is the fallback for ZONE_NORMAL for unmovable allocations, instead of
-> running out of memory
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Thank you!
+> 
+> One question below, though.
+> 
+> > Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
+> > Cc: stable <stable@vger.kernel.org>     # 5.7
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > ---
+> >  drivers/tty/serial/serial_core.c | 32 +++++++++++++++-----------------
+> >  include/linux/serial_core.h      |  1 +
+> >  2 files changed, 16 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> > index 53b79e1fcbc8..124524ecfe26 100644
+> > --- a/drivers/tty/serial/serial_core.c
+> > +++ b/drivers/tty/serial/serial_core.c
+> > @@ -1916,24 +1916,12 @@ static inline bool uart_console_enabled(struct uart_port *port)
+> >  	return uart_console(port) && (port->cons->flags & CON_ENABLED);
+> >  }
+> >  
+> > -static void __uart_port_spin_lock_init(struct uart_port *port)
+> > +static void uart_port_spin_lock_init(struct uart_port *port)
+> >  {
+> >  	spin_lock_init(&port->lock);
+> >  	lockdep_set_class(&port->lock, &port_lock_key);
+> >  }
+> >  
+> > -/*
+> > - * Ensure that the serial console lock is initialised early.
+> > - * If this port is a console, then the spinlock is already initialised.
+> > - */
+> > -static inline void uart_port_spin_lock_init(struct uart_port *port)
+> > -{
+> 
+> > -	if (uart_console(port))
+> 
+> I'm wondering if we may revert this line to be uart_console_enabled() and use a
+> helper below twice.
 
-I might be missing something but how can this work longterm? Or put in
-another words why would this work any better than existing fragmentation
-avoidance techniques that page allocator implements already - movability
-grouping etc. Please note that I am not deeply familiar with those but
-my high level understanding is that we already try hard to not mix
-movable and unmovable objects in same page blocks as much as we can.
+I didn't do that on purpose as the rationale for why the
+uart_console_enabled() check is there is different in the two paths so
+merging the two comments, and moving it away from the call sites, wasn't
+really a good idea to begin with.
 
-My suspicion is that a separate zone would work in a similar fashion. As
-long as there is a lot of free memory then zone will be effectively
-MOVABLE. Similar applies to normal zone when unmovable allocations are
-in minority. As long as the Normal zone gets full of unmovable objects
-they start overflowing to ZONE_PREFER_MOVABLE and it will resemble page
-block stealing when unmovable objects start spreading over movable page
-blocks.
+> > -		return;
+> > -
+> > -	__uart_port_spin_lock_init(port);
+> > -}
+> > -
+> >  #if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_POLL)
+> >  /**
+> >   *	uart_console_write - write a console message to a serial port
+> > @@ -2086,7 +2074,15 @@ uart_set_options(struct uart_port *port, struct console *co,
+> >  	struct ktermios termios;
+> >  	static struct ktermios dummy;
+> >  
+> > -	uart_port_spin_lock_init(port);
+> > +	/*
+> > +	 * Ensure that the serial-console lock is initialised early.
+> > +	 *
+> > +	 * Note that the console-enabled check is needed because of kgdboc,
+> > +	 * which can end up calling uart_set_options() for an already enabled
+> > +	 * console via tty_find_polling_driver() and uart_poll_init().
+> > +	 */
+> > +	if (!uart_console_enabled(port) && !port->console_reinit)
+> > +		uart_port_spin_lock_init(port);
+> >  
+> >  	memset(&termios, 0, sizeof(struct ktermios));
+> >  
+> > @@ -2794,10 +2790,12 @@ static ssize_t console_store(struct device *dev,
+> >  		if (oldconsole && !newconsole) {
+> >  			ret = unregister_console(uport->cons);
+> >  		} else if (!oldconsole && newconsole) {
+> > -			if (uart_console(uport))
+> > +			if (uart_console(uport)) {
+> > +				uport->console_reinit = 1;
+> >  				register_console(uport->cons);
+> > -			else
+> > +			} else {
+> >  				ret = -ENOENT;
+> > +			}
+> >  		}
+> >  	} else {
+> >  		ret = -ENXIO;
+> > @@ -2898,7 +2896,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+> >  	 * initialised.
+> >  	 */
+> >  	if (!uart_console_enabled(uport))
+> > -		__uart_port_spin_lock_init(uport);
+> > +		uart_port_spin_lock_init(uport);
+> >  
+> >  	if (uport->cons && uport->dev)
+> >  		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+> > diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> > index 01fc4d9c9c54..8a99279a579b 100644
+> > --- a/include/linux/serial_core.h
+> > +++ b/include/linux/serial_core.h
+> > @@ -248,6 +248,7 @@ struct uart_port {
+> >  
+> >  	unsigned char		hub6;			/* this should be in the 8250 driver */
+> >  	unsigned char		suspended;
+> > +	unsigned char		console_reinit;
+> >  	const char		*name;			/* port name */
+> >  	struct attribute_group	*attr_group;		/* port specific attributes */
+> >  	const struct attribute_group **tty_groups;	/* all attributes (serial core use only) */
+> > -- 
+> > 2.26.2
 
-Again, my level of expertise to page allocator is quite low so all the
-above might be simply wrong...
-
-> If someone messes up the zone ratio, issues known from zone imbalances
-> are avoided - large allocations simply become less likely to succeed. In
-> contrast to ZONE_MOVABLE, memory offlining is not guaranteed to work.
--- 
-Michal Hocko
-SUSE Labs
+Johan
