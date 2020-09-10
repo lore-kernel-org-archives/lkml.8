@@ -2,92 +2,122 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E05C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B274C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 660F020829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kdb+4Cln";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="lRTq3Z1v"
+	by mail.kernel.org (Postfix) with ESMTP id DE7F120C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599755545;
+	bh=pU7vs9Oqtq1EuN0LnSu799unpKeDDHK8B0ZI7XTbRh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ger7puQweZgcqBZWBcJMRSLqlsBfq1ELalZzXigu+splbObZp1VGrlRlloc3noYPG
+	 BZSJuVLwCf0CWIdDFl1ghjQyXVIoSq5WNZD5d21ZvaH+li2AuVa8VnFDRtaUiFjIvA
+	 9Xr3IyMzBsZe0zG5qQWI4hcFrSWcsZ1jA0D1Jh+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgIJQcG (ORCPT
+        id S1726919AbgIJQcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:32:06 -0400
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:41402
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgIJQbq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:31:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599755503;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
-        bh=JsEHHJbA/KTCse1B/sa8kRNxBwgyPWQGjQkRyaMNlIE=;
-        b=kdb+4ClnoNgQB9XvuE8wF69B70K5E8XGdqGljaBK6N9y1RJ8UVIbPeJ62qb7V2+4
-        JA6hg5XsqOK1xQH+21gf8xYfnVsKeQCHrSBWiF32xkrgRB3n5Rr/Fz6spB6f1G+xfyT
-        c08PoGZq3QnnPlfeokVeW3n1Dj4nLjuwQ1vrkG4w=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599755503;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
-        bh=JsEHHJbA/KTCse1B/sa8kRNxBwgyPWQGjQkRyaMNlIE=;
-        b=lRTq3Z1vh/fetU1kFqkDu7HdsTb3VjMs/Vinm/bTWNF8NfDcGNjWq6JQuReUyAh4
-        ruGnzCTclrgKvaJBYjxsM+gQFrmn2Rcy40f32kXkC44zRUfQc/jMOq9IW7sy+40BSpc
-        tIfCHOOzhW2zBWBmqdRR7Yf+r6zlbLGE6/lXMVaI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9A6F6C433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Sep 2020 12:32:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgIJQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:32:01 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BE720C09;
+        Thu, 10 Sep 2020 16:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599755521;
+        bh=pU7vs9Oqtq1EuN0LnSu799unpKeDDHK8B0ZI7XTbRh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uDFhA5k4yX+WzUizO+Zb6wqKrXfTncoQ6z51rA0TvJFV+dhYyifq0/40ocjnU2QiR
+         5cc3EX4oIyBFK4gjIEZvohwstFhYNSO2854opBdYqzf6g2mvtFrsaz/ERxg/8cmjf2
+         HryVczveTV/E4gDiI56HXK8yIItIrxUxyDGwlg9c=
+Date:   Thu, 10 Sep 2020 18:32:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Eads, Gage" <gage.eads@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        "Topel, Bjorn" <bjorn.topel@intel.com>
+Subject: Re: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+Message-ID: <20200910163208.GA1321670@kroah.com>
+References: <20200901191548.31646-1-gage.eads@intel.com>
+ <20200901191548.31646-2-gage.eads@intel.com>
+ <20200907130150.GE2371705@kroah.com>
+ <SN6PR11MB2574DA2AA215E9566BA4F410F6270@SN6PR11MB2574.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 24/29] ath9k: ar9002_initvals: Remove unused array
- 'ar9280PciePhy_clkreq_off_L1_9280'
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200910065431.657636-25-lee.jones@linaro.org>
-References: <20200910065431.657636-25-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-ID: <0101017478dbc6e7-1d4ddf5e-fade-4e45-a0d5-ecb92bf35a72-000000@us-west-2.amazonses.com>
-Date:   Thu, 10 Sep 2020 16:31:43 +0000
-X-SES-Outgoing: 2020.09.10-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR11MB2574DA2AA215E9566BA4F410F6270@SN6PR11MB2574.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
-
-> Fixes the following W=1 kernel build warning(s):
+On Thu, Sep 10, 2020 at 04:24:31PM +0000, Eads, Gage wrote:
 > 
->  drivers/net/wireless/ath/ath9k/ar9002_initvals.h:900:18: warning: ‘ar9280PciePhy_clkreq_off_L1_9280’ defined but not used [-Wunused-const-variable=]
 > 
-> Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Monday, September 7, 2020 8:02 AM
+> > To: Eads, Gage <gage.eads@intel.com>
+> > Cc: linux-kernel@vger.kernel.org; arnd@arndb.de; Karlsson, Magnus
+> > <magnus.karlsson@intel.com>; Topel, Bjorn <bjorn.topel@intel.com>
+> > Subject: Re: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+> > 
+> > On Tue, Sep 01, 2020 at 02:15:30PM -0500, Gage Eads wrote:
+> > > --- /dev/null
+> > > +++ b/drivers/misc/dlb2/dlb2_main.c
+> > > @@ -0,0 +1,208 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/* Copyright(c) 2018-2020 Intel Corporation */
+> > > +
+> > > +#include <linux/aer.h>
+> > > +#include <linux/cdev.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/fs.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/pci.h>
+> > > +#include <linux/uaccess.h>
+> > > +
+> > > +#include "dlb2_main.h"
+> > > +
+> > > +static const char
+> > > +dlb2_driver_copyright[] = "Copyright(c) 2018-2020 Intel Corporation";
+> > 
+> > Why have this in a string and then:
+> > 
+> > > +MODULE_LICENSE("GPL v2");
+> > > +MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+> > 
+> > Not use it?
+> > 
+> > It's probably not needed at all, right?
+> > 
+> > Don't you get a build warning about this when applying and building this
+> > patch?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> dlb2_driver_copyright was used in a pr_info() in the v1 patchset that was
+> removed at Arnd's recommendation, and I forgot to remove the string. Will fix.
+> The unused warning variable was likely missed in the deluge of warnings from
+> included kernel headers.
 
-Already fixed in ath.git.
+You should not have any build warnings.  If you do, then something is
+really wrong, the kernel builds cleanly today.
 
-error: patch failed: drivers/net/wireless/ath/ath9k/ar9002_initvals.h:897
-error: drivers/net/wireless/ath/ath9k/ar9002_initvals.h: patch does not apply
-stg import: Diff does not apply cleanly
+thanks,
 
-Patch set to Rejected.
-
--- 
-https://patchwork.kernel.org/patch/11766749/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+greg k-h
