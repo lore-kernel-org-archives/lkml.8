@@ -2,125 +2,74 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDDAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB993206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:01:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="susunWFF"
+	by mail.kernel.org (Postfix) with ESMTP id B601C2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599728633;
+	bh=PXXK58jPCqS6xYVS0F97ACb3SCnVEU4nMHvu1m+Yjww=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=P3waaVplrPld4u1sMrQjjU5z7wJGzPJ0iWpvq+EkfmmaBLESSpkQuxUUvyQ4kB5Qu
+	 6g9PYa+Hs6AK3UWaAZeLFr6TSzv0vjOr8TmAe9ko26hYLLazHfYDj6ftxerEp27xtp
+	 9OXrYCU+2UdmZ087OE3bw4/Tf8XuJxOby/Hm70/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbgIJJBY (ORCPT
+        id S1727090AbgIJJDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730116AbgIJJBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:01:06 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22D5C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:01:05 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w7so4261458pfi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ikzS6RYjoj2agknRb+4ptOX5afJxX0ugn9/c1CJ7PGY=;
-        b=susunWFFKwqMfxgI6ByE2bxzf0efOUepi18FJy0I3JaGM6PyRxlr5pWK3ZQrDC2hnN
-         ReIMsZIjJ33de7BpVFfN6XqNS2jyfb9GZ4K4h/I+P+A/84lrh4EPnpGm+66JuThreZhq
-         iAMtKUT4cO0Ytr/lL4S5Sgtjvq1DbmwGLc9mWMpW0LEU+uV0uBZdkKDexwQrIXp5JxOQ
-         RA7+krRJzRP7PBsEmcwR2pTSvNWBUhC9PH7lfT+vnhnZJ2EJ/bJDi6mlKCS+wRvd9Aam
-         hrjVglwXEJHhNVjheCVAFPlrQygD9qBLmsofYecD5zPuBl8kXkIXPqbFzTT4CDb1bFpn
-         vioA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ikzS6RYjoj2agknRb+4ptOX5afJxX0ugn9/c1CJ7PGY=;
-        b=oPihWGn3vPLHJMPDo4rnBPLtPj478ahFGNeqEesyZBxrgMUgkonI63Y9oePyXiRKRf
-         9/VjBWIzIeJtOmISQFM0HusQJlIYtUluKPkBlc9gLlZmACcFj59+Iw11ABQzSZVL4KiV
-         1gluorMjaG2Kpb7q/NBUbb4MAxRGm81FwYQSUxLk5IZwalkhyJyKDBkajDpBf65NpvrH
-         Iy19UWi0zW9h7yZVCvxyTrmvXfuSQG+5+R30W+xtCsck2Sb8xTGlv3DI+uq0upL64dyK
-         tCuy3JmkB9Ok5GsfAL2CUqfZfPTIiSBHe79Oair8+azcyBdZMqAXQWTbW/q7MN2t2+/K
-         ChcA==
-X-Gm-Message-State: AOAM532eTfkQMN4tIT9C8rCgEbvZEnTVONXvl1cg6iMchad/HTl0khJy
-        c+IbV2OGQk8j0GHIPjOk8ooYBY683VFzc2FOqdEn5A==
-X-Google-Smtp-Source: ABdhPJyz+lxVXWAN3RjhjfBgNFqBMssrHGsYLq26O3vVlwR5Eg9ERiehVAHVqUqpwEj5gFDwZOX+ebtv3+a8IJuSeMA=
-X-Received: by 2002:a63:fd03:: with SMTP id d3mr3605973pgh.201.1599728464251;
- Thu, 10 Sep 2020 02:01:04 -0700 (PDT)
+        Thu, 10 Sep 2020 05:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgIJJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:03:51 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06455206A1;
+        Thu, 10 Sep 2020 09:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599728631;
+        bh=PXXK58jPCqS6xYVS0F97ACb3SCnVEU4nMHvu1m+Yjww=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=u5/cueTq+S2bdNS+dHMZ3rey0YBx20X/O3idxF7MPKKoBFhB4uB8oNjCldahtEx29
+         gXpFp9cGK6chH8HZamzspUrTZUyCWy7c6pYp8umQlTBTawp8P0wRXER6fvIUcjF3vS
+         oc6q2KtIBUxFLCVYO6B4DrQaVY2hD8J95MCWeWVg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200909203059.23427-1-eajames@linux.ibm.com> <20200909203059.23427-4-eajames@linux.ibm.com>
-In-Reply-To: <20200909203059.23427-4-eajames@linux.ibm.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 10 Sep 2020 02:00:53 -0700
-Message-ID: <CAFd5g46ghV7ArmM8LnMkGa-Nip_fT934+3cPOkVxS-b5odZXYw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        wsa@kernel.org, rentao.bupt@gmail.com,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200827141629.101802-1-jingxiangfeng@huawei.com>
+References: <20200827141629.101802-1-jingxiangfeng@huawei.com>
+Subject: Re: [PATCH] clk: qcom: lpass: Correct goto target in lpass_core_sc7180_probe()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        tdas@codeaurora.org
+Date:   Thu, 10 Sep 2020 02:03:49 -0700
+Message-ID: <159972862952.2295844.10882678924928944990@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 1:31 PM Eddie James <eajames@linux.ibm.com> wrote:
->
-> Mask the IRQ status to only the bits that the driver checks. This
-> prevents excessive driver warnings when operating in slave mode
-> when additional bits are set that the driver doesn't handle.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
-
-Sorry, looks like I didn't get my comment in in time.
-
-Looks good in principle. One minor comment below:
-
+Quoting Jing Xiangfeng (2020-08-27 07:16:29)
+> lpass_core_sc7180_probe() misses to call pm_clk_destroy() and
+> pm_runtime_disable() in error paths. Correct goto target to fix it.
+> This issue is found by code inspection.
+>=20
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
 > ---
->  drivers/i2c/busses/i2c-aspeed.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-> index 31268074c422..724bf30600d6 100644
-> --- a/drivers/i2c/busses/i2c-aspeed.c
-> +++ b/drivers/i2c/busses/i2c-aspeed.c
-> @@ -69,6 +69,7 @@
->   * These share bit definitions, so use the same values for the enable &
->   * status bits.
->   */
-> +#define ASPEED_I2CD_INTR_RECV_MASK                     0xf000ffff
 
-Could we define ASPEED_I2CD_INTR_RECV_MASK to be ASPEED_I2CD_INTR_ALL ?
+HMm.. presumably
 
->  #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT                        BIT(14)
->  #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE              BIT(13)
->  #define ASPEED_I2CD_INTR_SLAVE_MATCH                   BIT(7)
-> @@ -604,6 +605,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->         writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->                bus->base + ASPEED_I2C_INTR_STS_REG);
->         readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-> +       irq_received &= ASPEED_I2CD_INTR_RECV_MASK;
->         irq_remaining = irq_received;
->
->  #if IS_ENABLED(CONFIG_I2C_SLAVE)
-> --
-> 2.26.2
->
+Fixes: edab812d802d ("clk: qcom: lpass: Add support for LPASS clock control=
+ler for SC7180")
+
+should be added?
