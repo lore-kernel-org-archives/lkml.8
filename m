@@ -2,163 +2,114 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4718C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8027820719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCE120719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nY/GFWKy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNQ6YQYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgIJFeZ (ORCPT
+        id S1726792AbgIJFei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 01:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57290 "EHLO
+        Thu, 10 Sep 2020 01:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgIJFeF (ORCPT
+        with ESMTP id S1725855AbgIJFeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 01:34:05 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FCBC061757
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 22:34:02 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id i1so5023334edv.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 22:34:02 -0700 (PDT)
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3759CC061573;
+        Wed,  9 Sep 2020 22:34:01 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id o16so2464769pjr.2;
+        Wed, 09 Sep 2020 22:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=60m4hlTxGIMTHH9zDLpW2r5D85YdOPl2w4joQJnWmwA=;
-        b=nY/GFWKyeBX/RUFO9u1oe4hlkrj2e2sOr59SOi/XTYi5toZj9oU+PlC3yWoAwPOFN2
-         5i8xIU1YcBt2bAXr6Jp03/gOrEuZTChoV6Eg6JR+z8Bb75FlyvBxuquNU7tXif2hK8k0
-         bJKTYNsTwz5EUDsp6fTOQJvRuIvC1csiVVvzo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uGUkLkekDDrHHyjl9V1yaazxeNg3zJrmb/AGpekFVEU=;
+        b=LNQ6YQYlGzUoEEn59bhxCAzN0bbl0RH3ljxUlRnh8MvIkfpOCRQN5XEMH/xRYA+JQI
+         MbwO0s/RiAvGlJAmzsU1/Gjve4jRbyiPhjQAWj9i4i/+Tvvx5X/w8AlSz7PInXV10Tp6
+         RIBT1pgKtAf+7vUT/N9a5+AEeTfUQA4RlqbAwwPX3tTWSDo7nEsF3KpKEhrY/zd7QXmm
+         uvFkOh3Ej6tRjlIsLSbuGw+chSIIhXReaHOszaTXvv2CoRZZR/Tjn5oK4qThg9++DAeG
+         0ahQ5J9HSH/14/4AARusqV25omLbV4GjHBlX7ZAPXnquQn3XpSSmRF/xrx7O1YvKiJyA
+         VLlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=60m4hlTxGIMTHH9zDLpW2r5D85YdOPl2w4joQJnWmwA=;
-        b=lYtDvgAgmeS/g/2aodkQP/Tlkf6igLbtucGIG9aGcFpUjWVE6JxBOP3oT9X2/ppSiQ
-         wORmnaMLDD+ap4isC6rplo4znpwkr2CyM3+aQsdivV9If72iuYePJy08ZpYSD4hH6CRh
-         zSoQ5kvUOlAfYYx4Xm2IQ+CiAMB3k656vxb9pjyHZaMOE0IRc6nxI3HvdNlybsVI/yv5
-         U+gJlmUO+duqU5FQFGGv/f0IThtMRfK9aMKXVXY0rhVuj9MUPFAJYVU1b5MEi7fWeKwj
-         2CIdbNv+O8jk/ZZsF21c/X9rFJjphkvKx/DytJZfBuJR2nwgyR4jfuiT6age2fNpGSan
-         pY1g==
-X-Gm-Message-State: AOAM533GyiPVyHbhEcE8i91r07KUW0ypo2dUZgIA0Rs1ZkVSmR0z7oPU
-        OHDQ1GOYknrurotbuJCDL4c3G5nDIzlzaYV4jX3B/w==
-X-Google-Smtp-Source: ABdhPJxZWL/a+FakIDHKml1deb33cHOcCk+94TvMWao3/i9x9TyStla5QSTT3ONizI1t9/7Icb72n5sslJD4sHHnvic=
-X-Received: by 2002:a50:fe0f:: with SMTP id f15mr7513034edt.235.1599716040960;
- Wed, 09 Sep 2020 22:34:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uGUkLkekDDrHHyjl9V1yaazxeNg3zJrmb/AGpekFVEU=;
+        b=Zba0qlF5d6EEdeMb9e0Mo5fU1uxCzyfDPWbQ+o9kszE7+y1AKyoldQmj6rDSVoAAcs
+         eYyGHP2tFuog/lmhCKE9e++NXtD1ZwWSYGeDXRkEjXQyL1dBKSblmXgPxwpo6e3yRPcE
+         C/zp4Uq/KV0lHkehyvKlw3kOiBW3ywQtJZIrePi/zWn5Qv0O253c8VUtq8JfFTSeDcV9
+         ivEjjjcL7dzLH6xYXY/SaBkVS9ZH432S2Z9qALhlhZN9qLFj6gHLoOZCnQcn7teaZRJL
+         huPy5k11qM6ys0K9D7k+EuY2dXNGWdHfNkLVdTe7rQZXsqdR8Ylc77QHuKAHZYaE1jqo
+         azBQ==
+X-Gm-Message-State: AOAM532nyBz+iuBYR7rduvB2ipnNkmf8N5zSmXYJHJbCgpV90NOUzyFZ
+        4qDah40n2LZRORpcF1VIM3Q=
+X-Google-Smtp-Source: ABdhPJyA4kPg48qb2udCMYHl4sXWhpEBoJK9wBIXp40zG7zp6AGgM9d0QvaM0WisgbU+c02gkQNkMg==
+X-Received: by 2002:a17:902:bc81:: with SMTP id bb1mr4107803plb.105.1599716040593;
+        Wed, 09 Sep 2020 22:34:00 -0700 (PDT)
+Received: from [192.168.1.5] ([61.7.133.45])
+        by smtp.googlemail.com with ESMTPSA id j26sm4453002pfa.160.2020.09.09.22.33.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 22:34:00 -0700 (PDT)
+Subject: Re: [PATCH v2] usb: serial: Repair FTDI FT232R bricked eeprom
+To:     Oliver Neukum <oneukum@suse.de>,
+        James Hilliard <james.hilliard1@gmail.com>,
+        linux-usb@vger.kernel.org
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@gmail.com>,
+        Hector Martin <hector@marcansoft.com>
+References: <20200909193419.2006744-1-james.hilliard1@gmail.com>
+ <1599706954.10822.3.camel@suse.de>
+From:   Lars Melin <larsm17@gmail.com>
+Message-ID: <a1161f77-5b37-39ea-eb91-7b0b59278960@gmail.com>
+Date:   Thu, 10 Sep 2020 12:33:55 +0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200909081422.2412795-1-pihsun@chromium.org> <dd5a6b8b-71dc-ce54-1f0d-7fa6b1dd6248@gmail.com>
-In-Reply-To: <dd5a6b8b-71dc-ce54-1f0d-7fa6b1dd6248@gmail.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Thu, 10 Sep 2020 13:33:24 +0800
-Message-ID: <CANdKZ0dAWG7CyNF9064+WBC_7q8M=S6=Q30TFz9fpgd4YbOsOw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: mt8183-kukui: add scp node
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1599706954.10822.3.camel@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 4:58 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
->
->
-> On 09/09/2020 10:14, Pi-Hsun Shih wrote:
-> > Add scp node to mt8183-kukui
-> >
-> > Fixes: 0d5e41709f76 ("arm64: dts: mt8183: add scp node")
-> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> > ---
-> >
-> > Change since v1:
-> > * Add Fixes tag.
-> >
-> > ---
-> >   .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 30 +++++++++++++++++++
-> >   1 file changed, 30 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> > index f0a070535b34..85f7c33ba446 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> > @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
-> >               regulator-max-microvolt = <3300000>;
-> >       };
-> >
-> > +     reserved_memory: reserved-memory {
-> > +             #address-cells = <2>;
-> > +             #size-cells = <2>;
-> > +             ranges;
-> > +
-> > +             scp_mem_reserved: scp_mem_region {
-> > +                     compatible = "shared-dma-pool";
-> > +                     reg = <0 0x50000000 0 0x2900000>;
-> > +                     no-map;
-> > +             };
-> > +     };
-> > +
->
-> Do we expect other boards to have a different memory reservation? I can see that
-> EVB and Kukui uses the same. If not, we should add the node in mt8183.dtsi instead.
->
-> Regards,
-> Matthias
+On 9/10/2020 10:02, Oliver Neukum wrote:
+> Am Mittwoch, den 09.09.2020, 13:34 -0600 schrieb James Hilliard:
+>> This patch detects and reverses the effects of the malicious FTDI
+>> Windows driver version 2.12.00(FTDIgate).
+> 
+> Hi,
+> 
+> this raises questions.
+> Should we do this unconditionally without asking?
+> Does this belong into kernel space?
+> 
 
-All our current boards use the same memory reservation, but it's still
-possible for future boards based on mt8183 to use different SCP memory
-size, so I feel this should still be left out of mt8183.dtsi.
+My answer to both of those question is a strong NO.
 
->
-> >       max98357a: codec0 {
-> >               compatible = "maxim,max98357a";
-> >               sdmode-gpios = <&pio 175 0>;
-> > @@ -524,6 +536,13 @@ pins_clk {
-> >               };
-> >       };
-> >
-> > +     scp_pins: scp {
-> > +             pins_scp_uart {
-> > +                     pinmux = <PINMUX_GPIO110__FUNC_TP_URXD1_AO>,
-> > +                              <PINMUX_GPIO112__FUNC_TP_UTXD1_AO>;
-> > +             };
-> > +     };
-> > +
-> >       spi0_pins: spi0 {
-> >               pins_spi{
-> >                       pinmux = <PINMUX_GPIO85__FUNC_SPI0_MI>,
-> > @@ -651,6 +670,17 @@ pins_wifi_wakeup {
-> >       };
-> >   };
-> >
-> > +&scp {
-> > +     status = "okay";
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&scp_pins>;
-> > +
-> > +     cros_ec {
-> > +             compatible = "google,cros-ec-rpmsg";
-> > +             mtk,rpmsg-name = "cros-ec-rpmsg";
-> > +     };
-> > +};
-> > +
-> >   &soc_data {
-> >       status = "okay";
-> >   };
-> >
+The patch author tries to justify the patch with egoistical arguments 
+(easier for him and his customers) without thinking of all other users 
+of memory constrained embedded hardware that doesn't need the patch code 
+but have to carry it.
+
+The bricked PID is btw already supported by the linux ftdi driver so 
+there is no functionality gain in the patch.
+
+br
+Lars
+
+
+
