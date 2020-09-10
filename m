@@ -7,99 +7,84 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056B3C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0149DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCE120809
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01E42076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599739910;
-	bh=ftw+9lHW/uw9KeqwaGHdnGsb8ijDkMpb7UkG/tH4jUs=;
+	s=default; t=1599740038;
+	bh=xfinSNc0Rk06xPtfQRWYjBtz2AOXa7N9s9orv6qw3pc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LisGpLKhEV6Im87ru/uSt1i196UhDRI0gdhgQEAeDisIkUYOQta1uBPD5I4xnmAQr
-	 6nuhfiKHNSK1s45kfHCi/dUbI7a2Zg/a1Kya308oLlAWv/XKtNmoiVD/TIrlr0Pvh1
-	 Urf/8OvpSpF63jU9eoHJEUtN1ox2jTaaPBN0vVs0=
+	b=GaHLQgdhRZCxrP14fnUXpB2n/lJAQ9vvJqqogfPzro3xq7DJxnvogimW03EofMwZ/
+	 zZsz4MIKBUghxFdJ8Wvy0Poo9X1PjQUGdVSq5HqArIfEocB1OJthckkAhYCsLh+hes
+	 JIY+YMu5VNonagC9+vtjtUwai1LqAJhbUlekTwUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgIJMKu (ORCPT
+        id S1730485AbgIJMNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:10:50 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:40184 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730461AbgIJMJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:09:57 -0400
-Received: by mail-ej1-f68.google.com with SMTP id z22so8327645ejl.7;
-        Thu, 10 Sep 2020 05:08:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fMr7yVrAmB2s1rgrqGSTgH2SeLcG7AUVdmZBn9HXpKw=;
-        b=oi11BHVyCYK5OErZsFe84YXQjYFe/5drTSvQ3aI+JjZKA14ukiIzKqf/hsiGuu93mM
-         7jCdXvWGq/s9zWW48kIQiE+tZcswJhHHq+hcyKKtWS9z1tpeVQ5Gy6MOPr9QS4Yzhww9
-         CaLMFsLSEdU3LqkZd6U2Kq2x/+JZcyvczdgBuWrcRKkTLpY8zviXrNGdALo+uUWlKeOH
-         jJKLIJtusz7mH69viwAP7qllebJQSq1aV/dj/wecsnE7E7G5KR+mKXS6FBYtyUOMAeax
-         ab1/7f5mOZx9AeFcMa/LhyYEcWdRYAUR5tW6johmmrvCwVubrKKwcvAkNzwrgFnmO3M2
-         ix7g==
-X-Gm-Message-State: AOAM532/2KdOK74VLwRgw3Ih3u5EMEfvQwg1FJn96u8BBIGehxW+amD3
-        DUbxf1UDW/gaVfCVqAnbjtlfDGSkhX0=
-X-Google-Smtp-Source: ABdhPJznuwyTY0MUsaJSoqj7g6gSzRl1JGZ3NGHhpIGRwpsjCVqpYLabExRBhxJ0Bt8KNlmwTEOzwQ==
-X-Received: by 2002:a17:907:9c3:: with SMTP id bx3mr8658856ejc.164.1599739695700;
-        Thu, 10 Sep 2020 05:08:15 -0700 (PDT)
-Received: from pi3 ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id cf7sm6822005edb.78.2020.09.10.05.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 05:08:14 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 14:08:12 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        lukasz.luba@arm.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] PM / devfreq: event: Change prototype of
- devfreq_event_get_edev_by_phandle function
-Message-ID: <20200910120812.GC2206@pi3>
-References: <20200908102447.15097-1-cw00.choi@samsung.com>
- <CGME20200908101231epcas1p4b6262aae4d5272f6cce366ac1ffbb955@epcas1p4.samsung.com>
- <20200908102447.15097-4-cw00.choi@samsung.com>
+        Thu, 10 Sep 2020 08:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730179AbgIJMKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:10:35 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B114F20672;
+        Thu, 10 Sep 2020 12:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599739831;
+        bh=xfinSNc0Rk06xPtfQRWYjBtz2AOXa7N9s9orv6qw3pc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YKkrDluJms68RxWu1I4Mws1SowUefhzGlVOZYbx3EJDJW0xbY306SgYwX3SYCBzmb
+         yi9sSgVpJNMEC+VNAU38Zp5WGvOnRKwgEgbETYqdwh4E9W/5sBQrBXlEniwr0qDI0E
+         7GH3ldV4ldY3voMsnIDqyU3g2uLCVKHjmXUeR8hQ=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AE95A40D3D; Thu, 10 Sep 2020 09:10:29 -0300 (-03)
+Date:   Thu, 10 Sep 2020 09:10:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] perf test: Introduce script for Arm CoreSight testing
+Message-ID: <20200910121029.GC4018363@kernel.org>
+References: <20200907130154.9601-1-leo.yan@linaro.org>
+ <20200908191207.GB506647@xps15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908102447.15097-4-cw00.choi@samsung.com>
+In-Reply-To: <20200908191207.GB506647@xps15>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 07:24:47PM +0900, Chanwoo Choi wrote:
-> Previously, devfreq core support 'devfreq-events' property in order to get
-> the devfreq-event device by phandle. But, 'devfreq-events' property name is
-> not proper on devicetree binding because this name doesn't mean
-> the any h/w attribute.
-> 
-> The devfreq-event core hand over the rights to decide the property name
-> for getting the devfreq-event device on devicetree. Each devfreq-event driver
-> will decide the property name on devicetree binding and then pass
-> the their own property name to devfreq_event_get_edev_by_phandle function.
-> 
-> And change the prototype of devfreq_event_get_edev_count function
-> because of used deprecated 'devfreq-events' property.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  drivers/devfreq/devfreq-event.c         | 14 ++++++++------
->  drivers/devfreq/exynos-bus.c            |  5 +++--
->  drivers/devfreq/rk3399_dmc.c            |  2 +-
->  drivers/memory/samsung/exynos5422-dmc.c |  6 ++++--
->  include/linux/devfreq-event.h           | 14 ++++++++++----
->  5 files changed, 26 insertions(+), 15 deletions(-)
-> 
+Em Tue, Sep 08, 2020 at 01:12:07PM -0600, Mathieu Poirier escreveu:
+> On Mon, Sep 07, 2020 at 09:01:54PM +0800, Leo Yan wrote:
+> > We need a simple method to test Perf with Arm CoreSight drivers, this
+> > could be used for smoke testing when new patch is coming for perf or
+> > CoreSight drivers, and we also can use the test to confirm if the
+> > CoreSight has been enabled successfully on new platforms.
+> > 
+> > This patch introduces the shell script test_arm_coresight.sh which is
+> > under the 'pert test' framework.  This script provides three testing
+> > scenarios:
 
-Feel free to take it via devfreq tree. I don't expect conflicts around
-memory/samsung/exynos5422-dmc.c.
+<SNIP>
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Best regards,
-Krzysztof
+Thanks, applied.
+
+- Arnaldo
