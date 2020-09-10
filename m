@@ -7,57 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4653CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96827C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E392321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B66C21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="so72j/GB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9t7v9lt5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iB0PrJIA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VKQeoA6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgIJJgc (ORCPT
+        id S1730520AbgIJJgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 10 Sep 2020 05:36:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38970 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730368AbgIJJW3 (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730378AbgIJJWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:22:29 -0400
-Date:   Thu, 10 Sep 2020 09:22:23 -0000
+        Thu, 10 Sep 2020 05:22:32 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4545C061799;
+        Thu, 10 Sep 2020 02:22:16 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 09:22:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729744;
+        s=2020; t=1599729730;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gx0QGEvHxisXvWcUkCNlHibymu2ehyqZiypSVAGsVG8=;
-        b=so72j/GBM5YVXYt7WsCTULtxrmVgtfEemu2sredLhDSHSG7E07VDNOIdBPXWdhswz72qWK
-        el/uY8Nw3psyFoGJudgsg3C+JcVNMi0on4G22gdTk+Ldu6p7K0pCkn5cZ+2BCFAJiM8FBf
-        WONlV1BB1OHv+fPeMdKyz8FhDXEiOEe8uKuN8kNIz1IEf30TjvfeDQaD5cHIvP8xlcTKKb
-        NMJh4p01JeJwdYrifR+PcZ+WVoEFCHgPx894Dp2oKP0ny4/c0G1ckXCM7+DmydUnAQLibd
-        BNVkvHqfmnD/kyR+LOvOtXhhz+yHucmW9JXmkLCG8JP6bcv3jAKiWqOe/CQlBw==
+        bh=rJk3MYLbFbSfPhJZF4bSYd6z3TZoLOoRN1THYmZyuo0=;
+        b=iB0PrJIAEPHGOVvXpW6SO0i5j3ncHIqLCDnUZNBk4og3RrFeUNShqV/PqYwzX2r/wLE1rV
+        S+rds0YQ89EzYION0K4UOonjwdRjIMTpALaOzLzcSudeqLsfRcMywPS6Rs1g6ONFBpGtAR
+        ZPxFSaoNyxwd35XCNaPAVKI5kDRrGU3lEzNaXhSnz8ygkkPJo8EQk/k5EBziL3pjKNdXFn
+        leAxq7u5Kv5CH6BYHJ1N4/tjE4uMrlCvY2UgXm0IyCNUetpALZXOmlEfsxnraI6+X2VuvD
+        uKN10d5bGylPifrZLt3p8xW7EI87a3aVAHdtDq5pfH1aDjsiwf3+xtMa3Nu5ww==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729744;
+        s=2020e; t=1599729730;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=gx0QGEvHxisXvWcUkCNlHibymu2ehyqZiypSVAGsVG8=;
-        b=9t7v9lt5CUQjC/cFmKgAUHpFnP8sNdsxnNZPH4hBg47Tb2vN8YEFnW6oGDrS0dgiZBf+B1
-        GBYACd33XZGphSAw==
-From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
+        bh=rJk3MYLbFbSfPhJZF4bSYd6z3TZoLOoRN1THYmZyuo0=;
+        b=VKQeoA6kSOPnX9NkJ76BjxEgsFrrJsFMTfYPg08DUSR7z2JC15oMsjmdZNO631ex2ZlzN6
+        qaeOK/xG7rVVcGBA==
+From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
-Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/seves] x86/sev-es: Handle RDTSC(P) Events
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-23-joro@8bytes.org>
-References: <20200907131613.12703-23-joro@8bytes.org>
+In-Reply-To: <20200907131613.12703-55-joro@8bytes.org>
+References: <20200907131613.12703-55-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972974350.20229.4361067927128131337.tip-bot2@tip-bot2>
+Message-ID: <159972972968.20229.4360332624550491069.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -69,190 +73,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     c81d60029a1393183d2125fcb4b64831629b8864
-Gitweb:        https://git.kernel.org/tip/c81d60029a1393183d2125fcb4b64831629b8864
-Author:        Joerg Roedel <jroedel@suse.de>
-AuthorDate:    Mon, 07 Sep 2020 15:15:23 +02:00
+Commit-ID:     4711e7acaa125d8cc242f06e1f4d6c74e177454b
+Gitweb:        https://git.kernel.org/tip/4711e7acaa125d8cc242f06e1f4d6c74e177454b
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Mon, 07 Sep 2020 15:15:55 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 07 Sep 2020 19:45:25 +02:00
+CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
 
-x86/boot/compressed/64: Add set_page_en/decrypted() helpers
+x86/sev-es: Handle RDTSC(P) Events
 
-The functions are needed to map the GHCB for SEV-ES guests. The GHCB
-is used for communication with the hypervisor, so its content must not
-be encrypted. After the GHCB is not needed anymore it must be mapped
-encrypted again so that the running kernel image can safely re-use the
-memory.
+Implement a handler for #VC exceptions caused by RDTSC and RDTSCP
+instructions. Also make it available in the pre-decompression stage
+because the KASLR code uses RDTSC/RDTSCP to gather entropy and some
+hypervisors intercept these instructions.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Adapt to #VC handling infrastructure
+                   - Make it available early ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-23-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20200907131613.12703-55-joro@8bytes.org
 ---
- arch/x86/boot/compressed/ident_map_64.c | 133 +++++++++++++++++++++++-
- arch/x86/boot/compressed/misc.h         |   2 +-
- 2 files changed, 135 insertions(+)
+ arch/x86/boot/compressed/sev-es.c |  4 ++++
+ arch/x86/kernel/sev-es-shared.c   | 23 +++++++++++++++++++++++
+ arch/x86/kernel/sev-es.c          |  4 ++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index aa91beb..05742f6 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -24,6 +24,7 @@
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index b1790f4..5f15e58 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -181,6 +181,10 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 		goto finish;
  
- /* These actually do the work of building the kernel identity maps. */
- #include <linux/pgtable.h>
-+#include <asm/cmpxchg.h>
- #include <asm/trap_pf.h>
- #include <asm/trapnr.h>
- #include <asm/init.h>
-@@ -165,6 +166,138 @@ void finalize_identity_maps(void)
- 	write_cr3(top_level_pgt);
+ 	switch (exit_code) {
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(boot_ghcb, &ctxt, exit_code);
++		break;
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(boot_ghcb, &ctxt);
+ 		break;
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 491b557..4be8af2 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -467,3 +467,26 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
+ 
+ 	return ES_OK;
  }
- 
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
++
++static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt,
++				      unsigned long exit_code)
 +{
-+	unsigned long page_flags;
-+	unsigned long address;
-+	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
++	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
++	enum es_result ret;
 +
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	if (!pte)
-+		return NULL;
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
++	if (ret != ES_OK)
++		return ret;
 +
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
++	if (!(ghcb_rax_is_valid(ghcb) && ghcb_rdx_is_valid(ghcb) &&
++	     (!rdtscp || ghcb_rcx_is_valid(ghcb))))
++		return ES_VMM_ERROR;
 +
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
-+	}
++	ctxt->regs->ax = ghcb->save.rax;
++	ctxt->regs->dx = ghcb->save.rdx;
++	if (rdtscp)
++		ctxt->regs->cx = ghcb->save.rcx;
 +
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
++	return ES_OK;
 +}
-+
-+static void clflush_page(unsigned long address)
-+{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
-+
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
-+
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
-+
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
-+}
-+
-+static int set_clr_page_flags(struct x86_mapping_info *info,
-+			      unsigned long address,
-+			      pteval_t set, pteval_t clr)
-+{
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist. Use assembly here so
-+	 * the access won't be optimized away.
-+	 */
-+	asm volatile("mov %[address], %%r9"
-+		     :: [address] "g" (*(unsigned long *)address)
-+		     : "r9", "memory");
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	if ((set | clr) & _PAGE_ENC)
-+		clflush_page(address);
-+
-+	/* Update PTE */
-+	pte = *ptep;
-+	pte = pte_set_flags(pte, set);
-+	pte = pte_clear_flags(pte, clr);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB after changing encryption attribute */
-+	write_cr3(top_level_pgt);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
-+}
-+
-+int set_page_encrypted(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index eaa8b45..01c0fb3 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
-+extern int set_page_encrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index aba27c3..4d468ec 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -866,6 +866,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
++		break;
+ 	case SVM_EXIT_CPUID:
+ 		result = vc_handle_cpuid(ghcb, ctxt);
+ 		break;
