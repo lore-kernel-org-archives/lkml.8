@@ -2,190 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7291CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137A7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D6420BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C617A21D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="tSbbd0LY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GEZ0H1yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgIJCWM (ORCPT
+        id S1730779AbgIJCWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53764 "EHLO
+        Wed, 9 Sep 2020 22:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730717AbgIJCMD (ORCPT
+        with ESMTP id S1730694AbgIJCMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 22:12:03 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062e.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16660C061795
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 16:17:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ei/kEyBq1efU6aSN/jGPOs5edxSrky408DmqCVss3UY7u0A7kk/jdFlglCQO2e8Y0ADIzi80FZEVDGrDeYZ0ywBOy+69lXlN7MDneBbWzAJJunKuyA9eNU24MSd3xjiOEp8i5ihzznKApm3JKWqZK7ZWWgYzofnf1KCD0D52WVG6HbXQZ6XSJUTHtL76JNY0D617Fk6y7/G8CG9Zm9mz9BC8wcHlsWcSc7yD8ZfIxVkc4JnLI1aXAV3RviV/hLahvLSCxZ4J9YqJdXZjNx0g6f9YN1SXw6mJuopJk0sMibKbbsFITh3eB0lEL2N9En39bvHCwZt5jiefTbv4cvb85g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LsGkSND//QMcm6QNMK9AopcnDe5fv9Dj0RZojN/pOUQ=;
- b=bKBhiAfCABXXdSk8wPTzN+s78kssWS4R9nCeT/uU6EjvEZicIHUADxpTyxzXzZ/Pj+onVzK5FHvq+jObf6NH1OMNwD+njwrWqz7Rmgm9NbYxHAWH4MQ1jeFb9Tb77U+1+53D5PJDjdIl278M0Rfr7pPxl7W1PHChig1OxNoS71eeLFk2HwVE6DWM1abgbYbQ+yJy0hHzbITpMAtWIZRM9ABpKQDc1Kn5NW1/1irV0tHmliDOgi8uBMozCUemv5Sw6Qefzhe2C7wD5PR8huytKcTF7TAmHnkyOdWi3r9q0HYLoius2ntTIzzabcCKOu5+OU/DyppSkHIfJYC1AP31Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFD2C061362
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:10 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so67225plt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LsGkSND//QMcm6QNMK9AopcnDe5fv9Dj0RZojN/pOUQ=;
- b=tSbbd0LYNHKpsDGps6SqbkO2B0Il00Os71DIixFLhLhiuhKDkDHiE6WYw7/eGHRV21VhwRF/FEGC4xqJVgGzqOKYokQJFtTOh7NElXy9ITibE/Akk1fiEcywP5E5a8nGyd/gJatRcNBe0Mlo6sWOkya6Yd7jO9wsSCzSzAxN6eY=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20)
- by DM6PR12MB2986.namprd12.prod.outlook.com (2603:10b6:5:39::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.18; Wed, 9 Sep
- 2020 22:54:35 +0000
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e]) by DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e%8]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 22:54:35 +0000
-From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        hersenxs.wu@amd.com
-Subject: [PATCH 1/3] drm/amd/display: Rework registers tracepoint
-Date:   Wed,  9 Sep 2020 18:53:50 -0400
-Message-Id: <20200909225352.4072030-2-Rodrigo.Siqueira@amd.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-References: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::22) To DM6PR12MB4124.namprd12.prod.outlook.com
- (2603:10b6:5:221::20)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wSus/y6lL8EmG6yL6JLfCPXtJnmL/oSSFawM27yJogM=;
+        b=GEZ0H1yH33wJmSTJONAngV1gVbg+2UBO93tZN3OI1kQsIR3ea6TYmsFIHv97HFfEH+
+         s66xIFsN5f+fU1qFmea2N0d1tYwknw6/nVFOT17HFKEBGBIvDpJMtAaY3HbHKFZCkk4T
+         +7OWTCqTIb17Cr6ecvTW4AT1MerUKcaH1Z16A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wSus/y6lL8EmG6yL6JLfCPXtJnmL/oSSFawM27yJogM=;
+        b=EBgYpxQaFE3K5qP/HtuN8JBjDnFcSH5IXTWTTlZ2SJS9G9gNC0oHMhL+kApagLX9K5
+         L0AExW5hZ2F3w3duTDwtvnrfsitZmrVLoR1rJ8+6ZL1gHeBQfkthMnW1XT9gE5fdMTq8
+         GELFTxjN6DYUq4k9IzJtKOXKgGO6bbjU4qGWvAeBCWqY7U8pTwwFgLe88LMbJHXAMqQs
+         cQXC9Pmi5eSy/4vJbVtu1egnjJbFqlhW9YNl2CLfyNfSUfkopRUpBFRYCOVQBZKSBF2p
+         IwL3gLYv0rhRIEGIaBLNWf6jsVcsw/pQcE+hLJhiEIMLZV9H2RakuTkctj47qLs1ro2y
+         YtWw==
+X-Gm-Message-State: AOAM532Q2MZ57GKrSDyUJChuovsjsbRstgV9Mw9ZNxkdesMp9nbLR54J
+        u7ltARRJIBGRwnIsP2EucVJNqg==
+X-Google-Smtp-Source: ABdhPJzhev1K2Ieq+ndV4g0JOIdTahf8qXpADPs+1HB4t8k9T1I4cYHOsH8u/kttTG7NxupkPXbsFQ==
+X-Received: by 2002:a17:90a:644b:: with SMTP id y11mr3066145pjm.13.1599698950272;
+        Wed, 09 Sep 2020 17:49:10 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 17:49:09 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: [PATCH v3 05/10] phy: qcom-qmp: Get dp_com I/O resource by index
+Date:   Wed,  9 Sep 2020 17:48:57 -0700
+Message-Id: <20200910004902.2252694-6-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
+References: <20200910004902.2252694-1-swboyd@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from atma2.hitronhub.home (2607:fea8:56e0:6d60::10ec) by YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 22:54:34 +0000
-X-Mailer: git-send-email 2.28.0
-X-Originating-IP: [2607:fea8:56e0:6d60::10ec]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 74fca6f5-655d-4d6b-cf00-08d85513529f
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2986:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB29863232C11AC798A012BB1E98260@DM6PR12MB2986.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sVvX2uDJN0MjymvzlVcDMoQLydpOu+/mTCp51QqKvXiq/XFzTJos30E2pqb63QOi3oKyM2hOMADraQYCoAuPGef/PWcc96dho4Z2ji4IvbbmOZ7DT1DDncd3MzKKECRQyyZyabG05S23QvGOWIxLLqJKnQh23g59uWxEvch1CkEoVmQVyxAhwPWQqNOorTZwTX7Z8tnCJ6VHPP82hSjuf8sdywH5q3AChqZT44ZBQolcijymHwjt7MJqigHTdMmGkGUCDnrFBze3veQReWgA5YFk5Fb++abRHkUxD3fhD4c6I4IrI1frMONbWkJWRlMhTQb13h2+bWSDaZ1cWjCwng==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4124.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39860400002)(2906002)(8936002)(6486002)(6512007)(5660300002)(16526019)(186003)(478600001)(83380400001)(4326008)(8676002)(52116002)(316002)(1076003)(66476007)(6506007)(6666004)(86362001)(2616005)(66556008)(54906003)(36756003)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: uCMS0QiZrmtwwYiUzHZylOadFnNajiTnNgfdznwwOuptXq9FY2l1P9lgeBS3/6D3jO5t5ljV+Quxr7N6Qtt9s/0jYME18BZyeo/AWQyEF5FyuqVKqdsvJE3LzhXtpmsUrM6ff9AgEhxjfRPuIIJ/c2vXsrhe62VWt6/5Yp/TpNXzrgduO3J6VColidDwNnwoEDQ2QFhZ98XQ20yfbRWGKBTMwvACfpIryX36ddNMtiK4nCrEqiZJK6z3/dKvA4HH+OLeJHqY0hxB2Sc2yri6l43d8tiLSOsWRalEJUKNWOWuHjekwU9wUKztr+MtZx2onUUTS3VSRVXhm6gcMAqlwhwplwquRtCt3YQ+ifa26+Bpt8syVEkO+x72ceOdCmARsqpL/uV36GohFBRAkb2bWJlGKJXRicuY0JuzEyG4LqLXWRWPDFgGB07rHOsnjSXdG9kBfyq2JqP8OX8oN2xFonw1irDysgRe/4UBi4ON95sS4YMGf8tjbkB+lcIsrNWbkwRq7xu0/nCAsDYGivIqCpHH3aYTZuFv9XLVHOBvukWMdkJicTr9nhrQ2QPh2kngSd4HaRsZ74XPACpnenRlhsbXn2XDUwUhSvdq+DR6tU9rga+iDgiIhodG1hD6h4nv/Kf2pf9Lh2CoBYYT9Dm2mRdY/LMP0nOfI6ck4M0Nt00Ub+sJ1+kptTKAXSrZGIYy
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74fca6f5-655d-4d6b-cf00-08d85513529f
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4124.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 22:54:35.3900
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O4ycvR4NZDNEYtGMVVREsRpgL1i1y26Dotw3yqCyidvk7q+fDGlXI+u0ZRBa0PHybf/GSdP4DWZeDPkyqwWeJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2986
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-amdgpu_dc_rreg and amdgpu_dc_wreg are very similar, for this reason,
-this commits abstract these two events by using DECLARE_EVENT_CLASS and
-create an instance of it for each one of these events.
+The dp_com resource is always at index 1 according to the dts files in
+the kernel. Get this resource by index so that we don't need to make
+future additions to the DT binding use 'reg-names'.
 
-Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: Chandan Uddaraju <chandanu@codeaurora.org>
+Cc: Vara Reddy <varar@codeaurora.org>
+Cc: Tanmay Shah <tanmay@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jonathan Marek <jonathan@marek.ca>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- .../amd/display/amdgpu_dm/amdgpu_dm_trace.h   | 55 ++++++++-----------
- 1 file changed, 24 insertions(+), 31 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-index d898981684d5..dd34e11b1079 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-@@ -31,40 +31,33 @@
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 40c051813c34..215abd179e74 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -3266,13 +3266,9 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
  
- #include <linux/tracepoint.h>
+ 	/* per PHY dp_com; if PHY has dp_com control block */
+ 	if (cfg->has_phy_dp_com_ctrl) {
+-		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						   "dp_com");
+-		base = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(base))
+-			return PTR_ERR(base);
+-
+-		qmp->dp_com = base;
++		qmp->dp_com = devm_platform_ioremap_resource(pdev, 1);
++		if (IS_ERR(qmp->dp_com))
++			return PTR_ERR(qmp->dp_com);
+ 	}
  
--TRACE_EVENT(amdgpu_dc_rreg,
--	TP_PROTO(unsigned long *read_count, uint32_t reg, uint32_t value),
--	TP_ARGS(read_count, reg, value),
--	TP_STRUCT__entry(
--			__field(uint32_t, reg)
--			__field(uint32_t, value)
--		),
--	TP_fast_assign(
--			__entry->reg = reg;
--			__entry->value = value;
--			*read_count = *read_count + 1;
--		),
--	TP_printk("reg=0x%08lx, value=0x%08lx",
--			(unsigned long)__entry->reg,
--			(unsigned long)__entry->value)
--);
-+DECLARE_EVENT_CLASS(amdgpu_dc_reg_template,
-+		    TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
-+		    TP_ARGS(count, reg, value),
- 
--TRACE_EVENT(amdgpu_dc_wreg,
--	TP_PROTO(unsigned long *write_count, uint32_t reg, uint32_t value),
--	TP_ARGS(write_count, reg, value),
--	TP_STRUCT__entry(
--			__field(uint32_t, reg)
--			__field(uint32_t, value)
--		),
--	TP_fast_assign(
--			__entry->reg = reg;
--			__entry->value = value;
--			*write_count = *write_count + 1;
--		),
--	TP_printk("reg=0x%08lx, value=0x%08lx",
--			(unsigned long)__entry->reg,
--			(unsigned long)__entry->value)
-+		    TP_STRUCT__entry(
-+				     __field(uint32_t, reg)
-+				     __field(uint32_t, value)
-+		    ),
-+
-+		    TP_fast_assign(
-+				   __entry->reg = reg;
-+				   __entry->value = value;
-+				   *count = *count + 1;
-+		    ),
-+
-+		    TP_printk("reg=0x%08lx, value=0x%08lx",
-+			      (unsigned long)__entry->reg,
-+			      (unsigned long)__entry->value)
- );
- 
-+DEFINE_EVENT(amdgpu_dc_reg_template, amdgpu_dc_rreg,
-+	     TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
-+	     TP_ARGS(count, reg, value));
-+
-+DEFINE_EVENT(amdgpu_dc_reg_template, amdgpu_dc_wreg,
-+	     TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
-+	     TP_ARGS(count, reg, value));
- 
- TRACE_EVENT(amdgpu_dc_performance,
- 	TP_PROTO(unsigned long read_count, unsigned long write_count,
+ 	mutex_init(&qmp->phy_mutex);
 -- 
-2.28.0
+Sent by a computer, using git, on the internet
 
