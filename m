@@ -2,79 +2,91 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B1BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8B420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:19:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cIB5Z/m3"
+	by mail.kernel.org (Postfix) with ESMTP id EC5A62145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgIJLSN (ORCPT
+        id S1730397AbgIJLUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730295AbgIJLNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:13:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5738C061757;
-        Thu, 10 Sep 2020 04:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=s+ol+PXubNrmJOSYnY96WBz+SWC8FNGcvNY7shjniI8=; b=cIB5Z/m36eTnnu3QrGnKe3a0PA
-        WRTWVFl1aVcQY+DUURUIB7nMKIML+LXd0yZVK+1A9h4c56740wxJ1uF3EamahmblovoT/8gOBlbUY
-        skVQoaV5sjFuWMbzfU7FyXUBNp1XzUGOFXr93zptKZ/XQ2mJcz/17PS2WPVOlJVzpyjz7RgO5T2Vt
-        0WjUDtRC+OfNBIXqiGBi8qlhHgSHyFb/VCNjSIjtvP3qJH0T0+GVuhi7ScW3j9XBuUaMADhEj4ntk
-        oymZAI65/UXqu5Gzjco69deKaKmE+jqqkHdOFJhvT70jvLnP1R13/gnISnUYrqaikl/7DvbH+eRTr
-        T6JV4zCQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGKW2-00038W-5P; Thu, 10 Sep 2020 11:13:22 +0000
-Date:   Thu, 10 Sep 2020 12:13:22 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/14] XArray: docs: add missing kernel-doc parameters
- for xas_split_alloc()
-Message-ID: <20200910111322.GQ6583@casper.infradead.org>
-References: <cover.1599732764.git.mchehab+huawei@kernel.org>
- <17aed0aeb9dad9ad3a1ca97da11bec16a6283f3c.1599732764.git.mchehab+huawei@kernel.org>
+        Thu, 10 Sep 2020 07:20:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:33556 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729741AbgIJLPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:15:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4F5731B;
+        Thu, 10 Sep 2020 04:15:52 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B029E3F68F;
+        Thu, 10 Sep 2020 04:15:51 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:15:49 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     tglx@linutronix.de, peterz@infradead.org, cai@lca.pw,
+        mingo@kernel.org, ethp@qq.com, tyhicks@canonical.com,
+        arnd@arndb.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: Use scnprintf() in show_smt_*() instead of
+ snprintf()
+Message-ID: <20200910111547.wkayyfmcf3crvcmh@e107158-lin.cambridge.arm.com>
+References: <20200901234930.359126-1-skhan@linuxfoundation.org>
+ <20200901234930.359126-2-skhan@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <17aed0aeb9dad9ad3a1ca97da11bec16a6283f3c.1599732764.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200901234930.359126-2-skhan@linuxfoundation.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:23:56PM +0200, Mauro Carvalho Chehab wrote:
->  /**
-> - * Allocate memory for splitting an entry of @order size into the order
-> - * stored in the @xas.
-> + * xas_split_alloc() - Allocate memory for splitting an entry of
-> + *		       @order size into the order stored in the @xas.
-> + *
-> + * @xas: is the 'xarray operation state'.  It may be either a pointer to
-> + * an xa_state, or an xa_state stored on the stack.  This is an unfortunate
-> + * ambiguity.
-> + * @entry: refers to something stored in a slot in the xarray
-> + * @order: size of each entry
-> + * @gfp: GFP allocation flags
->   */
+On 09/01/20 17:49, Shuah Khan wrote:
+> Since snprintf() returns would-be-output size instead of the actual
+> output size, replace it with scnprintf(), so the show_smt_control(),
+> and show_smt_active() routines return the actual size.
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 
-No.  I'll do this properly.  Sorry for forgetting to document the arguments.
+Looks good to me.
 
->  void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
->  		gfp_t gfp)
+Cheers
+
+--
+Qais Yousef
+
+> ---
+>  kernel/cpu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 6ff2578ecf17..29a5ceb93cda 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -2334,7 +2334,7 @@ show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
+>  {
+>  	const char *state = smt_states[cpu_smt_control];
+>  
+> -	return snprintf(buf, PAGE_SIZE - 2, "%s\n", state);
+> +	return scnprintf(buf, PAGE_SIZE - 2, "%s\n", state);
+>  }
+>  
+>  static ssize_t
+> @@ -2348,7 +2348,7 @@ static DEVICE_ATTR(control, 0644, show_smt_control, store_smt_control);
+>  static ssize_t
+>  show_smt_active(struct device *dev, struct device_attribute *attr, char *buf)
+>  {
+> -	return snprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
+> +	return scnprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
+>  }
+>  static DEVICE_ATTR(active, 0444, show_smt_active, NULL);
+>  
 > -- 
-> 2.26.2
+> 2.25.1
 > 
