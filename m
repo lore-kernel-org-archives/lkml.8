@@ -2,174 +2,94 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ED2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA95C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46427207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81EF207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599714424;
+	bh=Lbn9xs8qkCiA5rfVxd87HIU11Jf2P/zukvdmNIBKwyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jJvDMQ9ig1TQIMONdROZY0g4D5ueuJI8Dyop+JzomjQf7k/qh5t7rb62UFt1Z/52f
+	 wNo5wtGNl8cVKRyJvtMmEYGXoL79ah1+R2dE+i4Dqe25yXNpnco6F3w1I9R28+Y2Cp
+	 MLIyLTyBB6nZTS9vvtn5UuFLFvF6r9WW8RDVyAVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgIJFER (ORCPT
+        id S1726693AbgIJFHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 01:04:17 -0400
-Received: from mga11.intel.com ([192.55.52.93]:13864 "EHLO mga11.intel.com"
+        Thu, 10 Sep 2020 01:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgIJFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 01:04:14 -0400
-IronPort-SDR: 9Mn8EGTRJkxZLhPruU5sv0or40z3kvi1XrFo3qQ0fMbjfJKVASkRPbYc9irV509+v5lNT9hFyI
- nB9pwt1A7EzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155929597"
-X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
-   d="scan'208";a="155929597"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 22:04:13 -0700
-IronPort-SDR: giKSZ97bAcEPsKSl2Gh6CC9pNy5654GgHPAQPoMyGewdnl7NN80U+HoFoXC9OmHd+4ANtUAQQk
- doEoB5TcNmbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
-   d="scan'208";a="344126832"
-Received: from lkp-server01.sh.intel.com (HELO 12ff3cf3f2e9) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 09 Sep 2020 22:04:11 -0700
-Received: from kbuild by 12ff3cf3f2e9 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kGEkl-0000jS-4J; Thu, 10 Sep 2020 05:04:11 +0000
-Date:   Thu, 10 Sep 2020 13:03:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:WIP.x86/seves] BUILD SUCCESS
- 1ac0dc494a9796d6f94ff392f16e0c9a8cea7021
-Message-ID: <5f59b3a9.XsYhjv28rfjcwzlj%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725855AbgIJFHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 01:07:02 -0400
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4780207EA;
+        Thu, 10 Sep 2020 05:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599714421;
+        bh=Lbn9xs8qkCiA5rfVxd87HIU11Jf2P/zukvdmNIBKwyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o1BMPBgqOfPecIA0rAE70qWdPtpP8hT+87oOV2DoyELHE4VoyuGG5Vo6u54f5uUfa
+         EX1Rk+GohPhVUaTxSJZoreGFkuRW2w9da2ZKQggM6YptawuzWTjNjYCr8ByBTz9DHf
+         FQyaSUL31uH7WE9aZ1wQ6HmaKBEO3pKfyjYUJUlg=
+Date:   Wed, 9 Sep 2020 22:06:59 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Anmol Karn <anmol.karan123@gmail.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: Re: [PATCH] net: bluetooth: Fix null pointer dereference in
+ hci_event_packet()
+Message-ID: <20200910050659.GD828@sol.localdomain>
+References: <20200910043424.19894-1-anmol.karan123@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200910043424.19894-1-anmol.karan123@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/seves
-branch HEAD: 1ac0dc494a9796d6f94ff392f16e0c9a8cea7021  x86/sev-es: Check required CPU features for SEV-ES
+On Thu, Sep 10, 2020 at 10:04:24AM +0530, Anmol Karn wrote:
+> Prevent hci_phy_link_complete_evt() from dereferencing 'hcon->amp_mgr'
+> as NULL. Fix it by adding pointer check for it.
+> 
+> Reported-and-tested-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
+> Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> ---
+>  net/bluetooth/hci_event.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 4b7fc430793c..871e16804433 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4936,6 +4936,11 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+>  		return;
+>  	}
+>  
+> +	if (IS_ERR_OR_NULL(hcon->amp_mgr)) {
+> +		hci_dev_unlock(hdev);
+> +		return;
+> +	}
+> +
 
-elapsed time: 720m
+In patches that fix a NULL pointer dereference, please include a brief
+explanation of why the pointer can be NULL, including what it means
+semantically; and why the proposed change is the best fix for the problem.
 
-configs tested: 100
-configs skipped: 7
+Also, why IS_ERR_OR_NULL()?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-h8300                       h8s-sim_defconfig
-mips                      fuloong2e_defconfig
-sh                         apsh4a3a_defconfig
-arm                      footbridge_defconfig
-sh                         ecovec24_defconfig
-powerpc                     powernv_defconfig
-powerpc                      mgcoge_defconfig
-arm                        neponset_defconfig
-m68k                        stmark2_defconfig
-arm                         lpc18xx_defconfig
-mips                           jazz_defconfig
-m68k                       m5249evb_defconfig
-parisc                generic-32bit_defconfig
-arm                         assabet_defconfig
-arm                            dove_defconfig
-arm                         cm_x300_defconfig
-sh                ecovec24-romimage_defconfig
-csky                                defconfig
-i386                                defconfig
-sh                          polaris_defconfig
-m68k                        mvme16x_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-mips                  maltasmvp_eva_defconfig
-alpha                               defconfig
-sh                              ul2_defconfig
-powerpc                        cell_defconfig
-m68k                          multi_defconfig
-arm                         nhk8815_defconfig
-sh                           se7206_defconfig
-xtensa                    xip_kc705_defconfig
-mips                          rb532_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200909
-x86_64               randconfig-a006-20200909
-x86_64               randconfig-a003-20200909
-x86_64               randconfig-a001-20200909
-x86_64               randconfig-a005-20200909
-x86_64               randconfig-a002-20200909
-i386                 randconfig-a004-20200909
-i386                 randconfig-a005-20200909
-i386                 randconfig-a006-20200909
-i386                 randconfig-a002-20200909
-i386                 randconfig-a001-20200909
-i386                 randconfig-a003-20200909
-i386                 randconfig-a016-20200909
-i386                 randconfig-a015-20200909
-i386                 randconfig-a011-20200909
-i386                 randconfig-a013-20200909
-i386                 randconfig-a014-20200909
-i386                 randconfig-a012-20200909
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a013-20200909
-x86_64               randconfig-a016-20200909
-x86_64               randconfig-a011-20200909
-x86_64               randconfig-a012-20200909
-x86_64               randconfig-a015-20200909
-x86_64               randconfig-a014-20200909
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+- Eric
