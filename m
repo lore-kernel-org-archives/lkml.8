@@ -2,155 +2,112 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3179EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEC4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E94BB20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E94214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K31IH21T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgIJSfm (ORCPT
+        id S1725807AbgIJSgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:35:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2108 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbgIJSdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:33:47 -0400
-IronPort-SDR: wSYNeRRvAS+P7TZvhEhi1sEKZvUy+NQrpPGTzkFoHCspugprrZyYf8Lg1qWU7sX3uGgEO9I6L0
- oY3l2gCP+Uig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="138128098"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="138128098"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:33:43 -0700
-IronPort-SDR: 1a/KSLpHMr/+R7JtsXWE2hXmug66deTVdvrtfeesZwCdJX/YgF8I0vNKPFK65vrZ2aRx1LX4FP
- uG4HpMCpUYFQ==
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="334266515"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.209.150.7]) ([10.209.150.7])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:33:42 -0700
-Subject: Re: [PATCH v3 06/17] virt: acrn: Introduce VM management interfaces
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shuo A Liu <shuo.a.liu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>, Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20200909090836.46762-1-shuo.a.liu@intel.com>
- <20200909090836.46762-7-shuo.a.liu@intel.com>
- <20200909094516.GB607744@kroah.com>
- <20200910061900.GI13723@shuo-intel.sh.intel.com>
- <20200910162810.GB1265411@kroah.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <df5adcb4-152b-f7fc-fae8-8c93eb2b818b@intel.com>
-Date:   Thu, 10 Sep 2020 11:33:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 14:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgIJSeC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:34:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7394C061798;
+        Thu, 10 Sep 2020 11:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=O3f4pJZULtJ0Hg2fNHWuRs5XcF+sc7d6/Hzv1fj3FPw=; b=K31IH21Tut9dcJNTkS09h6hBMc
+        zzqUmjTdSEGz7kbkojcnDkmNauqqxB7FbXhHGDpsxcJhPWRcqSYX0le9QfA9DkUTleaOsDu76FXdT
+        3AdUKzs5yHbqQq3g1sP4PZsgZQkYfiNcQgmItXFGklo37jxy/0YO6B1YYw9zFBHlrFKptdYs3itjz
+        LbBbGz1kjShY7XpdkW2tr/ARbYgUzKLJbGFBcZRovkONmt0heqXfLfc1Q/7MqGrFAeh1pfKxrHrJv
+        VNm5Xs5VZPTA+FKeangibdYPtMCLGkGhe1oY8JSdJ8LyauGiq0l3DmjoxI8ToSbCB1zDsYU632iZa
+        dvs7zhXw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGRNn-0005FX-SV; Thu, 10 Sep 2020 18:33:19 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] Return head pages from find_*_entry
+Date:   Thu, 10 Sep 2020 19:33:10 +0100
+Message-Id: <20200910183318.20139-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-In-Reply-To: <20200910162810.GB1265411@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuo and Greg,
+This patch series started out as part of the THP patch set, but it has
+some nice effects along the way and it seems worth splitting it out and
+submitting separately.
 
-On 9/10/2020 9:28 AM, Greg Kroah-Hartman wrote:
-> On Thu, Sep 10, 2020 at 02:19:00PM +0800, Shuo A Liu wrote:
->> On Wed  9.Sep'20 at 11:45:16 +0200, Greg Kroah-Hartman wrote:
->>> On Wed, Sep 09, 2020 at 05:08:25PM +0800, shuo.a.liu@intel.com wrote:
+Currently find_get_entry() and find_lock_entry() return the page
+corresponding to the requested index, but the first thing most callers do
+is find the head page, which we just threw away.  As part of auditing
+all the callers, I found some misuses of the APIs and some plain
+inefficiencies that I've fixed.
 
-...
+The diffstat is unflattering, but I added more kernel-doc and a new wrapper.
 
->>>>  /**
->>>>   * struct acrn_vm - Properties of ACRN User VM.
->>>> + * @dev:	The struct device this VM belongs to
->>>> + * @list:	Entry within global list of all VMs
->>>>   * @vmid:	User VM ID
->>>> + * @vcpu_num:	Number of virtual CPUs in the VM
->>>> + * @flags:	Flags (ACRN_VM_FLAG_*) of the VM. This is VM flag management
->>>> + *		in HSM which is different from the &acrn_vm_creation.vm_flag.
->>>>   */
->>>>  struct acrn_vm {
->>>> -	u16	vmid;
->>>> +	struct device		*dev;
->>>> +	struct list_head	list;
->>>> +	u16			vmid;
->>>> +	int			vcpu_num;
->>>> +	unsigned long		flags;
->>>>  };
->>>>
->>>> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
->>>> +			       struct acrn_vm_creation *vm_param);
->>>> +int acrn_vm_destroy(struct acrn_vm *vm);
->>>> +
->>>>  #endif /* __ACRN_HSM_DRV_H */
->>>> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
->>>> index 28a3052ffa55..bc85a3c14f87 100644
->>>> --- a/drivers/virt/acrn/hsm.c
->>>> +++ b/drivers/virt/acrn/hsm.c
->>>> @@ -19,6 +19,8 @@
->>>>
->>>>  #include "acrn_drv.h"
->>>>
->>>> +static struct miscdevice acrn_dev;
->>>> +
->>>>  /*
->>>>   * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
->>>>   * represent a VM instance and continues to be associated with the opened file
->>>> @@ -34,14 +36,77 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
->>>>  		return -ENOMEM;
->>>>
->>>>  	vm->vmid = ACRN_INVALID_VMID;
->>>> +	vm->dev = get_device(acrn_dev.this_device);
->>>
->>> You are grabbing a reference on a static structure?
->>
->> acrn_dev is static, but acrn_dev.this_device is not.
-> 
-> But you don't control that device, the misc device core does.
-> 
->>>
->>> Ugh, who reviewed this code before it was sent out???
->>
->> This part was just newly added according to your suggestion.. Please
->> refer to
->> https://lore.kernel.org/lkml/1946bf48-fda7-20e0-246d-93414a1a67f5@intel.com/
-> 
-> What you were doing there was wrong, and what you are doing here is just
-> odd.
-> 
-> Step back please, and describe exactly what you are trying to do.  And
-> then explain how grabbing a reference to the device reference count for
-> the misc device is going to help solve that issue.
-> 
+v2:
+ - Rework how shmem_getpage_gfp() handles getting a head page back from
+   find_lock_entry()
+ - Renamed find_get_swap_page() to find_get_incore_page()
+ - Make sure find_get_incore_page() doesn't return a head page
+ - Fix the missing include of linux/shmem_fs.h
+ - Move find_get_entry and find_lock_entry prototypes to mm/internal.h
+ - Rename thp_valid_index() to thp_contains()
+ - Fix thp_contains() for hugetlbfs and swapcache
+ - Add find_lock_head() wrapper around pagecache_get_page()
 
-From what I understand this current path was entered after Greg's
-original suggestion from
-https://lore.kernel.org/lkml/20200828102704.GB1470435@kroah.com
-to replace the pr_xxx() calls with the more informative dev_xxx() ones.
+Matthew Wilcox (Oracle) (8):
+  mm: Factor find_get_incore_page out of mincore_page
+  mm: Use find_get_incore_page in memcontrol
+  mm: Optimise madvise WILLNEED
+  proc: Optimise smaps for shmem entries
+  i915: Use find_lock_page instead of find_lock_entry
+  mm: Convert find_get_entry to return the head page
+  mm/shmem: Return head page from find_lock_entry
+  mm: Add find_lock_head
 
-Perhaps all that is needed to follow the original suggestion is to
-replace the pr_xxx() calls with dev_xxx(acrn_dev.this_device, ...) ?
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  4 +--
+ fs/proc/task_mmu.c                        |  8 +----
+ include/linux/pagemap.h                   | 43 +++++++++++++++++-----
+ include/linux/swap.h                      |  7 ++++
+ mm/filemap.c                              | 44 +++++++++++------------
+ mm/internal.h                             |  3 ++
+ mm/madvise.c                              | 21 ++++++-----
+ mm/memcontrol.c                           | 24 ++-----------
+ mm/mincore.c                              | 28 ++-------------
+ mm/shmem.c                                | 20 +++++------
+ mm/swap_state.c                           | 32 +++++++++++++++++
+ 11 files changed, 127 insertions(+), 107 deletions(-)
 
-(An example of this is drivers/input/serio/userio.c and some others)
-
-The device (acrn_dev.this_device) can be trusted to exist for the
-lifetime of the driver since it is removed on module unload where the
-misc device is unregistered.
-
-Reinette
-
+-- 
+2.28.0
 
