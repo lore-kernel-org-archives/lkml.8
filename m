@@ -2,125 +2,162 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F32C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4EFC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2624020C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iE30cmYj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9g9fhrZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgIJJay (ORCPT
+        id S1730592AbgIJJbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:30:54 -0400
-Received: from mail-il1-f205.google.com ([209.85.166.205]:39532 "EHLO
-        mail-il1-f205.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730474AbgIJJ3S (ORCPT
+        Thu, 10 Sep 2020 05:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730518AbgIJJYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:29:18 -0400
-Received: by mail-il1-f205.google.com with SMTP id u8so571672ilc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:29:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wbQ5hEj6rADmWVMRkDe2eqg2V1dhGor68kn9Ygqa8iA=;
-        b=KxsUc23Ue3rNOdzKJzuLrWJV8avBFfuiRtqZJw06v+VJ3e85DC3/m6RPYeF7LwGZXe
-         W2cC2V22M0zGSydGi9dv5O8ulPFYqQwuL8+zLTErZEX6wp1c7tL0YJ5yiDNvdR1sGbN8
-         /K11nX/MlXJc+prdy1tI7HC9OeketuT2tKyAQq2tXomVXnBFdlmwwi18mJSv9XEJFFjn
-         HXVQel552v4uUxakvI0EVtUcP7CUNSw7VJ28VrfV9Ft46kdYezlY3WdUnXBizHJv2+Ud
-         CSzA4tWc+6ELO5LsYDr6wMrl26eBfWrtlQk+ZVgITpa4GPf9kTx+Whw2BN7kUnajvSKW
-         qX+g==
-X-Gm-Message-State: AOAM532EPQxPwBvtICaVQ1TK5qyP+T19Y0E/xSqua8+6hHhnrrEb3ugI
-        5WlbSqFhT1/WsT6npyBqRpZaiGRyZPOavJM+kreF/hBWNp7D
-X-Google-Smtp-Source: ABdhPJysA8PxfONSscctagFdb07Pwycnr+IyT1EJoVzpbEd5spAORPGz6sq4E1/U597TkUzi0Uji6askr1L0y35jAufu+PZB7B5v
+        Thu, 10 Sep 2020 05:24:35 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC975C0617BA;
+        Thu, 10 Sep 2020 02:22:23 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 09:22:21 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599729742;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9g7bm+cdXI5Vmo4l5RBC13hzSXc1ind1ejHSFFKubVs=;
+        b=iE30cmYjRlF41I/bJeTehbqK77gd8b+zfoMZac4wQRItGZ1VmkTU1ouzy6dWEzV/0S73FK
+        KTFxSnhaMYkYHKH6XNLFcFbKil6RbYKVK5ARlrX1866tAKZ8MlV0BJDytmCXNm8Jpg/n/b
+        D6BzRUs5959lcFd+elM1EYfYZ7dEK7OBNWjtRHH5A1wYUlBKDvsMs5b1AvgyWxwT8tn4lJ
+        akYwBrLv+Cvb11eOQOYvcLSRhjKOQjBUK/v1hbpJ0RwArdnrt0ny+OnM6J4lghyBYpjARQ
+        lJtVB/LSKH9ykNvE62BeizqV7Y4nQkM01SWLD0tQ5CHRajIFFDdMkoFAv5YvAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599729742;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9g7bm+cdXI5Vmo4l5RBC13hzSXc1ind1ejHSFFKubVs=;
+        b=9g9fhrZpj3bb7r44tRdMAhYpznGT6ve1jlV6NtvcOX7/H0Pgd5u16ixVclgfDMZOsdzfOI
+        Sm1Es6zdeAl1KhAw==
+From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/seves] x86/sev-es: Add CPUID handling to #VC handler
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-28-joro@8bytes.org>
+References: <20200907131613.12703-28-joro@8bytes.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:d2:: with SMTP id r18mr6888793ilq.303.1599730157627;
- Thu, 10 Sep 2020 02:29:17 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 02:29:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c82fe505aef233c6@google.com>
-Subject: WARNING in bpf_raw_tp_link_fill_link_info
-From:   syzbot <syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159972974133.20229.5160639798798149324.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The following commit has been merged into the x86/seves branch of tip:
 
-syzbot found the following issue on:
+Commit-ID:     a7de15d489d956217b47671705ac2218ca50eaae
+Gitweb:        https://git.kernel.org/tip/a7de15d489d956217b47671705ac2218ca50eaae
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Mon, 07 Sep 2020 15:15:28 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 07 Sep 2020 20:15:51 +02:00
 
-HEAD commit:    7fb5eefd selftests/bpf: Fix test_sysctl_loop{1, 2} failure..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1424fdb3900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
-dashboard link: https://syzkaller.appspot.com/bug?extid=976d5ecfab0c7eb43ac3
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a1f411900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10929c11900000
+x86/sev-es: Add CPUID handling to #VC handler
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com
+Handle #VC exceptions caused by CPUID instructions. These happen in
+early boot code when the KASLR code checks for RDTSC.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 check_copy_size include/linux/thread_info.h:150 [inline]
-WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 copy_to_user include/linux/uaccess.h:167 [inline]
-WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6854 Comm: syz-executor574 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:check_copy_size include/linux/thread_info.h:150 [inline]
-RIP: 0010:copy_to_user include/linux/uaccess.h:167 [inline]
-RIP: 0010:bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
-Code: 41 bc ea ff ff ff e9 35 ff ff ff 4c 89 ff e8 41 66 33 00 e9 d0 fd ff ff 4c 89 ff e8 a4 66 33 00 e9 06 ff ff ff e8 ca ed f2 ff <0f> 0b eb 94 48 89 ef e8 2e 66 33 00 e9 65 fd ff ff e8 24 66 33 00
-RSP: 0018:ffffc900051c7bd0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffc900051c7c60 RCX: ffffffff818179d6
-RDX: ffff88808b490000 RSI: ffffffff81817a96 RDI: 0000000000000006
-RBP: 0000000000000019 R08: 0000000000000000 R09: ffffc900051c7c7f
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000019
-R13: 0000000000001265 R14: ffffffff8986ecc0 R15: ffffc900051c7c78
- bpf_link_get_info_by_fd kernel/bpf/syscall.c:3626 [inline]
- bpf_obj_get_info_by_fd+0x43a/0xc40 kernel/bpf/syscall.c:3664
- __do_sys_bpf+0x1906/0x4b30 kernel/bpf/syscall.c:4237
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4405f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff47155808 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004405f9
-RDX: 0000000000000010 RSI: 00000000200000c0 RDI: 000000000000000f
-RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401e00
-R13: 0000000000401e90 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling framework ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200907131613.12703-28-joro@8bytes.org
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/x86/boot/compressed/sev-es.c |  4 +++-
+ arch/x86/kernel/sev-es-shared.c   | 35 ++++++++++++++++++++++++++++++-
+ 2 files changed, 39 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 61504eb..b1790f4 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -16,6 +16,7 @@
+ #include <asm/trapnr.h>
+ #include <asm/trap_pf.h>
+ #include <asm/msr-index.h>
++#include <asm/fpu/xcr.h>
+ #include <asm/ptrace.h>
+ #include <asm/svm.h>
+ 
+@@ -183,6 +184,9 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(boot_ghcb, &ctxt);
+ 		break;
++	case SVM_EXIT_CPUID:
++		result = vc_handle_cpuid(boot_ghcb, &ctxt);
++		break;
+ 	default:
+ 		result = ES_UNSUPPORTED;
+ 		break;
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index bae7cf2..a6b4191 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -432,3 +432,38 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 
+ 	return ret;
+ }
++
++static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt)
++{
++	struct pt_regs *regs = ctxt->regs;
++	u32 cr4 = native_read_cr4();
++	enum es_result ret;
++
++	ghcb_set_rax(ghcb, regs->ax);
++	ghcb_set_rcx(ghcb, regs->cx);
++
++	if (cr4 & X86_CR4_OSXSAVE)
++		/* Safe to read xcr0 */
++		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
++	else
++		/* xgetbv will cause #GP - use reset value for xcr0 */
++		ghcb_set_xcr0(ghcb, 1);
++
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (!(ghcb_rax_is_valid(ghcb) &&
++	      ghcb_rbx_is_valid(ghcb) &&
++	      ghcb_rcx_is_valid(ghcb) &&
++	      ghcb_rdx_is_valid(ghcb)))
++		return ES_VMM_ERROR;
++
++	regs->ax = ghcb->save.rax;
++	regs->bx = ghcb->save.rbx;
++	regs->cx = ghcb->save.rcx;
++	regs->dx = ghcb->save.rdx;
++
++	return ES_OK;
++}
