@@ -2,115 +2,298 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFB7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4FCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C29206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599759485;
-	bh=YR/Eo3zVFW4pHpjkeXYfgb+zhvxCpiHjuIi2DUOzvmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YEhHQjQjzCoxlpE+ufDcSR2tDz11KCVZ/oe1REhvUQKIJlYTBvnFTHvKfGH5cekUl
-	 r/tvY3i+4SB2GGBmMcBVo8i2shsMp1OZ/aR0wtPpx6rAfPGmmV2w3FufZqhlwSXAND
-	 lqXYQJ1FEvfKCoGA+HwXfjlKEW0oE/wxGKWHTpj4=
+	by mail.kernel.org (Postfix) with ESMTP id A50B421582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="urHuQFYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgIJRh7 (ORCPT
+        id S1726657AbgIJRiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:37:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37697 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgIJRXx (ORCPT
+        Thu, 10 Sep 2020 13:38:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60122 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgIJReU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:23:53 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a3so6674994oib.4;
-        Thu, 10 Sep 2020 10:23:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8YXEBZOH+T+RhFJFPDEUgKSmlEXTOglbsDJ60nDEBkg=;
-        b=N6Ik9K18BJYB0UftQP3kUIqovwNFM2VOSHR+e4/43SoGZMC1kIUQK6zw5i107Byy3Q
-         W7j//szKJhgCmRbEeKMQV/eJgeskk4EtSWyI6fMRbmKs866nR1+OBbVNpN+YVRnhnyKl
-         92i6Jud2DeIG2dWflPOZnnd9+bViNN+bxbFwwfvaNTRu4Lrrhjl9SsH2x6ouqH0AhMUS
-         QP9uSagnC3Zt0zITk/N6R23BbbmwHOr9GsgaVYlhBwOQSbpBbu5tiY4PXp4tYHGiQdtk
-         dmSe2BYH2vIzlIz7CQ+/h76lwBFBjDEQs0kSmuWWINMAQgDniHurpd9LRQONOv0huRa6
-         dO5Q==
-X-Gm-Message-State: AOAM533eXV3OwrLCObrnK6ivP2wSMGqcWvCxB3ol9m72WTaoCOip8fMR
-        HESAyAWFS5b8GOQ3gcfSKSCazXE6cMm1kgAeFgo=
-X-Google-Smtp-Source: ABdhPJwUdXfy0DyKAuD41O86HmDXJql8iH0o6k9jHIrjzcHWv88oKjuYV+hGoGWBTz7Q1umF54ChchENEJMYigi+X8g=
-X-Received: by 2002:aca:df84:: with SMTP id w126mr681428oig.103.1599758622685;
- Thu, 10 Sep 2020 10:23:42 -0700 (PDT)
+        Thu, 10 Sep 2020 13:34:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AHYAOU012934;
+        Thu, 10 Sep 2020 12:34:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599759250;
+        bh=w/1pWFuQbg23uoRnZS+pLtiGKqGvx6oYjiN6Hcvqabo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=urHuQFYd2CTFPgRLbOo+EWXVbJR57kzBvFJ3f7s3mvG4mKsgoeg2rH9Im5Se/t2UT
+         LGKy5aCD1MDMwUQ6Dlv1RqKrvjsGWOKbNWrNG19F8TtYGeRURxh4SNCS+gNZ4xSRTH
+         gdXNPi6IqFZ3aN01FsrnJDG4wlc7WRflzCS7vH+w=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AHY9r3059716
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 12:34:09 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 12:34:09 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 12:34:09 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AHY9Po113734;
+        Thu, 10 Sep 2020 12:34:09 -0500
+Subject: Re: [PATCH net-next v3 2/3] net: phy: dp83869: support Wake on LAN
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200903114259.14013-1-dmurphy@ti.com>
+ <20200903114259.14013-3-dmurphy@ti.com>
+ <20200905113428.5bd7dc95@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <5051f1e2-4f8e-a021-df6c-d4066938422f@ti.com>
+Date:   Thu, 10 Sep 2020 12:34:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <e40a76dbc4d17d0bc80daf95e259fcd6cc6d48e2.1599733531.git.amitk@kernel.org>
-In-Reply-To: <e40a76dbc4d17d0bc80daf95e259fcd6cc6d48e2.1599733531.git.amitk@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 10 Sep 2020 19:23:31 +0200
-Message-ID: <CAJZ5v0h=1Jwxz40Ojp-tWh4BDDdphZKCAh0jZy2wCSGdSdZ+tA@mail.gmail.com>
-Subject: Re: [PATCH] powercap: make documentation reflect code
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200905113428.5bd7dc95@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:28 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Fix up documentation of the struct members to reflect reality. Also
-> fixup a stray whitespace.
->
-> Signed-off-by: Amit Kucheria <amitk@kernel.org>
-> ---
->  include/linux/powercap.h | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/powercap.h b/include/linux/powercap.h
-> index 4537f57f9e42f..3d557bbcd2c71 100644
-> --- a/include/linux/powercap.h
-> +++ b/include/linux/powercap.h
-> @@ -44,19 +44,18 @@ struct powercap_control_type_ops {
->  };
->
->  /**
-> - * struct powercap_control_type- Defines a powercap control_type
-> - * @name:              name of control_type
-> + * struct powercap_control_type - Defines a powercap control_type
->   * @dev:               device for this control_type
->   * @idr:               idr to have unique id for its child
-> - * @root_node:         Root holding power zones for this control_type
-> + * @nr_zones:          counter for number of zones of this type
->   * @ops:               Pointer to callback struct
-> - * @node_lock:         mutex for control type
-> + * @lock:              mutex for control type
->   * @allocated:         This is possible that client owns the memory
->   *                     used by this structure. In this case
->   *                     this flag is set to false by framework to
->   *                     prevent deallocation during release process.
->   *                     Otherwise this flag is set to true.
-> - * @ctrl_inst:         link to the control_type list
-> + * @node:              linked-list node
->   *
->   * Defines powercap control_type. This acts as a container for power
->   * zones, which use same method to control power. E.g. RAPL, RAPL-PCI etc.
-> @@ -129,7 +128,7 @@ struct powercap_zone_ops {
->   *                     this flag is set to false by framework to
->   *                     prevent deallocation during release process.
->   *                     Otherwise this flag is set to true.
-> - * @constraint_ptr:    List of constraints for this zone.
-> + * @constraints:       List of constraints for this zone.
->   *
->   * This defines a power zone instance. The fields of this structure are
->   * private, and should not be used by client drivers.
-> --
+Jakub
 
-Applied with some changelog edits as 5.9-rc material, thanks!
+Thanks for the review
+
+On 9/5/20 1:34 PM, Jakub Kicinski wrote:
+> On Thu, 3 Sep 2020 06:42:58 -0500 Dan Murphy wrote:
+>> This adds WoL support on TI DP83869 for magic, magic secure, unicast and
+>> broadcast.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/net/phy/dp83869.c | 128 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 128 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+>> index 48a68474f89c..5045df9515a5 100644
+>> --- a/drivers/net/phy/dp83869.c
+>> +++ b/drivers/net/phy/dp83869.c
+>> @@ -4,6 +4,7 @@
+>>    */
+>>   
+>>   #include <linux/ethtool.h>
+>> +#include <linux/etherdevice.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/mii.h>
+>>   #include <linux/module.h>
+>> @@ -27,6 +28,13 @@
+>>   #define DP83869_RGMIICTL	0x0032
+>>   #define DP83869_STRAP_STS1	0x006e
+>>   #define DP83869_RGMIIDCTL	0x0086
+>> +#define DP83869_RXFCFG		0x0134
+>> +#define DP83869_RXFPMD1		0x0136
+>> +#define DP83869_RXFPMD2		0x0137
+>> +#define DP83869_RXFPMD3		0x0138
+>> +#define DP83869_RXFSOP1		0x0139
+>> +#define DP83869_RXFSOP2		0x013A
+>> +#define DP83869_RXFSOP3		0x013B
+>>   #define DP83869_IO_MUX_CFG	0x0170
+>>   #define DP83869_OP_MODE		0x01df
+>>   #define DP83869_FX_CTRL		0x0c00
+>> @@ -105,6 +113,14 @@
+>>   #define DP83869_OP_MODE_MII			BIT(5)
+>>   #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
+>>   
+>> +/* RXFCFG bits*/
+>> +#define DP83869_WOL_MAGIC_EN		BIT(0)
+>> +#define DP83869_WOL_PATTERN_EN		BIT(1)
+>> +#define DP83869_WOL_BCAST_EN		BIT(2)
+>> +#define DP83869_WOL_UCAST_EN		BIT(4)
+>> +#define DP83869_WOL_SEC_EN		BIT(5)
+>> +#define DP83869_WOL_ENH_MAC		BIT(7)
+>> +
+>>   enum {
+>>   	DP83869_PORT_MIRRORING_KEEP,
+>>   	DP83869_PORT_MIRRORING_EN,
+>> @@ -156,6 +172,115 @@ static int dp83869_config_intr(struct phy_device *phydev)
+>>   	return phy_write(phydev, MII_DP83869_MICR, micr_status);
+>>   }
+>>   
+>> +static int dp83869_set_wol(struct phy_device *phydev,
+>> +			   struct ethtool_wolinfo *wol)
+>> +{
+>> +	struct net_device *ndev = phydev->attached_dev;
+>> +	u16 val_rxcfg, val_micr;
+>> +	u8 *mac;
+>> +
+>> +	val_rxcfg = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
+>> +	val_micr = phy_read(phydev, MII_DP83869_MICR);
+> In the previous patch you checked if phy_read() failed, here you don't.
+I will add it back
+>
+>> +	if (wol->wolopts & (WAKE_MAGIC | WAKE_MAGICSECURE | WAKE_UCAST |
+>> +			    WAKE_BCAST)) {
+>> +		val_rxcfg |= DP83869_WOL_ENH_MAC;
+>> +		val_micr |= MII_DP83869_MICR_WOL_INT_EN;
+>> +
+>> +		if (wol->wolopts & WAKE_MAGIC) {
+>> +			mac = (u8 *)ndev->dev_addr;
+>> +
+>> +			if (!is_valid_ether_addr(mac))
+>> +				return -EINVAL;
+>> +
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD1,
+>> +				      (mac[1] << 8 | mac[0]));
+> parenthesis unnecessary
+OK
+>
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD2,
+>> +				      (mac[3] << 8 | mac[2]));
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFPMD3,
+>> +				      (mac[5] << 8 | mac[4]));
+> Why only program mac addr for wake_magic, does magic_secure or unicast
+> not require it?
+
+Unicast and broadcast are the ways to send the magic packet.
+
+Magic secure is programmed below into the SOP (secure on pass) registers
+
+>
+>> +
+>> +			val_rxcfg |= DP83869_WOL_MAGIC_EN;
+>> +		} else {
+>> +			val_rxcfg &= ~DP83869_WOL_MAGIC_EN;
+>> +		}
+>> +
+>> +		if (wol->wolopts & WAKE_MAGICSECURE) {
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP1,
+>> +				      (wol->sopass[1] << 8) | wol->sopass[0]);
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP2,
+>> +				      (wol->sopass[3] << 8) | wol->sopass[2]);
+>> +			phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFSOP3,
+>> +				      (wol->sopass[5] << 8) | wol->sopass[4]);
+>> +
+>> +			val_rxcfg |= DP83869_WOL_SEC_EN;
+>> +		} else {
+>> +			val_rxcfg &= ~DP83869_WOL_SEC_EN;
+>> +		}
+>> +
+>> +		if (wol->wolopts & WAKE_UCAST)
+>> +			val_rxcfg |= DP83869_WOL_UCAST_EN;
+>> +		else
+>> +			val_rxcfg &= ~DP83869_WOL_UCAST_EN;
+>> +
+>> +		if (wol->wolopts & WAKE_BCAST)
+>> +			val_rxcfg |= DP83869_WOL_BCAST_EN;
+>> +		else
+>> +			val_rxcfg &= ~DP83869_WOL_BCAST_EN;
+>> +	} else {
+>> +		val_rxcfg &= ~DP83869_WOL_ENH_MAC;
+>> +		val_micr &= ~MII_DP83869_MICR_WOL_INT_EN;
+>> +	}
+>> +
+>> +	phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG, val_rxcfg);
+>> +	phy_write(phydev, MII_DP83869_MICR, val_micr);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void dp83869_get_wol(struct phy_device *phydev,
+>> +			    struct ethtool_wolinfo *wol)
+>> +{
+>> +	u16 value, sopass_val;
+>> +
+>> +	wol->supported = (WAKE_UCAST | WAKE_BCAST | WAKE_MAGIC |
+>> +			WAKE_MAGICSECURE);
+>> +	wol->wolopts = 0;
+>> +
+>> +	value = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RXFCFG);
+>> +
+>> +	if (value & DP83869_WOL_UCAST_EN)
+>> +		wol->wolopts |= WAKE_UCAST;
+>> +
+>> +	if (value & DP83869_WOL_BCAST_EN)
+>> +		wol->wolopts |= WAKE_BCAST;
+>> +
+>> +	if (value & DP83869_WOL_MAGIC_EN)
+>> +		wol->wolopts |= WAKE_MAGIC;
+>> +
+>> +	if (value & DP83869_WOL_SEC_EN) {
+>> +		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
+>> +					  DP83869_RXFSOP1);
+>> +		wol->sopass[0] = (sopass_val & 0xff);
+>> +		wol->sopass[1] = (sopass_val >> 8);
+>> +
+>> +		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
+>> +					  DP83869_RXFSOP2);
+>> +		wol->sopass[2] = (sopass_val & 0xff);
+>> +		wol->sopass[3] = (sopass_val >> 8);
+>> +
+>> +		sopass_val = phy_read_mmd(phydev, DP83869_DEVADDR,
+>> +					  DP83869_RXFSOP3);
+>> +		wol->sopass[4] = (sopass_val & 0xff);
+>> +		wol->sopass[5] = (sopass_val >> 8);
+>> +
+>> +		wol->wolopts |= WAKE_MAGICSECURE;
+>> +	}
+>> +
+>> +	if (!(value & DP83869_WOL_ENH_MAC))
+>> +		wol->wolopts = 0;
+> What does ENH stand for?
+Enhanced MAC - Enables enhanced RX features. This bit should be set when 
+using
+wakeup abilities, CRC check or RX 1588 indication
+>
+> Perhaps it would be cleaner to make a helper like this:
+>
+> u32 helper(u16 rxfsop1)
+> {
+> 	u32 wolopts;
+>
+> 	if (!(value & DP83869_WOL_ENH_MAC))
+> 		return 0;
+>
+> 	if (value & DP83869_WOL_UCAST_EN)
+> 		wolopts |= WAKE_UCAST;
+> 	if (value & DP83869_WOL_BCAST_EN)
+> 		wolopts |= WAKE_BCAST;
+> 	if (value & DP83869_WOL_MAGIC_EN)
+> 		wolopts |= WAKE_MAGIC;
+> 	if (value & DP83869_WOL_SEC_EN)
+> 		wolopts |= WAKE_MAGICSECURE;
+>
+> 	return wolopts;
+> }
+>
+> wol->wolopts = helper(value);
+>
+> setting the bits and then clearing the value looks strange.
+A helper is a bit overkill see below.
+>
+>> +}
+>> +
+>>   static int dp83869_config_port_mirroring(struct phy_device *phydev)
+>>   {
+>>   	struct dp83869_private *dp83869 = phydev->priv;
+> Overall this code looks quite similar to dp83867, is there no way to
+> factor this out?
+
+Factor what out?  Yes the DP83867 and DP83869 are very similar in 
+registers and bitmaps.  They just differ in their feature sets.
+
+The WoL code was copied and pasted to the 869 and I would like to keep 
+the two files as similar as I can as it will be easier to fix and find bugs.
+
