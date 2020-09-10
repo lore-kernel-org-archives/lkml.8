@@ -2,172 +2,173 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9232FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0FCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DB9221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CFc2buze"
+	by mail.kernel.org (Postfix) with ESMTP id 91FD0221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599772388;
+	bh=salMRlGjnoK95Phh9CY8qdPV8NMj56OFSekdPxeGZXY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KH6yeQE1EGBwfWz8QUUM5Y/kTF90ldJVh9gmstPPZU5IdPqhIsu01D/wfINoOGozR
+	 HF30JTH5ojP0ymP/2RsJtqTMA/X4E3nOsmyJPu1kx6AWDf4T1ORTwP1Jzcowmc+f8s
+	 3g3+Luf7pn24v/Vf5D1HQhJcSo262UNGHBoP6Yi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgIJVMx (ORCPT
+        id S1726853AbgIJVNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:12:53 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15694 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731007AbgIJObH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:31:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5a38870001>; Thu, 10 Sep 2020 07:30:31 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 10 Sep 2020 07:30:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 10 Sep 2020 07:30:45 -0700
-Received: from [10.2.173.224] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
- 2020 14:30:40 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Rik van Riel <riel@surriel.com>
-CC:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, <linux-mm@kvack.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Date:   Thu, 10 Sep 2020 10:30:38 -0400
-X-Mailer: MailMate (1.13.1r5705)
-Message-ID: <A66751D3-447F-4457-A8F3-E11A28452703@nvidia.com>
-In-Reply-To: <b3dc8cca3689ea69491370449801ffe8d828c66c.camel@surriel.com>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908143503.GE26850@dhcp22.suse.cz>
- <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
- <20200909070445.GA7348@dhcp22.suse.cz>
- <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
- <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
- <20200910073213.GC28354@dhcp22.suse.cz>
- <b3dc8cca3689ea69491370449801ffe8d828c66c.camel@surriel.com>
+        Thu, 10 Sep 2020 17:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49043 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730919AbgIJOad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:30:33 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7577D2087C;
+        Thu, 10 Sep 2020 14:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599747678;
+        bh=salMRlGjnoK95Phh9CY8qdPV8NMj56OFSekdPxeGZXY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r8mA/WM4GAag74Rz/h6lfoHg7YqgBW20uaN7mf7fzmpo7PlglzrIXRzzrqGc7+cGi
+         Y/og4+gWKnLW4vkaMCIc693r2vz9obPU+ty8FdihXKbGQTbV9isGTn+1qbR1heOlgv
+         sOO/q++0+MP6oeP2Qzg1+qry+HtUCvkEEyBE53wQ=
+Received: by mail-ot1-f52.google.com with SMTP id c10so5451874otm.13;
+        Thu, 10 Sep 2020 07:21:18 -0700 (PDT)
+X-Gm-Message-State: AOAM533icXlUjhrQzjI+q9WDQWHDHAUEfG4dQ99rgYNKq9lbiHb2728r
+        QgcRT9leEyhEe7DE7H34NFRJAbBbe1zWMSMGDA==
+X-Google-Smtp-Source: ABdhPJzb1vRjFSSLpVZBm5iUnsot1VzV+T9qMMQv98D8GBYK5JNzMJ4L3rrbEQtXG9GSyYia3/x2GlAFp9CEfYCCrqk=
+X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr3816367otp.107.1599747677765;
+ Thu, 10 Sep 2020 07:21:17 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_BF9FD1D1-814C-46BB-AA9C-13BCA4D14B60_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599748231; bh=k7azRfoKtt2/zjJ4fEeYdXUZXEVFO8FgKZ148tBF0KY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=CFc2buze5y6GP2Pa+pydcOwETHhWf+oYuxYN17D7pQG9ctxKdJjw7AdZLR3hI03d7
-         ejgI2N4J4YAbY1NSwETYR0Azti5QJC34QF+6NopwP0lMaujRNNA0HQ8Hgm04Xsk64h
-         nzFf4fmOw7KWESwSEkW0tKQogcvctvt+58+snU2TyOxC+gR7jjOkxXAGcQv5Y8lEsd
-         wvDd19PqEyPhW54b7PE/qFlk8A4JHrxABbdjwV+HQifClFmLtVN44tbf6BBi1tv6hZ
-         eFP+I36DD5PrxtxcuUXcMum/m0ObxFMXW8YmrtDugZgOCIQ/eAUrnuZVHqRRR8fBkG
-         ToyPlkEmLnAuQ==
+References: <1596245149-28628-1-git-send-email-suxingxing@loongson.cn> <20200910020742.GA748627@bjorn-Precision-5520>
+In-Reply-To: <20200910020742.GA748627@bjorn-Precision-5520>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Sep 2020 08:21:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
+Message-ID: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_BF9FD1D1-814C-46BB-AA9C-13BCA4D14B60_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On 10 Sep 2020, at 9:32, Rik van Riel wrote:
-
-> On Thu, 2020-09-10 at 09:32 +0200, Michal Hocko wrote:
->> [Cc Vlastimil and Mel - the whole email thread starts
->> http://lkml.kernel.org/r/20200902180628.4052244-1-zi.yan@sent.com
->>  but this particular subthread has diverged a bit and you might find
->> it
->>  interesting]
->>
->> On Wed 09-09-20 15:43:55, David Hildenbrand wrote:
->>>
->>> I am not sure I like the trend towards CMA that we are seeing,
->>> reserving
->>> huge buffers for specific users (and eventually even doing it
->>> automatically).
->>>
->>> What we actually want is ZONE_MOVABLE with relaxed guarantees, such
->>> that
->>> anybody who requires large, unmovable allocations can use it.
->>>
->>> I once played with the idea of having ZONE_PREFER_MOVABLE, which
->>> a) Is the primary choice for movable allocations
->>> b) Is allowed to contain unmovable allocations (esp., gigantic
->>> pages)
->>> c) Is the fallback for ZONE_NORMAL for unmovable allocations,
->>> instead of
->>> running out of memory
->>
->> I might be missing something but how can this work longterm? Or put
->> in
->> another words why would this work any better than existing
->> fragmentation
->> avoidance techniques that page allocator implements already -
+On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> One big difference is reclaim. If ZONE_NORMAL runs low on
-> free memory, page reclaim would kick in and evict some
-> movable/reclaimable things, to free up more space for
-> unmovable allocations.
+> [+cc Mark, Florian, Rob, Scott]
 >
-> The current fragmentation avoidance techniques don't do
-> things like reclaim, or proactively migrating movable
-> pages out of unmovable page blocks to prevent unmovable
-> allocations in currently movable page blocks.
+> On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > Do not use printk in raw_spinlocks,
+> > it will cause BUG: Invalid wait context.
+> >
+> > The trace reported by lockdep follows.
+> >
+> > [    2.986113] =============================
+> > [    2.986115] [ BUG: Invalid wait context ]
+> > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > [    2.986118] -----------------------------
+> > [    2.986120] swapper/0/1 is trying to lock:
+> > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > [    2.986130] other info that might help us debug this:
+> > [    2.986132] context-{5:5}
+> > [    2.986134] 3 locks held by swapper/0/1:
+> > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > [    2.986161] stack backtrace:
+> > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > [    2.986245]         ...
+> > [    2.986250] Call Trace:
+> > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> >
+> > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> > ---
+> >  drivers/pci/access.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > index 79c4a2e..b3fc164 100644
+> > --- a/drivers/pci/access.c
+> > +++ b/drivers/pci/access.c
+> > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> >        * write happen to have any RW1C (write-one-to-clear) bits set, we
+> >        * just inadvertently cleared something we shouldn't have.
+> >        */
+> > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > -                          size, pci_domain_nr(bus), bus->number,
+> > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+>
+> We just changed this printk (see [1]), but I think we still have this
+> lockdep problem even after Mark's change.  So I guess we need another
+> think about this.
+>
+> Maybe we can print something when registering pci_ops that use
+> pci_generic_config_write32()?
 
-Isn=E2=80=99t Mel Gorman=E2=80=99s watermark boost patch[1] (merged about=
- a year ago)
-doing what you are describing?
+That was my suggestion, but as Mark pointed out that doesn't work if
+pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
 
+Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+writes to a bridge going to cause problems? For xgene, interestingly,
+with DT _write32 is needed, but for ACPI it is not (only _read32). I
+think xgene is practically dead though a few people still have
+systems, but likely xgene with DT is really dead. The ECAM case was
+for QCom server which is also pretty much dead. SA1100 nano-engine is
+really old and something only a few people have at most (Russell
+King). So ignoring all those, we're left with just loongson and iproc.
+Maybe just remove the warning?
 
-[1]https://lore.kernel.org/linux-mm/20181123114528.28802-1-mgorman@techsi=
-ngularity.net/
-
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_BF9FD1D1-814C-46BB-AA9C-13BCA4D14B60_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9aOI4PHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKJVEP/3nuRDt806wEH+aC3JJFFmc+QyymvaD1qczP
-AzSehhMVUlHxN4b8cS2eH/6r8PfS+RMNjRys1LrZ7zZCg38YXg+oyX6wAK0SJDhi
-uO9xeV6B5VvuoWlc2Pu+FDtJiLQDl1I/JIlCqBDYgZvCpmBbamvey1/sapH9V6F6
-6QDVuCTn91o3QVGq2ACrKc7XkFe5LKjoOS8jhFpyNh+5VIGS33gcZawI0TsFG/05
-g6xnsK4tPuzUnEM7MNCdOegV1860T4jPW5XNSniFTqqFewhFdMVboaD+rXvh1oEj
-GE8fwSjj8gHaSp81aa4I1fYsCyUngRpCYkpf7DLjIY89ZYFuQfFyzKl6712aeZ7e
-Vgyclm+BcJDwnCRCYCH8f6PU5B+NUJH80e7V01wysJe0FNn0iYBPfQZacLDXoje1
-9uAL8sx3bBeYsrcKNziY0dXxc1/vlK/2/MGApIIwIdnWOLaBDesbglROy3YS8U5Z
-ANLmYzxxItptzHfzjQBBIi5vdfIEiWhvkuM/iW69dUtVNBN7CXS4Gkpuy/IPRGpr
-vDvCUhCbp9MKBgODr41CafqIWMfk0T+I2J8gfMqeEXR2QRjvyFJTPZdGCDj4K0O1
-c0/2d5jdHlfpiQlJeM4QzFIeDRMAzuZyz9affaR4yK9prIHwM8tLHHvDw3s0iXne
-ur8sCBS/
-=6twx
------END PGP SIGNATURE-----
-
---=_MailMate_BF9FD1D1-814C-46BB-AA9C-13BCA4D14B60_=--
+Rob
