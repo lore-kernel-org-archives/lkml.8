@@ -2,527 +2,156 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBEAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5452C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99BE5214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LoOiqmsp"
+	by mail.kernel.org (Postfix) with ESMTP id 6E90021D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgIJUnD (ORCPT
+        id S1726957AbgIJUnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:43:03 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47274 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgIJU3G (ORCPT
+        Thu, 10 Sep 2020 16:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgIJUlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:29:06 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AKSxKT116529;
-        Thu, 10 Sep 2020 15:28:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599769739;
-        bh=T0vEyaZIzK+YOhVL1aT2Hj7/oC3d1nw3F+zKDemup3A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LoOiqmsp9O95Wy7CE6Aar3Fp+RxKNsYSmoulO+PKrjRZaSdwY0EfczkfSqwOg3AXe
-         Rr4jgPtAG2M/VXTikaQ0I2CS7Wg/AeGrkLMBKBVsILVThnawx+Gg2VcXEsd6O+uxLK
-         WyyWTyyFUA3r1Enq/nSK86JTp6rSwGKYC8ozzQ7k=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AKSxg6041793
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 15:28:59 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Sep 2020 15:28:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Sep 2020 15:28:59 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AKSvXl066484;
-        Thu, 10 Sep 2020 15:28:58 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v3 8/9] net: ethernet: ti: ale: switch to use tables for vlan entry description
-Date:   Thu, 10 Sep 2020 23:28:06 +0300
-Message-ID: <20200910202807.17473-9-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910202807.17473-1-grygorii.strashko@ti.com>
-References: <20200910202807.17473-1-grygorii.strashko@ti.com>
+        Thu, 10 Sep 2020 16:41:49 -0400
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7991CC061757;
+        Thu, 10 Sep 2020 13:41:48 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
+        by mail.nic.cz (Postfix) with ESMTPSA id 81BBB13FD86;
+        Thu, 10 Sep 2020 22:41:46 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 22:41:46 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?B?T25k?= =?UTF-8?B?xZllag==?= Jirman 
+        <megous@megous.com>, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
+ for LEDs controlled by Marvell PHYs
+Message-ID: <20200910224146.60d21a60@nic.cz>
+In-Reply-To: <20200910202345.GA18431@ucw.cz>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+        <20200909162552.11032-7-marek.behun@nic.cz>
+        <20200910122341.GC7907@duo.ucw.cz>
+        <20200910131541.GD3316362@lunn.ch>
+        <20200910161522.3cf3ad63@dellmb.labs.office.nic.cz>
+        <20200910202345.GA18431@ucw.cz>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ALE VLAN entries are too much differ between different TI CPSW ALE
-versions. So, handling them using flags, defines and get/set functions
-became over-complicated.
+On Thu, 10 Sep 2020 22:23:45 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
-This patch introduces tables to describe the ALE VLAN entries fields, which
-are different between TI CPSW ALE versions, and new get/set access
-functions. It also allows to detect incorrect access to not available ALL
-entry fields.
+> Hi!
+> 
+> > Okay, so the netdev trigger offers modes `link`, `rx`, `tx`.
+> > You can enable/disable either of these (via separate sysfs files). `rx`
+> > and `tx` blink the LED, `link` turns the LED on if the interface is
+> > linked.  
+> 
+> I wonder if people really need separate rx and tx, but... this sounds
+> reasonable.
+> 
+> > The phy_led_trigger subsystem works differently. Instead of registering
+> > one trigger (like netdev) it registers one trigger per PHY device and
+> > per speed. So for a PHY with name XYZ and supported speeds 1Gbps,
+> > 100Mbps, 10Mbps it registers 3 triggers:
+> >   XYZ:1Gbps XYZ:100Mbps XYZ:10Mbps  
+> 
+> That is not reasonable.
+> 
+> > I propose that at least these HW modes should be available (and
+> > documented) for ethernet PHY controlled LEDs:  
+> 
+> Ok, and which of these will you actually use?
+> 
+> >   mode to determine link on:
+> >     - `link`
+> >   mode for activity (these should blink):
+> >     - `activity` (both rx and tx), `rx`, `tx`
+> >   mode for link (on) and activity (blink)
+> >     - `link/activity`, maybe `link/rx` and `link/tx`
+> >   mode for every supported speed:
+> >     - `1Gbps`, `100Mbps`, `10Mbps`, ...
+> >   mode for every supported cable type:
+> >     - `copper`, `fiber`, ... (are there others?)  
+> 
+> That's ... way too many options.
+> 
+> Can we do it like netdev trigger? link? yes/no. rx? yes/no. tx? yes/no.
+> 
+> If displaying link only for certain speeds is useful, have link_min
+> and link_max, specifying values in Mbps? Default would be link_min ==
+> 0, and link_max = 25000, so it would react on any link speed.
+> 
+> Is mode for cable type really useful? Then we should have link_fiber?
+> yes/no. link_copper? yes/no.
+> 
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw_ale.c | 239 ++++++++++++++++++++++-------
- drivers/net/ethernet/ti/cpsw_ale.h |   3 +
- 2 files changed, 188 insertions(+), 54 deletions(-)
+I want to put the speed differentiating mode by default on MOX on one
+LED, and activity on other LED.
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 7b54e9911b1e..0dd0c3329dee 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -50,6 +50,18 @@
- /* ALE_AGING_TIMER */
- #define ALE_AGING_TIMER_MASK	GENMASK(23, 0)
- 
-+/**
-+ * struct ale_entry_fld - The ALE tbl entry field description
-+ * @start_bit: field start bit
-+ * @num_bits: field bit length
-+ * @flags: field flags
-+ */
-+struct ale_entry_fld {
-+	u8 start_bit;
-+	u8 num_bits;
-+	u8 flags;
-+};
-+
- enum {
- 	CPSW_ALE_F_STATUS_REG = BIT(0), /* Status register present */
- 	CPSW_ALE_F_HW_AUTOAGING = BIT(1), /* HW auto aging */
-@@ -64,6 +76,7 @@ enum {
-  * @tbl_entries: number of ALE entries
-  * @major_ver_mask: mask of ALE Major Version Value in ALE_IDVER reg.
-  * @nu_switch_ale: NU Switch ALE
-+ * @vlan_entry_tbl: ALE vlan entry fields description tbl
-  */
- struct cpsw_ale_dev_id {
- 	const char *dev_id;
-@@ -71,6 +84,7 @@ struct cpsw_ale_dev_id {
- 	u32 tbl_entries;
- 	u32 major_ver_mask;
- 	bool nu_switch_ale;
-+	const struct ale_entry_fld *vlan_entry_tbl;
- };
- 
- #define ALE_TABLE_WRITE		BIT(31)
-@@ -132,6 +146,51 @@ static inline void cpsw_ale_set_##name(u32 *ale_entry, u32 value,	\
- 	cpsw_ale_set_field(ale_entry, start, bits, value);		\
- }
- 
-+enum {
-+	ALE_ENT_VID_MEMBER_LIST = 0,
-+	ALE_ENT_VID_UNREG_MCAST_MSK,
-+	ALE_ENT_VID_REG_MCAST_MSK,
-+	ALE_ENT_VID_FORCE_UNTAGGED_MSK,
-+	ALE_ENT_VID_UNREG_MCAST_IDX,
-+	ALE_ENT_VID_REG_MCAST_IDX,
-+	ALE_ENT_VID_LAST,
-+};
-+
-+#define ALE_FLD_ALLOWED			BIT(0)
-+#define ALE_FLD_SIZE_PORT_MASK_BITS	BIT(1)
-+#define ALE_FLD_SIZE_PORT_NUM_BITS	BIT(2)
-+
-+#define ALE_ENTRY_FLD(id, start, bits)	\
-+[id] = {				\
-+	.start_bit = start,		\
-+	.num_bits = bits,		\
-+	.flags = ALE_FLD_ALLOWED,	\
-+}
-+
-+#define ALE_ENTRY_FLD_DYN_MSK_SIZE(id, start)	\
-+[id] = {					\
-+	.start_bit = start,			\
-+	.num_bits = 0,				\
-+	.flags = ALE_FLD_ALLOWED |		\
-+		 ALE_FLD_SIZE_PORT_MASK_BITS,	\
-+}
-+
-+/* dm814x, am3/am4/am5, k2hk */
-+static const struct ale_entry_fld vlan_entry_cpsw[ALE_ENT_VID_LAST] = {
-+	ALE_ENTRY_FLD(ALE_ENT_VID_MEMBER_LIST, 0, 3),
-+	ALE_ENTRY_FLD(ALE_ENT_VID_UNREG_MCAST_MSK, 8, 3),
-+	ALE_ENTRY_FLD(ALE_ENT_VID_REG_MCAST_MSK, 16, 3),
-+	ALE_ENTRY_FLD(ALE_ENT_VID_FORCE_UNTAGGED_MSK, 24, 3),
-+};
-+
-+/* k2e/k2l, k3 am65/j721e cpsw2g  */
-+static const struct ale_entry_fld vlan_entry_nu[ALE_ENT_VID_LAST] = {
-+	ALE_ENTRY_FLD_DYN_MSK_SIZE(ALE_ENT_VID_MEMBER_LIST, 0),
-+	ALE_ENTRY_FLD(ALE_ENT_VID_UNREG_MCAST_IDX, 20, 3),
-+	ALE_ENTRY_FLD_DYN_MSK_SIZE(ALE_ENT_VID_FORCE_UNTAGGED_MSK, 24),
-+	ALE_ENTRY_FLD(ALE_ENT_VID_REG_MCAST_IDX, 44, 3),
-+};
-+
- DEFINE_ALE_FIELD(entry_type,		60,	2)
- DEFINE_ALE_FIELD(vlan_id,		48,	12)
- DEFINE_ALE_FIELD(mcast_state,		62,	2)
-@@ -141,17 +200,76 @@ DEFINE_ALE_FIELD(ucast_type,		62,     2)
- DEFINE_ALE_FIELD1(port_num,		66)
- DEFINE_ALE_FIELD(blocked,		65,     1)
- DEFINE_ALE_FIELD(secure,		64,     1)
--DEFINE_ALE_FIELD1(vlan_untag_force,	24)
--DEFINE_ALE_FIELD1(vlan_reg_mcast,	16)
--DEFINE_ALE_FIELD1(vlan_unreg_mcast,	8)
--DEFINE_ALE_FIELD1(vlan_member_list,	0)
- DEFINE_ALE_FIELD(mcast,			40,	1)
--/* ALE NetCP nu switch specific */
--DEFINE_ALE_FIELD(vlan_unreg_mcast_idx,	20,	3)
--DEFINE_ALE_FIELD(vlan_reg_mcast_idx,	44,	3)
- 
- #define NU_VLAN_UNREG_MCAST_IDX	1
- 
-+static int cpsw_ale_entry_get_fld(struct cpsw_ale *ale,
-+				  u32 *ale_entry,
-+				  const struct ale_entry_fld *entry_tbl,
-+				  int fld_id)
-+{
-+	const struct ale_entry_fld *entry_fld;
-+	u32 bits;
-+
-+	if (!ale || !ale_entry)
-+		return -EINVAL;
-+
-+	entry_fld = &entry_tbl[fld_id];
-+	if (!(entry_fld->flags & ALE_FLD_ALLOWED)) {
-+		dev_err(ale->params.dev, "get: wrong ale fld id %d\n", fld_id);
-+		return -ENOENT;
-+	}
-+
-+	bits = entry_fld->num_bits;
-+	if (entry_fld->flags & ALE_FLD_SIZE_PORT_MASK_BITS)
-+		bits = ale->port_mask_bits;
-+
-+	return cpsw_ale_get_field(ale_entry, entry_fld->start_bit, bits);
-+}
-+
-+static void cpsw_ale_entry_set_fld(struct cpsw_ale *ale,
-+				   u32 *ale_entry,
-+				   const struct ale_entry_fld *entry_tbl,
-+				   int fld_id,
-+				   u32 value)
-+{
-+	const struct ale_entry_fld *entry_fld;
-+	u32 bits;
-+
-+	if (!ale || !ale_entry)
-+		return;
-+
-+	entry_fld = &entry_tbl[fld_id];
-+	if (!(entry_fld->flags & ALE_FLD_ALLOWED)) {
-+		dev_err(ale->params.dev, "set: wrong ale fld id %d\n", fld_id);
-+		return;
-+	}
-+
-+	bits = entry_fld->num_bits;
-+	if (entry_fld->flags & ALE_FLD_SIZE_PORT_MASK_BITS)
-+		bits = ale->port_mask_bits;
-+
-+	cpsw_ale_set_field(ale_entry, entry_fld->start_bit, bits, value);
-+}
-+
-+static int cpsw_ale_vlan_get_fld(struct cpsw_ale *ale,
-+				 u32 *ale_entry,
-+				 int fld_id)
-+{
-+	return cpsw_ale_entry_get_fld(ale, ale_entry,
-+				      ale->vlan_entry_tbl, fld_id);
-+}
-+
-+static void cpsw_ale_vlan_set_fld(struct cpsw_ale *ale,
-+				  u32 *ale_entry,
-+				  int fld_id,
-+				  u32 value)
-+{
-+	cpsw_ale_entry_set_fld(ale, ale_entry,
-+			       ale->vlan_entry_tbl, fld_id, value);
-+}
-+
- /* The MAC address field in the ALE entry cannot be macroized as above */
- static inline void cpsw_ale_get_addr(u32 *ale_entry, u8 *addr)
- {
-@@ -446,19 +564,22 @@ static void cpsw_ale_set_vlan_mcast(struct cpsw_ale *ale, u32 *ale_entry,
- 	int idx;
- 
- 	/* Set VLAN registered multicast flood mask */
--	idx = cpsw_ale_get_vlan_reg_mcast_idx(ale_entry);
-+	idx = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+				    ALE_ENT_VID_REG_MCAST_IDX);
- 	writel(reg_mcast, ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
- 
- 	/* Set VLAN unregistered multicast flood mask */
--	idx = cpsw_ale_get_vlan_unreg_mcast_idx(ale_entry);
-+	idx = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+				    ALE_ENT_VID_UNREG_MCAST_IDX);
- 	writel(unreg_mcast, ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
- }
- 
- static void cpsw_ale_set_vlan_untag(struct cpsw_ale *ale, u32 *ale_entry,
- 				    u16 vid, int untag_mask)
- {
--	cpsw_ale_set_vlan_untag_force(ale_entry,
--				      untag_mask, ale->vlan_field_bits);
-+	cpsw_ale_vlan_set_fld(ale, ale_entry,
-+			      ALE_ENT_VID_FORCE_UNTAGGED_MSK,
-+			      untag_mask);
- 	if (untag_mask & ALE_PORT_HOST)
- 		bitmap_set(ale->p0_untag_vid_mask, vid, 1);
- 	else
-@@ -480,17 +601,19 @@ int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port_mask, int untag,
- 	cpsw_ale_set_vlan_untag(ale, ale_entry, vid, untag);
- 
- 	if (!ale->params.nu_switch_ale) {
--		cpsw_ale_set_vlan_reg_mcast(ale_entry, reg_mcast,
--					    ale->vlan_field_bits);
--		cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
--					      ale->vlan_field_bits);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_REG_MCAST_MSK, reg_mcast);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_UNREG_MCAST_MSK, unreg_mcast);
- 	} else {
--		cpsw_ale_set_vlan_unreg_mcast_idx(ale_entry,
--						  NU_VLAN_UNREG_MCAST_IDX);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_UNREG_MCAST_IDX,
-+				      NU_VLAN_UNREG_MCAST_IDX);
- 		cpsw_ale_set_vlan_mcast(ale, ale_entry, reg_mcast, unreg_mcast);
- 	}
--	cpsw_ale_set_vlan_member_list(ale_entry, port_mask,
--				      ale->vlan_field_bits);
-+
-+	cpsw_ale_vlan_set_fld(ale, ale_entry,
-+			      ALE_ENT_VID_MEMBER_LIST, port_mask);
- 
- 	if (idx < 0)
- 		idx = cpsw_ale_match_free(ale);
-@@ -509,20 +632,20 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
- 	int reg_mcast, unreg_mcast;
- 	int members, untag;
- 
--	members = cpsw_ale_get_vlan_member_list(ale_entry,
--						ale->vlan_field_bits);
-+	members = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					ALE_ENT_VID_MEMBER_LIST);
- 	members &= ~port_mask;
- 	if (!members) {
- 		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
- 		return;
- 	}
- 
--	untag = cpsw_ale_get_vlan_untag_force(ale_entry,
--					      ale->vlan_field_bits);
--	reg_mcast = cpsw_ale_get_vlan_reg_mcast(ale_entry,
--						ale->vlan_field_bits);
--	unreg_mcast = cpsw_ale_get_vlan_unreg_mcast(ale_entry,
--						    ale->vlan_field_bits);
-+	untag = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+				      ALE_ENT_VID_FORCE_UNTAGGED_MSK);
-+	reg_mcast = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					  ALE_ENT_VID_REG_MCAST_MSK);
-+	unreg_mcast = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					    ALE_ENT_VID_UNREG_MCAST_MSK);
- 	untag &= members;
- 	reg_mcast &= members;
- 	unreg_mcast &= members;
-@@ -530,16 +653,16 @@ static void cpsw_ale_del_vlan_modify(struct cpsw_ale *ale, u32 *ale_entry,
- 	cpsw_ale_set_vlan_untag(ale, ale_entry, vid, untag);
- 
- 	if (!ale->params.nu_switch_ale) {
--		cpsw_ale_set_vlan_reg_mcast(ale_entry, reg_mcast,
--					    ale->vlan_field_bits);
--		cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
--					      ale->vlan_field_bits);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_REG_MCAST_MSK, reg_mcast);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_UNREG_MCAST_MSK, unreg_mcast);
- 	} else {
- 		cpsw_ale_set_vlan_mcast(ale, ale_entry, reg_mcast,
- 					unreg_mcast);
- 	}
--	cpsw_ale_set_vlan_member_list(ale_entry, members,
--				      ale->vlan_field_bits);
-+	cpsw_ale_vlan_set_fld(ale, ale_entry,
-+			      ALE_ENT_VID_MEMBER_LIST, members);
- }
- 
- int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
-@@ -577,15 +700,15 @@ int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
- 	if (idx >= 0)
- 		cpsw_ale_read(ale, idx, ale_entry);
- 
--	vlan_members = cpsw_ale_get_vlan_member_list(ale_entry,
--						     ale->vlan_field_bits);
--	reg_mcast_members = cpsw_ale_get_vlan_reg_mcast(ale_entry,
--							ale->vlan_field_bits);
-+	vlan_members = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					     ALE_ENT_VID_MEMBER_LIST);
-+	reg_mcast_members = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+						  ALE_ENT_VID_REG_MCAST_MSK);
- 	unreg_mcast_members =
--		cpsw_ale_get_vlan_unreg_mcast(ale_entry,
--					      ale->vlan_field_bits);
--	untag_members = cpsw_ale_get_vlan_untag_force(ale_entry,
--						      ale->vlan_field_bits);
-+		cpsw_ale_vlan_get_fld(ale, ale_entry,
-+				      ALE_ENT_VID_UNREG_MCAST_MSK);
-+	untag_members = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					      ALE_ENT_VID_FORCE_UNTAGGED_MSK);
- 
- 	vlan_members |= port_mask;
- 	untag_members = (untag_members & ~port_mask) | untag_mask;
-@@ -618,14 +741,15 @@ void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
- 			continue;
- 
- 		unreg_members =
--			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
--						      ale->vlan_field_bits);
-+			cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					      ALE_ENT_VID_UNREG_MCAST_MSK);
- 		if (add)
- 			unreg_members |= unreg_mcast_mask;
- 		else
- 			unreg_members &= ~unreg_mcast_mask;
--		cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_members,
--					      ale->vlan_field_bits);
-+		cpsw_ale_vlan_set_fld(ale, ale_entry,
-+				      ALE_ENT_VID_UNREG_MCAST_MSK,
-+				      unreg_members);
- 		cpsw_ale_write(ale, idx, ale_entry);
- 	}
- }
-@@ -635,15 +759,15 @@ static void cpsw_ale_vlan_set_unreg_mcast(struct cpsw_ale *ale, u32 *ale_entry,
- {
- 	int unreg_mcast;
- 
--	unreg_mcast =
--		cpsw_ale_get_vlan_unreg_mcast(ale_entry,
--					      ale->vlan_field_bits);
-+	unreg_mcast = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+					    ALE_ENT_VID_UNREG_MCAST_MSK);
- 	if (allmulti)
- 		unreg_mcast |= ALE_PORT_HOST;
- 	else
- 		unreg_mcast &= ~ALE_PORT_HOST;
--	cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
--				      ale->vlan_field_bits);
-+
-+	cpsw_ale_vlan_set_fld(ale, ale_entry,
-+			      ALE_ENT_VID_UNREG_MCAST_MSK, unreg_mcast);
- }
- 
- static void
-@@ -653,7 +777,8 @@ cpsw_ale_vlan_set_unreg_mcast_idx(struct cpsw_ale *ale, u32 *ale_entry,
- 	int unreg_mcast;
- 	int idx;
- 
--	idx = cpsw_ale_get_vlan_unreg_mcast_idx(ale_entry);
-+	idx = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+				    ALE_ENT_VID_UNREG_MCAST_IDX);
- 
- 	unreg_mcast = readl(ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
- 
-@@ -677,9 +802,9 @@ void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
- 		type = cpsw_ale_get_entry_type(ale_entry);
- 		if (type != ALE_TYPE_VLAN)
- 			continue;
--		vlan_members =
--			cpsw_ale_get_vlan_member_list(ale_entry,
--						      ale->vlan_field_bits);
-+
-+		vlan_members = cpsw_ale_vlan_get_fld(ale, ale_entry,
-+						     ALE_ENT_VID_MEMBER_LIST);
- 
- 		if (port != -1 && !(vlan_members & BIT(port)))
- 			continue;
-@@ -1056,18 +1181,21 @@ static const struct cpsw_ale_dev_id cpsw_ale_id_match[] = {
- 		.dev_id = "cpsw",
- 		.tbl_entries = 1024,
- 		.major_ver_mask = 0xff,
-+		.vlan_entry_tbl = vlan_entry_cpsw,
- 	},
- 	{
- 		/* 66ak2h_xgbe */
- 		.dev_id = "66ak2h-xgbe",
- 		.tbl_entries = 2048,
- 		.major_ver_mask = 0xff,
-+		.vlan_entry_tbl = vlan_entry_cpsw,
- 	},
- 	{
- 		.dev_id = "66ak2el",
- 		.features = CPSW_ALE_F_STATUS_REG,
- 		.major_ver_mask = 0x7,
- 		.nu_switch_ale = true,
-+		.vlan_entry_tbl = vlan_entry_nu,
- 	},
- 	{
- 		.dev_id = "66ak2g",
-@@ -1075,6 +1203,7 @@ static const struct cpsw_ale_dev_id cpsw_ale_id_match[] = {
- 		.tbl_entries = 64,
- 		.major_ver_mask = 0x7,
- 		.nu_switch_ale = true,
-+		.vlan_entry_tbl = vlan_entry_nu,
- 	},
- 	{
- 		.dev_id = "am65x-cpsw2g",
-@@ -1082,6 +1211,7 @@ static const struct cpsw_ale_dev_id cpsw_ale_id_match[] = {
- 		.tbl_entries = 64,
- 		.major_ver_mask = 0x7,
- 		.nu_switch_ale = true,
-+		.vlan_entry_tbl = vlan_entry_nu,
- 	},
- 	{ },
- };
-@@ -1129,6 +1259,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 	ale->params = *params;
- 	ale->ageout = ale->params.ale_ageout * HZ;
- 	ale->features = ale_dev_id->features;
-+	ale->vlan_entry_tbl = ale_dev_id->vlan_entry_tbl;
- 
- 	rev = readl_relaxed(ale->params.ale_regs + ALE_IDVER);
- 	ale->version =
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 9c6da58183c9..5e4a69662c5f 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -28,6 +28,8 @@ struct cpsw_ale_params {
- 	unsigned long		bus_freq;
- };
- 
-+struct ale_entry_fld;
-+
- struct cpsw_ale {
- 	struct cpsw_ale_params	params;
- 	struct timer_list	timer;
-@@ -39,6 +41,7 @@ struct cpsw_ale {
- 	u32			port_num_bits;
- 	u32			vlan_field_bits;
- 	unsigned long		*p0_untag_vid_mask;
-+	const struct ale_entry_fld *vlan_entry_tbl;
- };
- 
- enum cpsw_ale_control {
--- 
-2.17.1
+I think there are devices which have written on the case next to the
+LED that this LED is on for this specific speed, that LED is on for
+other specific speed. So modes for speed are reasonable, I think.
+
+In my opinion the disjunctive modes the Marvell PHYs support are useless
+(like ON when 1000Mbps or 10Mbps).
+
+You can't have link_min and link_max setting. The hardware does not
+support it this way. You can tell the hardware to light the LED when
+linked on a specific speed, and this is actually used on some devices
+(as I have written above, some devices have this written on the case).
+
+In my opinion the set `link`, `link/activity`, `activity`, `speed`,
+and one mode for each supported speed on the PHY is reasonable. This could
+be also compatible with software triggering via the proposed phydev
+trigger.
+
+> >   mode that allows the user to determine link speed
+> >     - `speed` (or maybe `linkspeed` ?)
+> >     - on some Marvell PHYs the speed can be determined by how fast
+> >       the LED is blinking (ie. 1Gbps blinks with default blinking
+> >       frequency, 100Mbps with half blinking frequeny of 1Gbps, 10Mbps
+> >       of half blinking frequency of 100Mbps)
+> >     - on other Marvell PHYs this is instead:
+> >       1Gpbs blinks 3 times, pause, 3 times, pause, ...
+> >       100Mpbs blinks 2 times, pause, 2 times, pause, ...
+> >       10Mpbs blinks 1 time, pause, 1 time, pause, ...
+> >     - we don't need to differentiate these modes with different names,
+> >       because the important thing is just that this mode allows the
+> >       user to determine the speed from how the LED blinks  
+> 
+> I'd be very careful. Userspace should know what they are asking
+> for. I'd propose simply ignoring this feature.
+
+As I wrote above, I think this mode is rather useful when you have just
+two LEDs for a port. You can tell speed by looking on one LED and
+activity by looking at the other LED. And I want to set this as default
+on Turris MOX.
+
+> >   mode to just force blinking - `blink`  
+> 
+> We already have different support for blinking in LED subsystem. Lets use that.
+> 
+> Best regards,
+> 									Pavel
 
