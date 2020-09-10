@@ -2,82 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BC8C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875ADC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A23C214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lSmfzfKQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3FF212078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599761575;
+	bh=nYdsEt4eLLJRNSq2tYSCZbVTWwm5iqC5mEub4SpLTXE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rvHMPdU3OVTLQcVaIBTHYqsE+gpZBIgxWBBlgSoNArEadwBNVtjSPkjQRv0U7xS5a
+	 5lewi3hilHCRFcDcp+/6AGuGpvdhIWuY/sP5GE1EaJFJVkVNclT31knedfcD1c67/D
+	 3tAcaOzV3Y/uuIPM7GAyjoc9GMjTTLfmRicTPtPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgIJSMY (ORCPT
+        id S1727001AbgIJSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgIJSMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:12:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1EEC061573;
-        Thu, 10 Sep 2020 11:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GJFNj3LJXM5inEjcMlpYk5NsvVZoANjG6yDaNXtOQ30=; b=lSmfzfKQqqcZo41ZNtr3bnrgR4
-        +oCiqbseC0eG8Qb0mENU6p9HScVlmOiyyM1D/WsCKITLnLrqtYU2uSs83TNc2H7nb3CWqc5NptNNk
-        eoQXGoLaw95Xu62UgQpdgGC+Iqi8qH0NWOmNiYc9/1RolRzHEPpk/vyGATU1ebBHGk6vDDNM2CcX9
-        TaX6KjY56oFftWnxzn5DcUii5inCbDzwfhiWPgz4RIVc13hX2FwuCKj8MsdBhnVNxTNUpZg3UJWpM
-        xgUnFjHIv4drBCNsM3tQkHR7MwJYt1gWzxiJBLlf1Z5B6uY382Y8QqZ00ZOLGmOJldB+qjNM5EBsa
-        ZZXGcqWw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGR3I-0003sC-H5; Thu, 10 Sep 2020 18:12:08 +0000
-Date:   Thu, 10 Sep 2020 19:12:08 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: Re: [PATCH 00/14] get rid of the remaining kernel-doc warnings when
- building the docs
-Message-ID: <20200910181208.GW6583@casper.infradead.org>
-References: <cover.1599732764.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1599732764.git.mchehab+huawei@kernel.org>
+        Thu, 10 Sep 2020 14:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgIJR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:59:06 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E9FC21D90;
+        Thu, 10 Sep 2020 17:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599760746;
+        bh=nYdsEt4eLLJRNSq2tYSCZbVTWwm5iqC5mEub4SpLTXE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qxe1ewZk3ANKT0jYpzLPsJG3fIjRqBF2b5XH1uhcD5ON03tM0IgyhVDcSybWHCGOU
+         6aoLL/1Kttdp8WUIZMxwUgI1EaIJGdFTkieikEhJsSh3VNEdrruhn9MIfPD+bQe3Ca
+         neb6d0Kuq2FduigMJzjlultnMq8A5ivf+gYrtpOo=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 11/15] ARM: dts: aspeed: fix PCA95xx GPIO expander properties on Portwell
+Date:   Thu, 10 Sep 2020 19:57:29 +0200
+Message-Id: <20200910175733.11046-12-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910175733.11046-1-krzk@kernel.org>
+References: <20200910175733.11046-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:23:53PM +0200, Mauro Carvalho Chehab wrote:
-> As described on its subject, this series finally get rid of all kernel-doc warnings.
-> 
-> With this series applied (plus my last series fixing other warnings), building
-> the docs is now clean[1] against next-20200909:
+The PCA95xx GPIO expander requires GPIO controller properties to operate
+properly.
 
-Thanks, this has been a truly heroic effort.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I'd suggest that we change the kernel build to always run the CHKDOC
-instead of at W=1 (or rather, as the patch I just sent out demonstrates,
-not at all (oops)).  Otherwise you're just going to have to continue
-doing this.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+index 4a1ca8f5b6a7..03c161493ffc 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
+@@ -121,6 +121,8 @@
+ 	pca9555@27 {
+ 		compatible = "nxp,pca9555";
+ 		reg = <0x27>;
++		gpio-controller;
++		#gpio-cells = <2>;
+ 	};
+ };
+ 
+-- 
+2.17.1
 
-At some point, perhaps we can add some other warnings at W=1, like
-an EXPORT_SYMBOL of a function which doesn't have kernel-doc.
