@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173CCC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA18C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C60FA21D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B368B21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7jKxizK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWyypZoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgIJVTK (ORCPT
+        id S1728204AbgIJVTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        Thu, 10 Sep 2020 17:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgIJVOo (ORCPT
+        with ESMTP id S1727116AbgIJVOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:44 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42028C06179F;
-        Thu, 10 Sep 2020 14:14:25 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id l9so2093347wme.3;
-        Thu, 10 Sep 2020 14:14:25 -0700 (PDT)
+        Thu, 10 Sep 2020 17:14:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00862C06179A;
+        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id c18so8737758wrm.9;
+        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VbC5saaYZHnTXOXwHebFrJkh2FffiwaEU7e2jnpZU5k=;
-        b=t7jKxizKOsHR0GZ9KH2Q7Mrk4zJF39Q0887R11FPxyKx7wPPMH1bYZELE6EqzfO8Hl
-         vZPjrmhex4WpoxUqCuDbqf59PD6+LlE9djSMgzIjVZGdsovY89Oc+MQvxCiKLQdut6Zo
-         b2aLeoaUaYDVlHxdyrwk02S1pmS0vCJ7JejQJD8g+4IC0pU0ZuUavKA41p95EufAJ2TW
-         TJFkn7UVvtf8ISZfF/3ZpvP7NArBQAEyoqHSCYZdDPqf4WsY2HqYrx/efI6AVCTbH1l/
-         wXFUX3MgfA3+LE55if5LKJka1UWrLZRTur9T3wXw6PDOaGs8ZliUDDe9hUGLawTSPE7R
-         nR9Q==
+        bh=2ReUn4s9LGs+Wc1qa0Wl54OLhH+3YOfASWWo0CBEymQ=;
+        b=PWyypZoJc6BPiQwDax3WwcV3cXwmEQeLGMNWjpLxjW3ZDOvhwAI8gaIQnSrT7JjpPt
+         WXtxb5ypgcHqga0h7GYIEQV4Lvcw8jhMxLgFbKljO8gMIfXv7rMCw30sKoaHFLk1cRXx
+         xmd4XZ4F2ZeaOZloE8c2SL9ZHSJuCYwadRgmCt0vtH0xKE+x30ElA3nPfQA0pphHfTxB
+         idZHLhwNvtDwhfUzSwOyWZYJSyoQlFkmW5oaC7wpixfRJO2UJVqSgpb1inJRj/5i8Dqx
+         tIsWtXmWwEDxqICje7Ibl4ZNrAwB4sdhBaiLcstnH/t2b0psshxt8VmtYyq3GzlbVOsK
+         vo1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VbC5saaYZHnTXOXwHebFrJkh2FffiwaEU7e2jnpZU5k=;
-        b=fq4D3LYoCe7WCXvXNOPHjV3z+QJFXD+3pJtqriJlGuYCrRGVuv7Ze7jUftrTnPxG2R
-         jVBUyvIrLjmi2GQiTePncNV3j7Hbn9zw9UC5uzLYaxGfWSi/MYS1E7cMKmKaT9MxzA33
-         MnTmMKhcUs2n50WAGfMzsGp5dpT+k/0JWP0y1Fz3DhLiDMR7SDAx8Emge78gQxv+Tpuu
-         tKHZtUIZ1Sb3fBeuQwMoP3MDjp6Cy5WrdEXmz7r/LlQysKdRcOpZX2xNE6R8CUy999tJ
-         q1Tu2zVXWkNFHmzbWyhbRHDezmlORoQNFaCcpbYDaFacxLQVUweWiQkqhKbAF9YaIabN
-         7rOg==
-X-Gm-Message-State: AOAM532/1SXkpEaP9Qx9irV3NbZmyVtFAq6P/p7xcpE25q57MnJSEjob
-        y+Z1GqaFmW8qb0Y6RnnbC9Q=
-X-Google-Smtp-Source: ABdhPJwKLEVsspZCKYvSWCKV3osACyyrbIsswVav0nAjuKMTFu9VsPSliryNIpHd1/4I4NwRSx9Ukw==
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr1912230wml.176.1599772462037;
-        Thu, 10 Sep 2020 14:14:22 -0700 (PDT)
+        bh=2ReUn4s9LGs+Wc1qa0Wl54OLhH+3YOfASWWo0CBEymQ=;
+        b=j63HT2wX9tZ/RHaJC5AoyFU/06lprhejxALfYFCMpNIW4L3gqAJtMa75fk5/MKHUik
+         zqFBUEdcm1BEIcmoWw2L48DqUtYw/NrqwfV+LFpm7RGmYfarEdWe5VsbGDdlVCBoFghD
+         6dYpvqYADWwKzO+XBjUes5JFvaHq2fjUPiEQ/KQhi0IRz0nN6kpy3+5IavzlLw9CrCx1
+         Rqje4dvYRvivCCi4918gXw+RYVymYLuwXhcpsOPIXOU8jwRUZwHfzVPW627o6nups123
+         ESgHCCe4//yjNJjtv3afI5pQ4vUhu0lEQR3tFrMdBGaQNYZpN13IZtw7Z1/ger4yo3Aa
+         Jv0A==
+X-Gm-Message-State: AOAM533PKPzjVeml+pgGMj7gDgQRshmr4LskaBT8r4yICXBCl55ID7ne
+        lp0GxlIDBkgg/xhSHfRFwurcKccfXqDLiw==
+X-Google-Smtp-Source: ABdhPJzB/zOuW5pRmJib0Zkf/bplgkS1XsWd03JCQyHYUlzMb6jcDRjzye/d92mwZHbYg78z233z0w==
+X-Received: by 2002:adf:f750:: with SMTP id z16mr10413808wrp.377.1599772459739;
+        Thu, 10 Sep 2020 14:14:19 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.20
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:21 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:19 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 11/24] stat.2: Remove unneeded cast
-Date:   Thu, 10 Sep 2020 23:13:32 +0200
-Message-Id: <20200910211344.3562-12-colomar.6.4.3@gmail.com>
+Subject: [PATCH 09/24] clock_getcpuclockid.3: Remove unneeded cast
+Date:   Thu, 10 Sep 2020 23:13:30 +0200
+Message-Id: <20200910211344.3562-10-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -77,31 +77,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both major(3) and minor(3) return an 'unsigned int',
-so there is no need to use a 'long' for printing.
-Moreover, it should have been 'unsigned long',
-as "%lx" expects an unsigned type.
+Member 'tv_nsec' of 'struct timespec' is of type 'long' (see time.h.0p),
+and therefore, the cast is completely redundant.
 
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man2/stat.2 | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ man3/clock_getcpuclockid.3 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/man2/stat.2 b/man2/stat.2
-index b35e3c615..3418e1b5d 100644
---- a/man2/stat.2
-+++ b/man2/stat.2
-@@ -664,8 +664,8 @@ main(int argc, char *argv[])
-         exit(EXIT_FAILURE);
+diff --git a/man3/clock_getcpuclockid.3 b/man3/clock_getcpuclockid.3
+index 283f92557..050d7ad13 100644
+--- a/man3/clock_getcpuclockid.3
++++ b/man3/clock_getcpuclockid.3
+@@ -154,7 +154,7 @@ main(int argc, char *argv[])
      }
  
--    printf("ID of containing device:  [%lx,%lx]\en",
--	    (long) major(sb.st_dev), (long) minor(sb.st_dev));
-+    printf("ID of containing device:  [%x,%x]\en",
-+	    major(sb.st_dev), minor(sb.st_dev));
- 
-     printf("File type:                ");
- 
+     printf("CPU-time clock for PID %s is %ld.%09ld seconds\en",
+-            argv[1], (long) ts.tv_sec, (long) ts.tv_nsec);
++            argv[1], (long) ts.tv_sec, ts.tv_nsec);
+     exit(EXIT_SUCCESS);
+ }
+ .EE
 -- 
 2.28.0
 
