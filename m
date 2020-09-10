@@ -2,97 +2,86 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18640C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F001DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB281214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfNPYQ0I"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD9821941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgIJSlj (ORCPT
+        id S1727058AbgIJSma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIJSSa (ORCPT
+        Thu, 10 Sep 2020 14:42:30 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:49720 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgIJSlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:18:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6754BC0613ED;
-        Thu, 10 Sep 2020 11:18:21 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so4655701pgd.12;
-        Thu, 10 Sep 2020 11:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gG+fuMGEqnPLk7Bo+tjlREXOWrP6LnZTNp4lY+I/XBQ=;
-        b=RfNPYQ0IMWGuVftlfbq63KXkfZ4nENjXeVCkHwxybJksNYRjTqa45Kd4xB4cDmp1mH
-         ekdt75q52/StE9ky15srFtmEfHWQjfQp0oH8PtY5qQuvMdGaNqXVSv3LMTyg90Wpeijj
-         3dG9t/v0u+s7ew+jlHXh91XhEJNgaUpOmhjmXUsmycqF3u3hW7ptqn6LzKv7uBxuOQa+
-         9mKFhZJHsCQrNXUeZxY+QZrbFsZLxN8jpmaV4EukWX5RvP8xj3Wi7Z/uUhVwZUIc0lQk
-         gtyYvJf7H+vWVPoksIr7R6qPVcbd08Zusk2I4HEGzS5OiKsAdeykYVbwG4j/IDZjDIxM
-         bPbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gG+fuMGEqnPLk7Bo+tjlREXOWrP6LnZTNp4lY+I/XBQ=;
-        b=AYivvxeoT0uXQKZy9gy31+s0ZRSI0XZIN1epi4VYcv0zmDracMWHhqtbLXB5fNa64b
-         63x56h4BvN5/o5masjJo5MdrDKA0SO/DOB6jb5w4TjFSNmBoBG8rEKWZdCBXyAri/f1q
-         t6behVQMLgg7TBw+4l/+jsI3O7s0WTi562c/RhN4ewTx8jYvg21/MIVTcFWFh57WeOZG
-         SOvrhulBNKiQQUlKivu6vhtIUWwvaXuVZfrIWICVMcZyGxXv0ZbD9nt3skZb83OTuiy+
-         Vawoto0OWHO5DMtDVdHOcFd3nOlCGuR7IL3VpELCXaySwjQHHjDGsosJYG0Sa5z/R2Tb
-         0v2A==
-X-Gm-Message-State: AOAM530QS3KIZlhctE5EDe/HkbWsls0es4iBq5iaHDk/TMXMUEzAdiVU
-        LOtpdaivxauK/4jtFg3GlZo=
-X-Google-Smtp-Source: ABdhPJwoOV6PL/qF/81ukPiLOopjSpVEVjK+cK4tEqnBpZRsa4JZlzuJfInL5Pw0iZjGOICBlgQdsw==
-X-Received: by 2002:a63:fa10:: with SMTP id y16mr5469723pgh.304.1599761900909;
-        Thu, 10 Sep 2020 11:18:20 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id v4sm2468345pjh.38.2020.09.10.11.18.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 11:18:20 -0700 (PDT)
-Subject: Re: [PATCH 2/4] spi: bcm-qspi: Add compatible string for BRCMSTB 7445
- SoCs
-To:     Ray Jui <ray.jui@broadcom.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200910152539.45584-1-ray.jui@broadcom.com>
- <20200910152539.45584-2-ray.jui@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <34f96a04-a8cd-5cd8-da25-9202c95cb15a@gmail.com>
-Date:   Thu, 10 Sep 2020 11:18:17 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.2.1
+        Thu, 10 Sep 2020 14:41:47 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 180CB20039;
+        Thu, 10 Sep 2020 20:41:42 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 20:41:41 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        devicetree <devicetree@vger.kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        lukas@mntmn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
+ Subsystem
+Message-ID: <20200910184141.GD893045@ravnborg.org>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+ <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141>
+ <e882838158cb9e81440c8cdeb25d80bf3310e8a8.camel@pengutronix.de>
+ <20200831112445.t4xfz33avdyx5w6p@fsr-ub1864-141>
+ <f46d44f38008d214951994a340814570c182cc15.camel@pengutronix.de>
+ <CAKMK7uG7s1j+k0WPq8H4OcTD0jP2_LpTy0SBw0RtP-ij1OS7Mw@mail.gmail.com>
+ <20200910080432.26dleo5wxybsacvl@fsr-ub1864-141>
 MIME-Version: 1.0
-In-Reply-To: <20200910152539.45584-2-ray.jui@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910080432.26dleo5wxybsacvl@fsr-ub1864-141>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=EC8lkJN9LEwtObD5xQsA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Laurentiu
 
-
-On 9/10/2020 8:25 AM, Ray Jui wrote:
-> Add compatible string for BRCMSTB 7445 SoCs and indicate it has MSPI rev
-> support.
+> > > I've tested this together with a hacked up eDP bridge driver stack on
+> > > my boards. The testing hasn't been really in-depth, but things seem to
+> > > work fine. I have now pushed the whole series into drm-misc-next.
+> > 
+> > Something doesn't compile too well
+> > 
+> > ERROR: modpost: "__aeabi_ldivmod"
+> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
+> > ERROR: modpost: "__aeabi_uldivmod"
+> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
 > 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Oops... :/ I guess we need an ARM64 dependency in Kconfig. No
+> 32bit NXP SoC uses this particular display controller. So, that should
+> fix the compilation issue on 32bit.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Build coverage for ARM64 is an OK short term fix.
+
+Please fix the driver so we can build test it for all architectures.
+The chance to miss something when refactoring if only build for ARM64
+is too high. The fix can land when it is ready, and is not urgent.
+
+	Sam
