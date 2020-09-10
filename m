@@ -2,139 +2,115 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1750C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D49822204
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EsqOhFI0"
+	by mail.kernel.org (Postfix) with ESMTP id 3BDD522204
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbgIJOB5 (ORCPT
+        id S1731009AbgIJOC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:01:57 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1914 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730989AbgIJNzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:55:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5a2ce40001>; Thu, 10 Sep 2020 06:40:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 10 Sep 2020 06:43:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 10 Sep 2020 06:43:08 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
- 2020 13:43:08 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 10 Sep 2020 13:43:08 +0000
-Received: from moonraker.nvidia.com (Not Verified[10.26.73.219]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f5a2d6a0002>; Thu, 10 Sep 2020 06:43:08 -0700
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 5/5] arm64: tegra: Populate EEPROMs for Jetson Xavier NX
-Date:   Thu, 10 Sep 2020 14:42:39 +0100
-Message-ID: <20200910134239.192030-6-jonathanh@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200910134239.192030-1-jonathanh@nvidia.com>
-References: <20200910134239.192030-1-jonathanh@nvidia.com>
+        Thu, 10 Sep 2020 10:02:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730992AbgIJNyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:54:50 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E32177AABAC7776F98AE;
+        Thu, 10 Sep 2020 21:52:30 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 21:52:23 +0800
+From:   Zheng Bin <zhengbin13@huawei.com>
+To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH -next 3/3] rtlwifi: rtl8188ee: fix comparison pointer to bool warning in hw.c
+Date:   Thu, 10 Sep 2020 21:59:17 +0800
+Message-ID: <20200910135917.143723-4-zhengbin13@huawei.com>
+X-Mailer: git-send-email 2.26.0.106.g9fadedd
+In-Reply-To: <20200910135917.143723-1-zhengbin13@huawei.com>
+References: <20200910135917.143723-1-zhengbin13@huawei.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599745252; bh=yUbtCK0PckeSjkBV0tkSuiBjwH6LDZxGlJ3jgLQJf/4=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=EsqOhFI0RyLoudnJKCMysoRtwISSB5x3SrUmaCJzk171m0z3z5GV7r+Uz/ZNobu0M
-         tVUIX/4LOveouGLU8dxAlrdlPm2UVJkSux6SofGS9ke27KI79W0Taf98lH4y8GPLf0
-         HPr/wqddBYwS1iFjKXwkD6T1MkJ5K8HxJCosciqNrY7/7umP8STCMqZ/WJiaMV1G5U
-         ub2wiEr6A3WmxcN+598qoj/z3+nacN3uVWZ7Qryj365g1+xVDx/FgdGaVgQE1caOhg
-         U3CH+LTSchQ60oG2MZBq3ISNOhMClcSi+HMGrzbRfAlI3pKTyGfNFktqO4F9NfLeOF
-         InCXE2dH+y8Xw==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Populate the EEPROMs that are present on the Jetson Xavier NX developer
-platform.
+Fixes coccicheck warning:
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:777:14-20: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:782:13-19: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:787:14-20: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:792:13-19: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:871:6-33: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c:1070:5-13: WARNING: Comparison to bool
+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 ---
- .../nvidia/tegra194-p3509-0000+p3668-0000.dts    | 14 ++++++++++++++
- .../boot/dts/nvidia/tegra194-p3668-0000.dtsi     | 16 ++++++++++++++++
- 2 files changed, 30 insertions(+)
+ drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dts =
-b/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dts
-index c1c589805d6b..7f97b34216a0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p3509-0000+p3668-0000.dts
-@@ -27,6 +27,20 @@ ddc: i2c@3190000 {
- 			status =3D "okay";
- 		};
-=20
-+		i2c@3160000 {
-+			eeprom@57 {
-+				compatible =3D "atmel,24c02";
-+				reg =3D <0x57>;
-+
-+				label =3D "system";
-+				vcc-supply =3D <&vdd_1v8>;
-+				address-width =3D <8>;
-+				pagesize =3D <8>;
-+				size =3D <256>;
-+				read-only;
-+			};
-+		};
-+
- 		hda@3510000 {
- 			nvidia,model =3D "jetson-xavier-nx-hda";
- 			status =3D "okay";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p3668-0000.dtsi b/arch/arm=
-64/boot/dts/nvidia/tegra194-p3668-0000.dtsi
-index 10cb836aea7e..a2893be80507 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p3668-0000.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p3668-0000.dtsi
-@@ -58,6 +58,22 @@ serial@c280000 {
- 			status =3D "okay";
- 		};
-=20
-+		i2c@3160000 {
-+			status =3D "okay";
-+
-+			eeprom@50 {
-+				compatible =3D "atmel,24c02";
-+				reg =3D <0x50>;
-+
-+				label =3D "module";
-+				vcc-supply =3D <&vdd_1v8ls>;
-+				address-width =3D <8>;
-+				pagesize =3D <8>;
-+				size =3D <256>;
-+				read-only;
-+			};
-+		};
-+
- 		/* SDMMC1 (SD/MMC) */
- 		mmc@3400000 {
- 			status =3D "okay";
---=20
-2.25.1
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
+index 4c8d71fbdd7a..63f9ea21962f 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
+@@ -774,22 +774,22 @@ static bool _rtl88ee_llt_table_init(struct ieee80211_hw *hw)
+
+ 	for (i = 0; i < (txpktbuf_bndy - 1); i++) {
+ 		status = _rtl88ee_llt_write(hw, i, i + 1);
+-		if (true != status)
++		if (!status)
+ 			return status;
+ 	}
+
+ 	status = _rtl88ee_llt_write(hw, (txpktbuf_bndy - 1), 0xFF);
+-	if (true != status)
++	if (!status)
+ 		return status;
+
+ 	for (i = txpktbuf_bndy; i < maxpage; i++) {
+ 		status = _rtl88ee_llt_write(hw, i, (i + 1));
+-		if (true != status)
++		if (!status)
+ 			return status;
+ 	}
+
+ 	status = _rtl88ee_llt_write(hw, maxpage, txpktbuf_bndy);
+-	if (true != status)
++	if (!status)
+ 		return status;
+
+ 	return true;
+@@ -868,7 +868,7 @@ static bool _rtl88ee_init_mac(struct ieee80211_hw *hw)
+ 	rtl_write_byte(rtlpriv, MSR, 0x00);
+
+ 	if (!rtlhal->mac_func_enable) {
+-		if (_rtl88ee_llt_table_init(hw) == false) {
++		if (!_rtl88ee_llt_table_init(hw)) {
+ 			rtl_dbg(rtlpriv, COMP_INIT, DBG_LOUD,
+ 				"LLT table init fail\n");
+ 			return false;
+@@ -1067,7 +1067,7 @@ int rtl88ee_hw_init(struct ieee80211_hw *hw)
+ 	}
+
+ 	rtstatus = _rtl88ee_init_mac(hw);
+-	if (rtstatus != true) {
++	if (!rtstatus) {
+ 		pr_info("Init MAC failed\n");
+ 		err = 1;
+ 		goto exit;
+--
+2.26.0.106.g9fadedd
 
