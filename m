@@ -2,355 +2,471 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9EAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174CAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F7321D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02A320BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsvnH5BH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbgIJPCn (ORCPT
+        id S1731280AbgIJPZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 11:02:43 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:52372 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbgIJOzB (ORCPT
+        Thu, 10 Sep 2020 11:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730321AbgIJOwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:55:01 -0400
-Date:   Thu, 10 Sep 2020 10:23:37 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     linux-api@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] vfs: add fchmodat2 syscall
-Message-ID: <20200910142335.GG3265@brightrain.aerifal.cx>
+        Thu, 10 Sep 2020 10:52:22 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C30C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:52:21 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id q13so9127616ejo.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dJNpd1k/iXy/9vDDM1M28W1JVEcIvh8oM+RnMoJEaDg=;
+        b=KsvnH5BHQ1Uy6iuofqukywM5klP+kHns60Qe3eVgcntRLLC/K7Mkb2kEPEytUlk5bu
+         fQ5PqD0adoFZPG7M2OlOzej5ZKAAzj7vOdRR8OJnhM9W9oVo7j3fY9nUljOsYegnhOPE
+         5aEUK4f/umAuynJgaBjLjBsiE/Nu0yhZ3sBoWvptQNmGHE0k40STcoXTiOOFc1vxmssr
+         G7tRwGh/xmRZifCB/8xERtpTakorgUGQ4Qhpxnq+P2y8tTEwqj3JCv0qGu6nMynUshAM
+         UzGBZ69QKAs6XzQCZhXj3mqZnYlpEUtmIIVbYBUEoC+BWtQ48wEAJeva+AJB324nx26q
+         hoYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJNpd1k/iXy/9vDDM1M28W1JVEcIvh8oM+RnMoJEaDg=;
+        b=MNMlwXy/s9fUILVdI4FLXc2DzBxjtP/xBHtHIK8j03bRQ+Yt5MnCsmUc12fg3hxqlK
+         MY7zkjmqS9b49pH3JLs7a3b3GiCmZmR2W2nwOWt5Cve5AdDgqxQZle3YJ3VaJZyqcufj
+         eQqVH3XlxPnX36FSQ6IcTOliBt6Aw1FQIlOD5wFlHxSVst22oNhwnXmgSyZRwbzHv5/9
+         iW26QM2lpU6/QvhT+AaDB4yaOz/5kBiTJfZxRBx3AIfzjfjD3wJcTv8Oh36PqglT7/pJ
+         sd3iWlXdwJcuyMp269mRz262OAshFx10sFIeyAXx3OrSwCRmBZh928YP32Xgg2CN+aZ6
+         iD7Q==
+X-Gm-Message-State: AOAM533OmLnia1FAqRYZfTTrB9e6/uhXqZujaMsGZfZrUA/oWYdsLe2e
+        9HQV41V3NzdZWuWJNPDMWNGdpB93psJrFXnMQ1MjcQ==
+X-Google-Smtp-Source: ABdhPJx0KOv5hjFNV+JKZVJF3x+RtceP+aJ7B3sF18ElqWV3pnh4IpgxrrcPLOMIqDjkgYuIHIQEdHSXc6UXnGc6zhk=
+X-Received: by 2002:a17:906:1e11:: with SMTP id g17mr8738428ejj.298.1599749539289;
+ Thu, 10 Sep 2020 07:52:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200909224226.2177401-1-swboyd@chromium.org> <CABXOdTeWfuZHLywMU1d+No-NSZ4uusAgkhs=2hNZGFM-uYz2wA@mail.gmail.com>
+ <c3ba5d92-8bfe-30d7-44f0-c8a3e40d1906@collabora.com>
+In-Reply-To: <c3ba5d92-8bfe-30d7-44f0-c8a3e40d1906@collabora.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 10 Sep 2020 07:52:08 -0700
+Message-ID: <CABXOdTdsVyae9oHKEMSbXOsi5VWUZhLbKVxeNVedc4redZineQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/chrome: Don't populate lightbar device if it
+ isn't there
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POSIX defines fchmodat as having a 4th argument, flags, that can be
-AT_SYMLINK_NOFOLLOW. Support for changing the access mode of symbolic
-links is optional (EOPNOTSUPP allowed if not supported), but this flag
-is important even on systems where symlinks do not have access modes,
-since it's the only way to safely change the mode of a file which
-might be asynchronously replaced with a symbolic link, without a race
-condition whereby the link target is changed.
+On Thu, Sep 10, 2020 at 7:32 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi,
+>
+> On 10/9/20 16:18, Guenter Roeck wrote:
+> > On Wed, Sep 9, 2020 at 3:42 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >>
+> >> The cros ec lightbar driver has a check in probe to fail early if the ec
+> >> device isn't the cros_ec one or if it can't read the lightbar version
+> >> from the EC. Let's move this check to the place where the lightbar
+> >> device is registered. This way we don't expose devices that aren't
+> >> actually there on devices that don't have a lightbar.
+> >>
+> >> This should improve memory and possibly performance too because struct
+> >> devices don't exactly have a small memory footprint and they contribute
+> >> to suspend/resume regardless of driver attachment.
+> >>
+> >> Cc: Gwendal Grignou <gwendal@chromium.org>
+> >> Cc: Guenter Roeck <groeck@chromium.org>
+> >> Cc: Lee Jones <lee.jones@linaro.org>
+> >> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> >> ---
+> >>
+> >> Changes from v1:
+> >>  * Rebased on linux-next patches to this file
+> >>
+> >>  drivers/mfd/cros_ec_dev.c                   |  16 ++-
+> >>  drivers/platform/chrome/cros_ec_lightbar.c  | 102 ++------------------
+> >>  drivers/platform/chrome/cros_ec_proto.c     |  84 ++++++++++++++++
+> >>  include/linux/platform_data/cros_ec_proto.h |   4 +
+> >>  4 files changed, 111 insertions(+), 95 deletions(-)
+> >>
+> >> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> >> index d07b43d7c761..9e98b2ec5d92 100644
+> >> --- a/drivers/mfd/cros_ec_dev.c
+> >> +++ b/drivers/mfd/cros_ec_dev.c
+> >> @@ -74,6 +74,10 @@ static const struct mfd_cell cros_ec_cec_cells[] = {
+> >>         { .name = "cros-ec-cec", },
+> >>  };
+> >>
+> >> +static const struct mfd_cell cros_ec_lightbar_cells[] = {
+> >> +       { .name = "cros-ec-lightbar", },
+> >> +};
+> >> +
+> >>  static const struct mfd_cell cros_ec_rtc_cells[] = {
+> >>         { .name = "cros-ec-rtc", },
+> >>  };
+> >> @@ -112,7 +116,6 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
+> >>  static const struct mfd_cell cros_ec_platform_cells[] = {
+> >>         { .name = "cros-ec-chardev", },
+> >>         { .name = "cros-ec-debugfs", },
+> >> -       { .name = "cros-ec-lightbar", },
+> >>         { .name = "cros-ec-sysfs", },
+> >>  };
+> >>
+> >> @@ -206,6 +209,17 @@ static int ec_device_probe(struct platform_device *pdev)
+> >>                 }
+> >>         }
+> >>
+> >> +       if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
+> >> +           !cros_ec_get_lightbar_version(ec, NULL, NULL)) {
+> >
+> > Any idea why the lightbar code doesn't use cros_ec_check_features() ?
+> > There is a definition for EC_FEATURE_LIGHTBAR, but it doesn't seem to
+> > be used. It would be much more convenient if that feature check could
+> > be used instead of moving the get_lightbar_version command and its
+> > helper function around.
+> >
+>
+> IIRC it was to support a very old device, the Pixel Chromebook (Link). This flag
+> is not set in this device but has a lightbar, hence we had this 'weird' way to
+> detect the lightbar.
+>
 
-It's possible to emulate AT_SYMLINK_NOFOLLOW in userspace, and both
-musl libc and glibc do this, by opening an O_PATH file descriptor and
-performing chmod on the corresponding magic symlink in /proc/self/fd.
-However, this requires procfs to be mounted and accessible.
+If that is the only reason, wouldn't it be better to use something
+else (eg dmi_match) to determine if the system in question is a  Pixel
+Chromebook (Link) ?
 
-It was determined (see glibc issue #14578 and commit a492b1e5ef) that,
-on some filesystems, performing chmod on the link itself produces a
-change in the inode's access mode, but returns an EOPNOTSUPP error.
-This is non-conforming and wrong. Rather than try to fix all the
-broken filesystem backends, block attempts to change the symlink
-access mode via fchmodat2 at the frontend layer. This matches the
-userspace emulation done in libc implementations. No change is made to
-the underlying chmod_common(), so it's still possible to attempt
-changes via procfs, if desired. If at some point all filesystems have
-been fixed, this could be relaxed to allow filesystems to make their
-own decision whether changing access mode of links is supported.
+             if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
+                 (cros_ec_check_features(ec, EC_FEATURE_LIGHTBAR) ||
+                  dmi_match(DMI_PRODUCT_NAME, "Link")) {
 
-Signed-off-by: Rich Felker <dalias@libc.org>
----
- arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
- arch/arm/tools/syscall.tbl                  |  1 +
- arch/arm64/include/asm/unistd.h             |  2 +-
- arch/arm64/include/asm/unistd32.h           |  2 ++
- arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
- arch/s390/kernel/syscalls/syscall.tbl       |  1 +
- arch/sh/kernel/syscalls/syscall.tbl         |  1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
- fs/open.c                                   | 29 ++++++++++++++++++---
- include/linux/syscalls.h                    |  2 ++
- include/uapi/asm-generic/unistd.h           |  4 ++-
- 21 files changed, 49 insertions(+), 6 deletions(-)
+Thanks,
+Guenter
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index ec8bed9e7b75..5648fa8be7a1 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -479,3 +479,4 @@
- 547	common	openat2				sys_openat2
- 548	common	pidfd_getfd			sys_pidfd_getfd
- 549	common	faccessat2			sys_faccessat2
-+550	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 171077cbf419..b6b715bb3315 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -453,3 +453,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 3b859596840d..b3b2019f8d16 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		440
-+#define __NR_compat_syscalls		441
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 734860ac7cf9..cd0845f3c19f 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -887,6 +887,8 @@ __SYSCALL(__NR_openat2, sys_openat2)
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
- #define __NR_faccessat2 439
- __SYSCALL(__NR_faccessat2, sys_faccessat2)
-+#define __NR_fchmodat2 440
-+__SYSCALL(__NR_fchmodat2, sys_fchmodat2)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index f52a41f4c340..7c3f8564d0f3 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -360,3 +360,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 81fc799d8392..063d875377bf 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -439,3 +439,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index b4e263916f41..6aea8a435fd0 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -445,3 +445,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index f9df9edb67a4..a9205843251d 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -378,3 +378,4 @@
- 437	n32	openat2				sys_openat2
- 438	n32	pidfd_getfd			sys_pidfd_getfd
- 439	n32	faccessat2			sys_faccessat2
-+440	n32	fchmodat2			sys_fchmodat2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 557f9954a2b9..31da28e2d6f3 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -354,3 +354,4 @@
- 437	n64	openat2				sys_openat2
- 438	n64	pidfd_getfd			sys_pidfd_getfd
- 439	n64	faccessat2			sys_faccessat2
-+440	n64	fchmodat2			sys_fchmodat2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 195b43cf27c8..af0e38302ed8 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -427,3 +427,4 @@
- 437	o32	openat2				sys_openat2
- 438	o32	pidfd_getfd			sys_pidfd_getfd
- 439	o32	faccessat2			sys_faccessat2
-+440	o32	fchmodat2			sys_fchmodat2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index def64d221cd4..379cdb44ca0b 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index c2d737ff2e7b..ada11db506e6 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -529,3 +529,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 10456bc936fb..a4dae0abb353 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -442,3 +442,4 @@
- 437  common	openat2			sys_openat2			sys_openat2
- 438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
- 439  common	faccessat2		sys_faccessat2			sys_faccessat2
-+440  common	fchmodat2		sys_fchmodat2			sys_fchmodat2
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index ae0a00beea5f..b59b4408b85f 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -442,3 +442,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 4af114e84f20..e817416f81df 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -485,3 +485,4 @@
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 9d1102873666..208b06650cef 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -444,3 +444,4 @@
- 437	i386	openat2			sys_openat2
- 438	i386	pidfd_getfd		sys_pidfd_getfd
- 439	i386	faccessat2		sys_faccessat2
-+440	i386	fchmodat2		sys_fchmodat2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index f30d6ae9a688..d9a591db72fb 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -361,6 +361,7 @@
- 437	common	openat2			sys_openat2
- 438	common	pidfd_getfd		sys_pidfd_getfd
- 439	common	faccessat2		sys_faccessat2
-+440	common	fchmodat2		sys_fchmodat2
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 6276e3c2d3fc..ff756cb2f5d7 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -410,3 +410,4 @@
- 437	common	openat2				sys_openat2
- 438	common	pidfd_getfd			sys_pidfd_getfd
- 439	common	faccessat2			sys_faccessat2
-+440	common	fchmodat2			sys_fchmodat2
-diff --git a/fs/open.c b/fs/open.c
-index 9af548fb841b..570a21f4d81e 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -610,15 +610,30 @@ SYSCALL_DEFINE2(fchmod, unsigned int, fd, umode_t, mode)
- 	return err;
- }
- 
--static int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
-+static int do_fchmodat(int dfd, const char __user *filename, umode_t mode, int flags)
- {
- 	struct path path;
- 	int error;
- 	unsigned int lookup_flags = LOOKUP_FOLLOW;
-+
-+	if (flags & AT_SYMLINK_NOFOLLOW)
-+		lookup_flags &= ~LOOKUP_FOLLOW;
-+	if (flags & ~AT_SYMLINK_NOFOLLOW)
-+		return -EINVAL;
- retry:
- 	error = user_path_at(dfd, filename, lookup_flags, &path);
- 	if (!error) {
--		error = chmod_common(&path, mode);
-+		/* Block chmod from getting to fs layer. Ideally the
-+		 * fs would either allow it or fail with EOPNOTSUPP,
-+		 * but some are buggy and return an error but change
-+		 * the mode, which is non-conforming and wrong.
-+		 * Userspace emulation of AT_SYMLINK_NOFOLLOW in
-+		 * glibc and musl blocked it too, for same reason. */
-+		if (S_ISLNK(path.dentry->d_inode->i_mode)
-+		    && (flags & AT_SYMLINK_NOFOLLOW))
-+			error = -EOPNOTSUPP;
-+		else
-+			error = chmod_common(&path, mode);
- 		path_put(&path);
- 		if (retry_estale(error, lookup_flags)) {
- 			lookup_flags |= LOOKUP_REVAL;
-@@ -628,15 +643,21 @@ static int do_fchmodat(int dfd, const char __user *filename, umode_t mode)
- 	return error;
- }
- 
-+SYSCALL_DEFINE4(fchmodat2, int, dfd, const char __user *, filename,
-+		umode_t, mode, int, flags)
-+{
-+	return do_fchmodat(dfd, filename, mode, flags);
-+}
-+
- SYSCALL_DEFINE3(fchmodat, int, dfd, const char __user *, filename,
- 		umode_t, mode)
- {
--	return do_fchmodat(dfd, filename, mode);
-+	return do_fchmodat(dfd, filename, mode, 0);
- }
- 
- SYSCALL_DEFINE2(chmod, const char __user *, filename, umode_t, mode)
- {
--	return do_fchmodat(AT_FDCWD, filename, mode);
-+	return do_fchmodat(AT_FDCWD, filename, mode, 0);
- }
- 
- int chown_common(const struct path *path, uid_t user, gid_t group)
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 75ac7f8ae93c..ced00c56eba7 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -435,6 +435,8 @@ asmlinkage long sys_chroot(const char __user *filename);
- asmlinkage long sys_fchmod(unsigned int fd, umode_t mode);
- asmlinkage long sys_fchmodat(int dfd, const char __user * filename,
- 			     umode_t mode);
-+asmlinkage long sys_fchmodat2(int dfd, const char __user * filename,
-+			      umode_t mode, int flags);
- asmlinkage long sys_fchownat(int dfd, const char __user *filename, uid_t user,
- 			     gid_t group, int flag);
- asmlinkage long sys_fchown(unsigned int fd, uid_t user, gid_t group);
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 995b36c2ea7d..ebf5cdb3f444 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -859,9 +859,11 @@ __SYSCALL(__NR_openat2, sys_openat2)
- __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
- #define __NR_faccessat2 439
- __SYSCALL(__NR_faccessat2, sys_faccessat2)
-+#define __NR_fchmodat2 440
-+__SYSCALL(__NR_fchmodat2, sys_fchmodat2)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 440
-+#define __NR_syscalls 441
- 
- /*
-  * 32 bit systems traditionally used different
--- 
-2.21.0
-
+> > Thanks,
+> > Guenter
+> >
+> >> +               retval = mfd_add_hotplug_devices(ec->dev,
+> >> +                               cros_ec_lightbar_cells,
+> >> +                               ARRAY_SIZE(cros_ec_lightbar_cells));
+> >> +               if (retval)
+> >> +                       dev_err(ec->dev,
+> >> +                               "failed to add lightbar device: %d\n",
+> >> +                               retval);
+> >> +       }
+> >> +
+> >>         /*
+> >>          * The PD notifier driver cell is separate since it only needs to be
+> >>          * explicitly added on platforms that don't have the PD notifier ACPI
+> >> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> >> index de8dfb12e486..a7cfde90c8e5 100644
+> >> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> >> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> >> @@ -82,77 +82,6 @@ static int lb_throttle(void)
+> >>         return ret;
+> >>  }
+> >>
+> >> -static struct cros_ec_command *alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
+> >> -{
+> >> -       struct cros_ec_command *msg;
+> >> -       int len;
+> >> -
+> >> -       len = max(sizeof(struct ec_params_lightbar),
+> >> -                 sizeof(struct ec_response_lightbar));
+> >> -
+> >> -       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
+> >> -       if (!msg)
+> >> -               return NULL;
+> >> -
+> >> -       msg->version = 0;
+> >> -       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
+> >> -       msg->outsize = sizeof(struct ec_params_lightbar);
+> >> -       msg->insize = sizeof(struct ec_response_lightbar);
+> >> -
+> >> -       return msg;
+> >> -}
+> >> -
+> >> -static int get_lightbar_version(struct cros_ec_dev *ec,
+> >> -                               uint32_t *ver_ptr, uint32_t *flg_ptr)
+> >> -{
+> >> -       struct ec_params_lightbar *param;
+> >> -       struct ec_response_lightbar *resp;
+> >> -       struct cros_ec_command *msg;
+> >> -       int ret;
+> >> -
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> -       if (!msg)
+> >> -               return 0;
+> >> -
+> >> -       param = (struct ec_params_lightbar *)msg->data;
+> >> -       param->cmd = LIGHTBAR_CMD_VERSION;
+> >> -       msg->outsize = sizeof(param->cmd);
+> >> -       msg->result = sizeof(resp->version);
+> >> -       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> >> -       if (ret < 0 && ret != -EINVAL) {
+> >> -               ret = 0;
+> >> -               goto exit;
+> >> -       }
+> >> -
+> >> -       switch (msg->result) {
+> >> -       case EC_RES_INVALID_PARAM:
+> >> -               /* Pixel had no version command. */
+> >> -               if (ver_ptr)
+> >> -                       *ver_ptr = 0;
+> >> -               if (flg_ptr)
+> >> -                       *flg_ptr = 0;
+> >> -               ret = 1;
+> >> -               goto exit;
+> >> -
+> >> -       case EC_RES_SUCCESS:
+> >> -               resp = (struct ec_response_lightbar *)msg->data;
+> >> -
+> >> -               /* Future devices w/lightbars should implement this command */
+> >> -               if (ver_ptr)
+> >> -                       *ver_ptr = resp->version.num;
+> >> -               if (flg_ptr)
+> >> -                       *flg_ptr = resp->version.flags;
+> >> -               ret = 1;
+> >> -               goto exit;
+> >> -       }
+> >> -
+> >> -       /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
+> >> -       ret = 0;
+> >> -exit:
+> >> -       kfree(msg);
+> >> -       return ret;
+> >> -}
+> >> -
+> >>  static ssize_t version_show(struct device *dev,
+> >>                             struct device_attribute *attr, char *buf)
+> >>  {
+> >> @@ -165,7 +94,7 @@ static ssize_t version_show(struct device *dev,
+> >>                 return ret;
+> >>
+> >>         /* This should always succeed, because we check during init. */
+> >> -       if (!get_lightbar_version(ec, &version, &flags))
+> >> +       if (cros_ec_get_lightbar_version(ec, &version, &flags))
+> >>                 return -EIO;
+> >>
+> >>         return scnprintf(buf, PAGE_SIZE, "%d %d\n", version, flags);
+> >> @@ -184,7 +113,7 @@ static ssize_t brightness_store(struct device *dev,
+> >>         if (kstrtouint(buf, 0, &val))
+> >>                 return -EINVAL;
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -222,7 +151,7 @@ static ssize_t led_rgb_store(struct device *dev, struct device_attribute *attr,
+> >>         unsigned int val[4];
+> >>         int ret, i = 0, j = 0, ok = 0;
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -289,7 +218,7 @@ static ssize_t sequence_show(struct device *dev,
+> >>         int ret;
+> >>         struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -324,7 +253,7 @@ static int lb_send_empty_cmd(struct cros_ec_dev *ec, uint8_t cmd)
+> >>         struct cros_ec_command *msg;
+> >>         int ret;
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -352,7 +281,7 @@ static int lb_manual_suspend_ctrl(struct cros_ec_dev *ec, uint8_t enable)
+> >>         struct cros_ec_command *msg;
+> >>         int ret;
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -399,7 +328,7 @@ static ssize_t sequence_store(struct device *dev, struct device_attribute *attr,
+> >>                         return ret;
+> >>         }
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -444,7 +373,7 @@ static ssize_t program_store(struct device *dev, struct device_attribute *attr,
+> >>                 return -EINVAL;
+> >>         }
+> >>
+> >> -       msg = alloc_lightbar_cmd_msg(ec);
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >>         if (!msg)
+> >>                 return -ENOMEM;
+> >>
+> >> @@ -531,24 +460,9 @@ static struct attribute_group cros_ec_lightbar_attr_group = {
+> >>  static int cros_ec_lightbar_probe(struct platform_device *pd)
+> >>  {
+> >>         struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
+> >> -       struct cros_ec_platform *pdata = dev_get_platdata(ec_dev->dev);
+> >>         struct device *dev = &pd->dev;
+> >>         int ret;
+> >>
+> >> -       /*
+> >> -        * Only instantiate the lightbar if the EC name is 'cros_ec'. Other EC
+> >> -        * devices like 'cros_pd' doesn't have a lightbar.
+> >> -        */
+> >> -       if (strcmp(pdata->ec_name, CROS_EC_DEV_NAME) != 0)
+> >> -               return -ENODEV;
+> >> -
+> >> -       /*
+> >> -        * Ask then for the lightbar version, if it's 0 then the 'cros_ec'
+> >> -        * doesn't have a lightbar.
+> >> -        */
+> >> -       if (!get_lightbar_version(ec_dev, NULL, NULL))
+> >> -               return -ENODEV;
+> >> -
+> >>         /* Take control of the lightbar from the EC. */
+> >>         lb_manual_suspend_ctrl(ec_dev, 1);
+> >>
+> >> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> >> index dda182132a6a..a08747eec36a 100644
+> >> --- a/drivers/platform/chrome/cros_ec_proto.c
+> >> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> >> @@ -922,3 +922,87 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+> >>         return sensor_count;
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
+> >> +
+> >> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
+> >> +{
+> >> +       struct cros_ec_command *msg;
+> >> +       int len;
+> >> +
+> >> +       len = max(sizeof(struct ec_params_lightbar),
+> >> +                 sizeof(struct ec_response_lightbar));
+> >> +
+> >> +       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
+> >> +       if (!msg)
+> >> +               return NULL;
+> >> +
+> >> +       msg->version = 0;
+> >> +       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
+> >> +       msg->outsize = sizeof(struct ec_params_lightbar);
+> >> +       msg->insize = sizeof(struct ec_response_lightbar);
+> >> +
+> >> +       return msg;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(cros_ec_alloc_lightbar_cmd_msg);
+> >> +
+> >> +/**
+> >> + * cros_ec_get_lightbar_version() - Get the EC lightbar version
+> >> + *
+> >> + * @ec: EC device, does not have to be connected directly to the AP,
+> >> + *      can be daisy chained through another device.
+> >> + * @ver_ptr: Detected lightbar version number
+> >> + * @flag_ptr: Detected lightbar flags
+> >> + *
+> >> + * Call this function to determine the EC's lightbar version and flags
+> >> + * information. If it doesn't exist then this function returns a negative
+> >> + * error value.
+> >> + *
+> >> + * Return: 0 on success, negative errno on failure to detect a lightbar.
+> >> + */
+> >> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
+> >> +                                uint32_t *flg_ptr)
+> >> +{
+> >> +       struct ec_params_lightbar *param;
+> >> +       struct ec_response_lightbar *resp;
+> >> +       struct cros_ec_command *msg;
+> >> +       int ret;
+> >> +
+> >> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+> >> +       if (!msg)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       param = (struct ec_params_lightbar *)msg->data;
+> >> +       param->cmd = LIGHTBAR_CMD_VERSION;
+> >> +       msg->outsize = sizeof(param->cmd);
+> >> +       msg->result = sizeof(resp->version);
+> >> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> >> +       if (ret < 0 && ret != -EINVAL)
+> >> +               goto exit;
+> >> +
+> >> +       switch (msg->result) {
+> >> +       case EC_RES_INVALID_PARAM:
+> >> +               /* Pixel had no version command. */
+> >> +               if (ver_ptr)
+> >> +                       *ver_ptr = 0;
+> >> +               if (flg_ptr)
+> >> +                       *flg_ptr = 0;
+> >> +               ret = 0;
+> >> +               break;
+> >> +       case EC_RES_SUCCESS:
+> >> +               resp = (struct ec_response_lightbar *)msg->data;
+> >> +
+> >> +               /* Future devices w/lightbars should implement this command */
+> >> +               if (ver_ptr)
+> >> +                       *ver_ptr = resp->version.num;
+> >> +               if (flg_ptr)
+> >> +                       *flg_ptr = resp->version.flags;
+> >> +               ret = 0;
+> >> +               break;
+> >> +       default:
+> >> +               /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
+> >> +               ret = -ENODEV;
+> >> +       }
+> >> +exit:
+> >> +       kfree(msg);
+> >> +       return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(cros_ec_get_lightbar_version);
+> >> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> >> index 4a415ae851ef..50221254956c 100644
+> >> --- a/include/linux/platform_data/cros_ec_proto.h
+> >> +++ b/include/linux/platform_data/cros_ec_proto.h
+> >> @@ -229,6 +229,10 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
+> >>
+> >>  int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+> >>
+> >> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec);
+> >> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
+> >> +                                uint32_t *flg_ptr);
+> >> +
+> >>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+> >>
+> >>  /**
+> >>
+> >> base-commit: 1e7913ff5f9f1b73146ad8522958bd266f22a510
+> >> --
+> >> Sent by a computer, using git, on the internet
+> >>
