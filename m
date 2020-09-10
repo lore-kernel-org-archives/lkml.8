@@ -2,81 +2,98 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D6BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B712BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3307F2065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3079D207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgIJJF6 (ORCPT
+        id S1730176AbgIJJGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:05:58 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35972 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgIJJF4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:05:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 60so4744587otw.3;
-        Thu, 10 Sep 2020 02:05:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hFNMAhYmlLxYKeb7svmHG1hXMeSW5ltqU9S2s32FYG4=;
-        b=CYI0oCOON+BOI+EKwufA9OK+FX4kOM5NGW0+T7yLf5MUob7E31XVwV4wp3/WJRqNUH
-         rujuaqljxc4TFrIHo8IEhOXtvA4+gHbGCkpoiAmACmBgsWr+5RyiZFNCcCBI1IB8MgUb
-         V1oP404UcUhdp9aDPWGnexQNhUCoa4q6I4kfGa1ZKUaldg3rJ/s8eh2QwaA3Kuiszixf
-         tE9xT7tkkz97sjoq/zWGf2truMxjg8WXQKuBzjDPyBmFn/3Xf4++O4EFYN/vwq4IeCwf
-         bpCRJkMHNxF3E9tlZ70IyFwuv3qNuOxjXl+Qhcik0CtTvPKG7dhJGLiuKBM4nANev2Xy
-         W+zA==
-X-Gm-Message-State: AOAM530vh5jxBTsNaZnCrvj/CyPum2vj4r+QMcPKY4iNyx0bXmwOrVlp
-        70gQ9qfxC4Sf8c+DhXW24EoLbNqYjtg/sr8bYmk=
-X-Google-Smtp-Source: ABdhPJxniUaza46mYCMHdv2Xhtn1rGJeyKAGQvZtGFWosMTcRyVa75TOrOoPNNukhNh2gMy/jn4/RGfhdoG1mbLYG5I=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr3061640otp.107.1599728755415;
- Thu, 10 Sep 2020 02:05:55 -0700 (PDT)
+        Thu, 10 Sep 2020 05:06:32 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17876 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgIJJG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:06:29 -0400
+IronPort-SDR: jGewJH0bjtxxheTwJ2NeJA9749X1y2xZnYphQ4MAi81Fey8IfmKg8KcuIFCFrS0gjNZgWXHI6B
+ dsM5gESaXoqg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="158531601"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="158531601"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 02:06:29 -0700
+IronPort-SDR: WIrzJC6y5FIl0jF84V5cLkjFwXcy7VIWSi+mxD5gwtYqmrixTipndRhqCyPNoILOuTOXWdOOQ6
+ reMeeQ5tk+tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="334115483"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 02:06:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kGIXB-00FeKK-FX; Thu, 10 Sep 2020 12:06:25 +0300
+Date:   Thu, 10 Sep 2020 12:06:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matt Porter <mporter@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Alexandre Bounine <alexandre.bounine@idt.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1] rapidio: Make it dependent to DMADEVICES
+Message-ID: <20200910090625.GL1891694@smile.fi.intel.com>
+References: <20190813143906.9865-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200907155541.2011-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200907155541.2011-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200907155541.2011-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Sep 2020 11:05:44 +0200
-Message-ID: <CAMuHMdVdfZCbKdXbWMONVRdBPE2k07Gp1tRsGO495DStA9uRpA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: r8a7742-iwg21d-q7: Enable SD2 LED indication
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813143906.9865-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 5:56 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for LED trigger on SD2 interface.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Aug 13, 2019 at 05:39:06PM +0300, Andy Shevchenko wrote:
+> DMADEVICES option depends on HAS_DMA, and this dependency is ignored
+> when DMADEVICES is being selected.
+> 
+> Replace 'select' by 'depends on' in Kconfig for RAPIDIO_DMA_ENGINE.
 
-Thanks for the update, will queue in renesas-devel for v5.10.
+Yeah, I'm wondering why we got this into kernel much later (as
+d2b861002450 ("rapidio: Replace 'select' DMAENGINES 'with depends on'") in
+linux next and no one commented on this...
 
-Gr{oetje,eeting}s,
-
-                        Geert
+> Fixes: e42d98ebe7d7 ("rapidio: add DMA engine support for RIO data transfers")
+> Cc: Alexandre Bounine <alexandre.bounine@idt.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/rapidio/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rapidio/Kconfig b/drivers/rapidio/Kconfig
+> index 677d1aff61b7..788e7830771b 100644
+> --- a/drivers/rapidio/Kconfig
+> +++ b/drivers/rapidio/Kconfig
+> @@ -37,7 +37,7 @@ config RAPIDIO_ENABLE_RX_TX_PORTS
+>  config RAPIDIO_DMA_ENGINE
+>  	bool "DMA Engine support for RapidIO"
+>  	depends on RAPIDIO
+> -	select DMADEVICES
+> +	depends on DMADEVICES
+>  	select DMA_ENGINE
+>  	help
+>  	  Say Y here if you want to use DMA Engine frameork for RapidIO data
+> -- 
+> 2.20.1
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
