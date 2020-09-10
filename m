@@ -7,72 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D59EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7160AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F6E20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35756207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SQZNXcqU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MrzRYyfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgIJGEh (ORCPT
+        id S1726935AbgIJGE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
+        Thu, 10 Sep 2020 02:04:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIJGEP (ORCPT
+        with ESMTP id S1726534AbgIJGEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:04:15 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51BAC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:04:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kk9so2513971pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:04:14 -0700 (PDT)
+        Thu, 10 Sep 2020 02:04:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AD7C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:04:42 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so4021218pfi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vZWQw2MqezQSjPCg0Dku6/BdcAwBC3dDRSyH4V8pXAg=;
-        b=SQZNXcqU0ZuZn0AJkjqfkWCEklXGWMXhKkzRoLq85tYAhNvLeQZSzS+KpCuZ4KpW72
-         wwTVKXiK5Htjys+hkHZ4/YNhZ+CMji2am9sulpMpqCVjWq14byniLkA0VLeLPIRZJUKi
-         4m85yH8ncqbDTCRcwW9Wx+9C7mtjIdGEjrx54=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pPCDwGmcreej0UTgOvHeud65Ck7ttZheB3Tpbe5Ii+k=;
+        b=MrzRYyfYrdUOluPQ3Hd8mzad54wNbNurcjisgU8OBBFvRllFdb+ZenK6Rje7u5gB6A
+         yxjiA72pi2YvkME0vYjHX9aKq8lFNqwKGfCC+2FiX0BGgvMxlr5cc5GfKJNeU5hENKhh
+         odYukto3kXbOSf804FXWHdJhdPUrpzHjDD2pU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vZWQw2MqezQSjPCg0Dku6/BdcAwBC3dDRSyH4V8pXAg=;
-        b=PE458H9ppWw/W8VBbg8ZDSR5NEKWE3UQvr2PpCnFrH51nzhSLvHwzFlh5t5MdcyC3E
-         cC1tumUFkgcvn2hr79xmWmjQmdXFOuX8s+lA1e/NdIvIbkmU6SicxDuUDooRbRzN/Whb
-         rbCAN7sn/vnmubefo1gP7PUBgcsZCimGsOK0tBSxqCE5+m0sUEzm9PYFCbsyNzTZiItE
-         WCXmF9gclv/SW6CNKO77wohGwcYM2ngd+iSZw0Sdym0B4WkgwC0ge7av5d0uAOx9Jm0k
-         nkE38HaCCBXwyZCeiw/pH1RYx2vRbmw5hokkFpRrYi4uqQWEQlg7YjzUi2JvD76n6bzG
-         g4IA==
-X-Gm-Message-State: AOAM532NKCK5Fy87vboGscSIxBdtC5vb2PCVSr4BhO3I7VITiDvGdJht
-        XEIiXZJSprKY3aR8eJrfTwtVvw==
-X-Google-Smtp-Source: ABdhPJyxgMEM0piakxuNRBDbU1TVf/izPnfSQ3fQIf5qgxZExhxTcQhq8L6R1tcELWl8gyxoUEj3Dg==
-X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr3924629pjb.225.1599717854210;
-        Wed, 09 Sep 2020 23:04:14 -0700 (PDT)
-Received: from josephsih-z840.tpe.corp.google.com ([2401:fa00:1:10:de4a:3eff:fe7d:ff5f])
-        by smtp.gmail.com with ESMTPSA id j14sm893236pjz.21.2020.09.09.23.04.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pPCDwGmcreej0UTgOvHeud65Ck7ttZheB3Tpbe5Ii+k=;
+        b=Hk0uCrQFjhAwuZSPJRgwIN0CejuQ12Atg4ccGnAyZIRDML/TxNqMWUYapxKNEDdyWK
+         kXswHPcQAdSbdPpceb7HfHIyfFRMhHNGyHpYvf8ikh8vgBwpa6P7jDOJXIqvUmiKhwmB
+         y8kgfGCbXRgW2ZQRkBnD890o22wppnbez4FQVpKx98kxjsiCZ5GL+ECDc90fERcWcO1P
+         nxXHUk/uzuGzoeulnxTFTyTDAokvxFw5tWbQP7OG6if5j55MENPDyjJCmc5aHdN+qBjT
+         +2pHronTVpVK+/kbYZOEG51e3tjDFUTjSjjhNIi+ThgUL6gmcYivqh8H+l3PcJpUszG0
+         6nAw==
+X-Gm-Message-State: AOAM5312XCq2ZIi3cDmKiZjzrMlOdphqC45tfrqbXUIEg8lzbMzkcUNp
+        KipHtU5s40actMakzvjg5vTfaw==
+X-Google-Smtp-Source: ABdhPJxTCipQzSP5KOrtWtUPu+ui70YGHVVLP7khWBM647UJ1fytRm0k/5NVDQ4ws1WnqFF3794bKw==
+X-Received: by 2002:a62:92ca:0:b029:13e:d13d:a07e with SMTP id o193-20020a6292ca0000b029013ed13da07emr3813251pfd.21.1599717881579;
+        Wed, 09 Sep 2020 23:04:41 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id y6sm987739pjl.9.2020.09.09.23.04.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 23:04:13 -0700 (PDT)
-From:   Joseph Hwang <josephsih@chromium.org>
-To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        luiz.dentz@gmail.com, pali@kernel.org
-Cc:     chromeos-bluetooth-upstreaming@chromium.org, josephsih@google.com,
-        Joseph Hwang <josephsih@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v3 1/2] Bluetooth: btusb: define HCI packet sizes of USB Alts
-Date:   Thu, 10 Sep 2020 14:04:01 +0800
-Message-Id: <20200910140342.v3.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
-X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
-In-Reply-To: <20200910060403.144524-1-josephsih@chromium.org>
-References: <20200910060403.144524-1-josephsih@chromium.org>
+        Wed, 09 Sep 2020 23:04:40 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH] driver core: platform: Document return type of more functions
+Date:   Wed,  9 Sep 2020 23:04:40 -0700
+Message-Id: <20200910060440.2302925-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,137 +70,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is desirable to define the HCI packet payload sizes of
-USB alternate settings so that they can be exposed to user
-space.
+I can't always remember the return values of these functions, and so I
+usually jump to the function to read the kernel-doc and see that it
+doesn't tell me. Then I have to spend more time reading the code to jump
+to the function that actually tells me the return values. Let's document
+it here so that we don't all have to spend time digging through the code
+to understand the return values.
 
-Reviewed-by: Alain Michaud <alainm@chromium.org>
-Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+Cc: <linux-doc@vger.kernel.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
+ drivers/base/platform.c | 14 ++++++++++++++
+ lib/devres.c            | 18 ++++++++++++------
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-Changes in v3:
-- Set hdev->sco_mtu to rp->sco_mtu if the latter is smaller.
-
-Changes in v2:
-- Used sco_mtu instead of a new sco_pkt_len member in hdev.
-- Do not overwrite hdev->sco_mtu in hci_cc_read_buffer_size
-  if it has been set in the USB interface.
-
- drivers/bluetooth/btusb.c | 45 +++++++++++++++++++++++++++++----------
- net/bluetooth/hci_event.c | 14 +++++++++++-
- 2 files changed, 47 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index fe80588c7bd3a8..651d5731a6c6cf 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -459,6 +459,24 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
- #define BTUSB_WAKEUP_DISABLE	14
- #define BTUSB_USE_ALT1_FOR_WBS	15
- 
-+/* Per core spec 5, vol 4, part B, table 2.1,
-+ * list the hci packet payload sizes for various ALT settings.
-+ * This is used to set the packet length for the wideband speech.
-+ * If a controller does not probe its usb alt setting, the default
-+ * value will be 0. Any clients at upper layers should interpret it
-+ * as a default value and set a proper packet length accordingly.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index e5d8a0503b4f..4b3dc6813714 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -45,6 +45,8 @@ EXPORT_SYMBOL_GPL(platform_bus);
+  * @dev: platform device
+  * @type: resource type
+  * @num: resource index
 + *
-+ * To calculate the HCI packet payload length:
-+ *   for alternate settings 1 - 5:
-+ *     hci_packet_size = suggested_max_packet_size * 3 (packets) -
-+ *                       3 (HCI header octets)
-+ *   for alternate setting 6:
-+ *     hci_packet_size = suggested_max_packet_size - 3 (HCI header octets)
-+ *   where suggested_max_packet_size is {9, 17, 25, 33, 49, 63}
-+ *   for alt settings 1 - 6.
-+ */
-+static const int hci_packet_size_usb_alt[] = { 0, 24, 48, 72, 96, 144, 60 };
-+
- struct btusb_data {
- 	struct hci_dev       *hdev;
- 	struct usb_device    *udev;
-@@ -3959,6 +3977,15 @@ static int btusb_probe(struct usb_interface *intf,
- 	hdev->notify = btusb_notify;
- 	hdev->prevent_wake = btusb_prevent_wake;
- 
-+	if (id->driver_info & BTUSB_AMP) {
-+		/* AMP controllers do not support SCO packets */
-+		data->isoc = NULL;
-+	} else {
-+		/* Interface orders are hardcoded in the specification */
-+		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
-+		data->isoc_ifnum = ifnum_base + 1;
-+	}
-+
- #ifdef CONFIG_PM
- 	err = btusb_config_oob_wake(hdev);
- 	if (err)
-@@ -4022,6 +4049,10 @@ static int btusb_probe(struct usb_interface *intf,
- 		hdev->set_diag = btintel_set_diag;
- 		hdev->set_bdaddr = btintel_set_bdaddr;
- 		hdev->cmd_timeout = btusb_intel_cmd_timeout;
-+
-+		if (btusb_find_altsetting(data, 6))
-+			hdev->sco_mtu = hci_packet_size_usb_alt[6];
-+
- 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
- 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
-@@ -4063,15 +4094,6 @@ static int btusb_probe(struct usb_interface *intf,
- 		btusb_check_needs_reset_resume(intf);
- 	}
- 
--	if (id->driver_info & BTUSB_AMP) {
--		/* AMP controllers do not support SCO packets */
--		data->isoc = NULL;
--	} else {
--		/* Interface orders are hardcoded in the specification */
--		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
--		data->isoc_ifnum = ifnum_base + 1;
--	}
--
- 	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
- 	    (id->driver_info & BTUSB_REALTEK)) {
- 		hdev->setup = btrtl_setup_realtek;
-@@ -4083,9 +4105,10 @@ static int btusb_probe(struct usb_interface *intf,
- 		 * (DEVICE_REMOTE_WAKEUP)
- 		 */
- 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
--		if (btusb_find_altsetting(data, 1))
-+		if (btusb_find_altsetting(data, 1)) {
- 			set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
--		else
-+			hdev->sco_mtu = hci_packet_size_usb_alt[1];
-+		} else
- 			bt_dev_err(hdev, "Device does not support ALT setting 1");
- 	}
- 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 33d8458fdd4adc..1869dc7ebbb5ac 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -730,7 +730,19 @@ static void hci_cc_read_buffer_size(struct hci_dev *hdev, struct sk_buff *skb)
- 		return;
- 
- 	hdev->acl_mtu  = __le16_to_cpu(rp->acl_mtu);
--	hdev->sco_mtu  = rp->sco_mtu;
-+	/* If the host controller interface is USB, the hdev->sco_mtu is
-+	 * set in btusb.c and is not expected to be larger than the max sco
-+	 * buffer size returned from the controller in rp->sco_mtu.
-+	 */
-+	if (hdev->sco_mtu > 0) {
-+		if (rp->sco_mtu < hdev->sco_mtu) {
-+			BT_ERR("sco mtu %d changed to max sco buffer size %d",
-+			       hdev->sco_mtu, rp->sco_mtu);
-+			hdev->sco_mtu = rp->sco_mtu;
-+		}
-+	} else {
-+		hdev->sco_mtu  = rp->sco_mtu;
-+	}
- 	hdev->acl_pkts = __le16_to_cpu(rp->acl_max_pkt);
- 	hdev->sco_pkts = __le16_to_cpu(rp->sco_max_pkt);
- 
++ * Return: a pointer to the resource or NULL on failure.
+  */
+ struct resource *platform_get_resource(struct platform_device *dev,
+ 				       unsigned int type, unsigned int num)
+@@ -70,6 +72,9 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
+  *        resource management
+  * @index: resource index
+  * @res: optional output parameter to store a pointer to the obtained resource.
++ *
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *
+ devm_platform_get_and_ioremap_resource(struct platform_device *pdev,
+@@ -91,6 +96,9 @@ EXPORT_SYMBOL_GPL(devm_platform_get_and_ioremap_resource);
+  * @pdev: platform device to use both for memory resource lookup as well as
+  *        resource management
+  * @index: resource index
++ *
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+ 					     unsigned int index)
+@@ -106,6 +114,9 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+  * @pdev: platform device to use both for memory resource lookup as well as
+  *        resource management
+  * @index: resource index
++ *
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *devm_platform_ioremap_resource_wc(struct platform_device *pdev,
+ 						unsigned int index)
+@@ -124,6 +135,9 @@ void __iomem *devm_platform_ioremap_resource_wc(struct platform_device *pdev,
+  * @pdev: platform device to use both for memory resource lookup as well as
+  *	  resource management
+  * @name: name of the resource
++ *
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *
+ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+diff --git a/lib/devres.c b/lib/devres.c
+index ebb1573d9ae3..a289b9d2f742 100644
+--- a/lib/devres.c
++++ b/lib/devres.c
+@@ -162,13 +162,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
+  * region and ioremaps it. All operations are managed and will be undone
+  * on driver detach.
+  *
+- * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
+- * on failure. Usage example:
++ * Usage example:
+  *
+  *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+  *	base = devm_ioremap_resource(&pdev->dev, res);
+  *	if (IS_ERR(base))
+  *		return PTR_ERR(base);
++ *
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *devm_ioremap_resource(struct device *dev,
+ 				    const struct resource *res)
+@@ -183,8 +185,8 @@ EXPORT_SYMBOL(devm_ioremap_resource);
+  * @dev: generic device to handle the resource for
+  * @res: resource to be handled
+  *
+- * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
+- * on failure. Usage example:
++ * Return: a pointer to the remapped memory or an ERR_PTR() encoded error code
++ * on failure.
+  */
+ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+ 				       const struct resource *res)
+@@ -207,8 +209,8 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+  * @node:       The device-tree node where the resource resides
+  * @index:	index of the MMIO range in the "reg" property
+  * @size:	Returns the size of the resource (pass NULL if not needed)
+- * Returns a pointer to the requested and mapped memory or an ERR_PTR() encoded
+- * error code on failure. Usage example:
++ *
++ * Usage example:
+  *
+  *	base = devm_of_iomap(&pdev->dev, node, 0, NULL);
+  *	if (IS_ERR(base))
+@@ -219,6 +221,8 @@ void __iomem *devm_ioremap_resource_wc(struct device *dev,
+  * two drivers try to map the same memory, the of_iomap() function will succeed
+  * but the the devm_of_iomap() function will return -EBUSY.
+  *
++ * Return: a pointer to the requested and mapped memory or an ERR_PTR() encoded
++ * error code on failure.
+  */
+ void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int index,
+ 			    resource_size_t *size)
+@@ -256,6 +260,8 @@ static int devm_ioport_map_match(struct device *dev, void *res,
+  *
+  * Managed ioport_map().  Map is automatically unmapped on driver
+  * detach.
++ *
++ * Return: a pointer to the remapped memory or NULL on failure.
+  */
+ void __iomem *devm_ioport_map(struct device *dev, unsigned long port,
+ 			       unsigned int nr)
 -- 
-2.28.0.618.gf4bc123cb7-goog
+Sent by a computer, using git, on the internet
 
