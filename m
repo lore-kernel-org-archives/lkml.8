@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDD3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5FDC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF5B207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4965C20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s+zIzTOK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gz904nsa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m4qSHDnZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BirEK82J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgIJT2r (ORCPT
+        id S1727907AbgIJT3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
+        Thu, 10 Sep 2020 15:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731222AbgIJPsR (ORCPT
+        with ESMTP id S1731424AbgIJPsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 11:48:17 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F8EC061358;
-        Thu, 10 Sep 2020 08:08:30 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 15:08:27 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42846C061350;
+        Thu, 10 Sep 2020 08:08:29 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 15:08:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599750508;
+        s=2020; t=1599750507;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Z2/hUdQLd7wur+pFlosSdnnkNuhfnbkcRAyfZezhqDs=;
-        b=s+zIzTOKMTbUYLOVU9e4IE4wGdaXSk7tmLONJ7z/a+/EPs3XE7IZEMKR2TIRNRpDrgJE2o
-        i6LPm0MQtTeQF76pfW1EeyC4AewS41eSQAzrVf7CY4PpNd+vu/+oqpTXzuD7jh+A8RPqAS
-        2PG705z705JxQfHYzpkghTugDtY0SD6EwOfML6OHPdw1G1t7TJSjuVCNWVuLvEO6EC2S57
-        u3Iohj1v6UwEeKUH6Zq3dgHnbiz8fiOgdh9Pe5lq6BL3PwSkWsj+Z2GHr1uI3Zt8ffe41o
-        XCYIppNJwmqAkxmS9qTlQrzCEGsMkgRZFEB+fla6/i4F95+MX1HTFWoVdsisgg==
+        bh=W6+IFj5KsRwEgGxJPZulh3HA62DooTbJIv60Z+9sE10=;
+        b=m4qSHDnZcxNODEKHI7R7I0n8RVi7blwJ2zeUg3y2wWzvD16qluHu2Vm2nu0htWUIfqsN19
+        N3OlV+FuGAXOxfOl6ZEMkQFVQT9cMixcWmZTv0Hii/WXCm6PkRl6SYhGzRnVwbdG9+Y3Qv
+        Q94oVCmU5W/bp0GkfBtB4U0zTg85kZgSZwfBiG6CMiFuu5rHnzqn5itAi8FpxVkSY4HqtF
+        kIH28Wt5TXFLr5jwGkXLuGLDv3gi/w5MDkFp3Ry+WWlTXUtNFuH3Vc0MyGxvZGVhIvPMQI
+        vxsheCwiy/0wZrNNLDkALHjhsrIo5F8xQLns9CY7vYalRfBsWShpucmII2Ongg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599750508;
+        s=2020e; t=1599750507;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Z2/hUdQLd7wur+pFlosSdnnkNuhfnbkcRAyfZezhqDs=;
-        b=Gz904nsajQPQrH0HFwvIoTp4fSM2h3IA/Ic84+ltv5fZjvhXp69CVc/q4tEtBJ+n4vuTfa
-        UVcpzx6mJvDr+TBw==
+        bh=W6+IFj5KsRwEgGxJPZulh3HA62DooTbJIv60Z+9sE10=;
+        b=BirEK82JlKkzGqHVY8zlyFWNLAkEzIUmAPLA5eCyiyj6b/XltzeEwVTwRLVmwY4pCrri/Y
+        e2xv/lwZzia0UiCg==
 From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] time/sched_clock: Use seqcount_latch_t
+Subject: [tip: locking/core] x86/tsc: Use seqcount_latch_t
 Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200827114044.11173-5-a.darwish@linutronix.de>
-References: <20200827114044.11173-5-a.darwish@linutronix.de>
+In-Reply-To: <20200827114044.11173-7-a.darwish@linutronix.de>
+References: <20200827114044.11173-7-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159975050783.20229.16826459517712069243.tip-bot2@tip-bot2>
+Message-ID: <159975050696.20229.10208989556997350425.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,48 +73,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     a690ed07353ec45f056b0a6f87c23a12a59c030d
-Gitweb:        https://git.kernel.org/tip/a690ed07353ec45f056b0a6f87c23a12a59c030d
+Commit-ID:     a1f1066133d85d5f42217cc72a2490bb7aa889c5
+Gitweb:        https://git.kernel.org/tip/a1f1066133d85d5f42217cc72a2490bb7aa889c5
 Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
-AuthorDate:    Thu, 27 Aug 2020 13:40:40 +02:00
+AuthorDate:    Thu, 27 Aug 2020 13:40:42 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Thu, 10 Sep 2020 11:19:29 +02:00
 
-time/sched_clock: Use seqcount_latch_t
+x86/tsc: Use seqcount_latch_t
 
 Latch sequence counters have unique read and write APIs, and thus
 seqcount_latch_t was recently introduced at seqlock.h.
 
 Use that new data type instead of plain seqcount_t. This adds the
-necessary type-safety and ensures only latching-safe seqcount APIs are
-to be used.
+necessary type-safety and ensures that only latching-safe seqcount APIs
+are to be used.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+[peterz: unwreck cyc2ns_read_begin()]
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200827114044.11173-5-a.darwish@linutronix.de
+Link: https://lkml.kernel.org/r/20200827114044.11173-7-a.darwish@linutronix.de
 ---
- kernel/time/sched_clock.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/tsc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index 8c6b5fe..0642013 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -35,7 +35,7 @@
-  * into a single 64-byte cache line.
-  */
- struct clock_data {
--	seqcount_t		seq;
-+	seqcount_latch_t	seq;
- 	struct clock_read_data	read_data[2];
- 	ktime_t			wrap_kt;
- 	unsigned long		rate;
-@@ -76,7 +76,7 @@ struct clock_read_data *sched_clock_read_begin(unsigned int *seq)
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 49d9250..f70dffc 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -54,7 +54,7 @@ struct clocksource *art_related_clocksource;
  
- int sched_clock_read_retry(unsigned int seq)
- {
--	return read_seqcount_retry(&cd.seq, seq);
-+	return read_seqcount_latch_retry(&cd.seq, seq);
+ struct cyc2ns {
+ 	struct cyc2ns_data data[2];	/*  0 + 2*16 = 32 */
+-	seqcount_t	   seq;		/* 32 + 4    = 36 */
++	seqcount_latch_t   seq;		/* 32 + 4    = 36 */
+ 
+ }; /* fits one cacheline */
+ 
+@@ -73,14 +73,14 @@ __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+ 	preempt_disable_notrace();
+ 
+ 	do {
+-		seq = this_cpu_read(cyc2ns.seq.sequence);
++		seq = this_cpu_read(cyc2ns.seq.seqcount.sequence);
+ 		idx = seq & 1;
+ 
+ 		data->cyc2ns_offset = this_cpu_read(cyc2ns.data[idx].cyc2ns_offset);
+ 		data->cyc2ns_mul    = this_cpu_read(cyc2ns.data[idx].cyc2ns_mul);
+ 		data->cyc2ns_shift  = this_cpu_read(cyc2ns.data[idx].cyc2ns_shift);
+ 
+-	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.sequence)));
++	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.seqcount.sequence)));
  }
  
- unsigned long long notrace sched_clock(void)
+ __always_inline void cyc2ns_read_end(void)
+@@ -186,7 +186,7 @@ static void __init cyc2ns_init_boot_cpu(void)
+ {
+ 	struct cyc2ns *c2n = this_cpu_ptr(&cyc2ns);
+ 
+-	seqcount_init(&c2n->seq);
++	seqcount_latch_init(&c2n->seq);
+ 	__set_cyc2ns_scale(tsc_khz, smp_processor_id(), rdtsc());
+ }
+ 
+@@ -203,7 +203,7 @@ static void __init cyc2ns_init_secondary_cpus(void)
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		if (cpu != this_cpu) {
+-			seqcount_init(&c2n->seq);
++			seqcount_latch_init(&c2n->seq);
+ 			c2n = per_cpu_ptr(&cyc2ns, cpu);
+ 			c2n->data[0] = data[0];
+ 			c2n->data[1] = data[1];
