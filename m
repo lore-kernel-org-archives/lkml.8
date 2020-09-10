@@ -2,83 +2,133 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0246AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75E4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD9920719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B11B2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599775179;
+	bh=n7fko+K24EPbXR431Tv5ZgLjx98hbWABFxYSBLUpKws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ug72yZNshdV/d+GjRyMEJPWhHJ7dRkPgqBiwF5YJFQ9p81R5yev4VJ7S2v4h4Jqg+
+	 qeHKbIfMIa5Py4TmJYTy+S7cLbtXqcoLP/VTrge4H7hVLeg/wABWh7wCR+4YSMcJxz
+	 X09b5RlGihtA4/Ngk8GDeph//wAaLaAiyQsxiOk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgIJV72 (ORCPT
+        id S1725290AbgIJV7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:59:28 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18184 "EHLO mga14.intel.com"
+        Thu, 10 Sep 2020 17:59:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgIJLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:10:30 -0400
-IronPort-SDR: H4cSjfvoeqxq8R1PNVJauz376Xa843CnFVvVZIlsFJP6rTkJPRR/VzMTnPU3Veeh4+At/g/LDL
- PT1ieuJF6VWw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="157790726"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="157790726"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 04:10:21 -0700
-IronPort-SDR: Rf6AqbrvlPtt/XYMILfRvF4fyk8hmsstyZFoh95B7GC8FZsKavm0GCaZhQla7+fQEY46quKLGb
- 0tqvM3wufowQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="334143904"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 04:10:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kGKT3-00FfiW-6k; Thu, 10 Sep 2020 14:10:17 +0300
-Date:   Thu, 10 Sep 2020 14:10:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200910111017.GT1891694@smile.fi.intel.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+        id S1730518AbgIJLKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:10:35 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB4B621556;
+        Thu, 10 Sep 2020 11:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599736223;
+        bh=n7fko+K24EPbXR431Tv5ZgLjx98hbWABFxYSBLUpKws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jbc6qqCieYpi405/MUUIN69qEpUHLQ9tvNwfAcZHqz1p0Qa7gTdQeldC50pB+Sruy
+         zGXbzZDsMsIvYrX9Cka1lOYuNk1YecakhwfgEVpZJQSN5D+7qaSl22txo6jxtWedR7
+         SnfcYWMTV1s2CoKH6zv6DEyb7hHPkwvZb0Z+Ie58=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D1C8540D3D; Thu, 10 Sep 2020 08:10:20 -0300 (-03)
+Date:   Thu, 10 Sep 2020 08:10:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCHSET 0/4] perf stat: Add --multiply-cgroup option
+Message-ID: <20200910111020.GA4018363@kernel.org>
+References: <20200908044228.61197-1-namhyung@kernel.org>
+ <20200910091542.GD1627030@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200910091542.GD1627030@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:02:03PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 27, 2020 at 5:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+Em Thu, Sep 10, 2020 at 11:15:42AM +0200, Jiri Olsa escreveu:
+> On Tue, Sep 08, 2020 at 01:42:24PM +0900, Namhyung Kim wrote:
+> > When we profile cgroup events with perf stat, it's very annoying to
+> > specify events and cgroups on the command line as it requires the
+> > mapping between events and cgroups.  (Note that perf record can use
+> > cgroup sampling but it's not usable for perf stat).
 
-> please hold it maybe for one more week - I'd love to have some more
-> people take a look at the user facing header at least. Andy is usually
-> very thorough in his reviews so I'm Ccing him here.
+> > I guess most cases we just want to use a same set of events (N) for
+> > all cgroups (M), but we need to specify NxM events and NxM cgroups.
+> > This is not good especially when profiling large number of cgroups:
+> > say M=200.
+
+> > So I added --multiply-cgroup option to make it easy for that case.  It
+> > will create NxM events from N events and M cgroups.  One more upside
+> > is that it can handle metrics too.
+
+> agreed that it's PITA to use -G option ;-)
+
+yeah, its great that someone is looking at cgroups improvements, thanks
+Namyung, its great to have you working on this!
+
+More below.
+ 
+> > For example, the following example measures IPC metric for 3 cgroups
+
+> >   $ cat perf-multi-cgrp.sh
+> >   #!/bin/sh
+
+> >   METRIC=${1:-IPC}
+> >   CGROUP_DIR=/sys/fs/cgroup/perf_event
+
+> >   sudo mkdir $CGROUP_DIR/A $CGROUP_DIR/B $CGROUP_DIR/C
+
+> >   # add backgroupd workload for each cgroup
+> >   echo $$ | sudo tee $CGROUP_DIR/A/cgroup.procs > /dev/null
+> >   yes > /dev/null &
+> >   echo $$ | sudo tee $CGROUP_DIR/B/cgroup.procs > /dev/null
+> >   yes > /dev/null &
+> >   echo $$ | sudo tee $CGROUP_DIR/C/cgroup.procs > /dev/null
+> >   yes > /dev/null &
+
+> >   # run 'perf stat' in the root cgroup
+> >   echo $$ | sudo tee $CGROUP_DIR/cgroup.procs > /dev/null
+> >   perf stat -a -M $METRIC --multiply-cgroup -G A,B,C sleep 1
 > 
-> I'll too skim through the series one more time.
+> would it be easier to have new option for this? like:
+> 
+>   perf stat -a -M $METRIC --for-cgroup A,B,C
+>   perf stat -a -M $METRIC --for-each-cgroup A,B,C
+>   perf stat -a -M $METRIC --attach-cgroup A,B,C
+>   perf stat -a -M $METRIC --attach-to-cgroup A,B,C
+> 
+> I'm still not sure how the --multiply-cgroup deals with empty
+> cgroup A,,C but looks like we don't need this behaviour now?
 
-Thank you, Bart.
+Yeah, I also didn't like the --multiply-cgroup thing, perhaps we can use
+a per-event term? or per group, for example:
 
-I think you, guys know how to do that best. Unfortunately I was almost squeezed
-under pile of several tasks and didn't find time for this.
+  perf stat -a -M $METRIC/cgroups=A,B,C/
+  perf stat -a -e '{cycles,instructions,cache-misses}/cgroups=A,B,C/'
 
-Meanwhile I have sent an updated fix for v1 as suggested by Arnd. It works for
-me.
+Allowing wildcards or regexps would help with some use cases.
 
--- 
-With Best Regards,
-Andy Shevchenko
+We already have several terms that allows us to control per event knobs,
+this would be one more.
 
-
+- Arnaldo
