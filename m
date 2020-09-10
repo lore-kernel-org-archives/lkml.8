@@ -2,120 +2,120 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF543C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDB1C2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9651320770
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M7wdL6CN"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC44214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599727679;
+	bh=RPokpgxyglYjppmxdwE4ETpgoWb+FLMn8txdhEbALdk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=ZyLstjoZBJLemQSIxKjxfliqqGXkRJ/LWFLQ6aTDZe0BDaLFtVblMQkZo5zhhI55A
+	 bBH5HQdIxc/xWTZzeR1zCWai1yrVcAuaIWWmeTazhtt26/o1+X1m0Jl4Nc/nkFtrSm
+	 YjK0T7ZyjuWDL7loCFuyf/EfhhNgSdUp0/KHbwdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgIJIqh (ORCPT
+        id S1730423AbgIJIrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbgIJIpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:45:08 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F70C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:45:06 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z25so6166954iol.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vc9DogxoLgngfubJ0u33iUTXXgPBqlfWnxisJuHVigk=;
-        b=M7wdL6CNysKj2I2uFNxFP98crOR6oki0Kv9eRzGJ/PUHBswh1K2Yef8UbV955S99ID
-         CtqGAsbh6F1xTWPhc6/mzKjL8BLWEH41oqA7SEHhpbQr9ftZ+z7DZWEIjmkFp1Ft+YVc
-         k8p/nOP2BaHgcfiFrb0kKX0UeiprgHQqBSDwk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vc9DogxoLgngfubJ0u33iUTXXgPBqlfWnxisJuHVigk=;
-        b=qly5C/nTi3oJ/1cscWUtRqwhGRsCYmCF525x2+EEcWGWUzTxVO+QmYfLs+gyhr95xB
-         mR44AgpHEAZAQ385wPMgpBWWx7pu5UT3nDEHhAHgcNxfOzIM9tmd0n8Hd/dyV7BROAgW
-         2QvWxB+/nRuFa/DOZ4z3pDT2p9HBSniCPbFjB8H3el4VRv0tdSJazrfEdMRUTKsH5Q9u
-         YPswdxzBoXnH5ti0pLHXv6CqhkmL5FwY0fcMQ1mFP5wCogz+l9YIUanKb9Zv/uUWtJWL
-         DafsusDmF4hhNtWlhTrIm8CGZhX2Ivl0rPH+JKr9cCoI9nSMVjvxeQOo4QSq5zVYK3q/
-         3Dsg==
-X-Gm-Message-State: AOAM532iHe5suD++9ompoKzR+QNjbeeBSH9pxp4P7ODAmhWP5vqK9LA6
-        nAKmjB30OHZECOz+M6C1txGxZ49saPonsijiyV6GQg==
-X-Google-Smtp-Source: ABdhPJz/GqbhJlGBoiOlJ5GNckLlLrZXvPr+cXRexeJo/NhSRwi3XrdA0NDkw8Xgcs52YM7DxFPmui+9bnlO4Y0Zf7w=
-X-Received: by 2002:a5e:930d:: with SMTP id k13mr6689385iom.40.1599727505770;
- Thu, 10 Sep 2020 01:45:05 -0700 (PDT)
+        Thu, 10 Sep 2020 04:47:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbgIJIru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:47:50 -0400
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C4F920770;
+        Thu, 10 Sep 2020 08:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599727668;
+        bh=RPokpgxyglYjppmxdwE4ETpgoWb+FLMn8txdhEbALdk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=caMPoUSKexLI6/Cqhtg8fT99cl3GRCJBgwM+b8CDUH4fpndiULhN2ZxxlePCqMtm8
+         o+PPIhKL0Yab4dKBUBJb9PAX9HTFJdHyhq4ZrB98n0hws/gO34J2oo99WhyXQG8LAo
+         ih4L+nIDe5nvGNhsdtsxYZAUrexQb+0pD4TKBRdk=
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+Date:   Thu, 10 Sep 2020 11:47:27 +0300
+Message-ID: <878sdikogw.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200910054635.3337487-1-hsinyi@chromium.org> <ba77586c-7902-9ce4-0f4f-ad1743596d85@collabora.com>
- <CAJMQK-j_Syejw1Bc53fN8OuRYppns7g_=EQW+PUDkQDhnwxvSw@mail.gmail.com> <944325c1-818e-934c-907d-7ff0493446b4@collabora.com>
-In-Reply-To: <944325c1-818e-934c-907d-7ff0493446b4@collabora.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Thu, 10 Sep 2020 16:44:39 +0800
-Message-ID: <CAJMQK-gVO53a1SnsjsJPu-ZR-NoNb4TGXrOpb-naD71pmjExCw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: mt8173: elm: Set uart0 to mmio32 iotype
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 4:16 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Hsin-Yi,
->
-> On 10/9/20 9:57, Hsin-Yi Wang wrote:
-> > On Thu, Sep 10, 2020 at 3:20 PM Enric Balletbo i Serra
-> > <enric.balletbo@collabora.com> wrote:
-> >>
-> >> Hi Hsin-Yi,
-> >>
-> >> On 10/9/20 7:46, Hsin-Yi Wang wrote:
-> >>> Set uart0 iotype to mmio32 to make earlycon work with stdout-path.
-> >>>
-> >>> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> >>> index a5a12b2599a4a..d54e62f72c65d 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> >>> @@ -1160,6 +1160,8 @@ &thermal {
-> >>>  };
-> >>>
-> >>>  &uart0 {
-> >>> +     reg-io-width = <4>;
-> >>> +     reg-shift = <2>;
-> >>
-> >> I am wondering if these properties are common enough to go to mt8173.dtsi
-> >> instead of here.
-> >>
-> > Since stdout-path is set on elm.dtsi (using uart0), so I add this
-> > attribute here.
-> >
->
-> Why needs to be defined in the same place that stdout-path is set?
->
-> My guess is that reg-io-width and reg-shift are SoC specific, as they define how
-> the IO access to the register is done. In fact, I think that these properties
-> should be added in all the uarts, not only the one that has defined the stdout-path.
->
-Okay, I'll apply them to all uart. Thanks.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Joe Perches <joe@perches.com> writes:
+>  drivers/usb/dwc3/core.c                                   |  2 +-
+>  drivers/usb/gadget/legacy/inode.c                         |  2 +-
+>  drivers/usb/gadget/udc/pxa25x_udc.c                       |  4 ++--
+>  drivers/usb/phy/phy-fsl-usb.c                             |  2 +-
+
+for the drivers above:
+
+Acked-by: Felipe Balbi <balbi@kernel.org>
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9Z6B8RHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzL64meEamQZSCRAAuTv1hrqhd9iVfnwXFrfx8dYquoCMc3VI
+y1IiULV6avnZvLQTqKviHDvZw05WY6dna714mpLFW1laW3WuhLSD4elIu6cqHaiz
+ZgtvtA4bZ/s7ipV+jlZ86S9oIz4MMBbZYhqSN1ZVk50NsUA/1thpcjS0aLI5SAgX
+j2dV6BEEHBSgMDwcWLPNwr6f5R/ycEBx3i6HYSSdNtBr1SK+UhbSkwNxdCA9IzH8
+1WCugmJdohP26DIYNzFZcssjcSFb5wu2iuHXQXuvOmmAfQmro+gRcnq1SOElae7v
+cas67L69RQ5fxskM/XpIYH2AURFnRUNondcJWViUQXHwXF1U0r+FdwXUr8OeFi19
+sVEI4FNu7ZqgvhfUlKMpldyUZRIrWb+WZZ5toBQAKFee/3tqTs4Tqh9cwfLL9IU4
+ho4tG7J/bd6hASfr0x2dH5Pm7oXKskxmtUpmmSVlNaTpXytiD30+pUvOl9Qg7A+X
+tc9h6N3Z6kdVxkJlm1KpUUccPeUtHox549ukAtzKQL4x6PDCdNqBkNDVSIx04FA4
+dgyt4O7w4HaWT1GPHH322pG5nNT1dsGT0CC9QA/2AJkoXTY03YGR3dgDw89GNUrP
+WPj73gtBbWTwRFuwHQQs8F/E8x2UjBC005aawoKcK2bxBR1fzqz1y8daUaiCftnV
+ocu1QwRIgL8=
+=BFTp
+-----END PGP SIGNATURE-----
+--=-=-=--
