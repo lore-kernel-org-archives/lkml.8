@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4F5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3170AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3227520829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF78D20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWqAdG33"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="az80YPjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgIJKTZ (ORCPT
+        id S1726883AbgIJKTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        Thu, 10 Sep 2020 06:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgIJKRx (ORCPT
+        with ESMTP id S1730712AbgIJKSE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:17:53 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D27C061795
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w5so6053729wrp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:51 -0700 (PDT)
+        Thu, 10 Sep 2020 06:18:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C1BC06179F
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z9so5241193wmk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XiTDwe0DE6I7Qq6iJehCoT2zSGDBsTZiTs0CApOPA1I=;
-        b=FWqAdG33IxMr+QgyxdRqUDWiYgJsK8hTsj1WMNseY5YWkHruSHbiEken0vXLzsuv3L
-         CWDZaqI+bxxqe24R2Lu++jFMvrDaTD4qiZnN/4Xv1Citx8DDaz8LapDrZIsAgMfq06nP
-         KtXqkfwDhaTfoYWS5LNXGWaIVZmyg7lYXYbvzLZU0+0phvgbKG+WVpEhG3YDYrUD4/Pb
-         b5IWVUFMHez3kOAmU8bGxtrpgZrPOjQUITEQsJP/5/Ecxx75H5DOSHxqPVHaSPQYz9xa
-         8XmL0dfz1BtqFgCUikJAQKHCuI1fhsmjHiI6kBmeZwf1wex3MQpzOLdqpVfEd++3f42Z
-         0r4Q==
+        bh=3VQ3bGKtBxRBApFT2T0Tmq9tmwkVFZ1oYNu2zUBN5wY=;
+        b=az80YPjHOHIydGMO4T0LCTDhmktqPRLH6LMmcI2oOStXcYNtT0Dn7k16T1eCHa50G3
+         H5VaiOhNbxhjav3+6kIsqF4W59WVmKeZzc7P6l7vHIilMC0ioTST56K4cv8mEaJUkDC+
+         BTrl1LvDD0+HWfW2uTpJkmtltkX2ebwsoEE4bfw1X94WXAhjW2U66ZpZbaem5yqxSepM
+         3AlVagzgxU8t3loxozOB4CLpOjHAHIfgsEz4gT7M42O4YpBKaMD+Preinl7Wcv0TOPpk
+         vLhBN+SkhzHl+q8xfsu6XCF4F0y7yFSrNgcld7WpxN5T/S7iaC1Y61KNSai/YOR8xd62
+         iPLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XiTDwe0DE6I7Qq6iJehCoT2zSGDBsTZiTs0CApOPA1I=;
-        b=WJDpptPyweoyscJ+yZr3lLCjP6Vt8qGLPrtlqmRFDwKfQJ0PUpjKjXiqF/NzqILaav
-         5yAVb8YuDNeiNq0TOf2shsdHS69Agk8iQPWGgFT4fqVheTaJfbRzMoCH0XATmNq00g6D
-         Y9ihLutWFt3cZQyBSXG6Dd8BAZy70EnywZ/jUqRlMufhRoDZAA6vo/bk9TjATZJke64F
-         U6XqQqFtYLD04LPMq1LnRyZND/cav1TxMzQN5o42s4R2h1CKyhjCBz/u9rqJAPKZdl2f
-         EnxQguvtDeFTKTivdZJtxkGPaqCo784geDn5XlpACmRFFVPLMtNfE8Vek/6xuPPSY/Gv
-         fGDA==
-X-Gm-Message-State: AOAM533Q+raw+ZyxDfKLQs5om0yXeu/QoNP9ksMwznMXcqHovEuzhfX0
-        ASC4Lk8tG4X7sQWF5rQ7yTZ85g==
-X-Google-Smtp-Source: ABdhPJz9heXgS8rFxJS0nXHKUiSQmu7ZR9KnDg2SgCKZBNu8QkHR6CIg7pqKUo9m1ZUWj95R+WtbyA==
-X-Received: by 2002:a5d:4910:: with SMTP id x16mr9051472wrq.204.1599733069852;
-        Thu, 10 Sep 2020 03:17:49 -0700 (PDT)
+        bh=3VQ3bGKtBxRBApFT2T0Tmq9tmwkVFZ1oYNu2zUBN5wY=;
+        b=b1yiCy4kZKjiuwwoDX1PIRWtLXOgV+m0fen/xIhCak8c31oDbym1AVgA7DudcpMHLn
+         L2cZVlRYIJMKa9wDphrlOXbH9Chp98ZjHsE/s7v2N5fpHtGXD86QSl51zVm0FAdO9Rlo
+         y9xUHb1TaoclY7Zbr39kKCnwdLT6dOV33vAjNDfHZrMbLvaq7jZjqY21gFjBEZAssMKv
+         gfxxWdz6L3qeaBlA+uCu+mZsm+UZfMX2L4EWNBHbQV/jIXuFDMc/RBRwgIKb3FaRrOcp
+         5JtgxKOPOqDQwgHuzDh3JDekHhHE6ekJv8rzzALuOTYl4bAjLMacT+zB0b9+aeFKvUSO
+         +NJw==
+X-Gm-Message-State: AOAM532Z17l1WDAG/qwKx9ClBDlme8NqHeFprL2Gh1F5mgVk7Zd2kHgU
+        Sc2nKXZfG/O1xSrUPbr0OlpTvQ==
+X-Google-Smtp-Source: ABdhPJzN1Uau/E0JLtlzAH0YotHH2e/OT0iND+6DjIa5vN8pMGBuma/nMuts/1GRS+oCzezB4dPzzA==
+X-Received: by 2002:a1c:9dd5:: with SMTP id g204mr7550515wme.162.1599733074961;
+        Thu, 10 Sep 2020 03:17:54 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.gmail.com with ESMTPSA id m4sm8851731wro.18.2020.09.10.03.17.48
+        by smtp.gmail.com with ESMTPSA id m4sm8851731wro.18.2020.09.10.03.17.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 03:17:49 -0700 (PDT)
+        Thu, 10 Sep 2020 03:17:54 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org
 Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, plai@codeaurora.org,
@@ -66,9 +66,9 @@ Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, plai@codeaurora.org,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/8] ASoC: q6dsp: q6routing: add support to Codec DMA ports
-Date:   Thu, 10 Sep 2020 11:17:26 +0100
-Message-Id: <20200910101732.23484-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 6/8] ASoC: q6dsp: q6afe: update q6afe_set_param to support global clocks
+Date:   Thu, 10 Sep 2020 11:17:30 +0100
+Message-Id: <20200910101732.23484-7-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
 References: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
@@ -79,171 +79,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Previously there was no case where we need to set clock or send commands
+that are not associated with q6afe ports, now we have cases like clock
+voting and clock consumers like codecs that needed these clocks.
+
+update q6afe_set_param() to support such cases, including token passing.
+
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/qdsp6/q6routing.c | 121 ++++++++++++++++++++++++++++++-
- 1 file changed, 120 insertions(+), 1 deletion(-)
+ sound/soc/qcom/qdsp6/q6afe.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-index 25d23e0266c7..b12539fae6ed 100644
---- a/sound/soc/qcom/qdsp6/q6routing.c
-+++ b/sound/soc/qcom/qdsp6/q6routing.c
-@@ -113,7 +113,19 @@
- 	{ mix_name, "QUIN_TDM_TX_4", "QUIN_TDM_TX_4"},		\
- 	{ mix_name, "QUIN_TDM_TX_5", "QUIN_TDM_TX_5"},		\
- 	{ mix_name, "QUIN_TDM_TX_6", "QUIN_TDM_TX_6"},		\
--	{ mix_name, "QUIN_TDM_TX_7", "QUIN_TDM_TX_7"}
-+	{ mix_name, "QUIN_TDM_TX_7", "QUIN_TDM_TX_7"},		\
-+	{ mix_name, "WSA_CODEC_DMA_TX_0", "WSA_CODEC_DMA_TX_0"},	\
-+	{ mix_name, "WSA_CODEC_DMA_TX_1", "WSA_CODEC_DMA_TX_1"},	\
-+	{ mix_name, "WSA_CODEC_DMA_TX_2", "WSA_CODEC_DMA_TX_2"},	\
-+	{ mix_name, "VA_CODEC_DMA_TX_0", "VA_CODEC_DMA_TX_0"},	\
-+	{ mix_name, "VA_CODEC_DMA_TX_1", "VA_CODEC_DMA_TX_1"},	\
-+	{ mix_name, "VA_CODEC_DMA_TX_2", "VA_CODEC_DMA_TX_2"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_0", "TX_CODEC_DMA_TX_0"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_1", "TX_CODEC_DMA_TX_1"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_2", "TX_CODEC_DMA_TX_2"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_3", "TX_CODEC_DMA_TX_3"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_4", "TX_CODEC_DMA_TX_4"},	\
-+	{ mix_name, "TX_CODEC_DMA_TX_5", "TX_CODEC_DMA_TX_5"}
+diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
+index 51c94dd9998d..9ed5537ee58e 100644
+--- a/sound/soc/qcom/qdsp6/q6afe.c
++++ b/sound/soc/qcom/qdsp6/q6afe.c
+@@ -967,14 +967,13 @@ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
+ 	return ret;
+ }
  
- #define Q6ROUTING_TX_MIXERS(id)						\
- 	SOC_SINGLE_EXT("PRI_MI2S_TX", PRIMARY_MI2S_TX,			\
-@@ -267,6 +279,42 @@
- 		id, 1, 0, msm_routing_get_audio_mixer,			\
- 		msm_routing_put_audio_mixer),				\
- 	SOC_SINGLE_EXT("QUIN_TDM_TX_7", QUINARY_TDM_TX_7,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("WSA_CODEC_DMA_TX_0", WSA_CODEC_DMA_TX_0,	\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("WSA_CODEC_DMA_TX_1", WSA_CODEC_DMA_TX_1,	\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("WSA_CODEC_DMA_TX_2", WSA_CODEC_DMA_TX_2,	\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("VA_CODEC_DMA_TX_0", VA_CODEC_DMA_TX_0,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("VA_CODEC_DMA_TX_1", VA_CODEC_DMA_TX_1,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("VA_CODEC_DMA_TX_2", VA_CODEC_DMA_TX_2,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_0", TX_CODEC_DMA_TX_0,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_1", TX_CODEC_DMA_TX_1,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_2", TX_CODEC_DMA_TX_2,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_3", TX_CODEC_DMA_TX_3,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_4", TX_CODEC_DMA_TX_4,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TX_CODEC_DMA_TX_5", TX_CODEC_DMA_TX_5,		\
- 		id, 1, 0, msm_routing_get_audio_mixer,			\
- 		msm_routing_put_audio_mixer),
+-static int q6afe_port_set_param(struct q6afe_port *port, void *data,
+-				int param_id, int module_id, int psize)
++static int q6afe_set_param(struct q6afe *afe, struct q6afe_port *port,
++			   void *data, int param_id, int module_id, int psize,
++			   int token)
+ {
+ 	struct afe_svc_cmd_set_param *param;
+ 	struct afe_port_param_data_v2 *pdata;
+-	struct q6afe *afe = port->afe;
+ 	struct apr_pkt *pkt;
+-	u16 port_id = port->id;
+ 	int ret, pkt_size;
+ 	void *p, *pl;
  
-@@ -609,6 +657,36 @@ static const struct snd_kcontrol_new quin_tdm_rx_6_mixer_controls[] = {
- static const struct snd_kcontrol_new quin_tdm_rx_7_mixer_controls[] = {
- 	Q6ROUTING_RX_MIXERS(QUINARY_TDM_RX_7) };
+@@ -995,7 +994,7 @@ static int q6afe_port_set_param(struct q6afe_port *port, void *data,
+ 	pkt->hdr.pkt_size = pkt_size;
+ 	pkt->hdr.src_port = 0;
+ 	pkt->hdr.dest_port = 0;
+-	pkt->hdr.token = port->token;
++	pkt->hdr.token = token;
+ 	pkt->hdr.opcode = AFE_SVC_CMD_SET_PARAM;
  
-+static const struct snd_kcontrol_new wsa_codec_dma_rx_0_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(WSA_CODEC_DMA_RX_0) };
-+
-+static const struct snd_kcontrol_new wsa_codec_dma_rx_1_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(WSA_CODEC_DMA_RX_1) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_0_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_0) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_1_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_1) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_2_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_2) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_3_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_3) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_4_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_4) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_5_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_5) };
-+
-+static const struct snd_kcontrol_new rxcodec_dma_rx_6_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_6) };
-+
-+static const struct snd_kcontrol_new rx_codec_dma_rx_7_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(RX_CODEC_DMA_RX_7) };
-+
+ 	param->payload_size = sizeof(*pdata) + psize;
+@@ -1008,13 +1007,19 @@ static int q6afe_port_set_param(struct q6afe_port *port, void *data,
  
- static const struct snd_kcontrol_new mmul1_mixer_controls[] = {
- 	Q6ROUTING_TX_MIXERS(MSM_FRONTEND_DAI_MULTIMEDIA1) };
-@@ -819,6 +897,37 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
- 	SND_SOC_DAPM_MIXER("QUIN_TDM_RX_7 Audio Mixer", SND_SOC_NOPM, 0, 0,
- 				quin_tdm_rx_7_mixer_controls,
- 				ARRAY_SIZE(quin_tdm_rx_7_mixer_controls)),
+ 	ret = afe_apr_send_pkt(afe, pkt, port, AFE_SVC_CMD_SET_PARAM);
+ 	if (ret)
+-		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
+-		       port_id, ret);
++		dev_err(afe->dev, "AFE set params failed %d\n", ret);
+ 
+ 	kfree(pkt);
+ 	return ret;
+ }
+ 
++static int q6afe_port_set_param(struct q6afe_port *port, void *data,
++				int param_id, int module_id, int psize)
++{
++	return q6afe_set_param(port->afe, port, data, param_id, module_id,
++			       psize, port->token);
++}
 +
-+	SND_SOC_DAPM_MIXER("WSA_CODEC_DMA_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		wsa_codec_dma_rx_0_mixer_controls,
-+		ARRAY_SIZE(wsa_codec_dma_rx_0_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("WSA_CODEC_DMA_RX_1 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		wsa_codec_dma_rx_1_mixer_controls,
-+		ARRAY_SIZE(wsa_codec_dma_rx_1_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_0_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_0_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_1 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_1_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_1_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_2 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_2_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_2_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_3 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_3_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_3_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_4 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_4_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_4_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_5 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_5_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_5_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_6 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rxcodec_dma_rx_6_mixer_controls,
-+		ARRAY_SIZE(rxcodec_dma_rx_6_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("RX_CODEC_DMA_RX_7 Audio Mixer", SND_SOC_NOPM, 0, 0,
-+		rx_codec_dma_rx_7_mixer_controls,
-+		ARRAY_SIZE(rx_codec_dma_rx_7_mixer_controls)),
- 	SND_SOC_DAPM_MIXER("MultiMedia1 Mixer", SND_SOC_NOPM, 0, 0,
- 		mmul1_mixer_controls, ARRAY_SIZE(mmul1_mixer_controls)),
- 	SND_SOC_DAPM_MIXER("MultiMedia2 Mixer", SND_SOC_NOPM, 0, 0,
-@@ -901,6 +1010,16 @@ static const struct snd_soc_dapm_route intercon[] = {
- 	Q6ROUTING_RX_DAPM_ROUTE("QUIN_TDM_RX_5 Audio Mixer", "QUIN_TDM_RX_5"),
- 	Q6ROUTING_RX_DAPM_ROUTE("QUIN_TDM_RX_6 Audio Mixer", "QUIN_TDM_RX_6"),
- 	Q6ROUTING_RX_DAPM_ROUTE("QUIN_TDM_RX_7 Audio Mixer", "QUIN_TDM_RX_7"),
-+	Q6ROUTING_RX_DAPM_ROUTE("WSA_CODEC_DMA_RX_0 Audio Mixer", "WSA_CODEC_DMA_RX_0"),
-+	Q6ROUTING_RX_DAPM_ROUTE("WSA_CODEC_DMA_RX_1 Audio Mixer", "WSA_CODEC_DMA_RX_1"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_0 Audio Mixer", "RX_CODEC_DMA_RX_0"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_1 Audio Mixer", "RX_CODEC_DMA_RX_1"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_2 Audio Mixer", "RX_CODEC_DMA_RX_2"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_3 Audio Mixer", "RX_CODEC_DMA_RX_3"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_4 Audio Mixer", "RX_CODEC_DMA_RX_4"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_5 Audio Mixer", "RX_CODEC_DMA_RX_5"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_6 Audio Mixer", "RX_CODEC_DMA_RX_6"),
-+	Q6ROUTING_RX_DAPM_ROUTE("RX_CODEC_DMA_RX_7 Audio Mixer", "RX_CODEC_DMA_RX_7"),
- 	Q6ROUTING_TX_DAPM_ROUTE("MultiMedia1 Mixer"),
- 	Q6ROUTING_TX_DAPM_ROUTE("MultiMedia2 Mixer"),
- 	Q6ROUTING_TX_DAPM_ROUTE("MultiMedia3 Mixer"),
+ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
+ 				   int param_id, int module_id, int psize)
+ {
+@@ -1064,7 +1069,7 @@ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
+ 	return ret;
+ }
+ 
+-static int q6afe_set_lpass_clock(struct q6afe_port *port,
++static int q6afe_port_set_lpass_clock(struct q6afe_port *port,
+ 				 struct afe_clk_cfg *cfg)
+ {
+ 	return q6afe_port_set_param_v2(port, cfg,
+@@ -1111,7 +1116,7 @@ int q6afe_port_set_sysclk(struct q6afe_port *port, int clk_id,
+ 		ccfg.clk_src = clk_src;
+ 		ccfg.clk_root = clk_root;
+ 		ccfg.clk_set_mode = Q6AFE_LPASS_MODE_CLK1_VALID;
+-		ret = q6afe_set_lpass_clock(port, &ccfg);
++		ret = q6afe_port_set_lpass_clock(port, &ccfg);
+ 		break;
+ 
+ 	case LPAIF_OSR_CLK:
+@@ -1120,7 +1125,7 @@ int q6afe_port_set_sysclk(struct q6afe_port *port, int clk_id,
+ 		ccfg.clk_src = clk_src;
+ 		ccfg.clk_root = clk_root;
+ 		ccfg.clk_set_mode = Q6AFE_LPASS_MODE_CLK2_VALID;
+-		ret = q6afe_set_lpass_clock(port, &ccfg);
++		ret = q6afe_port_set_lpass_clock(port, &ccfg);
+ 		break;
+ 	case Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT ... Q6AFE_LPASS_CLK_ID_QUI_MI2S_OSR:
+ 	case Q6AFE_LPASS_CLK_ID_MCLK_1 ... Q6AFE_LPASS_CLK_ID_INT_MCLK_1:
 -- 
 2.21.0
 
