@@ -2,98 +2,126 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4474C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E991F20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AAD420872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:52:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a68PNyTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbgIJKvd (ORCPT
+        id S1730588AbgIJKwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:51:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:57470 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgIJKtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:49:17 -0400
-IronPort-SDR: p2AkMGkK7lb4tMc+mTrUukjggEV2VnvkVlPETInT8Li5IHOwHBUi2OnSX6dd08z1z3Y364nWXV
- kk/rMi5K8LkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="146212598"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="146212598"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 03:49:14 -0700
-IronPort-SDR: np3Lz2Hdt8aRmnjvTDOHJHxP4Gyse2oTaxFQvBAKPXAxPxbhbpIR0nycZ2ZApuDyzWewj3OQ1I
- 6O+NW+FG8icA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="407725912"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 10 Sep 2020 03:49:12 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 10 Sep 2020 13:49:11 +0300
-Date:   Thu, 10 Sep 2020 13:49:11 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: linux-next: Tree for Sep 9
- (drivers/usb/typec/mux/intel_pmc_mux.c)
-Message-ID: <20200910104911.GA3709033@kuha.fi.intel.com>
-References: <20200909202624.2cc6c3d1@canb.auug.org.au>
- <f2de7078-db94-6914-87af-c0a553daa5cc@infradead.org>
+        Thu, 10 Sep 2020 06:52:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37704 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730326AbgIJKtt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:49:49 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AAYPWK177381;
+        Thu, 10 Sep 2020 10:49:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=fN/ETYUSmj9/pRoUk3iHgY2Npxy2z+BXnfBD/U2xvEE=;
+ b=a68PNyTuR/Ya7gDF83LDKZQwcJPvMkAb8MTEijJIo8fXjvS5/dm2yiB8iBvckb6OO4/V
+ yR1giJXwGSHbLA6bJgRepaaLySl/LcC01ieNDGys7GTX6TcHtikMJbTS26UOsvAw4a9W
+ aAdXPBGpbBL1Tx/GqkI/L7T7LWg1/36uU2Hkmd6HnGEcocw3vJhJlug+qGVHcBqO7bJX
+ kQYf7e+l0+sVFw5cGLjN+jOVt7HOuG3t1cdCyNrIJQrEGNfzWtEtdGK48DGcSuEomfDk
+ 93MRfMYzfeZugwO4tH6FUIIxGCayOxvU3wPFIQN0leeWDXjlzH69xGeyA3A90zn+ofpc wg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 33c3an76nw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 10:49:33 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AAkerQ067429;
+        Thu, 10 Sep 2020 10:49:33 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 33cmm0rd75-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 10:49:32 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08AAnRgq022266;
+        Thu, 10 Sep 2020 10:49:27 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Sep 2020 03:49:27 -0700
+Date:   Thu, 10 Sep 2020 13:49:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Anmol Karn <anmol.karan123@gmail.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: Re: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer
+ dereference in hci_event_packet()
+Message-ID: <20200910104918.GF12635@kadam>
+References: <20200910043424.19894-1-anmol.karan123@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f2de7078-db94-6914-87af-c0a553daa5cc@infradead.org>
+In-Reply-To: <20200910043424.19894-1-anmol.karan123@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100099
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:04:53AM -0700, Randy Dunlap wrote:
-> On 9/9/20 3:26 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200908:
-> > 
+On Thu, Sep 10, 2020 at 10:04:24AM +0530, Anmol Karn wrote:
+> Prevent hci_phy_link_complete_evt() from dereferencing 'hcon->amp_mgr'
+> as NULL. Fix it by adding pointer check for it.
 > 
-> on x86_64:
+> Reported-and-tested-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
+> Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> ---
+>  net/bluetooth/hci_event.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->   CC [M]  drivers/usb/typec/mux/intel_pmc_mux.o
-> ../drivers/usb/typec/mux/intel_pmc_mux.c: In function ‘update_port_status’:
-> ../drivers/usb/typec/mux/intel_pmc_mux.c:151:21: error: implicit declaration of function ‘readl’ [-Werror=implicit-function-declaration]
->   port->iom_status = readl(port->pmc->iom_base + IOM_PORT_STATUS_OFFSET +
->                      ^~~~~
-> ../drivers/usb/typec/mux/intel_pmc_mux.c: In function ‘is_memory’:
-> ../drivers/usb/typec/mux/intel_pmc_mux.c:524:10: error: implicit declaration of function ‘acpi_dev_resource_memory’; did you mean ‘acpi_os_read_memory’? [-Werror=implicit-function-declaration]
->   return !acpi_dev_resource_memory(res, &r);
->           ^~~~~~~~~~~~~~~~~~~~~~~~
->           acpi_os_read_memory
-> ../drivers/usb/typec/mux/intel_pmc_mux.c: In function ‘pmc_usb_probe_iom’:
-> ../drivers/usb/typec/mux/intel_pmc_mux.c:539:8: error: implicit declaration of function ‘acpi_dev_get_resources’; did you mean ‘acpi_get_event_resources’? [-Werror=implicit-function-declaration]
->   ret = acpi_dev_get_resources(adev, &resource_list, is_memory, NULL);
->         ^~~~~~~~~~~~~~~~~~~~~~
->         acpi_get_event_resources
->   CC      drivers/net/ethernet/broadcom/bnxt/bnxt_vfr.o
-> ../drivers/usb/typec/mux/intel_pmc_mux.c:547:2: error: implicit declaration of function ‘acpi_dev_free_resource_list’; did you mean ‘acpi_get_event_resources’? [-Werror=implicit-function-declaration]
->   acpi_dev_free_resource_list(&resource_list);
->   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->   acpi_get_event_resources
-> ../drivers/usb/typec/mux/intel_pmc_mux.c:550:19: error: dereferencing pointer to incomplete type ‘struct acpi_device’
->    put_device(&adev->dev);
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 4b7fc430793c..871e16804433 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4936,6 +4936,11 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+>  		return;
+>  	}
+>  
+> +	if (IS_ERR_OR_NULL(hcon->amp_mgr)) {
 
-It looks like we are missing ACPI dependency in Kconfig and a include.
-I'll prepare the fixes.
+It can't be an error pointer.  Shouldn't we call hci_conn_del() on this
+path?  Try to find the Fixes tag to explain how this bug was introduced.
 
-Thanks Randy,
+(Don't rush to send a v2.  The patch requires quite a bit more digging
+and detective work before it is ready).
 
--- 
-heikki
+> +		hci_dev_unlock(hdev);
+> +		return;
+> +	}
+> +
+>  	if (ev->status) {
+>  		hci_conn_del(hcon);
+>  		hci_dev_unlock(hdev);
+
+regards,
+dan carpenter
+
