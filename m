@@ -2,183 +2,99 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E73C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5582EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71357221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1016221D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuD3TGmS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="du3O/2JV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgIJVSC (ORCPT
+        id S1728033AbgIJVRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
+        Thu, 10 Sep 2020 17:17:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbgIJVPv (ORCPT
+        with ESMTP id S1728069AbgIJVPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:15:51 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0668BC061756;
-        Thu, 10 Sep 2020 14:15:46 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id h9so1790253ooo.10;
-        Thu, 10 Sep 2020 14:15:45 -0700 (PDT)
+        Thu, 10 Sep 2020 17:15:12 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D089C0617AB;
+        Thu, 10 Sep 2020 14:14:34 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id z9so2109550wmk.1;
+        Thu, 10 Sep 2020 14:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BFCtXTuROc0+YYGPop04Dk+iiUlezsA+0NbzQBhD+BA=;
-        b=GuD3TGmStXtihH8Sxv8w7dkoBPihevY3v9BGFDKVMp+7HFRNCzM+ojYulbfbw3lzVh
-         Egul2zPj6VBeJQM7kBVVJLNlvhNYje/3IJuRSi/52MWfq2fpQzVo+ZPuxt+0hXyqYijd
-         esXtFKqyodblu9iwD++CZEeeoB5JjwehGQcG2+QYC5rBEC9vr/PiLDNyumU235l6CrNi
-         WgKJBTLvbfe4Fk4BElHk5G5wuI69rh9cNBS0gIykgUQxuHoruMFKh/CeMaFuNmYqSykS
-         LTyVKYWz+lO7ZKlQpGz/z3ESKtcQeqOrQg5nRmddC8yXipIxVptwy1yojTMpwVlb+vXJ
-         D8WA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mvkPmOXLQSLv5XAp3JONwaRYHZOFFUic4NLYdLc4uNs=;
+        b=du3O/2JVG8SFJp5JMXYvJdmuknTXpXVdWRRUTg/MZOViXvQxlEkd7BjkwYp3Tf28oL
+         lNb3G8BSJchXUSlfnAhy6gSrzybPkDjMl3wnn53tXvgF1s8J38a2ebrM3ekfTdgQlIYi
+         zLesdtnEVbmbHKP47ikF5N+rrrYmCBHBE36rVGBfamXLEAZWhcsIGs1OPKKm8a5kxMNd
+         En8ZOkRAIVrZw9waw78R5uhdeHJ9/9pBBAec2tlxr0ammylzPyIQiFQGXL9jLTt3MZoD
+         OacPE/scygOEiHlAi8Z4fVl+dapqqTSeo4ALEpIq6SppJ0aLHaynpfOMi4gbI/wtLhO3
+         gCYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BFCtXTuROc0+YYGPop04Dk+iiUlezsA+0NbzQBhD+BA=;
-        b=fFAivLO7/bPX7vIn12F1fZaH9IPXrpv1Ggnf41gUeVjw4kPGPXAKxi5sv3gUzmn87l
-         DLB+OFxTsDhb5TfSfXu8EDIooYu05Zg5Vm5gSx6iHpsRcHA8njJooFzz3vyHuG8EW5Tg
-         gqtYU4QH2xTg+7kkQPKtM72NDDQ8mwpM/j2PMnhqvPVP2f8V1JoQ6NMc9NGYzcjrt9pM
-         jym5wU9R3wsDXttkDzlqDmmfgJfMkg2tekmOnPYS4siEbNOYffnDvEMP7Daa4+C76Pui
-         wIKVCLVDKfCeMUmys/pfBPJq585w23ndnjXvFIacUAUnHKqy6YvfFwOKqLDA0w8wmdP6
-         NAjw==
-X-Gm-Message-State: AOAM531Z8Z11dXH1g3EkfefAA5Osi8jKPnvcrGKkY4ebCsiWzG0huNSJ
-        eg4XeNNVpnE7MuSEt8kA7VHoNzf1PneHY+ewbe0=
-X-Google-Smtp-Source: ABdhPJyc58SU56Yz39kDkKsbOrktPwfoFXhHf6/Jso5xD3Rgi5BFy5TRwq1e66DV0J4w4LySieyUCaiWxbu/130vgiA=
-X-Received: by 2002:a4a:d509:: with SMTP id m9mr6013838oos.77.1599772545342;
- Thu, 10 Sep 2020 14:15:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mvkPmOXLQSLv5XAp3JONwaRYHZOFFUic4NLYdLc4uNs=;
+        b=tGCEspVnq6WNvmUk2S6yhLhjESeZJIEtllUbidpBF2g8nHSd19Rj8t6OJ4OqXIHIaQ
+         eMJiX1Kx+HGmXbEazP6hyDqtH2Nla85UGkRH8nzD5cFJjEme3JFZf6FU6l9qTVmFtMeT
+         nV3hB87vZhP3udlAxM+MtNlZRJhpeLYzhq+xEDiYKkqjo3tWJoom+iPtIMTZSKZZxq4N
+         Ex/LEX989oZLBJgOXgI64RdW1kgbTDpiWIHVBxrrzj5smcFzXApY7/rcdQD0ZkV92c/5
+         yjv/qKnOBTVUSE9eRq7/1YBg8lroMkSHNk3IYSA+L09LnwelCTmjEYYnaJgHE7g7pHrB
+         ZZiA==
+X-Gm-Message-State: AOAM5332HW6x79oQuo1Uj9IkMFh6oV+lipr0ZzK/jS23iYLAW7VeBOk+
+        BW79akQyFu/yfSiQkV+Xi3SgzSybNFksbA==
+X-Google-Smtp-Source: ABdhPJzVJB3IcxOggoNitnAwtPEfW6L+8Rk7aPgB9VqmKJdKM7SGXQKRyODnlONdhOi45NEOsJuM4A==
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr2029106wmf.17.1599772471739;
+        Thu, 10 Sep 2020 14:14:31 -0700 (PDT)
+Received: from localhost.localdomain ([170.253.60.68])
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 14:14:31 -0700 (PDT)
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+To:     mtk.manpages@gmail.com
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alejandro Colomar <colomar.6.4.3@gmail.com>
+Subject: [PATCH 20/24] loop.4: ffix
+Date:   Thu, 10 Sep 2020 23:13:41 +0200
+Message-Id: <20200910211344.3562-21-colomar.6.4.3@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 MIME-Version: 1.0
-References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
- <20200910132835.1bf7b638@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAFCwf127fssgiDEwYvv3rFW7iFFfKKZDE=oxDUbFBcwpz3yQkQ@mail.gmail.com> <a13199ce-0c73-920d-857d-3223144f41f0@gmail.com>
-In-Reply-To: <a13199ce-0c73-920d-857d-3223144f41f0@gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 11 Sep 2020 00:15:17 +0300
-Message-ID: <CAFCwf13ak5NPc2BTWoA2cwHB5AUJjq5i1jOucbsJnwyyQCfQ4w@mail.gmail.com>
-Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 12:05 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 9/10/2020 1:32 PM, Oded Gabbay wrote:
-> > On Thu, Sep 10, 2020 at 11:28 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> >>
-> >> On Thu, 10 Sep 2020 23:16:22 +0300 Oded Gabbay wrote:
-> >>> On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> >>>> On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
-> >>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
-> >>>>>   create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
-> >>>>
-> >>>> The relevant code needs to live under drivers/net/(ethernet/).
-> >>>> For one thing our automation won't trigger for drivers in random
-> >>>> (/misc) part of the tree.
-> >>>
-> >>> Can you please elaborate on how to do this with a single driver that
-> >>> is already in misc ?
-> >>> As I mentioned in the cover letter, we are not developing a
-> >>> stand-alone NIC. We have a deep-learning accelerator with a NIC
-> >>> interface.
-> >>> Therefore, we don't have a separate PCI physical function for the NIC
-> >>> and I can't have a second driver registering to it.
-> >>
-> >> Is it not possible to move the files and still build them into a single
-> >> module?
-> > hmm...
-> > I actually didn't try that as I thought it will be very strange and
-> > I'm not familiar with other drivers that build as a single ko but have
-> > files spread out in different subsystems.
-> > I don't feel it is a better option than what we did here.
-> >
-> > Will I need to split pull requests to different subsystem maintainers
-> > ? For the same driver ?
-> > Sounds to me this is not going to fly.
->
-> Not necessarily, you can post your patches to all relevant lists and
-> seek maintainer review/acked-by tags from the relevant maintainers. This
-> is not unheard of with mlx5 for instance.
-Yeah, I see what you are saying, the problem is that sometimes,
-because everything is tightly integrated in our SOC, the patches
-contain code from common code (common to ALL our ASICs, even those who
-don't have NIC at all), GAUDI specific code which is not NIC related
-and the NIC code itself.
-But I guess that as a last resort if this is a *must* I can do that.
-Though I would like to hear Greg's opinion on this as he is my current
-maintainer.
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+---
+ man4/loop.4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Personally I do want to send relevant patches to netdev because I want
-to get your expert reviews on them, but still keep the code in a
-single location.
+diff --git a/man4/loop.4 b/man4/loop.4
+index 73b23871d..1b5d05666 100644
+--- a/man4/loop.4
++++ b/man4/loop.4
+@@ -227,7 +227,7 @@ in
+ .IR loop_config.info.lo_flags ;
+ and
+ .IP *
+-Explicitly request read-only mode by setting
++explicitly request read-only mode by setting
+ .BR LO_FLAGS_READ_ONLY
+ in
+ .IR loop_config.info.lo_flags .
+-- 
+2.28.0
 
->
-> Have you considered using notifiers to get your NIC driver registered
-> while the NIC code lives in a different module?
-Yes, and I prefered to keep it simple. I didn't want to start sending
-notifications to the NIC driver every time, for example, I needed to
-reset the SOC because a compute engine got stuck. Or vice-versa - when
-some error happened in the NIC to start sending notifications to the
-common driver.
-
-In addition, from my AMD days, we had a very tough time managing two
-drivers that "talk" to each other and manage the same H/W. I'm talking
-about amdgpu for graphics and amdkfd for compute (which I was the
-maintainer). AMD is working in the past years to unite those two
-drivers to get out of that mess. That's why I didn't want to go down
-that road.
-
-Thanks,
-Oded
-
-> --
-> Florian
