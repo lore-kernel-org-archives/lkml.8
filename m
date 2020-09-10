@@ -2,466 +2,281 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F94C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A4FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A05A221E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ci4PsvgO"
+	by mail.kernel.org (Postfix) with ESMTP id 0E4D8207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgIJSHt (ORCPT
+        id S1726591AbgIJSIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:07:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgIJSFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:05:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84D4C061573;
-        Thu, 10 Sep 2020 11:05:37 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id fa1so408745pjb.0;
-        Thu, 10 Sep 2020 11:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kd6D3uOy+jWlK6YqamPAaqgBI+aBqWSwpEiEKk4pSmI=;
-        b=ci4PsvgOGRWYc5gDc7IsoJv5Ssd7WO8Ny5/z1R1wfuTwBkpRJ6eD2vmLkBBbJ8yTQ1
-         rP0lDYsKt/WeLbM4JY6u9/hUTu9X+GIXVeDV4V65Zvik/WGJRcJZcADRa3locHlM1CVV
-         0JkDh0zNqQ7CLvHHgQR3AbxXJjXE0BzwI9wED1OHWGG23dCcpLxWokq0K+JmJ2yLraGX
-         Dj7CONaLN3YRHHGCgOjy5FiAec+plfot/7y9TVEEf1e5e7zPj3k3M5MsU5RhxDTkdtrn
-         PFMF7Z30r7CpAnvtXrXirdyzM7KObZfx08+gNpTr5xsQ2qJchSgUvSQ2gisCwZTIdqlR
-         7kYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kd6D3uOy+jWlK6YqamPAaqgBI+aBqWSwpEiEKk4pSmI=;
-        b=d9sRrdwPp2M28/UndYjwys80nQP3Br5tKeA24jz7kvGPUmrNYj8Z6KHeanUu+dxl8w
-         /visBJLMbdWaF6MTEH4+w6Df8SWkb6IH3NOV8rTa3EKNAKgITf/4V/jzTfX7DQ+zff2v
-         97lRxQM+vTsc1OFlgBLC2dWOOAtUZnXD5DNcedcNDg9X7qgtDPERVtC2Xy49LxGc3Uj3
-         r0pHUwrHmVAUDPDVwc0DlofRDVNZOaY84luqil2+7ckB8KNaBAS4C9e5hEapxfgipYeo
-         4KgcRDFg7i24iM4WOAi7GPZh6HSYm/alOWpU2SoGFBs2juRBN6q93ghaH9eSBd+C3O2Y
-         4yKw==
-X-Gm-Message-State: AOAM5306ECVJ/gQukUsZy2UDWrAas/wh3R8UusHv8Pn7idqUlDSKBj/V
-        yD5uCFmFjrSxx4P7I71g9Fg=
-X-Google-Smtp-Source: ABdhPJyAyC86VQCA8McduutXmW4rPyX/fPsDcgKFftyKlBFFJ3xPMpX7v9v/X9N3CvCBLYDnCX1Vww==
-X-Received: by 2002:a17:90a:ce95:: with SMTP id g21mr1041659pju.175.1599761137269;
-        Thu, 10 Sep 2020 11:05:37 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
-        by smtp.gmail.com with ESMTPSA id n12sm5702532pgk.20.2020.09.10.11.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:05:36 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [RESEND PATCH v3 1/3] iio: gyro: adxrs290: Add triggered buffer support
-Date:   Thu, 10 Sep 2020 23:34:48 +0530
-Message-Id: <20200910180450.29696-2-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200910180450.29696-1-nish.malpani25@gmail.com>
-References: <20200910180450.29696-1-nish.malpani25@gmail.com>
+        Thu, 10 Sep 2020 14:08:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:41680 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbgIJSCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:02:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55A17106F;
+        Thu, 10 Sep 2020 11:02:31 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6FEF3F66E;
+        Thu, 10 Sep 2020 11:02:27 -0700 (PDT)
+Subject: Re: [PATCH 1/3] ARM/dma-mapping: move various helpers from
+ dma-mapping.h to dma-direct.h
+To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-sh@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200910054038.324517-1-hch@lst.de>
+ <20200910054038.324517-2-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
+Date:   Thu, 10 Sep 2020 19:02:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910054038.324517-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a way for continuous data capture by setting up buffer support. The
-data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
-a hardware interrupt which triggers to fill the buffer.
+On 2020-09-10 06:40, Christoph Hellwig wrote:
+> Move the helpers to translate to and from direct mapping DMA addresses
+> to dma-direct.h.  This not only is the most logical place, but the new
+> placement also avoids dependency loops with pending commits.
 
-Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
-software triggers (sysfs-trig & hrtimer).
+For the straightforward move as it should be,
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Changes in v3:
-  - issue a separate precursor patch for the devm resource unwinding hook
-  - rename labels in the error-path
-  - use dev_err_probe() (which handles deferred probing) only for calls
-    which request h/w resources
+However I do wonder how much of this could be cleaned up further...
 
-Changes in v2:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/arm/common/dmabounce.c        |  2 +-
+>   arch/arm/include/asm/dma-direct.h  | 70 ++++++++++++++++++++++++++++++
+>   arch/arm/include/asm/dma-mapping.h | 70 ------------------------------
+>   3 files changed, 71 insertions(+), 71 deletions(-)
+> 
+> diff --git a/arch/arm/common/dmabounce.c b/arch/arm/common/dmabounce.c
+> index f4b719bde76367..d3e00ea9208834 100644
+> --- a/arch/arm/common/dmabounce.c
+> +++ b/arch/arm/common/dmabounce.c
+> @@ -24,7 +24,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/page-flags.h>
+>   #include <linux/device.h>
+> -#include <linux/dma-mapping.h>
+> +#include <linux/dma-direct.h>
+>   #include <linux/dmapool.h>
+>   #include <linux/list.h>
+>   #include <linux/scatterlist.h>
+> diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
+> index 7c3001a6a775bf..de0f4ff9279615 100644
+> --- a/arch/arm/include/asm/dma-direct.h
+> +++ b/arch/arm/include/asm/dma-direct.h
+> @@ -2,6 +2,76 @@
+>   #ifndef ASM_ARM_DMA_DIRECT_H
+>   #define ASM_ARM_DMA_DIRECT_H 1
+>   
+> +#include <asm/memory.h>
+> +
+> +#ifdef __arch_page_to_dma
+> +#error Please update to __arch_pfn_to_dma
+> +#endif
 
-  - In adxrs290_set_mode(), move 'if' block outside the locked section
-  - use break statement for error handling instead of goto labels in
-    switch-case blocks
-  - remove outer parentheses when conditional ternary operator is used
-  - use dev_err_probe() saving a few lines of code
-  - re-align 'buffer' variable name in 'struct adxrs290_state'
-  - don't return errors in 'try_reenable' callback
-  - use 'st->spi' inline in 'adxrs290_trigger_handler'
-  - unnecessary to mention default 'shift' (= 0) in
-    iio_chan_spec.scan_type
-  - bring in consistent wrapping of parameters while staying under
-    the advised 80 chars line limit
----
- drivers/iio/gyro/Kconfig    |   2 +
- drivers/iio/gyro/adxrs290.c | 211 +++++++++++++++++++++++++++++++++---
- 2 files changed, 199 insertions(+), 14 deletions(-)
+This must be long, long dead by now.
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index 024a34139875..5824f2edf975 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -44,6 +44,8 @@ config ADIS16260
- config ADXRS290
- 	tristate "Analog Devices ADXRS290 Dual-Axis MEMS Gyroscope SPI driver"
- 	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for Analog Devices ADXRS290 programmable
- 	  digital output gyroscope.
-diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
-index 2864eb443957..41b1f995a143 100644
---- a/drivers/iio/gyro/adxrs290.c
-+++ b/drivers/iio/gyro/adxrs290.c
-@@ -13,8 +13,12 @@
- #include <linux/module.h>
- #include <linux/spi/spi.h>
- 
-+#include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
- 
- #define ADXRS290_ADI_ID		0xAD
- #define ADXRS290_MEMS_ID	0x1D
-@@ -35,7 +39,9 @@
- #define ADXRS290_READ		BIT(7)
- #define ADXRS290_TSM		BIT(0)
- #define ADXRS290_MEASUREMENT	BIT(1)
--#define ADXRS290_SYNC		GENMASK(1, 0)
-+#define ADXRS290_DATA_RDY_OUT	BIT(0)
-+#define ADXRS290_SYNC_MASK	GENMASK(1, 0)
-+#define ADXRS290_SYNC(x)	FIELD_PREP(ADXRS290_SYNC_MASK, x)
- #define ADXRS290_LPF_MASK	GENMASK(2, 0)
- #define ADXRS290_LPF(x)		FIELD_PREP(ADXRS290_LPF_MASK, x)
- #define ADXRS290_HPF_MASK	GENMASK(7, 4)
-@@ -50,6 +56,13 @@ enum adxrs290_mode {
- 	ADXRS290_MODE_MEASUREMENT,
- };
- 
-+enum adxrs290_scan_index {
-+	ADXRS290_IDX_X,
-+	ADXRS290_IDX_Y,
-+	ADXRS290_IDX_TEMP,
-+	ADXRS290_IDX_TS,
-+};
-+
- struct adxrs290_state {
- 	struct spi_device	*spi;
- 	/* Serialize reads and their subsequent processing */
-@@ -57,6 +70,12 @@ struct adxrs290_state {
- 	enum adxrs290_mode	mode;
- 	unsigned int		lpf_3db_freq_idx;
- 	unsigned int		hpf_3db_freq_idx;
-+	struct iio_trigger      *dready_trig;
-+	/* Ensure correct alignment of timestamp when present */
-+	struct {
-+		s16 channels[3];
-+		s64 ts __aligned(8);
-+	} buffer;
- };
- 
- /*
-@@ -270,24 +289,34 @@ static int adxrs290_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+
- 		switch (chan->type) {
- 		case IIO_ANGL_VEL:
- 			ret = adxrs290_get_rate_data(indio_dev,
- 						     ADXRS290_READ_REG(chan->address),
- 						     val);
- 			if (ret < 0)
--				return ret;
-+				break;
- 
--			return IIO_VAL_INT;
-+			ret = IIO_VAL_INT;
-+			break;
- 		case IIO_TEMP:
- 			ret = adxrs290_get_temp_data(indio_dev, val);
- 			if (ret < 0)
--				return ret;
-+				break;
- 
--			return IIO_VAL_INT;
-+			ret = IIO_VAL_INT;
-+			break;
- 		default:
--			return -EINVAL;
-+			ret = -EINVAL;
-+			break;
- 		}
-+
-+		iio_device_release_direct_mode(indio_dev);
-+		return ret;
- 	case IIO_CHAN_INFO_SCALE:
- 		switch (chan->type) {
- 		case IIO_ANGL_VEL:
-@@ -334,34 +363,52 @@ static int adxrs290_write_raw(struct iio_dev *indio_dev,
- 			      long mask)
- {
- 	struct adxrs290_state *st = iio_priv(indio_dev);
--	int lpf_idx, hpf_idx;
-+	int ret, lpf_idx, hpf_idx;
-+
-+	ret = iio_device_claim_direct_mode(indio_dev);
-+	if (ret)
-+		return ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
- 		lpf_idx = adxrs290_find_match(adxrs290_lpf_3db_freq_hz_table,
- 					      ARRAY_SIZE(adxrs290_lpf_3db_freq_hz_table),
- 					      val, val2);
--		if (lpf_idx < 0)
--			return -EINVAL;
-+		if (lpf_idx < 0) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
- 		/* caching the updated state of the low-pass filter */
- 		st->lpf_3db_freq_idx = lpf_idx;
- 		/* retrieving the current state of the high-pass filter */
- 		hpf_idx = st->hpf_3db_freq_idx;
--		return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-+		ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-+		break;
-+
- 	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
- 		hpf_idx = adxrs290_find_match(adxrs290_hpf_3db_freq_hz_table,
- 					      ARRAY_SIZE(adxrs290_hpf_3db_freq_hz_table),
- 					      val, val2);
--		if (hpf_idx < 0)
--			return -EINVAL;
-+		if (hpf_idx < 0) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
- 		/* caching the updated state of the high-pass filter */
- 		st->hpf_3db_freq_idx = hpf_idx;
- 		/* retrieving the current state of the low-pass filter */
- 		lpf_idx = st->lpf_3db_freq_idx;
--		return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-+		ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+		break;
- 	}
- 
--	return -EINVAL;
-+	iio_device_release_direct_mode(indio_dev);
-+	return ret;
- }
- 
- static int adxrs290_read_avail(struct iio_dev *indio_dev,
-@@ -389,6 +436,72 @@ static int adxrs290_read_avail(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static int adxrs290_data_rdy_trigger_set_state(struct iio_trigger *trig,
-+					       bool state)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct adxrs290_state *st = iio_priv(indio_dev);
-+	int ret;
-+	u8 val;
-+
-+	val = state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0;
-+
-+	ret = adxrs290_spi_write_reg(st->spi, ADXRS290_REG_DATA_RDY, val);
-+	if (ret < 0)
-+		dev_err(&st->spi->dev, "failed to start data rdy interrupt\n");
-+
-+	return ret;
-+}
-+
-+static int adxrs290_reset_trig(struct iio_trigger *trig)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	int val;
-+
-+	/*
-+	 * Data ready interrupt is reset after a read of the data registers.
-+	 * Here, we only read the 16b DATAY registers as that marks the end of
-+	 * a read of the data registers and initiates a reset for the interrupt
-+	 * line.
-+	 */
-+	adxrs290_get_rate_data(indio_dev,
-+			       ADXRS290_READ_REG(ADXRS290_REG_DATAY0), &val);
-+
-+	return 0;
-+}
-+
-+static const struct iio_trigger_ops adxrs290_trigger_ops = {
-+	.set_trigger_state = &adxrs290_data_rdy_trigger_set_state,
-+	.validate_device = &iio_trigger_validate_own_device,
-+	.try_reenable = &adxrs290_reset_trig,
-+};
-+
-+static irqreturn_t adxrs290_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct adxrs290_state *st = iio_priv(indio_dev);
-+	u8 tx = ADXRS290_READ_REG(ADXRS290_REG_DATAX0);
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+
-+	/* exercise a bulk data capture starting from reg DATAX0... */
-+	ret = spi_write_then_read(st->spi, &tx, sizeof(tx), st->buffer.channels,
-+				  sizeof(st->buffer.channels));
-+	if (ret < 0)
-+		goto out_unlock_notify;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, &st->buffer,
-+					   pf->timestamp);
-+
-+out_unlock_notify:
-+	mutex_unlock(&st->lock);
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
- #define ADXRS290_ANGL_VEL_CHANNEL(reg, axis) {				\
- 	.type = IIO_ANGL_VEL,						\
- 	.address = reg,							\
-@@ -401,6 +514,13 @@ static int adxrs290_read_avail(struct iio_dev *indio_dev,
- 	.info_mask_shared_by_type_available =				\
- 	BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY) |		\
- 	BIT(IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY),		\
-+	.scan_index = ADXRS290_IDX_##axis,				\
-+	.scan_type = {                                                  \
-+		.sign = 's',                                            \
-+		.realbits = 16,                                         \
-+		.storagebits = 16,                                      \
-+		.endianness = IIO_LE,					\
-+	},                                                              \
- }
- 
- static const struct iio_chan_spec adxrs290_channels[] = {
-@@ -411,7 +531,20 @@ static const struct iio_chan_spec adxrs290_channels[] = {
- 		.address = ADXRS290_REG_TEMP0,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 		BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = ADXRS290_IDX_TEMP,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 12,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
- 	},
-+	IIO_CHAN_SOFT_TIMESTAMP(ADXRS290_IDX_TS),
-+};
-+
-+static const unsigned long adxrs290_avail_scan_masks[] = {
-+	BIT(ADXRS290_IDX_X) | BIT(ADXRS290_IDX_Y) | BIT(ADXRS290_IDX_TEMP),
-+	0
- };
- 
- static const struct iio_info adxrs290_info = {
-@@ -420,6 +553,44 @@ static const struct iio_info adxrs290_info = {
- 	.read_avail = &adxrs290_read_avail,
- };
- 
-+static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
-+{
-+	struct adxrs290_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (!st->spi->irq) {
-+		dev_info(&st->spi->dev, "no irq, using polling\n");
-+		return 0;
-+	}
-+
-+	st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev, "%s-dev%d",
-+						 indio_dev->name,
-+						 indio_dev->id);
-+	if (!st->dready_trig)
-+		return -ENOMEM;
-+
-+	st->dready_trig->dev.parent = &st->spi->dev;
-+	st->dready_trig->ops = &adxrs290_trigger_ops;
-+	iio_trigger_set_drvdata(st->dready_trig, indio_dev);
-+
-+	ret = devm_request_irq(&st->spi->dev, st->spi->irq,
-+			       &iio_trigger_generic_data_rdy_poll,
-+			       IRQF_ONESHOT, "adxrs290_irq", st->dready_trig);
-+	if (ret < 0)
-+		return dev_err_probe(&st->spi->dev, ret,
-+				     "request irq %d failed\n", st->spi->irq);
-+
-+	ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
-+	if (ret) {
-+		dev_err(&st->spi->dev, "iio trigger register failed\n");
-+		return ret;
-+	}
-+
-+	indio_dev->trig = iio_trigger_get(st->dready_trig);
-+
-+	return 0;
-+}
-+
- static int adxrs290_probe(struct spi_device *spi)
- {
- 	struct iio_dev *indio_dev;
-@@ -439,6 +610,7 @@ static int adxrs290_probe(struct spi_device *spi)
- 	indio_dev->channels = adxrs290_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(adxrs290_channels);
- 	indio_dev->info = &adxrs290_info;
-+	indio_dev->available_scan_masks = adxrs290_avail_scan_masks;
- 
- 	mutex_init(&st->lock);
- 
-@@ -478,6 +650,17 @@ static int adxrs290_probe(struct spi_device *spi)
- 	st->lpf_3db_freq_idx = val;
- 	st->hpf_3db_freq_idx = val2;
- 
-+	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+					      &iio_pollfunc_store_time,
-+					      &adxrs290_trigger_handler, NULL);
-+	if (ret < 0)
-+		return dev_err_probe(&spi->dev, ret,
-+				     "iio triggered buffer setup failed\n");
-+
-+	ret = adxrs290_probe_trigger(indio_dev);
-+	if (ret < 0)
-+		return ret;
-+
- 	return devm_iio_device_register(&spi->dev, indio_dev);
- }
- 
--- 
-2.20.1
+> +
+> +/*
+> + * dma_to_pfn/pfn_to_dma/dma_to_virt/virt_to_dma are architecture private
+> + * functions used internally by the DMA-mapping API to provide DMA
+> + * addresses. They must not be used by drivers.
+> + */
+> +#ifndef __arch_pfn_to_dma
+> +static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> +{
+> +	if (dev)
+> +		pfn -= dev->dma_pfn_offset;
+> +	return (dma_addr_t)__pfn_to_bus(pfn);
+> +}
+> +
+> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> +{
+> +	unsigned long pfn = __bus_to_pfn(addr);
+> +
+> +	if (dev)
+> +		pfn += dev->dma_pfn_offset;
+> +
+> +	return pfn;
+> +}
 
+These are only overridden for OMAP1510, and it looks like it wouldn't 
+take much for the platform code or ohci-omap driver to set up a generic 
+DMA offset for the relevant device.
+
+> +
+> +static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> +{
+> +	if (dev) {
+> +		unsigned long pfn = dma_to_pfn(dev, addr);
+> +
+> +		return phys_to_virt(__pfn_to_phys(pfn));
+> +	}
+> +
+> +	return (void *)__bus_to_virt((unsigned long)addr);
+> +}
+
+This appears entirely unused.
+
+> +
+> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> +{
+> +	if (dev)
+> +		return pfn_to_dma(dev, virt_to_pfn(addr));
+> +
+> +	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> +}
+
+And this is only used for some debug prints in dmabounce.
+
+Similarly the __bus_to_*()/__*_to_bus() calls themselves only appear 
+significant to mach-footbridge any more, and could probably also be 
+evolved into regular DMA offsets now that all API calls must have a 
+non-NULL device. I think I might come back and take a closer look at all 
+this at some point in future... :)
+
+Robin.
+
+> +
+> +#else
+> +static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> +{
+> +	return __arch_pfn_to_dma(dev, pfn);
+> +}
+> +
+> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> +{
+> +	return __arch_dma_to_pfn(dev, addr);
+> +}
+> +
+> +static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> +{
+> +	return __arch_dma_to_virt(dev, addr);
+> +}
+> +
+> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> +{
+> +	return __arch_virt_to_dma(dev, addr);
+> +}
+> +#endif
+> +
+>   static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+>   {
+>   	unsigned int offset = paddr & ~PAGE_MASK;
+> diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+> index bdd80ddbca3451..0a1a536368c3a4 100644
+> --- a/arch/arm/include/asm/dma-mapping.h
+> +++ b/arch/arm/include/asm/dma-mapping.h
+> @@ -8,8 +8,6 @@
+>   #include <linux/scatterlist.h>
+>   #include <linux/dma-debug.h>
+>   
+> -#include <asm/memory.h>
+> -
+>   #include <xen/xen.h>
+>   #include <asm/xen/hypervisor.h>
+>   
+> @@ -23,74 +21,6 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+>   	return NULL;
+>   }
+>   
+> -#ifdef __arch_page_to_dma
+> -#error Please update to __arch_pfn_to_dma
+> -#endif
+> -
+> -/*
+> - * dma_to_pfn/pfn_to_dma/dma_to_virt/virt_to_dma are architecture private
+> - * functions used internally by the DMA-mapping API to provide DMA
+> - * addresses. They must not be used by drivers.
+> - */
+> -#ifndef __arch_pfn_to_dma
+> -static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> -{
+> -	if (dev)
+> -		pfn -= dev->dma_pfn_offset;
+> -	return (dma_addr_t)__pfn_to_bus(pfn);
+> -}
+> -
+> -static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> -{
+> -	unsigned long pfn = __bus_to_pfn(addr);
+> -
+> -	if (dev)
+> -		pfn += dev->dma_pfn_offset;
+> -
+> -	return pfn;
+> -}
+> -
+> -static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> -{
+> -	if (dev) {
+> -		unsigned long pfn = dma_to_pfn(dev, addr);
+> -
+> -		return phys_to_virt(__pfn_to_phys(pfn));
+> -	}
+> -
+> -	return (void *)__bus_to_virt((unsigned long)addr);
+> -}
+> -
+> -static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> -{
+> -	if (dev)
+> -		return pfn_to_dma(dev, virt_to_pfn(addr));
+> -
+> -	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> -}
+> -
+> -#else
+> -static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+> -{
+> -	return __arch_pfn_to_dma(dev, pfn);
+> -}
+> -
+> -static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+> -{
+> -	return __arch_dma_to_pfn(dev, addr);
+> -}
+> -
+> -static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> -{
+> -	return __arch_dma_to_virt(dev, addr);
+> -}
+> -
+> -static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> -{
+> -	return __arch_virt_to_dma(dev, addr);
+> -}
+> -#endif
+> -
+>   /**
+>    * arm_dma_alloc - allocate consistent memory for DMA
+>    * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
+> 
