@@ -2,112 +2,81 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6851C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D486C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F47021D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599766505;
-	bh=ZnkVLkdxFTHqWVbICsIxMpUCV946upQejuyAiTgNi5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X8VoJGHh6RxfQzX2DCxgx9U0M9a/2q+D1dthENT0evK08eIHZR95zwFVPnMg6PzNj
-	 R3DZcAk7+7cPlY1A6+N6tv9mYbRhE6vvdaG29nqBAs8W4QgOinSbUoYiGUArLG7k1s
-	 xEyO68rubHFyz+ZfmZvQGPPEH+GJUXYwR2e9BE5s=
+	by mail.kernel.org (Postfix) with ESMTP id 32D6321D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgIJTe5 (ORCPT
+        id S1727929AbgIJTfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:34:57 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40130 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgIJTds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:33:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x123so5272705pfc.7;
-        Thu, 10 Sep 2020 12:33:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E825qm/7EG/v1qMJRENDdr8UrJ7c6Yo1KshoI/I0ueg=;
-        b=RHO8ZaK3FlihxqjCxq6T3hxIjMvu1amZ9KskbVEwh84B8cbMQiqFOfHhA8pG/xlr0B
-         qOXi8rrDMayttEX070fhGlwp0c2G3fJnbTRMfPGa8D6NPCv5QmntaQH9ATY42kVk++cJ
-         l168ikQY/ShNuJfXdaLW6IC+3CK4Dvbq6DSDlImPCyI74LpatrUii+7+DyAx6gL8CWkf
-         Z78HkgBv8qRO0YgtQW7ViCKIC2hoMdqtClk65/vJZVnYWQA0MnotrjC1P4PtBh89+Mfy
-         5OlupzTh/1Qw/ImKMMcP5s3Nqv10h4CBscfLJZo9qUMYhKMklzbajpMIkmv55YW98grm
-         TpwA==
-X-Gm-Message-State: AOAM531PJApI1N+OPJcp82IH4SSkWyNyHB7eE0WSQEkgg7DKzMWRnqMt
-        TJK78DIi/ayVjxLqAAyHLx4=
-X-Google-Smtp-Source: ABdhPJwkAXtdVJDC5/PQROYD2FplK9h+zyPV3N2nLTb28vrgLb0yHjLqShdxF8N1anfjedmdVafZXQ==
-X-Received: by 2002:a17:902:ee15:: with SMTP id z21mr4329526plb.103.1599766427635;
-        Thu, 10 Sep 2020 12:33:47 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1162:1ac0:17a6:4cc6:d1ef])
-        by smtp.gmail.com with ESMTPSA id y7sm5525188pgk.73.2020.09.10.12.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 12:33:47 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:33:45 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Lucy Yan <lucyyan@google.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Moritz Fischer <mdf@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: dec: de2104x: Increase receive ring size for
- Tulip
-Message-ID: <20200910193345.GA28525@archbook>
-References: <20200910190509.81755-1-lucyyan@google.com>
+        Thu, 10 Sep 2020 15:35:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35968 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731398AbgIJPnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:43:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 06CFEACC8;
+        Thu, 10 Sep 2020 15:24:33 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 17:24:47 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     Martin Doucha <mdoucha@suse.cz>
+Cc:     ltp@lists.linux.it,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [LTP] [PATCH v2] syscall/ptrace08: Simplify the test.
+Message-ID: <20200910152447.GA10844@yuki.lan>
+References: <20200904140931.10153-1-chrubis@suse.cz>
+ <5d127ee5-56d1-01c5-c364-dcb004204e9d@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910190509.81755-1-lucyyan@google.com>
+In-Reply-To: <5d127ee5-56d1-01c5-c364-dcb004204e9d@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:05:09PM -0700, Lucy Yan wrote:
-> Increase Rx ring size to address issue where hardware is reaching
-> the receive work limit.
-> 
-> Before:
-> 
-> [  102.223342] de2104x 0000:17:00.0 eth0: rx work limit reached
-> [  102.245695] de2104x 0000:17:00.0 eth0: rx work limit reached
-> [  102.251387] de2104x 0000:17:00.0 eth0: rx work limit reached
-> [  102.267444] de2104x 0000:17:00.0 eth0: rx work limit reached
-> 
-> Signed-off-by: Lucy Yan <lucyyan@google.com>
-Reviewed-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  drivers/net/ethernet/dec/tulip/de2104x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/dec/tulip/de2104x.c b/drivers/net/ethernet/dec/tulip/de2104x.c
-> index cb116b530f5e..2610efe4f873 100644
-> --- a/drivers/net/ethernet/dec/tulip/de2104x.c
-> +++ b/drivers/net/ethernet/dec/tulip/de2104x.c
-> @@ -85,7 +85,7 @@ MODULE_PARM_DESC (rx_copybreak, "de2104x Breakpoint at which Rx packets are copi
->  #define DSL			CONFIG_DE2104X_DSL
->  #endif
->  
-> -#define DE_RX_RING_SIZE		64
-> +#define DE_RX_RING_SIZE		128
->  #define DE_TX_RING_SIZE		64
->  #define DE_RING_BYTES		\
->  		((sizeof(struct de_desc) * DE_RX_RING_SIZE) +	\
-> -- 
-> 2.28.0.526.ge36021eeef-goog
-> 
+Hi!
+> looks good and the test passes on older fixed kernels. Just one
+> compatibility issue below.
 
-Thanks,
-Moritz
+I've fixed that and also the kernel version when the behavior had
+changed and pushed, thanks for the review and testing.
+
+...
+
+> > +	if (TST_RET != -1) {
+> > +		tst_res(TFAIL, "ptrace() breakpoint with kernel addr succeeded");
+> > +	} else {
+> > +		if (TST_ERR == EINVAL) {
+> > +			tst_res(TPASS | TTERRNO,
+> > +				"ptrace() breakpoint with kernel addr failed");
+> > +		} else {
+> > +			tst_res(TFAIL | TTERRNO,
+> > +				"ptrace() breakpoint on kernel addr should return EINVAL, got");
+> > +		}
+> > +	}
+> > +
+> > +	unsigned long addr;
+> 
+> AFAICT, we're not compiling with --std=c99 so older compilers may
+> complain about the variable declaration here.
+
+The default std for gcc has been at least gnu90 for ages, which includes
+subset of c99 features as well including this one. So unless you
+explicitly pass --std=c90 or older it will work just fine.
+
+I've moved the declaration to the top of the function nevertheless.
+
+-- 
+Cyril Hrubis
+chrubis@suse.cz
