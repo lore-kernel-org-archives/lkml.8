@@ -2,122 +2,129 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE305C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D404C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B387120732
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4E1208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbgIJPaq (ORCPT
+        id S1731264AbgIJPcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 11:30:46 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:34871 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1731243AbgIJP2G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:28:06 -0400
-Received: (qmail 851550 invoked by uid 1000); 10 Sep 2020 11:27:34 -0400
-Date:   Thu, 10 Sep 2020 11:27:34 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linux@prisktech.co.nz, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: host: ehci-platform: Add workaround for
- brcm,xgs-iproc-ehci
-Message-ID: <20200910152734.GB849569@rowland.harvard.edu>
-References: <20200910025154.20848-1-chris.packham@alliedtelesis.co.nz>
+        Thu, 10 Sep 2020 11:32:32 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2804 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731307AbgIJPaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:30:03 -0400
+Received: from lhreml720-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2BA129CB13D474964D18;
+        Thu, 10 Sep 2020 16:29:57 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml720-chm.china.huawei.com (10.201.108.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 10 Sep 2020 16:29:56 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Thu, 10 Sep 2020 16:29:56 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>, Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH 1/1] RAS: Add CPU Correctable Error Collector to isolate
+ an erroneous CPU core
+Thread-Topic: [PATCH 1/1] RAS: Add CPU Correctable Error Collector to isolate
+ an erroneous CPU core
+Thread-Index: AQHWgG1JK3/pxs0Hy0WMoA7NPJGN4qlT2awAgAxWxYCAAaMi4A==
+Date:   Thu, 10 Sep 2020 15:29:56 +0000
+Message-ID: <50714e083d55491a8ccf5ad847682d1e@huawei.com>
+References: <20200901140140.1772-1-shiju.jose@huawei.com>
+ <20200901143539.GC8392@zn.tnic> <512b7b8e6cb846aabaf5a2191cd9b5d4@huawei.com>
+ <20200909120203.GB12237@zn.tnic>
+In-Reply-To: <20200909120203.GB12237@zn.tnic>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.89.170]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910025154.20848-1-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 02:51:53PM +1200, Chris Packham wrote:
-> The ehci controller found in some Broadcom switches with integrated SoCs
-> has an issue which causes a soft lockup with large transfers like you
-> see when running ext4 on USB3 flash drive.
-> 
-> Port the fix from the Broadcom XLDK to increase the OUT_THRESHOLD to
-> avoid the problem.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> 
-> I don't have much data on what this change does. I can say it is needed to
-> avoid a soft lockup when using a USB3 Flash drive formatted has ext4 (USB2 +
-> ext4 is OK, USB3 + fat is OK). I presume the affected combination ends up using
-> larger transfers triggering the problem.
-> 
-> The equivalent change in the Broadcom XLDK is
-> 
-> 	if (IS_ENABLED(CONFIG_USB_EHCI_XGS_IPROC))
-> 		ehci_writel(ehci, BCM_USB_FIFO_THRESHOLD,
-> 				&ehci->regs->reserved4[6]);
-> 
-> This is problematic because it would unconditionally apply to all ehci
-> controllers whenever CONFIG_USB_EHCI_XGS_IPROC is enabled (also reserved4 only
-> goes to 6 so technically it's indexing off the end of the array).
-> 
-> I wasn't sure if I should add a new property or somehow detect the affected
-> host controller. I settled on using of_device_is_compatible() as that seemed
-> the simplest thing to do.
-
-Reasonable.
-
->  drivers/usb/host/ehci-platform.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-> index 006c4f6188a5..0d2de8faa3c1 100644
-> --- a/drivers/usb/host/ehci-platform.c
-> +++ b/drivers/usb/host/ehci-platform.c
-> @@ -53,6 +53,9 @@ struct ehci_platform_priv {
->  
->  static const char hcd_name[] = "ehci-platform";
->  
-> +#define bcm_iproc_insnreg01	hostpc
-> +#define BCM_USB_FIFO_THRESHOLD	0x00800040
-
-Minor nit: Since hostpc is nominally an array, IMO it would be a little 
-clearer to define bcm_iproc_insnreg01 as hostpc[0] and then do the 
-ehci_writel to &ehci->regs->bcm_iproc_insnreg01.  That makes it look 
-more like an ordinary structure member.
-
-Also IMO, it's better to put the #define's before the structure 
-definitions.
-
-> +
->  static int ehci_platform_reset(struct usb_hcd *hcd)
->  {
->  	struct platform_device *pdev = to_platform_device(hcd->self.controller);
-> @@ -358,6 +361,9 @@ static int ehci_platform_probe(struct platform_device *dev)
->  
->  	device_wakeup_enable(hcd->self.controller);
->  	device_enable_async_suspend(hcd->self.controller);
-> +	if (of_device_is_compatible(dev->dev.of_node, "brcm,xgs-iproc-ehci"))
-> +		ehci_writel(ehci, BCM_USB_FIFO_THRESHOLD,
-> +			    ehci->regs->bcm_iproc_insnreg01);
-
-In theory, this should go before the usb_add_hcd() call because 
-afterward the controller is active.  But you can't put it before 
-ehci->regs has been assigned, which happens in ehci_setup().  Probably 
-the best place is at the end of ehci_platform_reset().
-
-Alan Stern
-
->  	platform_set_drvdata(dev, hcd);
->  
->  	if (priv->quirk_poll)
-> -- 
-> 2.28.0
-> 
+SGVsbG8gQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlz
+bGF2IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAwOSBTZXB0ZW1iZXIgMjAy
+MCAxMzowMg0KPlRvOiBTaGlqdSBKb3NlIDxzaGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxp
+bnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtDQo+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgdG9ueS5sdWNrQGludGVsLmNvbTsgcmp3QHJq
+d3lzb2NraS5uZXQ7DQo+amFtZXMubW9yc2VAYXJtLmNvbTsgbGVuYkBrZXJuZWwub3JnOyBMaW51
+eGFybQ0KPjxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBS
+QVM6IEFkZCBDUFUgQ29ycmVjdGFibGUgRXJyb3IgQ29sbGVjdG9yIHRvIGlzb2xhdGUNCj5hbiBl
+cnJvbmVvdXMgQ1BVIGNvcmUNCj4NCj5PbiBUdWUsIFNlcCAwMSwgMjAyMCBhdCAwNDoyMDo1NFBN
+ICswMDAwLCBTaGlqdSBKb3NlIHdyb3RlOg0KPj4gQ1BVIENFQyBkZXJpdmVkIHRoZSBpbmZyYXN0
+cnVjdHVyZSBvZiB0aGUgQ0VDIG9ubHkgYW5kIHRoZSBsb2dpYyB1c2VkDQo+PiBpbiB0aGUgQ0VD
+IGZvciBDRSBjb3VudCBzdG9yYWdlLCBDRSBjb3VudCBjYWxjdWxhdGlvbiBhbmQgcGFnZQ0KPj4g
+aXNvbGF0aW9uIGlzIHZlcnkgdW5pcXVlIGZvciB0aGUgbWVtb3J5IHBhZ2VzLCB3aGljaCBzZWVt
+cyBjYW5ub3QgYmUNCj4+IHJldXNhYmxlIGZvciB0aGUgQ1BVIENFcy4NCj4NCj5PaCwgYmVjYXVz
+ZSBpdCBzYXZlcyB0aGUgcmVwb3J0ZWQgZXJyb3IncyBQRk4gYW5kIHlvdSB3YW50IHRvIHNhdmUN
+Cj4NCj5bQ1BVIG51bSB8IGVycm9yIGNvdW50XQ0KPg0KPj8NClllcy4gDQoNCj4NCj5XZWxsLCB5
+b3UgY2FuIGVhc2lseSBjaGFuZ2UgdGhhdCBieSBleHRlbmRpbmcgdGhlIGV4aXN0aW5nIENFQyB0
+byBoYXZlIGENCj5kaWZmZXJlbnQgc3RvcmFnZSBmb3JtYXQgZm9yIENQVSBlcnJvcnMsIGkuZS4s
+IHVzZSBhIGRpZmZlcmVudCBjZV9hcnJheSB3aGljaA0KPmdldHMgcGFzc2VkIHRvIHRoZSBmdW5j
+dGlvbnMgYW55d2F5Lg0KT2suIEhvd2V2ZXIgdGhlIGZ1bmN0aW9ucyBzdWNoIGFzIF9fZmluZF9l
+bGVtKCkgdXNlDQptZW1vcnkgc3BlY2lmaWMgUEZOKCkgYW5kIFBBR0VfU0hJRlQuDQoNCj4NCj4+
+IEFsc28gdGhlIHZhbHVlcyBzZXQgZm9yIHRoZSBwYXJhbWV0ZXJzIHN1Y2ggYXMgdGhyZXNob2xk
+LCB0aW1lIHBlcmlvZA0KPj4gZm9yIHRoZSBtZW1vcnkgZXJyb3JzIGFuZCBDUFUgZXJyb3JzIHdv
+dWxkIGJlIGRpZmZlcmVudC4NCj4NCj5BbmQgeW91ciBpbXBsZW1lbnRhdGlvbiB3aXRoIHNsaWRp
+bmcgd2luZG93cyBpcyBzbyB0b3RhbGx5IGRpZmZlcmVudCB0aGF0IGl0DQo+d2FycmFudHMgdGhl
+IGR1cGxpY2F0aW9uIG9mIHRoZSBjb2RlPyBJIGRvbid0IHRoaW5rIHNvLg0KPg0KPllvdSBjYW4g
+dXNlIHRoZSBjdXJyZW50IENFQyB0byBkbyBleGFjdGx5IHdoYXQgeW91IHdhbm5hIGRvLCB3aXRo
+IHRoZQ0KPmRlY2F5aW5nIGFuZCBzbyBvbi4NCkkgd2lsbCBjaGVjayB0aGlzLg0KRm9yIENQVSwg
+dGhlIGNvcnJlY3RlZCBlcnJvcnMgY291bnQgZm9yIGEgc2hvcnQgdGltZSBwZXJpb2QgdG8gYmUg
+Y2hlY2tlZC4NClRodXMgb2xkIGVycm9ycyBvdXRzaWRlIHRoaXMgcGVyaW9kIHdvdWxkIG5vdCBi
+ZSBjb25zaWRlcmVkIGFuZCB3b3VsZCBiZSBjbGVhcmVkLiANCkl0IGlzIG5vdCBjbGVhciB0byBt
+ZSB3aGV0aGVyIGluIHRoZSBjdXJyZW50IENFQywgdGhlIGNvdW50IGZvciB0aGUgb2xkIGVycm9y
+cyBvdXRzaWRlDQphIHRpbWUgcGVyaW9kIHdvdWxkIGJlIGV4Y2x1ZGVkIGZvciB0aGUgdGhyZXNo
+b2xkIGNoZWNrIG9yIHJlbW92ZWQ/DQoNCj4NCj5CZWNhdXNlIGFsbCB5b3Ugd2FubmEgZG8gaXMg
+Y291bnQgdGhlIGVycm9ycyBhIENQVSB0cmlnZ2VyZWQuDQo+DQo+SG93ZXZlciwgYSBDUFUgY2Fu
+IHRyaWdnZXIgYSAqbG90KiBvZiBkaWZmZXJlbnQgdHlwZXMgb2YgZXJyb3JzLg0KPllvdSdyZSBw
+dXR0aW5nIHRoZW0gYWxsIGluIHRoZSBzYW1lIGJhc2tldCBieSBkb2luZzoNCj4NCj4gICAgICAg
+ICAgICAgICAgZWxzZSBpZiAoZ3VpZF9lcXVhbChzZWNfdHlwZSwgJkNQRVJfU0VDX1BST0NfQVJN
+KSkNCj4JCQkvKiBhZGQgdG8gQ0VDICovDQo+DQo+YW5kIG9ubHkgZm9yIGNvcnJlY3RhYmxlLg0K
+Pg0KPldoYXQgdHlwZSBvZiBlcnJvcnMgZ2V0IHJlcG9ydGVkIGluIENQRVJfU0VDX1BST0NfQVJN
+Pw0KQWNjb3JkaW5nIHRvIHRoZSBBUk0gUHJvY2Vzc29yIENQRVIgZGVmaW5pdGlvbiB0aGUgZXJy
+b3IgdHlwZXMgcmVwb3J0ZWQgYXJlDQpDYWNoZSBFcnJvciwgVExCIEVycm9yLCBCdXMgRXJyb3Ig
+YW5kIG1pY3JvLWFyY2hpdGVjdHVyYWwgRXJyb3IuDQoNCj4NCj5JZiB0aGV5J3JlIGFsbCBsdW1w
+ZWQgdG9nZXRoZXIgYW5kIGlmIHNvbWUgZnVuY3Rpb25hbCB1bml0IGdlbmVyYXRlcyBhIGxvdCBv
+Zg0KPmVycm9ycywgaW5zdGVhZCBvZiBkaXNhYmxpbmcgdGhhdCB1bml0IG9ubHksIHlvdSdsbCBn
+byBhbmQgcmVtb3ZlIHRoZSB3aG9sZQ0KPkNQVT8NCj4NCkZldyB0aG91Z2h0cyBvbiB0aGlzLA0K
+MS4gTm90IHN1cmUgd2lsbCBhIENQVSBjb3JlIHdvdWxkIHdvcmsvcGVyZm9ybSBhcyBub3JtYWwg
+YWZ0ZXIgZGlzYWJsaW5nDQphIGZ1bmN0aW9uYWwgdW5pdD8NCjIuIFN1cHBvcnQgaW4gdGhlIEhX
+IHRvIGRpc2FibGUgYSBmdW5jdGlvbiB1bml0IGFsb25lIG1heSBub3QgYXZhaWxhYmxlLg0KMy4g
+SWYgaXQgaXMgcmVxdWlyZSB0byBzdG9yZSBhbmQgcmV0cmlldmUgdGhlIGVycm9yIGNvdW50IGJh
+c2VkIG9uIGZ1bmN0aW9uYWwgdW5pdCwNCiAgICB0aGVuIENFQyB3aWxsIGJlY29tZSBtb3JlIGNv
+bXBsZXg/DQoNCj5Eb2Vzbid0IG1ha2UgYSB3aG9sZSBsb3Qgb2Ygc2Vuc2UgdG8gbWUuDQo+DQo+
+SG93IGFib3V0IHlvdSBkZWZpbmUgd2hhdCBleGFjdGx5IHlvdSdyZSB0cnlpbmcgdG8gc29sdmUs
+IG1heWJlIGdpdmUgYW4NCj5leGFtcGxlIG9mIGEgcmVhbCBpc3N1ZSBzb21lb25lIGlzIGVuY291
+bnRlcmluZyBhbmQgeW91J3JlIHRyeWluZyB0bw0KPmFkZHJlc3M/IEJlY2F1c2UgdGhlcmUgd2Fz
+IG5ldmVyIGEgbmVjZXNzaXR5IHNvIGZhciB0byBkaXNhYmxlIENQVXMgb24NCj54ODYgZHVlIHRv
+IGNvcnJlY3RhYmxlIGVycm9ycy4gV2h5IGlzIHRoYXQgbmVlZGVkIG9uIEFSTT8NCj4NClRoaXMg
+cmVxdWlyZW1lbnQgaXMgdGhlIHBhcnQgb2YgdGhlIGVhcmx5IGZhdWx0IHByZWRpY3Rpb24gYnkg
+dGFraW5nIGFjdGlvbg0Kd2hlbiBsYXJnZSBudW1iZXIgb2YgY29ycmVjdGVkIGVycm9ycyByZXBv
+cnRlZCBvbiBhIENQVSBjb3JlDQpiZWZvcmUgaXQgY2F1c2luZyBzZXJpb3VzIGZhdWx0cy4gDQpX
+ZSBhcmUgbWFpbmx5IGxvb2tpbmcgZm9yIGRpc2FibGUgQ1BVIGNvcmUgb24gbGFyZ2UgbnVtYmVy
+IG9mIEwxL0wyIGNhY2hlDQpjb3JyZWN0ZWQgZXJyb3JzICByZXBvcnRlZCBvbiBhIENQVSBjb3Jl
+LiBDYW4gd2UgYWRkIGF0bGVhc3QgcmVtb3ZpbmcgQ1BVIGNvcmUNCmZvciB0aGUgQ1BVIGNhY2hl
+IGNvcnJlY3RlZCBlcnJvcnMgZmlsdGVyaW5nIG91dCBvdGhlciBlcnJvciB0eXBlcz8NCiANClsu
+Li5dDQoNClRoYW5rcywNClNoaWp1DQoNCg==
