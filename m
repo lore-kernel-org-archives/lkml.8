@@ -2,114 +2,133 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6D7C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54166C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 773C121D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA7F21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgIJJ1o (ORCPT
+        id S1730181AbgIJJ2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:27:44 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:39571 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbgIJJ1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:27:34 -0400
-Received: from gandi.net (laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr [90.63.246.187])
-        (Authenticated sender: thibaut.sautereau@clip-os.org)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 14A87100013;
-        Thu, 10 Sep 2020 09:26:54 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 11:26:56 +0200
-From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
-Message-ID: <20200910092656.GA800@gandi.net>
-References: <20200908075956.1069018-1-mic@digikod.net>
- <20200908185026.GU1236603@ZenIV.linux.org.uk>
- <e3223b50-0d00-3b64-1e09-cfb1b9648b02@digikod.net>
- <20200909170851.GL6583@casper.infradead.org>
+        Thu, 10 Sep 2020 05:28:11 -0400
+Received: from mga11.intel.com ([192.55.52.93]:34053 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730381AbgIJJ1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:27:30 -0400
+IronPort-SDR: mN4Uow4Byk5k4UvhSnTNlUyibOBSy0oEUcs8w/rWXt4DNVDCNpRY762hQdPvg7KeqM0VjL30rB
+ Nlv48Ggz10YA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155959546"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="155959546"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 02:27:19 -0700
+IronPort-SDR: eCrhByWXSSpzQhy0QRwbfDpyXB6D1mCK4pQ0qv49CimrJISk/wYVOIIq6oYwYQwClFtU3ibcSG
+ 89+uWbTIVm1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="334120998"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 02:27:17 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kGIrL-00FeWV-0j; Thu, 10 Sep 2020 12:27:15 +0300
+Date:   Thu, 10 Sep 2020 12:27:15 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Johan Hovold <johan@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] serial: core: fix console port-lock regression
+Message-ID: <20200910092715.GM1891694@smile.fi.intel.com>
+References: <20200909143101.15389-1-johan@kernel.org>
+ <20200909143101.15389-3-johan@kernel.org>
+ <20200909154815.GD1891694@smile.fi.intel.com>
+ <20200910073527.GC24441@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200909170851.GL6583@casper.infradead.org>
+In-Reply-To: <20200910073527.GC24441@localhost>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 06:08:51PM +0100, Matthew Wilcox wrote:
-> On Wed, Sep 09, 2020 at 09:19:11AM +0200, Mickaël Salaün wrote:
-> > 
-> > On 08/09/2020 20:50, Al Viro wrote:
-> > > On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
-> > >> Hi,
-> > >>
-> > >> This height patch series rework the previous O_MAYEXEC series by not
-> > >> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
-> > >> suggested, this enables to perform the access check on a file descriptor
-> > >> instead of on a file path (while opening it).  This may require two
-> > >> checks (one on open and then with faccessat2) but it is a more generic
-> > >> approach [8].
-> > > 
-> > > Again, why is that folded into lookup/open/whatnot, rather than being
-> > > an operation applied to a file (e.g. O_PATH one)?
-> > 
-> > I don't understand your question. AT_INTERPRETED can and should be used
-> > with AT_EMPTY_PATH. The two checks I wrote about was for IMA.
-> 
-> Al is saying you should add a new syscall, not try to fold it into
-> some existing syscall.
-> 
-> I agree with him.  Add a new syscall, just like you were told to do it
-> last time.
++Cc: Tony, let me add Tony to the discussion.
 
-Sure, we'll do it. In the meantime, could we at least get an explanation
-about why using faccessat2() instead of a new syscall is wrong? I could
-see the reasons for separating the exec checks from the file opening,
-but this time I don't understand. Is it because it brings too much
-complexity to do_faccessat()?
+On Thu, Sep 10, 2020 at 09:35:27AM +0200, Johan Hovold wrote:
+> On Wed, Sep 09, 2020 at 06:48:15PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 09, 2020 at 04:31:01PM +0200, Johan Hovold wrote:
+> > > Fix the port-lock initialisation regression introduced by commit
+> > > a3cb39d258ef ("serial: core: Allow detach and attach serial device for
+> > > console") by making sure that the lock is again initialised during
+> > > console setup.
+> > > 
+> > > The console may be registered before the serial controller has been
+> > > probed in which case the port lock needs to be initialised during
+> > > console setup by a call to uart_set_options(). The console-detach
+> > > changes introduced a regression in several drivers by effectively
+> > > removing that initialisation by not initialising the lock when the port
+> > > is used as a console (which is always the case during console setup).
+> > > 
+> > > Add back the early lock initialisation and instead use a new
+> > > console-reinit flag to handle the case where a console is being
+> > > re-attached through sysfs.
+> > > 
+> > > The question whether the console-detach interface should have been added
+> > > in the first place is left for another discussion.
+> > 
+> > It was discussed in [1]. TL;DR: OMAP would like to keep runtime PM available
+> > for UART while at the same time we disable it for kernel consoles in
+> > bedb404e91bb.
+> > 
+> > [1]: https://lists.openwall.net/linux-kernel/2018/09/29/65
+> 
+> Yeah, I remember that. My fear is just that the new interface opens up a
+> can of worms as it removes the earlier assumption that the console would
+> essentially never be deregistered without really fixing all those
+> drivers, and core functions, written under that assumption. Just to
+> mention a few issues; we have drivers enabling clocks and other
+> resources during console setup which can now be done repeatedly,
+
+The series introduced the console ->exit() callback, so it should be easy to
+fix.
+
+>	and
+> several drivers whose setup callbacks are marked __init and will oops
+> the minute you reattach the console.
+
+I believe this can be fixed relatively easy. As a last resort it can be a quirk
+that disables console detachment for problematic consoles.
+
+> And what about power management
+> which was the reason for wanting this on OMAP in the first place; tty
+> core never calls shutdown() for a console port, not even when it's been
+> detached using the new interface.
+
+That is interesting... Tony, do we have OMAP case working because of luck?
+
+> I know, the console setup is all a mess, but this still seems a little
+> rushed to me. I'm even inclined to suggest a revert until the above and
+> similar issues have been addressed properly rather keeping a known buggy
+> interface.
+
+You know that it will be a dead end. Any solution how to move forward?
+
+> > > Note that the console-enabled check in uart_set_options() is not
+> > > redundant because of kgdboc, which can end up reinitialising an already
+> > > enabled console (see commit 42b6a1baa3ec ("serial_core: Don't
+> > > re-initialize a previously initialized spinlock.")).
 
 -- 
-Thibaut Sautereau
-CLIP OS developer
+With Best Regards,
+Andy Shevchenko
+
+
