@@ -2,128 +2,128 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC25C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F155C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8247F208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFBA208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQyE+kit"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpErupGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbgIJMkS (ORCPT
+        id S1730716AbgIJMlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
+        Thu, 10 Sep 2020 08:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730720AbgIJMcz (ORCPT
+        with ESMTP id S1727805AbgIJMfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:32:55 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4174EC061756;
-        Thu, 10 Sep 2020 05:32:46 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id c196so4684704pfc.0;
-        Thu, 10 Sep 2020 05:32:46 -0700 (PDT)
+        Thu, 10 Sep 2020 08:35:09 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E646DC061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:34:59 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so6546106wrm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:34:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mEwZSmSPM9tJPXbfj/hisKYRPYb4G1wKBGhUAXFVXQE=;
-        b=QQyE+kittH/tfmJ8ZNi17jn05QZQZcXwMXVymiKtSy+2DeXb1jiT3escHBvEh6nBkR
-         N88tlDY4zkfS37XNjX8SIuiq73jsc6YnrdrzA0t1dU2T2teWmUc2+DzpOA/8ZAtN5wNs
-         +7b3EL7XVaNrhEX3l6z54aV0/P3PLQGCwEtcf3mdgUZJZ+1IH5g7aOTRY+80M6ykaEjE
-         W9wHsMdf7Ii9vErVU1ctuZ7zBc33XwdDB9NDd93mll4W9W2Ayhlf03qiMEIiA3ilo89s
-         z1wfC/PhdoTHEdGcuufJztn+lVo39fiNHxrCIK+IiuXNLL5FdM1D/saoqSFHIG8oh2Un
-         /K+Q==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ou9injEFK3ynx6TLorApjrz9C+IV+NUJDgRb4FiGCd0=;
+        b=JpErupGX9fulmYZvxtdV0U32w7X1pxyfApvEkhWK8zhYuxW1uI+EqU5Fjv9BaF9H/V
+         YurieurqjypG7BJAUBnBCH5arbZ3tVER2qmEt+rAqI4sfn3j4bXg9iz0fRz0pKoPNL3y
+         YSW2fRVwWb6wg82ODMDH5pUFWZ0GjjH48pGAH5EmstenSokAdTz7Xt7zn4OgIwRIR4l9
+         0fLwBGV8McXKD8aluzhihwYePyApjjulnhMvLjwOH3WO1/cwpNtD7nu9TdVZ4OCMjA8S
+         c9CQIJkAS0fQVUjZIlIZtaLGjr0eQHoBc0Ml2c5fY6fYDFZIe4MRDXrAX2YVoKmv1DK0
+         bwYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mEwZSmSPM9tJPXbfj/hisKYRPYb4G1wKBGhUAXFVXQE=;
-        b=E+cNJO1uin1vPr8ATnylU5fSGCTi9rVpWsAvV5c0GJ60IPMUrS6aVVBBkUNDKDj2MS
-         7v7x+F9NSAX6kbGgIoqIoeYPEmfiMF3vTIc5g5NSQllqvLejuveHW9IzXXEd2OIXlE+k
-         bzEvsR/Vxc7jkQwEGdl09MlSTdaGKAdZ294SYDTfT+TjveFqRHHj08A0qSLEDwDem0N0
-         h/rcC7dErP3QG6Ndw/rRgv2WDqYrq++hw82fNashmL6Qd0pNhyPCmT/piJ5LJC7bhAOM
-         7xMtOYW4HOQIgGS78FKOZZPPy3KnAE/91iYREm1ABQAbM5UijXcCiBy+eo+wntq8VgmJ
-         BrwQ==
-X-Gm-Message-State: AOAM530nJ5DLYMz4hjhfXh6JpBCCa274icD41BIx29RzvP0kAHy46iRo
-        RRKLYgb/HikTOjzfRdXgVIBHSc1uFfQ=
-X-Google-Smtp-Source: ABdhPJx4LbkZbNn0hXoKo43LaWN99HPlceHJPG4X2zeKOzevSUZD1WXT6hmjCiUOacSfeY9fy+eduQ==
-X-Received: by 2002:a63:4d5b:: with SMTP id n27mr4212074pgl.360.1599741162699;
-        Thu, 10 Sep 2020 05:32:42 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
-        by smtp.gmail.com with ESMTPSA id c1sm5799309pfc.93.2020.09.10.05.32.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ou9injEFK3ynx6TLorApjrz9C+IV+NUJDgRb4FiGCd0=;
+        b=XqUfkq2om2vcnCJXv5EkyVfTKE9q2uUftjiWxp9/yhzJmspE9cNp79QgNwKqJZ5dhD
+         BrmI8TnqCgt3vhrGRFQtluwYAAUrjiUlxU2Jo2WQLtCDhFXGBULi7N3YF/Sd5O0Mgl+E
+         e6MykB6oGp8X8YWpbaxDi8uNgCj8FnEV+ynF8YGSWtqWOkkJTwDhJn7pXIYKaHQkwwlv
+         qC9xc6i9BJws4tBroNXhkeVTDrEP3riQSGMZeEavDHL7THJ/U8gjFo+QGEM1mjk0fau2
+         PbJHceFO0jbAR9Ez6u07og5uU13yL2JD9IWYQgl4Rs3r+cBbjhSg7iUUo3ix5jDdlmMz
+         06kw==
+X-Gm-Message-State: AOAM532g47z9p0Fsjr3MHxrIiF2W57trAnimd6GQoxPqllmPj6u7xtZ2
+        8wOS5YrijqSBl3m6tWNED0hJpg==
+X-Google-Smtp-Source: ABdhPJzW0hcZaP/tw8LsHLMPTKiwkkYHFromXeW07uLdryNq4J0OhAM1tb62eb6pB/v/hKExJM8Mhg==
+X-Received: by 2002:a5d:6886:: with SMTP id h6mr9066135wru.374.1599741297317;
+        Thu, 10 Sep 2020 05:34:57 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:109:4a0f:cfff:fe4a:6363])
+        by smtp.gmail.com with ESMTPSA id n21sm3532461wmi.21.2020.09.10.05.34.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 05:32:41 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v3 2/3] dt-bindings: iio: gyro: adxrs290: Add interrupts support
-Date:   Thu, 10 Sep 2020 18:02:36 +0530
-Message-Id: <20200910123236.17141-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Sep 2020 05:34:56 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 13:34:52 +0100
+From:   Andrew Scull <ascull@google.com>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 04/10] kvm: arm64: Remove hyp_adr/ldr_this_cpu
+Message-ID: <20200910123452.GD93664@google.com>
+References: <20200903091712.46456-1-dbrazdil@google.com>
+ <20200903091712.46456-5-dbrazdil@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903091712.46456-5-dbrazdil@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include 'interrupts' property and provide a suitable example for using
-a GPIO interrupt line.
+On Thu, Sep 03, 2020 at 11:17:06AM +0200, 'David Brazdil' via kernel-team wrote:
+> The hyp_adr/ldr_this_cpu helpers were introduced for use in hyp code
+> because they always needed to use TPIDR_EL2 for base, while
+> adr/ldr_this_cpu from kernel proper would select between TPIDR_EL2 and
+> _EL1 based on VHE/nVHE.
+> 
+> Simplify this now that the nVHE hyp mode case can be handled using the
+> __KVM_NVHE_HYPERVISOR__ macro. VHE selects _EL2 with alternatives.
+> 
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Acked-by: Andrew Scull <ascull@google.com>
 
-Changes in v3:
-  - remove gpio.h header since unused
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index 54d181177656..b392a977efb6 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -218,6 +218,21 @@ lr	.req	x30		// link register
+>  	str	\src, [\tmp, :lo12:\sym]
+>  	.endm
+>  
+> +	/*
+> +	 * @dst: destination register (32 or 64 bit wide)
+> +	 */
+> +	.macro	this_cpu_offset, dst
+> +#ifdef __KVM_NVHE_HYPERVISOR__
+> +	mrs	\dst, tpidr_el2
 
-Changes in v2:
+Another part that might also apply to __KVM_VHE_HYPERVISOR__.
 
-  - remove 'interrupts' property from the required properties list
-  - rewrite commit message
----
- .../devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
+> +#else
+> +alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
+> +	mrs	\dst, tpidr_el1
+> +alternative_else
+> +	mrs	\dst, tpidr_el2
+> +alternative_endif
+> +#endif
+> +	.endm
 
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-index 61adb2c2454b..662ec59ca0af 100644
---- a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -28,6 +28,9 @@ properties:
- 
-   spi-cpha: true
- 
-+  interrupts:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -39,6 +42,7 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-     spi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-@@ -48,6 +52,8 @@ examples:
-                    spi-max-frequency = <5000000>;
-                    spi-cpol;
-                    spi-cpha;
-+                   interrupt-parent = <&gpio>;
-+                   interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-         };
-     };
- ...
--- 
-2.20.1
 
