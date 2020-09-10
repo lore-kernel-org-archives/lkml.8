@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FCFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0D7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C46206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29F6208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QBGwJrY2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sG/VHChV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725782AbgIJXAs (ORCPT
+        id S1725385AbgIJXDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 19:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51332 "EHLO
+        Thu, 10 Sep 2020 19:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgIJXAq (ORCPT
+        with ESMTP id S1725275AbgIJXDH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 19:00:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E47C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:00:46 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 34so5134721pgo.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:00:46 -0700 (PDT)
+        Thu, 10 Sep 2020 19:03:07 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E00C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:03:07 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id jw11so770273pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:03:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=AEJBmoX8WsfyyVQZBwLDrC1Z1HfJ9zE1C+dj3rnnLIA=;
-        b=QBGwJrY226Z2o5SR7+/ZaEJqS00GKWQY5BKwSDFCSxgV7VBDWfvP0IzhD6bQkcfbvQ
-         n5AhvvNI1zc7+yi7+k8O3/331t8W2e7zPfNgtJQ3gRPNPzdl2C0YO4Ad8Woj9sadt+Yh
-         wZewRr7qJvofHUUEj9yW60BCenG37z02ElHuJBHKcESbEwPRA50yT2/u8pjpT4DWMaOp
-         e4jTXqTzf+le1cai3EdqtuJhebsq6KHSTxYnh8JGD5VAcIF0sWnxtTWl78EyS+XC3JvE
-         kFp3eXqCZjdWuWVdT9xTzK1/Am3AkHqKzZUzWOYGYGWBog6YRxtMIDBWQqc6v1YktMDl
-         g7cw==
+        bh=tvfyY+EQ1A9se+UIishx7R8RQe/Xnth3cDXfZrzfAiI=;
+        b=sG/VHChVy8E26BgXZPFD7WHtcCt35Y6m4EBUHkGV6Hza+p5NDNqRauhertdtTUWdj/
+         u44yi+tgriXMMauJNB7BvEXkBMh5P2t2Aiw61/NKuj6f3rhA5WCXJx+5+vnBlHzIqj8c
+         VsWc4kKKr8TnM3T3nfe8hWPiEvQjHIxZ+ahTMpAnIXHEidlkEmEH0SAHeT8YpbJxPKiM
+         HCr5ZR5Dd9E3GM1pIEUW+0Df8/zCnMSvy+86us5L8qb6Dc46W+Rur2tolH4X7hQnMkf3
+         XvgLdVSBd/zAwFct5FszLJJQUgALthkixgpty+L0AWcjLGwtTOXLvuWT1W6vNxhc3vxd
+         XdwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AEJBmoX8WsfyyVQZBwLDrC1Z1HfJ9zE1C+dj3rnnLIA=;
-        b=tkPsaFDC9f13vrHBf5OLSMcFQayJ06ZUiv7JPt25gsSloNYCwaoRtWUpAHY3HdjHJm
-         US6Vywo71B2ML+Qa/7pkR/R/Q3471lgK/nfs22jLUuWnph1ZKsntzXHACN/3cyRBSJqy
-         C8y91vS3AYpPSPcJk4ZK2z4fe29sPeeSTL1fQyQvXd/PqPYQJ0Frq3ql+vBNeFsS3+ZH
-         FNt25WmlA4Nin3aU0zTd8/2FVP8b8QE1IrbF+usFGwDQu+nzwesogLFkl+Xhcrs9xB21
-         WoVfPCeUignLwcXlbbjtsE0uUkBA8VJP3TXC0P5FA8zKb4I4+X0soAEAoKNEO8YQTnh+
-         u8KQ==
-X-Gm-Message-State: AOAM530V3VyJb7+Vkmjk26j3Bt7XkVGTVA7B9zLh42u8L/X5EZcM5stc
-        ZUvqTxPLOjpnofsoLIQRjLUhOA==
-X-Google-Smtp-Source: ABdhPJzNBLPVWj1zi8MRD98x0w6/LGAgHbOrzn9dJrEC77bm4p349/phdk9vOTEIZTR4dZ1bJwyE3Q==
-X-Received: by 2002:a63:384b:: with SMTP id h11mr6430377pgn.113.1599778845655;
-        Thu, 10 Sep 2020 16:00:45 -0700 (PDT)
+        bh=tvfyY+EQ1A9se+UIishx7R8RQe/Xnth3cDXfZrzfAiI=;
+        b=sqYDpJeQlwtgPJhhxokrk1bnPdvXqZCis2+pWNMbkELn0EKdQWX4WezYslZ9u42Saa
+         Dp8fqaz+w+XA5EbZDQCe6QoUxOghMlnlB1xu3rlmVAw/rMxP+CRwaZ67OurY0ebHyVkZ
+         m+949OEORALnsSBDabKd0QyvKoP7XyP2XgOOtRkQiB+J4vBVQS5Cj4T39OrY8GKmZYPp
+         cm9cJH3eFIBiGTDX6P0d/5NUpxuYNTKgMppjV8aW0ir1KkJOrwgJyO8u1l1w7422au+p
+         iGzKDQNf3zyaod6yeP9RIU95qOvooT/4QFsu6KNr7STFK4SyrPudE96K6+ff/tO3Maww
+         v1xA==
+X-Gm-Message-State: AOAM532YVDBP/cbfsuPuAJww89QocVAcJuTeC7te0jgp2cgbReT2Lzsr
+        aWYYk9+7rrRlOUxlOZZLQ5PxqA==
+X-Google-Smtp-Source: ABdhPJzf7mGPTli6PvrqPcra3i92nCo69WvqRfmz1WJG6xCdM1Juu+ZHG/7k0+WKgLzOJU6pzIXxcQ==
+X-Received: by 2002:a17:90a:d152:: with SMTP id t18mr1980927pjw.27.1599778986439;
+        Thu, 10 Sep 2020 16:03:06 -0700 (PDT)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id t20sm70364pgj.27.2020.09.10.16.00.44
+        by smtp.gmail.com with ESMTPSA id g5sm78407pjx.53.2020.09.10.16.03.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 16:00:45 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 17:00:43 -0600
+        Thu, 10 Sep 2020 16:03:05 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 17:03:03 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Tingwei Zhang <tingwei@codeaurora.org>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -75,82 +75,164 @@ Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 18/24] coresight: cti: Fix bug clearing sysfs links
- on callback
-Message-ID: <20200910230043.GD590446@xps15>
+Subject: Re: [PATCH v10 21/24] coresight: cti: allow cti to be built as a
+ module
+Message-ID: <20200910230303.GE590446@xps15>
 References: <20200821034445.967-1-tingwei@codeaurora.org>
- <20200821034445.967-19-tingwei@codeaurora.org>
+ <20200821034445.967-22-tingwei@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821034445.967-19-tingwei@codeaurora.org>
+In-Reply-To: <20200821034445.967-22-tingwei@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:44:39AM +0800, Tingwei Zhang wrote:
-> From: Mike Leach <mike.leach@linaro.org>
+On Fri, Aug 21, 2020 at 11:44:42AM +0800, Tingwei Zhang wrote:
+> Allow to build coresight-cti as a module, for ease of development.
 > 
-> During module unload, a coresight driver module will call back into
-> the CTI driver to remove any links between the two devices.
+> - Kconfig becomes a tristate, to allow =m
+> - append -core to source file name to allow module to
+>   be called coresight-cti by the Makefile
+> - add an cti_remove function, for module unload
+> - move cti_remove_conn_xrefs to cti_remove
+> - add a MODULE_DEVICE_TABLE for autoloading on boot
 > 
-> The current code has 2 issues:-
-> 1) in the CTI driver the matching code is matching to the wrong device
-> so misses all the links.
-> 2) The callback is called too late in the unload process resulting in a
-> crash.
-> 
-> This fixes both the issues.
-> 
-> Fixes: 177af8285b59 ("coresight: cti: Enable CTI associated with devices")
-> Reported-by: Tingwei Zhang <tingwei@codeaurora.org>
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
+> Tested-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by Mike Leach <mike.leach@linaro.org>
 > ---
->  drivers/hwtracing/coresight/coresight-cti.c | 2 +-
->  drivers/hwtracing/coresight/coresight.c     | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/hwtracing/coresight/Kconfig           |  5 ++++-
+>  drivers/hwtracing/coresight/Makefile          |  4 ++--
+>  .../{coresight-cti.c => coresight-cti-core.c} | 20 ++++++++++++++++++-
+>  .../hwtracing/coresight/coresight-platform.c  |  1 +
+>  drivers/hwtracing/coresight/coresight.c       |  1 +
+>  5 files changed, 27 insertions(+), 4 deletions(-)
+>  rename drivers/hwtracing/coresight/{coresight-cti.c => coresight-cti-core.c} (98%)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 73304374a155..ec286d617b73 100644
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index f31778dd0b5d..b04aae2ceecc 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -136,7 +136,7 @@ config CORESIGHT_CPU_DEBUG
+>  	  module will be called coresight-cpu-debug.
+>  
+>  config CORESIGHT_CTI
+> -	bool "CoreSight Cross Trigger Interface (CTI) driver"
+> +	tristate "CoreSight Cross Trigger Interface (CTI) driver"
+>  	depends on ARM || ARM64
+>  	help
+>  	  This driver provides support for CoreSight CTI and CTM components.
+> @@ -147,6 +147,9 @@ config CORESIGHT_CTI
+>  	  halt compared to disabling sources and sinks normally in driver
+>  	  software.
+>  
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called coresight-cti.
+> +
+>  config CORESIGHT_CTI_INTEGRATION_REGS
+>  	bool "Access CTI CoreSight Integration Registers"
+>  	depends on CORESIGHT_CTI
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index f2a568b969c4..0359d5a1588f 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -19,6 +19,6 @@ coresight-etm4x-y := coresight-etm4x-core.o coresight-etm4x-sysfs.o
+>  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
+>  obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
+>  obj-$(CONFIG_CORESIGHT_CATU) += coresight-catu.o
+> -obj-$(CONFIG_CORESIGHT_CTI) += coresight-cti.o \
+> -				coresight-cti-platform.o \
+> +obj-$(CONFIG_CORESIGHT_CTI) += coresight-cti.o
+> +coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
+>  				coresight-cti-sysfs.o
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti-core.c
+> similarity index 98%
+> rename from drivers/hwtracing/coresight/coresight-cti.c
+> rename to drivers/hwtracing/coresight/coresight-cti-core.c
+> index ec286d617b73..d6d5419ec21c 100644
 > --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -608,7 +608,7 @@ static void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
->  		ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
->  		ctidev = &ctidrv->ctidev;
->  		list_for_each_entry(tc, &ctidev->trig_cons, node) {
-> -			if (tc->con_dev == csdev->ect_dev) {
-> +			if (tc->con_dev == csdev) {
->  				cti_remove_sysfs_link(ctidrv, tc);
->  				tc->con_dev = NULL;
->  				break;
+> +++ b/drivers/hwtracing/coresight/coresight-cti-core.c
+> @@ -838,7 +838,6 @@ static void cti_device_release(struct device *dev)
+>  	struct cti_drvdata *ect_item, *ect_tmp;
+>  
+>  	mutex_lock(&ect_mutex);
+> -	cti_remove_conn_xrefs(drvdata);
+>  	cti_pm_release(drvdata);
+>  
+>  	/* remove from the list */
+> @@ -853,6 +852,18 @@ static void cti_device_release(struct device *dev)
+>  	if (drvdata->csdev_release)
+>  		drvdata->csdev_release(dev);
+>  }
+> +static int __exit cti_remove(struct amba_device *adev)
+> +{
+> +	struct cti_drvdata *drvdata = dev_get_drvdata(&adev->dev);
+> +
+> +	mutex_lock(&ect_mutex);
+> +	cti_remove_conn_xrefs(drvdata);
+> +	mutex_unlock(&ect_mutex);
+> +
+> +	coresight_unregister(drvdata->csdev);
+> +
+> +	return 0;
+
+Once again my recommendations from V8 were not followed.
+
+> +}
+>  
+>  static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+> @@ -973,6 +984,8 @@ static const struct amba_id cti_ids[] = {
+>  	{ 0, 0},
+>  };
+>  
+> +MODULE_DEVICE_TABLE(amba, cti_ids);
+> +
+>  static struct amba_driver cti_driver = {
+>  	.drv = {
+>  		.name	= "coresight-cti",
+> @@ -980,6 +993,7 @@ static struct amba_driver cti_driver = {
+>  		.suppress_bind_attrs = true,
+>  	},
+>  	.probe		= cti_probe,
+> +	.remove		= cti_remove,
+>  	.id_table	= cti_ids,
+>  };
+>  
+> @@ -1002,3 +1016,7 @@ static void __exit cti_exit(void)
+>  
+>  module_init(cti_init);
+>  module_exit(cti_exit);
+> +
+> +MODULE_AUTHOR("Mike Leach <mike.leach@linaro.org>");
+> +MODULE_DESCRIPTION("Arm CoreSight CTI Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 227e234a2470..3629b7885aca 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -75,6 +75,7 @@ coresight_find_csdev_by_fwnode(struct fwnode_handle *r_fwnode)
+>  	}
+>  	return csdev;
+>  }
+> +EXPORT_SYMBOL_GPL(coresight_find_csdev_by_fwnode);
+>  
+>  #ifdef CONFIG_OF
+>  static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
 > diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index c2174fed263b..6c09be15d60c 100644
+> index 6c9f6930b8b8..668963b4b7d4 100644
 > --- a/drivers/hwtracing/coresight/coresight.c
 > +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -1254,8 +1254,6 @@ static void coresight_device_release(struct device *dev)
->  {
->  	struct coresight_device *csdev = to_coresight_device(dev);
+> @@ -288,6 +288,7 @@ void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
+>  	csdev->ect_dev = ect_csdev;
+>  	mutex_unlock(&coresight_mutex);
+>  }
+> +EXPORT_SYMBOL_GPL(coresight_set_assoc_ectdev_mutex);
 >  
-> -	if (cti_assoc_ops && cti_assoc_ops->remove)
-> -		cti_assoc_ops->remove(csdev);
->  	fwnode_handle_put(csdev->dev.fwnode);
->  	kfree(csdev->refcnt);
->  	kfree(csdev);
-> @@ -1590,6 +1588,8 @@ void coresight_unregister(struct coresight_device *csdev)
->  {
->  	etm_perf_del_symlink_sink(csdev);
->  	/* Remove references of that device in the topology */
-> +	if (cti_assoc_ops && cti_assoc_ops->remove)
-> +		cti_assoc_ops->remove(csdev);
->  	coresight_remove_conns(csdev);
->  	coresight_clear_default_sink(csdev);
->  	coresight_release_platform_data(csdev, csdev->pdata);
+>  static int coresight_enable_sink(struct coresight_device *csdev,
+>  				 u32 mode, void *data)
 > -- 
 > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 > a Linux Foundation Collaborative Project
