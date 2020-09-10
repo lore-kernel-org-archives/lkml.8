@@ -2,131 +2,86 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6097AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD67FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1048821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jm0FeBub"
+	by mail.kernel.org (Postfix) with ESMTP id 86DE721D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgIJNrW (ORCPT
+        id S1730720AbgIJNrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730927AbgIJNjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:39:06 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B2BC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:34 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id c3so930063plz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N3mgJASizexPLNkdFt4Wcjn+xRiScZKeT3febPP2GBs=;
-        b=jm0FeBubSLNdmOw7edyREhQe0fHd7uC1w3dnmUfrc1pPQA9LjHaAGbmQmlzdWirFNI
-         zATrB/jWrCY/mvh5sRgI21Jdv6tCgd4nwF67n6J0i3+akIH16jJe1P8fn5kuNIRFBBJy
-         AjVBalKDmuD35a49JkSS04+cwj4A3cjMwkzu/lrltDB2LXekFJBua8k6M3VCGUDoEmif
-         tzJICDtdTfeg2enYNGt9lQw4mewr7jRWXqMoVXMM7ehzyjjJlj4OqNeKQAk4/sxMDe0/
-         IaMfUp1ctePiLCggBZ+SFFrEL2W7R8iVMoze9fLs9WEt41HK2TMNntRYjuU6WgjbMLtT
-         c1iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=N3mgJASizexPLNkdFt4Wcjn+xRiScZKeT3febPP2GBs=;
-        b=cfw3RFczeiV0vPFOcN2eS7aIOLf0MOtvOXTYbRfe8gpx39wXPp9n1Fiye3KOy74Ql3
-         T7p6b2SKL31RSiLnBrnNYOHdVPEwlj0ls8mAwPU28bfCceQhWdulciMZ28T59H9gkofm
-         pGR+6xHytY9T/7VQS3rsEo8PTBwkrAh1AsM27VDMSXfk0PN72kQl/49HPyvLSfb4Hm5+
-         VKjwd0KCu4bLpJQHb9MQZ4BDximqOMOFm0UuRvASzexG+aeequEkxjYXlKxNDNcBzXaL
-         CQ7Rh3p3rlS+ij3xTdwHdwxnLMDPZqXdnixWx+O42Rl59RB3cv4N12CZAwTCfSU6/nsq
-         cxLw==
-X-Gm-Message-State: AOAM533lzT4MP6FCODmqbRzeU60bDq4G42Y/MaqAkQ4uwwchw6g8iJa9
-        d8iYcmqf8JEFyz6C2L9IgL/Q
-X-Google-Smtp-Source: ABdhPJxRELGnMm3DJ89Rir5TtGhJ47XLeP1KTjwsnp7EbUrctdExJ5hMzEP2U6K/qP0+ei6wNUSEag==
-X-Received: by 2002:a17:902:8f98:b029:d1:870b:469e with SMTP id z24-20020a1709028f98b02900d1870b469emr5877515plo.3.1599745102152;
-        Thu, 10 Sep 2020 06:38:22 -0700 (PDT)
-Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id o30sm5603801pgc.45.2020.09.10.06.38.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:38:21 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev.kurt@vandijck-laurijssen.be,
-        o.rempel@pengutronix.de,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/6] can: rx-offload: can_rx_offload_add_manual(): add new initialization function
-Date:   Thu, 10 Sep 2020 19:08:01 +0530
-Message-Id: <20200910133806.25077-2-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
-References: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
+        Thu, 10 Sep 2020 09:47:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53444 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730923AbgIJNjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:39:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9C025ACAF;
+        Thu, 10 Sep 2020 13:39:19 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 15:39:00 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
+        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200910133854.GA8713@linux>
+References: <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <20200909105914.GF7348@dhcp22.suse.cz>
+ <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+ <20200910072331.GB28354@dhcp22.suse.cz>
+ <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+ <20200910111246.GE28354@dhcp22.suse.cz>
+ <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+ <20200910120343.GA6635@linux>
+ <20200910124755.GG28354@dhcp22.suse.cz>
+ <20200910124847.GH28354@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910124847.GH28354@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+On Thu, Sep 10, 2020 at 02:48:47PM +0200, Michal Hocko wrote:
+> > Is there any actual usecase for a configuration like this? What is the
+> > point to statically define additional memory like this when the same can
+> > be achieved on the same command line?
 
-This patch adds a new initialization function:
-can_rx_offload_add_manual()
+Well, for qemu I am not sure, but if David is right, it seems you can face
+the same if you reboot a vm with hotplugged memory.
+Moreover, it seems that the problem we spotted with [1], it was a VM running on
+Promox (KVM).
+The Hypervisor probably said at boot time "Ey, I do have these ACPI devices, care
+to enable them now"?
 
-It should be used to add support rx-offload to a driver, if the callback
-mechanism should not be used. Use e.g. can_rx_offload_queue_sorted() to queue
-skbs into rx-offload.
+As always, there are all sorts of configurations/scenarios out there in the wild.
 
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/net/can/rx-offload.c   | 11 +++++++++++
- include/linux/can/rx-offload.h |  3 +++
- 2 files changed, 14 insertions(+)
+> Forgot to ask one more thing. Who is going to online that memory when
+> userspace is not running yet?
 
-diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
-index e8328910a234..3b180269a92d 100644
---- a/drivers/net/can/rx-offload.c
-+++ b/drivers/net/can/rx-offload.c
-@@ -351,6 +351,17 @@ int can_rx_offload_add_fifo(struct net_device *dev,
- }
- EXPORT_SYMBOL_GPL(can_rx_offload_add_fifo);
- 
-+int can_rx_offload_add_manual(struct net_device *dev,
-+			      struct can_rx_offload *offload,
-+			      unsigned int weight)
-+{
-+	if (offload->mailbox_read)
-+		return -EINVAL;
-+
-+	return can_rx_offload_init_queue(dev, offload, weight);
-+}
-+EXPORT_SYMBOL_GPL(can_rx_offload_add_manual);
-+
- void can_rx_offload_enable(struct can_rx_offload *offload)
- {
- 	napi_enable(&offload->napi);
-diff --git a/include/linux/can/rx-offload.h b/include/linux/can/rx-offload.h
-index 1b78a0cfb615..f1b38088b765 100644
---- a/include/linux/can/rx-offload.h
-+++ b/include/linux/can/rx-offload.h
-@@ -35,6 +35,9 @@ int can_rx_offload_add_timestamp(struct net_device *dev,
- int can_rx_offload_add_fifo(struct net_device *dev,
- 			    struct can_rx_offload *offload,
- 			    unsigned int weight);
-+int can_rx_offload_add_manual(struct net_device *dev,
-+			      struct can_rx_offload *offload,
-+			      unsigned int weight);
- int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload,
- 					 u64 reg);
- int can_rx_offload_irq_offload_fifo(struct can_rx_offload *offload);
+Depends, if you have CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE set or you specify
+memhp_default_online_type=[online,online_*], memory will get onlined right
+after hot-adding stage:
+
+        /* online pages if requested */
+        if (memhp_default_online_type != MMOP_OFFLINE)
+                walk_memory_blocks(start, size, NULL, online_memory_block);
+
+If not, systemd-udev will do the magic once the system is up.
+
 -- 
-2.17.1
-
+Oscar Salvador
+SUSE L3
