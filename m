@@ -2,104 +2,155 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B489DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF4620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7EB20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="I5ElECNe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="St7IS+ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgIJVkz (ORCPT
+        id S1727972AbgIJVlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgIJNF4 (ORCPT
+        Thu, 10 Sep 2020 17:41:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33616 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728409AbgIJVku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:05:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DC0C0617A0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:05 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a9so5746672wmm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=04PutPpSnQgJelQ+Ix7sCACVphrDCgo/mARCI+1M3iQ=;
-        b=I5ElECNegzKV59s6JDgamlwfsKqKmsqgAZWZhuJtIF/NepdJ4yQ1J0gVJPS/gmCH2q
-         pxNXUc00OBUgR9YQpa8abe/n9kcVZfDBoAtgfQ9tjH2lUERnab+Tg8553FcL5eV7i+hP
-         2WoOyCWUCCctzA+uOQ6up/fQ+LG6zx7c3KMvc5l7NhovRnFapZuiWEi0uxzmaFVLoht3
-         B4Fivt+et52dEemD+x8t+kw7G9/ga6YdQwmHgwSQzNUFpN13UTMRBZb6rxNXf8kJvYIU
-         7Kg4SRs8FC2wDSiLJxRDt6uFoiNQfWxED4oxlfjHe0A6GvGLpnfGFprIp/jbxmz9Yd+j
-         o3qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=04PutPpSnQgJelQ+Ix7sCACVphrDCgo/mARCI+1M3iQ=;
-        b=WAntQ17v4o9jerKUcaUybCHwjcW6T9ejZz5A7TV/Ut6L/YvA+gcwhIeRdfYZ4MOBf/
-         hpm7mlC5tvN+viqe5EsOCmTMhBrZAz7FkXJjuUwG6p7AnA5uP0M+G1H6/ffyABsSgEsn
-         n8ge4PR9CmjQdZezfMGrdMEbVGoxdi/PvTZRELcsb9RI8AQk1Yrjm0n9KFVJDSnHHJgz
-         2q8/Acj7N3+njFN3lZKaUJ/uk4ac0C6r7K/dnQLbFai/ywq9ZRwH+4krRs/61Iu+F5V4
-         myPKvmS967Xv9x/oMo6BWwW/cX9lBh4szzvKxSRf/Vd02BZCm2oDA4AxCJoZDTaIsIEF
-         ewNQ==
-X-Gm-Message-State: AOAM533LiPJ8N43/reYDlggDzIaj9wrYV1XnvN3Z53HPO3xR66DKwIQx
-        uYb6qmsmlJpowseTlWIkNjpI+A==
-X-Google-Smtp-Source: ABdhPJyDCGWUuOs1NMZFyeRKTEUtz+d0fMCNarMxxpLq2mXotOnXRILoD+iX9hJti9NpSehQlrjQHw==
-X-Received: by 2002:a1c:9c4b:: with SMTP id f72mr8403290wme.188.1599743104359;
-        Thu, 10 Sep 2020 06:05:04 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id p16sm9321988wro.71.2020.09.10.06.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:05:03 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 06/11] rtc: rx8010: drop unnecessary initialization
-Date:   Thu, 10 Sep 2020 15:04:41 +0200
-Message-Id: <20200910130446.5689-7-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200910130446.5689-1-brgl@bgdev.pl>
-References: <20200910130446.5689-1-brgl@bgdev.pl>
+        Thu, 10 Sep 2020 17:40:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599774048;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZGRVnEaekhAhEIL8CGWeb7ErYvV0SGt63fSdiNWSRlQ=;
+        b=St7IS+apzVErPzusqkmrYsb9P4TIrcDhHR4dG6I+lgOsjEzOZGYzh/tvWES1Xe34cO6PQ3
+        DKYSMyFd0TllVMCY/TdHaaDnyI/b+7O0+u5rLMPFcBtJ0T7KDjDO/VCCs/AmIwrTY2Spce
+        1adw+bMVdy/hyrIFsDSMVpHYYdat58Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-1xTI1pPWM7Oqcr1Ld6N7rg-1; Thu, 10 Sep 2020 17:40:42 -0400
+X-MC-Unique: 1xTI1pPWM7Oqcr1Ld6N7rg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D1001074640;
+        Thu, 10 Sep 2020 21:40:40 +0000 (UTC)
+Received: from ovpn-112-6.ams2.redhat.com (ovpn-112-6.ams2.redhat.com [10.36.112.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BC7E37E8EB;
+        Thu, 10 Sep 2020 21:40:36 +0000 (UTC)
+Message-ID: <0f3b24664813091d535da32d0a645f406f3e30a2.camel@redhat.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Kehuan Feng <kehuan.feng@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Date:   Thu, 10 Sep 2020 23:40:35 +0200
+In-Reply-To: <5f5a959fbe236_c295820892@john-XPS-13-9370.notmuch>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+         <20200623134259.8197-1-mzhivich@akamai.com>
+         <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+         <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+         <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+         <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
+         <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+         <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
+         <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
+         <20200822032800.16296-1-hdanton@sina.com>
+         <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
+         <20200825032312.11776-1-hdanton@sina.com>
+         <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
+         <20200825162329.11292-1-hdanton@sina.com>
+         <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
+         <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
+         <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
+         <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
+         <20200827125747.5816-1-hdanton@sina.com>
+         <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+         <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
+         <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
+         <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com>
+         <5f51cbad3cc2_3eceb208fc@john-XPS-13-9370.notmuch>
+         <CAM_iQpVqdVc5_LkhO4Qie7Ff+XXRTcpiptZsEVNh=o9E0GkcRQ@mail.gmail.com>
+         <5f5a959fbe236_c295820892@john-XPS-13-9370.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, 2020-09-10 at 14:07 -0700, John Fastabend wrote:
+> Cong Wang wrote:
+> > On Thu, Sep 3, 2020 at 10:08 PM John Fastabend <john.fastabend@gmail.com> wrote:
+> > > Maybe this would unlock us,
+> > > 
+> > > diff --git a/net/core/dev.c b/net/core/dev.c
+> > > index 7df6c9617321..9b09429103f1 100644
+> > > --- a/net/core/dev.c
+> > > +++ b/net/core/dev.c
+> > > @@ -3749,7 +3749,7 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
+> > > 
+> > >         if (q->flags & TCQ_F_NOLOCK) {
+> > >                 rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+> > > -               qdisc_run(q);
+> > > +               __qdisc_run(q);
+> > > 
+> > >                 if (unlikely(to_free))
+> > >                         kfree_skb_list(to_free);
+> > > 
+> > > 
+> > > Per other thread we also need the state deactivated check added
+> > > back.
+> > 
+> > I guess no, because pfifo_dequeue() seems to require q->seqlock,
+> > according to comments in qdisc_run(), so we can not just get rid of
+> > qdisc_run_begin()/qdisc_run_end() here.
+> > 
+> > Thanks.
+> 
+> Seems we would have to revert this as well then,
+> 
+>  commit 021a17ed796b62383f7623f4fea73787abddad77
+>  Author: Paolo Abeni <pabeni@redhat.com>
+>  Date:   Tue May 15 16:24:37 2018 +0200
+> 
+>     pfifo_fast: drop unneeded additional lock on dequeue
+>     
+>     After the previous patch, for NOLOCK qdiscs, q->seqlock is
+>     always held when the dequeue() is invoked, we can drop
+>     any additional locking to protect such operation.
+> 
+> Then I think it should be safe. Back when I was working on the ptr
+> ring implementation I opted not to do a case without the spinlock
+> because the performance benefit was minimal in the benchmarks I
+> was looking at.
 
-The 'err' local variable in rx8010_init_client() doesn't need to be
-initialized.
+The main point behind all that changes was try to close the gap vs the
+locked implementation in the uncontended scenario. In our benchmark,
+after commit eb82a994479245a79647d302f9b4eb8e7c9d7ca6, was more near to
+10%.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/rtc/rtc-rx8010.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Anyway I agree reverting back to the bitlock should be safe.
 
-diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
-index b065973b8a14..3b8a95330a0a 100644
---- a/drivers/rtc/rtc-rx8010.c
-+++ b/drivers/rtc/rtc-rx8010.c
-@@ -194,7 +194,7 @@ static int rx8010_init_client(struct i2c_client *client)
- {
- 	struct rx8010_data *rx8010 = i2c_get_clientdata(client);
- 	u8 ctrl[2];
--	int need_clear = 0, err = 0;
-+	int need_clear = 0, err;
- 
- 	/* Initialize reserved registers as specified in datasheet */
- 	err = i2c_smbus_write_byte_data(client, RX8010_RESV17, 0xD8);
--- 
-2.26.1
+Cheers,
+
+Paolo 
+
 
