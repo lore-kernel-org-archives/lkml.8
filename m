@@ -2,156 +2,118 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3442CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE59E20C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4896214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gH5ANVlh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hweQM1Dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgIJRRJ (ORCPT
+        id S1726515AbgIJRTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:17:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20533 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725372AbgIJRP7 (ORCPT
+        Thu, 10 Sep 2020 13:19:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37890 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgIJRSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:15:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599758150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=V5RVkZoHNNgO8iRkts2uQucFzF0PqLciDsVyoi9bgfc=;
-        b=gH5ANVlh9jHChevAgLxQU6nEieXdAB93TigKP1WvfIKmZ6pVADdvi7rZTEsLqOpZnj2sDu
-        OhPCxAZQ9sgZBkTyw4ty6ImPZKHwi5E0d1bhyiuwaNgfiGjgh3P2QAv9N0VS4tX/gl3XVb
-        3zIVLYKa8LDenzQjpCd10+ZcVWFekqA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-HnAUMfNAM0OMvyN4RsRhjA-1; Thu, 10 Sep 2020 13:15:48 -0400
-X-MC-Unique: HnAUMfNAM0OMvyN4RsRhjA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7CFB802B72;
-        Thu, 10 Sep 2020 17:15:45 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 061BB60BFA;
-        Thu, 10 Sep 2020 17:15:42 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 13:15:41 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        martin.petersen@oracle.com, Hans de Goede <hdegoede@redhat.com>,
-        Song Liu <song@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        dm-devel@redhat.com, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, drbd-dev@tron.linbit.com,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
- block layer
-Message-ID: <20200910171541.GB21919@redhat.com>
-References: <20200726150333.305527-1-hch@lst.de>
- <20200726150333.305527-7-hch@lst.de>
- <20200826220737.GA25613@redhat.com>
- <20200902151144.GA1738@lst.de>
- <20200902162007.GB5513@redhat.com>
- <20200910092813.GA27229@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910092813.GA27229@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 10 Sep 2020 13:18:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AHE3DU150208;
+        Thu, 10 Sep 2020 17:18:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=mtTRYf8cW9IrGv5hxQTD9YTSb1RZGlhCqY0Rw3OKHlQ=;
+ b=hweQM1DmWcaSr+g9POWlAgCdNd5+LyQS/OpQNKcP71S985+9AtQDkn69baMqr6RUpB86
+ NpS9Eaek2h4t0ElK+pVJcNtq+gsqo8vTL0VHKwQOx2TpOVUQdGF1YkQLX7DTPeBXOvGt
+ OTWItZggZPSHHdTOmey73W+TOlfRqWSYYLH8xF7/h5no0a8rIrNqa0Y98m6jHoBUIdjT
+ SiV66On+LrTHXkaSQhk8o+k/4d2bMPfgETdAadF4COLb7KRRdblxjIxuqL0QYk2qzJx8
+ arHi2jEaLMHEUtkz38xkw7vtgRH1crifTgptu0hsuoOgo2IJ7GfT9yfEQmbXm2lbHiHv 7A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 33c3an9e7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 17:18:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AHFYQ8123309;
+        Thu, 10 Sep 2020 17:16:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 33cmevb23q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 17:16:37 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08AHGW26013722;
+        Thu, 10 Sep 2020 17:16:33 GMT
+Received: from paddy.uk.oracle.com (/10.175.191.159)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Sep 2020 10:16:32 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] iommu/amd: Fix potential @entry null deref
+Date:   Thu, 10 Sep 2020 18:16:21 +0100
+Message-Id: <20200910171621.12879-1-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=8 adultscore=0
+ bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100159
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=8 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10 2020 at  5:28am -0400,
-Christoph Hellwig <hch@lst.de> wrote:
+After commit 26e495f34107 ("iommu/amd: Restore IRTE.RemapEn bit after
+programming IRTE"), smatch warns:
 
-> On Wed, Sep 02, 2020 at 12:20:07PM -0400, Mike Snitzer wrote:
-> > On Wed, Sep 02 2020 at 11:11am -0400,
-> > Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> > > On Wed, Aug 26, 2020 at 06:07:38PM -0400, Mike Snitzer wrote:
-> > > > On Sun, Jul 26 2020 at 11:03am -0400,
-> > > > Christoph Hellwig <hch@lst.de> wrote:
-> > > > 
-> > > > > Drivers shouldn't really mess with the readahead size, as that is a VM
-> > > > > concept.  Instead set it based on the optimal I/O size by lifting the
-> > > > > algorithm from the md driver when registering the disk.  Also set
-> > > > > bdi->io_pages there as well by applying the same scheme based on
-> > > > > max_sectors.
-> > > > > 
-> > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > > ---
-> > > > >  block/blk-settings.c         |  5 ++---
-> > > > >  block/blk-sysfs.c            |  1 -
-> > > > >  block/genhd.c                | 13 +++++++++++--
-> > > > >  drivers/block/aoe/aoeblk.c   |  2 --
-> > > > >  drivers/block/drbd/drbd_nl.c | 12 +-----------
-> > > > >  drivers/md/bcache/super.c    |  4 ----
-> > > > >  drivers/md/dm-table.c        |  3 ---
-> > > > >  drivers/md/raid0.c           | 16 ----------------
-> > > > >  drivers/md/raid10.c          | 24 +-----------------------
-> > > > >  drivers/md/raid5.c           | 13 +------------
-> > > > >  10 files changed, 16 insertions(+), 77 deletions(-)
-> > > > 
-> > > > 
-> > > > In general these changes need a solid audit relative to stacking
-> > > > drivers.  That is, the limits stacking methods (blk_stack_limits)
-> > > > vs lower level allocation methods (__device_add_disk).
-> > > > 
-> > > > You optimized for lowlevel __device_add_disk establishing the bdi's
-> > > > ra_pages and io_pages.  That is at the beginning of disk allocation,
-> > > > well before any build up of stacking driver's queue_io_opt() -- which
-> > > > was previously done in disk_stack_limits or driver specific methods
-> > > > (e.g. dm_table_set_restrictions) that are called _after_ all the limits
-> > > > stacking occurs.
-> > > > 
-> > > > By inverting the setting of the bdi's ra_pages and io_pages to be done
-> > > > so early in __device_add_disk it'll break properly setting these values
-> > > > for at least DM afaict.
-> > > 
-> > > ra_pages never got inherited by stacking drivers, check it by modifying
-> > > it on an underlying device and then creating a trivial dm or md one.
-> > 
-> > Sure, not saying that it did.  But if the goal is to set ra_pages based
-> > on io_opt then to do that correctly on stacking drivers it must be done
-> > in terms of limits stacking right?  Or at least done at a location that
-> > is after the limits stacking has occurred?  So should DM just open-code
-> > setting ra_pages like it did for io_pages?
-> > 
-> > Because setting ra_pages in __device_add_disk() is way too early for DM
-> > -- given it uses device_add_disk_no_queue_reg via add_disk_no_queue_reg
-> > at DM device creation (before stacking all underlying devices' limits).
-> 
-> I'll move it to blk_register_queue, which should work just fine.
+	drivers/iommu/amd/iommu.c:3870 amd_iommu_deactivate_guest_mode()
+        warn: variable dereferenced before check 'entry' (see line 3867)
 
-That'll work for initial DM table load as part of DM device creation
-(dm_setup_md_queue).  But it won't account for DM table reloads that
-might change underlying devices on a live DM device (done using
-__bind).
+Fix this by moving the @valid assignment to after @entry has been checked
+for NULL.
 
-Both dm_setup_md_queue() and __bind() call dm_table_set_restrictions()
-to set/update queue_limits.  It feels like __bind() will need to call a
-new block helper to set/update parts of queue_limits (e.g. ra_pages and
-io_pages).
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Fixes: 26e495f34107 ("iommu/amd: Restore IRTE.RemapEn bit after programming IRTE")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ drivers/iommu/amd/iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Any chance you're open to factoring out that block function as an
-exported symbol for use by blk_register_queue() and code like DM's
-__bind()?
-
-Thanks,
-Mike
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 07ae8b93887e..8abe1c7ad45b 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3864,12 +3864,14 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
+ 	struct irte_ga *entry = (struct irte_ga *) ir_data->entry;
+ 	struct irq_cfg *cfg = ir_data->cfg;
+-	u64 valid = entry->lo.fields_remap.valid;
++	u64 valid;
+ 
+ 	if (!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) ||
+ 	    !entry || !entry->lo.fields_vapic.guest_mode)
+ 		return 0;
+ 
++	valid = entry->lo.fields_remap.valid;
++
+ 	entry->lo.val = 0;
+ 	entry->hi.val = 0;
+ 
+-- 
+2.17.1
 
