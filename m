@@ -2,119 +2,203 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F345C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED69BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B80121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94649208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yM5N1/J5"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iWU6CZa9";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dx+vEJO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725554AbgIJWlU (ORCPT
+        id S1725730AbgIJWnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:41:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56116 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725274AbgIJWlR (ORCPT
+        Thu, 10 Sep 2020 18:43:41 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57048 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725274AbgIJWnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:41:17 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMeAnq158188;
-        Thu, 10 Sep 2020 22:41:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=BYAf4AQrHYdjFsNM20uZvb1ii4hwHzWLj/pZXbS8seo=;
- b=yM5N1/J5ypSXRnjSs5ix8I6y0bfkt06pYNszFkkTWle14zWdSHFsyhMDjxcZUd5tV/r9
- a8+NKO5beItgjRDjDuwziFsNEVsR/9arCllDfW5Xn/EiirbSdBik6kzbblFTXY/NHbef
- K8zdpDJZq2YNieLS2AodJl+d9MS1a4LXvERYU3UAXY+ZZ6RqHMNe1ll7shKzf7aDVZN+
- x+E2ZMq+L3R1tOAfah7N19+DJV2Il+rSJsXUCefct4e/ld/VlM1mORShxsOIEkyet/mt
- fgeGVXPOoFwbSr1Wdxb7sC/D8jC9sZ7hIK25IufEe6fsqxBc4s4xZSAFrlPYlid6SaRu 0w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 33c3anawkf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 22:41:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMZ9s1119344;
-        Thu, 10 Sep 2020 22:41:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33cmkay96t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 22:41:11 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08AMfARM012484;
-        Thu, 10 Sep 2020 22:41:10 GMT
-Received: from [10.98.138.194] (/10.98.138.194)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Sep 2020 15:41:10 -0700
-Subject: Re: [PATCH 0/3] clk: keystone: some minor fixes
-To:     Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com, ssantosh@kernel.org
-References: <20200907085740.1083-1-t-kristo@ti.com>
- <8a594a9d-8e10-6e01-908c-8e59da1d7fbe@oracle.com>
- <159977335346.2295844.11165311759086345858@swboyd.mtv.corp.google.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <a017be90-4538-ecbd-64dd-a988ec8f80ce@oracle.com>
-Date:   Thu, 10 Sep 2020 15:41:08 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Thu, 10 Sep 2020 18:43:40 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AMYwtH003597;
+        Thu, 10 Sep 2020 15:43:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=kY+V1fdqMWgRM7EPYgqDlSoI4UU9i91EG+BbCAB5Zyw=;
+ b=iWU6CZa9ho/woA/YpJGVoj/X8J0NEswSeiNX9UOl4TVQYkQ2WKT8YDsx8ITx/hkpcYc4
+ J7pq3SgnOV2NczQ5w4Jlbdvia3UXmzgIjOqQYFE0a+1HcMss37JXFm/Kp4u8bAcDONgS
+ +HzRIpYm8Z0Nu+MDK63taBit7XIBa/Ofavc= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 33ftqt0sjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 10 Sep 2020 15:43:27 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 10 Sep 2020 15:43:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SncqFjtYO9MhLSklkREi7PGZ9w59scVRfmDhDmc80G2OXjbBm+2f9PQ7GErqDGGApqD/NQ9t9oFSm4c2lMXbI6rCdd0kGNyxp8PMToixt3XQiKzxJB9Bi30uurFL5Neea4F5dv4fNHRIaa4uNu09RwdWWIpGUzOvscAH5NRPFy/QZi6VqQzv+dbIyvmBfN/xjYHhUdfj9ZXNLeYNz/X9WbKD4TQSHAHVixdfdy2EBTUHxwxXR51w5KWBGAeCBV6nDuncGCagn0BKHQuSVQ+4kjGbW3YsCQEMxH0YOFWBf5rueDTVb/iS5n1cxfzLTXJtLspXVQXzKNuMac+gq/+M6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kY+V1fdqMWgRM7EPYgqDlSoI4UU9i91EG+BbCAB5Zyw=;
+ b=las8SEBI5zACzLVd/Uq4/buekedKGAmhG5zEkgflAV7A2dBSF4e+GlLlKlGXUXikkJcomdw9DKT5Bz1Imc174zufM5V3OfnMtr15vzMgC5jBBqArshBivJM7C0Aqm9FF11Lp2kRlncYVEmgf5dqBY14Iiu1u66Q6bE8ERgESkg/e7stqX77GvdIMDDrOZn/XtS88xgAlHiQ6K4y+J+FCLTvByEJaFBgxzrKIfxMn4inMEMq5D5fo8URQS7hn0Y6OLeWe3V9qMcTJ8cQLqUHwbMGcYUCPRAOl8hmI15VZRdgmSSdw/KbYMkSADHM5vX7g3eesI24CBtoO5ZIvMr2OAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kY+V1fdqMWgRM7EPYgqDlSoI4UU9i91EG+BbCAB5Zyw=;
+ b=dx+vEJO/QIPHWHyv/tOlxiwYYH89xXky35SEev5PGtgql6rHiNvoZVlksHfZqE1iIytx5nfbOctnRtJGXxts1WfE5popuHoFv8CTyE/CnGBLM8LGoxZNjEGqSTxahe8e+vgsQriUVAM6TXsvjWQUrDvss5Q9keEZGZQPUfzF7Tc=
+Authentication-Results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 22:43:15 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 22:43:15 +0000
+Date:   Thu, 10 Sep 2020 15:43:09 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+CC:     Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm: memcg/slab: fix racy access to page->mem_cgroup in
+ mem_cgroup_from_obj()
+Message-ID: <20200910224309.GB1307870@carbon.dhcp.thefacebook.com>
+References: <20200910022435.2773735-1-guro@fb.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910022435.2773735-1-guro@fb.com>
+X-ClientProxiedBy: MW2PR16CA0043.namprd16.prod.outlook.com
+ (2603:10b6:907:1::20) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <159977335346.2295844.11165311759086345858@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100197
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:86e) by MW2PR16CA0043.namprd16.prod.outlook.com (2603:10b6:907:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 22:43:14 +0000
+X-Originating-IP: [2620:10d:c090:400::5:86e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4611f0e0-4a5c-4c3d-5480-08d855dae78f
+X-MS-TrafficTypeDiagnostic: BYAPR15MB4136:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB41363B4DCB0A19333148F4D7BE270@BYAPR15MB4136.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UUkZl9KOYKnEiYH6RrwB6kb0+ddKDV1EKpYgrjiepN6Zg63qUrnagKvEf9R6JxXQqoKdeZ9JWHIdOavHIA8dtypkUFGOe9Yfhrj2KMtAv12xJf7CVad7z8El+HtkusQWeNdPzuPni7kctcZgyd49JaWTEjTXLo1UACiY8b7s4b4DaFt81v1ro15kD53KGnqehJMQb9264o4TKs9dMF/spTHQ1hMsr/NG6KBczN/HsO0rrQ0ekmcBV6wr1dzffo2hYzsvxusGDxnUEVdcaWihgJvXirP+Fla7cYv75zuGsHsnKfdL0ruGCBUjLrFjxx3NccXUYzMcB3OT/x1FM2ujVA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(346002)(366004)(376002)(136003)(55016002)(8936002)(86362001)(5660300002)(9686003)(53546011)(66946007)(1076003)(6506007)(316002)(478600001)(52116002)(7696005)(33656002)(8676002)(66476007)(54906003)(6666004)(66556008)(4326008)(83380400001)(16526019)(186003)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: nFDtUcLftjTNk5TpgQvbCJDEnyL8VHqCOnTuc9FpXf1LIUK2fEHRBv62EbYIqPfz8Lmaf89hsb7r3XnoqPL+n7PWIaWB+14DcOFj/prYR92KngH7gDWlN/f1KqGmZ9Lxjtkx2NEjBA6PH6BEcgK7RDyTZ3VoHw3b0/fdlVt5V4Mz7TwFnGBZuP0I+I9vlT5fWTsC46y6Ioz+uhKQugvKFXTtBzTEP8p3FWj+A/nhDKvwn2rtqP18+YkYQJdCUEFdFbQyw1QdoJII9WSW3j9WwbE1y65A9R4S8YO6duCN3806KnWND9fvKGnBfDLeNYaRjjHJBhHIIIQqJ5hsCVZCFWM69CrvfXgQtHJfisKyZZOCnuo5iUWvFFuV/4ZQ+RQvFPnju08/np9nB3snU1e0S6llcKNkDoY7g9Uac0EPgGfPu4sE37Rsj7cQusePCvsFTeg0suprXmjsmMsv6m0VcY9NOE91WNup4bpULr+v81Uf67oO7ochzY67/PncHG3POb6Tfr5Vez3D02a3/Vgfg1CRnrfrIdmeBqK/fxeC4GuLWb8R2sdnTvtS4w7Cmz7RdUr1Eyt5292tA8l7LgCk1FKexPDLsxxvrgwuAZuO/oR++gZEZB/OJEhVaoYjDCFAc4uaAK2gPN/VcYaMD3GlZrs6p+o+kY75+Xeu/lDfegA=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4611f0e0-4a5c-4c3d-5480-08d855dae78f
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 22:43:15.3444
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VJ3clPj10FDHI7pW4KY67r5bgzC0jYAZXwC96ycyygt4muCW4T6OW0O3P5tjDwg3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4136
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_10:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=1
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009100197
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Forgot to cc stable@, an updated version is below.
 
+Thanks!
 
-On 9/10/20 2:29 PM, Stephen Boyd wrote:
-> Quoting santosh.shilimkar@oracle.com (2020-09-08 10:19:32)
->>
->>
->> On 9/7/20 1:57 AM, Tero Kristo wrote:
->>> Hi Santosh,
->>>
->>> This series contains a few fixes for the TI SCI clock driver.
->>> - Patch #1 is a clear bug fix, where we missed to parse assigned-clock
->>>     data properly to detect which clocks are in use on the SoC.
->>> - Patch #2 is a performance improvement patch which avoids some
->>>     unnecessary round trips to firmware side while setting clock
->>>     frequency.
->>> - Patch #3 fixes some issues with set_rate passed to firmware, where the
->>>     parameters are too strict; namely, firmware fails to handle some cases
->>>     properly if min,tgt,max values for a clock rate are exactly the same
->>>     value. Yeah, the firmware is quite weird here but nothing much else we
->>>     can do from kernel side other than this....
->>>
->> Looks fine to me Tero.
->>
->> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
->>
->>
->> Hi Stephen, Mike,
->> Can you please pick these fixes via clk tree ?
-> 
-> Sure. I assume this is -next material and not critical fixes.
-> 
-Yep.
+--
+
+From fe61af45ae570b143ca783ba4d013a0a2b923a15 Mon Sep 17 00:00:00 2001
+From: Roman Gushchin <guro@fb.com>
+Date: Wed, 9 Sep 2020 12:19:37 -0700
+Subject: [PATCH] mm: memcg/slab: fix racy access to page->mem_cgroup in
+ mem_cgroup_from_obj()
+
+mem_cgroup_from_obj() checks the lowest bit of the page->mem_cgroup
+pointer to determine if the page has an attached obj_cgroup vector
+instead of a regular memcg pointer. If it's not set, it simple returns
+the page->mem_cgroup value as a struct mem_cgroup pointer.
+
+The commit 10befea91b61 ("mm: memcg/slab: use a single set of
+kmem_caches for all allocations") changed the moment when this bit
+is set: if previously it was set on the allocation of the slab page,
+now it can be set well after, when the first accounted object is
+allocated on this page.
+
+It opened a race: if page->mem_cgroup is set concurrently after the
+first page_has_obj_cgroups(page) check, a pointer to the obj_cgroups
+array can be returned as a memory cgroup pointer.
+
+A simple check for page->mem_cgroup pointer for NULL before the
+page_has_obj_cgroups() check fixes the race. Indeed, if the pointer
+is not NULL, it's either a simple mem_cgroup pointer or a pointer
+to obj_cgroup vector. The pointer can be asynchronously changed
+from NULL to (obj_cgroup_vec | 0x1UL), but can't be changed
+from a valid memcg pointer to objcg vector or back.
+
+If the object passed to mem_cgroup_from_obj() is a slab object
+and page->mem_cgroup is NULL, it means that the object is not
+accounted, so the function must return NULL.
+
+I've discovered the race looking at the code, so far I haven't seen it
+in the wild.
+
+Fixes: 10befea91b61 ("mm: memcg/slab: use a single set of kmem_caches for all allocations")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: stable@vger.kernel.org
+---
+ mm/memcontrol.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 75cd1a1e66c8..093526fec4bf 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2923,6 +2923,17 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
+ 
+ 	page = virt_to_head_page(p);
+ 
++	/*
++	 * If page->mem_cgroup is set, it's either a simple mem_cgroup pointer
++	 * or a pointer to obj_cgroup vector. In the latter case the lowest
++	 * bit of the pointer is set.
++	 * The page->mem_cgroup pointer can be asynchronously changed
++	 * from NULL to (obj_cgroup_vec | 0x1UL), but can't be changed
++	 * from a valid memcg pointer to objcg vector or back.
++	 */
++	if (!page->mem_cgroup)
++		return NULL;
++
+ 	/*
+ 	 * Slab objects are accounted individually, not per-page.
+ 	 * Memcg membership data for each individual object is saved in
+-- 
+2.26.2
+
