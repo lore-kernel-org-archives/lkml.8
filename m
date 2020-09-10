@@ -2,116 +2,155 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D0EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5170B221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CEC821D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pmbtzx/w"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iyiND7wW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbgIJVXN (ORCPT
+        id S1728161AbgIJVXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgIJVW1 (ORCPT
+        Thu, 10 Sep 2020 17:23:49 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14255 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgIJVWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:22:27 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21C8C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:22:26 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id u21so10861798eja.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N10c9+tEMvd+V1v5/kjFg7uIplbi+YryLR/t+QNnqsU=;
-        b=Pmbtzx/w5PJRKpuyzWZgUthB5SqsFujhymQl5gJo8f6W3hvApNoms7SWH1Ie3t+Xhv
-         G4BzucZpRgNaCDRkBPiUSWCjEuLpi8agAsdGI/QBUu92rYGZ8Pp3MkAt2a24+m/S5x3B
-         6epqPgVItTvZ5dHCiaBsFReRRMDht3h8fKCaRGh1IkHnw2lateEx0y9mDjHKtpX8Y8Nz
-         pj8E/O7vvbiRPAFHA3pzg1fCXA5Q5JExBVpXPTHZUF0gtsfus/hcwcxmf9RfgHDwtSxq
-         1bx0ofN7Nm21fcXiPRlbKh/d5ruR2ePp3ji5Py5uWlztcfvuDu+7GtC29bjR7vEOzNWS
-         NI6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N10c9+tEMvd+V1v5/kjFg7uIplbi+YryLR/t+QNnqsU=;
-        b=TQnYljPGrcYyxKGu/sNhIjOu2lfA7WvqbaTCRF9MRWH2ndNlVhlUyzivt36v593tzu
-         z9dOsHopgVnaiEQC/jaMXV0uRlGdkOiK8uCyf+lFNHkKLUZ8PHu9qAVaWWELoeDjZuhA
-         a0c4DDCqy0YRzop/h2jg3m98tZ3X+5GCHd35vEsXcPtZAPF5KCCyhfmo4o1lWP5P+t+M
-         RrdUgH5nXzdm85/ZMtAgN58bKwvtDU0Lj9zeW2NllT4mmAQpK+9rzylYMxHkDtczcze0
-         byArGRFxykQTfP4wbtphri2LskOBC0z2SdmE07i6NzimzHu5+zPGfKUYptQ0SHMAixTM
-         XkHA==
-X-Gm-Message-State: AOAM533XddVLWeeCmodypvZ0lumIGmAVDjbvT3bYyAH15+vofbMy+Wg2
-        UknF5zsA0VQaAbPY18WjCtLX9bXQLRsDGtbxpz37lA==
-X-Google-Smtp-Source: ABdhPJz1ZXFqvRU0UEmWsJMjbaIMk2L+dkrdUn+tEviQSYc6CnuQg/EudEOu/jzT2CS0AbLrfEZiZReKFnSsXFJuWYE=
-X-Received: by 2002:a17:906:4088:: with SMTP id u8mr11408126ejj.184.1599772945031;
- Thu, 10 Sep 2020 14:22:25 -0700 (PDT)
+        Thu, 10 Sep 2020 17:22:52 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5a99180000>; Thu, 10 Sep 2020 14:22:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 10 Sep 2020 14:22:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 10 Sep 2020 14:22:45 -0700
+Received: from [10.2.54.52] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
+ 2020 21:22:37 +0000
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+ <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+ <20200909142904.00b72921@thinkpad>
+ <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca>
+ <20200910093925.GB29166@oc3871087118.ibm.com>
+ <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+ <20200910181319.GO87483@ziepe.ca>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <0c9bcb54-914b-e582-dd6d-3861267b6c94@nvidia.com>
+Date:   Thu, 10 Sep 2020 14:22:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200910202107.3799376-1-keescook@chromium.org> <20200910202107.3799376-2-keescook@chromium.org>
-In-Reply-To: <20200910202107.3799376-2-keescook@chromium.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 10 Sep 2020 23:21:58 +0200
-Message-ID: <CAG48ez1V=oVczCCSuRaWX=bbN2cOi0Y9q48=e-Fuhg7mwMOi0A@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] security/fbfam: Add a Kconfig to enable the fbfam feature
-To:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200910181319.GO87483@ziepe.ca>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599772952; bh=KgUwNS6Q+E8fqoYsN87vU1D8tqx/ffcZtMThZuyBhrY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=iyiND7wWuYHj8PeTvg/XtmrYveZZgQlXRnTEfuRaqVXA6x8uYqDCj3nrByA0pX5cI
+         5pEdOff/AUuhqRtuvklooFd8NslrApTnPUOi4JcmLIL68MhkbQJc9AX9wpzPo47t5P
+         WonYZKJQ7qlOSxr7z0+3iwfyQPcDStoEMZWR2//x0MYBmno68OCeOHSxdecN4/r9lr
+         Jbhl/MI+cwSAsj1DIol///tYiiv7Ue7ZlwRJ+mqssEw4A5AmoU61blAy2i3+rfNZd4
+         /0vhPiQoPG2wWvgPHKrzc4/jcDRLgdPpH3xb6nJhrSWHQnnGiRHTVHuGyPppzkiMo2
+         pXOZNwCZ5mRKQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:21 PM Kees Cook <keescook@chromium.org> wrote:
-> From: John Wood <john.wood@gmx.com>
->
-> Add a menu entry under "Security options" to enable the "Fork brute
-> force attack mitigation" feature.
-[...]
-> +config FBFAM
+On 9/10/20 11:13 AM, Jason Gunthorpe wrote:
+> On Thu, Sep 10, 2020 at 10:35:38AM -0700, Linus Torvalds wrote:
+>> On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
+>> <agordeev@linux.ibm.com> wrote:
+>>>
+>>> It is only gup_fast case that exposes the issue. It hits because
+>>> pointers to stack copies are passed to gup_pXd_range iterators, not
+>>> pointers to real page tables itself.
+>>
+>> Can we possibly change fast-gup to not do the stack copies?
+>>
+>> I'd actually rather do something like that, than the "addr_end" thing.
+> 
+>> As you say, none of the other page table walking code does what the
+>> GUP code does, and I don't think it's required.
+> 
+> As I understand it, the requirement is because fast-gup walks without
+> the page table spinlock, or mmap_sem held so it must READ_ONCE the
+> *pXX.
+> 
+> It then checks that it is a valid page table pointer, then calls
+> pXX_offset().
+> 
+> The arch implementation of pXX_offset() derefs again the passed pXX
+> pointer. So it defeats the READ_ONCE and the 2nd load could observe
+> something that is no longer a page table pointer and crash.
 
-Please give this a more descriptive name than FBFAM. Some name where,
-if a random kernel developer sees an "#ifdef" with that name in some
-random piece of kernel code, they immediately have a rough idea for
-what kind of feature this is.
+Just to be clear, though, that makes it sound a little wilder and
+reckless than it really is, right?
 
-Perhaps something like THROTTLE_FORK_CRASHES. Or something else that
-is equally descriptive.
+Because actually, the page tables cannot be freed while gup_fast is
+walking them, due to either IPI blocking during the walk, or the moral
+equivalent (MMU_GATHER_RCU_TABLE_FREE) for non-IPI architectures. So the
+pages tables can *change* underneath gup_fast, and for example pages can
+be unmapped. But they remain valid page tables, it's just that their
+contents are unstable. Even if pXd_none()==true.
 
-> +       bool "Fork brute force attack mitigation"
-> +       default n
+Or am I way off here, and it really is possible (aside from the current
+s390 situation) to observe something that "is no longer a page table"?
 
-"default n" is superfluous and should AFAIK be omitted.
 
-> +       help
-> +         This is a user defense that detects any fork brute force attack
-> +         based on the application's crashing rate. When this measure is
-> +         triggered the fork system call is blocked.
-
-This help text claims that the mitigation will block fork(), but patch
-6/6 actually kills the process hierarchy.
+thanks,
+-- 
+John Hubbard
+NVIDIA
