@@ -2,139 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4F0C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3108C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D78206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599734558;
-	bh=2/QJ576wZRpyl1HMtg6+FjdAJuU3SOYpLoRvCGPk68w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ttQnvJ8nE9yeTZFfdA8860lH6o73hM4m2oaqjOXfoRGDa6Hv3WVqvKQmHH11EKx1O
-	 mfCwtY5vYA7udux2F8RW8NCLBLdBZttNdRp/iBnEToflidGT4xaVM2xRrA3S2Qhc4b
-	 2FlxGi4ySmr2+/PYZXdCD4pnr9F0SeZq9raAqYFk=
+	by mail.kernel.org (Postfix) with ESMTP id 8FCBB206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgIJKmg convert rfc822-to-8bit (ORCPT
+        id S1727055AbgIJKmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:42:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36780 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726057AbgIJKmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:42:03 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-cK_L9dlCO6qXUkXUIk9AhQ-1; Thu, 10 Sep 2020 06:41:58 -0400
-X-MC-Unique: cK_L9dlCO6qXUkXUIk9AhQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC3998030DD;
-        Thu, 10 Sep 2020 10:41:56 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.192.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D4E845D9E8;
-        Thu, 10 Sep 2020 10:41:54 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Wade Mealing <wmealing@redhat.com>
-Subject: [PATCH] perf: Fix race in perf_mmap_close function
-Date:   Thu, 10 Sep 2020 12:41:53 +0200
-Message-Id: <20200910104153.1672460-1-jolsa@kernel.org>
+        Thu, 10 Sep 2020 06:42:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:57014 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbgIJKmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:42:22 -0400
+IronPort-SDR: OkLs0y3qncGHzch1ayqndDUu20zMT031PONAuIQDEO/Ch73fk3vye6YtZdT/GnIUf/dni4729Y
+ Glsh97Q9x6ew==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="146212063"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="146212063"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 03:42:20 -0700
+IronPort-SDR: Wp6FjaA7MVpu0ej/9UBiIVN3UVOB2GV5sui+4rvhO8AuYtubmhVdbh+ONlwyM6/7EGaWyomwT5
+ C3qh0znhT3yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="407723770"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Sep 2020 03:42:19 -0700
+Received: from [10.215.160.12] (rtanwar-MOBL.gar.corp.intel.com [10.215.160.12])
+        by linux.intel.com (Postfix) with ESMTP id A68F3580039;
+        Thu, 10 Sep 2020 03:42:16 -0700 (PDT)
+Subject: Re: [PATCH 2/2] Add driver for Moortec MR75203 PVT controller
+To:     Philipp Zabel <p.zabel@pengutronix.de>, jdelvare@suse.com,
+        linux@roeck-us.net, linux-hwmon@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rtanwar@maxlinear.com
+References: <cover.1599634208.git.rahul.tanwar@linux.intel.com>
+ <ecb6794a8f2ef6576421e6d5fbdf4e6a91f06b91.1599634208.git.rahul.tanwar@linux.intel.com>
+ <b113e2f455f7770fc4852437b1bf3c40c8bc853e.camel@pengutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <e0392219-a9aa-169b-a1eb-44644392f06f@linux.intel.com>
+Date:   Thu, 10 Sep 2020 18:42:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jolsa@kernel.org
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <b113e2f455f7770fc4852437b1bf3c40c8bc853e.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a possible race in perf_mmap_close when checking ring buffer's
-mmap_count refcount value. The problem is that the mmap_count check is
-not atomic because we call atomic_dec and atomic_read separately.
 
-  perf_mmap_close:
-  ...
-   atomic_dec(&rb->mmap_count);
-   ...
-   if (atomic_read(&rb->mmap_count))
-      goto out_put;
 
-   <ring buffer detach>
-   free_uid
+On 10/9/2020 6:35 pm, Philipp Zabel wrote:
+> On Wed, 2020-09-09 at 14:52 +0800, Rahul Tanwar wrote:
+>> PVT controller (MR75203) is used to configure & control
+>> Moortec embedded analog IP which contains temprature
+>> sensor(TS), voltage monitor(VM) & process detector(PD)
+>> modules. Add driver to support MR75203 PVT controller.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>> ---
+> [...]
+>> +static int mr75203_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct hwmon_channel_info **pvt_info;
+>> +	u32 ts_num, vm_num, pd_num, val, index, i;
+>> +	struct device *dev = &pdev->dev;
+>> +	u32 *temp_config, *in_config;
+>> +	struct device *hwmon_dev;
+>> +	struct pvt_device *pvt;
+>> +	int ret;
+>> +
+>> +	pvt = devm_kzalloc(dev, sizeof(*pvt), GFP_KERNEL);
+>> +	if (!pvt)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = pvt_get_regmap(pdev, "common");
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	pvt->rst = devm_reset_control_get(dev, NULL);
+> Please use devm_reset_control_get_exclusive().
 
-out_put:
-  ring_buffer_put(rb); /* could be last */
+Well noted. Missed that, thanks.
 
-The race can happen when we have two (or more) events sharing same ring
-buffer and they go through atomic_dec and then they both see 0 as refcount
-value later in atomic_read. Then both will go on and execute code which
-is meant to be run just once.
-
-The code that detaches ring buffer is probably fine to be executed more
-than once, but the problem is in calling free_uid, which will later on
-demonstrate in related crashes and refcount warnings, like:
-
-  refcount_t: addition on 0; use-after-free.
-  ...
-  RIP: 0010:refcount_warn_saturate+0x6d/0xf
-  ...
-  Call Trace:
-  prepare_creds+0x190/0x1e0
-  copy_creds+0x35/0x172
-  copy_process+0x471/0x1a80
-  _do_fork+0x83/0x3a0
-  __do_sys_wait4+0x83/0x90
-  __do_sys_clone+0x85/0xa0
-  do_syscall_64+0x5b/0x1e0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Using atomic decrease and check instead of separated calls.
-This fixes CVE-2020-14351.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- kernel/events/core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7ed5248f0445..29313cc54d9e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5903,8 +5903,6 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		mutex_unlock(&event->mmap_mutex);
- 	}
- 
--	atomic_dec(&rb->mmap_count);
--
- 	if (!atomic_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
- 		goto out_put;
- 
-@@ -5912,7 +5910,7 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	mutex_unlock(&event->mmap_mutex);
- 
- 	/* If there's still other mmap()s of this buffer, we're done. */
--	if (atomic_read(&rb->mmap_count))
-+	if (!atomic_dec_and_test(&rb->mmap_count))
- 		goto out_put;
- 
- 	/*
--- 
-2.26.2
+Regards,
+Rahul
 
