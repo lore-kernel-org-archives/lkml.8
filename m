@@ -2,243 +2,126 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CF4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1526CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9A22076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23A120BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPQnq/zd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PGu7s7Hl";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="PXUC++uQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgIJI1v (ORCPT
+        id S1730315AbgIJIaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:27:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56844 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730412AbgIJI1e (ORCPT
+        Thu, 10 Sep 2020 04:30:05 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:64702 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730375AbgIJI16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:27:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599726451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=CAceJYo8i16bUPVAl+qJrQMnEColNt7dWId2KccjTlI=;
-        b=QPQnq/zdOjSoNw2iuhq1U3aY8Of/tEtzJKnRVTsWMMXnEvmSVDHwZ7DUbNf2HfbjoAcljO
-        zM7yg+dw82dVPdYR8liLYtZ7c52idJ7VY1oVHHX0VLKn5hpuMU8beBBXWGfDEVAnKumth3
-        AY1HSOpYjSpTChyLD1WfZjKRt/EcojQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-548-JwGAtMAyNteUJIZ7HxwWNQ-1; Thu, 10 Sep 2020 04:27:28 -0400
-X-MC-Unique: JwGAtMAyNteUJIZ7HxwWNQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CCF10ABDAC;
-        Thu, 10 Sep 2020 08:27:25 +0000 (UTC)
-Received: from [10.36.113.88] (ovpn-113-88.ams2.redhat.com [10.36.113.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 885AE7E46E;
-        Thu, 10 Sep 2020 08:27:22 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Rik van Riel <riel@surriel.com>, Zi Yan <ziy@nvidia.com>,
-        Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@suse.de>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908143503.GE26850@dhcp22.suse.cz>
- <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
- <20200909070445.GA7348@dhcp22.suse.cz>
- <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
- <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
- <20200910073213.GC28354@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <9ffa345f-fd45-aeac-691d-54d1364bff6d@redhat.com>
-Date:   Thu, 10 Sep 2020 10:27:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200910073213.GC28354@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Thu, 10 Sep 2020 04:27:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599726477; x=1631262477;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=PGu7s7HlxPhC9eGdlHaVcnlRYfaVHGqnURqR5/8+uUMDdN9grSIVsZlu
+   jcHg3uyVL5exl80Thpj/HHosVNy611DyrfXcxForLJ8zOy0LPakSiyweI
+   W2SS10QCFHYtRXVBSC/rtoM4GQ5Xq5RSQpHHn1CFFWe0b3ukJRw6Fep/N
+   0ZTBzB09nSgxVHvoffWuout28AzjL67pGLmiilWvk6iu/VCsZydDLPUHQ
+   BZKAoEYiCN2Zg60f4rsRtxJW+rhe2Q1soxm5gxi7I6OoiDeP4cIPAi/Yd
+   pjqgq+wpvDJSM88TYJ67g1wGWbjRfShyrI0D/53QZvmmhO/tyN2hMi9jp
+   w==;
+IronPort-SDR: wdbqx+I+h4Rwe8fNvKmszzcuso4ofR0DdEsQThoE4CXip6nixitmwetmnuPwX8BFpOWEvPPwJN
+ hI9a1NlROyap87+q416sN69HQRIvHvYTruDtt9Kp3AJ6py93tKheNT0Mreq6chXA6v/YhOrNZ+
+ 9J5LTTIYoriXn4kOQEz/cbY+y4KS62Aw9pU9RGLICMPFeFG/d6wbX4YjTXIiVria0O9oNan2td
+ qrWI7MXe72vqlsaYhNJpVS+sFHRKd5zen9xPJHDqjEFJBbf5PpTpBLr8dbsryiPDYQkFislrQM
+ e0I=
+X-IronPort-AV: E=Sophos;i="5.76,412,1592841600"; 
+   d="scan'208";a="148235271"
+Received: from mail-co1nam04lp2057.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.57])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Sep 2020 16:27:54 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iiic58NV6PJmFg2NsOowv0hyizNHb1Cb+aDqX80iQV2MNDJo1K5ltSk6fcJ5QGD4bbpbRSdULsEx7jg/xk01pDjkkhNAZhhK8VheMMMb/PR8zOl+QiS8LY9uKYZzOPMYOS3DlKZ0I7QbqjucS6t60aNwcqVNjjJ0HtighM26TwKUr0FnpBrmPz525NHD17wFHmfAqtY05NHBMO3UehiT3B7mh+NMKPN+KFxpErH2O3zxDeR6+1IszsOcZeFChvbSlehGaDyKydh088F7/Jgu7NWQ9LBwCOA/DL3U/eHqAaepYmeB1d+LHWwlT37B+YTBPiVEw1VjQCJps1gQ3bnlPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=g7yYpwFewuUljJnkX03SNhIue/VIJCX95F9EHOllSmlMEYgTQiJwrfT5Qse30nrMaOfECVEQSWE794+hvFDMbPgN53eibHOdG28zn4D2rBqDwuS0gBOSv3TgpM/l/MhoV2wtjvUIoKsL17RdFBnvtxO0cq8X7IOzl7w+sGE1oT7xqgBKHjC7F3fG/FApRB37IKAemu3WxsbKpCBuWEfADdZ9RjUXq0h6HsTS3ie5F79bgVTuabU+s5YgCyS/gVNLmDltbMNwfgSsIg1wJ4QDUk+HogNDE08AtbI4DgkOUHISEo4fsgrqy2nZXrDBHqGHmK6krnHJz0i39Gd7jQJmWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=PXUC++uQAyEU/x/w5gzNFRER7WHocPLTrFWXZesRlhi0PYyP/OlV3GdZX3uwTrZC3fnzhIKwDI2TG2o9lSWW/Y88db3HONexKfmHEw7RQLjD7mSP/CrIcjmhCqmeZDv16aedxxWRaMyhPx7sySU8d50Am99pEVl80eNjH+38GQY=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4045.namprd04.prod.outlook.com
+ (2603:10b6:805:47::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 10 Sep
+ 2020 08:27:53 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
+ 08:27:53 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     YueHaibing <yuehaibing@huawei.com>, "clm@fb.com" <clm@fb.com>,
+        "josef@toxicpanda.com" <josef@toxicpanda.com>,
+        "dsterba@suse.com" <dsterba@suse.com>,
+        "nborisov@suse.com" <nborisov@suse.com>
+CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] btrfs: Remove unused function
+ calc_global_rsv_need_space()
+Thread-Topic: [PATCH -next] btrfs: Remove unused function
+ calc_global_rsv_need_space()
+Thread-Index: AQHWhsDhxv21KuizVE6Qrv0Uy/DrGQ==
+Date:   Thu, 10 Sep 2020 08:27:53 +0000
+Message-ID: <SN4PR0401MB3598643129987ED456C0B63A9B270@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200909135142.27352-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:142d:5701:2cf6:d0e8:5d46:4118]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fc9ecfeb-9ff3-4c48-654f-08d855636982
+x-ms-traffictypediagnostic: SN6PR04MB4045:
+x-microsoft-antispam-prvs: <SN6PR04MB4045362D3B9E5DDED92154F59B270@SN6PR04MB4045.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SMQ7tHbE58uNlJLLgBFeOBsLx4BJ7dbGRAhGBBVoVAocyUhA4PP7hZkzBxeZw0RfZiXSAqbl+yQP2oPCu70pfTWzRhBuSeYH4hSQx+YdNpf+0NR5Gv4UBc10H3z9OGq9Cm9Rsoc32HUKKRMtaS2vg+Ym06sL1pSi/bzXKkxvEUYyEQFYBPq6CYkBdlDVSIC+FZvVJvdpP++1v0lMVE1oTYb9K7NwWJZ19h6PoOYq1EHS1fsxfDH1KuqvLICeUcP+09Ie9Bg/+pRP+q4/y34HCc20XjBBGVffZkGVaj4nVm84yGetX06/V84QrBom6aBbEYHSzFsjlpcVqob+KPd1bg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(8936002)(316002)(110136005)(54906003)(2906002)(8676002)(55016002)(19618925003)(186003)(66476007)(64756008)(7696005)(71200400001)(4326008)(4270600006)(9686003)(478600001)(558084003)(5660300002)(76116006)(33656002)(66446008)(6506007)(91956017)(86362001)(66556008)(66946007)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: krQ3ctV7dDiJkhf9SV09p15ueHSrrFiGNVWKWgF/d9ZmdVnlhXSvRp684whiY57jp7ZXMY5VFgggYzfh9/3GExfe0wGG/O0+dF21/8oj88QTTPb9LywRmiCbxtrXESnWOfExbVHqXf57yV/wuh5pnyKyFYmEQdvti9cUGjByKI/tDGYk7ob0kLDeUbz3yQQZh1AANCH5tnL1b43Euit2l1ZiK7J2SN/0wQk0K93Bpb+4gx62xdC2pj65gdricALkMtJNBnGRFA4wkRbjd0LWrYRvTfOhd7hnOa0nKe9HlgoqI0VTiqJxs/TAsdNJMq+Rr/i/8ehgDuDtXo6ZO+0YCuc3WVqrvfsLsYsnmD8eNqY+BP6Y1irNNfLgjVwLIV2AlO65rdn7DkvcoLe2EYrr41UaWKMhJFL7/p8VNAWgbIPYAmQ+7VPbjdyRQMFO5ueX8FHjZ4iF7VNE42HL40BBtTH4ThxSuXVKdfxa/Gz3OC3lhpXHVgGT0VemriSd9zokbBkNPBLMWQS0eNJ2ZCm0rEEdCb74GfapzpMVo/3nP0rWBKefBh5W1NjgIGXVTLNPz3xutyGTVxM40J4NhanHFb1XNfyhmGSAOS8Xvh7M62rTd7M+wBYFhTPXgFPzyM8emjEVjBIjVo+CrR9lOSvycEiVv3qrDRyGnsMPVGYJieh2SJhd+4Q/huO7xQRgK4g5gCtQPMoyG0cEczzyPGP0+Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc9ecfeb-9ff3-4c48-654f-08d855636982
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 08:27:53.2312
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2okw9WZ4o1T46KXpd9diLw55xy8w0zWaTtYjlnjMag/wGq35EDk0N71VxLRa35JcA0UC1P/8xjXptt3y6sTYVGgs9qNGR2a7zMdJJm3V7VY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4045
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.20 09:32, Michal Hocko wrote:
-> [Cc Vlastimil and Mel - the whole email thread starts
->  http://lkml.kernel.org/r/20200902180628.4052244-1-zi.yan@sent.com
->  but this particular subthread has diverged a bit and you might find it
->  interesting]
-> 
-> On Wed 09-09-20 15:43:55, David Hildenbrand wrote:
->> On 09.09.20 15:19, Rik van Riel wrote:
->>> On Wed, 2020-09-09 at 09:04 +0200, Michal Hocko wrote:
->>>> On Tue 08-09-20 10:41:10, Rik van Riel wrote:
->>>>> On Tue, 2020-09-08 at 16:35 +0200, Michal Hocko wrote:
->>>>>
->>>>>> A global knob is insufficient. 1G pages will become a very
->>>>>> precious
->>>>>> resource as it requires a pre-allocation (reservation). So it
->>>>>> really
->>>>>> has
->>>>>> to be an opt-in and the question is whether there is also some
->>>>>> sort
->>>>>> of
->>>>>> access control needed.
->>>>>
->>>>> The 1GB pages do not require that much in the way of
->>>>> pre-allocation. The memory can be obtained through CMA,
->>>>> which means it can be used for movable 4kB and 2MB
->>>>> allocations when not
->>>>> being used for 1GB pages.
->>>>
->>>> That CMA has to be pre-reserved, right? That requires a
->>>> configuration.
->>>
->>> To some extent, yes.
->>>
->>> However, because that pool can be used for movable
->>> 4kB and 2MB
->>> pages as well as for 1GB pages, it would be easy to just set
->>> the size of that pool to eg. 1/3 or even 1/2 of memory for every
->>> system.
->>>
->>> It isn't like the pool needs to be the exact right size. We
->>> just need to avoid the "highmem problem" of having too little
->>> memory for kernel allocations.
->>>
->>
->> I am not sure I like the trend towards CMA that we are seeing, reserving
->> huge buffers for specific users (and eventually even doing it
->> automatically).
->>
->> What we actually want is ZONE_MOVABLE with relaxed guarantees, such that
->> anybody who requires large, unmovable allocations can use it.
->>
->> I once played with the idea of having ZONE_PREFER_MOVABLE, which
->> a) Is the primary choice for movable allocations
->> b) Is allowed to contain unmovable allocations (esp., gigantic pages)
->> c) Is the fallback for ZONE_NORMAL for unmovable allocations, instead of
->> running out of memory
-> 
-> I might be missing something but how can this work longterm? Or put in
-> another words why would this work any better than existing fragmentation
-> avoidance techniques that page allocator implements already - movability
-> grouping etc. Please note that I am not deeply familiar with those but
-> my high level understanding is that we already try hard to not mix
-> movable and unmovable objects in same page blocks as much as we can.
-
-Note that we group in pageblock granularity, which avoids fragmentation
-on a pageblock level, not on anything bigger than that. Especially
-MAX_ORDER - 1 pages (e.g., on x86-64) and gigantic pages.
-
-So once you run for some time on a system (especially thinking about
-page shuffling *within* a zone), trying to allocate a gigantic page will
-simply always fail - even if you always had plenty of free memory in
-your single zone.
-
-> 
-> My suspicion is that a separate zone would work in a similar fashion. As
-> long as there is a lot of free memory then zone will be effectively
-> MOVABLE. Similar applies to normal zone when unmovable allocations are
-
-Note the difference to MOVABLE: if you really want, you *can* put
-movable allocations into that zone. So you can happily allocate gigantic
-pages from it. Or anything else you like. As the name suggests "prefer
-movable allocations".
-
-> in minority. As long as the Normal zone gets full of unmovable objects
-> they start overflowing to ZONE_PREFER_MOVABLE and it will resemble page
-> block stealing when unmovable objects start spreading over movable page
-> blocks.
-
-Right, the long-term goal would be
-1. To limit the chance of that happening. (e.g., size it in a way that's
-safe for 99.9% of all setups, resize dynamically on demand)
-2. To limit the physical area where that is happening (e.g., find lowest
-possible pageblock etc.). That's more tricky but I consider this a pure
-optimization on top.
-
-As long as we stay in safe zone boundaries you get a benefit in most
-scenarios. As soon as we would have a (temporary) workload that would
-require more unmovable allocations we would fallback to polluting some
-pageblocks only.
-
-> 
-> Again, my level of expertise to page allocator is quite low so all the
-> above might be simply wrong...
-
-Same over here. I had this idea in my mind for quite a while but
-obviously didn't get to figure out the details/implement yet - that's
-why I decided to share the basic idea just now.
-
--- 
-Thanks,
-
-David / dhildenb
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
