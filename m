@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875ADC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A409C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF212078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E726C2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599761575;
-	bh=nYdsEt4eLLJRNSq2tYSCZbVTWwm5iqC5mEub4SpLTXE=;
+	s=default; t=1599761597;
+	bh=euoNrh4CREhCtBrTlTDs/D23cyiar9mHO2VGZrvJGGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvHMPdU3OVTLQcVaIBTHYqsE+gpZBIgxWBBlgSoNArEadwBNVtjSPkjQRv0U7xS5a
-	 5lewi3hilHCRFcDcp+/6AGuGpvdhIWuY/sP5GE1EaJFJVkVNclT31knedfcD1c67/D
-	 3tAcaOzV3Y/uuIPM7GAyjoc9GMjTTLfmRicTPtPk=
+	b=TVv/QOoHExbsdQasDbIuY0WBsOL6Ti/CRC1ypGDq7wVFpLqotMTSzALt1bESAE5IV
+	 OibyXwBk4UyMSKcO/JHqCjlByBq1heQHa5I9TSl+uQ+tabDosGQyNvB2Cmodb++pH/
+	 y9wTZUOuTRfuc5iLpfpOu8x7aXCfKDPnUoVzOdv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgIJSMw (ORCPT
+        id S1727030AbgIJSNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36460 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 14:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgIJR7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:59:06 -0400
+        id S1726109AbgIJR7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:59:05 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9FC21D90;
-        Thu, 10 Sep 2020 17:58:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18F421D40;
+        Thu, 10 Sep 2020 17:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599760746;
-        bh=nYdsEt4eLLJRNSq2tYSCZbVTWwm5iqC5mEub4SpLTXE=;
+        s=default; t=1599760739;
+        bh=euoNrh4CREhCtBrTlTDs/D23cyiar9mHO2VGZrvJGGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxe1ewZk3ANKT0jYpzLPsJG3fIjRqBF2b5XH1uhcD5ON03tM0IgyhVDcSybWHCGOU
-         6aoLL/1Kttdp8WUIZMxwUgI1EaIJGdFTkieikEhJsSh3VNEdrruhn9MIfPD+bQe3Ca
-         neb6d0Kuq2FduigMJzjlultnMq8A5ivf+gYrtpOo=
+        b=C0lS38qLr2jfEk2yhlwaXZzmaYcinq8ZDR7MVbkH6ctctSqOAC39pmBVy9T7tMARz
+         ne82KmiWRJSRU2WQZGzCRJK+h6gtHtGpzyilfRd83upQgUNsalLHMtJUjNP8mF2oYB
+         UBVCPw0WqSHJZS7u1eoQkNx0kWdJb8Q31lbJLNjc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -67,9 +67,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
         linux-renesas-soc@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 11/15] ARM: dts: aspeed: fix PCA95xx GPIO expander properties on Portwell
-Date:   Thu, 10 Sep 2020 19:57:29 +0200
-Message-Id: <20200910175733.11046-12-krzk@kernel.org>
+Subject: [PATCH v2 10/15] ARM: dts: am3874: iceboard: fix GPIO expander reset GPIOs
+Date:   Thu, 10 Sep 2020 19:57:28 +0200
+Message-Id: <20200910175733.11046-11-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200910175733.11046-1-krzk@kernel.org>
 References: <20200910175733.11046-1-krzk@kernel.org>
@@ -78,27 +78,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCA95xx GPIO expander requires GPIO controller properties to operate
-properly.
+Correct the property for reset GPIOs of the GPIO expander.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/am3874-iceboard.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-index 4a1ca8f5b6a7..03c161493ffc 100644
---- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-@@ -121,6 +121,8 @@
- 	pca9555@27 {
- 		compatible = "nxp,pca9555";
- 		reg = <0x27>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
- 	};
- };
+diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
+index 1bb57019d082..9423e9feaa10 100644
+--- a/arch/arm/boot/dts/am3874-iceboard.dts
++++ b/arch/arm/boot/dts/am3874-iceboard.dts
+@@ -195,7 +195,7 @@
+ 					"FMCA_PG_C2M", "FMCA_PRSNT_M2C_L", "FMCA_CLK_DIR", "SFP_LOS",
+ 					"FMCB_EN_12V0", "FMCB_EN_3V3", "FMCB_EN_VADJ", "FMCB_PG_M2C",
+ 					"FMCB_PG_C2M", "FMCB_PRSNT_M2C_L", "FMCB_CLK_DIR", "SFP_ModPrsL";
+-				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
++				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
+ 			};
  
+ 			u42: pca9575@21 {
+@@ -208,7 +208,7 @@
+ 					"QSFPA_LPMode", "QSFPB_ModPrsL", "QSFPB_IntL", "QSFPB_ResetL",
+ 					"SFP_TxFault", "SFP_TxDisable", "SFP_RS0", "SFP_RS1",
+ 					"QSFPB_ModSelL", "QSFPB_LPMode", "SEL_SFP", "ARM_MR";
+-				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
++				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
+ 			};
+ 
+ 			u48: pca9575@22 {
+@@ -227,7 +227,7 @@
+ 					"GP_SW5", "GP_SW6", "GP_SW7", "GP_SW8",
+ 					"GP_LED8", "GP_LED7", "GP_LED6", "GP_LED5",
+ 					"GP_LED4", "GP_LED3", "GP_LED2", "GP_LED1";
+-				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
++				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
+ 			};
+ 
+ 			u59: pca9575@23 {
+@@ -240,7 +240,7 @@
+ 					"GTX1V8PowerFault", "PHYAPowerFault", "PHYBPowerFault", "ArmPowerFault",
+ 					"BP_SLOW_GPIO0", "BP_SLOW_GPIO1", "BP_SLOW_GPIO2", "BP_SLOW_GPIO3",
+ 					"BP_SLOW_GPIO4", "BP_SLOW_GPIO5", "__unused_u59_p16", "__unused_u59_p17";
+-				reset_gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
++				reset-gpios = <&gpio2 11 GPIO_ACTIVE_LOW>;
+ 			};
+ 
+ 			tmp100@48 { compatible = "ti,tmp100"; reg = <0x48>; };
 -- 
 2.17.1
 
