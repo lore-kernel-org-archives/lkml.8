@@ -2,114 +2,128 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D0AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E524C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2071820C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9750D20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgIJLI0 (ORCPT
+        id S1730687AbgIJLJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:08:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:33124 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730635AbgIJK7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:59:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11EFA31B;
-        Thu, 10 Sep 2020 03:59:19 -0700 (PDT)
-Received: from [10.163.71.250] (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2963F68F;
-        Thu, 10 Sep 2020 03:59:15 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually
- contiguous memory
-To:     David Hildenbrand <david@redhat.com>,
-        Sudarshan Rajagopalan <sudaraja@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>
-References: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
- <0475e813-cb95-0992-39e4-593bfd5cdbf8@arm.com>
- <372df305-3bff-bf8e-e2a3-a03932df58d5@redhat.com>
-Message-ID: <f772d6ea-001b-be8f-843a-1e56c316814f@arm.com>
-Date:   Thu, 10 Sep 2020 16:28:43 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 10 Sep 2020 07:09:04 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:12554 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730413AbgIJLGz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:06:55 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85f5a0899992-8a133; Thu, 10 Sep 2020 19:06:01 +0800 (CST)
+X-RM-TRANSID: 2ee85f5a0899992-8a133
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[223.112.105.130])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25f5a0896cdb-115c6;
+        Thu, 10 Sep 2020 19:06:01 +0800 (CST)
+X-RM-TRANSID: 2ee25f5a0896cdb-115c6
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     gregkh@linuxfoundation.org, paul@pwsan.com, aaro.koskinen@iki.fi,
+        tony@atomide.com
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] ARM: OMAP1: clock: Use IS_ERR_OR_NULL() to clean code
+Date:   Thu, 10 Sep 2020 19:06:40 +0800
+Message-Id: <20200910110640.4308-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-In-Reply-To: <372df305-3bff-bf8e-e2a3-a03932df58d5@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use IS_ERR_OR_NULL() to make the code cleaner.
+
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ arch/arm/mach-omap1/clock.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/mach-omap1/clock.c b/arch/arm/mach-omap1/clock.c
+index bd5be8210..9d4a0ab50 100644
+--- a/arch/arm/mach-omap1/clock.c
++++ b/arch/arm/mach-omap1/clock.c
+@@ -612,7 +612,7 @@ int clk_enable(struct clk *clk)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&clockfw_lock, flags);
+@@ -627,7 +627,7 @@ void clk_disable(struct clk *clk)
+ {
+ 	unsigned long flags;
+ 
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return;
+ 
+ 	spin_lock_irqsave(&clockfw_lock, flags);
+@@ -650,7 +650,7 @@ unsigned long clk_get_rate(struct clk *clk)
+ 	unsigned long flags;
+ 	unsigned long ret;
+ 
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return 0;
+ 
+ 	spin_lock_irqsave(&clockfw_lock, flags);
+@@ -670,7 +670,7 @@ long clk_round_rate(struct clk *clk, unsigned long rate)
+ 	unsigned long flags;
+ 	long ret;
+ 
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return 0;
+ 
+ 	spin_lock_irqsave(&clockfw_lock, flags);
+@@ -686,7 +686,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
+ 	unsigned long flags;
+ 	int ret = -EINVAL;
+ 
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return ret;
+ 
+ 	spin_lock_irqsave(&clockfw_lock, flags);
+@@ -791,7 +791,7 @@ void clk_preinit(struct clk *clk)
+ 
+ int clk_register(struct clk *clk)
+ {
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return -EINVAL;
+ 
+ 	/*
+@@ -817,7 +817,7 @@ EXPORT_SYMBOL(clk_register);
+ 
+ void clk_unregister(struct clk *clk)
+ {
+-	if (clk == NULL || IS_ERR(clk))
++	if (IS_ERR_OR_NULL(clk))
+ 		return;
+ 
+ 	mutex_lock(&clocks_mutex);
+-- 
+2.20.1.windows.1
 
 
-On 09/10/2020 01:38 PM, David Hildenbrand wrote:
-> On 10.09.20 08:45, Anshuman Khandual wrote:
->> Hello Sudarshan,
->>
->> On 09/10/2020 11:35 AM, Sudarshan Rajagopalan wrote:
->>> When section mappings are enabled, we allocate vmemmap pages from physically
->>> continuous memory of size PMD_SZIE using vmemmap_alloc_block_buf(). Section> mappings are good to reduce TLB pressure. But when system is highly fragmented
->>> and memory blocks are being hot-added at runtime, its possible that such
->>> physically continuous memory allocations can fail. Rather than failing the
->>
->> Did you really see this happen on a system ?
->>
->>> memory hot-add procedure, add a fallback option to allocate vmemmap pages from
->>> discontinuous pages using vmemmap_populate_basepages().
->>
->> Which could lead to a mixed page size mapping in the VMEMMAP area.
-> 
-> Right, with gives you a slight performance hit - nobody really cares,
-> especially if it happens in corner cases only.
 
-On performance impact, will probably let Catalin and others comment from
-arm64 platform perspective, because I might not have all information here.
-But will do some more audit regarding possible impact of a mixed page size
-vmemmap mapping.
-
-> 
-> At least x86_64 (see vmemmap_populate_hugepages()) and s390x (added
-> recently by me) implement that behavior.
-> 
-> Assume you run in a virtualized environment where your hypervisor tries
-> to do some smart dynamic guest resizing - like monitoring the guest
-> memory consumption and adding more memory on demand. You much rather
-> want hotadd to succeed (in these corner cases) that failing just because
-> you weren't able to grab a huge page in one instance.
-> 
-> Examples include XEN balloon, Hyper-V balloon, and virtio-mem. We might
-> see some of these for arm64 as well (if don't already do).
-
-Makes sense.
-
-> 
->> Allocation failure in vmemmap_populate() should just cleanly fail
->> the memory hot add operation, which can then be retried. Why the
->> retry has to be offloaded to kernel ?
-> 
-> (not sure what "offloaded to kernel" really means here - add_memory() is
-
-Offloaded here referred to the responsibility to retry or just fallback.
-If the situation can be resolved by user retrying hot add operation till
-it succeeds, compared to kernel falling back on allocating normal pages.
-
-> also just triggered from the kernel) I disagree, we should try our best
-> to add memory and make it available, especially when short on memory
-> already.
-
-Okay.
