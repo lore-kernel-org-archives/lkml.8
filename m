@@ -2,104 +2,318 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AA1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3260120719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4179620731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:55:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PrxFIm+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgIJVmz (ORCPT
+        id S1728535AbgIJVmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:42:55 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31863 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgIJNCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:02:23 -0400
-IronPort-SDR: zwKpcClAf3U2obN8Ddkyb51KU1fQn5EYV3mmJFJUTdbpDY/v7y/MrsT2tZD6w18j6Yfc6rHOxR
- Kcd60y59uWRA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243341152"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="243341152"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 06:02:03 -0700
-IronPort-SDR: S1rFM1mUOCY51KMgy45KFAjTbE4MlcEArsGaQgoirdTTKovsol6uIHM3WlHOHti9ElPTdIxOoR
- ocpbwya6fPmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="505828973"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Sep 2020 06:02:00 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next 2/3] net: stmmac: Fix incorrect location to set real_num_rx|tx_queues
-Date:   Thu, 10 Sep 2020 21:03:44 +0800
-Message-Id: <20200910130344.15013-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Thu, 10 Sep 2020 17:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730700AbgIJNBv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:01:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFA8C0617A5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:01:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z1so6617879wrt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0sqmFv2eHfj0bGsGV6vzOEYNJHRHbaIrZSb1iBx+VKQ=;
+        b=PrxFIm+qcOE/pECnf7g0zilV+8j8fE3iImaK+uxbPgjn59kMBEZfMkdg4ORS781Smo
+         lYYl/sJgPqyCEaARQ2FuV8iZn4IkgLY8S5J6CGi9aDUeXATZp/+Q5eV6UQmP/miEogq8
+         ZQA/3HYv8K1ArxRnxNiB8N1yKMM6IgKO2ISHyOYHMYCR+oNFpwDb3i5YVB3oglVAacGM
+         bX+vw9VM/NL9SuURbUIO+L6oPO8ZswxA7VKZHmYZlSuBOjKPCPEjBIlNI6rP0ON+ouG6
+         D1QMY56UgRlfD3tqTVBPpsM3gfnf6I9NrDQVdAPKC5OJ6h8I5FV2JRfm6Ieo0VWAY7Vd
+         KB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0sqmFv2eHfj0bGsGV6vzOEYNJHRHbaIrZSb1iBx+VKQ=;
+        b=Le5EWyNJW7Pyo5ZubVa8T4OkfvBKwKqsLNXIOXlZWKLeuBidqhKpe1U/nRACoNQmQL
+         AA0A92sHeFpb1IDriYtCkwS1iJcUqvqyBEFrMTX7pau0eEfRn/LRNbgzqxXBGoQLYTRy
+         brRTF7wbfysToBh8IoSZcYAIzQAQrtfnPn0OzKFHDZVSZAyANgWF94WJ/nHJiu1n5B3J
+         3V+v2Tk7FydZQS3yLO0UVpQPBO3upGcLMjs6MW1z3pSwBW/xAgJpisF53+h1lZ3SxRGb
+         6dd8GtUvlcQKceofkRnAUIdNL0V77QbJYBlJPrr4B9tRzvmNNE1XUXn26at6S1e0Tv2g
+         tnuw==
+X-Gm-Message-State: AOAM531/ywwM6u/qDL0kJMoITXioffbrvChLBmdqljfodkAlrEUcp5Ag
+        Ed+/ARKvX3DisP/j0+0Llm45Xw==
+X-Google-Smtp-Source: ABdhPJyYLi78UG6+M+KyTBE9epJZAgjW7K+uFBmHRxFPQFLB+d//S0LjdkoG9ek90bxop5qFrF9GSg==
+X-Received: by 2002:adf:db43:: with SMTP id f3mr9538768wrj.219.1599742901335;
+        Thu, 10 Sep 2020 06:01:41 -0700 (PDT)
+Received: from alex-xps13.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y1sm9488269wru.87.2020.09.10.06.01.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 06:01:40 -0700 (PDT)
+From:   Alexandre Bailon <abailon@baylibre.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, mathieu.poirier@linaro.org
+Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stephane.leprovost@mediatek.com, gpain@baylibre.com,
+        Alexandre Bailon <abailon@baylibre.com>
+Subject: [PATCH v2 3/4] remoteproc: mtk_vpu_rproc: Add support of JTAG
+Date:   Thu, 10 Sep 2020 15:01:47 +0200
+Message-Id: <20200910130148.8734-4-abailon@baylibre.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200910130148.8734-1-abailon@baylibre.com>
+References: <20200910130148.8734-1-abailon@baylibre.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aashish Verma <aashishx.verma@intel.com>
+The DSP could be debugged using JTAG.
+The support of JTAG could enabled at build time and it could be enabled
+using debugfs.
 
-netif_set_real_num_tx_queues() & netif_set_real_num_rx_queues() should be
-used to inform network stack about the real Tx & Rx queue (active) number
-in both stmmac_open() and stmmac_resume(), therefore, we move the code
-from stmmac_dvr_probe() to stmmac_hw_setup().
-
-Fixes: c02b7a914551 net: stmmac: use netif_set_real_num_{rx,tx}_queues
-
-Signed-off-by: Aashish Verma <aashishx.verma@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/remoteproc/Kconfig   |   9 +++
+ drivers/remoteproc/mtk_apu.c | 151 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 159 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 9302d8012a10..fea3b77892ab 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2733,6 +2733,10 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 		stmmac_enable_tbs(priv, priv->ioaddr, enable, chan);
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index 4ebea57bf4c8..310462346bd8 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -61,6 +61,15 @@ config MTK_APU
+ 
+ 	  It's safe to say N here.
+ 
++config MTK_APU_JTAG
++	bool "Enable support of JTAG"
++	depends on MTK_APU
++	help
++	  Say y to enable support of JTAG.
++	  By default, JTAG will remain disabled until it is enabled using
++	  debugfs: remoteproc/remoteproc0/jtag. Write 1 to enable it and
++	  0 to disable it.
++
+ config OMAP_REMOTEPROC
+ 	tristate "OMAP remoteproc support"
+ 	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
+diff --git a/drivers/remoteproc/mtk_apu.c b/drivers/remoteproc/mtk_apu.c
+index 6d2f577cfde5..07157fdc24ba 100644
+--- a/drivers/remoteproc/mtk_apu.c
++++ b/drivers/remoteproc/mtk_apu.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/highmem.h>
+ #include <linux/interrupt.h>
+@@ -14,6 +15,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of_reserved_mem.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/remoteproc.h>
+ 
+@@ -48,6 +50,11 @@
+ #define CORE_DEFAULT1				(0x00000140)
+ #define CORE_DEFAULT0_ARUSER_IDMA_USE_IOMMU	(0x10 << 0)
+ #define CORE_DEFAULT0_AWUSER_IDMA_USE_IOMMU	(0x10 << 5)
++#define CORE_DEFAULT2				(0x00000144)
++#define CORE_DEFAULT2_DBG_EN			BIT(3)
++#define CORE_DEFAULT2_NIDEN			BIT(2)
++#define CORE_DEFAULT2_SPNIDEN			BIT(1)
++#define CORE_DEFAULT2_SPIDEN			BIT(0)
+ #define CORE_XTENSA_ALTRESETVEC			(0x000001F8)
+ 
+ struct mtk_apu_rproc {
+@@ -57,6 +64,13 @@ struct mtk_apu_rproc {
+ 	void __iomem *base;
+ 	int irq;
+ 	struct clk_bulk_data clks[3];
++
++#ifdef CONFIG_MTK_APU_JTAG
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pinctrl_jtag;
++	bool jtag_enabled;
++	struct mutex jtag_mutex;
++#endif
+ };
+ 
+ static int mtk_apu_rproc_prepare(struct rproc *rproc)
+@@ -166,6 +180,137 @@ static irqreturn_t handle_event(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++#ifdef CONFIG_MTK_APU_JTAG
++
++static int apu_enable_jtag(struct mtk_apu_rproc *apu_rproc)
++{
++	int ret = 0;
++
++	mutex_lock(&apu_rproc->jtag_mutex);
++	if (apu_rproc->jtag_enabled) {
++		ret = -EINVAL;
++		goto err_mutex_unlock;
++	}
++
++	writel(CORE_DEFAULT2_SPNIDEN | CORE_DEFAULT2_SPIDEN |
++		CORE_DEFAULT2_NIDEN | CORE_DEFAULT2_DBG_EN,
++		apu_rproc->base + CORE_DEFAULT2);
++
++	apu_rproc->jtag_enabled = 1;
++
++err_mutex_unlock:
++	mutex_unlock(&apu_rproc->jtag_mutex);
++
++	return ret;
++}
++
++static int apu_disable_jtag(struct mtk_apu_rproc *apu_rproc)
++{
++	int ret = 0;
++
++	mutex_lock(&apu_rproc->jtag_mutex);
++	if (!apu_rproc->jtag_enabled) {
++		ret = -EINVAL;
++		goto err_mutex_unlock;
++	}
++
++	writel(0, apu_rproc->base + CORE_DEFAULT2);
++
++	apu_rproc->jtag_enabled = 0;
++
++err_mutex_unlock:
++	mutex_unlock(&apu_rproc->jtag_mutex);
++
++	return ret;
++}
++
++static ssize_t rproc_jtag_read(struct file *filp, char __user *userbuf,
++			       size_t count, loff_t *ppos)
++{
++	struct rproc *rproc = filp->private_data;
++	struct mtk_apu_rproc *apu_rproc = (struct mtk_apu_rproc *)rproc->priv;
++	char *buf = apu_rproc->jtag_enabled ? "enabled\n" : "disabled\n";
++
++	return simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
++}
++
++static ssize_t rproc_jtag_write(struct file *filp, const char __user *user_buf,
++				size_t count, loff_t *ppos)
++{
++	struct rproc *rproc = filp->private_data;
++	struct mtk_apu_rproc *apu_rproc = (struct mtk_apu_rproc *)rproc->priv;
++	char buf[10];
++	int ret;
++
++	if (count < 1 || count > sizeof(buf))
++		return -EINVAL;
++
++	ret = copy_from_user(buf, user_buf, count);
++	if (ret)
++		return -EFAULT;
++
++	/* remove end of line */
++	if (buf[count - 1] == '\n')
++		buf[count - 1] = '\0';
++
++	if (!strncmp(buf, "enabled", count))
++		ret = apu_enable_jtag(apu_rproc);
++	else if (!strncmp(buf, "disabled", count))
++		ret = apu_disable_jtag(apu_rproc);
++	else
++		return -EINVAL;
++
++	return ret ? ret : count;
++}
++
++static const struct file_operations rproc_jtag_ops = {
++	.read = rproc_jtag_read,
++	.write = rproc_jtag_write,
++	.open = simple_open,
++};
++
++static int apu_jtag_probe(struct mtk_apu_rproc *apu_rproc)
++{
++	int ret;
++
++	if (!apu_rproc->rproc->dbg_dir)
++		return -ENODEV;
++
++	apu_rproc->pinctrl = devm_pinctrl_get(apu_rproc->dev);
++	if (IS_ERR(apu_rproc->pinctrl)) {
++		dev_warn(apu_rproc->dev, "Failed to find JTAG pinctrl\n");
++		return PTR_ERR(apu_rproc->pinctrl);
++	}
++
++	apu_rproc->pinctrl_jtag = pinctrl_lookup_state(apu_rproc->pinctrl,
++						       "jtag");
++	if (IS_ERR(apu_rproc->pinctrl_jtag))
++		return PTR_ERR(apu_rproc->pinctrl_jtag);
++
++	ret = pinctrl_select_state(apu_rproc->pinctrl,
++				   apu_rproc->pinctrl_jtag);
++	if (ret < 0)
++		return ret;
++
++	mutex_init(&apu_rproc->jtag_mutex);
++
++	debugfs_create_file("jtag", 0600, apu_rproc->rproc->dbg_dir,
++			    apu_rproc->rproc, &rproc_jtag_ops);
++
++	return 0;
++}
++#else
++static int apu_jtag_probe(struct mtk_apu_rproc *apu_rproc)
++{
++	return 0;
++}
++
++static int apu_disable_jtag(struct mtk_apu_rproc *apu_rproc)
++{
++	return 0;
++}
++#endif /* CONFIG_MTK_APU_JTAG */
++
+ static int mtk_apu_rproc_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -242,6 +387,10 @@ static int mtk_apu_rproc_probe(struct platform_device *pdev)
+ 		goto free_mem;
  	}
  
-+	/* Configure real RX and TX queues */
-+	netif_set_real_num_rx_queues(dev, priv->plat->rx_queues_to_use);
-+	netif_set_real_num_tx_queues(dev, priv->plat->tx_queues_to_use);
++	ret = apu_jtag_probe(apu_rproc);
++	if (ret)
++		dev_warn(dev, "Failed to configure jtag\n");
 +
- 	/* Start the ball rolling... */
- 	stmmac_start_all_dma(priv);
+ 	return 0;
  
-@@ -4883,10 +4887,6 @@ int stmmac_dvr_probe(struct device *device,
+ free_mem:
+@@ -259,7 +408,7 @@ static int mtk_apu_rproc_remove(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
  
- 	stmmac_check_ether_addr(priv);
- 
--	/* Configure real RX and TX queues */
--	netif_set_real_num_rx_queues(ndev, priv->plat->rx_queues_to_use);
--	netif_set_real_num_tx_queues(ndev, priv->plat->tx_queues_to_use);
+ 	disable_irq(apu_rproc->irq);
 -
- 	ndev->netdev_ops = &stmmac_netdev_ops;
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
++	apu_disable_jtag(apu_rproc);
+ 	rproc_del(rproc);
+ 	of_reserved_mem_device_release(dev);
+ 	rproc_free(rproc);
 -- 
-2.17.0
+2.26.2
 
