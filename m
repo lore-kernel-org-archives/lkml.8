@@ -2,121 +2,152 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F09C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24712145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63672075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:02:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eHtit0kB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qAHPkyhF";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="c5wE3DeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgIJKBY (ORCPT
+        id S1730553AbgIJKCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:01:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21775 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730257AbgIJKBQ (ORCPT
+        Thu, 10 Sep 2020 06:02:14 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:26367 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729971AbgIJKCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:01:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599732074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SAWVsQ1VutHeIxcMMMfasmStNBpMRCAzjajMGXTXbd0=;
-        b=eHtit0kB4Q4gqxCFnvs2sI/d1zB45cvF+vS4fBVctNtQB7dyum3wgsgdHAVCkPqmajfyTV
-        rK7w4uQVbZNby42gkseiqeFWLxHhIJQAaxPmg/ytNX3fzdBnNrGmLcV5j2FqP0Ql76DS7E
-        DrRVbJBNULeZhT/RYaFKC4XS6Hxgjf8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-2ul8F2GxPr6_nDXiBcdcfQ-1; Thu, 10 Sep 2020 06:01:11 -0400
-X-MC-Unique: 2ul8F2GxPr6_nDXiBcdcfQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35E8C801FDF;
-        Thu, 10 Sep 2020 10:01:08 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 32A011002D5E;
-        Thu, 10 Sep 2020 10:01:04 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 12:01:01 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Maydell <peter.maydell@linaro.org>
-Cc:     Peter Maydell <Peter.Maydell@arm.com>,
-        Juan Quintela <quintela@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Price <steven.price@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v2 2/2] arm64: kvm: Introduce MTE VCPU feature
-Message-ID: <20200910100101.4c47ww4xniza7owi@kamzik.brq.redhat.com>
-References: <20200904160018.29481-1-steven.price@arm.com>
- <20200904160018.29481-3-steven.price@arm.com>
- <20200909154804.mide6szbzgdy7jju@kamzik.brq.redhat.com>
- <CAFEAcA_1YnBg3HVmtrSMP8u7GqHY8mtDAJwVcZuNUhwA+q9q=w@mail.gmail.com>
- <20200910063854.vwhtn3lc5tei72fh@kamzik.brq.redhat.com>
+        Thu, 10 Sep 2020 06:02:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599732128; x=1631268128;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=9BHLGls136Gg6KcgEPigRxw7h5iUt5xfNUxzt6zd+SQ=;
+  b=qAHPkyhF1j+U58Ndx/fNAcPaCYABXiVH/le4Sn9RaekbPrZsdJjd9IG7
+   hqKcxjdqJT7IRsWfAY0bhF6a3lrP4mx4pdCmE6gfThRDFjHP5GD9vu/KO
+   NqExMhBa202eB9nSVHfPOMF/m7ycmVvcc1pW0Tx1l7aAIM+fpdOM6/p2R
+   NS27RMd0zE/RG/5gu3LD5Tgbh65LDpZC2Gk9iLvIlCxpRwurgyk4SnKNF
+   1XF+TtrYT384Y+h93+XjWX70qpMxX6ptzdk+piEfyuWqHF1B0BqQM9JGN
+   FmGgTbBmy6P7vOrDsaDwTwkPuk5WBu3BWZiHnsAr8B4KBhi9cdoOeYOuP
+   A==;
+IronPort-SDR: Y5LU5RbevJD/mFfEWStWpWxse9gVpcmNxdxIhHjEOZaLn7mMa2bt33iGJxt7RFCcDBhlALaF0a
+ rOMM5N3cg3LmEdQBrXW44X8M3VL5e6hVf0JfLAqE4Ut9H3VJQSpnhaGToFEl4HzTbn9AGv0rFZ
+ MYR/J3w4JXqMN98x//PP8HKj59YGVVmHY+8oIk+/Vfxo6Ua/zMHsxeDZzu9v2Rg1Z7KHpxIOq3
+ k3dttS0i1zkh6CpQfXYyvUfwQU0qNyXBFv/loaFnDwXqa5nJsEmFacy0GWwjxHtjJTQfEsQpLe
+ gRU=
+X-IronPort-AV: E=Sophos;i="5.76,412,1592841600"; 
+   d="scan'208";a="146942068"
+Received: from mail-co1nam11lp2169.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.169])
+  by ob1.hgst.iphmx.com with ESMTP; 10 Sep 2020 18:02:06 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ejTigs8TVP2QYLx4fse3/TsK5KwLB2afIvJboImvfXR2+mbPaZrl6Flib4zPVDzqSKK1/LldqcbnxJx1G5/eQ+6Wdt3nH7AxZ5aeHhS7ae3/P+UoJFRC+WZe2AxeY65ZAF0lEoDL2aQF3jd4ofxCEVTrIL2IPssw6Z7lM7dGTWb88iy/Fou0YRBK2JgzEZvHtzZxZqfONsGczinAVJbjJCyBfomQ5977685pyUv5c8XfCKgKxsqdQQMZWhbKSHlSU5ZTNzE5xwZKcVcUZWVcse38ZjZdZRVX2HLRkPTZsMrlcd/idDg2n2Rxh5BwDCDSsKUc/S9MM0D2XYLShtFBtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9BHLGls136Gg6KcgEPigRxw7h5iUt5xfNUxzt6zd+SQ=;
+ b=f2Z5om7u2ni8ON+W2DjQLpb713/snEsug1YtIXDVaETMTZIO5qia3/uRNUrDQz4anUBlBr4wJhyxMuDg3wK0AgP/mRrEuevrJO4hm9disW6URm/hrjE9O+qgGnDmcyDONmP4SbqAtYIHqbF6es2oY0SWlr59buUIfXYE4QsqT2Y0WoPbRSJ5u80TUsQycYZ9D+uU/4bymG5lQ8NYcIaa0cRuRFk15xnUsB/4D3pP2ZiEvbSNG8V5phH4ddWLH8vfZhr1TZPuKpQghF6aq4mJ1rHLtYmocOshAadsrJe7ZYw8y/ChjONHZlUkxMhQ869D5N4PjC7/9tTLG3yaDn96Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9BHLGls136Gg6KcgEPigRxw7h5iUt5xfNUxzt6zd+SQ=;
+ b=c5wE3DeQYs8cJgVNr6hR7Zb+EJ/tO0SMEHcHb3XeUwrGFpNw2oqg9aYrjcT4GojzaV4DzXbwEA+VdOiOaw+dQOyh2KKJpki0jbJmX78QUIL7qXMjECcxdMM+KJEQJehE0lgKr5RcvrbKzYb+swdtpryqb48Q174mxfnU9ptbgh0=
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com (2603:10b6:a03:220::8)
+ by BYAPR04MB5511.namprd04.prod.outlook.com (2603:10b6:a03:eb::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 10:02:05 +0000
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::2c49:48e2:e9fb:d5a0]) by BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::2c49:48e2:e9fb:d5a0%9]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 10:02:05 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] scsi: ufshcd: Properly set the device Icc Level
+Thread-Topic: [PATCH v1 1/1] scsi: ufshcd: Properly set the device Icc Level
+Thread-Index: AQHWhxG+0K54wBwZM0eA3rPrh1VjiKlhodNw
+Date:   Thu, 10 Sep 2020 10:02:05 +0000
+Message-ID: <BY5PR04MB6705A865E35CDA367249DC4EFC270@BY5PR04MB6705.namprd04.prod.outlook.com>
+References: <5c9d6f76303bbe5188bf839b2ea5e5bf530e7281.1598923023.git.nguyenb@codeaurora.org>
+ <0101017475a11d00-6def34a7-db5d-472c-9dcc-215a80510402-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101017475a11d00-6def34a7-db5d-472c-9dcc-215a80510402-000000@us-west-2.amazonses.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2a00:a040:188:8f6c:c9c6:4a8e:98b2:ddf5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 00827195-87a2-479a-de5d-08d855709279
+x-ms-traffictypediagnostic: BYAPR04MB5511:
+x-microsoft-antispam-prvs: <BYAPR04MB55114B9A247FF534C2081332FC270@BYAPR04MB5511.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QUifcPxqtnyBSf/dStbajTjGLarmTOmlaEDiwx+bLrqZz7SXfwwrHQcR/npx10a4sqed6cIIBAwFmti2i65HeEVA5ewq0DBQmMlyv9DxZodCdRrJO6bhCpdpjk20/SeIVz5DwT2xEDOPKUmtEjq/60zUwNLnagoaVcqL1LXR/w8aYxO3oUq/s12hOwxiR5ADdhb+kMrj3iUaQJaxfXa1DV/vcr9ZTan6tuWZ06pXT3haFx/PMaybCGOPygmHNCreDYX95eW19RXiAJQM8KVK1JTRQLUvxtUUQFzez1gdn6jwUMJIhTS3Q39FwPf1+9Vw0/+a3I7tJrnr6Ty9eKv8BA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6705.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(366004)(39860400002)(53546011)(66556008)(52536014)(478600001)(316002)(6506007)(66476007)(8936002)(4326008)(7416002)(64756008)(186003)(66446008)(55016002)(4744005)(33656002)(66946007)(71200400001)(54906003)(8676002)(9686003)(7696005)(86362001)(76116006)(5660300002)(2906002)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 3awd6YyFeeL/c8pOCgwLFjkOqoi0zh7bvyxMvLLvq8kXU6/6cLwQreIpuJGRBka8hwVwaRwOjp0cynYGlTSEHB41xizjwP2jMKVT/e+lY3QA1yZUFDpyUetcTD8zTjHkUdMfY6dcjSUZ6u7C79szPaa32usUhF7sS0/WsWKSw+v8ZmafDTH1mf716klDi9xj+5wiAfHA0TBReYZ5ieWM4Lqnizt5sCoLeWy7bg/pHrSEm0jymfC9ioj11hIffJD2NyNzUOsRIfeYYykhSe6XpkyJ2yIafL632yOS3UMNeVgumzCBeh5QIqma+1jE57VujZGZDPPsljlfLVBgSbq9jcJ3JsE7NmgdQ98SX56eFOxF1cZPXo5zwkGtgEwtKT49Dud8q40rfRKTes8PF4ht5sdujuf7ESEyM2mVOEZcGjnINyWXsUyF1LlySwyJvY+SzUa6h9E4wZLxHIli5TiiV6i2A7l9VGxzM2Ym8xJJ8G2qHTaaOBcoAsInQceOS9reYW9oPLz+KrckNFPrcg1WcxTFEazU5bcu06nC9TOB+OYJkB8MXlyOPePhCHrrLdsTa790Vqm0hpaMai1J+EgEQPngwH4z3djFuUDpLjrHFMmRhHuf07jeYNwFWbIImML7xiyODyqbq0rM45Ivyac3r5YyYlZd6P8lPMI8KnrizRvBfjPpm9syx0RL3bg8g+HW9t6VhyD4mQc2yfmw7hw7Fg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910063854.vwhtn3lc5tei72fh@kamzik.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6705.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00827195-87a2-479a-de5d-08d855709279
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 10:02:05.2743
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 74za/KBpCaFGX3q6efWR77VF2L3Ra6YxjRg8kLfPgdTckwK28uvWD06viut0rRyknOqZOnU0nh5JjLsA196Awg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5511
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:38:54AM +0200, Andrew Jones wrote:
-> On Wed, Sep 09, 2020 at 04:53:02PM +0100, Peter Maydell wrote:
-> > On Wed, 9 Sep 2020 at 16:48, Andrew Jones <drjones@redhat.com> wrote:
-> > > We either need a KVM cap or a new CPU feature probing interface to avoid
-> > > making userspace try features one at a time. It's too bad that VCPU_INIT
-> > > doesn't clear all offending features from the feature set when returning
-> > > EINVAL, because then userspace could create a scratch VCPU with everything
-> > > it supports in order to see what KVM also supports in one go.
-> > 
-> > You could add one if you wanted -- add a new feature bit
-> > TELL_ME_WHAT_YOU_HAVE. If the kernel sees that then on filure
-> > it clears out feature bits it doesn't support and also clears
-> > TELL_ME_WHAT_YOU_HAVE. If QEMU sees EINVAL and TELL_ME_WHAT_YOU_HAVE
-> > is still set, then it knows it's dealing with an old kernel
-> > and has to do one-at-a-time probing. If it sees EINVAL but not
-> > TELL_ME_WHAT_YOU_HAVE then it knows it has a new kernel and
-> > has just got all the info.
-> >
-> 
-> That's a great proposal. I'll try to find time to send the patches.
->
+>=20
+> On 2020-08-31 18:19, Bao D. Nguyen wrote:
+> > UFS version 3.0 and later devices require Vcc and Vccq power supplies
+> > with Vccq2 being optional. While earlier UFS version 2.0 and 2.1
+> > devices, the Vcc and Vccq2 are required with Vccq being optional.
+> > Check the required power supplies used by the device
+> > and set the device's supported Icc level properly.
+Practically you are correct - most flash vendors moved in UFS3.1 to 1.2 sup=
+ply instead of 1.8.
+However, the host should provide all 3 supplies to the device because -=20
+a) A flash vendor might want to still use 1.8 in its UFS3.1 device, and
+b) We should allow a degenerated configurations, e.g. 3.1 devices, that are=
+ degenerated to 2.1 or 2.2
 
-We also have KVM_ARM_PREFERRED_TARGET, which is documented as
-
-"""
-...
-The ioctl returns struct kvm_vcpu_init instance containing information
-about preferred CPU target type and recommended features for it.  The
-kvm_vcpu_init->features bitmap returned will have feature bits set if
-the preferred target recommends setting these features, but this is
-not mandatory.
-...
-"""
-
-But, it says "recommended" features, not "all supported" features,
-and the current implementation of KVM_ARM_PREFERRED_TARGET only
-zeros out features. So, I think we should just leave
-KVM_ARM_PREFERRED_TARGET as is and stick to the plan of extending
-VCPU_INIT.
+That said, I think we can entirely remove the check in the beginning of the=
+ function,
+But not because the spec allows it, but because each supply is explicitly c=
+hecked later on,
+before reading its applicable max current entry in the power descriptor.
 
 Thanks,
-drew
-
+Avri
