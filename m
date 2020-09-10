@@ -2,123 +2,178 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747B5C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CAFC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209B2207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042AB2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhW5ilmv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HLvuaRMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgIJSYk (ORCPT
+        id S1725372AbgIJSY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
+        Thu, 10 Sep 2020 14:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgIJSQW (ORCPT
+        with ESMTP id S1726812AbgIJSSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:16:22 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 759EBC061796
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:45 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id gr14so10154833ejb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:45 -0700 (PDT)
+        Thu, 10 Sep 2020 14:18:53 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF057C061799
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f18so5099733pfa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EjroAkfsxrKtCy0Ubpv2tKVEkMRZLXOZ0SySu7UagEs=;
-        b=dhW5ilmv8SIYNLxmDFFj8Df+SAWU2DumBkJioFX+0EscCmg+AfOAPKL4TpW6wNBwut
-         a4IJlgU68DkDNCWf/vtWl227mhaRXxxmNqDy3Z72fBK1Fd9biP0yMUxlsykdwSbO03nd
-         2XaVPRsfDtxmatPuztMTO3VJJ2kLihSX4CK0yafoP/yxHHDIUNJPd6uDPGHi+cVLXiYv
-         zcSBoYhiqxnYgBxGTSsg5pN5pZiA//cdFk7NF+LgDAppMa5IbnOp6+2fcMFWqSSfmPnT
-         Wlt0eSptjogkykD9efYU6FItNeEikdMtqlZVOj69FXYFlk/NwMxdnc2SyBr1X5WlBSr2
-         lXiw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NNmcHwO+Iwg+rMeH3STh9feD6/hRsrC6t3t7wQ2j07g=;
+        b=HLvuaRMWnIdqkY/j252Zk2tw3F2MY+FcibjdL/KozWLivJNfEdTrKZ7CqbgRS7PlOp
+         JYDi+SPDHVcl/yQBRgsBfinBkUhTC2Vg4LOpBjFc6XUoK73NwgnL9x33VlwMsXmy4U//
+         L1KOhxbAqZ23ZfVN8lGVbKftKzpOrRTb+F6EQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EjroAkfsxrKtCy0Ubpv2tKVEkMRZLXOZ0SySu7UagEs=;
-        b=Lk9eJXYwc48bLajITCOV6Wv3KplJ6V8MyfUb0+3RdYOWV3nVYOcYxBt9//9HGWr1S3
-         Y2s5baTU68hq58vK04wNivTc4djrPms3uMAJukXdtV4HVOMEW/yvpxdaFOPQP/KJ20RN
-         BW6oUWfnsUj3zKxs3SfYBVZKre4tCerHis8zzVggvdv78EO6EyR/Kok7VFZb8ddwA6sA
-         ypfEJHiCm6uxPK/qAk8iJIT9m1ewdaVD4J2Sdn/doN7i0GbuRw2Y0dr7fNt62LbFdCn/
-         nZNC94jwZJ8i3FZKZXK0E2W4g6TQKmBrIjgsdfYbAl0S5KjIXqkZ8wqoVParh1Vnuq71
-         HoPQ==
-X-Gm-Message-State: AOAM533v1n+DitGbd2KkzFES+BMkOy8vlyb0NFxJD72Z9PrShJV0MsVL
-        KvxjiaM20BBPVXBbHEMyWBrdNLp/caQ=
-X-Google-Smtp-Source: ABdhPJz+Xba1s3W+7a7/sDj23I8eqeFZDqMMZgvoRaCZKrdO9Niu1y3PV4oLzlRQqnexdddCdh9/hA==
-X-Received: by 2002:a17:906:7fcb:: with SMTP id r11mr9837299ejs.519.1599761743628;
-        Thu, 10 Sep 2020 11:15:43 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id y6sm8636117edj.50.2020.09.10.11.15.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NNmcHwO+Iwg+rMeH3STh9feD6/hRsrC6t3t7wQ2j07g=;
+        b=cf5gRvcN7lUgiss6MlpKhuESZbQI2OJql94zj0549wL9QJDHEHrQQgdnU4d7Gtl4GQ
+         Aw08IUapdRBQpSvA0/asExnXwsA9Hj5vMw9+gZ0dC9C2MH8dUQymVoJrI9p0779TfYI6
+         h/jw75EMpXJDm9VOe9NxMRutIfUJRJUB5tJFCCnuCb+5T9VYV5Zk8awFzCKHRoZV20SM
+         2LuN86SXXii4PtwS61snTJhhjiZ5ofz9J3jVJfvrA4kK0lcGqbZHBb5vxpCmO3ATFfQk
+         yN/j2T+qaR16sWOJBgnTr+wjcHLfQZQiLPDqdjqAyWnkdvRLpQ1ic28wV8NVLbSs1ZX+
+         RDlQ==
+X-Gm-Message-State: AOAM531ykKjs2WUfN/SLO8WvUJqprDhIFL3ZyVtzDcXbEjse0naIlobH
+        BeUnBACqTeNbiKkMIt582J0tuPm1YzArA8O+
+X-Google-Smtp-Source: ABdhPJw/4pL1OYUwp6z4yw3Dzx5FlBwoM08u2lDH1WyZ3QTjZmpweja7YeY9sCB7pjDSgbG18rK2lA==
+X-Received: by 2002:a63:6cc4:: with SMTP id h187mr5452054pgc.129.1599761932269;
+        Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k3sm6784065pfp.41.2020.09.10.11.18.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:15:42 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 07/11] habanalabs: allow to wait on CS without sleep
-Date:   Thu, 10 Sep 2020 21:15:20 +0300
-Message-Id: <20200910181524.21460-7-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910181524.21460-1-oded.gabbay@gmail.com>
-References: <20200910181524.21460-1-oded.gabbay@gmail.com>
+        Thu, 10 Sep 2020 11:18:51 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 11:18:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+Message-ID: <202009101057.1CCEB434@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
+ <20200908234643.GF1060586@google.com>
+ <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The user sometimes wants to check if a CS has completed to clean resources.
-In that case, the user doesn't want to sleep but just to check if the CS
-has finished and continue with his code.
+On Thu, Sep 10, 2020 at 10:18:05AM +0900, Masahiro Yamada wrote:
+> On Wed, Sep 9, 2020 at 8:46 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > On Sun, Sep 06, 2020 at 09:24:38AM +0900, Masahiro Yamada wrote:
+> > > On Fri, Sep 4, 2020 at 5:30 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> > > >
+> > > > This patch series adds support for building x86_64 and arm64 kernels
+> > > > with Clang's Link Time Optimization (LTO).
+> > > [...]
+> > > One more thing, could you teach me
+> > > how Clang LTO optimizes the code against
+> > > relocatable objects?
+> > >
+> > > When I learned Clang LTO first, I read this document:
+> > > https://llvm.org/docs/LinkTimeOptimization.html
+> > >
+> > > It is easy to confirm the final executable
+> > > does not contain foo2, foo3...
+> > >
+> > > In contrast to userspace programs,
+> > > kernel modules are basically relocatable objects.
+> > >
+> > > Does Clang drop unused symbols from relocatable objects?
+> > > If so, how?
+> >
+> > I don't think the compiler can legally drop global symbols from
+> > relocatable objects, but it can rename and possibly even drop static
+> > functions.
+> 
+> Compilers can drop static functions without LTO.
+> Rather, it is a compiler warning
+> (-Wunused-function), so the code should be cleaned up.
 
-Add a new definition to the API of the wait on CS. The new definition says
-that if the timeout is 0, the driver won't sleep at all but return
-immediately after checking if the CS has finished.
+Right -- I think you're both saying the same thing. Unused static
+functions can be dropped (modulo a warning) in both regular and LTO
+builds.
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/common/command_submission.c | 7 +++++--
- include/uapi/misc/habanalabs.h                      | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+> At first, I thought the motivation of LTO
+> was to remove unused global symbols, and
+> to perform further optimization.
 
-diff --git a/drivers/misc/habanalabs/common/command_submission.c b/drivers/misc/habanalabs/common/command_submission.c
-index 470bffbe9bdc..b2b974ecc431 100644
---- a/drivers/misc/habanalabs/common/command_submission.c
-+++ b/drivers/misc/habanalabs/common/command_submission.c
-@@ -1180,8 +1180,11 @@ static long _hl_cs_wait_ioctl(struct hl_device *hdev,
- 				"Can't wait on CS %llu because current CS is at seq %llu\n",
- 				seq, ctx->cs_sequence);
- 	} else if (fence) {
--		rc = wait_for_completion_interruptible_timeout(
--				&fence->completion, timeout);
-+		if (!timeout_us)
-+			rc = completion_done(&fence->completion);
-+		else
-+			rc = wait_for_completion_interruptible_timeout(
-+					&fence->completion, timeout);
- 
- 		if (fence->error == -ETIMEDOUT)
- 			rc = -ETIMEDOUT;
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 69fb44d35292..d449f8a31ce6 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -914,6 +914,9 @@ struct hl_debug_args {
-  * inside the kernel until the CS has finished or until the user-requested
-  * timeout has expired.
-  *
-+ * If the timeout value is 0, the driver won't sleep at all. It will check
-+ * the status of the CS and return immediately
-+ *
-  * The return value of the IOCTL is a standard Linux error code. The possible
-  * values are:
-  *
+One of LTO's benefits is the performance optimizations, but that's not
+the driving motivation for it here. The performance optimizations are
+possible because LTO provides the compiler with a view of the entire
+built-in portion of the kernel (i.e. not shared objects). That "visible
+all at once" state is the central concern because CFI (Control Flow
+Integrity, the driving motivation for this series) needs it in the same
+way that the performance optimization passes need it.
+
+i.e. to gain CFI coverage, LTO is required. Since LTO is a distinct
+first step independent of CFI, it was split out to be upstreamed while
+fixes for CFI continued to land independently[1]. Once LTO is landed,
+CFI comes next.
+
+> In contrast, this patch set produces a bigger kernel
+> because LTO cannot remove any unused symbol.
+> 
+> So, I do not understand what the benefit is.
+> 
+> Is inlining beneficial?
+> I am not sure.
+
+This is just a side-effect of LTO. As Sami mentions, it's entirely
+tunable, and that tuning was chosen based on measurements made for the
+kernel being built with LTO[2].
+
+> As a whole, I still do not understand
+> the motivation of this patch set.
+
+It is a prerequisite for CFI, and CFI has been protecting *mumble*billion
+Android device kernels against code-reuse attacks for the last 2ish
+years[3]. I want this available for the entire Linux ecosystem, not just
+Android; it is a strong security flaw mitigation technique.
+
+I hope that helps explain it!
+
+-Kees
+
+
+[1] for example, these are some:
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=Control+Flow+Integrity
+
+[2] https://lore.kernel.org/lkml/20200624203200.78870-1-samitolvanen@google.com/T/#m6b576c3af79bdacada10f21651a2b02d33a4e32e
+
+[3] https://android-developers.googleblog.com/2018/10/control-flow-integrity-in-android-kernel.html
+
 -- 
-2.17.1
-
+Kees Cook
