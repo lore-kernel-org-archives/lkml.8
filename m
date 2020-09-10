@@ -2,210 +2,171 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18249C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2D7C2D0E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B91E521D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFAC221E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qGkU2ngt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ic7UgdZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725379AbgIJXpx (ORCPT
+        id S1725775AbgIJXrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 19:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58300 "EHLO
+        Thu, 10 Sep 2020 19:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgIJXps (ORCPT
+        with ESMTP id S1725385AbgIJXrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 19:45:48 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B0AC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:45:48 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cy2so4291919qvb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1cv5j35BABg4q2f4/PUHEsEap0GTGj1LrVIdAlf5e5I=;
-        b=qGkU2ngtRzd1MnDmFePrSWXuIuG33/CjbOW7gF6fH38AAZidSofTZ4SdeT0s5s4a/9
-         bX1NKKOffNfkiv9lf5K8aeMoAfFO+NmlQ1ZcLxSs/U2QLdmuAFauBA9AeGFzx8a+ABR0
-         Ze8wJG4i7ZztnJ53Zh2v2JxyEWHMAs1MVXfUzWspSNk0DdKyToJJMwtjPx92K5BJT02M
-         D3gFxhIfQiQO8spmv6UqzaqU3cdZBCENZERhgLFy3snm7Ik12B64AT+gCrEekGA6rXLe
-         jjAxLweP+D+wLZUJvLyiYhVpw2K10W0JHNjHuo2xPqdDOtbC8WLPCbeJ5ETd2C5mKwGB
-         ylnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1cv5j35BABg4q2f4/PUHEsEap0GTGj1LrVIdAlf5e5I=;
-        b=MFTMqOvC0xzl0an9+IbtYOl3JzxIrizxFnbNgQPwuFoa3pVKc1F+sEkv0Zwh+mCdX0
-         13J8VHqiPxgIanvurzI0vzKStB55Hpk7914gtSyfvB3vTBWxk9ftADlcwnwSDkhjz9CK
-         RVrfPWQpd2Sv592rHswJJxHpNNbs5S54WRKAmoytCkEP00aw1fGhiYVnqnDTUVIjdGQJ
-         +LLYs5wV4P42cLeRMWGCina2qIb2kbc1ZUrDSAo/rARxjDmkxoyIYHPbWQ9jTboqymLa
-         saP2HOppqiQ78HfUHZl0o3TeH3hlnyU9sC7HFpAtuyDchWjpKGJD57DCEx6E0mP62WSW
-         LhYw==
-X-Gm-Message-State: AOAM532jzVQHUJ/0R2saMNty60VddH+ItkKaZwZtlMlDXnTITou5Lcpk
-        BqJNjInjK7sWUJzDF+p3FjiQtA==
-X-Google-Smtp-Source: ABdhPJw8zaFnhCta+8BO94bH8EWlMXGJLBrw/PW+lcHMmANnFPR+jOwF9U7s/VpS5KmvZX1sAal6BA==
-X-Received: by 2002:ad4:56a6:: with SMTP id bd6mr11148014qvb.22.1599781546904;
-        Thu, 10 Sep 2020 16:45:46 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id g5sm332403qtx.43.2020.09.10.16.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 16:45:46 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 23:45:44 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        dianders@chromium.org
-Subject: Re: [PATCH V5 2/4] arm64: dts: qcom: sc7180: Add necessary pinctrl
- and interrupt config for BT UART
-Message-ID: <20200910234544.GC472@uller>
-References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
- <1599742438-16811-3-git-send-email-skakit@codeaurora.org>
+        Thu, 10 Sep 2020 19:47:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A165C061573;
+        Thu, 10 Sep 2020 16:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=TvHq+ozrS3RU346WhpVscGddUaMK0kivrdCStwjOLJM=; b=Ic7UgdZEoZWANOhKnQsQypu4GU
+        F5Fj25TLedAt5hLgJ9IaNdYv29nhquBxUg2fU744YZ3vPgLo92GV9EdtbY2GclLq8zb2qWNHSrtn+
+        bGApUEGYpD0W7B9HOHkBQfrOBm10tLON9reFJJ8DEqoOn8lv0VpKCA5Sc/k/oS0202W56TxrsPxEb
+        wAPTNdCC1h/aHFt1kPgx/BefBbBTknuw0AP4ezYYYVdiu7GAoeQliLixzHGodnU5CBnyvrIyW21o/
+        0/ia8rMFipeonO1oghaByVlz5sbXS2ts+nD5LxvBSjiNXcAClD/vcl6iAXwzPM3nUjzIZT/zShekR
+        4gfrispQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGWHV-0001Rd-DS; Thu, 10 Sep 2020 23:47:09 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Dave Kleikamp <shaggy@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <dchinner@redhat.com>
+Subject: [PATCH v2 2/9] fs: Introduce i_blocks_per_page
+Date:   Fri, 11 Sep 2020 00:47:00 +0100
+Message-Id: <20200910234707.5504-3-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200910234707.5504-1-willy@infradead.org>
+References: <20200910234707.5504-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599742438-16811-3-git-send-email-skakit@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10 Sep 12:53 UTC 2020, satya priya wrote:
+This helper is useful for both THPs and for supporting block size larger
+than page size.  Convert all users that I could find (we have a few
+different ways of writing this idiom, and I may have missed some).
 
-> Add a suitable sleep configuration for uart3 to support Bluetooth wakeup.
-> 
-> If QUP function is selected in sleep state, UART RTS/RFR is pulled high
-> during suspend and BT SoC not able to send wakeup bytes. So, configure
-> GPIO mode in sleep state to keep it low during suspend.
-> 
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/iomap/buffered-io.c  |  8 ++++----
+ fs/jfs/jfs_metapage.c   |  2 +-
+ fs/xfs/xfs_aops.c       |  2 +-
+ include/linux/pagemap.h | 16 ++++++++++++++++
+ 4 files changed, 22 insertions(+), 6 deletions(-)
 
-But patch 4 says that you change this behavior, is that patch really
-needed if we switch the pins to GPIO, or if this patch really needed if
-we merge patch 4?
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index d81a9a86c5aa..330f86b825d7 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -46,7 +46,7 @@ iomap_page_create(struct inode *inode, struct page *page)
+ {
+ 	struct iomap_page *iop = to_iomap_page(page);
+ 
+-	if (iop || i_blocksize(inode) == PAGE_SIZE)
++	if (iop || i_blocks_per_page(inode, page) <= 1)
+ 		return iop;
+ 
+ 	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
+@@ -147,7 +147,7 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+ 	unsigned int i;
+ 
+ 	spin_lock_irqsave(&iop->uptodate_lock, flags);
+-	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
++	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
+ 		if (i >= first && i <= last)
+ 			set_bit(i, iop->uptodate);
+ 		else if (!test_bit(i, iop->uptodate))
+@@ -1077,7 +1077,7 @@ iomap_finish_page_writeback(struct inode *inode, struct page *page,
+ 		mapping_set_error(inode->i_mapping, -EIO);
+ 	}
+ 
+-	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
++	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) <= 0);
+ 
+ 	if (!iop || atomic_dec_and_test(&iop->write_count))
+@@ -1373,7 +1373,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+ 	int error = 0, count = 0, i;
+ 	LIST_HEAD(submit_list);
+ 
+-	WARN_ON_ONCE(i_blocksize(inode) < PAGE_SIZE && !iop);
++	WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+ 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
+ 
+ 	/*
+diff --git a/fs/jfs/jfs_metapage.c b/fs/jfs/jfs_metapage.c
+index a2f5338a5ea1..176580f54af9 100644
+--- a/fs/jfs/jfs_metapage.c
++++ b/fs/jfs/jfs_metapage.c
+@@ -473,7 +473,7 @@ static int metapage_readpage(struct file *fp, struct page *page)
+ 	struct inode *inode = page->mapping->host;
+ 	struct bio *bio = NULL;
+ 	int block_offset;
+-	int blocks_per_page = PAGE_SIZE >> inode->i_blkbits;
++	int blocks_per_page = i_blocks_per_page(inode, page);
+ 	sector_t page_start;	/* address of page in fs blocks */
+ 	sector_t pblock;
+ 	int xlen;
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index b35611882ff9..55d126d4e096 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -544,7 +544,7 @@ xfs_discard_page(
+ 			page, ip->i_ino, offset);
+ 
+ 	error = xfs_bmap_punch_delalloc_range(ip, start_fsb,
+-			PAGE_SIZE / i_blocksize(inode));
++			i_blocks_per_page(inode, page));
+ 	if (error && !XFS_FORCED_SHUTDOWN(mp))
+ 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
+ out_invalidate:
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 50d2c39b47ab..f7f602040913 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -975,4 +975,20 @@ static inline int page_mkwrite_check_truncate(struct page *page,
+ 	return offset;
+ }
+ 
++/**
++ * i_blocks_per_page - How many blocks fit in this page.
++ * @inode: The inode which contains the blocks.
++ * @page: The page (head page if the page is a THP).
++ *
++ * If the block size is larger than the size of this page, return zero.
++ *
++ * Context: The caller should hold a refcount on the page to prevent it
++ * from being split.
++ * Return: The number of filesystem blocks covered by this page.
++ */
++static inline
++unsigned int i_blocks_per_page(struct inode *inode, struct page *page)
++{
++	return thp_size(page) >> inode->i_blkbits;
++}
+ #endif /* _LINUX_PAGEMAP_H */
+-- 
+2.28.0
 
-Could it be that in lower power states we drop the power to the uart
-block and rely on the PDC to wait for the BT chip to start sending the
-wakeup bytes on the rx pin?
-
-
-This commit will become the reference for all other platforms where we
-enable the same functionality, so better document it properly.
-
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - This patch adds sleep state for BT UART. Newly added in V2.
-> 
-> Changes in V3:
->  - Remove "output-high" for TX from both sleep and default states
->    as it is not required. Configure pull-up for TX in sleep state.
-> 
-> Changes in V4:
->  - As per Matthias's comment, removed drive-strength for sleep state
->    and fixed nit-pick.
-> 
-> Changes in V5:
->  - As per Matthias's comments, moved pinmux change for sleep state,
->    pinctrl and interrupt config to the board specific file.
-> 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 48 +++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 04888df..e529a41 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -344,6 +344,10 @@
->  };
->  
->  &uart3 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-1 = <&qup_uart3_sleep>;
-> +	interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-> +				<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
->  	status = "okay";
->  
->  	bluetooth: wcn3990-bt {
-> @@ -545,3 +549,47 @@
->  	};
->  };
->  
-> +&tlmm {
-> +	qup_uart3_sleep: qup-uart3-sleep {
-> +		pinmux {
-> +			pins = "gpio38", "gpio39",
-> +			       "gpio40", "gpio41";
-> +			function = "gpio";
-> +		};
-> +
-> +		pinconf-cts {
-> +			/*
-> +			 * Configure a pull-down on CTS to match the pull of
-> +			 * the Bluetooth module.
-> +			 */
-> +			pins = "gpio38";
-> +			bias-pull-down;
-> +		};
-> +
-> +		pinconf-rts {
-> +			/*
-> +			 * Configure pull-down on RTS to make sure that the BT SoC can
-> +			 * wake up the system by sending wakeup bytes during suspend.
-
-So "request to send" is active low and pulling it low will indicate to
-the BT chip that it's allowed to wake us up by pulling rx low?
-
-I would like this comment to really describe what's actually going on.
-
-> +			 */
-> +			 pins = "gpio39";
-> +			 bias-pull-down;
-> +		};
-> +
-> +		pinconf-tx {
-> +			/* Configure pull-up on TX when it isn't actively driven */
-
-Sure, but why? Wouldn't that be to prevent the BT chip from receiving
-garbage while the SoC is asleep?
-
-> +			pins = "gpio40";
-> +			bias-pull-up;
-> +		};
-> +
-> +		pinconf-rx {
-> +			/*
-> +			 * Configure a pull-up on RX. This is needed to avoid
-> +			 * garbage data when the TX pin of the Bluetooth module is
-> +			 * in tri-state (module powered off or not driving the
-> +			 * signal yet).
-> +			 */
-
-It's nice to avoid "garbage data", but isn't the real reason that the
-floating pin on the other side would cause spurious wakeups?
-
-Regards,
-Bjorn
-
-> +			pins = "gpio41";
-> +			bias-pull-up;
-> +		};
-> +	};
-> +};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
