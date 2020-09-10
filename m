@@ -2,130 +2,109 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C4DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C07FC2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 476BA2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0lHLlY7"
+	by mail.kernel.org (Postfix) with ESMTP id CCAA12076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbgIJIc2 (ORCPT
+        id S1730576AbgIJIce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:32:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59482 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730085AbgIJIcH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:32:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599726707;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7fZGuKxC07VUp0Irvl6Nj323Z7bzMsW/GZh3NECR3ds=;
-        b=Q0lHLlY7fQC7P7hA9l1ji8i4pOffxMwt87lk1jZM5PTgfizuoQ6w7QPbMGP8bbbdCCWzzZ
-        Qpr6hWj+OAICCWbK4e///u8zTIaa4ei94KjX4knnDa87uUVWUNEvIQ9Jaao+DBoJ9o/1zv
-        N6kGgFnoHemoQUIKAeoE0Q4IgN3CYxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-k5TyNAz2OYi7rm-KVdWm5A-1; Thu, 10 Sep 2020 04:31:44 -0400
-X-MC-Unique: k5TyNAz2OYi7rm-KVdWm5A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3DB21005E5A;
+        Thu, 10 Sep 2020 04:32:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39996 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730323AbgIJIb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:31:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 66B26AF43;
         Thu, 10 Sep 2020 08:31:42 +0000 (UTC)
-Received: from [10.64.54.123] (vpn2-54-123.bne.redhat.com [10.64.54.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0FFFE10001B3;
-        Thu, 10 Sep 2020 08:31:40 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH 2/2] arm64/mm: Use CONT_SHIFT to define CONT_PTE_SHIFT
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, shan.gavin@gmail.com
-References: <20200908071931.47767-1-gshan@redhat.com>
- <20200908071931.47767-2-gshan@redhat.com>
- <459d0f64-fea9-a060-91a5-17a37834fb1b@arm.com>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <283283a2-f516-6890-ae25-101d2b1b46a2@redhat.com>
-Date:   Thu, 10 Sep 2020 18:31:38 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+Date:   Thu, 10 Sep 2020 10:31:20 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [RFC 1/5] mm, page_alloc: clean up pageset high and batch update
+Message-ID: <20200910083116.GA2285@linux>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <20200907163628.26495-2-vbabka@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <459d0f64-fea9-a060-91a5-17a37834fb1b@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907163628.26495-2-vbabka@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+On Mon, Sep 07, 2020 at 06:36:24PM +0200, Vlastimil Babka wrote:
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-On 9/10/20 4:17 PM, Anshuman Khandual wrote:
-> On 09/08/2020 12:49 PM, Gavin Shan wrote:
->> The macro CONT_PTE_SHIFT actually depends on CONT_SHIFT, which has
->> been defined in page-def.h, based on CONFIG_ARM64_CONT_SHIFT. Lets
->> reflect the dependency.
->>
->> Signed-off-by: Gavin Shan <gshan@redhat.com>
->> ---
->>   arch/arm64/include/asm/pgtable-hwdef.h | 4 +---
->>   1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
->> index 8a399e666837..0bd9469f4323 100644
->> --- a/arch/arm64/include/asm/pgtable-hwdef.h
->> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
->> @@ -81,14 +81,12 @@
->>   /*
->>    * Contiguous page definitions.
->>    */
->> +#define CONT_PTE_SHIFT		(CONT_SHIFT + PAGE_SHIFT)
->>   #ifdef CONFIG_ARM64_64K_PAGES
->> -#define CONT_PTE_SHIFT		(5 + PAGE_SHIFT)
->>   #define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
->>   #elif defined(CONFIG_ARM64_16K_PAGES)
->> -#define CONT_PTE_SHIFT		(7 + PAGE_SHIFT)
->>   #define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
->>   #else
->> -#define CONT_PTE_SHIFT		(4 + PAGE_SHIFT)
->>   #define CONT_PMD_SHIFT		(4 + PMD_SHIFT)
->>   #endif
-> Could not a similar CONT_PMD be created from a new CONFIG_ARM64_CONT_PMD
-> config option, which would help unify CONT_PMD_SHIFT here as well ?
-> 
+>  	for_each_possible_cpu(cpu)
+> -		setup_pageset(&per_cpu(boot_pageset, cpu), 0);
+> +		setup_pageset(&per_cpu(boot_pageset, cpu));
 
-I was thinking of it, to have CONFIG_ARM64_CONT_PMD and defined the
-following macros in arch/arm64/include/asm/page-def.h:
+This is not really anything important but I realized we have like 7 functions
+messing with pcp lists, and everytime I try to follow them my head spins.
 
-    #define CONT_PMD_SHIFT	CONFIG_ARM64_CONT_PMD_SHIFT
-    #define CONT_PMD_SIZE        (_AC(1, UL) << (CONT_PMD_SHIFT + PMD_SHIFT)
-    #define CONT_PMD_MASK        (~(CONT_PMD_SIZE - 1))
+Since setup_pageset is only being called here, could we replace it by the
+pageset_init and pageset_update?
 
-PMD_SHIFT is variable because PMD could be folded into PUD or PGD,
-depending on the kernel configuration. PMD_SHIFT is declared
-in arch/arm64/include/asm/pgtable-types.h, which isn't supposed
-to be included in "page-def.h".
+(As I said, not important and probably a matter of taste. I just think that
+having so many mini functions around is not always cool,
+e.g: setup_zone_pageset->zone_pageset_init)
 
-So the peroper way to handle this might be drop the continuous page
-macros in page-def.h and introduce the following ones into pgtable-hwdef.h.
-I will post v2 to do this if it sounds good to you.
+> -/*
+> - * pageset_set_high() sets the high water mark for hot per_cpu_pagelist
+> - * to the value high for the pageset p.
+> - */
+> -static void pageset_set_high(struct per_cpu_pageset *p,
+> -				unsigned long high)
+> -{
+> -	unsigned long batch = max(1UL, high / 4);
+> -	if ((high / 4) > (PAGE_SHIFT * 8))
+> -		batch = PAGE_SHIFT * 8;
+> -
+> -	pageset_update(&p->pcp, high, batch);
+> +	pageset_update(&p->pcp, 0, 1);
+>  }
 
-    #define CONT_PTE_SHIFT         (CONFIG_ARM64_CONT_PTE_SHIFT + PAGE_SHIFT)
-    #define CONT_PMD_SHIFT         (CONFIG_ARM64_CONT_PMD_SHIFT + PMD_SHIFT)
+Could we restore the comment we had in pageset_set_high, and maybe
+update it to match this new function? I think it would be useful.
+>  
+>  static void pageset_set_high_and_batch(struct zone *zone,
+> -				       struct per_cpu_pageset *pcp)
+> +				       struct per_cpu_pageset *p)
+>  {
+> -	if (percpu_pagelist_fraction)
+> -		pageset_set_high(pcp,
+> -			(zone_managed_pages(zone) /
+> -				percpu_pagelist_fraction));
+> -	else
+> -		pageset_set_batch(pcp, zone_batchsize(zone));
+> +	unsigned long new_high;
+> +	unsigned long new_batch;
+> +	int fraction = READ_ONCE(percpu_pagelist_fraction);
 
-Thanks,
-Gavin
+Why the READ_ONCE? In case there is a parallel update so things to get
+messed up?
 
+as I said, I'd appreciate a comment in pageset_set_high_and_batch to be
+restored and updated, otherwise:
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de> 
+
+Thanks
+
+-- 
+Oscar Salvador
+SUSE L3
