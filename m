@@ -2,268 +2,199 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AF4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A059C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A535C206A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599761989;
-	bh=zKrOTyl2lxODG7FxOUUW122Nhs+GgcIY8/10hRwnPCs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVyvYPcHY/lzjM20nq2JCkjTJQO7PrU43WW47JRhiZYUObB3Kc3DcqwO+9pWc6noO
-	 9IKRuvZ5E8x57sJRjRzA3t8qq9DdbUgeMcyLFNiX3W47H7TihGdcyK8LuclLvxTptu
-	 39kPPs5OJIEXiFGITAwU6uBnkB++nAAR1PYW3Dpo=
+	by mail.kernel.org (Postfix) with ESMTP id 0F91E2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:21:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iod7zEfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgIJSTb (ORCPT
+        id S1726800AbgIJSUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgIJR6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:58:08 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF9AF21D81;
-        Thu, 10 Sep 2020 17:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599760681;
-        bh=zKrOTyl2lxODG7FxOUUW122Nhs+GgcIY8/10hRwnPCs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIk8N+5ERq/gbeec3gJiP3okRcmb8Q8iXa8mi1ZeHZ7WguQd8/at4IsZ3Pay6fgC/
-         Ufu+HNgvCaS/CIzJlt7Ttu8DhjrI0M6KScUwieNpePrKJwjDwIEmwNCd1PvoVgWnsE
-         5sBGCkjdtCAlYblMPXk0sjSCRx4s7sO9NyWXcC6k=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 02/15] dt-bindings: gpio: convert bindings for Maxim MAX732x family to dtschema
-Date:   Thu, 10 Sep 2020 19:57:20 +0200
-Message-Id: <20200910175733.11046-3-krzk@kernel.org>
+        Thu, 10 Sep 2020 14:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgIJSPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:15:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FD7C061786
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:41 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id nw23so10121016ejb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=voYR5muBlLbTVdG6m15hKxjJNNGpvc6FUli5ewyzpv0=;
+        b=Iod7zEfabBVVCSca6KQ7ZovDtE7lL5zlGxXMtprkOpOOx2JTBG7T27itE116bwbSut
+         ll6fZk0Ttv7hi3TZ47+piCNPl5JaQgWFyCHTWXOfGJFSJID1DqJdGRGrnm518Wb86WXU
+         lXgFGM6VFuxqGwrqM3VUltDlxmQtemH8ueuH9tdASZqioc1UpaTWiQFHZ/+hRF06cCXA
+         CPbh7z597QB+hR3DUIFpr4AktWjcC1nq3QC9/q7fgYE/M/ylm+ryZwFhv+PAxWmwL1eW
+         fOYf0TqQnX8ZR7szGxiFcAN+ctIIUCcGIdfQirPZ/nPksRlhaupGR5pZYdusgqzHsYjD
+         8cHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=voYR5muBlLbTVdG6m15hKxjJNNGpvc6FUli5ewyzpv0=;
+        b=TKK7pFr6NdIZIYeMyt00DI2Ea5Bqtz4Ls2vVPm6sTG2PmQ8YYVq+7ipbVaIR+ZVPR+
+         DV88W/HCo5BHDVNct8l0K3+GbiJWUliqrqWm5vOEPSumGqkFesKUZsClSLIikA3nXQ6S
+         lggfh8+0CM4XvNdbhIzG95mmR/tP8Ir054zWWi5ll5vKZy70CFqwtMbm43qoA/OITlao
+         bDTmLjnh7V+e4lXisAnuLisUyisyIUBbXZZjIJK5vgl5d9cbzVp6rdfv0h6IXqSQ52sg
+         4tejpsPvfXhm/qz04rNa5AUpxpA5/0v8q4pjNAn0AIiR6eNVJe0d/eKXI9t6swklgUQT
+         w42A==
+X-Gm-Message-State: AOAM532rogqvZlCp/KGtN8AkhIsN5h99E7NDlvr2hOsOGnC/DPbUXJWh
+        nnF8dbSqqhgJ5NXh+JI1xiSBT1M7cvQ=
+X-Google-Smtp-Source: ABdhPJxuWuTUkTyk5EwTyK+or4QHGX4423i67UqhcdHmGRNqOcdjG7yuT1M7EnD17pMULfnEDxKcSA==
+X-Received: by 2002:a17:906:4956:: with SMTP id f22mr9596001ejt.62.1599761738514;
+        Thu, 10 Sep 2020 11:15:38 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id y6sm8636117edj.50.2020.09.10.11.15.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 11:15:37 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     gregkh@linuxfoundation.org, Moti Haimovski <mhaimovski@habana.ai>
+Subject: [PATCH 05/11] habanalabs: add debugfs support for MMU with 6 HOPs
+Date:   Thu, 10 Sep 2020 21:15:18 +0300
+Message-Id: <20200910181524.21460-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910175733.11046-1-krzk@kernel.org>
-References: <20200910175733.11046-1-krzk@kernel.org>
+In-Reply-To: <20200910181524.21460-1-oded.gabbay@gmail.com>
+References: <20200910181524.21460-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Maxim MAX732x family of GPIO expanders bindings to device
-tree schema by merging it with existing PCA95xx schema.  These are quite
-similar so merging reduces duplication.
+From: Moti Haimovski <mhaimovski@habana.ai>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This commit modify the existing debugfs code to support future devices that
+have a 6 HOPs MMU implementation instead of 5 HOPs implementation.
+
+Signed-off-by: Moti Haimovski <mhaimovski@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- .../devicetree/bindings/gpio/gpio-max732x.txt | 58 ---------------
- .../bindings/gpio/gpio-pca95xx.yaml           | 72 ++++++++++++++++++-
- 2 files changed, 70 insertions(+), 60 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+ drivers/misc/habanalabs/common/debugfs.c | 70 ++++++++++++++++++++----
+ 1 file changed, 60 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
-deleted file mode 100644
-index b3a9c0c32823..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
-+++ /dev/null
-@@ -1,58 +0,0 @@
--* MAX732x-compatible I/O expanders
--
--Required properties:
--  - compatible: Should be one of the following:
--    - "maxim,max7319": For the Maxim MAX7319
--    - "maxim,max7320": For the Maxim MAX7320
--    - "maxim,max7321": For the Maxim MAX7321
--    - "maxim,max7322": For the Maxim MAX7322
--    - "maxim,max7323": For the Maxim MAX7323
--    - "maxim,max7324": For the Maxim MAX7324
--    - "maxim,max7325": For the Maxim MAX7325
--    - "maxim,max7326": For the Maxim MAX7326
--    - "maxim,max7327": For the Maxim MAX7327
--  - reg: I2C slave address for this device.
--  - gpio-controller: Marks the device node as a GPIO controller.
--  - #gpio-cells: Should be 2.
--    - first cell is the GPIO number
--    - second cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
--      Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
--
--Optional properties:
--
--  The I/O expander can detect input state changes, and thus optionally act as
--  an interrupt controller. When the expander interrupt line is connected all the
--  following properties must be set. For more information please see the
--  interrupt controller device tree bindings documentation available at
--  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
--
--  - interrupt-controller: Identifies the node as an interrupt controller.
--  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
--    - first cell is the pin number
--    - second cell is used to specify flags
--  - interrupts: Interrupt specifier for the controllers interrupt.
--
--Please refer to gpio.txt in this directory for details of the common GPIO
--bindings used by client devices.
--
--Example 1. MAX7325 with interrupt support enabled (CONFIG_GPIO_MAX732X_IRQ=y):
--
--	expander: max7325@6d {
--		compatible = "maxim,max7325";
--		reg = <0x6d>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		interrupt-parent = <&gpio4>;
--		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
--	};
--
--Example 2. MAX7325 with interrupt support disabled (CONFIG_GPIO_MAX732X_IRQ=n):
--
--	expander: max7325@6d {
--		compatible = "maxim,max7325";
--		reg = <0x6d>;
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-index 7ff6efadf797..028cc6275d95 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -9,6 +9,10 @@ title: NXP PCA95xx I2C GPIO multiplexer
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
+diff --git a/drivers/misc/habanalabs/common/debugfs.c b/drivers/misc/habanalabs/common/debugfs.c
+index 9398a21e0398..7b1fb49c3501 100644
+--- a/drivers/misc/habanalabs/common/debugfs.c
++++ b/drivers/misc/habanalabs/common/debugfs.c
+@@ -354,6 +354,14 @@ static inline u64 get_hop4_pte_addr(struct hl_ctx *ctx,
+ 					mmu_specs->hop4_shift);
+ }
  
-+description: |+
-+  Bindings for the family of I2C GPIO multiplexers/expanders: NXP PCA95xx,
-+  Maxim MAX73xx
++static inline u64 get_hop5_pte_addr(struct hl_ctx *ctx,
++					struct hl_mmu_properties *mmu_specs,
++					u64 hop_addr, u64 vaddr)
++{
++	return get_hopN_pte_addr(ctx, hop_addr, vaddr, mmu_specs->hop5_mask,
++					mmu_specs->hop5_shift);
++}
 +
- properties:
-   compatible:
-     enum:
-@@ -17,6 +21,15 @@ properties:
-       - maxim,max7312
-       - maxim,max7313
-       - maxim,max7315
-+      - maxim,max7319
-+      - maxim,max7320
-+      - maxim,max7321
-+      - maxim,max7322
-+      - maxim,max7323
-+      - maxim,max7324
-+      - maxim,max7325
-+      - maxim,max7326
-+      - maxim,max7327
-       - nxp,pca6416
-       - nxp,pca9505
-       - nxp,pca9534
-@@ -69,11 +82,11 @@ properties:
-   reset-gpios:
-     description:
-       GPIO specification for the RESET input. This is an active low signal to
--      the PCA953x.
-+      the PCA953x.  Not valid for Maxim MAX732x devices.
+ static inline u64 get_next_hop_addr(u64 curr_pte)
+ {
+ 	if (curr_pte & PAGE_PRESENT_MASK)
+@@ -377,6 +385,7 @@ static int mmu_show(struct seq_file *s, void *data)
+ 		hop2_addr = 0, hop2_pte_addr = 0, hop2_pte = 0,
+ 		hop3_addr = 0, hop3_pte_addr = 0, hop3_pte = 0,
+ 		hop4_addr = 0, hop4_pte_addr = 0, hop4_pte = 0,
++		hop5_addr = 0, hop5_pte_addr = 0, hop5_pte = 0,
+ 		virt_addr = dev_entry->mmu_addr;
  
-   vcc-supply:
-     description:
--      Optional power supply
-+      Optional power supply.  Not valid for Maxim MAX732x devices.
+ 	if (!hdev->mmu_enable)
+@@ -428,20 +437,49 @@ static int mmu_show(struct seq_file *s, void *data)
+ 	hop3_pte_addr = get_hop3_pte_addr(ctx, mmu_prop, hop3_addr, virt_addr);
+ 	hop3_pte = hdev->asic_funcs->read_pte(hdev, hop3_pte_addr);
  
-   wakeup-source:
-     $ref: /schemas/types.yaml#/definitions/flag
-@@ -103,6 +116,27 @@ required:
+-	if (!(hop3_pte & LAST_MASK)) {
++	if (mmu_prop->num_hops == MMU_ARCH_5_HOPS) {
++		if (!(hop3_pte & LAST_MASK)) {
++			hop4_addr = get_next_hop_addr(hop3_pte);
++
++			if (hop4_addr == ULLONG_MAX)
++				goto not_mapped;
++
++			hop4_pte_addr = get_hop4_pte_addr(ctx, mmu_prop,
++							hop4_addr, virt_addr);
++			hop4_pte = hdev->asic_funcs->read_pte(hdev,
++								hop4_pte_addr);
++			if (!(hop4_pte & PAGE_PRESENT_MASK))
++				goto not_mapped;
++		} else {
++			if (!(hop3_pte & PAGE_PRESENT_MASK))
++				goto not_mapped;
++		}
++	} else {
+ 		hop4_addr = get_next_hop_addr(hop3_pte);
  
- additionalProperties: false
+ 		if (hop4_addr == ULLONG_MAX)
+ 			goto not_mapped;
  
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - maxim,max7320
-+              - maxim,max7321
-+              - maxim,max7322
-+              - maxim,max7323
-+              - maxim,max7324
-+              - maxim,max7325
-+              - maxim,max7326
-+              - maxim,max7327
-+    then:
-+      properties:
-+        reset-gpios:
-+          maxItems: 0
-+        vcc-supply:
-+          maxItems: 0
+-		hop4_pte_addr = get_hop4_pte_addr(ctx, mmu_prop, hop4_addr,
+-							virt_addr);
+-		hop4_pte = hdev->asic_funcs->read_pte(hdev, hop4_pte_addr);
+-		if (!(hop4_pte & PAGE_PRESENT_MASK))
+-			goto not_mapped;
+-	} else {
+-		if (!(hop3_pte & PAGE_PRESENT_MASK))
+-			goto not_mapped;
++		hop4_pte_addr = get_hop4_pte_addr(ctx, mmu_prop,
++						hop4_addr, virt_addr);
++		hop4_pte = hdev->asic_funcs->read_pte(hdev,
++							hop4_pte_addr);
++		if (!(hop4_pte & LAST_MASK)) {
++			hop5_addr = get_next_hop_addr(hop4_pte);
 +
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
-@@ -164,3 +198,37 @@ examples:
-             ti,micbias = <0>; /* 2.1V */
-         };
-     };
++			if (hop5_addr == ULLONG_MAX)
++				goto not_mapped;
 +
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
++			hop5_pte_addr = get_hop5_pte_addr(ctx, mmu_prop,
++							hop5_addr, virt_addr);
++			hop5_pte = hdev->asic_funcs->read_pte(hdev,
++								hop5_pte_addr);
++			if (!(hop5_pte & PAGE_PRESENT_MASK))
++				goto not_mapped;
++		} else {
++			if (!(hop4_pte & PAGE_PRESENT_MASK))
++				goto not_mapped;
++		}
+ 	}
+ 
+ 	seq_printf(s, "asid: %u, virt_addr: 0x%llx\n",
+@@ -463,10 +501,22 @@ static int mmu_show(struct seq_file *s, void *data)
+ 	seq_printf(s, "hop3_pte_addr: 0x%llx\n", hop3_pte_addr);
+ 	seq_printf(s, "hop3_pte: 0x%llx\n", hop3_pte);
+ 
+-	if (!(hop3_pte & LAST_MASK)) {
++	if (mmu_prop->num_hops == MMU_ARCH_5_HOPS) {
++		if (!(hop3_pte & LAST_MASK)) {
++			seq_printf(s, "hop4_addr: 0x%llx\n", hop4_addr);
++			seq_printf(s, "hop4_pte_addr: 0x%llx\n", hop4_pte_addr);
++			seq_printf(s, "hop4_pte: 0x%llx\n", hop4_pte);
++		}
++	} else {
+ 		seq_printf(s, "hop4_addr: 0x%llx\n", hop4_addr);
+ 		seq_printf(s, "hop4_pte_addr: 0x%llx\n", hop4_pte_addr);
+ 		seq_printf(s, "hop4_pte: 0x%llx\n", hop4_pte);
 +
-+    i2c2 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        // MAX7325 with interrupt support enabled
-+        gpio@6d {
-+            compatible = "maxim,max7325";
-+            reg = <0x6d>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+            interrupt-parent = <&gpio4>;
-+            interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
-+        };
-+    };
-+
-+  - |
-+    i2c3 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        // MAX7325 with interrupt support disabled
-+        gpio@6e {
-+            compatible = "maxim,max7325";
-+            reg = <0x6e>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+        };
-+    };
++		if (!(hop4_pte & LAST_MASK)) {
++			seq_printf(s, "hop5_addr: 0x%llx\n", hop5_addr);
++			seq_printf(s, "hop5_pte_addr: 0x%llx\n", hop5_pte_addr);
++			seq_printf(s, "hop5_pte: 0x%llx\n", hop5_pte);
++		}
+ 	}
+ 
+ 	goto out;
 -- 
 2.17.1
 
