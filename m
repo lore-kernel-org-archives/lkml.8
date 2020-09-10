@@ -2,310 +2,222 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FD2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA85C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C85720872
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDEC420C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+t4wr/U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQpO+ZJN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgIJI0k (ORCPT
+        id S1730477AbgIJI0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:26:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43080 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730157AbgIJIUf (ORCPT
+        Thu, 10 Sep 2020 04:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730401AbgIJIY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:20:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599726021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I7g9XHSyyT6+AOBpFrPSMv8YWka9NpbJkzSJ/h44F3s=;
-        b=O+t4wr/ULwUupzsY+ItI8BZXKOHcz4TYfLdktJQ8EUMDN26/bst5d646oUOhENZHj6jfO5
-        K4jxnvJg7LIYwjbWF3dsye4tsUDbSbqpPjH/cnNoeKDVtqo3BB4t94Pog1xCPUv4NVnCmm
-        ftA5exO7u4J8xFFS1LRfakVzDxbZT7k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-BZVquaokNYmhETq_MzRQ9g-1; Thu, 10 Sep 2020 04:20:19 -0400
-X-MC-Unique: BZVquaokNYmhETq_MzRQ9g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 646D5801ABC;
-        Thu, 10 Sep 2020 08:20:04 +0000 (UTC)
-Received: from [10.36.112.212] (ovpn-112-212.ams2.redhat.com [10.36.112.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BD137E46E;
-        Thu, 10 Sep 2020 08:20:02 +0000 (UTC)
-Subject: Re: [PATCH v4 09/10] vfio/fsl-mc: Add read/write support for fsl-mc
- devices
-To:     Diana Craciun OSS <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-10-diana.craciun@oss.nxp.com>
- <182a6686-a1ca-398b-2ccc-8a5638ffe7aa@redhat.com>
- <f256cc69-128a-0bd3-cbab-763b18ea46a4@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <fa27af72-5ec4-312a-aeb1-35a6db626cdd@redhat.com>
-Date:   Thu, 10 Sep 2020 10:20:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 10 Sep 2020 04:24:26 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD36C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:24:14 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id a16so2900387vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eQRoi7azmXw9DhQr/EkZeyb3raZh2+EzD84kCzPcKmQ=;
+        b=IQpO+ZJN8hEIxKKXEVX6pnZXoK7U8oJe3Rtm3II8W+/5GYDow3YNmnH96hrHx/wuqG
+         SFRb4xr8BLqx8LItlGDnyQjxqZ/ZSlgBH3BGxzq9Os8zm/g0b1gVjHP7PGzx9a5o5B6/
+         EDEc9DE5S5gVqIyGLNhaQAsT9VqTWPTwtmUgu+7ANNK1/QFxxXfUCvyzXmxLmQ44BRGh
+         tkQjJzv5WFK5eilLOXHbkW70t8ezZlDleZTaVT9xdiks1rnLSwa6yuHa2zX5qbzLvNSU
+         Euh7ET4qW9jY4Bw1ryswD3A5u/iQXJd+47RYjxdjBZnNUTUspU1ELTTSyLOg7B8ufiJb
+         ZlxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eQRoi7azmXw9DhQr/EkZeyb3raZh2+EzD84kCzPcKmQ=;
+        b=jy0pJnZjyJB9RU4w3wR65PWQqpKYxBUiTKoeJYQZG+ZxQG+askfNeLhPcZcrgkP1/s
+         eLofVbQFTETq2T2eQl5lPsGQfGU5Lnykjh2/QoqwhfQlLU2kEDjDOrTvQLzTCvlOqx1v
+         p/cm1Z2z5BL8RBhOF8JQrTuKLiqDoRUykCwYA1gy1Tj+LFEX3UWexexod3fzzOf3YQyN
+         yRvRiLQJLYIrHS4tKGHepUX17q+R+UsrdSlgxlEkV8cgrOXA2OguJigQ6398KxJN0L1f
+         rBya6aU87CGqxtzZtznqudhpCasu/DW36M9Er8Dz+2WRYU7l4HXIvjVf5Si9xPT6+Kk3
+         c85w==
+X-Gm-Message-State: AOAM533QvqkfFVgl/6E11QdRR1xq2B4No+XK2z3UYNTUOCdVhzgsprbJ
+        uavNXr/LgAJ/nXQBqBxjLegkp/qYXSMtcQ==
+X-Google-Smtp-Source: ABdhPJzr1GXhPuG45YbvdFgS2cj+z0XuaRX7l/WQLasE9SaQCLB48FQrL7jcADXIXadwNJH/IYovOA==
+X-Received: by 2002:a67:9c6:: with SMTP id 189mr2996489vsj.26.1599726252013;
+        Thu, 10 Sep 2020 01:24:12 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id p130sm830990vke.14.2020.09.10.01.24.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 01:24:10 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id c25so1369492vkm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:24:10 -0700 (PDT)
+X-Received: by 2002:a1f:964c:: with SMTP id y73mr3236074vkd.8.1599726249873;
+ Thu, 10 Sep 2020 01:24:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f256cc69-128a-0bd3-cbab-763b18ea46a4@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200910054333.447888-1-xie.he.0141@gmail.com>
+In-Reply-To: <20200910054333.447888-1-xie.he.0141@gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 10 Sep 2020 10:23:33 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSdcT70_zyJHiMPT_HK8zJbTg72y-AO2XYUXL28RX+tY9A@mail.gmail.com>
+Message-ID: <CA+FuTSdcT70_zyJHiMPT_HK8zJbTg72y-AO2XYUXL28RX+tY9A@mail.gmail.com>
+Subject: Re: [PATCH net v2] net: Clarify the difference between
+ hard_header_len and needed_headroom
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
+On Thu, Sep 10, 2020 at 7:44 AM Xie He <xie.he.0141@gmail.com> wrote:
+>
+> The difference between hard_header_len and needed_headroom has long been
+> confusing to driver developers. Let's clarify it.
+>
+> The understanding on this issue in this patch is based on the following
+> reasons:
+>
+> 1.
+>
+> In af_packet.c, the function packet_snd first reserves a headroom of
+> length (dev->hard_header_len + dev->needed_headroom).
+> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+> which calls dev->header_ops->create, to create the link layer header.
+> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+> length (dev->hard_header_len), and checks if the user has provided a
+> header of length (dev->hard_header_len) (in dev_validate_header).
 
-On 9/7/20 4:34 PM, Diana Craciun OSS wrote:
-> Hi Eric,
-> 
-> On 9/4/2020 11:18 AM, Auger Eric wrote:
->> Hi Diana,
->>
->> On 8/26/20 11:33 AM, Diana Craciun wrote:
->>> The software uses a memory-mapped I/O command interface (MC portals) to
->>> communicate with the MC hardware. This command interface is used to
->>> discover, enumerate, configure and remove DPAA2 objects. The DPAA2
->>> objects use MSIs, so the command interface needs to be emulated
->>> such that the correct MSI is configured in the hardware (the guest
->>> has the virtual MSIs).
->> What I don't get is all the regions are mmappable too.
->> And this patch does not seem to introduce special handling with respect
->> to MSIs. Please could you clarify?
-> 
-> The device can be controlled using commands issued towards a firmware.
-> Most of the commands can be passthrough, among exceptions is the command
-> that configures the interrupts. In a guest the interrupts are emulated
-> and for the hardware the numbers in the guest mean nothing. So, in a
-> virtual machine scenario, the DPMCP and DPRC regions are emulated in
-> qemu such that the command which configures the interrupts will not go
-> to hardware with the information set by the guest.
-> However there are other scenarios apart from virtual machines like DPDK
-> in which the interrupt configuration command is not used. The problem
-> might be that the userspace could issue the command because there is no
-> restriction in the VFIO, but in that case the worst thing that may
-> happen is for the interrupts for the device not to work.
-> However it is possible to restrict the command for this scenario as well
-> if I change the code and not allow the DPRC region to be mmapable. In
-> practice it proved that it might not gain much by direct assigning that
-> area. Also the interrupt configuration command was restricted from the
-> firmware to be issued only from the DPRC device region to help such a
-> scenario.
-Yes actually I meant that the region used to configure MSIs should not
-be mmappable then?
+I think if you want to clarify, we have to be exact: [up to]
+dev->hard_header_len. For protocols with variable length link layer
+headers, the length is at least dev->min_header_len.
+
+> This shows the developers of af_packet.c expect hard_header_len to
+> be consistent with header_ops.
+>
+> 2.
+>
+> In af_packet.c, the function packet_sendmsg_spkt has a FIXME comment.
+> That comment states that prepending an LL header internally in a driver
+> is considered a bug. I believe this bug can be fixed by setting
+> hard_header_len to 0, making the internal header completely invisible
+> to af_packet.c (and requesting the headroom in needed_headroom instead).
+>
+> 3.
+>
+> There is a commit for a WiFi driver:
+> commit 9454f7a895b8 ("mwifiex: set needed_headroom, not hard_header_len")
+> According to the discussion about it at:
+>   https://patchwork.kernel.org/patch/11407493/
+> The author tried to set the WiFi driver's hard_header_len to the Ethernet
+> header length, and request additional header space internally needed by
+> setting needed_headroom. This means this usage is already adopted by
+> driver developers.
+>
+> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Cc: Eric Dumazet <eric.dumazet@gmail.com>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
+
+Thanks for trying to clarify the behavior.
+
+This patch should target net-next.
+
+> ---
+>
+> Change from v1:
+> Small change to the commit message.
+>
+> ---
+>  include/linux/netdevice.h |  4 ++--
+>  net/packet/af_packet.c    | 19 +++++++++++++------
+>  2 files changed, 15 insertions(+), 8 deletions(-)
+>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 7bd4fcdd0738..3999b04e435d 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -1691,8 +1691,8 @@ enum netdev_priv_flags {
+>   *     @min_mtu:       Interface Minimum MTU value
+>   *     @max_mtu:       Interface Maximum MTU value
+>   *     @type:          Interface hardware type
+> - *     @hard_header_len: Maximum hardware header length.
+> - *     @min_header_len:  Minimum hardware header length
+> + *     @hard_header_len: Maximum length of the headers created by header_ops
+> + *     @min_header_len:  Minimum length of the headers created by header_ops
+
+This does not help imho. The existing definitions were clear and more
+exact: hardware (i.e., link layer) headers.
+
+Even more explicit, the hardware headers here must (probably) match
+those dictated by dev->type, such as ARPHRD_ETHER.
+
+>   *
+>   *     @needed_headroom: Extra headroom the hardware may need, but not in all
+>   *                       cases can this be guaranteed
+> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> index 2b33e977a905..0e324b08cb2e 100644
+> --- a/net/packet/af_packet.c
+> +++ b/net/packet/af_packet.c
+> @@ -93,12 +93,15 @@
+>
+>  /*
+>     Assumptions:
+> -   - if device has no dev->hard_header routine, it adds and removes ll header
+> -     inside itself. In this case ll header is invisible outside of device,
+> -     but higher levels still should reserve dev->hard_header_len.
+> -     Some devices are enough clever to reallocate skb, when header
+> -     will not fit to reserved space (tunnel), another ones are silly
+> -     (PPP).
+> +   - If the device has no dev->header_ops, there is no LL header visible
+> +     above the device. In this case, its hard_header_len should be 0.
+> +     The device may prepend its own header internally. In this case, its
+> +     needed_headroom should be set to the space needed for it to add its
+> +     internal header.
+> +     For example, a WiFi driver pretending to be an Ethernet driver should
+> +     set its hard_header_len to be the Ethernet header length, and set its
+> +     needed_headroom to be (the real WiFi header length - the fake Ethernet
+> +     header length).
+>     - packet socket receives packets with pulled ll header,
+>       so that SOCK_RAW should push it back.
+>
+> @@ -2937,10 +2940,14 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
+>         skb_reset_network_header(skb);
+>
+>         err = -EINVAL;
+> +       if (!dev->header_ops)
+> +               WARN_ON_ONCE(dev->hard_header_len != 0);
+
+Please make clear in the commit message that this is not just a
+comment clarification.
 
 
-Thanks
+>         if (sock->type == SOCK_DGRAM) {
+>                 offset = dev_hard_header(skb, dev, ntohs(proto), addr, NULL, len);
+>                 if (unlikely(offset < 0))
+>                         goto out_free;
+> +               WARN_ON_ONCE(offset > dev->hard_header_len);
+> +               WARN_ON_ONCE(offset < dev->min_header_len);
 
-Eric
-> 
-> 
->>>
->>> This patch is adding read/write support for fsl-mc devices. The mc
->>> commands are emulated by the userspace. The host is just passing
->>> the correct command to the hardware.
->>>
->>> Also the current patch limits userspace to write complete
->>> 64byte command once and read 64byte response by one ioctl.
->>>
->>> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
->>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
->>> ---
->>>   drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 115 +++++++++++++++++++++-
->>>   drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |   1 +
->>>   2 files changed, 114 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> index 73834f488a94..27713aa86878 100644
->>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> @@ -12,6 +12,7 @@
->>>   #include <linux/types.h>
->>>   #include <linux/vfio.h>
->>>   #include <linux/fsl/mc.h>
->>> +#include <linux/delay.h>
->>>     #include "vfio_fsl_mc_private.h"
->>>   @@ -106,6 +107,9 @@ static int vfio_fsl_mc_regions_init(struct
->>> vfio_fsl_mc_device *vdev)
->>>           vdev->regions[i].size = resource_size(res);
->>>           vdev->regions[i].flags = VFIO_REGION_INFO_FLAG_MMAP;
->>>           vdev->regions[i].type = mc_dev->regions[i].flags &
->>> IORESOURCE_BITS;
->>> +        vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_READ;
->>> +        if (!(mc_dev->regions[i].flags & IORESOURCE_READONLY))
->>> +            vdev->regions[i].flags |= VFIO_REGION_INFO_FLAG_WRITE;
->>>       }
->>>         vdev->num_regions = mc_dev->obj_desc.region_count;
->>> @@ -114,6 +118,11 @@ static int vfio_fsl_mc_regions_init(struct
->>> vfio_fsl_mc_device *vdev)
->>>     static void vfio_fsl_mc_regions_cleanup(struct vfio_fsl_mc_device
->>> *vdev)
->>>   {
->>> +    int i;
->>> +
->>> +    for (i = 0; i < vdev->num_regions; i++)
->>> +        iounmap(vdev->regions[i].ioaddr);
->>> +
->>>       vdev->num_regions = 0;
->>>       kfree(vdev->regions);
->>>   }
->>> @@ -311,13 +320,115 @@ static long vfio_fsl_mc_ioctl(void
->>> *device_data, unsigned int cmd,
->>>   static ssize_t vfio_fsl_mc_read(void *device_data, char __user *buf,
->>>                   size_t count, loff_t *ppos)
->>>   {
->>> -    return -EINVAL;
->>> +    struct vfio_fsl_mc_device *vdev = device_data;
->>> +    unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
->>> +    loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
->>> +    struct vfio_fsl_mc_region *region;
->>> +    u64 data[8];
->>> +    int i;
->>> +
->>> +    if (index >= vdev->num_regions)
->>> +        return -EINVAL;
->>> +
->>> +    region = &vdev->regions[index];
->>> +
->>> +    if (!(region->flags & VFIO_REGION_INFO_FLAG_READ))
->>> +        return -EINVAL;
->>> +
->>> +    if (!region->ioaddr) {
->>> +        region->ioaddr = ioremap(region->addr, region->size);
->>> +        if (!region->ioaddr)
->>> +            return -ENOMEM;
->>> +    }
->>> +
->>> +    if (count != 64 || off != 0)
->>> +        return -EINVAL;
->>> +
->>> +    for (i = 7; i >= 0; i--)
->>> +        data[i] = readq(region->ioaddr + i * sizeof(uint64_t));
->>> +
->>> +    if (copy_to_user(buf, data, 64))
->>> +        return -EFAULT;
->>> +
->>> +    return count;
->>> +}
->>> +
->>> +#define MC_CMD_COMPLETION_TIMEOUT_MS    5000
->>> +#define MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS    500
->>> +
->>> +static int vfio_fsl_mc_send_command(void __iomem *ioaddr, uint64_t
->>> *cmd_data)
->>> +{
->>> +    int i;
->>> +    enum mc_cmd_status status;
->>> +    unsigned long timeout_usecs = MC_CMD_COMPLETION_TIMEOUT_MS * 1000;
->>> +
->>> +    /* Write at command parameter into portal */
->>> +    for (i = 7; i >= 1; i--)
->>> +        writeq_relaxed(cmd_data[i], ioaddr + i * sizeof(uint64_t));
->>> +
->>> +    /* Write command header in the end */
->>> +    writeq(cmd_data[0], ioaddr);
->>> +
->>> +    /* Wait for response before returning to user-space
->>> +     * This can be optimized in future to even prepare response
->>> +     * before returning to user-space and avoid read ioctl.
->>> +     */
->>> +    for (;;) {
->>> +        u64 header;
->>> +        struct mc_cmd_header *resp_hdr;
->>> +
->>> +        header = cpu_to_le64(readq_relaxed(ioaddr));
->>> +
->>> +        resp_hdr = (struct mc_cmd_header *)&header;
->>> +        status = (enum mc_cmd_status)resp_hdr->status;
->>> +        if (status != MC_CMD_STATUS_READY)
->>> +            break;
->>> +
->>> +        udelay(MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS);
->>> +        timeout_usecs -= MC_CMD_COMPLETION_POLLING_MAX_SLEEP_USECS;
->>> +        if (timeout_usecs == 0)
->>> +            return -ETIMEDOUT;
->>> +    }
->>> +
->>> +    return 0;
->>>   }
->>>     static ssize_t vfio_fsl_mc_write(void *device_data, const char
->>> __user *buf,
->>>                    size_t count, loff_t *ppos)
->>>   {
->>> -    return -EINVAL;
->>> +    struct vfio_fsl_mc_device *vdev = device_data;
->>> +    unsigned int index = VFIO_FSL_MC_OFFSET_TO_INDEX(*ppos);
->>> +    loff_t off = *ppos & VFIO_FSL_MC_OFFSET_MASK;
->>> +    struct vfio_fsl_mc_region *region;
->>> +    u64 data[8];
->>> +    int ret;
->>> +
->>> +    if (index >= vdev->num_regions)
->>> +        return -EINVAL;
->>> +
->>> +    region = &vdev->regions[index];
->>> +
->>> +    if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE))
->>> +        return -EINVAL;
->>> +
->>> +    if (!region->ioaddr) {
->>> +        region->ioaddr = ioremap(region->addr, region->size);
->>> +        if (!region->ioaddr)
->>> +            return -ENOMEM;
->>> +    }
->>> +
->>> +    if (count != 64 || off != 0)
->>> +        return -EINVAL;
->>> +
->>> +    if (copy_from_user(&data, buf, 64))
->>> +        return -EFAULT;
->>> +
->>> +    ret = vfio_fsl_mc_send_command(region->ioaddr, data);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    return count;
->>> +
->>>   }
->>>     static int vfio_fsl_mc_mmap_mmio(struct vfio_fsl_mc_region region,
->>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> index bbfca8b55f8a..e6804e516c4a 100644
->>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
->>> @@ -32,6 +32,7 @@ struct vfio_fsl_mc_region {
->>>       u32            type;
->>>       u64            addr;
->>>       resource_size_t        size;
->>> +    void __iomem        *ioaddr;
->>>   };
->>>     struct vfio_fsl_mc_device {
->>>
->> Thanks
->>
->> Eric
->>
-> 
-> Thanks,
-> Diana
-> 
-
+This is not necessary. If worthwhile, this would belong inside
+dev_hard_header itself.
