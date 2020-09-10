@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E94C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D604CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1777A214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF73214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7NY3Y2D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F5AUBEYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgIJSfe (ORCPT
+        id S1727001AbgIJSi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
+        Thu, 10 Sep 2020 14:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgIJSdi (ORCPT
+        with ESMTP id S1725951AbgIJSeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:33:38 -0400
+        Thu, 10 Sep 2020 14:34:02 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A3DC061757;
-        Thu, 10 Sep 2020 11:33:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B387C061796;
+        Thu, 10 Sep 2020 11:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=oE5diPOqflUz5ouPiNiWbjF6mvAtjkW77tqVGwhB8+M=; b=G7NY3Y2Dwt/Soz3DFgXgOe/2lD
-        /6JIyqQm+QuQpNgiZbHV0nmd7Apukp/LVm5KCRPO/E9Bp9i8GKp0AnL8GPb2jhga2FN/uFTihKzwn
-        DJQkvgEaG3yYx4IXydeJIMcmpoxKVgl5alGE6FWJs/eIEhPpJl6sKOiIzetku3o+j4MiISiUMewvz
-        CCHhWLIhINMZphtPGkNrwQTMtSHGY7OTdsoOYERsOwZCJFqf7j+/T57gubnXbT7dHOIA3t42rATww
-        z7Tnalh6R6RxhB5rNzIxfVi279Is1hANBZZyYfD/Air6DVpqU1RS1DUx63xhiavuC/7c30ake9q6H
-        pnrG1Bng==;
+        bh=ewcIYV3TQS8WP/lMrXPvrY92L5jpE36QYNCFA1ncbsc=; b=F5AUBEYvYzQN95hW85bBYGSNGm
+        dqr/FIDMdYM5Al3Z2/G44MeSLdg3FvtOGcL0es06Bnbznufe5c2x8Lz7RURVTk5n1zGZVcxrtzErO
+        PZ53gJcR2CXaf7QigmY9EKywMn+n16Qge5W7dl8WazyVronln+U5qPN3PfzSg5tX+bQ9YjA+Pfu9M
+        c3fW+KnwVq/E0Pe1/bLa7ghA4WL8vnyOSLsz70Fb8hIGYcN9V2XzkttUG0ylT6s6TAtKtqFAl7Zby
+        QT5oT1X4Vq1OFEaAcU7o+Vf1OKFDtdZ4g2MaHkbITxeystP2bEPVRt06WbX6e2y0WsrLILor5Rj0F
+        0CyJHhKw==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGRNo-0005Fb-5g; Thu, 10 Sep 2020 18:33:20 +0000
+        id 1kGRNp-0005GR-FC; Thu, 10 Sep 2020 18:33:21 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -52,9 +52,9 @@ Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Huang Ying <ying.huang@intel.com>,
         intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/8] mm: Factor find_get_incore_page out of mincore_page
-Date:   Thu, 10 Sep 2020 19:33:11 +0100
-Message-Id: <20200910183318.20139-2-willy@infradead.org>
+Subject: [PATCH v2 5/8] i915: Use find_lock_page instead of find_lock_entry
+Date:   Thu, 10 Sep 2020 19:33:15 +0100
+Message-Id: <20200910183318.20139-6-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200910183318.20139-1-willy@infradead.org>
 References: <20200910183318.20139-1-willy@infradead.org>
@@ -65,137 +65,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide this functionality from the swap cache.  It's useful for
-more than just mincore().
+i915 does not want to see value entries.  Switch it to use
+find_lock_page() instead, and remove the export of find_lock_entry().
+Move find_lock_entry() and find_get_entry() to mm/internal.h to discourage
+any future use.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/swap.h |  7 +++++++
- mm/mincore.c         | 28 ++--------------------------
- mm/swap_state.c      | 32 ++++++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 4 ++--
+ include/linux/pagemap.h                   | 2 --
+ mm/filemap.c                              | 1 -
+ mm/internal.h                             | 3 +++
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 661046994db4..df87de38dca5 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -427,6 +427,7 @@ extern void free_pages_and_swap_cache(struct page **, int);
- extern struct page *lookup_swap_cache(swp_entry_t entry,
- 				      struct vm_area_struct *vma,
- 				      unsigned long addr);
-+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index);
- extern struct page *read_swap_cache_async(swp_entry_t, gfp_t,
- 			struct vm_area_struct *vma, unsigned long addr,
- 			bool do_poll);
-@@ -569,6 +570,12 @@ static inline struct page *lookup_swap_cache(swp_entry_t swp,
- 	return NULL;
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+index 38113d3c0138..75e8b71c18b9 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+@@ -258,8 +258,8 @@ shmem_writeback(struct drm_i915_gem_object *obj)
+ 	for (i = 0; i < obj->base.size >> PAGE_SHIFT; i++) {
+ 		struct page *page;
+ 
+-		page = find_lock_entry(mapping, i);
+-		if (!page || xa_is_value(page))
++		page = find_lock_page(mapping, i);
++		if (!page)
+ 			continue;
+ 
+ 		if (!page_mapped(page) && clear_page_dirty_for_io(page)) {
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 12ab56c3a86f..905a64030647 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -384,8 +384,6 @@ static inline struct page *find_subpage(struct page *head, pgoff_t index)
+ 	return head + (index & (thp_nr_pages(head) - 1));
  }
  
-+static inline
-+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index)
-+{
-+	return find_get_page(mapping, index);
-+}
-+
- static inline int add_to_swap(struct page *page)
- {
- 	return 0;
-diff --git a/mm/mincore.c b/mm/mincore.c
-index 453ff112470f..02db1a834021 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -48,7 +48,7 @@ static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
-  * and is up to date; i.e. that no page-in operation would be required
-  * at this time if an application were to map and access this page.
-  */
--static unsigned char mincore_page(struct address_space *mapping, pgoff_t pgoff)
-+static unsigned char mincore_page(struct address_space *mapping, pgoff_t index)
- {
- 	unsigned char present = 0;
- 	struct page *page;
-@@ -59,31 +59,7 @@ static unsigned char mincore_page(struct address_space *mapping, pgoff_t pgoff)
- 	 * any other file mapping (ie. marked !present and faulted in with
- 	 * tmpfs's .fault). So swapped out tmpfs mappings are tested here.
- 	 */
--#ifdef CONFIG_SWAP
--	if (shmem_mapping(mapping)) {
--		page = find_get_entry(mapping, pgoff);
--		/*
--		 * shmem/tmpfs may return swap: account for swapcache
--		 * page too.
--		 */
--		if (xa_is_value(page)) {
--			swp_entry_t swp = radix_to_swp_entry(page);
--			struct swap_info_struct *si;
--
--			/* Prevent swap device to being swapoff under us */
--			si = get_swap_device(swp);
--			if (si) {
--				page = find_get_page(swap_address_space(swp),
--						     swp_offset(swp));
--				put_swap_device(si);
--			} else
--				page = NULL;
--		}
--	} else
--		page = find_get_page(mapping, pgoff);
--#else
--	page = find_get_page(mapping, pgoff);
--#endif
-+	page = find_get_incore_page(mapping, index);
- 	if (page) {
- 		present = PageUptodate(page);
- 		put_page(page);
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index c16eebb81d8b..c79e2242dd04 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -21,6 +21,7 @@
- #include <linux/vmalloc.h>
- #include <linux/swap_slots.h>
- #include <linux/huge_mm.h>
-+#include <linux/shmem_fs.h>
- #include "internal.h"
- 
- /*
-@@ -414,6 +415,37 @@ struct page *lookup_swap_cache(swp_entry_t entry, struct vm_area_struct *vma,
+-struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
+-struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset);
+ unsigned find_get_entries(struct address_space *mapping, pgoff_t start,
+ 			  unsigned int nr_entries, struct page **entries,
+ 			  pgoff_t *indices);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 78d07a712112..d64f6f76bc0b 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1648,7 +1648,6 @@ struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset)
+ 	}
  	return page;
  }
+-EXPORT_SYMBOL(find_lock_entry);
  
-+/**
-+ * find_get_incore_page - Find and get a page from the page or swap caches.
-+ * @mapping: The address_space to search.
-+ * @index: The page cache index.
-+ *
-+ * This differs from find_get_page() in that it will also look for the
-+ * page in the swap cache.
-+ *
-+ * Return: The found page or %NULL.
-+ */
-+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index)
-+{
-+	swp_entry_t swp;
-+	struct swap_info_struct *si;
-+	struct page *page = find_get_entry(mapping, index);
+ /**
+  * pagecache_get_page - Find and get a reference to a page.
+diff --git a/mm/internal.h b/mm/internal.h
+index ab4beb7c5cd2..6345b08ce86c 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -60,6 +60,9 @@ static inline void force_page_cache_readahead(struct address_space *mapping,
+ 	force_page_cache_ra(&ractl, &file->f_ra, nr_to_read);
+ }
+ 
++struct page *find_get_entry(struct address_space *mapping, pgoff_t index);
++struct page *find_lock_entry(struct address_space *mapping, pgoff_t index);
 +
-+	if (!xa_is_value(page))
-+		return page;
-+	if (!shmem_mapping(mapping))
-+		return NULL;
-+
-+	swp = radix_to_swp_entry(page);
-+	/* Prevent swapoff from happening to us */
-+	si = get_swap_device(swp);
-+	if (!si)
-+		return NULL;
-+	page = find_get_page(swap_address_space(swp), swp_offset(swp));
-+	put_swap_device(si);
-+	return page;
-+}
-+
- struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
- 			struct vm_area_struct *vma, unsigned long addr,
- 			bool *new_page_allocated)
+ /**
+  * page_evictable - test whether a page is evictable
+  * @page: the page to test
 -- 
 2.28.0
 
