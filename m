@@ -2,84 +2,114 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD0FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCA5206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599742928;
-	bh=c+f/k+6GyQvNsPgFbCCeEDvT5NuCYq5YkYLiuMEqnl0=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=P0lsDFva/OWZvlPyFk3f6tlb41U0DjWmsFvXMHx0Me2gCj94Oj61M7byQHih5vFN7
-	 vj9X1pBwZjR5ERwnEP/Uo30kZjpWRDzi0xQT3oSt4dV7C8zBhqLCCbWuTyzA+B2HgU
-	 YyuC21npAoLLWSHXgdwbRI2S95txUqXZwgM+OeVw=
+	by mail.kernel.org (Postfix) with ESMTP id 4ECDA206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgIJNBm (ORCPT
+        id S1725876AbgIJNDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730734AbgIJMwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:52:49 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEEB220BED;
-        Thu, 10 Sep 2020 12:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599742338;
-        bh=c+f/k+6GyQvNsPgFbCCeEDvT5NuCYq5YkYLiuMEqnl0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=u2vf6VJMoiVc4IaTLGmNSUN1npSYI2KRTyLzavM8NrJyrIh+B9XmLeDU/us9/J0br
-         i5vmaQwhee+l8UMteeLnhYSKfm2OfzSaHXAJx4ZqS3UDMPpsKX9aJDhqDvgpaH4zEg
-         MpXOkM7X0k4bAQynkV+vZxPri2mYykDsSXw/7hr4=
-Date:   Thu, 10 Sep 2020 13:51:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 10 Sep 2020 09:03:00 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:15790 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730717AbgIJMzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:55:02 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 10 Sep 2020 05:55:01 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 10 Sep 2020 05:55:00 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Sep 2020 18:24:31 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id 4E54ADB1; Thu, 10 Sep 2020 18:24:30 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-In-Reply-To: <20200827150640.267f6edc@xhacker.debian>
-References: <20200827150640.267f6edc@xhacker.debian>
-Subject: Re: [PATCH] dt-bindings: regulator: Convert mp886x to json-schema
-Message-Id: <159974229313.39285.6202853983766593999.b4-ty@kernel.org>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        dianders@chromium.org, satya priya <skakit@codeaurora.org>
+Subject: [PATCH V5 1/4] arm64: dts: qcom: sc7180: Improve the pin config settings for CTS and TX
+Date:   Thu, 10 Sep 2020 18:23:55 +0530
+Message-Id: <1599742438-16811-2-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
+References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 15:06:40 +0800, Jisheng Zhang wrote:
-> Convert the mp886x binding to DT schema format using json-schema.
+Remove output-high from CTS and TX as this is not really required. During
+bringup to fix transfer failures this was added to match with console uart
+settings. Probably some boot loader config was missing then. As it is
+working fine now, remove it.
 
-Applied to
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in V4:
+ - This is newly added in V4 to separate the improvements in pin settings
+   and wakeup related changes.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Changes in V5:
+ - As per Doug's comment configured pull-down for CTS pin as earlier.
 
-Thanks!
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-[1/1] dt-bindings: regulator: Convert mp886x to json-schema
-      commit: fd24adf887e490fd10a9a6bb9d76854e87c235f8
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index d8b5507..04888df 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -474,32 +474,30 @@
+ &qup_uart3_default {
+ 	pinconf-cts {
+ 		/*
+-		 * Configure a pull-down on 38 (CTS) to match the pull of
++		 * Configure a pull-down on CTS to match the pull of
+ 		 * the Bluetooth module.
+ 		 */
+ 		pins = "gpio38";
+ 		bias-pull-down;
+-		output-high;
+ 	};
+ 
+ 	pinconf-rts {
+-		/* We'll drive 39 (RTS), so no pull */
++		/* We'll drive RTS, so no pull */
+ 		pins = "gpio39";
+ 		drive-strength = <2>;
+ 		bias-disable;
+ 	};
+ 
+ 	pinconf-tx {
+-		/* We'll drive 40 (TX), so no pull */
++		/* We'll drive TX, so no pull */
+ 		pins = "gpio40";
+ 		drive-strength = <2>;
+ 		bias-disable;
+-		output-high;
+ 	};
+ 
+ 	pinconf-rx {
+ 		/*
+-		 * Configure a pull-up on 41 (RX). This is needed to avoid
++		 * Configure a pull-up on RX. This is needed to avoid
+ 		 * garbage data when the TX pin of the Bluetooth module is
+ 		 * in tri-state (module powered off or not driving the
+ 		 * signal yet).
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
