@@ -2,185 +2,267 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F31C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD79C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAC420768
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFF22053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="aVrMkYlo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4/2+OBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIJDWB (ORCPT
+        id S1729913AbgIJDXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 23:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        Wed, 9 Sep 2020 23:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIJDV6 (ORCPT
+        with ESMTP id S1725772AbgIJDWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 23:21:58 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64234C061573;
-        Wed,  9 Sep 2020 20:21:58 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o8so6521355ejb.10;
-        Wed, 09 Sep 2020 20:21:58 -0700 (PDT)
+        Wed, 9 Sep 2020 23:22:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42025C061367
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:14 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u3so2186393pjr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A79j38TeGo0FTeKhZJ6Z5HVKC+rNAm+2XLbIiEuCKUY=;
-        b=aVrMkYlo/d+zmyouXTJxSqtB33bFfF1/mNixCVCCODQPmxJhhUiurbpS/1nRAOrm6o
-         M8pON54OhrBwxLNcItuOcyfQnJK26edZu8Do4NxxPQoqMoGIeDFGaWwG3ADZCs9fUq1m
-         8zuZ4YYIv1t1KKfwfaGw+isSSyNpgR6Cm4ZpU=
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4Qzj/qUp4jSPAOaZct4TWhQ6+mzW9PpkQg0E+GRsYw4=;
+        b=c4/2+OBS02BdGqkvXZ1Mthram8zkC17gKs9Gjc3Eeo2+itwDBe3Sk/q/9+EBEhJQzf
+         ysVEJ3JCoCSJ6YWyzg2EKpx5oUsA+s0C7lwmNoGIRIY4/m3cad7vH4RvxjSj9qYsddhQ
+         SrR4o/Lsq21Ls1i8z56cGnUa4Eawe1b2GrG6s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A79j38TeGo0FTeKhZJ6Z5HVKC+rNAm+2XLbIiEuCKUY=;
-        b=AbqWG5ulRkvDqCSuW46bK6/hgR3CybMvdP7CVxtwW9YM0GgqYzmngRh8PVIL8kkgQ7
-         E1P9efkn+Hfe/vPOT99LVmh/AVRGkk7N9IILhyKDAADtgFFzIwGSLyaRATOyTUvsfZ7V
-         v/V12qFbGXFvbH5bSz9te1k63McQicC2Bze/prFp2G+jjSkWyMQxtI1zc403XfaFWAjQ
-         NMJun/zD5c5vy939ugTS7hfL1eb6ZpZxSmcFWoC4IShtpPT/ugiKb/5ycmt6NujwK27d
-         OVr+Zisf8GzkOGu/73QHWZ0VdguZSeEe53PrSlMEKY+ee1fMeHC56o1bgD62wx0ocDKC
-         0Gaw==
-X-Gm-Message-State: AOAM533aaJYpHwX8dzzwt3Y/9zm/eFDoHt9rqWJXtjksSoqhhp0y9+P6
-        dcbfiohbPJSlG58M/S0exVnwMwwxojDR2cv28gc=
-X-Google-Smtp-Source: ABdhPJyKppctq6u7ic9iz13bTUlMW2PIg2/iotUNWAl8CNxSQjvLXnJMdPO7f/onda7kLt48QCQ9ONhY4jV5TO6/oKg=
-X-Received: by 2002:a17:906:4c58:: with SMTP id d24mr7092918ejw.108.1599708116944;
- Wed, 09 Sep 2020 20:21:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4Qzj/qUp4jSPAOaZct4TWhQ6+mzW9PpkQg0E+GRsYw4=;
+        b=ZMXXQX7jIpoTNz3+orkilUU5dHchBfY257P/kWlyXFdflghgcqVvNa0vGbJ6EopDdi
+         ZsStTVhkJxdHmwnZGvD2EPgpnXVlwAkO5IaY/Oxoi3suK8zdE7mZMvrQ1cmQ2KXdHhPf
+         RoJct4bI0mPdGorWFdVaHApo40kgevfZnjKQidmepBOuoQxvkr6hA3QHhRWQnQXmpFro
+         gmLIo++p/sqxVemfyhik1hhmV5YWCYD0P4cVLPUVE2TMbl9ADyDrqmjNT+UHefXenUON
+         OmIJcajn/EdGA+9XlmAv77yGekYlOUPfOCkkGBsJZiHXz/Hvk/YsL0YjBNvDdnRyTRfM
+         nQyQ==
+X-Gm-Message-State: AOAM531hysGYezs+T3jaiRlpd/dPlYRInMYNZDYkD3WtNOXRPkSC+Ktu
+        mSzvLnKe4Q3c6N4KzS196XG5ZQ==
+X-Google-Smtp-Source: ABdhPJxM2uzTSDeU+MKC66h0NtoH4hhvtd4jq4bBrRhLdqyi98u8XZ0PJQlyEPorE7KekFALx6IDgQ==
+X-Received: by 2002:a17:90b:198:: with SMTP id t24mr3010495pjs.107.1599698953778;
+        Wed, 09 Sep 2020 17:49:13 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 17:49:13 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: [PATCH v3 08/10] phy: qcom-qmp: Add support for sc7180 DP phy
+Date:   Wed,  9 Sep 2020 17:49:00 -0700
+Message-Id: <20200910004902.2252694-9-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
+References: <20200910004902.2252694-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20200826071916.3081953-1-joel@jms.id.au>
-In-Reply-To: <20200826071916.3081953-1-joel@jms.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 10 Sep 2020 03:21:43 +0000
-Message-ID: <CACPK8XcNc=O99Fuup=OnFacJJnRHd0bt0BiuSrYUCTSVs_shuw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: config: aspeed: Fix selection of media drivers
-To:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mips@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 07:19, Joel Stanley <joel@jms.id.au> wrote:
->
-> In the 5.7 merge window the media kconfig was restructued. For most
-> platforms these changes set CONFIG_MEDIA_SUPPORT_FILTER=y which keeps
-> unwanted drivers disabled.
->
-> The exception is if a config sets EMBEDDED or EXPERT (see b0cd4fb27665).
-> In that case the filter is set to =n, causing a bunch of DVB tuner drivers
-> (MEDIA_TUNER_*) to be accidentally enabled. This was noticed as it blew
-> out the build time for the Aspeed defconfigs.
->
-> Enabling the filter means the Aspeed config also needs to set
-> CONFIG_MEDIA_PLATFORM_SUPPORT=y in order to have the CONFIG_VIDEO_ASPEED
-> driver enabled.
->
-> Fixes: 06b93644f4d1 ("media: Kconfig: add an option to filter in/out platform drivers")
-> Fixes: b0cd4fb27665 ("media: Kconfig: on !EMBEDDED && !EXPERT, enable driver filtering")
-> Cc: stable@vger.kernel.org
-> CC: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->
-> Another solution would be to revert b0cd4fb27665 ("media: Kconfig: on
-> !EMBEDDED && !EXPERT, enable driver filtering"). I assume this was done
-> to be helpful, but in practice it has enabled the TUNER drivers (and
-> others) for the following configs that didn't have them before:
+Add the necessary compatible strings and phy data for the sc7180 USB3+DP
+combo phy.
 
-Mauro, did you have any thoughts here?
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: Chandan Uddaraju <chandanu@codeaurora.org>
+Cc: Vara Reddy <varar@codeaurora.org>
+Cc: Tanmay Shah <tanmay@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jonathan Marek <jonathan@marek.ca>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Link: https://lore.kernel.org/r/20200609034623.10844-1-tanmay@codeaurora.org
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 124 ++++++++++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
 
-Otherwise I'll merge the fix for the aspeed configs for 5.10.
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index dd9574ce2e52..7ad9e1489455 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -947,6 +947,88 @@ static const struct qmp_phy_init_tbl qmp_v3_usb3_tx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
+ };
+ 
++static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x1f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
++};
++
++static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_rbr[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x0c),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x6f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x08),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
++};
++
++static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x04),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0e),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
++};
++
++static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr2[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x8c),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x1f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x1c),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
++};
++
++static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr3[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x2f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x2a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x08),
++};
++
++static const struct qmp_phy_init_tbl qmp_v3_dp_tx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRANSCEIVER_BIAS_EN, 0x1a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_VMODE_CTRL1, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PRE_STALL_LDO_BOOST_EN, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_INTERFACE_SELECT, 0x3d),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_CLKBUF_ENABLE, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RESET_TSYNC_EN, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRAN_DRVR_EMP_EN, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PARRATE_REC_DETECT_IDLE_EN, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_INTERFACE_MODE, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_BAND, 0x4),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_POL_INV, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_DRV_LVL, 0x38),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_EMP_POST1_LVL, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_RX, 0x07),
++};
++
+ static const struct qmp_phy_init_tbl qmp_v3_usb3_rx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
+@@ -2223,6 +2305,41 @@ static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
+ 	.is_dual_lane_phy	= true,
+ };
+ 
++static const struct qmp_phy_cfg sc7180_dpphy_cfg = {
++	.type			= PHY_TYPE_DP,
++	.nlanes			= 1,
++
++	.serdes_tbl		= qmp_v3_dp_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_dp_serdes_tbl),
++	.tx_tbl			= qmp_v3_dp_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_dp_tx_tbl),
++
++	.serdes_tbl_rbr		= qmp_v3_dp_serdes_tbl_rbr,
++	.serdes_tbl_rbr_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_rbr),
++	.serdes_tbl_hbr		= qmp_v3_dp_serdes_tbl_hbr,
++	.serdes_tbl_hbr_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr),
++	.serdes_tbl_hbr2	= qmp_v3_dp_serdes_tbl_hbr2,
++	.serdes_tbl_hbr2_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr2),
++	.serdes_tbl_hbr3	= qmp_v3_dp_serdes_tbl_hbr3,
++	.serdes_tbl_hbr3_num	= ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr3),
++
++	.clk_list		= qmp_v3_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
++	.reset_list		= sc7180_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= qmp_v3_usb3phy_regs_layout,
++
++	.has_phy_dp_com_ctrl	= true,
++	.is_dual_lane_phy	= true,
++};
++
++static const struct qmp_phy_combo_cfg sc7180_usb3dpphy_cfg = {
++	.usb_cfg		= &sc7180_usb3phy_cfg,
++	.dp_cfg			= &sc7180_dpphy_cfg,
++};
++
+ static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+ 	.type			= PHY_TYPE_USB3,
+ 	.nlanes			= 1,
+@@ -3747,6 +3864,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible = "qcom,sc7180-qmp-usb3-phy",
+ 		.data = &sc7180_usb3phy_cfg,
++	}, {
++		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
++		/* It's a combo phy */
+ 	}, {
+ 		.compatible = "qcom,sdm845-qhp-pcie-phy",
+ 		.data = &sdm845_qhp_pciephy_cfg,
+@@ -3789,6 +3909,10 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ MODULE_DEVICE_TABLE(of, qcom_qmp_phy_of_match_table);
+ 
+ static const struct of_device_id qcom_qmp_combo_phy_of_match_table[] = {
++	{
++		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
++		.data = &sc7180_usb3dpphy_cfg,
++	},
+ 	{ }
+ };
+ 
+-- 
+Sent by a computer, using git, on the internet
 
-Cheers,
-
-Joel
-
->
-> $ git grep -lE "(CONFIG_EXPERT|CONFIG_EMBEDDED)"  arch/*/configs/ | xargs grep -l MEDIA_SUPPORT
-> arch/arm/configs/aspeed_g4_defconfig
-> arch/arm/configs/aspeed_g5_defconfig
-> arch/arm/configs/at91_dt_defconfig
-> arch/arm/configs/bcm2835_defconfig
-> arch/arm/configs/davinci_all_defconfig
-> arch/arm/configs/ezx_defconfig
-> arch/arm/configs/imote2_defconfig
-> arch/arm/configs/imx_v4_v5_defconfig
-> arch/arm/configs/imx_v6_v7_defconfig
-> arch/arm/configs/milbeaut_m10v_defconfig
-> arch/arm/configs/multi_v7_defconfig
-> arch/arm/configs/omap2plus_defconfig
-> arch/arm/configs/pxa_defconfig
-> arch/arm/configs/qcom_defconfig
-> arch/arm/configs/sama5_defconfig
-> arch/arm/configs/tegra_defconfig
-> arch/mips/configs/ci20_defconfig
-> arch/mips/configs/lemote2f_defconfig
-> arch/mips/configs/loongson3_defconfig
-> arch/mips/configs/pistachio_defconfig
->
-> I've cc'd the maintainers of these defconfigs so they are aware.
->
-> ---
->  arch/arm/configs/aspeed_g4_defconfig | 3 ++-
->  arch/arm/configs/aspeed_g5_defconfig | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/configs/aspeed_g4_defconfig b/arch/arm/configs/aspeed_g4_defconfig
-> index 303f75a3baec..58d293b63581 100644
-> --- a/arch/arm/configs/aspeed_g4_defconfig
-> +++ b/arch/arm/configs/aspeed_g4_defconfig
-> @@ -160,7 +160,8 @@ CONFIG_SENSORS_TMP421=y
->  CONFIG_SENSORS_W83773G=y
->  CONFIG_WATCHDOG_SYSFS=y
->  CONFIG_MEDIA_SUPPORT=y
-> -CONFIG_MEDIA_CAMERA_SUPPORT=y
-> +CONFIG_MEDIA_SUPPORT_FILTER=y
-> +CONFIG_MEDIA_PLATFORM_SUPPORT=y
->  CONFIG_V4L_PLATFORM_DRIVERS=y
->  CONFIG_VIDEO_ASPEED=y
->  CONFIG_DRM=y
-> diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-> index b0d056d49abe..cc2449ed6e6d 100644
-> --- a/arch/arm/configs/aspeed_g5_defconfig
-> +++ b/arch/arm/configs/aspeed_g5_defconfig
-> @@ -175,7 +175,8 @@ CONFIG_SENSORS_TMP421=y
->  CONFIG_SENSORS_W83773G=y
->  CONFIG_WATCHDOG_SYSFS=y
->  CONFIG_MEDIA_SUPPORT=y
-> -CONFIG_MEDIA_CAMERA_SUPPORT=y
-> +CONFIG_MEDIA_SUPPORT_FILTER=y
-> +CONFIG_MEDIA_PLATFORM_SUPPORT=y
->  CONFIG_V4L_PLATFORM_DRIVERS=y
->  CONFIG_VIDEO_ASPEED=y
->  CONFIG_DRM=y
-> --
-> 2.28.0
->
