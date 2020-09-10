@@ -2,138 +2,73 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4894FC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0283DC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCF6020809
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:51:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FexHUcTC"
+	by mail.kernel.org (Postfix) with ESMTP id 9EBDA20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599724343;
+	bh=ijucEkauTD7Oq3ltMK6SO/FeIANicHwPTK7VsIGPYl4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Pt5VE10ItJZFuWTetYh5oaxGTARIwwUhUNAwgXOjR//yn/gKVqar5YBz/t8DiQ4pK
+	 AhwArAXc0Jr8tyI0xTFZBIIIRECrdfCFvfJZT2wZU6PvN5yYHhJm2YvAjrZDFbKpLI
+	 Cl5r8AvUAtEfy3HMuuR89vCXf1d9Qsm0YOOGJ8o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgIJHv4 (ORCPT
+        id S1729779AbgIJHwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:51:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15646 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbgIJHvz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:51:55 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A7WaWB136825;
-        Thu, 10 Sep 2020 03:51:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=RbcJ0PzvSOiW+pD31812fTs0gs8zqf2Skz8SZ6YGPak=;
- b=FexHUcTCvpN03VFnrNzEF5g7db+zViIJgWFfeOlFGn/axH2V/oTgk8M4q7KIXXA6btL5
- tDtjTeoyM/rx6zflvCbqyx/mrxZwu8qfiTZ0i0KtDCMsgUU2Gg6i5sgtiOW145B3hnqr
- MTY+uVFkhg3a3zBR4ybe6Iz+TGvfmmuqcd3Y28hhME4V0aFkH+GgA0/2jHWWYyYyLJtx
- bWpfUIlj7ZcnwG5aOp2XzwzvqMWlsnqfiB/XaEn4w/whF/tr1pTpGLoHyTCuB9G227j5
- 79V9FEGLtbnsZJl1kdsQj2IN2ObxJpiPR71dmLI1+XTbwktqwz95tVutbnQEE92aiv2Q Vg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ffrb0n10-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 03:51:45 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08A7Wg6R137507;
-        Thu, 10 Sep 2020 03:51:44 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ffrb0n02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 03:51:44 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08A7m5Oc026276;
-        Thu, 10 Sep 2020 07:51:42 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a85sk5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 07:51:42 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08A7pdSM34472316
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 07:51:40 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE490A4053;
-        Thu, 10 Sep 2020 07:51:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47AC7A404D;
-        Thu, 10 Sep 2020 07:51:39 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.147.189])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 07:51:39 +0000 (GMT)
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
-Date:   Thu, 10 Sep 2020 09:51:39 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Thu, 10 Sep 2020 03:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbgIJHwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 03:52:22 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4208F20809;
+        Thu, 10 Sep 2020 07:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599724341;
+        bh=ijucEkauTD7Oq3ltMK6SO/FeIANicHwPTK7VsIGPYl4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=LNom3T6QTTA51pYBdbKQ74uZJ5by1QMhxIkfUmDr5vgd+7DNcUvRzfHinj7TCXRN3
+         DRqktnRsVwlfk8KfE23W1oaQaO+P6lala2NVBXFimEPYfIDcvNC0IVBpmI0Bchc40+
+         /ClkcpoeHh/P8J5a0Y2xqQz5+pp88mJu70SE3be0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200910072331.GB28354@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 clxscore=1015 adultscore=0
- suspectscore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100065
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200828154735.435374-1-jbrunet@baylibre.com>
+References: <20200828154735.435374-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] clk: meson: make shipped controller configurable
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org
+Date:   Thu, 10 Sep 2020 00:52:19 -0700
+Message-ID: <159972433977.2295844.12910258806178190962@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 10/09/2020 à 09:23, Michal Hocko a écrit :
-> On Wed 09-09-20 18:07:15, Laurent Dufour wrote:
->> Le 09/09/2020 à 12:59, Michal Hocko a écrit :
->>> On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
-> [...]
->>>> For the point a, using the enum allows to know in
->>>> register_mem_sect_under_node() if the link operation is due to a hotplug
->>>> operation or done at boot time.
->>>
->>> Yes, but let me repeat. We have a mess here and different paths check
->>> for the very same condition by different ways. We need to unify those.
->>
->> What are you suggesting to unify these checks (using a MP_* enum as
->> suggested by David, something else)?
-> 
-> We do have system_state check spread at different places. I would use
-> this one and wrap it behind a helper. Or have I missed any reason why
-> that wouldn't work for this case?
+Quoting Jerome Brunet (2020-08-28 08:47:35)
+> Add the necessary so bits so unnecessary amlogic clock controllers can be
 
-That would not work in that case because memory can be hot-added at the 
-SYSTEM_SCHEDULING system state and the regular memory is also registered at that 
-system state too. So system state is not enough to discriminate between the both.
+s/so//
 
-I think I'll go with the option suggested by David, replacing the enum 
-memmap_context a new enum memplug_context and pass that context to 
-register_mem_sect_under_node() so that function will known when node id should 
-be checked or not.
+> compiled out. This allows to save a few kB when necessary.
+>=20
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
 
-Cheers,
-Laurent.
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
