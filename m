@@ -2,145 +2,224 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D1BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC7BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01EDF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72582221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JWLt/K0Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AVDgGo0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbgIJNtt (ORCPT
+        id S1728153AbgIJVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48168 "EHLO
+        Thu, 10 Sep 2020 17:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730952AbgIJNkV (ORCPT
+        with ESMTP id S1730889AbgIJNt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:40:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAD9C0617A1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:36 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o68so4779152pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/0UJlMMYS97ZEd1pzZy1E70sLlZzGqr7O+AUirQ/jf8=;
-        b=JWLt/K0QwNvzoj6nxqKPcWAMMXsRyj3oN5+4omDOjxwKh6VeMqT0tOggHi3F5AYIbt
-         hyxo5lP35yLC+r5RRZWsGyW9UD6G6hm5mW+ADILi1Dx59pSfOnkl9/xG79xybquIlCoH
-         DyvTbrQzw43bvNGC6PdmN3nZHYQSm/Xd0bIqyFoCceAhDa5mfOugjvUD8i8vrGipBWg+
-         lrW5SQU3A/CUOJncDK5n26xHziFS7caOipKAve2w4lQ5me4Pe3f0dwnvCJTbfJyXp414
-         AhmAVU5GTrcKuNrA3ZaUk+yiBVryOa4cmozrqoePAqtkn7dyg53KoTrqedbYX86jouPV
-         yNoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/0UJlMMYS97ZEd1pzZy1E70sLlZzGqr7O+AUirQ/jf8=;
-        b=PuAlHgKoeSe1AmUQOc7zjB9rP81O6/5Z/Rtt03jEDPXYGMUNUwUXxFDTAFhvXYbcC9
-         MUgV70R7S9f7yIbZuUEmCx3AWfJp9eQyRU6GC+zHtb+tykFT7hHkuFpUr3UfFzdSkZ4n
-         6MkbjehJqW5ErEY42e9I047Q5wfhZso/jjM1cx1uUaRs6hm4Uiw/llPkohAGBK+paoqo
-         z2wnRGG4x5gPiOx4MLAjejixsbOPfBAuVuuR3I8hHXkrKmh1EmsoYNOCTp+Du7MO/RiT
-         dpvZxTIAfYclORL7bQO30O+5ZL2EeZDdqFmM0c3mK2wWwSS0vZq9Jyl40ABSrvJHAXi+
-         mrsw==
-X-Gm-Message-State: AOAM531cFm9MmcvCkVCRdiBc5iOGHhqXHxL9grFwnw+hszxIcj/9CWVa
-        8xADVj/zQcgYfbvhKi98CC8f
-X-Google-Smtp-Source: ABdhPJzqI5xjENQcYNVIlYz3X+XwkhIeEHTTbg43DOqqVs41K+m+0e9zySQ0dINzjL9/TNZ774pDzQ==
-X-Received: by 2002:a62:19c2:: with SMTP id 185mr5497347pfz.1.1599745115588;
-        Thu, 10 Sep 2020 06:38:35 -0700 (PDT)
-Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id o30sm5603801pgc.45.2020.09.10.06.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:38:35 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev.kurt@vandijck-laurijssen.be,
-        o.rempel@pengutronix.de,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 5/6] can: mcp25xxfd: add listen-only mode
-Date:   Thu, 10 Sep 2020 19:08:05 +0530
-Message-Id: <20200910133806.25077-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
-References: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
+        Thu, 10 Sep 2020 09:49:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962A0C061796;
+        Thu, 10 Sep 2020 06:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8HnaJsrywNAsTbyAgR0uDLUkI/076f0nl1xcx0f5Xko=; b=AVDgGo0/6/PB8I5DLtMJL2binO
+        pmOQFwK5wVGNZiNAEaWwYcL8vS/eMnTaPIZAY7mbv6nStP3R2yb3GXKw3Qof4jcmSlWeoHU+/82Bd
+        0TBjzvJIvJc9SWg49AWb+7o7JjGt5K7abOf0Il9pg05LbGq1YrgXcbg2ZOL7iK1OafUcqQA5Oej0N
+        Rzb00lRrkyeX+N9QqRfbzHBkWInN0t2a18twu+JQOaR6naObkQH/wPwnpfeKDHczznhDDNSnbqA1I
+        Hp3PxF293vyIQQgKuyBlP0/cCZMpvlMZkU473U0yNovX0yMS07kGlvLPybyBzlNDYEBoRKOPENnzX
+        TSCNEaRg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGMx1-0003DF-8H; Thu, 10 Sep 2020 13:49:23 +0000
+Date:   Thu, 10 Sep 2020 14:49:23 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: [PATCH v18 06/32] mm/thp: narrow lru locking
+Message-ID: <20200910134923.GR6583@casper.infradead.org>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1598273705-69124-7-git-send-email-alex.shi@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598273705-69124-7-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+On Mon, Aug 24, 2020 at 08:54:39PM +0800, Alex Shi wrote:
+> lru_lock and page cache xa_lock have no reason with current sequence,
+> put them together isn't necessary. let's narrow the lru locking, but
+> left the local_irq_disable to block interrupt re-entry and statistic update.
 
-This commit enables listen-only mode, which works internally like CANFD mode.
+What stats are you talking about here?
 
-Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+> +++ b/mm/huge_memory.c
+> @@ -2397,7 +2397,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
+>  }
+>  
+>  static void __split_huge_page(struct page *page, struct list_head *list,
+> -		pgoff_t end, unsigned long flags)
+> +			      pgoff_t end)
 
-diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
-index eea3ef69f585..905ea98448cd 100644
---- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
-+++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
-@@ -392,7 +392,8 @@ static int mcp25xxfd_ring_alloc(struct mcp25xxfd_priv *priv)
- 	int ram_free, i;
+Please don't change this whitespace.  It's really annoying having to
+adjust the whitespace when renaming a function.  Just two tabs indentation
+to give a clear separation of arguments from code is fine.
+
+
+How about this patch instead?  It occurred to me we already have
+perfectly good infrastructure to track whether or not interrupts are
+already disabled, and so we should use that instead of ensuring that
+interrupts are disabled, or tracking that ourselves.
+
+But I may have missed something else that's relying on having
+interrupts disabled.  Please check carefully.
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2ccff8472cd4..74cae6c032f9 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2376,17 +2376,16 @@ static void __split_huge_page_tail(struct page *head, int tail,
+ }
  
- 	tef_obj_size = sizeof(struct mcp25xxfd_hw_tef_obj);
--	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
-+	/* listen-only mode works like FD mode */
-+	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD)) {
- 		tx_obj_num = MCP25XXFD_TX_OBJ_NUM_CANFD;
- 		tx_obj_size = sizeof(struct mcp25xxfd_hw_tx_obj_canfd);
- 		rx_obj_size = sizeof(struct mcp25xxfd_hw_rx_obj_canfd);
-@@ -807,7 +808,7 @@ mcp25xxfd_chip_rx_fifo_init_one(const struct mcp25xxfd_priv *priv,
- 		MCP25XXFD_REG_FIFOCON_RXOVIE |
- 		MCP25XXFD_REG_FIFOCON_TFNRFNIE;
- 
--	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
-+	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD))
- 		fifo_con |= FIELD_PREP(MCP25XXFD_REG_FIFOCON_PLSIZE_MASK,
- 				       MCP25XXFD_REG_FIFOCON_PLSIZE_64);
- 	else
-@@ -857,7 +858,7 @@ static int mcp25xxfd_chip_fifo_init(const struct mcp25xxfd_priv *priv)
- 		MCP25XXFD_REG_FIFOCON_TXEN |
- 		MCP25XXFD_REG_FIFOCON_TXATIE;
- 
--	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
-+	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD))
- 		val |= FIELD_PREP(MCP25XXFD_REG_FIFOCON_PLSIZE_MASK,
- 				  MCP25XXFD_REG_FIFOCON_PLSIZE_64);
- 	else
-@@ -930,7 +931,9 @@ static u8 mcp25xxfd_get_normal_mode(const struct mcp25xxfd_priv *priv)
+ static void __split_huge_page(struct page *page, struct list_head *list,
+-		pgoff_t end, unsigned long flags)
++		pgoff_t end)
  {
- 	u8 mode;
+ 	struct page *head = compound_head(page);
+ 	pg_data_t *pgdat = page_pgdat(head);
+ 	struct lruvec *lruvec;
+ 	struct address_space *swap_cache = NULL;
+ 	unsigned long offset = 0;
++	unsigned long flags;
+ 	int i;
  
--	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
-+	if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
-+		mode = MCP25XXFD_REG_CON_MODE_LISTENONLY;
-+	else if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
- 		mode = MCP25XXFD_REG_CON_MODE_MIXED;
- 	else
- 		mode = MCP25XXFD_REG_CON_MODE_CAN2_0;
-@@ -2767,8 +2770,9 @@ static int mcp25xxfd_probe(struct spi_device *spi)
- 	priv->can.do_get_berr_counter = mcp25xxfd_get_berr_counter;
- 	priv->can.bittiming_const = &mcp25xxfd_bittiming_const;
- 	priv->can.data_bittiming_const = &mcp25xxfd_data_bittiming_const;
--	priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING |
--		CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON_ISO;
-+	priv->can.ctrlmode_supported = CAN_CTRLMODE_LISTENONLY |
-+		CAN_CTRLMODE_BERR_REPORTING | CAN_CTRLMODE_FD |
-+		CAN_CTRLMODE_FD_NON_ISO;
- 	priv->ndev = ndev;
- 	priv->spi = spi;
- 	priv->rx_int = rx_int;
--- 
-2.17.1
-
+-	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+-
+ 	/* complete memcg works before add pages to LRU */
+ 	mem_cgroup_split_huge_fixup(head);
+ 
+@@ -2395,9 +2394,13 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 
+ 		offset = swp_offset(entry);
+ 		swap_cache = swap_address_space(entry);
+-		xa_lock(&swap_cache->i_pages);
++		xa_lock_irq(&swap_cache->i_pages);
+ 	}
+ 
++	/* prevent PageLRU to go away from under us, and freeze lru stats */
++	spin_lock_irqsave(&pgdat->lru_lock, flags);
++	lruvec = mem_cgroup_page_lruvec(head, pgdat);
++
+ 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
+ 		__split_huge_page_tail(head, i, lruvec, list);
+ 		/* Some pages can be beyond i_size: drop them from page cache */
+@@ -2417,6 +2420,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	}
+ 
+ 	ClearPageCompound(head);
++	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+ 
+ 	split_page_owner(head, HPAGE_PMD_ORDER);
+ 
+@@ -2425,18 +2429,16 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 		/* Additional pin to swap cache */
+ 		if (PageSwapCache(head)) {
+ 			page_ref_add(head, 2);
+-			xa_unlock(&swap_cache->i_pages);
++			xa_unlock_irq(&swap_cache->i_pages);
+ 		} else {
+ 			page_ref_inc(head);
+ 		}
+ 	} else {
+ 		/* Additional pin to page cache */
+ 		page_ref_add(head, 2);
+-		xa_unlock(&head->mapping->i_pages);
++		xa_unlock_irq(&head->mapping->i_pages);
+ 	}
+ 
+-	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+-
+ 	remap_page(head);
+ 
+ 	for (i = 0; i < HPAGE_PMD_NR; i++) {
+@@ -2574,7 +2576,6 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
+ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ {
+ 	struct page *head = compound_head(page);
+-	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
+ 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
+ 	struct anon_vma *anon_vma = NULL;
+ 	struct address_space *mapping = NULL;
+@@ -2640,9 +2641,6 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 	unmap_page(head);
+ 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
+ 
+-	/* prevent PageLRU to go away from under us, and freeze lru stats */
+-	spin_lock_irqsave(&pgdata->lru_lock, flags);
+-
+ 	if (mapping) {
+ 		XA_STATE(xas, &mapping->i_pages, page_index(head));
+ 
+@@ -2650,13 +2648,13 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 		 * Check if the head page is present in page cache.
+ 		 * We assume all tail are present too, if head is there.
+ 		 */
+-		xa_lock(&mapping->i_pages);
++		xa_lock_irq(&mapping->i_pages);
+ 		if (xas_load(&xas) != head)
+ 			goto fail;
+ 	}
+ 
+ 	/* Prevent deferred_split_scan() touching ->_refcount */
+-	spin_lock(&ds_queue->split_queue_lock);
++	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+ 	count = page_count(head);
+ 	mapcount = total_mapcount(head);
+ 	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
+@@ -2664,7 +2662,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			ds_queue->split_queue_len--;
+ 			list_del(page_deferred_list(head));
+ 		}
+-		spin_unlock(&ds_queue->split_queue_lock);
++		spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ 		if (mapping) {
+ 			if (PageSwapBacked(head))
+ 				__dec_node_page_state(head, NR_SHMEM_THPS);
+@@ -2672,7 +2670,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 				__dec_node_page_state(head, NR_FILE_THPS);
+ 		}
+ 
+-		__split_huge_page(page, list, end, flags);
++		__split_huge_page(page, list, end);
+ 		if (PageSwapCache(head)) {
+ 			swp_entry_t entry = { .val = page_private(head) };
+ 
+@@ -2688,10 +2686,9 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			dump_page(page, "total_mapcount(head) > 0");
+ 			BUG();
+ 		}
+-		spin_unlock(&ds_queue->split_queue_lock);
++		spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+ fail:		if (mapping)
+-			xa_unlock(&mapping->i_pages);
+-		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
++			xa_unlock_irq(&mapping->i_pages);
+ 		remap_page(head);
+ 		ret = -EBUSY;
+ 	}
