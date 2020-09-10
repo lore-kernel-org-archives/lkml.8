@@ -2,189 +2,125 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CA3C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9376721D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nw/5syFj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bkaxo52r"
+	by mail.kernel.org (Postfix) with ESMTP id C4EFC206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgIJJ3r (ORCPT
+        id S1730514AbgIJJay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbgIJJYh (ORCPT
+        Thu, 10 Sep 2020 05:30:54 -0400
+Received: from mail-il1-f205.google.com ([209.85.166.205]:39532 "EHLO
+        mail-il1-f205.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730474AbgIJJ3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:24:37 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D00C0617BC;
-        Thu, 10 Sep 2020 02:22:27 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 09:22:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729743;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mdIzARFw3GA/TJ+BgwAX61yKblvq1LRO9bOgtIxvWnQ=;
-        b=nw/5syFjULea55SJ/TFtKfQWMdtcdZgQZ+CtdibNK9zUKFAz/vR0qJ/xZvajRFux6HPAB5
-        XV0gy3erKJ/p6aHzb5BXf9+PW6BDRhtImKX9mmbyoiVT5jK4HRYjjbXT5sIctKQ4r2rlDh
-        Ar+i2AZdkvMP35CenfGuS8wwsoKoNNvUrHeXTCVudp5khnVrYH9A/0v1YttDYh51jJZNIZ
-        to0boG3QFB1ewDL9InV3g2FhhRXt2XoZAlsXNefQGRUkSTrHou/T14jJkuyrI4L2D660Ng
-        Yn+nXvdDFGemZtWFCh2XDv6ArFAex4w6Wqh9m8fjjt7UaX8QeU6XcBrXEV0PVg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729743;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mdIzARFw3GA/TJ+BgwAX61yKblvq1LRO9bOgtIxvWnQ=;
-        b=bkaxo52rjYdFSNZVCx99WAfSVnSQgRRXWO2bqJmqOnz3Eoti1rbs4MkL++vuXCk6UUfscF
-        N2PLsvIlbLzjYYDA==
-From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/boot/compressed/64: Unmap GHCB page before
- booting the kernel
-Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-25-joro@8bytes.org>
-References: <20200907131613.12703-25-joro@8bytes.org>
+        Thu, 10 Sep 2020 05:29:18 -0400
+Received: by mail-il1-f205.google.com with SMTP id u8so571672ilc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:29:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wbQ5hEj6rADmWVMRkDe2eqg2V1dhGor68kn9Ygqa8iA=;
+        b=KxsUc23Ue3rNOdzKJzuLrWJV8avBFfuiRtqZJw06v+VJ3e85DC3/m6RPYeF7LwGZXe
+         W2cC2V22M0zGSydGi9dv5O8ulPFYqQwuL8+zLTErZEX6wp1c7tL0YJ5yiDNvdR1sGbN8
+         /K11nX/MlXJc+prdy1tI7HC9OeketuT2tKyAQq2tXomVXnBFdlmwwi18mJSv9XEJFFjn
+         HXVQel552v4uUxakvI0EVtUcP7CUNSw7VJ28VrfV9Ft46kdYezlY3WdUnXBizHJv2+Ud
+         CSzA4tWc+6ELO5LsYDr6wMrl26eBfWrtlQk+ZVgITpa4GPf9kTx+Whw2BN7kUnajvSKW
+         qX+g==
+X-Gm-Message-State: AOAM532EPQxPwBvtICaVQ1TK5qyP+T19Y0E/xSqua8+6hHhnrrEb3ugI
+        5WlbSqFhT1/WsT6npyBqRpZaiGRyZPOavJM+kreF/hBWNp7D
+X-Google-Smtp-Source: ABdhPJysA8PxfONSscctagFdb07Pwycnr+IyT1EJoVzpbEd5spAORPGz6sq4E1/U597TkUzi0Uji6askr1L0y35jAufu+PZB7B5v
 MIME-Version: 1.0
-Message-ID: <159972974262.20229.6139985453558606156.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:d2:: with SMTP id r18mr6888793ilq.303.1599730157627;
+ Thu, 10 Sep 2020 02:29:17 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 02:29:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c82fe505aef233c6@google.com>
+Subject: WARNING in bpf_raw_tp_link_fill_link_info
+From:   syzbot <syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/seves branch of tip:
+Hello,
 
-Commit-ID:     69add17a7c1992593a7cf775a66e0256ad4b3ef8
-Gitweb:        https://git.kernel.org/tip/69add17a7c1992593a7cf775a66e0256ad4b3ef8
-Author:        Joerg Roedel <jroedel@suse.de>
-AuthorDate:    Mon, 07 Sep 2020 15:15:25 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 07 Sep 2020 19:45:26 +02:00
+syzbot found the following issue on:
 
-x86/boot/compressed/64: Unmap GHCB page before booting the kernel
+HEAD commit:    7fb5eefd selftests/bpf: Fix test_sysctl_loop{1, 2} failure..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1424fdb3900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
+dashboard link: https://syzkaller.appspot.com/bug?extid=976d5ecfab0c7eb43ac3
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a1f411900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10929c11900000
 
-Force a page-fault on any further accesses to the GHCB page when they
-shouldn't happen anymore. This will catch any bugs where a #VC exception
-is raised even though none is expected anymore.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-25-joro@8bytes.org
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 check_copy_size include/linux/thread_info.h:150 [inline]
+WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 copy_to_user include/linux/uaccess.h:167 [inline]
+WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 6854 Comm: syz-executor574 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:check_copy_size include/linux/thread_info.h:150 [inline]
+RIP: 0010:copy_to_user include/linux/uaccess.h:167 [inline]
+RIP: 0010:bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
+Code: 41 bc ea ff ff ff e9 35 ff ff ff 4c 89 ff e8 41 66 33 00 e9 d0 fd ff ff 4c 89 ff e8 a4 66 33 00 e9 06 ff ff ff e8 ca ed f2 ff <0f> 0b eb 94 48 89 ef e8 2e 66 33 00 e9 65 fd ff ff e8 24 66 33 00
+RSP: 0018:ffffc900051c7bd0 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffc900051c7c60 RCX: ffffffff818179d6
+RDX: ffff88808b490000 RSI: ffffffff81817a96 RDI: 0000000000000006
+RBP: 0000000000000019 R08: 0000000000000000 R09: ffffc900051c7c7f
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000019
+R13: 0000000000001265 R14: ffffffff8986ecc0 R15: ffffc900051c7c78
+ bpf_link_get_info_by_fd kernel/bpf/syscall.c:3626 [inline]
+ bpf_obj_get_info_by_fd+0x43a/0xc40 kernel/bpf/syscall.c:3664
+ __do_sys_bpf+0x1906/0x4b30 kernel/bpf/syscall.c:4237
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4405f9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff47155808 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004405f9
+RDX: 0000000000000010 RSI: 00000000200000c0 RDI: 000000000000000f
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401e00
+R13: 0000000000401e90 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- arch/x86/boot/compressed/ident_map_64.c | 17 +++++++++++++++--
- arch/x86/boot/compressed/misc.h         |  6 ++++++
- arch/x86/boot/compressed/sev-es.c       | 14 ++++++++++++++
- 3 files changed, 35 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 05742f6..063a60e 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -298,6 +298,11 @@ int set_page_encrypted(unsigned long address)
- 	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
- }
- 
-+int set_page_non_present(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-@@ -316,8 +321,14 @@ static void do_pf_error(const char *msg, unsigned long error_code,
- 
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
--	unsigned long address = native_read_cr2() & PMD_MASK;
--	unsigned long end = address + PMD_SIZE;
-+	unsigned long address = native_read_cr2();
-+	unsigned long end;
-+	bool ghcb_fault;
-+
-+	ghcb_fault = sev_es_check_ghcb_fault(address);
-+
-+	address   &= PMD_MASK;
-+	end        = address + PMD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-@@ -327,6 +338,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 */
- 	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
- 		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
-+	else if (ghcb_fault)
-+		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
- 
- 	/*
- 	 * Error code is sane - now identity map the 2M region around
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 9995c70..c0e0ffe 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -100,6 +100,7 @@ static inline void choose_random_location(unsigned long input,
- #ifdef CONFIG_X86_64
- extern int set_page_decrypted(unsigned long address);
- extern int set_page_encrypted(unsigned long address);
-+extern int set_page_non_present(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
-@@ -117,8 +118,13 @@ void set_sev_encryption_mask(void);
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- void sev_es_shutdown_ghcb(void);
-+extern bool sev_es_check_ghcb_fault(unsigned long address);
- #else
- static inline void sev_es_shutdown_ghcb(void) { }
-+static inline bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	return false;
-+}
- #endif
- 
- /* acpi.c */
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index fa62af7..1e1fab5 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -121,6 +121,20 @@ void sev_es_shutdown_ghcb(void)
- 	 */
- 	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
- 		error("Can't map GHCB page encrypted");
-+
-+	/*
-+	 * GHCB page is mapped encrypted again and flushed from the cache.
-+	 * Mark it non-present now to catch bugs when #VC exceptions trigger
-+	 * after this point.
-+	 */
-+	if (set_page_non_present((unsigned long)&boot_ghcb_page))
-+		error("Can't unmap GHCB page");
-+}
-+
-+bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	/* Check whether the fault was on the GHCB page */
-+	return ((address & PAGE_MASK) == (unsigned long)&boot_ghcb_page);
- }
- 
- void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
