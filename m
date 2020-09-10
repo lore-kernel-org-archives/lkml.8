@@ -2,182 +2,156 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA7DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3442CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9572087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE59E20C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="d8XEy/h9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gH5ANVlh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIJRPD (ORCPT
+        id S1726109AbgIJRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgIJQfB (ORCPT
+        Thu, 10 Sep 2020 13:17:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725372AbgIJRP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:35:01 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CECBC0617AA
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:34:59 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n14so4939871pff.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FaJXhfrjUU4Eb8omzwhQgbkduynoMOFupoGOfbaZ3s0=;
-        b=d8XEy/h9aLwc461GtbYpEe6YJG5kQc027sQcQm8cbVphWcNTxqAgmcr9eSuRX9UQQ9
-         26gVkQDbm6fPZ7+oet9lRe3ok5l8ezihGzUh4bzHJA63YTEZze9hlwD3/2FlMzV/2BXl
-         XuEa2TERzj29I2cbOZy3ofzWAigoEqHbPHn/o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FaJXhfrjUU4Eb8omzwhQgbkduynoMOFupoGOfbaZ3s0=;
-        b=NujhxqCbFe2x5ADfRchVUhu44aFJliM3ZpBaSS6fzF3jy+HkpuRHVxm2BHZXmmz3XI
-         DZBFhYct+q5P6rBOMBw4IpyZIRV8ZM1pcxFBwKOxq3Io7BUjKuqbW16T8bTq2DTlhMgf
-         8u+zPGD6sEYvIDFEpGPibU3tQCx5P1/p9emBqW80k95nJ+uBoRHf1zyQRvOGnsbKXoMl
-         WelW9IeNVLEFFgq5gmS87eVOZJMVhGl9s45lImIvqZdOgvp9bcCNH/hcqL4W0iFfJ5EB
-         v38jD7yH8oaki8Ovu+Tyf5I5uTDm/rEYbnTt1eKuzvmqcDK0o07PpQQJl54wxOE4kKTZ
-         Sc+A==
-X-Gm-Message-State: AOAM531JX1jH3XusKXaq3Lhk4dWkHdhchMkCTK3pylpMgwzvXUm1eEtM
-        1o7ExCr0/Z9I5yXcBk9Hhp3eREmBIhSXslOr7ZY=
-X-Google-Smtp-Source: ABdhPJz8+1xKmpNVjR270T+PrLOO0s0m0+KunPLaRqaGMSDDT6h8BgUh8KAPaMIEr504buLU1S6p+Q==
-X-Received: by 2002:a63:1402:: with SMTP id u2mr4824306pgl.400.1599755698842;
-        Thu, 10 Sep 2020 09:34:58 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id x25sm5586983pgk.26.2020.09.10.09.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:34:58 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Yuval Bason <yuval.bason@cavium.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] qedr: fix resource leak in qedr_create_qp
-Date:   Thu, 10 Sep 2020 16:34:38 +0000
-Message-Id: <20200910163438.20495-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAEYrHj=pfGB7OuHt90t2aaawr31W9XZCHeHJurt3o0rK44jZ+A@mail.gmail.com>
-References: <CAEYrHj=pfGB7OuHt90t2aaawr31W9XZCHeHJurt3o0rK44jZ+A@mail.gmail.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 10 Sep 2020 13:15:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599758150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V5RVkZoHNNgO8iRkts2uQucFzF0PqLciDsVyoi9bgfc=;
+        b=gH5ANVlh9jHChevAgLxQU6nEieXdAB93TigKP1WvfIKmZ6pVADdvi7rZTEsLqOpZnj2sDu
+        OhPCxAZQ9sgZBkTyw4ty6ImPZKHwi5E0d1bhyiuwaNgfiGjgh3P2QAv9N0VS4tX/gl3XVb
+        3zIVLYKa8LDenzQjpCd10+ZcVWFekqA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-HnAUMfNAM0OMvyN4RsRhjA-1; Thu, 10 Sep 2020 13:15:48 -0400
+X-MC-Unique: HnAUMfNAM0OMvyN4RsRhjA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7CFB802B72;
+        Thu, 10 Sep 2020 17:15:45 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 061BB60BFA;
+        Thu, 10 Sep 2020 17:15:42 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 13:15:41 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        martin.petersen@oracle.com, Hans de Goede <hdegoede@redhat.com>,
+        Song Liu <song@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        dm-devel@redhat.com, linux-mtd@lists.infradead.org,
+        linux-mm@kvack.org, drbd-dev@tron.linbit.com,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
+ block layer
+Message-ID: <20200910171541.GB21919@redhat.com>
+References: <20200726150333.305527-1-hch@lst.de>
+ <20200726150333.305527-7-hch@lst.de>
+ <20200826220737.GA25613@redhat.com>
+ <20200902151144.GA1738@lst.de>
+ <20200902162007.GB5513@redhat.com>
+ <20200910092813.GA27229@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910092813.GA27229@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When xa_insert() fails, the acquired resource in qedr_create_qp should
-also be freed. However, current implementation does not handle the
-error.
+On Thu, Sep 10 2020 at  5:28am -0400,
+Christoph Hellwig <hch@lst.de> wrote:
 
-Fix this by adding a new goto label that calls qedr_free_qp_resources.
+> On Wed, Sep 02, 2020 at 12:20:07PM -0400, Mike Snitzer wrote:
+> > On Wed, Sep 02 2020 at 11:11am -0400,
+> > Christoph Hellwig <hch@lst.de> wrote:
+> > 
+> > > On Wed, Aug 26, 2020 at 06:07:38PM -0400, Mike Snitzer wrote:
+> > > > On Sun, Jul 26 2020 at 11:03am -0400,
+> > > > Christoph Hellwig <hch@lst.de> wrote:
+> > > > 
+> > > > > Drivers shouldn't really mess with the readahead size, as that is a VM
+> > > > > concept.  Instead set it based on the optimal I/O size by lifting the
+> > > > > algorithm from the md driver when registering the disk.  Also set
+> > > > > bdi->io_pages there as well by applying the same scheme based on
+> > > > > max_sectors.
+> > > > > 
+> > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > > ---
+> > > > >  block/blk-settings.c         |  5 ++---
+> > > > >  block/blk-sysfs.c            |  1 -
+> > > > >  block/genhd.c                | 13 +++++++++++--
+> > > > >  drivers/block/aoe/aoeblk.c   |  2 --
+> > > > >  drivers/block/drbd/drbd_nl.c | 12 +-----------
+> > > > >  drivers/md/bcache/super.c    |  4 ----
+> > > > >  drivers/md/dm-table.c        |  3 ---
+> > > > >  drivers/md/raid0.c           | 16 ----------------
+> > > > >  drivers/md/raid10.c          | 24 +-----------------------
+> > > > >  drivers/md/raid5.c           | 13 +------------
+> > > > >  10 files changed, 16 insertions(+), 77 deletions(-)
+> > > > 
+> > > > 
+> > > > In general these changes need a solid audit relative to stacking
+> > > > drivers.  That is, the limits stacking methods (blk_stack_limits)
+> > > > vs lower level allocation methods (__device_add_disk).
+> > > > 
+> > > > You optimized for lowlevel __device_add_disk establishing the bdi's
+> > > > ra_pages and io_pages.  That is at the beginning of disk allocation,
+> > > > well before any build up of stacking driver's queue_io_opt() -- which
+> > > > was previously done in disk_stack_limits or driver specific methods
+> > > > (e.g. dm_table_set_restrictions) that are called _after_ all the limits
+> > > > stacking occurs.
+> > > > 
+> > > > By inverting the setting of the bdi's ra_pages and io_pages to be done
+> > > > so early in __device_add_disk it'll break properly setting these values
+> > > > for at least DM afaict.
+> > > 
+> > > ra_pages never got inherited by stacking drivers, check it by modifying
+> > > it on an underlying device and then creating a trivial dm or md one.
+> > 
+> > Sure, not saying that it did.  But if the goal is to set ra_pages based
+> > on io_opt then to do that correctly on stacking drivers it must be done
+> > in terms of limits stacking right?  Or at least done at a location that
+> > is after the limits stacking has occurred?  So should DM just open-code
+> > setting ra_pages like it did for io_pages?
+> > 
+> > Because setting ra_pages in __device_add_disk() is way too early for DM
+> > -- given it uses device_add_disk_no_queue_reg via add_disk_no_queue_reg
+> > at DM device creation (before stacking all underlying devices' limits).
+> 
+> I'll move it to blk_register_queue, which should work just fine.
 
-Fixes: 1212767e23bb ("qedr: Add wrapping generic structure for qpidr and
-adjust idr routines.")
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
-changelog(v2): Change numbered labels to descriptive labels
+That'll work for initial DM table load as part of DM device creation
+(dm_setup_md_queue).  But it won't account for DM table reloads that
+might change underlying devices on a live DM device (done using
+__bind).
 
- drivers/infiniband/hw/qedr/verbs.c | 52 ++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+Both dm_setup_md_queue() and __bind() call dm_table_set_restrictions()
+to set/update queue_limits.  It feels like __bind() will need to call a
+new block helper to set/update parts of queue_limits (e.g. ra_pages and
+io_pages).
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index b49bef94637e..3b4c84f67023 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -2112,6 +2112,28 @@ static int qedr_create_kernel_qp(struct qedr_dev *dev,
- 	return rc;
- }
- 
-+static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
-+				  struct ib_udata *udata)
-+{
-+	struct qedr_ucontext *ctx =
-+		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
-+					  ibucontext);
-+	int rc;
-+
-+	if (qp->qp_type != IB_QPT_GSI) {
-+		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	if (qp->create_type == QEDR_QP_CREATE_USER)
-+		qedr_cleanup_user(dev, ctx, qp);
-+	else
-+		qedr_cleanup_kernel(dev, qp);
-+
-+	return 0;
-+}
-+
- struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 			     struct ib_qp_init_attr *attrs,
- 			     struct ib_udata *udata)
-@@ -2158,19 +2180,21 @@ struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 		rc = qedr_create_kernel_qp(dev, qp, ibpd, attrs);
- 
- 	if (rc)
--		goto err;
-+		goto out_free_qp;
- 
- 	qp->ibqp.qp_num = qp->qp_id;
- 
- 	if (rdma_protocol_iwarp(&dev->ibdev, 1)) {
- 		rc = xa_insert(&dev->qps, qp->qp_id, qp, GFP_KERNEL);
- 		if (rc)
--			goto err;
-+			goto out_free_qp_resources;
- 	}
- 
- 	return &qp->ibqp;
- 
--err:
-+out_free_qp_resources:
-+	qedr_free_qp_resources(dev, qp, udata);
-+out_free_qp:
- 	kfree(qp);
- 
- 	return ERR_PTR(-EFAULT);
-@@ -2671,28 +2695,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
- 	return rc;
- }
- 
--static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
--				  struct ib_udata *udata)
--{
--	struct qedr_ucontext *ctx =
--		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
--					  ibucontext);
--	int rc;
--
--	if (qp->qp_type != IB_QPT_GSI) {
--		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
--		if (rc)
--			return rc;
--	}
--
--	if (qp->create_type == QEDR_QP_CREATE_USER)
--		qedr_cleanup_user(dev, ctx, qp);
--	else
--		qedr_cleanup_kernel(dev, qp);
--
--	return 0;
--}
--
- int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
- {
- 	struct qedr_qp *qp = get_qedr_qp(ibqp);
--- 
-2.17.1
+Any chance you're open to factoring out that block function as an
+exported symbol for use by blk_register_queue() and code like DM's
+__bind()?
+
+Thanks,
+Mike
 
