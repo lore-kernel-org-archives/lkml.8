@@ -2,146 +2,123 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F046EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB81C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B1E20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:42:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDmpCbFh"
+	by mail.kernel.org (Postfix) with ESMTP id DDD2F20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgIJJmb (ORCPT
+        id S1726600AbgIJJnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgIJJm0 (ORCPT
+        Thu, 10 Sep 2020 05:43:51 -0400
+Received: from mail-io1-f78.google.com ([209.85.166.78]:49527 "EHLO
+        mail-io1-f78.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729781AbgIJJnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:42:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B508C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:42:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b17so2773072pji.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tfIByuMMo7C/Clnj6jXryHuR4zdcV5TwuhVI0+9ZXqk=;
-        b=uDmpCbFh1psm0nkusAJFY/dcLXBPE4iE9E7slyes1DD5ltL23+HkFPZPaAoW01eEP4
-         2vXjPNq2s/exWc+Pgplo/DJpbut9xfgknVSIV2dbNNUD8qcqEBJxPnzKiHw8Jkt/XOHj
-         nu4dYmVLRLzHj/bH7I4kO5qUD+ALbAHSdvOaR5Xq4M3FtkIlabCNYWf++M87+AQxYdab
-         F3Ewn9WGLULNvFuJleRF/eZbc2StBBn29B4fq/EM8MLDt6iF6ZdrIYHLNo+jwO2yU4jZ
-         Z5nNdXfEhORhGLmvyvskJcZvaGsVkmCdBLuntcCnFrN/OaHRQu8F/QG00qCXm6X86QhW
-         MnWQ==
+        Thu, 10 Sep 2020 05:43:23 -0400
+Received: by mail-io1-f78.google.com with SMTP id k133so3896406iof.16
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:43:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tfIByuMMo7C/Clnj6jXryHuR4zdcV5TwuhVI0+9ZXqk=;
-        b=I5liVFJV9DnsS2jjm9sCB/7yDzkjNfv6aGpPv3Q+JZ5Js5kHcE14D4x2BtEswxpdC+
-         T6mk5Kq5zMJAygG50pcojpVenvj6yj0msgOSIBBjUwJQVLV3ADpEN2C/zhWNX0saC0j3
-         r1JRZU3e9uLujK4WVMaVT/lSo9BM9JRAJO7cwSiBB+ndxasiyJ6thHBZpJQXQu/TkL3l
-         Hg163jy8Z2svwYArIZWVCV2pafTO/lsYMFzNGw9QSbyGu6rrbwze24Kb0WESZcHWUVf4
-         GRolmxSFZff9CWehX5WfMLizEFj+cC6/0PewEHIg7MRKjzWisFxs6+CabPtnAjSiMnmK
-         YXRg==
-X-Gm-Message-State: AOAM532HIPSPUvCzRs+3kJqXhC07HkYxOKRWnv6LogNmMkcao123jkC3
-        MMCKxH1WrOYbioz3wFvB8N8Ja49u0ZK3zdqV1Cv3BA==
-X-Google-Smtp-Source: ABdhPJz7PvLSYCqK0ku+A1ysRCQYzogbgA6IYq2pcoIqNsN3XrY5qY/AABceMIzcPX+1vQVAyYI6uTYl64B6AvrCmqI=
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr4517568pjb.20.1599730945276;
- Thu, 10 Sep 2020 02:42:25 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nU1Cfh/JcUj6ODLNVhA3Cjd25BwCeH0u3p5IbvUT7E8=;
+        b=UB0W+0ZOY4rrswN4PtcK6I0v7RgmUOCYp0LUDqrhDSPEYwZ4a+Uv/zt0S1EyvuT3hm
+         Orq8PGwnNnipC073dd+q6yPWynh0izH/X1y+Mb5jcfH6N+yo8CZDTw/tCEsddsnEnC2h
+         X7odVMA3AChUq2KobruFSkt0xrlNtvwfKvFrZ0Vaf1hMQ5pmc0352BQ8kU4ehNxQnTlc
+         wjibOwW/u0ie/fzQd98xzeOx+qhBGEpJWi8Jx0T6JhndFNII07AI4OzXjkkJB7r/wAdW
+         /9FETfbOPbNGiKSAId6OGSYDXwL/WH5eU0/Ln5mTj3CuHJX0z3cg2ZwWTFAYapoZmDRs
+         XhrQ==
+X-Gm-Message-State: AOAM533aXaar8LkKvEX5aC09WqlCLuq/jHalje9A6Tq97diIMOPiUu/Z
+        w+2o/B4L1WXW9EELJ+iFxIRXnKdVksCT8mNUns89gsPA2nkh
+X-Google-Smtp-Source: ABdhPJy/5bVJwVvzHKZWSI6/ZA6wJi6L48BOhQU+od43M7GR+DbMyzE5X3qlC95205a9ffBLtV1AzU37sCGWDUklU5/5IwFC5HTy
 MIME-Version: 1.0
-References: <20200902180950.4bc7c4de@canb.auug.org.au> <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
- <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org> <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
- <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org> <20200909104619.0902238c@canb.auug.org.au>
- <dea1bacd-48c2-067b-1bb2-00a0ee91196d@infradead.org> <90719242-ab0e-7bd9-1cce-5aac8940eb23@linuxfoundation.org>
-In-Reply-To: <90719242-ab0e-7bd9-1cce-5aac8940eb23@linuxfoundation.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 10 Sep 2020 02:42:14 -0700
-Message-ID: <CAFd5g452HH1Zfo+tqYzZuMVBnz-x=ePkits6uUnVDBXvaU=nzg@mail.gmail.com>
-Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+X-Received: by 2002:a92:ce48:: with SMTP id a8mr7114720ilr.295.1599731002412;
+ Thu, 10 Sep 2020 02:43:22 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 02:43:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000229d5a05aef26677@google.com>
+Subject: general protection fault in batadv_iv_ogm_schedule (2)
+From:   syzbot <syzbot+870c4745cc7a955e17e2@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
+        sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 5:55 PM Shuah Khan <skhan@linuxfoundation.org> wrote=
-:
->
-> On 9/8/20 6:49 PM, Randy Dunlap wrote:
-> > On 9/8/20 5:46 PM, Stephen Rothwell wrote:
-> >> Hi Randy,
-> >>
-> >> On Tue, 8 Sep 2020 07:38:31 -0700 Randy Dunlap <rdunlap@infradead.org>=
- wrote:
-> >>>
-> >>> On 9/4/20 12:59 AM, Brendan Higgins wrote:
-> >>>> On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org>=
- wrote:
-> >>>>>
-> >>>>> On 9/2/20 8:44 AM, Randy Dunlap wrote:
-> >>>>>> On 9/2/20 1:09 AM, Stephen Rothwell wrote:
-> >>>>>>> Hi all,
-> >>>>>>>
-> >>>>>>> Changes since 20200828:
-> >>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> on i386:
-> >>>>>>
-> >>>>>> ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
-> >>>>>> ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=
-=80=98kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_te=
-st=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-> >>>>>>    kunit_fail_current_test();
-> >>>>>>
-> >>>>>>
-> >>>>>> Full randconfig file is attached.
-> >>>>>>
-> >>>>>
-> >>>>> Hi Brendan,
-> >>>>>
-> >>>>> Do you know anything about this build error?
-> >>>>>
-> >>>>> I can't find kunit_fail_current_test() anywhere.
-> >>>>
-> >>>> Yeah, this got applied for some reason without the prerequisite
-> >>>> patches. It is from a two patch series, the other being here:
-> >>>>
-> >>>> https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-uri=
-elguajardojr@gmail.com/
-> >>>>
-> >>>> which in turn depends on another patchset which didn't make it into =
-5.9.
-> >>>>
-> >>>> Again, I don't know why this was applied without it's prereqs. Sorry=
- about that.
-> >>>>
-> >>>
-> >>> Well.  Who is responsible for this small mess?
-> >>> It is still killing linux-next builds for me (2020-0908).
-> >>
-> >> It came in via the kunit-next tree (Shuah cc'd).  I will revert commit
-> >> abe83f7621ee ("kunit: ubsan integration") today.
-> >
-> >
->
-> Sorry about that. I picked this up for 5.10 since it had the reviewed
-> by tags from Brendan.
->
-> I will drop this from kselftest kunit
+Hello,
 
-Thanks for taking care of this!
+syzbot found the following issue on:
+
+HEAD commit:    34d4ddd3 Merge tag 'linux-kselftest-5.9-rc5' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13db7cdd900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f5c353182ed6199
+dashboard link: https://syzkaller.appspot.com/bug?extid=870c4745cc7a955e17e2
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+870c4745cc7a955e17e2@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc000000000e: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
+CPU: 1 PID: 6396 Comm: kworker/u4:8 Not tainted 5.9.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
+RIP: 0010:batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:843 [inline]
+RIP: 0010:batadv_iv_ogm_schedule+0x925/0xf40 net/batman-adv/bat_iv_ogm.c:869
+Code: 00 48 c1 e8 03 48 89 44 24 28 48 c7 c5 48 e7 3a 8c 0f 1f 40 00 49 8d 5f 70 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 7d e0 a9 f9 48 8b 1b 48 b8 00 00 00
+RSP: 0018:ffffc90019cd7b88 EFLAGS: 00010202
+RAX: 000000000000000e RBX: 0000000000000070 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000007 RDI: 0000000000000000
+RBP: ffffffff8c3ae748 R08: ffffffff880ae416 R09: ffffed10152b4c06
+R10: ffffed10152b4c06 R11: 0000000000000000 R12: 0000000000000007
+R13: ffff8880a95a6028 R14: ffff8880a7f17870 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000931c4000 CR4: 00000000001526e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ batadv_iv_send_outstanding_bat_ogm_packet+0x68c/0x7c0 net/batman-adv/bat_iv_ogm.c:1723
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace 3bb6c6ec8627e29b ]---
+RIP: 0010:batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:843 [inline]
+RIP: 0010:batadv_iv_ogm_schedule+0x925/0xf40 net/batman-adv/bat_iv_ogm.c:869
+Code: 00 48 c1 e8 03 48 89 44 24 28 48 c7 c5 48 e7 3a 8c 0f 1f 40 00 49 8d 5f 70 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 7d e0 a9 f9 48 8b 1b 48 b8 00 00 00
+RSP: 0018:ffffc90019cd7b88 EFLAGS: 00010202
+RAX: 000000000000000e RBX: 0000000000000070 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000007 RDI: 0000000000000000
+RBP: ffffffff8c3ae748 R08: ffffffff880ae416 R09: ffffed10152b4c06
+R10: ffffed10152b4c06 R11: 0000000000000000 R12: 0000000000000007
+R13: ffff8880a95a6028 R14: ffff8880a7f17870 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000931c4000 CR4: 00000000001526e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
