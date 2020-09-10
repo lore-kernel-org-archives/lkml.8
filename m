@@ -2,229 +2,197 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED38FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF67C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA69208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D80A21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z8eNIqrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgIJJVY (ORCPT
+        id S1730207AbgIJJVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:21:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:58708 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgIJJVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:21:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4612A1045;
-        Thu, 10 Sep 2020 02:21:14 -0700 (PDT)
-Received: from [192.168.1.79] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BD033F68F;
-        Thu, 10 Sep 2020 02:21:12 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] arm64: kvm: Introduce MTE VCPU feature
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Peter Maydell <Peter.Maydell@arm.com>, qemu-devel@nongnu.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        Juan Quintela <quintela@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-References: <20200904160018.29481-1-steven.price@arm.com>
- <20200904160018.29481-3-steven.price@arm.com>
- <20200909154804.mide6szbzgdy7jju@kamzik.brq.redhat.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3a7e18af-84bd-cee3-d68f-e08f225fc166@arm.com>
-Date:   Thu, 10 Sep 2020 10:21:07 +0100
+        Thu, 10 Sep 2020 05:21:49 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:33055 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726847AbgIJJVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:21:42 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id GIltkYuMnPTBMGIlukQbGe; Thu, 10 Sep 2020 11:21:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599729699; bh=sUGEW/U5E0cvzvWuMOTakAeSmgZz++wx9LaBD4cbHO4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Z8eNIqrxHQeJbgvslk+iSbo8GaNpRZdwPvTEVQtfomRv2SEx7BakMAHfSvWl/IYMx
+         HSVxiQeRpAGhD5+E4oTRDkIkeUQ3DETJCru1z+GcCTa6MwoNfrj2LxgrqX0aTw+LrP
+         3LzDBLX4AJh4+ka9w2vyqXig764FUDCYBnKOJU7Zl5tvtFVLEYB5qLDDNiChkwqEcR
+         kTRM55BoFwvdw37vVDZFPCROTWy+Fngv4h96C80AlHmzcpeKis2xCcW8Ohdo9FzQOO
+         iFYeV0PwC+vx79lAk4V9Ta8VVBvLDB50eqMKFJc7fQ0YpCRub5/xO8MEkho+j3LcY4
+         3RQAoBZRyvOnA==
+Subject: Re: [PATCH v10 29/30] media: pci: fix common ALSA DMA-mapping related
+ codes
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+ <CGME20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68@eucas1p2.samsung.com>
+ <20200904131711.12950-30-m.szyprowski@samsung.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1215926b-d9d9-4dbe-4621-717151c41a45@xs4all.nl>
+Date:   Thu, 10 Sep 2020 11:21:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200909154804.mide6szbzgdy7jju@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200904131711.12950-30-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfG1kHPDqJjfReFCfxwg6VMaCSTVPGKLwVybyvVlhVzmrDjjVt+DkArAkO5encqdPow6Q0qfjZXmaTDKmUSKeGHv9Ejtdby7M2U4X4ifsI+PI/AHAXyHl
+ SNPw3umupvyD3Y343QC2Syt5RRFMAQDuoZezMEPEANfS7jIX03Wc6Behr1MaQvwOH95z78xqkPU9cemwgEUXgASyvIs3OBlhUXmq2lMOX6VvE2CH8UAO+vrd
+ 1OaSQqw3lL9fmD4r4XyD4H5vitHINwbqctQYgPdpDFHXzs1zlTXnC58neuBm+3zoE9cpvZrhgAof0ztBZWVog7BgLXrxdV4C4UF+yLTpH3xMgh+ovVGyClH8
+ 0o7TK81EQZ842FXZWCwd/j6nCjx4zw46MKNFvd22IBx/2+AbskZvUJ4YkCqOnDaap9UmHG+PsJRjESghHBMzQxAMdJur195qs8tnZkuJm0kc2hgPsIIpbKJk
+ v1U/xdSWzxKqy8xll0s8d2lOhwXvkrPZLfxubDI9ACooGPNhTt0pM2jjzs3DNBjKtlubO5R+9V6G92pT8WgZ1AWfMYWI+ptU2O9aJwejyGCLYuYzU/uQHx0X
+ TWBzDPqB8A8SmaeMfGOXLKUVbvJBc0fgqEkXOB5vFo/STWKM1+QfB8Wiqp1h/Er0bjpTpRbjYuvdY2E/24LOVC5i9YSJAcKQl/z2lb0w4KJpbIXeXSHlGtC8
+ N6LTmbX5h4Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09/2020 16:48, Andrew Jones wrote:
-> On Fri, Sep 04, 2020 at 05:00:18PM +0100, Steven Price wrote:
->> Add a new VCPU features 'KVM_ARM_VCPU_MTE' which enables memory tagging
->> on a VCPU. When enabled on any VCPU in the virtual machine this causes
->> all pages that are faulted into the VM to have the PG_mte_tagged flag
->> set (and the tag storage cleared if this is the first use).
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   arch/arm64/include/asm/kvm_emulate.h |  3 +++
->>   arch/arm64/include/asm/kvm_host.h    |  5 ++++-
->>   arch/arm64/include/uapi/asm/kvm.h    |  1 +
->>   arch/arm64/kvm/mmu.c                 | 15 +++++++++++++++
->>   arch/arm64/kvm/reset.c               |  8 ++++++++
->>   arch/arm64/kvm/sys_regs.c            |  6 +++++-
->>   6 files changed, 36 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
->> index 49a55be2b9a2..0042323a4b7f 100644
->> --- a/arch/arm64/include/asm/kvm_emulate.h
->> +++ b/arch/arm64/include/asm/kvm_emulate.h
->> @@ -79,6 +79,9 @@ static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
->>   	if (cpus_have_const_cap(ARM64_MISMATCHED_CACHE_TYPE) ||
->>   	    vcpu_el1_is_32bit(vcpu))
->>   		vcpu->arch.hcr_el2 |= HCR_TID2;
->> +
->> +	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
->> +		vcpu->arch.hcr_el2 |= HCR_ATA;
->>   }
->>   
->>   static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 4f4360dd149e..b1190366242b 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -37,7 +37,7 @@
->>   
->>   #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
->>   
->> -#define KVM_VCPU_MAX_FEATURES 7
->> +#define KVM_VCPU_MAX_FEATURES 8
->>   
->>   #define KVM_REQ_SLEEP \
->>   	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->> @@ -110,6 +110,9 @@ struct kvm_arch {
->>   	 * supported.
->>   	 */
->>   	bool return_nisv_io_abort_to_user;
->> +
->> +	/* If any VCPU has MTE enabled then all memory must be MTE enabled */
->> +	bool vcpu_has_mte;
+On 04/09/2020 15:17, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+> numer of the created entries in the DMA address space. However the
+
+numer -> number
+
+> subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+> called with the original number of entries passed to dma_map_sg. The
+> sg_table->nents in turn holds the result of the dma_map_sg call as stated
+> in include/linux/scatterlist.h. Adapt the code to obey those rules.
 > 
-> It looks like this is unnecessary as it's only used once, where a feature
-> check could be used.
-
-It's used in user_mem_abort(), so every time we fault a page into the VM 
-- so having to iterate over all VCPUs to check if any have the feature 
-bit set seems too expensive.
-
-Although perhaps I should just accept that this is realistically a VM 
-setting and move it out of the VCPU.
-
->>   };
->>   
->>   struct kvm_vcpu_fault_info {
->> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
->> index ba85bb23f060..2677e1ab8c16 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -106,6 +106,7 @@ struct kvm_regs {
->>   #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
->>   #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
->>   #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
->> +#define KVM_ARM_VCPU_MTE		7 /* VCPU supports Memory Tagging */
->>   
->>   struct kvm_vcpu_init {
->>   	__u32 target;
->> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
->> index ba00bcc0c884..e8891bacd76f 100644
->> --- a/arch/arm64/kvm/mmu.c
->> +++ b/arch/arm64/kvm/mmu.c
->> @@ -1949,6 +1949,21 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>   	if (vma_pagesize == PAGE_SIZE && !force_pte)
->>   		vma_pagesize = transparent_hugepage_adjust(memslot, hva,
->>   							   &pfn, &fault_ipa);
->> +	if (system_supports_mte() && kvm->arch.vcpu_has_mte && pfn_valid(pfn)) {
->> +		/*
->> +		 * VM will be able to see the page's tags, so we must ensure
->> +		 * they have been initialised.
->> +		 */
->> +		struct page *page = pfn_to_page(pfn);
->> +		long i, nr_pages = compound_nr(page);
->> +
->> +		/* if PG_mte_tagged is set, tags have already been initialised */
->> +		for (i = 0; i < nr_pages; i++, page++) {
->> +			if (!test_and_set_bit(PG_mte_tagged, &page->flags))
->> +				mte_clear_page_tags(page_address(page));
->> +		}
->> +	}
->> +
->>   	if (writable)
->>   		kvm_set_pfn_dirty(pfn);
->>   
->> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
->> index ee33875c5c2a..82f3883d717f 100644
->> --- a/arch/arm64/kvm/reset.c
->> +++ b/arch/arm64/kvm/reset.c
->> @@ -274,6 +274,14 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->>   		}
->>   	}
->>   
->> +	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features)) {
->> +		if (!system_supports_mte()) {
->> +			ret = -EINVAL;
->> +			goto out;
->> +		}
->> +		vcpu->kvm->arch.vcpu_has_mte = true;
->> +	}
+> While touching this code, update it to use the modern DMA_FROM_DEVICE
+> definitions.
 > 
-> We either need a KVM cap or a new CPU feature probing interface to avoid
-> making userspace try features one at a time. It's too bad that VCPU_INIT
-> doesn't clear all offending features from the feature set when returning
-> EINVAL, because then userspace could create a scratch VCPU with everything
-> it supports in order to see what KVM also supports in one go.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-If Peter's TELL_ME_WHAT_YOU_HAVE idea works out then perhaps we don't 
-need the cap? Or would it still be useful?
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-Thanks,
+Thanks!
 
-Steve
+	Hans
 
->> +
->>   	switch (vcpu->arch.target) {
->>   	default:
->>   		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index a655f172b5ad..6a971b201e81 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1132,7 +1132,8 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->>   			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
->>   		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
->>   	} else if (id == SYS_ID_AA64PFR1_EL1) {
->> -		val &= ~(0xfUL << ID_AA64PFR1_MTE_SHIFT);
->> +		if (!test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
->> +			val &= ~(0xfUL << ID_AA64PFR1_MTE_SHIFT);
->>   	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
->>   		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
->>   			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
->> @@ -1394,6 +1395,9 @@ static bool access_mte_regs(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->>   static unsigned int mte_visibility(const struct kvm_vcpu *vcpu,
->>   				   const struct sys_reg_desc *rd)
->>   {
->> +	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
->> +		return 0;
->> +
->>   	return REG_HIDDEN_USER | REG_HIDDEN_GUEST;
->>   }
->>   
->> -- 
->> 2.20.1
->>
->> _______________________________________________
->> kvmarm mailing list
->> kvmarm@lists.cs.columbia.edu
->> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
->>
+> ---
+>  drivers/media/pci/cx23885/cx23885-alsa.c | 4 ++--
+>  drivers/media/pci/cx25821/cx25821-alsa.c | 4 ++--
+>  drivers/media/pci/cx88/cx88-alsa.c       | 6 +++---
+>  drivers/media/pci/saa7134/saa7134-alsa.c | 4 ++--
+>  4 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> Thanks,
-> drew
+> diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
+> index df44ed7393a0..c797bff6eebb 100644
+> --- a/drivers/media/pci/cx23885/cx23885-alsa.c
+> +++ b/drivers/media/pci/cx23885/cx23885-alsa.c
+> @@ -113,7 +113,7 @@ static int cx23885_alsa_dma_map(struct cx23885_audio_dev *dev)
+>  	struct cx23885_audio_buffer *buf = dev->buf;
+>  
+>  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
+> +			buf->nr_pages, DMA_FROM_DEVICE);
+>  
+>  	if (0 == buf->sglen) {
+>  		pr_warn("%s: cx23885_alsa_map_sg failed\n", __func__);
+> @@ -129,7 +129,7 @@ static int cx23885_alsa_dma_unmap(struct cx23885_audio_dev *dev)
+>  	if (!buf->sglen)
+>  		return 0;
+>  
+> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
+> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
+>  	buf->sglen = 0;
+>  	return 0;
+>  }
+> diff --git a/drivers/media/pci/cx25821/cx25821-alsa.c b/drivers/media/pci/cx25821/cx25821-alsa.c
+> index 301616426d8a..8da31c953b02 100644
+> --- a/drivers/media/pci/cx25821/cx25821-alsa.c
+> +++ b/drivers/media/pci/cx25821/cx25821-alsa.c
+> @@ -177,7 +177,7 @@ static int cx25821_alsa_dma_map(struct cx25821_audio_dev *dev)
+>  	struct cx25821_audio_buffer *buf = dev->buf;
+>  
+>  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
+> +			buf->nr_pages, DMA_FROM_DEVICE);
+>  
+>  	if (0 == buf->sglen) {
+>  		pr_warn("%s: cx25821_alsa_map_sg failed\n", __func__);
+> @@ -193,7 +193,7 @@ static int cx25821_alsa_dma_unmap(struct cx25821_audio_dev *dev)
+>  	if (!buf->sglen)
+>  		return 0;
+>  
+> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
+> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
+>  	buf->sglen = 0;
+>  	return 0;
+>  }
+> diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
+> index 7d7aceecc985..d38633bc1330 100644
+> --- a/drivers/media/pci/cx88/cx88-alsa.c
+> +++ b/drivers/media/pci/cx88/cx88-alsa.c
+> @@ -316,7 +316,7 @@ static int cx88_alsa_dma_map(struct cx88_audio_dev *dev)
+>  	struct cx88_audio_buffer *buf = dev->buf;
+>  
+>  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
+> +			buf->nr_pages, DMA_FROM_DEVICE);
+>  
+>  	if (buf->sglen == 0) {
+>  		pr_warn("%s: cx88_alsa_map_sg failed\n", __func__);
+> @@ -332,8 +332,8 @@ static int cx88_alsa_dma_unmap(struct cx88_audio_dev *dev)
+>  	if (!buf->sglen)
+>  		return 0;
+>  
+> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen,
+> -		     PCI_DMA_FROMDEVICE);
+> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages,
+> +		     DMA_FROM_DEVICE);
+>  	buf->sglen = 0;
+>  	return 0;
+>  }
+> diff --git a/drivers/media/pci/saa7134/saa7134-alsa.c b/drivers/media/pci/saa7134/saa7134-alsa.c
+> index 544ca57eee75..707ca77221dc 100644
+> --- a/drivers/media/pci/saa7134/saa7134-alsa.c
+> +++ b/drivers/media/pci/saa7134/saa7134-alsa.c
+> @@ -297,7 +297,7 @@ static int saa7134_alsa_dma_map(struct saa7134_dev *dev)
+>  	struct saa7134_dmasound *dma = &dev->dmasound;
+>  
+>  	dma->sglen = dma_map_sg(&dev->pci->dev, dma->sglist,
+> -			dma->nr_pages, PCI_DMA_FROMDEVICE);
+> +			dma->nr_pages, DMA_FROM_DEVICE);
+>  
+>  	if (0 == dma->sglen) {
+>  		pr_warn("%s: saa7134_alsa_map_sg failed\n", __func__);
+> @@ -313,7 +313,7 @@ static int saa7134_alsa_dma_unmap(struct saa7134_dev *dev)
+>  	if (!dma->sglen)
+>  		return 0;
+>  
+> -	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->sglen, PCI_DMA_FROMDEVICE);
+> +	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->nr_pages, DMA_FROM_DEVICE);
+>  	dma->sglen = 0;
+>  	return 0;
+>  }
 > 
 
