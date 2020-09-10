@@ -4,120 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC6FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A05C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA37E221E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DFF22208
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599705500;
-	bh=UMqV0gNms+/YN0J4UoHozIqkDOwbFjYIjU/HXB1hJUI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zDFEk8m4jOeMhNnNFbE61rlZTF8PvdT9r9VxKv8RtFBe6VPmtbkx7Fy+IaLkrRf2z
-	 6877VmDspM8WjavVTAhPYkhSfvfzH511VSWPB7bz+RxTpI8JU2pSUKUCExBNjn8S7D
-	 nD4y/XFAQcf+96tthRAm2n4MW3aOixWoLOGYGpGo=
+	s=default; t=1599705532;
+	bh=DUreE3/B8B60ExKVpkn5deA+5RXtXj3rT/zpM+ipKM8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ezd7V+Grq9d1cPyz07trmHGBVDNoauYzwSzQ5Ur6R2D88+eCOxzl9rkyoHglcI3jF
+	 U8SUDpmaTzlTRi2QC+K+2TmikHpzRQnFfK7jFrQANkRe1TxoTnpGT8nh3xDpqe6nXl
+	 X31/AbZ189qKlwrbY/vbuTfFia7AL1ZVAL0bE+SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbgIJCiQ (ORCPT
+        id S1728207AbgIJCIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:38:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48528 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 22:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbgIJCfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:35:34 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730175AbgIJBza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 21:55:30 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92CA9221ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 00:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D5E22204;
+        Thu, 10 Sep 2020 00:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599696499;
-        bh=UMqV0gNms+/YN0J4UoHozIqkDOwbFjYIjU/HXB1hJUI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XRNW6eJbWsLI2dCSUJMZosNlb4e/tykXXido1LD8pPrbG5UZ5QGektxxF0uvXt+MV
-         w18DIgFZLwTpusUyngmzMOF41INJKtd6YRyH6FUTTLzWTp3HRAndMz0AKC0VOELqGy
-         nfyu9nrXrAKcS+bohj+9WtnQwRFM3oAWDSLPeQ40=
-Received: by mail-wr1-f53.google.com with SMTP id k15so4721434wrn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:08:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532GxAjsUtQD3vXJsN2bZQsyh1C/Gsp/m0GXMUOvr9yMxfYgfzgZ
-        aMx0OOYoAiqT/qeTRp/N6DMEbgzVrXfArCesFE5glg==
-X-Google-Smtp-Source: ABdhPJyUSmXfx3HBBp7JJYedle+oX0ZnG2Dep5K1q7otSlaEM88vPubsDRmIYtoT+Ndy42FJLTTE15tPhnz9BNTJbcY=
-X-Received: by 2002:adf:ce8e:: with SMTP id r14mr6110885wrn.257.1599696498201;
- Wed, 09 Sep 2020 17:08:18 -0700 (PDT)
+        s=default; t=1599698358;
+        bh=DUreE3/B8B60ExKVpkn5deA+5RXtXj3rT/zpM+ipKM8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fxbGvae5PiiQEAyf5ZOsc1H1PIbu/Dtuxhr4F+6DiH4VkMLBe6b8vAQvKMaITSQTk
+         lEZycuYgzorka6kWEpyiTs/w+GnoMbixvkjYtFueggSDVnfjsYIpwv0dMs2CU8jlJ/
+         Sxkfy16axgN5dv42JNKPDgfSrCN+JbHDZlGTfmbI=
+Date:   Wed, 9 Sep 2020 19:39:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Message-ID: <20200910003916.GA741660@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200907094843.1949-1-Jason@zx2c4.com> <20200907100647.GB10657@zn.tnic>
- <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
- <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
- <20200908172558.GG25236@zn.tnic> <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
- <20200908173656.GI25236@zn.tnic> <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
- <20200908180112.GK25236@zn.tnic> <20200908191838.GA2014@sultan-box.localdomain>
- <20200908193029.GM25236@zn.tnic> <fa447f6b7c7f03cc0c55573d5736889cee81a1e6.camel@linux.intel.com>
-In-Reply-To: <fa447f6b7c7f03cc0c55573d5736889cee81a1e6.camel@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 9 Sep 2020 17:08:06 -0700
-X-Gmail-Original-Message-ID: <CALCETrWAa+WogyaZ+XGsVxQ+3-j3C+VoQnRWz8L+FUgRpY7nfw@mail.gmail.com>
-Message-ID: <CALCETrWAa+WogyaZ+XGsVxQ+3-j3C+VoQnRWz8L+FUgRpY7nfw@mail.gmail.com>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 6:02 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Tue, 2020-09-08 at 21:30 +0200, Borislav Petkov wrote:
-> > On Tue, Sep 08, 2020 at 12:18:38PM -0700, Sultan Alsawaf wrote:
-> > > I'd like to point out that on Intel's recent 14nm parts,
-> > > undervolting
-> > > is not so much for squeezing every last drop of performance out of
-> > > the
-> > > SoC as it is for necessity.
-> >
-> > <snip interesting examples>
-> >
-> > Sounds to me that this undervolting functionality should be part of
-> > the kernel and happen automatically. I have no clue, though, whether
-> > people who do it, just get lucky and undervolting doesn't cause any
-> > other hardware issues, or there's a real reason for this power
-> > madness
-> > and if not done, power-related failures happen only on some boxes so
-> > they decided to do them on all.
-> >
-> > Or maybe BIOS is nuts, which is not a stretch.
-> >
-> The whole OC is based on experiments to come to correct values. This
-> depends on whole system design not just CPUs.
-> https://www.intel.com/content/www/us/en/gaming/resources/how-to-overclock.html
-> It warns about system stability.
->
-> > Srinivas, what's the story here?
-> I checked and there is no public spec. There are several mailbox
-> commands with version dependent on the processor.
->
-> The actual OC mailbox implementation itself is implemented in Linux in
-> intel_turbo_max_3 driver. So that is public.
-> So someone can develop a driver and provide some sysfs to send mailbox
-> commands, but kernel can't validate commands which can cause any
-> security or stability issues. Not sure if this is acceptable standard.
-> I don't think there is any precedent of creating such blind sysfs
-> entries.
->
->
+On Thu, Sep 03, 2020 at 01:10:02PM -0400, Matthew Rosato wrote:
+> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
 
-Having once written a rejected driver to poke at the Intel Xeon memory
-controller SMBUS, there is at least precedent for writing drivers for
-dangerous interfaces, if not merging said drivers :)
+> >    - How do we decide whether to use dev_flags vs a bitfield like
+> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
+> >      to use dev_flags.  If there's a reason, maybe we could add a
+> >      comment at pci_dev_flags for future reference.
+> 
+> Something like:
+> 
+> /*
+>  * Device does not implement PCI_COMMAND_MEMORY - this is true for any
+>  * device marked is_virtfn, but is also true for any VF passed-through
+>  * a lower-level hypervisor where emulation of the Memory Space Enable
+>  * bit was not provided.
+>  */
+> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
 
-But we have drivers for various EC interfaces, for other SMBUS hosts,
-etc, and all of these can cause all kinds of mischief if misused.
+Sorry, I wasn't clear about this.  I was trying to suggest that if
+there are some situations where we need to use pci_dev_flags instead
+of a bitfield, it would be useful to have a generic comment to help
+decide between them.
+
+I don't know that there *is* a good reason, and unless somebody can
+think of one, I'd like to get rid of pci_dev_flags completely and
+convert them all to bitfields.
+
+Given that, my preference would be to just add a new bitfield,
+something like this:
+
+  struct pci_dev {
+    ...
+    unsigned int no_command_memory:1;  /* No PCI_COMMAND_MEMORY */
