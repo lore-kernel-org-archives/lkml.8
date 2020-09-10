@@ -2,148 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ABFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40331C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF33214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XG1F0moH"
+	by mail.kernel.org (Postfix) with ESMTP id F3EAF214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599758023;
+	bh=PUBpYQj0CxzLrTEIPelTfB5FM7z8aFgQE0RamhRKdGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pBMMrPNCTNR7x7NqEbopbGJAH+ZpDvoomb3RdG4dssLa8tG280tSNHg5/8xaBtzn4
+	 9mtAw6sFfKQSqqZdXjdprm0g4Yt645Up2HjGQdeLg3RJuQidPHhHnSfVO3klzE3lzb
+	 SAqQ2cVR2RZ5L7fNwWCh+V5vTaBQVOGJ0Nf1xYHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgIJRM5 (ORCPT
+        id S1727016AbgIJRNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgIJRLf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:11:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D631BC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:11:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id o5so7546576wrn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e7jefh25XCKZfPoIkRNxN7N4Tflp0SqsV/tI/tWYRzk=;
-        b=XG1F0moHLQKlC3AzqilBlzA2HA0fK1G/k0lQDl+t35aFaRzrjooU2skfOKLerx6Zpr
-         aU6YzU6ZJZ/zKaE8xcC+nNp0VAcKbPZuR5BZHuXK1f46JHA+yueimFnO63xfUaOObu2B
-         a6KEqTqY8qvD8imR7OJy2tdob5sN4dHzBtqQ9OFtO1alOVwWU8wjmOzFcHO9bjUwDMCP
-         872eO5nSO78xuXnQhncEZ1VUIIBsbB/7ORAtpx+i3CAvAnubYuxfBiDBrQh0RNYa1vGH
-         pl2FeosyK0AxyAbc10rEw4avzsAxWRxIcKVeMMKiOA8kETxcpqtVxC1B/Uy1nrGlciAA
-         Eetg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e7jefh25XCKZfPoIkRNxN7N4Tflp0SqsV/tI/tWYRzk=;
-        b=kUDg8S6fUWGzMEZ+bpIbwa2iXixlDi+uHF0mkZk2yIDJ2K3bKJK3NKWSeXvCMWVSbB
-         ipHBBrdUwgkuJt6bA3bNcb4hxSM+B8XF7te4BKgHXTPKAPNK26VRrWqO2JE1eslCwYqY
-         E2iTPWqnY3P99e+OMRck9JZ1Y46kNDa7Xrzh4xAc3hnQqy4kvMRLQD80oSm2z1wRSMq0
-         JpslwVhGW8NXmqeOfcr9S/R4YNAUTPTLKWmqL8Ho/TD+tHQLuxLlMH10AjgtddgWkOJB
-         D3hCNRWM49xkXIqLqTS4rnJa4HqLE32q5HXldQpfcPCNRkwMmt0Mm7kxIsZEdcmAbnZG
-         q5dw==
-X-Gm-Message-State: AOAM532LME/rRDRD81LMKKIgRm5POzYyMIycjIxqgFQFl7NacMatOR2E
-        VLokipGDqQn/5K0iddA7WQlXp+PI56Tii/JQ0N/KVw==
-X-Google-Smtp-Source: ABdhPJwtHTt5kfroDQYT7AFrVej7dGgwjf21yW5MaYlzGNNQRhDz4YP5JrYn6cWgBC7NRLjptYY2REfgsATBs5jY8V0=
-X-Received: by 2002:adf:82b1:: with SMTP id 46mr10891426wrc.271.1599757893281;
- Thu, 10 Sep 2020 10:11:33 -0700 (PDT)
+        Thu, 10 Sep 2020 13:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgIJRMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:12:51 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B811120C09;
+        Thu, 10 Sep 2020 17:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599757971;
+        bh=PUBpYQj0CxzLrTEIPelTfB5FM7z8aFgQE0RamhRKdGk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EKml8Bp/9LmNdjeMi1rCzFyiQzegEeGNrtKf/vFqrtC10kEjnhTIxRe8hB5Fle0t6
+         7uDN6w35OLtDdE66DdKTs0hbqzABuv0/xOPYY4y/aU5Q6aO8CQMGTJLFJhZB+mbNPD
+         xJtDa0Yi6FsRPugbXzyqZtdbxk2aEPJyCbwfgXWE=
+Date:   Thu, 10 Sep 2020 19:12:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
+        peterx@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v2 v4.14.y 0/3] vfio: Fix for CVE-2020-12888
+Message-ID: <20200910171258.GC1621093@kroah.com>
+References: <1599591263-46520-1-git-send-email-akaher@vmware.com>
+ <1599591263-46520-4-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-References: <20200908044228.61197-1-namhyung@kernel.org> <20200910155736.jadhmqvnqquammpn@two.firstfloor.org>
-In-Reply-To: <20200910155736.jadhmqvnqquammpn@two.firstfloor.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 10 Sep 2020 10:11:21 -0700
-Message-ID: <CAP-5=fUp90QrY+HcetpgZJeUn2fSqndRCZ8f1m=rFcEwO7ZZew@mail.gmail.com>
-Subject: Re: [PATCHSET 0/4] perf stat: Add --multiply-cgroup option
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599591263-46520-4-git-send-email-akaher@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 8:57 AM Andi Kleen <andi@firstfloor.org> wrote:
->
-> On Tue, Sep 08, 2020 at 01:42:24PM +0900, Namhyung Kim wrote:
-> > When we profile cgroup events with perf stat, it's very annoying to
-> > specify events and cgroups on the command line as it requires the
-> > mapping between events and cgroups.  (Note that perf record can use
-> > cgroup sampling but it's not usable for perf stat).
->
-> The problem is real, but I don't really like your solution.
-> The option is ugly. Should rather be solved with some suitable
-> syntax in the expression parser to express: apply to all,
-> instead of adding adhoc options like this.
->
-> There are some additional problems that really need to be eventually
-> solved too:
->
-> - If you use the old syntax and some cgroups are not covered you don't
-> get any warning. At least that should be fixed too.
->
-> - And of course if everything works it is still very slow for the kernel
-> because there are so many perf events to handle. Long term we probably
-> need some more flexible way to just specify for given perf events which set of
-> cgroups they should apply, so that sharing and low overhead monitoring
-> of many cgroups is possible I hate to say it, but maybe some eBPF filter
-> is the solution here.
->
-> -Andi
+On Wed, Sep 09, 2020 at 12:24:23AM +0530, Ajay Kaher wrote:
+> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
+> devices may lead to DoS scenario
+>     
+> The VFIO modules allow users (guest VMs) to enable or disable access to the
+> devices' MMIO memory address spaces. If a user attempts to access (read/write)
+> the devices' MMIO address space when it is disabled, some h/w devices issue an
+> interrupt to the CPU to indicate a fatal error condition, crashing the system.
+> This flaw allows a guest user or process to crash the host system resulting in
+> a denial of service.
+>     
+> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
+> before user access.
+>     
+> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
+> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
+> can later use to invalidate those mappings.
+>     
+> Patch 3/ block the user from accessing memory spaces which is disabled by using
+> new vma list support to zap, or invalidate, those memory mappings in order to
+> force them to be faulted back in on access.
+>     
+> Upstreamed patches link:
+> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+> 
+> Diff from v1:
+> Fixed build break problem.
+> 
+> [PATCH v2 v4.14.y 1/3]:
+> Backporting of upsream commit 41311242221e:
+> vfio/type1: Support faulting PFNMAP vmas
+>         
+> [PATCH v2 v4.14.y 2/3]:
+> Backporting of upsream commit 11c4cd07ba11:
+> vfio-pci: Fault mmaps to enable vma tracking
+>         
+> [PATCH v2 v4.14.y 3/3]:
+> Backporting of upsream commit abafbc551fdd:
+> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
 
-Just to throw in some 2c worth. A nice thing about Namhyung's approach
-is that it can apply for metrics, events and pfm-events. It would be
-nice if there were a single option for specifying these, perhaps we
-can figure one out.
+This worked better, now all queued up, thanks!
 
-One thought that came to mind based on Namhyung's multiply name was
-and assuming a cgroup could be a modifier:
-
-perf record -e cycles:G1
-
-there could be equivalent to a new syntax of lists and multiplies of:
-
-perf record -e [cycles]*[:G1]
-
-This would allow expressions like:
-
-perf record -e [{instructions,cycles},branches]*[:u,:k]
-
-which would be equivalent to (showing the effect on sibling groups):
-
-perf record -e {instructions:u,cycles:u},branches:u,{instructions:k,cycles:k},branches:k
-
-Adding in cgroups makes a longer list of events:
-
-perf record -e [{instructions,cycles},branches]*[:u,:k]*[:G1,:G2]
-
-becomes:
-
-perf record -e {instructions:u:G1,cycles:u:G1},branches:u:G1,{instructions:k:G1,cycles:k:G1},branches:k:G1,{instructions:u:G2,cycles:u:G2},branches:u:G2,{instructions:k:G2,cycles:k:G2},branches:k:G2
-
-This is somewhat similar to Arnaldo's proposal but trying to make
-things a bit more generic, avoiding overloading the use of sibling
-groups, .. Perhaps there is a syntax that others prefer or could be
-borrowed from a familiar source like a programming language.
-
-I think for Namhyung's sake it is important not to get too distracted
-by desires for better syntax, as this change makes a benefit in a way
-that works with the existing flags. If it is accepted, the man pages
-need to be updated.
-
-Thanks,
-Ian
+greg k-h
