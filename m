@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A29C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C3DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E4B2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1874320855
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599763565;
-	bh=zplVVIgMQojsbwVzaG1n4QTE3TMlBcAZb0xfKeub8eE=;
+	s=default; t=1599763618;
+	bh=4BDeDZK996n/Vh4H0ckJIlmceQtTA38A19o30K70hSY=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnIEHPP5cgUz6r9yb0QJo+L0A2wmpzK1BmPvW4lqoXyWs1Nyoi+4b3DdUXseuvs/2
-	 +Lr/Lw8qjbXaxCsA4+DG5+cAGtQNDIPpgVrOgM64B4kfKXHJZ32CD/yGxs+XOdP7fD
-	 lJ2xrMXbN+1bRwk68jZF1wM5EYwQ55UxRPJROMVA=
+	b=meXn+/4aMj+0pXTL8F8R3nMlk+f4dVWvgWIkOq+hRncQKuCgzaEfx66Uo+KsaZvlE
+	 Z6V4uMRCzHbBXS0rjg57obUZTULuqIqk7aSNOaqfxd3pMmv6UiBUiILv6+YeUH9tr2
+	 D+lrvMMg6Nb9TjW+jTHSbj+ahsDtim3RZWKhbMvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgIJSqB (ORCPT
+        id S1727796AbgIJSqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 14:46:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgIJQNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:13:30 -0400
+        id S1726639AbgIJQN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:13:26 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8744221D90;
-        Thu, 10 Sep 2020 16:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9B121D91;
+        Thu, 10 Sep 2020 16:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599754364;
-        bh=zplVVIgMQojsbwVzaG1n4QTE3TMlBcAZb0xfKeub8eE=;
+        s=default; t=1599754357;
+        bh=4BDeDZK996n/Vh4H0ckJIlmceQtTA38A19o30K70hSY=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=p9Aps4ONeROFriwJ9u8H2cjA/DUEGWRKzoNnFEhQRzm20lKlg1F4hg8ZODe4lfyvA
-         hSobjF/nxCveprXcdjdJCZMp/51Xv7pRgUjZPxTwi0ZFYXc7udvs3NWsCssjExJ0pB
-         KFQLwO9iAu60t1Y4VrlazrSz2f2NIfyXSgQxCeM8=
+        b=P+dpOwouw9W8ptrls/F7JGMUkPFTYFzDnueo5mMPnroDoY8BpUNfoD1JwbnzahIvC
+         xGGxnEaSBxjbewiujbeG7eeBIJlqTnf+TIybcpsS6a1SLAR/0uVeND30tmqgMkzxLj
+         BEODxoO3/Kn5F9Oal6M6tLn2BF6Y7fOAqYtT2a+4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -49,9 +49,9 @@ To:     "David S. Miller" <davem@davemloft.net>,
         netdev@vger.kernel.org, devicetree@vger.kernel.org,
         linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v3 4/8] nfc: s3fwrn5: Remove unneeded 'ret' variable
-Date:   Thu, 10 Sep 2020 18:12:15 +0200
-Message-Id: <20200910161219.6237-5-krzk@kernel.org>
+Subject: [PATCH v3 2/8] dt-bindings: net: nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+Date:   Thu, 10 Sep 2020 18:12:13 +0200
+Message-Id: <20200910161219.6237-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200910161219.6237-1-krzk@kernel.org>
 References: <20200910161219.6237-1-krzk@kernel.org>
@@ -60,39 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The local variable 'ret' can be removed:
-
-  drivers/nfc/s3fwrn5/i2c.c:167:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+The device tree property prefix describes the vendor, which in case of
+S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
+and "fw-gpios" is not correct and should be deprecated.  Introduce
+properly named properties for these GPIOs and rename the fw-gpios" to
+"wake-gpios" to better describe its purpose.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/nfc/s3fwrn5/i2c.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../bindings/net/nfc/samsung,s3fwrn5.yaml     | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
-index 557279492503..dc995286be84 100644
---- a/drivers/nfc/s3fwrn5/i2c.c
-+++ b/drivers/nfc/s3fwrn5/i2c.c
-@@ -164,7 +164,6 @@ static int s3fwrn5_i2c_read(struct s3fwrn5_i2c_phy *phy)
- static irqreturn_t s3fwrn5_i2c_irq_thread_fn(int irq, void *phy_id)
- {
- 	struct s3fwrn5_i2c_phy *phy = phy_id;
--	int ret = 0;
+diff --git a/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
+index f43d31a2d94b..cb0b8a560282 100644
+--- a/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
++++ b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
+@@ -14,30 +14,42 @@ properties:
+   compatible:
+     const: samsung,s3fwrn5-i2c
  
- 	if (!phy || !phy->ndev) {
- 		WARN_ON_ONCE(1);
-@@ -179,10 +178,9 @@ static irqreturn_t s3fwrn5_i2c_irq_thread_fn(int irq, void *phy_id)
- 	switch (phy->mode) {
- 	case S3FWRN5_MODE_NCI:
- 	case S3FWRN5_MODE_FW:
--		ret = s3fwrn5_i2c_read(phy);
-+		s3fwrn5_i2c_read(phy);
- 		break;
- 	case S3FWRN5_MODE_COLD:
--		ret = -EREMOTEIO;
- 		break;
- 	}
++  en-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used for enabling/disabling the chip
++
+   interrupts:
+     maxItems: 1
  
+   reg:
+     maxItems: 1
+ 
++  wake-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used to enter firmware mode and sleep/wakeup control
++
+   s3fwrn5,en-gpios:
+     maxItems: 1
++    deprecated: true
+     description:
+-      Output GPIO pin used for enabling/disabling the chip
++      Use en-gpios
+ 
+   s3fwrn5,fw-gpios:
+     maxItems: 1
++    deprecated: true
+     description:
+-      Output GPIO pin used to enter firmware mode and sleep/wakeup control
++      Use wake-gpios
+ 
+ additionalProperties: false
+ 
+ required:
+   - compatible
++  - en-gpios
+   - interrupts
+   - reg
+-  - s3fwrn5,en-gpios
+-  - s3fwrn5,fw-gpios
++  - wake-gpios
+ 
+ examples:
+   - |
+@@ -55,7 +67,7 @@ examples:
+             interrupt-parent = <&gpa1>;
+             interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-            s3fwrn5,en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
+-            s3fwrn5,fw-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
++            en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
++            wake-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
+         };
+     };
 -- 
 2.17.1
 
