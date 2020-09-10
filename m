@@ -2,118 +2,128 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72EEC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B04C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B749221E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599769298;
-	bh=TVXcsgCAIE3J4CKEnU244kyeJ3WeU3LxPW676Kop+zk=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=CfDhWTlcdhP0msmA17QxyAlIux8zDLoLwDmJkrup178u4jkcWSLEilKsiGWy3XHu1
-	 C+M89jHAU36GoA89YzChnzagKyk3xTFk2cNKc3OsEKVodXPzFOyLVI56TjWM/SaL4l
-	 8gTPITO7finF4J12JyjHkJna/pihWxlp3Es0FDsc=
+	by mail.kernel.org (Postfix) with ESMTP id 4B45A20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIJUVe (ORCPT
+        id S1726385AbgIJUWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 16:22:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56252 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgIJUUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725833AbgIJUUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 16:20:12 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD3F20882;
-        Thu, 10 Sep 2020 20:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599769196;
-        bh=TVXcsgCAIE3J4CKEnU244kyeJ3WeU3LxPW676Kop+zk=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=VA8uvxxEYcis7kulu5NUYwyPHRIboMp7ipEPsOpcXRwa9V9wl3Kp9nMhBoUnyb05f
-         JxB+9rBPobHzU17oAg/tJqEh8tA8S3GgszUXpCvGmrwxZ1gzuexT33fFAezu/JSTSV
-         wRU2Tf8jUTOfSoXAwKKjMZLSsfjosjqFXcJV9rcw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 4BB413523080; Thu, 10 Sep 2020 13:19:56 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 13:19:56 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
-        jolsa@redhat.com, bpf@vger.kernel.org
-Subject: [PATCH RFC tip/core/rcu 0/4] Accelerate RCU Tasks Trace updates
-Message-ID: <20200910201956.GA24190@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kGT2t-00E8FC-Be; Thu, 10 Sep 2020 22:19:51 +0200
+Date:   Thu, 10 Sep 2020 22:19:51 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
+        davem@davemloft.net, kuba@kernel.org,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Subject: Re: [PATCH 13/15] habanalabs/gaudi: Add ethtool support using
+ coresight
+Message-ID: <20200910201951.GG3354160@lunn.ch>
+References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+ <20200910161126.30948-14-oded.gabbay@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200910161126.30948-14-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+> +static int gaudi_nic_get_link_ksettings(struct net_device *netdev,
+> +					struct ethtool_link_ksettings *cmd)
+> +{
+> +	struct gaudi_nic_device **ptr = netdev_priv(netdev);
+> +	struct gaudi_nic_device *gaudi_nic = *ptr;
+> +	struct hl_device *hdev = gaudi_nic->hdev;
+> +	u32 port = gaudi_nic->port, speed = gaudi_nic->speed;
 
-This series accelerates RCU Tasks Trace updates, reducing the average
-grace-period latencies from about a second to about 20 milliseconds
-on my x86 laptop.  These are benchmark numbers, based on a previously
-posted patch to rcuscale.c [1] running on my x86 laptop.  The patches
-in this series are as follows:
+Please go through the code and fixup Reverse Christmas tree.
 
-1.	Mark variables static, noted during this effort but otherwise
-	unconnected.  This change has no effect, so that the average
-	grace-period latency remains at 980 milliseconds.
+> +
+> +	cmd->base.speed = speed;
+> +	cmd->base.duplex = DUPLEX_FULL;
+> +
+> +	ethtool_link_ksettings_zero_link_mode(cmd, supported);
+> +	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
+> +
+> +	ethtool_add_mode(cmd, supported, 100000baseCR4_Full);
+> +	ethtool_add_mode(cmd, supported, 100000baseSR4_Full);
+> +	ethtool_add_mode(cmd, supported, 100000baseKR4_Full);
+> +	ethtool_add_mode(cmd, supported, 100000baseLR4_ER4_Full);
+> +
+> +	ethtool_add_mode(cmd, supported, 50000baseSR2_Full);
+> +	ethtool_add_mode(cmd, supported, 50000baseCR2_Full);
+> +	ethtool_add_mode(cmd, supported, 50000baseKR2_Full);
+> +
+> +	if (speed == SPEED_100000) {
+> +		ethtool_add_mode(cmd, advertising, 100000baseCR4_Full);
+> +		ethtool_add_mode(cmd, advertising, 100000baseSR4_Full);
+> +		ethtool_add_mode(cmd, advertising, 100000baseKR4_Full);
+> +		ethtool_add_mode(cmd, advertising, 100000baseLR4_ER4_Full);
+> +
+> +		cmd->base.port = PORT_FIBRE;
+> +
+> +		ethtool_add_mode(cmd, supported, FIBRE);
+> +		ethtool_add_mode(cmd, advertising, FIBRE);
+> +
+> +		ethtool_add_mode(cmd, supported, Backplane);
+> +		ethtool_add_mode(cmd, advertising, Backplane);
+> +	} else if (speed == SPEED_50000) {
+> +		ethtool_add_mode(cmd, advertising, 50000baseSR2_Full);
+> +		ethtool_add_mode(cmd, advertising, 50000baseCR2_Full);
+> +		ethtool_add_mode(cmd, advertising, 50000baseKR2_Full);
+> +	} else {
+> +		dev_err(hdev->dev, "unknown speed %d, port %d\n", speed, port);
+> +		return -EFAULT;
+> +	}
+> +
+> +	ethtool_add_mode(cmd, supported, Autoneg);
+> +
+> +	if (gaudi_nic->auto_neg_enable) {
+> +		ethtool_add_mode(cmd, advertising, Autoneg);
+> +		cmd->base.autoneg = AUTONEG_ENABLE;
+> +		if (gaudi_nic->auto_neg_resolved)
+> +			ethtool_add_mode(cmd, lp_advertising, Autoneg);
+> +	} else {
+> +		cmd->base.autoneg = AUTONEG_DISABLE;
+> +	}
+> +
+> +	ethtool_add_mode(cmd, supported, Pause);
+> +
+> +	if (gaudi_nic->pfc_enable)
+> +		ethtool_add_mode(cmd, advertising, Pause);
+> +
+> +	return 0;
+> +}
+> +
+> +static int gaudi_nic_set_link_ksettings(struct net_device *netdev,
+> +				const struct ethtool_link_ksettings *cmd)
+> +{
+> +	struct gaudi_nic_device **ptr = netdev_priv(netdev);
+> +	struct gaudi_nic_device *gaudi_nic = *ptr;
+> +	struct hl_device *hdev = gaudi_nic->hdev;
+> +	u32 port = gaudi_nic->port;
+> +	int rc = 0, speed = cmd->base.speed;
+> +	bool auto_neg = cmd->base.autoneg == AUTONEG_ENABLE;
 
-2.	Use more aggressive polling for RCU Tasks Trace.  This polling
-	starts at five-millisecond intervals instead of the prior
-	100-millisecond intervals.  As before, the polling interval
-	increases in duration as the grace period ages, and again as
-	before is capped at one second.  This change reduces the
-	average grace-period latency to about 620 milliseconds.
+It appears you only support speed and auto_neg. You should check that
+all other things which could be configured are empty, e.g. none of the
+bits are set in cmd->link_modes.advertising. If you are requested to
+configure something which is not supported, you need to return
+-EOPNOTSUPP.
 
-3.	Selectively enable more RCU Tasks Trace IPIs.  This retains
-	the old behavior of suppressing IPIs for grace periods that are
-	younger than 500 milliseconds for CONFIG_TASKS_TRACE_RCU_READ_MB=y
-	kernels, including CONFIG_PREEMPT_RT=y kernels, but allows IPIs
-	immediately on other kernels.  It is quite possible that a more
-	sophisticated decision procedure will be required, and changes
-	to RCU's dyntick-idle code might also be needed.  This change
-	(along with the earlier ones) reduces the average grace-period
-	latency to about 120 milliseconds.
-
-4.	Shorten per-grace-period sleep for RCU Tasks Trace.  The
-	current code sleeps for 100 milliseconds after the end of
-	each grace period, which by itself prevents a back-to-back
-	string of grace-period waits from completing faster than
-	ten per second.  This patch also retains this old behavior
-	for CONFIG_TASKS_TRACE_RCU_READ_MB=y (and again thus also
-	for CONFIG_PREEMPT_RT=y kernels).  For other kernels, this
-	post-grace-period sleep is reduced to five milliseconds.
-	This change (along with the earlier ones) reduced the average
-	grace-period latency to about 18 milliseconds, for an overall
-	factor-of-50 reduction in latency.
-
-Alexei Starovoitov benchmarked an earlier patch [2], producing results
-that are roughly consistent with the above reduction in latency [3].
-
-							Thanx, Paul
-
-[1] https://lore.kernel.org/bpf/20200909193900.GK29330@paulmck-ThinkPad-P72/
-[2] https://lore.kernel.org/bpf/20200910052727.GA4351@paulmck-ThinkPad-P72/
-[3] https://lore.kernel.org/bpf/619554b2-4746-635e-22f3-7f0f09d97760@fb.com/
-
-------------------------------------------------------------------------
-
- tasks.h |   37 +++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+	Andrew
