@@ -2,100 +2,194 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1A7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A6821556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EADE208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4lbT73q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgIJW5M (ORCPT
+        id S1725535AbgIJW7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:57:12 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50302 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgIJW5K (ORCPT
+        Thu, 10 Sep 2020 18:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgIJW7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:57:10 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 08AMv8qc089110;
-        Fri, 11 Sep 2020 07:57:08 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Fri, 11 Sep 2020 07:57:08 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 08AMv7Ii089106
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 11 Sep 2020 07:57:08 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: [PATCH] fbcon: Fix user font detection test at fbcon_resize().
-To:     syzbot <syzbot+b38b1ef6edf0c74a8d97@syzkaller.appspotmail.com>,
-        george.kennedy@oracle.com, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, syzkaller-bugs@googlegroups.com
-References: <00000000000024be1505ad487cbb@google.com>
-Cc:     b.zolnierkie@samsung.com, daniel.vetter@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, natechancellor@gmail.com
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <f6e3e611-8704-1263-d163-f52c906a4f06@I-love.SAKURA.ne.jp>
-Date:   Fri, 11 Sep 2020 07:57:06 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 18:59:41 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1144DC061573;
+        Thu, 10 Sep 2020 15:59:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f2so3139817pgd.3;
+        Thu, 10 Sep 2020 15:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WCk2bX/YNT7z2/9JsWe2t1BL4uka1nrZfC0S8q18cWg=;
+        b=u4lbT73q0nerUhyGRrZhfauivZnhEdime4oYipvCQgKO0oO7EFtCkJDUBgK//5dhMF
+         lWSfYGfefinVBYICgP0Okh4VYVkzfx0sVF6W4neUHdwJOkpvohP9Raj9BO9sa2kM8s3q
+         FUnaW1SrZ32LoryghWN4OkKqZ3mLV9pKfM2ND+bItHSovlGJXEflkjbncWZmBRiji4Lu
+         a1wuqYgvWQ+O7/DRoYIl7Q+DE6OMTyEiLaRGZsRUGAvcaQGmAINaGAE7/96M1ks/wzJ4
+         IFby0BcA/4J2XEcj2j0RTyz2FX7DPNUrE8VKlAKMcoU52fBUX7s6dmrrraHZVqSII5dI
+         y+0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=WCk2bX/YNT7z2/9JsWe2t1BL4uka1nrZfC0S8q18cWg=;
+        b=fyQXftWJCGHMD4DOy0rgiFKsI51ReRYcdF4VwdwG4nocY+UCZs+m0BG9U/jf3rg7Dd
+         NG9wS4iCZnyvpAO8uE+tpY4tRMIJDqtidninovmLf1xNztXS9Es2cALfUIjRa1iO8Tpw
+         EXApLu/yCwVpO4bjg/1DnMiDsQHGHTNnQvXDXaOSlDmvn+TQc/mBKp8zGe1WuZuue+BT
+         eY3dVOETGA7s0wIV2Ng4unmB3iv3VmemoYzCeGIacRN1Nb0BuyfxWIeHRLAxuhWpnNS3
+         CughbhPrSBYNdZESth+22WPLl1ortONvfj64PmAglf0qq1iZj5kSrNUzgdh5LCxGG7x2
+         ijUw==
+X-Gm-Message-State: AOAM532T/8fZhNQNLceczdA0iYmShOP4RH7o46pLfQ7TWgvAQATThUm5
+        mX3I98UO+VhVpJzGF0Kc+WYU4HaPWIp5j6RM
+X-Google-Smtp-Source: ABdhPJyf0FVUXmww71xlcWMxj12unsFtmF5ULtApqJcGRrSioIPcEAT3x7hvtGIhL+ESycOZMzX1sg==
+X-Received: by 2002:a17:902:b216:: with SMTP id t22mr8011535plr.35.1599778779423;
+        Thu, 10 Sep 2020 15:59:39 -0700 (PDT)
+Received: from Gentoo (sau-ff5be-or.servercontrol.com.au. [43.250.207.3])
+        by smtp.gmail.com with ESMTPSA id a14sm82578pju.30.2020.09.10.15.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 15:59:38 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 04:29:28 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     masahiroy@kernel.org, jeremie.francois@gmail.com,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] scripts : config : Added example use when run without
+ argument,extend help
+Message-ID: <20200910225928.GB10714@Gentoo>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>, masahiroy@kernel.org,
+        jeremie.francois@gmail.com, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+References: <20200910110713.12782-1-unixbhaskar@gmail.com>
+ <13084d55-6b9a-5c6b-0ce0-84739b3e1072@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <00000000000024be1505ad487cbb@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
+Content-Disposition: inline
+In-Reply-To: <13084d55-6b9a-5c6b-0ce0-84739b3e1072@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is reporting OOB read at fbcon_resize() [1], for
-commit 39b3cffb8cf31117 ("fbcon: prevent user font height or width change
- from causing potential out-of-bounds access") is by error using
-registered_fb[con2fb_map[vc->vc_num]]->fbcon_par->p->userfont (which was
-set to non-zero) instead of fb_display[vc->vc_num].userfont (which remains
-zero for that display).
 
-We could remove tricky userfont flag [2], for we can determine it by
-comparing address of the font data and addresses of built-in font data.
-But since that commit is failing to fix the original OOB read [3], this
-patch keeps the change minimal in case we decide to revert altogether.
+--JYK4vJDZwFMowpUq
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://syzkaller.appspot.com/bug?id=ebcbbb6576958a496500fee9cf7aa83ea00b5920
-[2] https://syzkaller.appspot.com/text?tag=Patch&x=14030853900000
-[3] https://syzkaller.appspot.com/bug?id=6fba8c186d97cf1011ab17660e633b1cc4e080c9
+On 15:52 Thu 10 Sep 2020, Randy Dunlap wrote:
+>Hi,
+>
+>Please be more careful. There are many errors here. (see below)
 
-Reported-by: syzbot <syzbot+b38b1ef6edf0c74a8d97@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Fixes: 39b3cffb8cf31117 ("fbcon: prevent user font height or width change from causing potential out-of-bounds access")
-Cc: George Kennedy <george.kennedy@oracle.com>
----
- drivers/video/fbdev/core/fbcon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Silly me! thanks Randy :)
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 66167830fefd..dae7ae7f225a 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -2203,7 +2203,7 @@ static int fbcon_resize(struct vc_data *vc, unsigned int width,
- 	struct fb_var_screeninfo var = info->var;
- 	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
- 
--	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
-+	if (p->userfont && FNTSIZE(vc->vc_font.data)) {
- 		int size;
- 		int pitch = PITCH(vc->vc_font.width);
- 
--- 
-2.18.4
+~Bhaskar=20
+>
+>On 9/10/20 4:07 AM, Bhaskar Chowdhury wrote:
+>> This patch extends the help section by adding an explicit example of use.
+>>=20
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/config | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>=20
+>> diff --git a/scripts/config b/scripts/config
+>> index eee5b7f3a092..b75a5aab2453 100755
+>> --- a/scripts/config
+>> +++ b/scripts/config
+>> @@ -45,6 +45,25 @@ make time.
+>>  By default, $myname will upper-case the given symbol. Use --keep-case t=
+o keep
+>>  the case of all following symbols unchanged.
+>> =20
+>> +The concerete example, say, you want to change any particular config ,l=
+ike
+>
+>       concrete                                                  config, l=
+ike
+>
+>> +GKOV for profiling , you can simply use this command
+>
+>   GCOV
+>
+>> +
+>> +To enable :
+>
+>      enable:
+>
+>> +
+>> +#scripts/config --enable GKOV_KERNEL  && grep GKOV .config
+>
+>                            GCOV_KERNEL          GCOV
+>
+>> +
+>> + and the output will be like this :
+>
+>                                this:
+>
+>> +
+>> +  CONFIG_GKOV_KERNEL=3Dy
+>
+>            GCOV
+>
+>> +
+>> +To disable :
+>
+>      disable:
+>
+>> +
+>> +#scripts/config --disable GKOV_KERNEL  && grep GKOV .config
+>
+>                             GCOV                 GCOV
+>
+>> +
+>> +  and the output will be like this :
+>
+>                                 this:
+>
+>> +
+>> +# CONFIG_GKOV_KERNEL is not set
+>
+>            GCOV
+>
+>> +
+>>  $myname uses 'CONFIG_' as the default symbol prefix. Set the environment
+>>  variable CONFIG_ to the prefix to use. Eg.: CONFIG_=3D"FOO_" $myname ...
+>>  EOL
+>>=20
+>
+>
+>--=20
+>~Randy
+>
 
+--JYK4vJDZwFMowpUq
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl9ar9AACgkQsjqdtxFL
+KRUTfAgAzU37uG52mvMQo0s0FEZ9QRGFIjQTNCDSCYz7J7ET+eZ5UjKX6TtLZKWy
+fH04zN4/wlBinTXiKJ7ZxcP0daIw6EKehB+pxCkNs8OWeSSJHLSzDOAlm3i21m/x
+FnfW0ona3lTGz02a/jy/II2SmRVQ19iwO490eEg4XNJimgmGRbRqM8UDAbeSlfzD
+tFQsd/zADMtbY9XxWwJUz70uysfVyRaN2k9YjvepWvPnIChCWU4j49SCS+kMEMSB
+KltGxycLXytvWVArFLLrt3n+vVMwTbM387cr9vR4RSrSP+4qOZMjqNVFhLq4M3Ce
+VcMSo5j3YpkiWGZeHCat6+iEMA/TOA==
+=jhvs
+-----END PGP SIGNATURE-----
+
+--JYK4vJDZwFMowpUq--
