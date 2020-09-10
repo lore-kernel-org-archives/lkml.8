@@ -2,139 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A85C2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F988C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80FC20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC7620731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="evbTMrD3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFEKLFgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725933AbgIJETM (ORCPT
+        id S1725981AbgIJEXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 00:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45806 "EHLO
+        Thu, 10 Sep 2020 00:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgIJETI (ORCPT
+        with ESMTP id S1725855AbgIJEXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 00:19:08 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F7FC061573;
-        Wed,  9 Sep 2020 21:19:08 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bn5HM5Ncqz9sTd;
-        Thu, 10 Sep 2020 14:18:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599711538;
-        bh=EhVZZhtTZCGxIkbgzYqVicFIUPzGTN9DxCVVPOY1Xss=;
-        h=Date:From:To:Cc:Subject:From;
-        b=evbTMrD34oqRHtx7o9AHio+LEMg/rNnKdizpFr2dEn4JHdhyKJtxaSjpX/uWXfroX
-         jU9wefkUcSN/FZ74YN8rn0SkzBGNSzSeDxsSsC5YKO9vqghY9gQYSWQ15WXQ6NnK23
-         Rk+KsUXLBHvx+OzLwGS8DDf3pjVXFJRcgKOnztZDZSiyP9vcZuRy+6RIVL03uiF3Eg
-         mNmLWDLrIksfVgRydeCGU1X6K7Gpx26Ff0cockawtd5Oy5qOKf6bigR+rHOdcEPMA+
-         Dokh4zzBffQYiKnRLhWZM1a8yeWdr33iPqDXO1epCGdfP7PNrQhvSEyeffyN4NKV7y
-         YcdzOVLfdgJ1A==
-Date:   Thu, 10 Sep 2020 14:18:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the extcon tree with the drm-misc tree
-Message-ID: <20200910141854.1d4b1b10@canb.auug.org.au>
+        Thu, 10 Sep 2020 00:23:42 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A18C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 21:23:41 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id x8so3248539ybm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 21:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/eMi6Tr0LlsDBlM6QiOu6xP2+hAoSjCKsAUIpkGtlPA=;
+        b=XFEKLFgxSjtgby5dZNg9BUlFoRVUhE+9I9O2rx/YpQivcHJ8V+rXoPjVL4RBnXHBiX
+         Pn0sJZjHH1QU7avB24ZbL4K8+ZiEpyWvFs6+niw1f1mg1EVF/CtRtMS/2N2XPskz5ZMt
+         6hA08B2Lmvi1eV/sBGcBQF8nvB+rVC9zYUaarzaqqT0XUIzE/pao4IS0AsdGySOWndS+
+         C1cV0IbAJEQha+ggd5oifWIOTHjLuNFzvKRIJHobi8Ck9jPSXK5L4OXZSHXo70Nw27gR
+         IC7Xt+O6SbrgwtfKt5FJEFIp4I4p8SF1UG0E02x+iSt+6plzvCaBfvfbJerHUI/anc8b
+         LuNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/eMi6Tr0LlsDBlM6QiOu6xP2+hAoSjCKsAUIpkGtlPA=;
+        b=dqpKdDuWIsJ24fSz9iVD8vS2JlBqF+tfLCbV8eGWQaqE1b+XAm4czmFzgcFtejfm5w
+         Q25dg9lbnG3250YVDYh0H3PD+NFDgSo474klaWjlLAQeheXG9RjjMl8xsqRAN3CJ1TYl
+         zRELB1Nxj7AuYS6ojB6cXRm48vUqxf5FU1dXl5DHfRFmkEpvgP+ZwXd9A8B4bUbJqCvS
+         wfx7Rzcax+NF0rEc+IsKENORyT9YYsL176tFleuw3Vnvd7NXiYUJD2avqQ2tIv/7retj
+         bGGPhk/rNKUlRQalYbDYzNZuGnbG6cm09hhcX3LT2b4JVQVTgHHd6n1PjH0Mez7DlWwb
+         Nlfg==
+X-Gm-Message-State: AOAM531hzz6OpmxgO88ozXwmbzmc9YBUyxXQlBYq6tRhj8xmkMrV0aEc
+        sJA9aDsyHGBIQJLbtGIE2Pgdbn7hWlNBeM9ARDymSzAvUuE=
+X-Google-Smtp-Source: ABdhPJx2TXiTER+LYCqBPMv17tIEsx6ZuvO/+P6A+Nn9JA+Vm/7lsXf2boUmHrOKzudz1ZjRrBaAFWjASSSY2IuUUq0=
+X-Received: by 2002:a25:c07:: with SMTP id 7mr9862909ybm.200.1599711821234;
+ Wed, 09 Sep 2020 21:23:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/e=KaLfUS5Ij0WJmpNj.Op=0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200812204952.1921587-1-jcline@redhat.com> <CACAvsv71oxCYB1+LCAUHD5v_NGAP-DpxPY_dPz53iw2=91KAJg@mail.gmail.com>
+ <CACO55tvv6REmNzZZyyRSJyRT5z-xEf38+tk9cDnft63DX5JQUw@mail.gmail.com> <20200909140706.GA27322@dev.jcline.org>
+In-Reply-To: <20200909140706.GA27322@dev.jcline.org>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Thu, 10 Sep 2020 14:23:30 +1000
+Message-ID: <CACAvsv5Pr_=ns89XqY2JbLNo8vPHdv6CJW3LJpFb4c+HAjiK8Q@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] drm/nouveau: Add fine-grain temperature reporting
+To:     Jeremy Cline <jcline@redhat.com>
+Cc:     Karol Herbst <kherbst@redhat.com>, David Airlie <airlied@linux.ie>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/e=KaLfUS5Ij0WJmpNj.Op=0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 10 Sep 2020 at 00:07, Jeremy Cline <jcline@redhat.com> wrote:
+>
+> On Wed, Sep 09, 2020 at 10:22:14AM +0200, Karol Herbst wrote:
+> > On Wed, Sep 9, 2020 at 6:06 AM Ben Skeggs <skeggsb@gmail.com> wrote:
+> > >
+> > > On Thu, 13 Aug 2020 at 06:50, Jeremy Cline <jcline@redhat.com> wrote:
+> > > >
+> > > > Commit d32656373857 ("drm/nouveau/therm/gp100: initial implementation of
+> > > > new gp1xx temperature sensor") added support for reading finer-grain
+> > > > temperatures, but continued to report temperatures in 1 degree Celsius
+> > > > increments via nvkm_therm_temp_get().
+> > > >
+> > > > Rather than altering nvkm_therm_temp_get() to report finer-grain
+> > > > temperatures, which would be inconvenient for other users of the
+> > > > function, a second interface has been added to line up with hwmon's
+> > > > native unit of temperature.
+> > > Hey Jeremy,
+> > >
+> > > Sorry this slipped past me until now.  I'm OK with adding support for
+> > > millidegree temperature reporting, but don't think we need to keep
+> > > both interfaces around and would rather see the existing code
+> > > converted to return millidegrees (even on GPUs that don't support it)
+> > > instead of degrees.
+> > >
+> > > Thanks!
+> > > Ben.
+> > >
+> >
+> > just a note as I was trying something like that in the past: we have a
+> > lot of code which fetches the temperature and there are a lot of
+> > places where we would then do a divide by 1000, so having a wrapper
+> > function at least makes sense. If we want to keep the func pointers?
+> > well.. I guess the increased CPU overhead wouldn't be as bad if all
+> > sub classes do this static * 1000 as well either. I just think we
+> > should have both interfaces in subdev/therm.h so we can just keep most
+> > of the current code as is.
+> >
+>
+> Indeed. My initial plan was to change the meaning of temp_get() and
+> adjust all the users, but there's around a dozen of them and based on my
+> understanding of the users none of them cared much about such accuracy.
+>
+> However, I do find having one way to do things appealing, so if there's
+> a strong preference for it, I'm happy to produce a somewhat more
+> invasive patch where all users expect millidegrees.
+Yeah, I do have a strong preference for not having to keep multiple
+interfaces around unnecessarily.  It'd be somewhat different if we had
+external interactions, but this is all stuff within the module and we
+should be able to make these kinds of changes without too much pain.
 
-Hi all,
+Ben.
 
-Today's linux-next merge of the extcon tree got a conflict in:
-
-  MAINTAINERS
-
-between commit:
-
-  f61249dddecc ("MAINTAINERS: Add entry for i.MX 8MQ DCSS driver")
-
-from the drm-misc tree and commit:
-
-  d0e3c25150dd ("MAINTAINERS: Add entry for NXP PTN5150A CC driver")
-
-from the extcon tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index 623c53ab5bd5,da94c9b12f1b..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -12496,14 -12430,13 +12496,21 @@@ F:	drivers/iio/gyro/fxas21002c_core.
-  F:	drivers/iio/gyro/fxas21002c_i2c.c
-  F:	drivers/iio/gyro/fxas21002c_spi.c
- =20
- +NXP i.MX 8MQ DCSS DRIVER
- +M:	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
- +R:	Lucas Stach <l.stach@pengutronix.de>
- +L:	dri-devel@lists.freedesktop.org
- +S:	Maintained
- +F:	Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
- +F:	drivers/gpu/drm/imx/dcss/
- +
-+ NXP PTN5150A CC LOGIC AND EXTCON DRIVER
-+ M:	Krzysztof Kozlowski <krzk@kernel.org>
-+ L:	linux-kernel@vger.kernel.org
-+ S:	Maintained
-+ F:	Documentation/devicetree/bindings/extcon/extcon-ptn5150.yaml
-+ F:	drivers/extcon/extcon-ptn5150.c
-+=20
-  NXP SGTL5000 DRIVER
-  M:	Fabio Estevam <festevam@gmail.com>
-  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-
---Sig_/e=KaLfUS5Ij0WJmpNj.Op=0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ZqS4ACgkQAVBC80lX
-0GzmZQgAhm9Au7ork/yyZ3MKOW+hLWU+QSZsorx+EpWJ0cp7nYN/YDijwMydfpXk
-DFf53BByT7rglwvwis8zhMwjoodlGOY6ImkMIIlOZEMZMhaLlZunhTWdeuYCuKvM
-xDyjPwQbXK/QCaoYGcTUrvG58IBqOIaeIIgGYc/bgw5aU/KER4syr8XS6KYGWsrX
-DQGlzedAMcfsoclBIRMjpuuSIuDHtMwVMa4Pnfz2PNcGnFZ7r5V24Pi4NY5+2zTW
-tdrmfs58w3Ilq30feyn5BYae64qwV5Z2jSVJOLYvgl5OS4YP79Q4ivf3738l04eK
-SEdOJSIYKI7pZkhmdJNu4fKLkxbENw==
-=zfDk
------END PGP SIGNATURE-----
-
---Sig_/e=KaLfUS5Ij0WJmpNj.Op=0--
+>
+> - Jeremy
+>
