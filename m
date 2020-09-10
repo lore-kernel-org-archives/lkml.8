@@ -2,323 +2,110 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B253C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4798C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E91208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7293620720
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VSHIjfqG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0XCiJD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgIJGry (ORCPT
+        id S1729296AbgIJGsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40392 "EHLO
+        Thu, 10 Sep 2020 02:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgIJGrq (ORCPT
+        with ESMTP id S1726796AbgIJGsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:47:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20505C061796
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:47:46 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a3so4953650oib.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:47:46 -0700 (PDT)
+        Thu, 10 Sep 2020 02:48:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677F6C061796;
+        Wed,  9 Sep 2020 23:48:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id m6so5432585wrn.0;
+        Wed, 09 Sep 2020 23:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=c5BRUOzvPRq+ucLWlHMvjOAcK2A18unxu2vLExCmowo=;
-        b=VSHIjfqG+wCS1T8UnTrVSqvUCwjGoIkQtc3XzrGMvc7toZdnbMgof0EmbPRAng7k3y
-         BST0H4W7NKvDWttpVVF21xvqguaaIlFH6jxUjQ3mPD7YnRURomRx2N+FA/bjEe2/i+z0
-         PY4AzNGs9SFYp6gm2JYg0PRsniafJLAcW2P8Y=
+        bh=FyBji0jUnhO4oYGrGFt75emLfTDTbis+giL1ABCyBwk=;
+        b=F0XCiJD4CO+YHJwA/K4EHHG0lF7D3Q17O3rGJYK/fG5W3zJAj+YrB0utZzE+LdGDKW
+         BIMK+W1trbYLEIyRiGfoG9XnhBHZ8s6oC8OnrnXAoFBqh0unW6scXNoRKUZSunOaRXl6
+         3CA73+Zbc5NpnXYEjmNEIuR91sChvOR4ovdjXTc2UJUqtMLQLLadedyXc+pCAbGc6q05
+         AdrKMW7y5CxWvfAlXOqRERMGaep5GVGp34LdD9Rt1f3QdbqwETxyQn3F0WLb7Wfaa01/
+         Kmb6V4MYd3/wRAQp7i4Q+CfBnHnYI+PkxyoRafmrpSUI/AEl1eRbANzmBqNLFlw3PH5m
+         1UCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=c5BRUOzvPRq+ucLWlHMvjOAcK2A18unxu2vLExCmowo=;
-        b=tb/RBLTU8CDlTzsHJMDST+Cwg10FoJ+N2uKM7Q5rdwkaOhlxY2IUPapObrx60HvaEp
-         0yOAMUjEDnGM6wLFI6cEShVDNBAHLr0oRJOeFo7qNKM8f6am0JCA9RyknEWLNU3vfFtz
-         OsG09SgvtuRzDx/hpFuvC1P4zcyWVr1QSXLMcz4c2bpgpNyBHiV/4PHHor0Z1YYPd/wN
-         Ie0gVsxs25cj1iaoYaH222d8L/ekV5iWm2Wmu4bPTp907TaS7cVOgDwZQnsmnW9XVwy8
-         mxARXXe8/znwMGcmUJh1y06S8kCRr3D5gB+y25R1uuAg3Xu7EZD2nh5prgwfdcuZLtx/
-         jRxQ==
-X-Gm-Message-State: AOAM532skg/+FLCXNJB6s0m9S9ugy7K/lVYhLgA8Hqi35RimlTpNeieL
-        XK0TmZYeKuXoRyMWAXCsiHmwSUWV3HchNrCRcT85UA==
-X-Google-Smtp-Source: ABdhPJxt0Z/+Z2ELV37yJUgoYvATDTKzdcBUbPzvQCNtPwWNuGCIKgNBVTZD1Eg9V7mK+xR8Me+YiEmMm9lczLiRaZI=
-X-Received: by 2002:aca:6083:: with SMTP id u125mr2910610oib.14.1599720465269;
- Wed, 09 Sep 2020 23:47:45 -0700 (PDT)
+        bh=FyBji0jUnhO4oYGrGFt75emLfTDTbis+giL1ABCyBwk=;
+        b=KRL0Qq8NEgdYb0I8dp1HvSQb4nUlssptrmRugIpfi3nkkaeCbslMYjKXEMPoTWsKqs
+         ajeJxq/8vheS+5H3cphQTr5snMwZnLkz9KQ54l04xe/Wyfdi+wm1W/zVZak213m0eCAl
+         K0sPPydYPAVZk5l4f2UwXfx/8lKv+1q/mGdEKiKfLYVHf9g7YBZrlMf2GfNpIpc9dvJB
+         7eF5BkPmTFWsM808tjFzsd82oshNhumuLaKiK4hybj4P00qHJtaN72SHySxVLCJn8C+S
+         /jp2mTLe8ZiyjMBmJExtHDvmbcCFu8+QOPAqdkGsErRHJQqFtKkUmIbMvb+nlcXjOLnJ
+         7wcg==
+X-Gm-Message-State: AOAM532n/A0ufnZ7aAoTdQLFMdsBWes6BPX2bvIEvoQtu+btEHs9kUfS
+        +5ZtwIqB5eUXO4tB5joKy49dL1lGiQT7Y/qoiXs=
+X-Google-Smtp-Source: ABdhPJzLSkdu/NgL5WJvAPPoWZi/tRfyBd1FYIBZ+DfsVm5stBb+zn2uEr03LpzvmbnbdsOLuMVlcVHLa4O383pQUVM=
+X-Received: by 2002:a05:6000:1152:: with SMTP id d18mr7214695wrx.173.1599720499997;
+ Wed, 09 Sep 2020 23:48:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
- <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141> <e882838158cb9e81440c8cdeb25d80bf3310e8a8.camel@pengutronix.de>
- <20200831112445.t4xfz33avdyx5w6p@fsr-ub1864-141> <f46d44f38008d214951994a340814570c182cc15.camel@pengutronix.de>
-In-Reply-To: <f46d44f38008d214951994a340814570c182cc15.camel@pengutronix.de>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 10 Sep 2020 08:47:34 +0200
-Message-ID: <CAKMK7uG7s1j+k0WPq8H4OcTD0jP2_LpTy0SBw0RtP-ij1OS7Mw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller Subsystem
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        lukas@mntmn.com,
+References: <20200909193419.2006744-1-james.hilliard1@gmail.com>
+ <1599706954.10822.3.camel@suse.de> <a1161f77-5b37-39ea-eb91-7b0b59278960@gmail.com>
+In-Reply-To: <a1161f77-5b37-39ea-eb91-7b0b59278960@gmail.com>
+From:   James Hilliard <james.hilliard1@gmail.com>
+Date:   Thu, 10 Sep 2020 00:48:07 -0600
+Message-ID: <CADvTj4q+b6nLBV6LEdd6K-daNbhTf6rUMOYnj+p0FO6+NTCg7A@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: serial: Repair FTDI FT232R bricked eeprom
+To:     Lars Melin <larsm17@gmail.com>
+Cc:     Oliver Neukum <oneukum@suse.de>, linux-usb@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Russ Dill <Russ.Dill@gmail.com>,
+        Hector Martin <hector@marcansoft.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 5:03 PM Lucas Stach <l.stach@pengutronix.de> wrote:
+On Wed, Sep 9, 2020 at 11:34 PM Lars Melin <larsm17@gmail.com> wrote:
 >
-> Hi Laurentiu,
+> On 9/10/2020 10:02, Oliver Neukum wrote:
+> > Am Mittwoch, den 09.09.2020, 13:34 -0600 schrieb James Hilliard:
+> >> This patch detects and reverses the effects of the malicious FTDI
+> >> Windows driver version 2.12.00(FTDIgate).
+> >
+> > Hi,
+> >
+> > this raises questions.
+> > Should we do this unconditionally without asking?
+> > Does this belong into kernel space?
+> >
 >
-> On Mo, 2020-08-31 at 14:24 +0300, Laurentiu Palcu wrote:
-> > Hi Lucas, Sam,
-> >
-> > On Mon, Aug 31, 2020 at 12:37:23PM +0200, Lucas Stach wrote:
-> > > Hi Laurentiu,
-> > >
-> > > On Fr, 2020-08-28 at 11:36 +0300, Laurentiu Palcu wrote:
-> > > > Hi Lucas,
-> > > >
-> > > > I was wondering about the plans to merge this series. Since not many
-> > > > people can test it properly due to lack of DCSS support in the upstream
-> > > > NWL driver (which I heard it's coming soon) and a completely nonexistent
-> > > > HDP driver, are we going to take a leap of faith and merge it as is? Or
-> > > > should we wait?
-> > >
-> > > I think even if the bridges aren't ready yet, the driver is in a good
-> > > enough shape to merge it. There's no point in letting it accumulate
-> > > bitrot while waiting for the bridges to land. Also I guess it will make
-> > > bridge driver development a lot easier when the DCSS driver is in-tree.
-> >
-> > OK, fair enough.
-> >
-> > > > As to who is going to do the actual merge, I know we had a brief
-> > > > discussion about it some time ago and I was supposed to apply for
-> > > > drm-misc rights, however it feels a little awkward to merge my own
-> > > > code... :) Though, I might not even qualify for drm-misc rights anyway,
-> > > > considering I haven't been very active in this area... :/
-> > >
-> > > Please consider applying for drm-misc merge rights. Even if you don't
-> > > do the initial merge I think it will come in handy in the long run.
-> >
-> > OK, I'll apply for drm-misc rights. Sam also encouraged me to do this in
-> > a previous email. Since this series will be followed by a bunch of other
-> > patches, enabling support for video planes, among other things, I guess
-> > I'll need the rights anyway.
-> >
-> > > > On that note, I will probably need help with the merging, provided it's
-> > > > still happenning. Will you be able to help me out with this?
-> > >
-> > > Sure, I'm having some time available this week. I'll give this v9
-> > > another spin on my boards and will do the merge after that.
-> >
-> > Thanks Lucas. As a matter of fact, after Sam's email, I was preparing a
-> > v10 after rebasing to latest drm-next. However, no conflicts were encountered
-> > and the v9 series applied cleanly. Let me know if you encounter any
-> > issues and I can resend it.
+> My answer to both of those question is a strong NO.
 >
-> I've tested this together with a hacked up eDP bridge driver stack on
-> my boards. The testing hasn't been really in-depth, but things seem to
-> work fine. I have now pushed the whole series into drm-misc-next.
-
-Something doesn't compile too well
-
-ERROR: modpost: "__aeabi_ldivmod"
-[drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-ERROR: modpost: "__aeabi_uldivmod"
-[drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-
-Cheers, Daniel
+> The patch author tries to justify the patch with egoistical arguments
+> (easier for him and his customers) without thinking of all other users
+> of memory constrained embedded hardware that doesn't need the patch code
+> but have to carry it.
+If that's a concern it would not be difficult to add a kconfig option to allow
+disabling it.
 >
-> Regards,
-> Lucas
+> The bricked PID is btw already supported by the linux ftdi driver so
+> there is no functionality gain in the patch.
+By the kernel driver sure, but userspace is where things get messed up
+without something like this.
 >
-> > Thanks,
-> > Laurentiu
-> >
-> > > Regards,
-> > > Lucas
-> > >
-> > > > Thanks,
-> > > > laurentiu
-> > > >
-> > > > On Fri, Jul 31, 2020 at 11:18:28AM +0300, Laurentiu Palcu wrote:
-> > > > > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > > > > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > > > > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > > > >
-> > > > > Support for the rest of the features will be added incrementally, in subsequent
-> > > > > patches.
-> > > > >
-> > > > > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > > > > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > > > >
-> > > > > Thanks,
-> > > > > Laurentiu
-> > > > >
-> > > > > Changes in v9:
-> > > > >  * Fixed a compilation issue found by Guido in his setup: 'select
-> > > > >    VIDEOMODE_HELPERS' was missing from Kconfig;
-> > > > >  * Use imx8mq-clock.h in the bindings file so one can understand what
-> > > > >    those clock values mean;
-> > > > >  * no other changes done. Couldn't address the hang Guido reported as
-> > > > >    it's not happening in my setup. However, in my tree, there are some
-> > > > >    extra NWL and ADV patches applied on top of upstream ones... Also,
-> > > > >    removing them and testing only with upstream, even if there's no
-> > > > >    image out, does not produce a hang... :/
-> > > > >
-> > > > > Changes in v8:
-> > > > >  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
-> > > > >    out. SRC is not used in DCSS driver;
-> > > > >  * Nothing else changed;
-> > > > >
-> > > > > Changes in v7:
-> > > > >  * Added a patch to initialize the connector using the drm_bridge_connector
-> > > > >    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
-> > > > >    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
-> > > > >    patches for ADV and NWL were needed, from our downstream tree, which
-> > > > >    will be upstreamed soon by their author;
-> > > > >  * Rest of the patches are untouched;
-> > > > >
-> > > > > [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-> > > > > [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-> > > > >
-> > > > > Changes in v6:
-> > > > >  * Addressed Rob's comment and added "additionalProperties: false" at
-> > > > >    the end of the bindings' properties. However, this change surfaced
-> > > > >    an issue with the assigned-clock* properties not being documented in
-> > > > >    the properties section. Added the descriptions and the bindings patch
-> > > > >    will need another review;
-> > > > >  * Added an entry for DCSS driver in the MAINTAINERS file;
-> > > > >  * Removed the component framework patch altogether;
-> > > > >
-> > > > > Changes in v5:
-> > > > >  * Rebased to latest;
-> > > > >  * Took out component framework support and made it a separate patch so
-> > > > >    that people can still test with HDP driver, which makes use of it.
-> > > > >    But the idea is to get rid of it once HDP driver's next versions
-> > > > >    will remove component framework as well;
-> > > > >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> > > > >    if the new mode and the old one are equal. Also, in this case, is
-> > > > >    not necessary to wait for DTG to shut off. This would allow to switch
-> > > > >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> > > > >    from DCSS point of view);
-> > > > >  * Do not fire off CTXLD when going to suspend, unless it still has
-> > > > >    entries that need to be committed to DCSS;
-> > > > >  * Addressed Rob's comments on bindings;
-> > > > >
-> > > > > Changes in v4:
-> > > > >  * Addressed Lucas and Philipp's comments:
-> > > > >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> > > > >    * Removed usage of devm_ functions since I'm already doing all the
-> > > > >      clean-up in the submodules_deinit();
-> > > > >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> > > > >    * Removed en_completion variable from dcss_crtc since this was
-> > > > >      introduced mainly to avoid vblank timeout warnings which were fixed
-> > > > >      by arming the vblank event in flush() instead of begin();
-> > > > >    * Removed clks_on and irq_enabled flags since all the calls to
-> > > > >      enabling/disabling clocks and interrupts were balanced;
-> > > > >    * Removed the custom atomic_commit callback and used the DRM core
-> > > > >      helper and, in the process, got rid of a workqueue that wasn't
-> > > > >      necessary anymore;
-> > > > >    * Fixed some minor DT binding issues flagged by Philipp;
-> > > > >    * Some other minor changes suggested by Lucas;
-> > > > >  * Removed YUV formats from the supported formats as these cannot work
-> > > > >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> > > > >    will add support for video planes;
-> > > > >
-> > > > > Changes in v3:
-> > > > >  * rebased to latest linux-next and made it compile as drmP.h was
-> > > > >    removed;
-> > > > >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> > > > >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> > > > >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> > > > >    by me several times;
-> > > > >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> > > > >    U-boot;
-> > > > >
-> > > > > Changes in v2:
-> > > > >  * Removed '0x' in node's unit-address both in DT and yaml;
-> > > > >  * Made the address region size lowercase, to be consistent;
-> > > > >  * Removed some left-over references to P010;
-> > > > >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> > > > >    issues reported by kbuild for other architectures;
-> > > > >
-> > > > >
-> > > > > Laurentiu Palcu (5):
-> > > > >   drm/imx: compile imx directory by default
-> > > > >   drm/imx: Add initial support for DCSS on iMX8MQ
-> > > > >   drm/imx/dcss: use drm_bridge_connector API
-> > > > >   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
-> > > > >   dt-bindings: display: imx: add bindings for DCSS
-> > > > >
-> > > > >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
-> > > > >  MAINTAINERS                                   |   8 +
-> > > > >  drivers/gpu/drm/Makefile                      |   2 +-
-> > > > >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> > > > >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> > > > >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
-> > > > >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> > > > >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> > > > >  20 files changed, 4112 insertions(+), 1 deletion(-)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> > > > >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> > > > >
-> > > > > --
-> > > > > 2.23.0
-> > > > >
+> br
+> Lars
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>
+>
