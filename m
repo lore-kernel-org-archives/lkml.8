@@ -2,103 +2,81 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F49AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5907BC07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0935D21941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nuYXudjI"
+	by mail.kernel.org (Postfix) with ESMTP id 042DF21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgIJSmY (ORCPT
+        id S1726794AbgIJSnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgIJSkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:40:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD032C061573;
-        Thu, 10 Sep 2020 11:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=SVMzvLSxHR4YQ7P25QME/n/EPljnU8bFV5nCGi/Qx44=; b=nuYXudjIOEKrlWaHHeZyFkpQS2
-        wwcSZk0K6RlZlYBKUfyyPTDC6keEIXtAj5sR8cW6zZPcdJenYgtUpeSbsI/A6IqqzX7UwTm3cLU54
-        7NZMZ6oZ/ZnahlBszJVIHI9ljDrIk4+VtqAzRV0N6OKnwAuaXO690x5NJgJOP3DQUNmKZAKgzJFs3
-        oOAuecoKw+/7+aDwFjfO1p5WdkwiGcJj2QfkXDILLlWhYQbcDm5GVAFw3XMqEGiWENVP58kACpBub
-        AqdkMeObcGfzgvZvocq6uoEzPznHnpjFWZBJFcgewoWlHp6VxFSUUTNnxJtmcgtpnGt38QNE919lg
-        kgp2qS6Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGRUn-0005ky-72; Thu, 10 Sep 2020 18:40:33 +0000
-Date:   Thu, 10 Sep 2020 19:40:33 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
-Message-ID: <20200910184033.GX6583@casper.infradead.org>
-References: <20200910164612.114215-1-mic@digikod.net>
- <20200910170424.GU6583@casper.infradead.org>
- <f6e2358c-8e5e-e688-3e66-2cdd943e360e@digikod.net>
- <a48145770780d36e90f28f1526805a7292eb74f6.camel@linux.ibm.com>
- <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
+        Thu, 10 Sep 2020 14:43:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42440 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgIJSmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:42:22 -0400
+IronPort-SDR: DLVLzQZyH8/89emHnetFN/7vyngC7xbDIcQV8VgYLQwK4zu5Qo4CzTB5fB8/PTYPaLa0nT5pr8
+ 9uXElScXU82Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="156010366"
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="156010366"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:42:09 -0700
+IronPort-SDR: Zcs5plhrRFs2sWIB5orwnncxOT0nrXtOrhIa+CQb58fgHpIQ2mSQddIrKy22DxKdpQKyspSKBw
+ U16o4d5zRLpw==
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="505931604"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:42:07 -0700
+Date:   Thu, 10 Sep 2020 11:42:06 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
+Message-ID: <20200910184206.GA17305@agluck-desk2.amr.corp.intel.com>
+References: <20200906212130.GA28456@zn.tnic>
+ <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
+ <20200908094650.GA25236@zn.tnic>
+ <20200908100837.GC25236@zn.tnic>
+ <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
+ <20200908152539.GE25236@zn.tnic>
+ <20200909113022.GA12237@zn.tnic>
+ <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
+ <20200909200321.GG12237@zn.tnic>
+ <20200910182901.GK8357@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
+In-Reply-To: <20200910182901.GK8357@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:38:21PM +0200, Mickaël Salaün wrote:
-> There is also the use case of noexec mounts and file permissions. From
-> user space point of view, it doesn't matter which kernel component is in
-> charge of defining the policy. The syscall should then not be tied with
-> a verification/integrity/signature/appraisal vocabulary, but simply an
-> access control one.
+On Thu, Sep 10, 2020 at 08:29:19PM +0200, Borislav Petkov wrote:
+> Ok, with all those changes, I don't think the following nice and juicy
+> message can be overlooked:
+> 
+> [   32.267830] mce: MSR access error: RDMSR from 0x1234 at rIP: 0xffffffff8102ed62 (mce_rdmsrl+0x12/0x50)
 
-permission()?
+With only one call site the rIP isn't super helpful at the moment. But
+once you start selling those "MSR or die" T-shirts everyone will want
+to use this :-)
+
+> [   32.267838] Call Trace:
+> [   32.267838]  <#MC>
+> [   32.267838]  do_machine_check+0xbd/0x9f0
+> [   32.267839]  ? trigger_mce+0x7/0x10
+> [   32.267839]  exc_machine_check+0x77/0xd0
+> [   32.267840]  asm_exc_machine_check+0x19/0x30
+
+Do we need the stack trace twice? Once from your fixup
+function, second from panic()?
+
+-Tony
