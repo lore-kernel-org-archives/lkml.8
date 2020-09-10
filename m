@@ -2,104 +2,94 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09225C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E134CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C169A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="BuBH/di8"
+	by mail.kernel.org (Postfix) with ESMTP id 912B5208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599758890;
+	bh=fiPZ2BP8Z4g3PTWcmBVre/QM99wVR3hZNpPT769ygts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PkYz22nkF+WnmWVROp+IhoIot5oq21BR5gEraYtS0GF6JUYMl8xtcOfCkl7wEfY6G
+	 r7nMe6uO6tXvxKh250oUJz8QKremn2d8E7zZoKhogqnjYIEYDsFoxqbiXV4rCMEGCY
+	 oqLlfsqpaQAfBqpC5PHiPvUfbMAKVB9iOAuJAL9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgIJR1q (ORCPT
+        id S1726641AbgIJR2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgIJRZS (ORCPT
+        Thu, 10 Sep 2020 13:28:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39605 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgIJRY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:25:18 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96BEC061786
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:25:16 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id n133so6821567qkn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/vqWihJxJulKAswDa6rjsgmUuGAobgE1eufaiUBVJcQ=;
-        b=BuBH/di8r/IY0DRgUoiYCEsDFHM9rctUOHuX1VbGAlbkAifpMocTQMVHND/ttsuSPV
-         IcwPxMvqGU6aHaPYXJHcHBeZTHrMs4rMSbeJy7D9Qf7oTWF6J64W0r1D1pKmVqPnl/Rt
-         BAw4/MWaTiD+wz71ezOFNIdOGgOe16bIS5msss+xIvII3bzfuYyqeLffc493EBNYixbM
-         2D9XxhlizMAPq+5rWIaMWGYZUV6CvG+uJANnNsxgpLOpZ0VOwpyIlWIUXdMzbrUlRxny
-         AdgU086zI/ts8CK/ZmQ/67BoG9oYERcDUG4on5JtF/CvJPWlY09MK67dGoZGGcoIuBna
-         85PA==
+        Thu, 10 Sep 2020 13:24:57 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c13so6661764oiy.6;
+        Thu, 10 Sep 2020 10:24:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/vqWihJxJulKAswDa6rjsgmUuGAobgE1eufaiUBVJcQ=;
-        b=KyL11870ShOUGeF9f0+m9F7N8jEoPX3fqTzlMYl1EWBgpY+6WGzEu0M7e/xNYI4n7k
-         EQUTMeNHQmmLCwHIZY1GWY1bpINZYwwCSo3cb/OvQ510H+QjiCRH+ADMbh8N4gtJXwmD
-         /r7XYcsTwOv+qavxDwPkwQkPNAKfmDRDX7ApTXW+b4qEiY4mkQwAJVqySS9Ntkr8ZZ6N
-         HS+OcoLltMRcgQXVBl2+1kRFGZHstShLqr1IHKEqI322AsBh7bUGdsX4AvYgGnuxEVqa
-         F/2EH1WYFPvyPX5ZcKYC+9mi+BBKJqOtq/iEoLaiUTdpUW7Zn7hodl8KwGMJBDrSAuIM
-         cQGA==
-X-Gm-Message-State: AOAM5301GthqvDc5jJwQalHg0VZLU+KNj3GniST6f9F+dktio9t/Uyz6
-        hSW3FaZBs6dCoAF9bg697DaLMbjNFrH1Xg==
-X-Google-Smtp-Source: ABdhPJx724rN9bj08FdYQXRaOcx+RqDNAhlrS6ZL2LtUQSCPA6BRnG6RnkUZmrQtwpnrDG0fwCYhlg==
-X-Received: by 2002:a37:6543:: with SMTP id z64mr9078713qkb.173.1599758715971;
-        Thu, 10 Sep 2020 10:25:15 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id j11sm6987698qko.111.2020.09.10.10.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 10:25:15 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kGQJu-004O47-FJ; Thu, 10 Sep 2020 14:25:14 -0300
-Date:   Thu, 10 Sep 2020 14:25:14 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm/doc: add usage description for migrate_vma_*()
-Message-ID: <20200910172514.GN87483@ziepe.ca>
-References: <20200909212956.20104-1-rcampbell@nvidia.com>
- <20200910105657.6007c5ca@lwn.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SjYkPCU61w/qb4B6RVouCzvKhSm3h1WA66nzvLfjm4Y=;
+        b=quRiHve48nAJjV09bFrsgP8HHIa6G4pvDjKK5TOnnBN8ghyrvyybNOkMX/QfPhnWZ+
+         DFMj9OSMFXSHAdclgebGNGTvAX4wquzZ+tv/Tyo1ik1x5xNHHXD3mR34cjxDdeaI5DZ8
+         hVsMOw7dg8JiAswKzWRl1EZvE/2zCDWuGjorLl1PKe+owVLsCW8/pO9VJQsPor5BO0J1
+         0H9Kx34rfN8pPasZj0o/R9uREuYbB2MaC40Fn6e2mmx9Ow5I7gMS882xP6XzPRTjhaQ5
+         D3kQjRPgSuLwo/NzjakrnD4dnqpLIbayUWlL7vF5oTKDTyQO+cTlpOAIlr6DD6ct6Noq
+         RWmg==
+X-Gm-Message-State: AOAM532fVtQze6jy91FCnXkbxAs025w5rrJ0XyNWZa/6eFI49kiZazKr
+        n/++2VNOHgb8CojKRSfqDnkfZS/oFETwmn6rVBigqKxd
+X-Google-Smtp-Source: ABdhPJynJyCEpO/tGdCDaOxBk3ZDa6w6i3ddDaYTbgQkZw4gQmwn7+kK35cbsnV5yWaFCEJBy4sMikK+fdImbFZ11vs=
+X-Received: by 2002:aca:fd95:: with SMTP id b143mr663599oii.68.1599758696796;
+ Thu, 10 Sep 2020 10:24:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910105657.6007c5ca@lwn.net>
+References: <d97f40ad-3033-703a-c3cb-2843ce0f6371@infradead.org>
+In-Reply-To: <d97f40ad-3033-703a-c3cb-2843ce0f6371@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 10 Sep 2020 19:24:45 +0200
+Message-ID: <CAJZ5v0iaHEWw2aV1pm6ZsXMRicYSkpKHmC+ygU=UW76isqX+4A@mail.gmail.com>
+Subject: Re: [PATCH] PM: <linux/device.h>: fix @em_pd kernel-doc warning
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:56:57AM -0600, Jonathan Corbet wrote:
-> On Wed, 9 Sep 2020 14:29:56 -0700
-> Ralph Campbell <rcampbell@nvidia.com> wrote:
-> 
-> > The migrate_vma_setup(), migrate_vma_pages(), and migrate_vma_finalize()
-> > API usage by device drivers is not well documented.
-> > Add a description for how device drivers are expected to use it.
-> > 
-> > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> > 
-> > There shouldn't be any merge conflict with my previous patch which
-> > touched hmm.rst but since Jonathan Corbet took my last patch, perhaps he
-> > would like to take this one through his tree too.
-> 
-> I'm happy to take it, but it certainly needs an ack from somebody who
-> understands HMM better than I do.
+On Mon, Sep 7, 2020 at 5:43 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix kernel-doc warning in <linux/device.h>:
+>
+> ../include/linux/device.h:613: warning: Function parameter or member 'em_pd' not described in 'device'
+>
+> Fixes: 1bc138c62295 ("PM / EM: add support for other devices than CPUs in Energy Model")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Lukasz Luba <lukasz.luba@arm.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  include/linux/device.h |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- lnx-59-rc4.orig/include/linux/device.h
+> +++ lnx-59-rc4/include/linux/device.h
+> @@ -454,6 +454,7 @@ struct dev_links_info {
+>   * @pm_domain: Provide callbacks that are executed during system suspend,
+>   *             hibernation, system resume and during runtime PM transitions
+>   *             along with subsystem-level and driver-level callbacks.
+> + * @em_pd:     device's energy model performance domain
+>   * @pins:      For device pin management.
+>   *             See Documentation/driver-api/pinctl.rst for details.
+>   * @msi_list:  Hosts MSI descriptors
+>
 
-Ralph wrote all the in kernel tests for this API, so I think he is
-well positioned to write the documentation :)
-
-Jason
+Applied as 5.9-rc material, thanks!
