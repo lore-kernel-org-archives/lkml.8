@@ -2,121 +2,117 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F24C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54391C2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B33C20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kwO7rFfP";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bxeCA5GE"
+	by mail.kernel.org (Postfix) with ESMTP id 169C9207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599719096;
+	bh=YYdbufaGVHlqO4nKD2x3a6t2VMqS5rsZ1vep5b/qwAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UwNmFJH8+xAa/MO0GBeZTWR4G4dW8gdW4Qy9nEUWfdDhPWDgI6SP7TGld+Y61oB+R
+	 bH74vHr9fggjMAMAy+InbCgqPttUSM2fpD6QL/FDonCMJqGeirvHqufrotLs3C/7WR
+	 OunlIt0WFOAWP/+dGawXVM9kMjcEAGZvbevxOML0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgIJGYm (ORCPT
+        id S1728611AbgIJGYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:24:42 -0400
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:33474
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726228AbgIJGYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:24:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599719072;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=sw5/57ZGcdqOaLzApeRTgEINqFme0CmU64O/ouWdLzQ=;
-        b=kwO7rFfPQV8eA+r9XtGKWrUuPxQ5GhAiYGbkCRPqM6+n0HNCBF57+m9yF0ssblTw
-        usspULVUyKIcWQ6II/wi6v6/kxE1IfvISiJ5LE1ST4zSCfGkCg/ztL2bsrcK9Z5YyZD
-        v6JX76SDLQ1tor0C7L/yYdPhBYhQn///1WV3tTpg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599719072;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=sw5/57ZGcdqOaLzApeRTgEINqFme0CmU64O/ouWdLzQ=;
-        b=bxeCA5GEbpgfh1xQtCEQIE3Tb/gHtffkU15OBfmSb57CCPeAsBJPtGEFqBfE3uwu
-        QfmjI9J3mh/P1xjDSbBl7j3bwH9kWTBqtjltNlGMDIiXLLX5wZwTeHZVCpvHUUJ/HgK
-        gBcFnoPXAacS94jXU6U/ljiZI/pkSFmk9OKxim+o=
+        Thu, 10 Sep 2020 02:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726228AbgIJGYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:24:50 -0400
+Received: from localhost (p5486ceec.dip0.t-ipconnect.de [84.134.206.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5BCF207DE;
+        Thu, 10 Sep 2020 06:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599719089;
+        bh=YYdbufaGVHlqO4nKD2x3a6t2VMqS5rsZ1vep5b/qwAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aTAXkxtLEunJFDT7fR21mpntjBM1h5RX7bLwZGytsLNRI6f9ocxRQhQ3P1zD9DYAi
+         hKiIw0BWQy+ig7qo9I/QWmxojJQ7ybNsK/S+m3pCv2dBD0gVFTmozjlhPJiG6XDPjx
+         285R+8i4zWAgog4LQ+tLw3BkQzLJEu8AG3RmQ66U=
+Date:   Thu, 10 Sep 2020 08:24:46 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 8/9] i2c: mux: gpmux: Simplify with dev_err_probe()
+Message-ID: <20200910062446.GD1031@ninjato>
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-8-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 10 Sep 2020 06:24:32 +0000
-From:   parashar@codeaurora.org
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        akashast@codeaurora.org
-Subject: Re: [PATCH] serial: qcom_geni_serial: To correct QUP Version
- detection logic
-In-Reply-To: <20200902060435.GA141898@kroah.com>
-References: <1599026211-12800-1-git-send-email-parashar@codeaurora.org>
- <20200902060435.GA141898@kroah.com>
-Message-ID: <0101017476afe173-62ad03fb-2f46-4f50-82f3-6967630a8ee0-000000@us-west-2.amazonses.com>
-X-Sender: parashar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.10-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZARJHfwaSJQLOEUz"
+Content-Disposition: inline
+In-Reply-To: <20200902150643.14839-8-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-02 11:34, Greg Kroah-Hartman wrote:
-> On Wed, Sep 02, 2020 at 11:26:51AM +0530, Paras Sharma wrote:
->> The current implementation reduces the sampling rate by half
->> if qup HW version is  greater is than 2.5 by checking if the
->> geni SE major version is greater than 2 and geni SE minor version
->> is greater than 5.
->> 
->> This implementation fails when the version is 3 or greater.
->> 
->> Hence new implementation checks if version is greater than or equal
->> to 0x20050000 which would work for any future version.
->> 
->> Signed-off-by: Paras Sharma <parashar@codeaurora.org>
->> ---
->>  drivers/tty/serial/qcom_geni_serial.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Is this a v2 patch?  What changed from the first one?
 
-This patch is in continuation of 
-https://patchwork.kernel.org/patch/11708805/ .
-It should have been V3 , i will correct it in my next patch .
-In the previous version ,i had added a new condition to separately check 
-if QUP se major version is greater than or equal to 3.
-In this ,i replaced the older logic of separately checking major and 
-minor versions for 2.5 and 3 with value of Qup version 0x20050000 .
-This checks for version greater than 2.5 directly.
-This would reduce the logic and will work for any future versions.
+--ZARJHfwaSJQLOEUz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> 
->> diff --git a/drivers/tty/serial/qcom_geni_serial.c 
->> b/drivers/tty/serial/qcom_geni_serial.c
->> index f0b1b47..e18b431 100644
->> --- a/drivers/tty/serial/qcom_geni_serial.c
->> +++ b/drivers/tty/serial/qcom_geni_serial.c
->> @@ -1000,7 +1000,7 @@ static void qcom_geni_serial_set_termios(struct 
->> uart_port *uport,
->>  	sampling_rate = UART_OVERSAMPLING;
->>  	/* Sampling rate is halved for IP versions >= 2.5 */
->>  	ver = geni_se_get_qup_hw_version(&port->se);
->> -	if (GENI_SE_VERSION_MAJOR(ver) >= 2 && GENI_SE_VERSION_MINOR(ver) >= 
->> 5)
->> +	if (ver >= 0x20050000)
-> 
-> That's an odd "magic value", can't you use the existing macros to 
-> define
-> this somehow so it makes sense?
+On Wed, Sep 02, 2020 at 05:06:42PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-The stable tag is not required because the board supporting version > 
-3 is not in any of the previous kernel versions.
-I will define a separate macro for this value in my next patch.
+Applied to for-next, thanks!
 
-> 
-> thanks,
-> 
-> greg k-h
+
+--ZARJHfwaSJQLOEUz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9Zxq4ACgkQFA3kzBSg
+KbbgJg/9GSHP1qRdFGhNdLgjcwkknpOwbjsZrYyXVYeYuUFbx9XQPf55dRd2yB28
+h6D02c/8cGep4CPrKQQDUpg/yFqTXV16AniUtjv8w0mP+BlBsyZ/GWhjUIsYxnHG
+Ff9l2LogCfDSoy3ZV5GLyELiGN0Ex3W1m6X5vjj+u3/pBMANwC6sUp89CmqgCic7
+IBX2wORSVUtvnA1cfA9ecn556CmTIWg9UzbGGV5/bPPItVALZ9gejg8CjHjaol/6
+mSUYdfaawrNZE9GYWP0iypPzu1qIdvPCcV38nbVp1/Y5DRA5bYD+NV3Yfc9MpLpK
+Ws+kpqElTyzcqorAABjk9TYUMa0CwEMfH40YysuupfdFRrZqkxMTtHQQ1DDhd//a
+p35eewasMSRaFzPalg5jAYX1WylSCi68O/o7tcmetO+4O0/z2yjTKrHsynaGKDpP
+6wy1pRywMx7ppAWamk1/4JQiq6KbpfjDK/0cbHVTigzUfCVvw0F6stAmUwqfV4dg
+/Osc9IuAXWlyax4rOcbWB5HsYXuPf5m3nqTNlHyYpFEThj0S8AfeyM8Zy1sDZ1SY
+Zk7VVFPPAIfDqfWlNMLhYTGrynwXjsDXW5gUUE71PccXJ2P1ZsbRO91fGDoZ+sIq
+ZOWfSEl1GHIwbSEmf06MM+fQNRg8WM3zA7EReBpW5GSntii3vpY=
+=CslT
+-----END PGP SIGNATURE-----
+
+--ZARJHfwaSJQLOEUz--
