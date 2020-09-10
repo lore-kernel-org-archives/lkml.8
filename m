@@ -2,112 +2,118 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D57C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC6DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48A63207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0DB20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oD1xRjIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgIJVB0 (ORCPT
+        id S1728009AbgIJVBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:01:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22318 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgIJVA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:00:27 -0400
-IronPort-SDR: iKpigk4c9iyTCQTW8pVLunAf0bqUFrzNbbeH2VLJAC0jRrhNXHmex7ijWHS6osXsomesbze/AD
- /eyxGoy3NxMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="176695887"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="176695887"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 14:00:21 -0700
-IronPort-SDR: tdlYxdjh/7WkCMR3CoT2zUlwckWJnEPQIMRF2Db0GxWi/0KrJI/nyeSqnoEBgg0/vLhjfogbzL
- 08HyLMKIgKUg==
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="329497302"
-Received: from spkincai-mobl.amr.corp.intel.com (HELO [10.254.127.63]) ([10.254.127.63])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 14:00:20 -0700
-Subject: Re: [PATCH v8 1/5] PCI: Conditionally initialize host bridge native_*
- members
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <20200910194901.GA808976@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <f1655ddf-35dc-424e-1df4-f3821ab7500e@linux.intel.com>
-Date:   Thu, 10 Sep 2020 14:00:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 17:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731218AbgIJOkP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:40:15 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EC2C061799
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:40:15 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id l1so2059976uai.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JlHSJzzDMd2cH/FNwWRua8Mp268amVy5W9EWLGVmUPc=;
+        b=oD1xRjIlRnK44AUoNaWNO/km7pvdC4CuwaFjutnksJPfr5b6oJmdEgdZ9yNz7Xk2Gm
+         bpWVhEtYTCTfJtAz6L1JEx6u/7KKahQo8ztrJBFbVTUqiD5g0ViXtUYWrkuVf7U4IKSh
+         OltoiL9sRb/sIZiVWKa1ZI4bJymSa/9pkerP0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JlHSJzzDMd2cH/FNwWRua8Mp268amVy5W9EWLGVmUPc=;
+        b=ZWqrLmS5L3pEyDKEMM4Ap29ga1rehA3GVqEuqISIivfKUR0maxNaf/ztT9mPanOQTY
+         ZVFwEG404e9j5cIIxVUsMswliNNXM1ATqfkmNTJJMj7OIvTcUY6zhZeCjBbGIq9ouaTg
+         Thxm1hGsuquif47JJbBJCQlnhOjh48+QsjweHW0YlFGqPfac4ePmNNIhcDuD58Tct8Eq
+         XtOwDigJ2NmIDjIV1lkXWM8fRwX56Gt6BEAxOlWdu0wxBuWj/u6STMIkYtW7WudxPX06
+         a6SOOwwW7OJjWGSP5+cGP/syc6W6zKiGzj/GcYldDO3bYWnU4UKh4Cpm2brg6ZuP5NAM
+         ocag==
+X-Gm-Message-State: AOAM532Xh7lyzCNwSACpP2FXKmFWQ2mq0c3y6XVRdzDdnJCcu2nU4Gi2
+        5nWF9KlGum3CcQt3g5bw4HlzKlKX9+yDww==
+X-Google-Smtp-Source: ABdhPJy2aII55ju5fI5ma1k+BGPNamszfPR0oLKGh37acAn5lkHnnJjXQd7FJtcKMw+4ZNUQWqKkEA==
+X-Received: by 2002:ab0:2a93:: with SMTP id h19mr4064430uar.18.1599748813338;
+        Thu, 10 Sep 2020 07:40:13 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id 89sm756370ual.11.2020.09.10.07.40.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 07:40:12 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id a16so3493763vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:40:12 -0700 (PDT)
+X-Received: by 2002:a67:d907:: with SMTP id t7mr4542751vsj.8.1599748811523;
+ Thu, 10 Sep 2020 07:40:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200910194901.GA808976@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org> <1599742438-16811-2-git-send-email-skakit@codeaurora.org>
+In-Reply-To: <1599742438-16811-2-git-send-email-skakit@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 10 Sep 2020 07:40:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XYqiGk3QEPxVKCgnYA0FVrizyarSW52HPRGVyAUSugrQ@mail.gmail.com>
+Message-ID: <CAD=FV=XYqiGk3QEPxVKCgnYA0FVrizyarSW52HPRGVyAUSugrQ@mail.gmail.com>
+Subject: Re: [PATCH V5 1/4] arm64: dts: qcom: sc7180: Improve the pin config
+ settings for CTS and TX
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Roja Rani Yarubandi <rojay@codeaurora.org>,
+        msavaliy@qti.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Thu, Sep 10, 2020 at 5:55 AM satya priya <skakit@codeaurora.org> wrote:
+>
+> Remove output-high from CTS and TX as this is not really required. During
+> bringup to fix transfer failures this was added to match with console uart
+> settings. Probably some boot loader config was missing then. As it is
+> working fine now, remove it.
+>
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in V4:
+>  - This is newly added in V4 to separate the improvements in pin settings
+>    and wakeup related changes.
+>
+> Changes in V5:
+>  - As per Doug's comment configured pull-down for CTS pin as earlier.
+>
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 
-On 9/10/20 12:49 PM, Bjorn Helgaas wrote:
-> On Fri, Jul 24, 2020 at 08:58:52PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> If CONFIG_PCIEPORTBUS is not enabled in kernel then initialing
->> struct pci_host_bridge PCIe specific native_* members to "1" is
->> incorrect. So protect the PCIe specific member initialization
->> with CONFIG_PCIEPORTBUS.
-> 
-> s/initialing/initializing/
-will fix it in next version.
-> 
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/probe.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 2f66988cea25..a94b97564ceb 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -588,12 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
->>   	 * may implement its own AER handling and use _OSC to prevent the
->>   	 * OS from interfering.
->>   	 */
->> +#ifdef CONFIG_PCIEPORTBUS
->>   	bridge->native_aer = 1;
->>   	bridge->native_pcie_hotplug = 1;
->> -	bridge->native_shpc_hotplug = 1;
->>   	bridge->native_pme = 1;
->>   	bridge->native_ltr = 1;
-> 
-> native_ltr isn't dependent on PCIEPORTBUS either, is it?  It's only
-> used for ASPM.
-Agreed. I was confused due to a comment in include/linux/pci.h
+Looks fine to me.  Slight nit that this only applies to the IDP board
+but ${SUBJECT} makes it sound as if this applies to all sc7180.  I
+wouldn't spin just for that, though.  If Bjorn agrees, he can always
+adjust the subject when applying.
 
-  unsigned int    native_ltr:1;           /* OS may use PCIe LTR */
-
-> 
->>   	bridge->native_dpc = 1;
->> +#endif
->> +	bridge->native_shpc_hotplug = 1;
->>   
->>   	device_initialize(&bridge->dev);
->>   }
->> -- 
->> 2.17.1
->>
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
