@@ -2,112 +2,107 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14995C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B688C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB3A206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599733533;
-	bh=fXbQXOaYjx72zqTGIw4X5zbM9zC7or8CP+BA7YjUllo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=anLzPoyezDGHaAWpIHgjZe03UOUjCI9tvmbV7WxpOwW8N16XwPjpDv3uznnWdeR6a
-	 JNh8zhS8ei5XpHlcjMgWgkOm8+cWxsFC+IJNZ5FmO2/ZzZEVsKq4l+bzvU0KYbemM4
-	 6u3bdFnH+/6NzBT/x222mfkoqjOYIMpb+jp7QpJg=
+	by mail.kernel.org (Postfix) with ESMTP id 71C3E2145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgIJKZc (ORCPT
+        id S1730876AbgIJKZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35524 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 06:25:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:60422 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730633AbgIJKYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:24:16 -0400
-Received: from mail.kernel.org (ip5f5ad5ac.dynamic.kabel-deutschland.de [95.90.213.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3B521D91;
-        Thu, 10 Sep 2020 10:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599733450;
-        bh=fXbQXOaYjx72zqTGIw4X5zbM9zC7or8CP+BA7YjUllo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgGAaeAyek3TLUjXyHworDsQs9TIbSF3FJF2y87ysMsG25t1JhxjL5wXN0UeLvrk+
-         sE8Oa5pkxG5b94pYCi8Xx0wH67/ur2NzbjlepfD8k+ixXlql3vRr8WoC46j9imgpEW
-         4Gd4OpcbUOj9yDzBtGgOzoAagXw05XZVb0FBN2z0=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kGJkO-00EINw-I1; Thu, 10 Sep 2020 12:24:08 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/14] rcu/tree: docs: document bkvcache new members at struct kfree_rcu_cpu
-Date:   Thu, 10 Sep 2020 12:24:01 +0200
-Message-Id: <40164da02303db3f9bafa6719cf509ffe6af1518.1599732764.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599732764.git.mchehab+huawei@kernel.org>
-References: <cover.1599732764.git.mchehab+huawei@kernel.org>
+        id S1730181AbgIJKZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:25:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A14DC1063;
+        Thu, 10 Sep 2020 03:24:58 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FED23F68F;
+        Thu, 10 Sep 2020 03:24:56 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
+To:     Richard Henderson <richard.henderson@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
+        Juan Quintela <quintela@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Peter Maydell <Peter.Maydell@arm.com>,
+        Haibo Xu <Haibo.Xu@arm.com>
+References: <20200904160018.29481-1-steven.price@arm.com>
+ <8e661984-70bc-790c-8636-39dcd8b00131@linaro.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <842807ac-562a-36ce-8061-aa323341b605@arm.com>
+Date:   Thu, 10 Sep 2020 11:24:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e661984-70bc-790c-8636-39dcd8b00131@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changeset 53c72b590b3a ("rcu/tree: cache specified number of objects")
-added new members for struct kfree_rcu_cpu, but didn't add the
-corresponding at the kernel-doc markup, as repoted when doing
-"make htmldocs":
-	./kernel/rcu/tree.c:3113: warning: Function parameter or member 'bkvcache' not described in 'kfree_rcu_cpu'
-	./kernel/rcu/tree.c:3113: warning: Function parameter or member 'nr_bkv_objs' not described in 'kfree_rcu_cpu'
+On 10/09/2020 01:33, Richard Henderson wrote:
+> On 9/4/20 9:00 AM, Steven Price wrote:
+>>   3. Doesn't provide any new methods for the VMM to access the tags on
+>>      memory.
+> ...
+>> (3) may be problematic and I'd welcome input from those familiar with
+>> VMMs. User space cannot access tags unless the memory is mapped with the
+>> PROT_MTE flag. However enabling PROT_MTE will also enable tag checking
+>> for the user space process (assuming the VMM enables tag checking for
+>> the process)...
+> 
+> The latest version of the kernel patches for user mte support has separate
+> controls for how tag check fail is reported.  Including
+> 
+>> +- ``PR_MTE_TCF_NONE``  - *Ignore* tag check faults
+> 
+> That may be less than optimal once userland starts uses tags itself, e.g.
+> running qemu itself with an mte-aware malloc.
+> 
+> Independent of that, there's also the TCO bit, which can be toggled by any
+> piece of code that wants to disable checking locally.
 
-So, move the description for bkvcache to kernel-doc, and add a
-description for nr_bkv_objs.
+Yes, I would expect the TCO bit is the best option for wrapping accesses 
+to make them unchecked.
 
-Fixes: 53c72b590b3a ("rcu/tree: cache specified number of objects")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- kernel/rcu/tree.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+> However, none of that is required for accessing tags.  User space can always
+> load/store tags via LDG/STG.  That's going to be slow, though.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 7623128d0020..395e69cda916 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3085,6 +3085,12 @@ struct kfree_rcu_cpu_work {
-  * @monitor_todo: Tracks whether a @monitor_work delayed work is pending
-  * @initialized: The @rcu_work fields have been initialized
-  * @count: Number of objects for which GP not started
-+ * @bkvcache:
-+ *	A simple cache list that contains objects for reuse purpose.
-+ *	In order to save some per-cpu space the list is singular.
-+ *	Even though it is lockless an access has to be protected by the
-+ *	per-cpu lock.
-+ * @nr_bkv_objs: number of allocated objects at @bkvcache.
-  *
-  * This is a per-CPU structure.  The reason that it is not included in
-  * the rcu_data structure is to permit this code to be extracted from
-@@ -3100,14 +3106,6 @@ struct kfree_rcu_cpu {
- 	bool monitor_todo;
- 	bool initialized;
- 	int count;
--
--	/*
--	 * A simple cache list that contains objects for
--	 * reuse purpose. In order to save some per-cpu
--	 * space the list is singular. Even though it is
--	 * lockless an access has to be protected by the
--	 * per-cpu lock.
--	 */
- 	struct llist_head bkvcache;
- 	int nr_bkv_objs;
- };
--- 
-2.26.2
+Yes as things stand LDG/STG is the way for user space to access tags. 
+Since I don't have any real hardware I can't really comment on speed.
 
+> It's a shame that LDGM/STGM are privileged instructions.  I don't understand
+> why that was done, since there's absolutely nothing that those insns can do
+> that you can't do with (up to) 16x LDG/STG.
+
+It is a shame, however I suspect this is because to use those 
+instructions you need to know the block size held in GMID_EL1. And at 
+least in theory that could vary between CPUs.
+
+> I think it might be worth adding some sort of kernel entry point that can bulk
+> copy tags, e.g. page aligned quantities.  But that's just a speed of migration
+> thing and could come later.
+
+When we have some real hardware it would be worth profiling this. At the 
+moment I've no idea whether the kernel entry overhead would make such an 
+interface useful from a performance perspective or not.
+
+Steve
