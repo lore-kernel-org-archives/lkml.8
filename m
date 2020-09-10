@@ -2,147 +2,107 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B17C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2DE20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599740893;
-	bh=HZhllT4V05jsntTn2xHSiHXZT+8hG/vt2ZUpOD42NaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JG9s9D7ompIMCsplLN+6PMMVG2kRmAVkAVD86ze1qP3yc8MDiiJQ/K9dLhEdWyFhD
-	 qIGh1xwqEHXN1VHLHImvDi6w2zRBrLWg0LeJwh2xVXEPZh7WiP+Rj3vnrUU9ZWSE+k
-	 QRH1y5Rzng5Oy1bgS/z0GJan01K4UeazjF3mSpyc=
+	by mail.kernel.org (Postfix) with ESMTP id 7A3D120BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgIJM2J (ORCPT
+        id S1730729AbgIJM2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:28:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbgIJMZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:25:06 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2951F208FE;
-        Thu, 10 Sep 2020 12:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599740702;
-        bh=HZhllT4V05jsntTn2xHSiHXZT+8hG/vt2ZUpOD42NaU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xS7s6stxB+Nk/1pHC1CM/RWPCvf3wBouzIXX0kXEFaPzPHnyY2KYhdjhJ+Rh4U7Bv
-         M4iDQQkyjuIqqe74WSTCZDRUkPvCrfoZlxXsK4BSCsRGxZlzlw2wLHgKAjFbxCEJT2
-         ZV94qt24nrNoJio8Z66oPBg+OSG+29dIMv4vMOTI=
-Date:   Thu, 10 Sep 2020 15:24:57 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Christian Benvenuti <benve@cisco.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Devesh Sharma <devesh.sharma@broadcom.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Lijun Ou <oulijun@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Naresh Kumar PBS <nareshkumar.pbs@broadcom.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Weihang Li <liweihang@huawei.com>,
-        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Yuval Shaia <yuval.shaia@oracle.com>,
-        Zhu Yanjun <yanjunz@nvidia.com>
-Subject: Re: [PATCH rdma-next v2 0/9] Restore failure of destroy commands
-Message-ID: <20200910122457.GI421756@unreal>
-References: <20200907120921.476363-1-leon@kernel.org>
- <20200909180607.GA916941@nvidia.com>
+        Thu, 10 Sep 2020 08:28:50 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41986 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730487AbgIJMZH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:25:07 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0EAE81C0B9C; Thu, 10 Sep 2020 14:25:02 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 14:25:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next + mvebu v2 7/7] arm64: dts:
+ armada-3720-turris-mox: add nodes for ethernet PHY LEDs
+Message-ID: <20200910122501.GD7907@duo.ucw.cz>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-8-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
 Content-Disposition: inline
-In-Reply-To: <20200909180607.GA916941@nvidia.com>
+In-Reply-To: <20200909162552.11032-8-marek.behun@nic.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 03:06:07PM -0300, Jason Gunthorpe wrote:
-> On Mon, Sep 07, 2020 at 03:09:12PM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > Changelog:
-> > v2:
-> >  * Rebased on top of the 524d8ffd07f0
-> >  * Removed "udata" check in destroy flows
-> >  * Changed ib_free_cq to return early
-> >  * Used Jason's suggestion to implement "RDMA/mlx5: Issue FW command to destroy
-> >    SRQ on reentry" patch.
-> > v1
-> >  * Changed returned value in efa_destroy_ah() from EINVAL to EOPNOTSUPP
-> >  * https://lore.kernel.org/lkml/20200830084010.102381-1-leon@kernel.org
-> > v0:
-> >  * https://lore.kernel.org/lkml/20200824103247.1088464-1-leon@kernel.org
-> >
-> > Hi,
-> >
-> > This series restores the ability to fail on destroy commands, due to the
-> > fact that mlx5_ib DEVX implementation interleaved ib_core objects
-> > with FW objects without sharing reference counters.
-> >
-> > In retrospect, every part of the mlx5_ib flow is correct.
-> >
-> > It started from IBTA which was written by HW engineers with HW in mind and
-> > they allowed to fail in destruction. FW implemented it with symmetrical
-> > interface like any other command and propagated error back to the kernel,
-> > which forwarded it to the libibverbs and kernel ULPs.
-> >
-> > Libibverbs was designed with IBTA spec in hand putting destroy errors in
-> > stone. Up till mlx5_ib DEVX, it worked well, because the IB verbs objects
-> > are counted by the kernel and ib_core ensures that FW destroy will success
-> > by managing various reference counters on such objects.
-> >
-> > The extension of the mlx5 driver changed this flow when allowed DEVX objects
-> > that are not managed by ib_core to be interleaved with the ones under ib_core
-> > responsibility.
-> >
-> > The drivers that want to implement DEVX flows must ensure that FW/HW
-> > destroys are performed as early as possible before any other internal
-> > cleanup. After HW destroys, drivers are not allowed to fail.
-> >
-> > This series includes two patches (WQ and "potential race") that will
-> > require extra work in mlx5_ib, they both theoretical. WQ is not in use
-> > in DEVX, but is needed to make interface symmetrical to other objects.
-> > "Potential race" is in ULP flow that ensures that SRQ is destroyed in
-> > proper order.
-> >
-> > Thanks
-> >
-> > Leon Romanovsky (9):
-> >   RDMA: Restore ability to fail on PD deallocate
-> >   RDMA: Restore ability to fail on AH destroy
-> >   RDMA/mlx5: Issue FW command to destroy SRQ on reentry
-> >   RDMA: Restore ability to fail on SRQ destroy
-> >   RDMA/core: Delete function indirection for alloc/free kernel CQ
-> >   RDMA: Allow fail of destroy CQ
-> >   RDMA: Change XRCD destroy return value
-> >   RDMA: Restore ability to return error for destroy WQ
-> >   RDMA: Make counters destroy symmetrical
->
-> Thanks, applied to for-next with the changes I noted:
 
-Thanks for taking care. LGTM.
+--pZs/OQEoSSbxGlYw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Add nodes for the green and yellow LEDs that are connected to the
+> ethernet PHY chip on Turris MOX A.
+>=20
+> Signed-off-by: Marek Beh=FAn <marek.behun@nic.cz>
+> ---
+>  .../dts/marvell/armada-3720-turris-mox.dts    | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arc=
+h/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> index f3a678e0fd99b..6da03b6c69c0a 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> @@ -9,6 +9,7 @@
+>  #include <dt-bindings/bus/moxtet.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/leds/common.h>
+>  #include "armada-372x.dtsi"
+> =20
+>  / {
+> @@ -273,6 +274,28 @@ &mdio {
+> =20
+>  	phy1: ethernet-phy@1 {
+>  		reg =3D <1>;
+> +
+> +		leds {
+> +			compatible =3D "linux,hw-controlled-leds";
+
+I don't believe this is suitable compatible.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pZs/OQEoSSbxGlYw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1obHQAKCRAw5/Bqldv6
+8ry1AJ0WuyNtKkIiDtHmZME1XJfne9xa4gCcDypSlX3LoleaOOtICEOjPdRFUoo=
+=sjN2
+-----END PGP SIGNATURE-----
+
+--pZs/OQEoSSbxGlYw--
