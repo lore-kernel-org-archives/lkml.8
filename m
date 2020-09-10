@@ -2,152 +2,173 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887E9C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49EC6206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475C0206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:36:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORBbdEvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgIJGg3 convert rfc822-to-8bit (ORCPT
+        id S1726976AbgIJGgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:36:29 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40695 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgIJGgY (ORCPT
+        Thu, 10 Sep 2020 02:36:36 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28606 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726693AbgIJGga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:36:24 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t76so4912105oif.7;
-        Wed, 09 Sep 2020 23:36:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hPGNyTwwUC632Hhbju4GIdkO+X61wOtKriG815nPY+Y=;
-        b=Qakn7Fc1Aqexy2mYE3MIbo1iqnZSTmVKIv6UcrLBlmVGPBpnrh/PftmC40vEmRg32a
-         yXLmVl3dQPafAgp0tl5cKiE5Ye21sAw4OcJ2daXMGAUnT5vqe83fx8yi+tSp2gWoTbek
-         1OgVm3rRnyNMLRSFR0DAwDKqJgKBVQsozaK81/bvyEFdGvEHpZ9FMIsMG7OJ2+TgmUQB
-         VO7pAK65smbdfbN52FrLISstJVs2Rq2lWUO1hEUrSnM95UShnqM8N42wmPFBgOVW23cB
-         a0mnc9xNezJqaKtOzB4hEO6Nb//14UOQdss9Kb2IGKX7etwq8BXPihvTsZsTaRgDp4Km
-         iy9A==
-X-Gm-Message-State: AOAM533s8X99R/2VNN8lDwy6JMuO9/8irtX13fFE4IKNexeWqwQ6CbtF
-        blwhLe3e+8MBwUXhtEdfI+mEiVMzVN7DaqJ9afI=
-X-Google-Smtp-Source: ABdhPJxo5O9LUp8vWoGEiw2+IA5tjdafqulzyCfzRdf5q3oI9K1w5d+wSdCEy2eloAqTo4fMm+nfH+NjAednwodtdrY=
-X-Received: by 2002:aca:4441:: with SMTP id r62mr2725769oia.153.1599719783692;
- Wed, 09 Sep 2020 23:36:23 -0700 (PDT)
+        Thu, 10 Sep 2020 02:36:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599719788;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9UW16lUstnnCGbjpX3liKw7JzbSB4SPpIDupEPmn0vI=;
+        b=ORBbdEvCijRtsn9ZbDuTzo6MtTssRFeHeCL7cXE8A7QjDukN6mZEe01r+bMrY+9Yt/BCWX
+        LIwj4GWpd4CrHYMrxK6nZV/MKzrwXtepQMRHMWI6M/d4ztlcmdBnwu45mCGYB7z2ioj+Ij
+        zThFZJ2dl+/BZTRhbCbIFe/GEb4DODE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-l5e4-x2BMViknvYHd6dgQQ-1; Thu, 10 Sep 2020 02:36:25 -0400
+X-MC-Unique: l5e4-x2BMViknvYHd6dgQQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B56951005E7C;
+        Thu, 10 Sep 2020 06:30:06 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60B0B7E46E;
+        Thu, 10 Sep 2020 06:30:01 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 08:29:58 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Peter Maydell <Peter.Maydell@arm.com>,
+        Juan Quintela <quintela@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        qemu-devel@nongnu.org,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
+Message-ID: <20200910062958.o55apuvdxmf3uiqb@kamzik.brq.redhat.com>
+References: <20200904160018.29481-1-steven.price@arm.com>
+ <20200909152540.ylnrljd6aelxoxrf@kamzik.brq.redhat.com>
+ <857566df-1b98-84f7-9268-d092722dc749@arm.com>
 MIME-Version: 1.0
-References: <20200908152241.646390211@linuxfoundation.org> <20200909164705.GE1479@roeck-us.net>
- <20200909180121.GD1003763@kroah.com> <5ea4e73b-778d-e742-7ba7-f1cbe0307a0f@roeck-us.net>
-In-Reply-To: <5ea4e73b-778d-e742-7ba7-f1cbe0307a0f@roeck-us.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Sep 2020 08:36:12 +0200
-Message-ID: <CAMuHMdXwqC-B-CHQ0zzZ8YY+BDdq6ffqO6j85hsna-PUdwqz_g@mail.gmail.com>
-Subject: Re: [PATCH 5.8 000/186] 5.8.8-rc1 review
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <857566df-1b98-84f7-9268-d092722dc749@arm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Günter,
+On Wed, Sep 09, 2020 at 05:04:15PM +0100, Steven Price wrote:
+> On 09/09/2020 16:25, Andrew Jones wrote:
+> > On Fri, Sep 04, 2020 at 05:00:16PM +0100, Steven Price wrote:
+> > >   2. Automatically promotes (normal host) memory given to the guest to be
+> > >      tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
+> > >      tags are cleared if the memory wasn't previously MTE enabled.
+> > 
+> > Shouldn't this be up to the guest? Or, is this required in order for the
+> > guest to use tagging at all. Something like making the guest IPAs memtag
+> > capable, but if the guest doesn't enable tagging then there is no guest
+> > impact? In any case, shouldn't userspace be the one that adds PROT_MTE
+> > to the memory regions it wants the guest to be able to use tagging with,
+> > rather than KVM adding the attribute page by page?
+> 
+> I think I've probably explained this badly.
+> 
+> The guest can choose how to populate the stage 1 mapping - so can choose
+> which parts of memory are accessed tagged or not. However, the hypervisor
+> cannot restrict this in stage 2 (except by e.g. making the memory uncached
+> but that's obviously not great - however devices forward to the guest can be
+> handled like this).
+> 
+> Because the hypervisor cannot restrict the guest's access to the tags, the
+> hypervisor must assume that all memory given to the guest could have the
+> tags accessed. So it must (a) clear any stale data from the tags, and (b)
+> ensure that the tags are preserved (e.g. when swapping pages out).
+> 
 
-On Wed, Sep 9, 2020 at 8:24 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 9/9/20 11:01 AM, Greg Kroah-Hartman wrote:
-> > On Wed, Sep 09, 2020 at 09:47:05AM -0700, Guenter Roeck wrote:
-> >> On Tue, Sep 08, 2020 at 05:22:22PM +0200, Greg Kroah-Hartman wrote:
-> >>> This is the start of the stable review cycle for the 5.8.8 release.
-> >>> There are 186 patches in this series, all will be posted as a response
-> >>> to this one.  If anyone has any issues with these being applied, please
-> >>> let me know.
-> >>>
-> >>> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> >>> Anything received after that time might be too late.
-> >>>
-> >>
-> >> Build results:
-> >>      total: 154 pass: 153 fail: 1
-> >> Failed builds:
-> >>      powerpc:allmodconfig
-> >> Qemu test results:
-> >>      total: 430 pass: 430 fail: 0
-> >>
-> >> The powerpc problem is the same as before:
-> >>
-> >> Inconsistent kallsyms data
-> >> Try make KALLSYMS_EXTRA_PASS=1 as a workaround
-> >>
-> >> KALLSYMS_EXTRA_PASS=1 doesn't help. The problem is sporadic, elusive, and all
-> >> but impossible to bisect. The same build passes on another system, for example,
-> >> with a different load pattern. It may pass with -j30 and fail with -j40.
-> >> The problem started at some point after v5.8, and got worse over time; by now
-> >> it almost always happens. I'd be happy to debug if there is a means to do it,
-> >> but I don't have an idea where to even start. I'd disable KALLSYMS in my
-> >> test configurations, but the symbol is selected from various places and thus
-> >> difficult to disable. So unless I stop building ppc:allmodconfig entirely
-> >> we'll just have to live with the failure.
-> >
-> > Ah, I was worried when I saw your dashboard orange for this kernel.
-> >
-> > I guess the powerpc maintainers don't care?  Sad :(
-> >
+Yes, this is how I understood it.
+
+> Because of the above the current series automatically sets PG_mte_tagged on
+> the pages. Note that this doesn't change the mappings that the VMM has (a
+> non-PROT_MTE mapping will still not have access to the tags).
+
+But if userspace created the memslots with memory already set with
+PROT_MTE, then this wouldn't be necessary, right? And, as long as
+there's still a way to access the memory with tag checking disabled,
+then it shouldn't be a problem.
+
+> > 
+> > If userspace needs to write to guest memory then it should be due to
+> > a device DMA or other specific hardware emulation. Those accesses can
+> > be done with tag checking disabled.
+> 
+> Yes, the question is can the VMM (sensibly) wrap the accesses with a
+> disable/renable tag checking for the process sequence. The alternative at
+> the moment is to maintain a separate (untagged) mapping for the purpose
+> which might present it's own problems.
+
+Hmm, so there's no easy way to disable tag checking when necessary? If we
+don't map the guest ram with PROT_MTE and continue setting the attribute
+in KVM, as this series does, then we don't need to worry about it tag
+checking when accessing the memory, but then we can't access the tags for
+migration.
+
+> 
+> > > 
+> > > If it's not practical to either disable tag checking in the VMM or
+> > > maintain multiple mappings then the alternatives I'm aware of are:
+> > > 
+> > >   * Provide a KVM-specific method to extract the tags from guest memory.
+> > >     This might also have benefits in terms of providing an easy way to
+> > >     read bulk tag data from guest memory (since the LDGM instruction
+> > >     isn't available at EL0).
+> > 
+> > Maybe we need a new version of KVM_GET_DIRTY_LOG that also provides
+> > the tags for all addresses of each dirty page.
+> 
+> Certainly possible, although it seems to conflate two operations: "get list
+> of dirty pages", "get tags from page". It would also require a lot of return
+> space (size of slot/32).
 >
-> Not sure if the powerpc architecture is to blame. Bisect attempts end up
-> all over the place, and don't typically include any powerpc changes.
-> I have no idea how kallsyms is created, but my suspicion is that it is
-> a generic problem and that powerpc just happens to hit it right now.
-> I have added KALLSYMS_EXTRA_PASS=1 to several architecture builds over
-> time, when they reported similar problems. Right now I set it for
-> alpha, arm, and m68k. powerpc just happens to be the first architecture
-> where it doesn't help.
 
-This is a generic problem, cfr. scripts/link-vmlinux.sh:
+It would require num-set-bits * host-page-size / 16 / 2, right?
+ 
+> > >   * Provide support for user space setting the TCMA0 or TCMA1 bits in
+> > >     TCR_EL1. These would allow the VMM to generate pointers which are not
+> > >     tag checked.
+> > 
+> > So this is necessary to allow the VMM to keep tag checking enabled for
+> > itself, plus map guest memory as PROT_MTE, and write to that memory when
+> > needed?
+> 
+> This is certainly one option. The architecture provides two "magic" values
+> (all-0s and all-1s) which can be configured using TCMAx to be treated
+> differently. The VMM could therefore construct pointers to otherwise tagged
+> memory which would be treated as untagged.
+> 
+> However, Catalin's user space series doesn't at the moment expose this
+> functionality.
+>
 
-        # kallsyms support
-        # Generate section listing all symbols and add it into vmlinux
-        # It's a three step process:
-        # 1)  Link .tmp_vmlinux1 so it has all symbols and sections,
-        #     but __kallsyms is empty.
-        #     Running kallsyms on that gives us .tmp_kallsyms1.o with
-        #     the right size
-        # 2)  Link .tmp_vmlinux2 so it now has a __kallsyms section of
-        #     the right size, but due to the added section, some
-        #     addresses have shifted.
-        #     From here, we generate a correct .tmp_kallsyms2.o
-        # 3)  That link may have expanded the kernel image enough that
-        #     more linker branch stubs / trampolines had to be added, which
-        #     introduces new names, which further expands kallsyms. Do another
-        #     pass if that is the case. In theory it's possible this results
-        #     in even more stubs, but unlikely.
-        #     KALLSYMS_EXTRA_PASS=1 may also used to debug or work around
-        #     other bugs.
+So if I understand correctly this would allow us to map the guest memory
+with PAGE_MTE and still access the memory when needed. If so, then this
+sounds interesting.
 
-Adding even more kallsyms_steps may help (or not, if you're really
-unlucky).  Perhaps the number of passes should be handled automatically
-(i.e. run until it succeeds, with a sane (16?) upper limit to avoid
- endless builds, so it can still fail, in theory).
+Thanks,
+drew 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
