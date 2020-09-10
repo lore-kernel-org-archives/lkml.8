@@ -2,215 +2,342 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5533CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C97A920758
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33702075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMuYKT/n"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MtVB6qDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgIJTE7 (ORCPT
+        id S1726662AbgIJTFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgIJQLv (ORCPT
+        Thu, 10 Sep 2020 15:05:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731503AbgIJQFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:11:51 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1959FC061796;
-        Thu, 10 Sep 2020 09:11:51 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id q13so9520280ejo.9;
-        Thu, 10 Sep 2020 09:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HqUXASV8/J3adrJxXgdebB7pk8ZpozkrNnLZPnpPNz4=;
-        b=rMuYKT/nO+bCs0/PjntzsIL3yMzZX12bky9TbQC+p43luWertUNdPLHCmcEs5/s7lp
-         aMpTMrWua4TtNULcw07fDXqnBINgH1XrvxHJIWztJiFx9CIAoONLTv76jjyb+KOeLXL4
-         3qmjjJrxKDsUmixe4O0e3mLWt4BvDxNO1+n8YOYjPOKMM0yfFlv4kSV1DlHu3Z0QPt7G
-         Sxrsc/6AClS5S8cVFamdUGYaYYcHJHUvI6NA0fp98W23kR+wAlUGCJVjXUX2jHRNMIGQ
-         TLbSysOhH3k1zkQVt0nz4NR3HuPfLYLXBInwj2Z1XkO9opu57YWwgd5Y6odJPo4mqKpI
-         qwhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HqUXASV8/J3adrJxXgdebB7pk8ZpozkrNnLZPnpPNz4=;
-        b=S30Y7hc+qClbrgkk1YPhBWzYQo9Q27AYjcpcQMTquqF4s4If7L5Q2Nh0Ew19OV4bXj
-         6TyOXdq3jSJuYAOzfzmDt+MzHKvStGJlLUJ2yvGnSHPuh4GBMdO9gem7Y5UQgaA+YmdU
-         0wFxGbBNsDODTI8/pMkW2Bu8GwAv6PV3j8tfbq9Md+GGagbAF3zDtKQnhpHVf8nwxYFF
-         6IgGFGRXGWjf2JAhMy7D/WNQLAEoIOiwJm8kJHfsRBu3qcpvGiwhThdWej2OQkmCyhFH
-         Pxv5XDbQ+35W96+AK5Ijmukb+/7xrOEITMh/O3PWFi78/hcAfSmY9GHrCJcjok6TnaNS
-         qRBg==
-X-Gm-Message-State: AOAM532ldCcj00tjlj9jZT+ZY+cOb1dK7cgdDjKLo9aDG+fhEX27oO54
-        0fTQWKV0VIlXb/bD1VNJ1tSP8XSE/aw=
-X-Google-Smtp-Source: ABdhPJwGOMYluoHBIFuyJ+aF+8vL+XdnHF/jHh1znvtHTiq4P26wtwfyKLhzusCwoGLiDFzFFEzN4Q==
-X-Received: by 2002:a17:906:8c8:: with SMTP id o8mr9460993eje.91.1599754308990;
-        Thu, 10 Sep 2020 09:11:48 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id k8sm7282911ejz.60.2020.09.10.09.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:11:47 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
-        davem@davemloft.net, kuba@kernel.org,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 02/15] habanalabs/gaudi: add NIC firmware-related definitions
-Date:   Thu, 10 Sep 2020 19:11:13 +0300
-Message-Id: <20200910161126.30948-3-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910161126.30948-1-oded.gabbay@gmail.com>
-References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+        Thu, 10 Sep 2020 12:05:19 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AF1xCY063427;
+        Thu, 10 Sep 2020 11:18:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=ICGj87vGPXIQ0OT45bocynk+ESeQ1DnDmFeDQ1BLOc8=;
+ b=MtVB6qDPUD3ljlPs4dOxO1/EwZ+S3ayJO/ZXIKogGfRwprVpQ19LHKBm4Ao3rfDdLi+w
+ TZwdCIZ0/RArdFj6jr8UWEWK6wZ3sBcDcbh09bmTJqgEWLHiB954FYnMgSmQaBH/Rz/8
+ 5xndeIGFL2V29fHuLXbjEcB5ZQwpL8C7bvR4wmFyDScG6U5AQU4tabxHWRZ6Zm7NxHvi
+ 9i9iTbJ0dxpzeIj+s2ZsAcGWWZw41yCOaWoioqfKiZnNpmvg4SV0ea//0Sgww0oggSKr
+ FddEuLeJgPZ9q2Paz9I0LWaL20qxDMqbCjyc87paw2tIoUYzrkppLxkXZS+AAj3LMfEw wg== 
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv1jxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:18:45 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AFCA5A021777;
+        Thu, 10 Sep 2020 15:18:44 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 33c2a9teqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:18:44 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AFIdtq65274360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 15:18:39 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBF946E052;
+        Thu, 10 Sep 2020 15:18:42 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6754C6E04E;
+        Thu, 10 Sep 2020 15:18:42 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.211.140.115])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 15:18:42 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-fsi@lists.ozlabs.org,
+        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, alistair@popple.id.au,
+        jk@ozlabs.org
+Subject: [PATCH 2/4] clk: ast2600: Add functionality to the APLL clock
+Date:   Thu, 10 Sep 2020 10:18:38 -0500
+Message-Id: <20200910151840.25333-3-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200910151840.25333-1-eajames@linux.ibm.com>
+References: <20200910151840.25333-1-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_04:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ suspectscore=1 priorityscore=1501 mlxlogscore=999 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+Register a clock with it's own operations to describe the APLL on
+the AST2600. The clock is controlled by an SCU register containing
+a multiplier and divider of the 25MHz input clock.
+The functionality to change the APLL is necessary to finely control
+the FSI bus frequency.
 
-Add new structures and messages that the driver use to interact with the
-firmware to receive information and events (errors) about GAUDI's NIC.
-
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- .../misc/habanalabs/include/common/cpucp_if.h | 34 ++++++++++++++++---
- .../habanalabs/include/gaudi/gaudi_fw_if.h    | 24 +++++++++++++
- 2 files changed, 54 insertions(+), 4 deletions(-)
+ drivers/clk/clk-ast2600.c | 177 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 165 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/include/common/cpucp_if.h b/drivers/misc/habanalabs/include/common/cpucp_if.h
-index dcde440427b4..ace746bb206e 100644
---- a/drivers/misc/habanalabs/include/common/cpucp_if.h
-+++ b/drivers/misc/habanalabs/include/common/cpucp_if.h
-@@ -9,6 +9,7 @@
- #define CPUCP_IF_H
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 177368cac6dd..a147dffbaccc 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -4,6 +4,7 @@
  
- #include <linux/types.h>
-+#include <linux/if_ether.h>
+ #define pr_fmt(fmt) "clk-ast2600: " fmt
  
- /*
-  * EVENT QUEUE
-@@ -199,6 +200,11 @@ enum pq_init_status {
-  *       CpuCP to write to the structure, to prevent data corruption in case of
-  *       mismatched driver/FW versions.
-  *
-+ * CPUCP_PACKET_NIC_INFO_GET -
-+ *       Fetch information from the device regarding the NIC. the host's driver
-+ *       passes the max size it allows the CpuCP to write to the structure, to
-+ *       prevent data corruption in case of mismatched driver/FW versions.
-+ *
-  * CPUCP_PACKET_TEMPERATURE_SET -
-  *       Set the value of the offset property of a specified thermal sensor.
-  *       The packet's arguments specify the desired sensor and the field to
-@@ -238,12 +244,12 @@ enum cpucp_packet_id {
- 	CPUCP_PACKET_MAX_POWER_GET,		/* sysfs */
- 	CPUCP_PACKET_MAX_POWER_SET,		/* sysfs */
- 	CPUCP_PACKET_EEPROM_DATA_GET,		/* sysfs */
--	CPUCP_RESERVED,
-+	CPUCP_PACKET_NIC_INFO_GET,		/* internal */
- 	CPUCP_PACKET_TEMPERATURE_SET,		/* sysfs */
- 	CPUCP_PACKET_VOLTAGE_SET,		/* sysfs */
- 	CPUCP_PACKET_CURRENT_SET,		/* sysfs */
--	CPUCP_PACKET_PCIE_THROUGHPUT_GET,		/* internal */
--	CPUCP_PACKET_PCIE_REPLAY_CNT_GET,		/* internal */
-+	CPUCP_PACKET_PCIE_THROUGHPUT_GET,	/* internal */
-+	CPUCP_PACKET_PCIE_REPLAY_CNT_GET,	/* internal */
- 	CPUCP_PACKET_TOTAL_ENERGY_GET,		/* internal */
++#include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+@@ -15,7 +16,7 @@
+ 
+ #include "clk-aspeed.h"
+ 
+-#define ASPEED_G6_NUM_CLKS		71
++#define ASPEED_G6_NUM_CLKS		72
+ 
+ #define ASPEED_G6_SILICON_REV		0x004
+ 
+@@ -31,6 +32,7 @@
+ #define ASPEED_G6_CLK_SELECTION1	0x300
+ #define ASPEED_G6_CLK_SELECTION2	0x304
+ #define ASPEED_G6_CLK_SELECTION4	0x310
++#define ASPEED_G6_CLK_SELECTION5	0x314
+ 
+ #define ASPEED_HPLL_PARAM		0x200
+ #define ASPEED_APLL_PARAM		0x210
+@@ -116,7 +118,7 @@ static const struct aspeed_gate_data aspeed_g6_gates[] = {
+ 	[ASPEED_CLK_GATE_UART11CLK]	= { 59,  -1, "uart11clk-gate",	"uartx", 0 },	/* UART11 */
+ 	[ASPEED_CLK_GATE_UART12CLK]	= { 60,  -1, "uart12clk-gate",	"uartx", 0 },	/* UART12 */
+ 	[ASPEED_CLK_GATE_UART13CLK]	= { 61,  -1, "uart13clk-gate",	"uartx", 0 },	/* UART13 */
+-	[ASPEED_CLK_GATE_FSICLK]	= { 62,  59, "fsiclk-gate",	NULL,	 0 },	/* FSI */
++	[ASPEED_CLK_GATE_FSICLK]	= { 62,  59, "fsiclk-gate",	"aplln", CLK_SET_RATE_PARENT },	/* FSI */
  };
  
-@@ -288,7 +294,7 @@ struct cpucp_packet {
- 		/* For led set */
- 		__le32 led_index;
- 
--		/* For get CpuCP info/EEPROM data */
-+		/* For get CpuCP info/EEPROM data/NIC info */
- 		__le32 data_max_size;
- 	};
- 
-@@ -367,6 +373,12 @@ struct eq_generic_event {
- #define CARD_NAME_MAX_LEN		16
- #define VERSION_MAX_LEN			128
- #define CPUCP_MAX_SENSORS		128
-+#define CPUCP_MAX_NICS			128
-+#define CPUCP_LANES_PER_NIC		4
-+#define CPUCP_NIC_QSFP_EEPROM_MAX_LEN	1024
-+#define CPUCP_MAX_NIC_LANES		(CPUCP_MAX_NICS * CPUCP_LANES_PER_NIC)
-+#define CPUCP_NIC_MASK_ARR_LEN		((CPUCP_MAX_NICS + 63) / 64)
-+#define CPUCP_NIC_POLARITY_ARR_LEN	((CPUCP_MAX_NIC_LANES + 63) / 64)
- 
- struct cpucp_sensor {
- 	__le32 type;
-@@ -415,4 +427,18 @@ struct cpucp_info {
- 	char card_name[CARD_NAME_MAX_LEN];
+ static const struct clk_div_table ast2600_eclk_div_table[] = {
+@@ -187,24 +189,166 @@ static struct clk_hw *ast2600_calc_pll(const char *name, u32 val)
+ 			mult, div);
  };
  
-+struct cpucp_mac_addr {
-+	__u8 mac_addr[ETH_ALEN];
-+};
-+
-+struct cpucp_nic_info {
-+	struct cpucp_mac_addr mac_addrs[CPUCP_MAX_NICS];
-+	__le64 link_mask[CPUCP_NIC_MASK_ARR_LEN];
-+	__le64 pol_tx_mask[CPUCP_NIC_POLARITY_ARR_LEN];
-+	__le64 pol_rx_mask[CPUCP_NIC_POLARITY_ARR_LEN];
-+	__le64 link_ext_mask[CPUCP_NIC_MASK_ARR_LEN];
-+	__u8 qsfp_eeprom[CPUCP_NIC_QSFP_EEPROM_MAX_LEN];
-+	__le64 auto_neg_mask[CPUCP_NIC_MASK_ARR_LEN];
-+};
-+
- #endif /* CPUCP_IF_H */
-diff --git a/drivers/misc/habanalabs/include/gaudi/gaudi_fw_if.h b/drivers/misc/habanalabs/include/gaudi/gaudi_fw_if.h
-index 8aadc6357da1..d61a4c87b765 100644
---- a/drivers/misc/habanalabs/include/gaudi/gaudi_fw_if.h
-+++ b/drivers/misc/habanalabs/include/gaudi/gaudi_fw_if.h
-@@ -8,6 +8,8 @@
- #ifndef GAUDI_FW_IF_H
- #define GAUDI_FW_IF_H
- 
-+#include <linux/types.h>
-+
- #define GAUDI_EVENT_QUEUE_MSI_IDX	8
- #define GAUDI_NIC_PORT1_MSI_IDX		10
- #define GAUDI_NIC_PORT3_MSI_IDX		12
-@@ -31,6 +33,28 @@ enum gaudi_pll_index {
- 	IF_PLL
- };
- 
-+enum gaudi_nic_axi_error {
-+	RXB,
-+	RXE,
-+	TXS,
-+	TXE,
-+	QPC_RESP,
-+	NON_AXI_ERR,
-+};
-+
+-static struct clk_hw *ast2600_calc_apll(const char *name, u32 val)
 +/*
-+ * struct eq_nic_sei_event - describes an AXI error cause.
-+ * @axi_error_cause: one of the events defined in enum gaudi_nic_axi_error.
-+ * @id: can be either 0 or 1, to further describe unit with interrupt cause
-+ *      (i.e. TXE0 or TXE1).
-+ * @pad[6]: padding structure to 64bit.
++ * APLL Frequency: F = 25MHz * (2 - od) * [(m + 2) / (n + 1)]
 + */
-+struct eq_nic_sei_event {
-+	__u8 axi_error_cause;
-+	__u8 id;
-+	__u8 pad[6];
++static void ast2600_apll_get_params(unsigned int *div, unsigned int *mul)
+ {
+-	unsigned int mult, div;
++	u32 val = readl(scu_g6_base + ASPEED_APLL_PARAM);
+ 
+ 	if (val & BIT(20)) {
+ 		/* Pass through mode */
+-		mult = div = 1;
++		*mul = *div = 1;
+ 	} else {
+-		/* F = 25Mhz * (2-od) * [(m + 2) / (n + 1)] */
+ 		u32 m = (val >> 5) & 0x3f;
+ 		u32 od = (val >> 4) & 0x1;
+ 		u32 n = val & 0xf;
+ 
+-		mult = (2 - od) * (m + 2);
+-		div = n + 1;
++		*mul = (2 - od) * (m + 2);
++		*div = n + 1;
+ 	}
+-	return clk_hw_register_fixed_factor(NULL, name, "clkin", 0,
+-			mult, div);
++}
++
++static long ast2600_apll_best(unsigned long ul_rate, unsigned long ul_prate,
++			      unsigned int *out_div, unsigned int *out_mul,
++			      unsigned int *output_divider)
++{
++#define min_mult 2ULL
++#define max_mult 65ULL
++#define min_div 1ULL
++#define max_div 16ULL
++	int i;
++	unsigned int bod = 0;
++	unsigned long long rem = 1ULL;
++	unsigned long long brem = ~(0ULL);
++	unsigned long long bdiv = 1ULL;
++	unsigned long long tdiv;
++	unsigned long long bmul = 16ULL;
++	unsigned long long tmul;
++	long brate = -ERANGE;
++	unsigned long long trate;
++	unsigned long long rate = ul_rate;
++	unsigned long long prate = ul_prate;
++
++	for (i = 0; i < 2; ++i, prate *= 2ULL) {
++		for (tdiv = min_div; tdiv <= max_div; ++tdiv) {
++			tmul = DIV_ROUND_CLOSEST_ULL(rate * tdiv, prate);
++			if (tmul <  min_mult || tmul > max_mult)
++				continue;
++
++			trate = DIV_ROUND_CLOSEST_ULL(prate * tmul, tdiv);
++			if (trate > rate)
++				rem = trate - rate;
++			else
++				rem = rate - trate;
++
++			if (rem < brem) {
++				bod = !i;
++				brem = rem;
++				bdiv = tdiv;
++				bmul = tmul;
++				brate = (long)trate;
++			}
++
++			if (!rem)
++				break;
++		}
++
++		if (!rem)
++			break;
++	}
++
++	if (out_div)
++		*out_div = (unsigned int)bdiv;
++
++	if (out_mul)
++		*out_mul = (unsigned int)bmul;
++
++	if (output_divider)
++		*output_divider = bod;
++
++	return brate;
++#undef min_mult
++#undef max_mult
++#undef min_div
++#undef max_div
++}
++
++static unsigned long ast2600_apll_recalc_rate(struct clk_hw *hw,
++					      unsigned long parent_rate)
++{
++	unsigned int div;
++	unsigned int mul;
++	unsigned long long rate;
++	unsigned long long prate = (unsigned long long)parent_rate;
++
++	ast2600_apll_get_params(&div, &mul);
++
++	rate = DIV_ROUND_CLOSEST_ULL(prate * (unsigned long long)mul, div);
++	return (unsigned long)rate;
++}
++
++static long ast2600_apll_round_rate(struct clk_hw *hw, unsigned long rate,
++				    unsigned long *parent_rate)
++{
++	return ast2600_apll_best(rate, *parent_rate, NULL, NULL, NULL);
++}
++
++static int ast2600_apll_set_rate(struct clk_hw *hw, unsigned long rate,
++				 unsigned long parent_rate)
++{
++	u32 val;
++	unsigned int od;
++	unsigned int div;
++	unsigned int mul;
++	long brate = ast2600_apll_best(rate, parent_rate, &div, &mul, &od);
++
++	if (brate < 0)
++		return brate;
++
++	val = readl(scu_g6_base + ASPEED_APLL_PARAM);
++	val &= ~0x7ff;
++	val |= (div - 1) & 0xf;
++	val |= ((mul - 2) & 0x3f) << 5;
++	if (od)
++		val |= 0x10;
++	writel(val, scu_g6_base + ASPEED_APLL_PARAM);
++
++	return 0;
++}
++
++static const struct clk_ops ast2600_apll_ops = {
++	.recalc_rate = ast2600_apll_recalc_rate,
++	.round_rate = ast2600_apll_round_rate,
++	.set_rate = ast2600_apll_set_rate,
 +};
 +
- #define GAUDI_PLL_FREQ_LOW		200000000 /* 200 MHz */
++static struct clk_hw *ast2600_create_apll(void)
++{
++	int rc;
++	const char *parent = "clkin";
++	struct clk_init_data init = {
++		.name = "apll",
++		.ops = &ast2600_apll_ops,
++		.parent_names = &parent,
++		.parent_data = NULL,
++		.parent_hws = NULL,
++		.num_parents = 1,
++		.flags = 0,
++	};
++	struct clk_hw *clk = kzalloc(sizeof(*clk), GFP_KERNEL);
++
++	if (!clk)
++		return ERR_PTR(-ENOMEM);
++
++	clk->init = &init;
++	rc = of_clk_hw_register(NULL, clk);
++	if (rc) {
++		kfree(clk);
++		clk = ERR_PTR(rc);
++	}
++
++	return clk;
+ };
  
- #endif /* GAUDI_FW_IF_H */
+ static u32 get_bit(u8 idx)
+@@ -630,6 +774,16 @@ static int aspeed_g6_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hw);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_ECLK] = hw;
+ 
++	hw = clk_hw_register_divider_table(dev, "aplln", "apll",
++					   CLK_SET_RATE_PARENT,
++					   scu_g6_base + ASPEED_G6_CLK_SELECTION5,
++					   28, 3, CLK_DIVIDER_READ_ONLY,
++					   ast2600_eclk_div_table,
++					   &aspeed_g6_clk_lock);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++	aspeed_g6_clk_data->hws[ASPEED_CLK_APLLN] = hw;
++
+ 	for (i = 0; i < ARRAY_SIZE(aspeed_g6_gates); i++) {
+ 		const struct aspeed_gate_data *gd = &aspeed_g6_gates[i];
+ 		u32 gate_flags;
+@@ -710,8 +864,7 @@ static void __init aspeed_g6_cc(struct regmap *map)
+ 	regmap_read(map, ASPEED_EPLL_PARAM, &val);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_EPLL] = ast2600_calc_pll("epll", val);
+ 
+-	regmap_read(map, ASPEED_APLL_PARAM, &val);
+-	aspeed_g6_clk_data->hws[ASPEED_CLK_APLL] = ast2600_calc_apll("apll", val);
++	aspeed_g6_clk_data->hws[ASPEED_CLK_APLL] = ast2600_create_apll();
+ 
+ 	/* Strap bits 12:11 define the AXI/AHB clock frequency ratio (aka HCLK)*/
+ 	regmap_read(map, ASPEED_G6_STRAP1, &val);
 -- 
-2.17.1
+2.26.2
 
