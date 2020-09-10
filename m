@@ -2,141 +2,205 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F13C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 723AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C34421D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C99F20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599759974;
-	bh=TXUjfWQi9tM2HzGm/oaJfdPsQO5fWIgylvuQhOYz4m4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SOXG/E5LO/IAiPrWJRSRVUtqasHZ9SmO6IZFCMScVGNwxmXnY6w6/qLVhRSCBRPUL
-	 PmpQO/8nmZxvF+J3uLpdEvbJHVPyNuEk3qHah1dNorfHGAvqhSzfA8cFiKbT7IJvtl
-	 F/Q/RgRUtewvXdfTELshVn7CGkFExFrUNAAnOrH4=
+	s=default; t=1599760050;
+	bh=mKaGdeBMiz5ZqOc/kvJB3cAWhRV08AagdLUfAwMQwvE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=rmUOTNwFhWylh8Hsmz0g+BdkirC+5G8Lo43V4Urf+0HBNpWNUcZhS+rHK+9db4lXq
+	 qMSnIGhSnRAyJt1FgyR6w1fOI9wcN5uviBA/+IQ3lV5qT176soSimCgsyVIFdwT2y9
+	 eKYfsPucRBDznLcYA1iiTVAri2dvhD6tIFboAYD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgIJRqJ (ORCPT
+        id S1727838AbgIJRr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgIJRm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:42:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E6C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c2so9258943ljj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
-        b=CyoQUM+SKXH6085O6WtByg3nDuki2CTSBORvYvwm25BqShZutFnNs6mSZACayZwSEH
-         qcd6gDs3XmrAOcCBysWWLpsCbEXmLRDCQnQxo0ENK46fWC+ppV/l5rSOr47qH79HuDsY
-         BAC6cJAHl7u65bYmrM5WLZPBZBfoI7ltEXEKA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
-        b=gaxeIL1UgV6zoe7GWetUE3JjPlgTm/X5pVQ00k/OZDKQrq6c5PRLIVhi8kAemoy5ps
-         0x86BFP2GZaLbIvFrB7LlPc1ObX6yWnx7PjT6Kl+uRgBQ7SYnH+WNNTKQVSOdoDLPSQ/
-         KELD2jAX7P5H7vhpHm32HcMM5lphNrh3gM7ZRY6f4+Kfpz0x7La22mX54LTh68Fw3YDm
-         PHFUyslCe3K/LjZuZ7dMMw4lMryBkx7FGOpaEjOP0rmiq97zsG1GHZpMdw1KaXz18CZk
-         VH8ryN95hNffSAl1SoyHo7DAJnAST4ls4agqZyEZKVqVs7w8Tqhbu1F/ZVu1LwM32Sss
-         goJw==
-X-Gm-Message-State: AOAM531slHtsCwgFPVs39pmhW7QgBOfxIzDwG8u8VG9ExhEJkJywikrz
-        27PB+TS+/Y0relb78Y0rP8T9ra/1bV4cCA==
-X-Google-Smtp-Source: ABdhPJyhWTw2yd7niyvGkh6b2x2kXbNyNxMZaHZ+ZAMzB8ie0jBkLA6wBWwZ1pJ5m3lp16Kd/krN/w==
-X-Received: by 2002:a2e:6a04:: with SMTP id f4mr4611377ljc.119.1599759759148;
-        Thu, 10 Sep 2020 10:42:39 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id u18sm1489111lfg.86.2020.09.10.10.42.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 10:42:38 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id b19so9256106lji.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:38 -0700 (PDT)
-X-Received: by 2002:a19:7d8b:: with SMTP id y133mr4765702lfc.152.1599759354367;
- Thu, 10 Sep 2020 10:35:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com> <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca> <20200910093925.GB29166@oc3871087118.ibm.com>
-In-Reply-To: <20200910093925.GB29166@oc3871087118.ibm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 10 Sep 2020 10:35:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
-Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Thu, 10 Sep 2020 13:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgIJRmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:42:31 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E22067C;
+        Thu, 10 Sep 2020 17:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599759750;
+        bh=mKaGdeBMiz5ZqOc/kvJB3cAWhRV08AagdLUfAwMQwvE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=AW8i7t3U2dVnW4Df2r86rtLf/Qkxa7XQ6kawV4X5oliq183NfO2vEwxuvvHJpT0c1
+         a9cKCGRdxgwShK8L8BGhMPGvgx6uFgwDz/CIr/KXk07DKXBidYWP+6GZtAWa3ERS4d
+         WXev5UprB9IrJp/ij3W4FONb/ByhGV9MJpLOVQV8=
+Message-ID: <8842543f4c929f7004cf356224230516a7fe2fb7.camel@kernel.org>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Date:   Thu, 10 Sep 2020 13:42:28 -0400
+In-Reply-To: <87k0x2k0wn.fsf@notabene.neil.brown.name>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+         <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+         <20200908112742.GA2956@quack2.suse.cz>
+         <e4f5ccb298170357ba16ae2870fde6a90ca2aa81.camel@kernel.org>
+         <87k0x2k0wn.fsf@notabene.neil.brown.name>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
-<agordeev@linux.ibm.com> wrote:
->
-> It is only gup_fast case that exposes the issue. It hits because
-> pointers to stack copies are passed to gup_pXd_range iterators, not
-> pointers to real page tables itself.
+On Thu, 2020-09-10 at 09:04 +1000, NeilBrown wrote:
+> On Tue, Sep 08 2020, Jeff Layton wrote:
+> 
+> > On Tue, 2020-09-08 at 13:27 +0200, Jan Kara wrote:
+> > > Added Jeff to CC since he has written the code...
+> > > 
+> > > On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
+> > > > [Widening the CC to include Andrew and linux-fsdevel@]
+> > > > [Milan: thanks for the patch, but it's unclear to me from your commit
+> > > > message how/if you verified the details.]
+> > > > 
+> > > > Andrew, maybe you (or someone else) can comment, since long ago your
+> > > > 
+> > > >     commit f79e2abb9bd452d97295f34376dedbec9686b986
+> > > >     Author: Andrew Morton <akpm@osdl.org>
+> > > >     Date:   Fri Mar 31 02:30:42 2006 -0800
+> > > > 
+> > > > included a comment that is referred to in  stackoverflow discussion
+> > > > about this topic (that SO discussion is in turn referred to by
+> > > > https://bugzilla.kernel.org/show_bug.cgi?id=194757).
+> > > > 
+> > > > The essence as I understand it, is this:
+> > > > (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
+> > > > has not been synced.
+> > > > (2) In this case, the EIO/ENOSPC setting is cleared so that...
+> > > > (3) A subsequent fsync() might return success, but...
+> > > > (4) That doesn't mean that the data in (1) landed on the disk.
+> > > 
+> > > Correct.
+> > > 
+> > > > The proposed manual page patch below wants to document this, but I'd
+> > > > be happy to have an FS-knowledgeable person comment before I apply.
+> > > 
+> > > Just a small comment below:
+> > > 
+> > > > On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+> > > > > From: Milan Shah <milan.opensource@gmail.com>
+> > > > > 
+> > > > > This Fix addresses Bug 194757.
+> > > > > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+> > > > > ---
+> > > > >  man2/fsync.2 | 13 +++++++++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > > 
+> > > > > diff --git a/man2/fsync.2 b/man2/fsync.2
+> > > > > index 96401cd..f38b3e4 100644
+> > > > > --- a/man2/fsync.2
+> > > > > +++ b/man2/fsync.2
+> > > > > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
+> > > > >  or
+> > > > >  .BR sdparm (8)
+> > > > >  to guarantee safe operation.
+> > > > > +
+> > > > > +When
+> > > > > +.BR fsync ()
+> > > > > +or
+> > > > > +.BR fdatasync ()
+> > > > > +returns
+> > > > > +.B EIO
+> > > > > +or
+> > > > > +.B ENOSPC
+> > > > > +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
+> > > > > +will return without error. It is
+> > > > > +.I not
+> > > > > +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
+> > > > >  .SH SEE ALSO
+> > > > >  .BR sync (1),
+> > > > >  .BR bdflush (2),
+> > > 
+> > > So the error state isn't really stored "on pages in the file mapping".
+> > > Current implementation (since 4.14) is that error state is stored in struct
+> > > file (I think this tends to be called "file description" in manpages) and
+> > > so EIO / ENOSPC is reported once for each file description of the file that
+> > > was open before the error happened. Not sure if we want to be so precise in
+> > > the manpages or if it just confuses people. Anyway your takeway that no
+> > > error on subsequent fsync() does not mean data was written is correct.
+> > > 
+> > > 
+> > 
+> > Thinking about it more, I think we ought to spell this out explicitly as
+> > we can in the manpage. This is a point of confusion for a lot of people
+> > and not understanding this can lead to data integrity bugs. Maybe
+> > something like this in the NOTES section?
+> > 
+> > '''
+> > When fsync returns an error, the file is considered to be "clean". A
+> > subsequent call to fsync will not result in a reattempt to write out the
+> > data, unless that data has been rewritten. Applications that want to
+> > reattempt writing to the file after a transient error must re-write
+> > their data.
+> > '''
+> > 
+> > To be clear:
+> > 
+> > In practice, you'd only have to write enough to redirty each page in
+> > most cases.
+> 
+> Nonononono.  In practice you have to repeat the entire write because you
+> cannot know if the cached page is from before the write failure, or has
+> since been flushed and reloaded.
+> 
 
-Can we possibly change fast-gup to not do the stack copies?
+Oh, good point! There's no way for userland to know that, so you really
+do have to rewrite the whole thing.
 
-I'd actually rather do something like that, than the "addr_end" thing.
+> > Also, it is hard to claim that the above behavior is universally true. A
+> > filesystem could opt to keep the pages dirty for some errors, but the
+> > vast majority just toss out the data whenever there is a writeback
+> > problem.
+> 
+> ...and any filesystem that doesn't behave that way is wasting effort,
+> because nothing else can be assumed.
+> 
 
-As you say, none of the other page table walking code does what the
-GUP code does, and I don't think it's required.
+Yeah. I only made the point to be pedantic. There's no benefit to
+documenting that, I think...
 
-The GUP code is kind of strange, I'm not quite sure why. Some of it
-unusually came from the powerpc code that handled their special odd
-hugepage model, and that may be why it's so different.
+> Regarding your "NOTES" addition, I don't feel comfortable with the
+> "clean" language.  I would prefer something like:
+> 
+>  When fsync() reports a failure (EIO, ENOSPC, EDQUOT) it must be assumed
+>  that any write requests initiated since the previous successful fsync
+>  was initiated may have failed, and that any cached data may have been
+>  lost.  A future fsync() will not attempt to write out the same data
+>  again.  If recovery is possible and desired, the application must
+>  repeat all the writes that may have failed.
+> 
+>  If the regions of a file that were written to prior to a failed fsync()
+>  are read, the content reported may not reflect the stored content, and
+>  subsequent reads may revert to the stored content at any time.
+> 
 
-How painful would it be to just pass the pmd (etc) _pointers_ around,
-rather than do the odd "take the address of local copies"?
+Much nicer.
 
-                  Linus
+Should we make a distinction between usage and functional classes of
+errors in this? The "usage" errors will probably not result in the pages
+being tossed out, but the functional ones almost certainly will...
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
