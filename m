@@ -2,89 +2,200 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26BCC07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E94C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410FB214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1777A214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qjVVztNN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7NY3Y2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgIJShy (ORCPT
+        id S1726848AbgIJSfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
+        Thu, 10 Sep 2020 14:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgIJSe4 (ORCPT
+        with ESMTP id S1726853AbgIJSdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:34:56 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A7CC061573;
-        Thu, 10 Sep 2020 11:34:55 -0700 (PDT)
+        Thu, 10 Sep 2020 14:33:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A3DC061757;
+        Thu, 10 Sep 2020 11:33:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XvvanWtbPeA4+U1mCCCR48ZeV6gTrzWi5uy9br9sD0s=; b=qjVVztNNQjmwqqWtlblKT4jAX
-        DA3Eqkgq8nyvYV+HQJTYZPBDdc6MlSJC+aHzJaa4/SePOHMWEh1xKNhlTsw0VHGwjxUuyJsdd7eEj
-        C/uIDyKlOeUoWDzrXvssPlYwHK9vTLyag7q6gFXeF0bcaYteafyMgiV2BYiP1RR9Nwj7V64p//rJv
-        FwtGhy0X5T+4XHC8uY95eV7hyJZyvtcEp6WhkxfHwE98aA3TPKac+9pJDhpmtvBQHRS26iOLw6m19
-        UoqSnKZuzv/aaTvymhZWHqW8jKFmEdvh59SxiK1cZEK6p0DfmxTxpG+KC1jAxS4+jSOQAXwkbX+XR
-        vOOwhvnog==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:32988)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1kGRP5-0006UZ-CL; Thu, 10 Sep 2020 19:34:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1kGRP1-0007UP-CC; Thu, 10 Sep 2020 19:34:35 +0100
-Date:   Thu, 10 Sep 2020 19:34:35 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
- for LEDs controlled by Marvell PHYs
-Message-ID: <20200910183435.GC1551@shell.armlinux.org.uk>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-7-marek.behun@nic.cz>
- <20200910122341.GC7907@duo.ucw.cz>
- <20200910131541.GD3316362@lunn.ch>
- <20200910182434.GA22845@duo.ucw.cz>
- <20200910183154.GF3354160@lunn.ch>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=oE5diPOqflUz5ouPiNiWbjF6mvAtjkW77tqVGwhB8+M=; b=G7NY3Y2Dwt/Soz3DFgXgOe/2lD
+        /6JIyqQm+QuQpNgiZbHV0nmd7Apukp/LVm5KCRPO/E9Bp9i8GKp0AnL8GPb2jhga2FN/uFTihKzwn
+        DJQkvgEaG3yYx4IXydeJIMcmpoxKVgl5alGE6FWJs/eIEhPpJl6sKOiIzetku3o+j4MiISiUMewvz
+        CCHhWLIhINMZphtPGkNrwQTMtSHGY7OTdsoOYERsOwZCJFqf7j+/T57gubnXbT7dHOIA3t42rATww
+        z7Tnalh6R6RxhB5rNzIxfVi279Is1hANBZZyYfD/Air6DVpqU1RS1DUx63xhiavuC/7c30ake9q6H
+        pnrG1Bng==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGRNo-0005Fb-5g; Thu, 10 Sep 2020 18:33:20 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-mm@kvack.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/8] mm: Factor find_get_incore_page out of mincore_page
+Date:   Thu, 10 Sep 2020 19:33:11 +0100
+Message-Id: <20200910183318.20139-2-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200910183318.20139-1-willy@infradead.org>
+References: <20200910183318.20139-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910183154.GF3354160@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:31:54PM +0200, Andrew Lunn wrote:
-> Generally the driver will default to the hardware reset blink
-> pattern. There are a few PHY drivers which change this at probe, but
-> not many. The silicon defaults are pretty good.
+Provide this functionality from the swap cache.  It's useful for
+more than just mincore().
 
-The "right" blink pattern can be a matter of how the hardware is
-wired.  For example, if you have bi-colour LEDs and the PHY supports
-special bi-colour mixing modes.
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ include/linux/swap.h |  7 +++++++
+ mm/mincore.c         | 28 ++--------------------------
+ mm/swap_state.c      | 32 ++++++++++++++++++++++++++++++++
+ 3 files changed, 41 insertions(+), 26 deletions(-)
 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 661046994db4..df87de38dca5 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -427,6 +427,7 @@ extern void free_pages_and_swap_cache(struct page **, int);
+ extern struct page *lookup_swap_cache(swp_entry_t entry,
+ 				      struct vm_area_struct *vma,
+ 				      unsigned long addr);
++struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index);
+ extern struct page *read_swap_cache_async(swp_entry_t, gfp_t,
+ 			struct vm_area_struct *vma, unsigned long addr,
+ 			bool do_poll);
+@@ -569,6 +570,12 @@ static inline struct page *lookup_swap_cache(swp_entry_t swp,
+ 	return NULL;
+ }
+ 
++static inline
++struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index)
++{
++	return find_get_page(mapping, index);
++}
++
+ static inline int add_to_swap(struct page *page)
+ {
+ 	return 0;
+diff --git a/mm/mincore.c b/mm/mincore.c
+index 453ff112470f..02db1a834021 100644
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -48,7 +48,7 @@ static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
+  * and is up to date; i.e. that no page-in operation would be required
+  * at this time if an application were to map and access this page.
+  */
+-static unsigned char mincore_page(struct address_space *mapping, pgoff_t pgoff)
++static unsigned char mincore_page(struct address_space *mapping, pgoff_t index)
+ {
+ 	unsigned char present = 0;
+ 	struct page *page;
+@@ -59,31 +59,7 @@ static unsigned char mincore_page(struct address_space *mapping, pgoff_t pgoff)
+ 	 * any other file mapping (ie. marked !present and faulted in with
+ 	 * tmpfs's .fault). So swapped out tmpfs mappings are tested here.
+ 	 */
+-#ifdef CONFIG_SWAP
+-	if (shmem_mapping(mapping)) {
+-		page = find_get_entry(mapping, pgoff);
+-		/*
+-		 * shmem/tmpfs may return swap: account for swapcache
+-		 * page too.
+-		 */
+-		if (xa_is_value(page)) {
+-			swp_entry_t swp = radix_to_swp_entry(page);
+-			struct swap_info_struct *si;
+-
+-			/* Prevent swap device to being swapoff under us */
+-			si = get_swap_device(swp);
+-			if (si) {
+-				page = find_get_page(swap_address_space(swp),
+-						     swp_offset(swp));
+-				put_swap_device(si);
+-			} else
+-				page = NULL;
+-		}
+-	} else
+-		page = find_get_page(mapping, pgoff);
+-#else
+-	page = find_get_page(mapping, pgoff);
+-#endif
++	page = find_get_incore_page(mapping, index);
+ 	if (page) {
+ 		present = PageUptodate(page);
+ 		put_page(page);
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index c16eebb81d8b..c79e2242dd04 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -21,6 +21,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/swap_slots.h>
+ #include <linux/huge_mm.h>
++#include <linux/shmem_fs.h>
+ #include "internal.h"
+ 
+ /*
+@@ -414,6 +415,37 @@ struct page *lookup_swap_cache(swp_entry_t entry, struct vm_area_struct *vma,
+ 	return page;
+ }
+ 
++/**
++ * find_get_incore_page - Find and get a page from the page or swap caches.
++ * @mapping: The address_space to search.
++ * @index: The page cache index.
++ *
++ * This differs from find_get_page() in that it will also look for the
++ * page in the swap cache.
++ *
++ * Return: The found page or %NULL.
++ */
++struct page *find_get_incore_page(struct address_space *mapping, pgoff_t index)
++{
++	swp_entry_t swp;
++	struct swap_info_struct *si;
++	struct page *page = find_get_entry(mapping, index);
++
++	if (!xa_is_value(page))
++		return page;
++	if (!shmem_mapping(mapping))
++		return NULL;
++
++	swp = radix_to_swp_entry(page);
++	/* Prevent swapoff from happening to us */
++	si = get_swap_device(swp);
++	if (!si)
++		return NULL;
++	page = find_get_page(swap_address_space(swp), swp_offset(swp));
++	put_swap_device(si);
++	return page;
++}
++
+ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+ 			struct vm_area_struct *vma, unsigned long addr,
+ 			bool *new_page_allocated)
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.28.0
+
