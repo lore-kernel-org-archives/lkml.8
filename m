@@ -2,62 +2,66 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A07DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A986C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7DE72075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC2921D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599747721;
-	bh=NuAQLLVniMTiSvD3NX63hR8Ps+um5HbA+yYGRbERCBs=;
+	s=default; t=1599747784;
+	bh=l/M6LZZJZ7DHoVufKas+aer9LD3Hp6q5cd2+VsWkIII=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ztp/CcoIMvMNv/mcHU3GzBSM2SmnHv08FD7JXz9BqTzlJ1aZ2h1Xvohj3FoNgVkuG
-	 b3LiL1mWvKHEFqyPq8fsg6poaY7sG7VT4EPBC7u9+848T2E0ZEIuGLIxL+fnbgSjQV
-	 itewryprQCbQY/N26XhcBWKEhhaY07Vi7DQYovJo=
+	b=EaWRAGXmF/JMibk5xkkmrcblvg5QdguaqixPJXVA2mhiDdMF1f50kGXYY2+BK/5YV
+	 48DLYXGhU3g+tOJecx4vY6jIRmsAPABsrCJPNc3VQ2ncT8Nyv/ZkCCTwAxQjsbgome
+	 9fVAML8oczNnMvNPT/KYCIkE63F9aO3fbL/na6tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730935AbgIJOVy (ORCPT
+        id S1731031AbgIJOW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731116AbgIJOKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:10:31 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53784206BE;
-        Thu, 10 Sep 2020 14:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599746451;
-        bh=NuAQLLVniMTiSvD3NX63hR8Ps+um5HbA+yYGRbERCBs=;
+        Thu, 10 Sep 2020 10:22:57 -0400
+Received: from condef-05.nifty.com ([202.248.20.70]:33543 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730890AbgIJOK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:10:28 -0400
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-05.nifty.com with ESMTP id 08ADtFcv031606;
+        Thu, 10 Sep 2020 22:55:15 +0900
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 08ADpSIv001308;
+        Thu, 10 Sep 2020 22:51:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 08ADpSIv001308
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599745889;
+        bh=JHjawyNi+2UsmyXrYxyqMJXMi2+rCaAViXhyNLVuK8M=;
         h=From:To:Cc:Subject:Date:From;
-        b=yEH2terUPqcySCZBBnx0Y3G3VIqdcs4YJwkjozcORo2pbdBF+K5w1y21JQDosuyP/
-         QrQN4hg/IYGip/gdhoH/ctYL6c2c9p4nXXbZ94MEaczBUdlrXwsCHHN80KDpU8jeyN
-         dH4Ubyx3F5KI623tIiGNT0mJ0TLEe3G3NxjZmASs=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Faisal Latif <faisal.latif@intel.com>,
-        Lijun Ou <oulijun@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        VMware PV-Drivers <pv-drivers@vmware.com>,
-        Weihang Li <liweihang@huawei.com>,
-        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: [PATCH rdma-next 00/10] Prepare drivers to move QP allocation to ib_core
-Date:   Thu, 10 Sep 2020 17:00:36 +0300
-Message-Id: <20200910140046.1306341-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        b=buyXflRaxjagpRHTL+9r/eT3QLgJLolWsUxnbjtXoDxjXWHVtUDCUi/5rTnV79Q5S
+         nULaajOuWCSJI3UtGUxIj3U8dZLZDsrJ0+ze+ED/FJXW+xt3ppN745E2vIs/CBKEKE
+         Oj61MLp+NUjjmvwkq5qHBzRP2F1gRnZv2qUgBIrAJkIUh+kg6d1p4fURxH9O4AC1nW
+         0+U0LHAF+8BgK8pkYpXrK5J0WWewIRwz55IN5QdNntD0Oh2JzqAq+wkIjWzaln1li0
+         2FvyHn/jDYwz47/UeJFtzUdUB25T0PvbTemNV53NpFvM23ty3AEwG37txOgD3awkDR
+         7cJBpo5TiyYUA==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] kbuild: remove cc-option test of -fno-strict-overflow
+Date:   Thu, 10 Sep 2020 22:51:17 +0900
+Message-Id: <20200910135120.3527468-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,47 +69,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+The minimal compiler versions, GCC 4.9 and Clang 10 support this flag.
 
-Hi,
+Here is the godbolt:
+https://godbolt.org/z/odq8h9
 
-This series mainly changes mlx4, mlx5, and mthca drivers to future
-change of QP allocation scheme.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-The rdmavt driver will be sent separately.
+ Makefile                          | 2 +-
+ arch/arm64/kernel/vdso32/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks
-
-Leon Romanovsky (10):
-  RDMA/mlx5: Embed GSI QP into general mlx5_ib QP
-  RDMA/mlx5: Reuse existing fields in parent QP storage object
-  RDMA/mlx5: Change GSI QP to have same creation flow like other QPs
-  RDMA/mlx5: Delete not needed GSI QP signature QP type
-  RDMA/mlx4: Embed GSI QP into general mlx4_ib QP
-  RDMA/mlx4: Prepare QP allocation to remove from the driver
-  RDMA/core: Align write and ioctl checks of QP types
-  RDMA/drivers: Remove udata check from special QP
-  RDMA/mthca: Combine special QP struct with mthca QP
-  RDMA/i40iw: Remove intermediate pointer that points to the same struct
-
- drivers/infiniband/core/uverbs_cmd.c         |  17 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c      |  57 ++--
- drivers/infiniband/hw/i40iw/i40iw_verbs.c    |   9 +-
- drivers/infiniband/hw/i40iw/i40iw_verbs.h    |   1 -
- drivers/infiniband/hw/mlx4/mlx4_ib.h         |  25 +-
- drivers/infiniband/hw/mlx4/qp.c              | 285 ++++++++-----------
- drivers/infiniband/hw/mlx5/gsi.c             | 138 +++------
- drivers/infiniband/hw/mlx5/main.c            |   6 +-
- drivers/infiniband/hw/mlx5/mlx5_ib.h         |  28 +-
- drivers/infiniband/hw/mlx5/qp.c              |  50 ++--
- drivers/infiniband/hw/mthca/mthca_dev.h      |   2 +-
- drivers/infiniband/hw/mthca/mthca_provider.c |  17 +-
- drivers/infiniband/hw/mthca/mthca_provider.h |  27 +-
- drivers/infiniband/hw/mthca/mthca_qp.c       |  75 +++--
- drivers/infiniband/hw/qedr/verbs.c           |   8 -
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c |   3 +-
- 16 files changed, 329 insertions(+), 419 deletions(-)
-
---
-2.26.2
+diff --git a/Makefile b/Makefile
+index 4b5a305e30d2..059b36f2ea53 100644
+--- a/Makefile
++++ b/Makefile
+@@ -922,7 +922,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 
+ # disable invalid "can't wrap" optimizations for signed / pointers
+-KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
++KBUILD_CFLAGS	+= -fno-strict-overflow
+ 
+ # clang sets -fmerge-all-constants by default as optimization, but this
+ # is non-conforming behavior for C and in fact breaks the kernel, so we
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index d6adb4677c25..dfffd55175a3 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -90,7 +90,7 @@ VDSO_CFLAGS  += -O2
+ # Some useful compiler-dependent flags from top-level Makefile
+ VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
+ VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
+-VDSO_CFLAGS += $(call cc32-option,-fno-strict-overflow)
++VDSO_CFLAGS += -fno-strict-overflow
+ VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+ VDSO_CFLAGS += $(call cc32-option,-Werror=date-time)
+ VDSO_CFLAGS += $(call cc32-option,-Werror=incompatible-pointer-types)
+-- 
+2.25.1
 
