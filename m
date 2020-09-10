@@ -2,128 +2,99 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F155C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFBA208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:41:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpErupGX"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB7020C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgIJMlL (ORCPT
+        id S1728289AbgIJMm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727805AbgIJMfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:35:09 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E646DC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:34:59 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so6546106wrm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ou9injEFK3ynx6TLorApjrz9C+IV+NUJDgRb4FiGCd0=;
-        b=JpErupGX9fulmYZvxtdV0U32w7X1pxyfApvEkhWK8zhYuxW1uI+EqU5Fjv9BaF9H/V
-         YurieurqjypG7BJAUBnBCH5arbZ3tVER2qmEt+rAqI4sfn3j4bXg9iz0fRz0pKoPNL3y
-         YSW2fRVwWb6wg82ODMDH5pUFWZ0GjjH48pGAH5EmstenSokAdTz7Xt7zn4OgIwRIR4l9
-         0fLwBGV8McXKD8aluzhihwYePyApjjulnhMvLjwOH3WO1/cwpNtD7nu9TdVZ4OCMjA8S
-         c9CQIJkAS0fQVUjZIlIZtaLGjr0eQHoBc0Ml2c5fY6fYDFZIe4MRDXrAX2YVoKmv1DK0
-         bwYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ou9injEFK3ynx6TLorApjrz9C+IV+NUJDgRb4FiGCd0=;
-        b=XqUfkq2om2vcnCJXv5EkyVfTKE9q2uUftjiWxp9/yhzJmspE9cNp79QgNwKqJZ5dhD
-         BrmI8TnqCgt3vhrGRFQtluwYAAUrjiUlxU2Jo2WQLtCDhFXGBULi7N3YF/Sd5O0Mgl+E
-         e6MykB6oGp8X8YWpbaxDi8uNgCj8FnEV+ynF8YGSWtqWOkkJTwDhJn7pXIYKaHQkwwlv
-         qC9xc6i9BJws4tBroNXhkeVTDrEP3riQSGMZeEavDHL7THJ/U8gjFo+QGEM1mjk0fau2
-         PbJHceFO0jbAR9Ez6u07og5uU13yL2JD9IWYQgl4Rs3r+cBbjhSg7iUUo3ix5jDdlmMz
-         06kw==
-X-Gm-Message-State: AOAM532g47z9p0Fsjr3MHxrIiF2W57trAnimd6GQoxPqllmPj6u7xtZ2
-        8wOS5YrijqSBl3m6tWNED0hJpg==
-X-Google-Smtp-Source: ABdhPJzW0hcZaP/tw8LsHLMPTKiwkkYHFromXeW07uLdryNq4J0OhAM1tb62eb6pB/v/hKExJM8Mhg==
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr9066135wru.374.1599741297317;
-        Thu, 10 Sep 2020 05:34:57 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:109:4a0f:cfff:fe4a:6363])
-        by smtp.gmail.com with ESMTPSA id n21sm3532461wmi.21.2020.09.10.05.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 05:34:56 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 13:34:52 +0100
-From:   Andrew Scull <ascull@google.com>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 04/10] kvm: arm64: Remove hyp_adr/ldr_this_cpu
-Message-ID: <20200910123452.GD93664@google.com>
-References: <20200903091712.46456-1-dbrazdil@google.com>
- <20200903091712.46456-5-dbrazdil@google.com>
+        Thu, 10 Sep 2020 08:42:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730770AbgIJMfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:35:51 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 135462F4C83CA4C34600;
+        Thu, 10 Sep 2020 20:35:18 +0800 (CST)
+Received: from [10.174.178.248] (10.174.178.248) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 10 Sep
+ 2020 20:35:13 +0800
+Subject: Re: [PATCH] drm/mm: prevent a potential null-pointer dereference
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <nirmoy.das@amd.com>
+References: <20200910023858.43759-1-jingxiangfeng@huawei.com>
+ <f6c93d83-b47d-a004-8da9-92305024c4b7@amd.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+Message-ID: <5F5A1D80.2060902@huawei.com>
+Date:   Thu, 10 Sep 2020 20:35:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903091712.46456-5-dbrazdil@google.com>
+In-Reply-To: <f6c93d83-b47d-a004-8da9-92305024c4b7@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.178.248]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 11:17:06AM +0200, 'David Brazdil' via kernel-team wrote:
-> The hyp_adr/ldr_this_cpu helpers were introduced for use in hyp code
-> because they always needed to use TPIDR_EL2 for base, while
-> adr/ldr_this_cpu from kernel proper would select between TPIDR_EL2 and
-> _EL1 based on VHE/nVHE.
-> 
-> Simplify this now that the nVHE hyp mode case can be handled using the
-> __KVM_NVHE_HYPERVISOR__ macro. VHE selects _EL2 with alternatives.
-> 
-> Signed-off-by: David Brazdil <dbrazdil@google.com>
-
-Acked-by: Andrew Scull <ascull@google.com>
-
-> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-> index 54d181177656..b392a977efb6 100644
-> --- a/arch/arm64/include/asm/assembler.h
-> +++ b/arch/arm64/include/asm/assembler.h
-> @@ -218,6 +218,21 @@ lr	.req	x30		// link register
->  	str	\src, [\tmp, :lo12:\sym]
->  	.endm
->  
-> +	/*
-> +	 * @dst: destination register (32 or 64 bit wide)
-> +	 */
-> +	.macro	this_cpu_offset, dst
-> +#ifdef __KVM_NVHE_HYPERVISOR__
-> +	mrs	\dst, tpidr_el2
-
-Another part that might also apply to __KVM_VHE_HYPERVISOR__.
-
-> +#else
-> +alternative_if_not ARM64_HAS_VIRT_HOST_EXTN
-> +	mrs	\dst, tpidr_el1
-> +alternative_else
-> +	mrs	\dst, tpidr_el2
-> +alternative_endif
-> +#endif
-> +	.endm
 
 
+On 2020/9/10 16:58, Christian König wrote:
+> Am 10.09.20 um 04:38 schrieb Jing Xiangfeng:
+>> The macro 'DECLARE_NEXT_HOLE_ADDR' may hit a potential null-pointer
+>> dereference. So use 'entry' after checking it.
+>
+> I don't see a potential null-pointer dereference here.
+>
+> Where should that be?
+
+In current code，the "entry" pointer is checked after entry->rb_hole_addr.
+	Thanks
+>
+> Christian.
+>
+>>
+>> Fixes: 5fad79fd66ff ("drm/mm: cleanup and improve next_hole_*_addr()")
+>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>> ---
+>>   drivers/gpu/drm/drm_mm.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_mm.c b/drivers/gpu/drm/drm_mm.c
+>> index a4a04d246135..6fcf70f71962 100644
+>> --- a/drivers/gpu/drm/drm_mm.c
+>> +++ b/drivers/gpu/drm/drm_mm.c
+>> @@ -392,11 +392,14 @@ first_hole(struct drm_mm *mm,
+>>   #define DECLARE_NEXT_HOLE_ADDR(name, first, last)            \
+>>   static struct drm_mm_node *name(struct drm_mm_node *entry, u64
+>> size)    \
+>>   {                                    \
+>> -    struct rb_node *parent, *node = &entry->rb_hole_addr;        \
+>> +    struct rb_node *parent, *node;                    \
+>>                                       \
+>> -    if (!entry || RB_EMPTY_NODE(node))                \
+>> +    if (!entry)                            \
+>>           return NULL;                        \
+>>                                       \
+>> +    node = &entry->rb_hole_addr;                    \
+>> +    if (RB_EMPTY_NODE(node))                    \
+>> +        return NULL;                        \
+>>       if (usable_hole_addr(node->first, size)) {            \
+>>           node = node->first;                    \
+>>           while (usable_hole_addr(node->last, size))        \
+>
+> .
+>
