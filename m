@@ -8,102 +8,232 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4247CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C98C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0246721941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747B021D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHatk3We"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NnAojsLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgIJSo6 (ORCPT
+        id S1727070AbgIJSpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35084 "EHLO
+        Thu, 10 Sep 2020 14:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgIJSPu (ORCPT
+        with ESMTP id S1725996AbgIJSPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 14:15:50 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E947AC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:33 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id ay8so7272034edb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:33 -0700 (PDT)
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4564C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:31 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id q21so7317568edv.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iVjDnzu3NoP5ee9O0uXdxD2nS2+K7rbMpfw/O/VU9gU=;
-        b=dHatk3WeMWL6tirKnt2blyKK7+cg/jJ0U9wAPtz5uTVXFL98IUJQtM/7xUBZ2JD+Yn
-         3krTqzEd7WhpOHqwCMjKUCTjchOFXIRXDz2gkptECSEfFx6e7FcWLDY1hM9rAsDDFJTY
-         QU5b4sNKRkcnuevgD/rzqmBMZlzrpflSesulbTXDAGzjv2bWDRdaraaEZwd0lcbCvkcI
-         Xm5+YD0fq8yIvI6gvA/N1jQJBiL1AwMR8yYdXILotu7wh4wquiUIM+yr6Yv8GaX9lI03
-         FKMDpQ8Go/uGNLduR/fv4J6V5zHJqZxtEHRm/XRlMPTWlrXzG5Od3PF2HepPSrIZADY5
-         ewpw==
+        h=from:to:cc:subject:date:message-id;
+        bh=fBMnGhFEGtSKYNN1DbAaLO5ZmFvQLZu2d8gj+7Gu1Z8=;
+        b=NnAojsLqGyoeMB26IbuJihdbMsJdxnNeUFbc5iP8EY3ZPi40/gPM4Qaa9agBsi/85w
+         Rmyzt5gmNN8K7i9ZMmeQzRx/FR0uugQbKVeeMG5QRkW2sT33sw0wGIQ7Rgmge5zyQYbi
+         Y7ie2PwSXhklwLTVMnhOq8v5HBI/gEHk5HotJfpnxD255a1/lzrfj0lvNgKAwHu4Mi0Z
+         nXSuYxnRTeOAzmzFls1WgwvUYVJmNFIqwDxCYVBrubEupBdNY7fnOQ+1nJOBkvtPLNTR
+         mOy54KFsb/f+skmSGxexxXRgtSQcJZWya76DYSenlP0u2wcNcJJqn83JDwYalhpER733
+         x3Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iVjDnzu3NoP5ee9O0uXdxD2nS2+K7rbMpfw/O/VU9gU=;
-        b=jfinlt12OM/j/zTBapuHUlghOE3J1HA97wNplrtA8CFvKn46SwONzh+RetOeewVRuT
-         K/Io+dsWnsHo7RZi4zIRVWI0IzgY+YI/xhPr7RME9crFFzS/ywGxKXh8fhIV5AKMCWZ5
-         2oUxdUzCvr6OP0Gstf7d2xNWX5FYH9J/QtwN8SKcBRKbZrddwc7gKubSFKYKn8lJEDND
-         /yzWk2nmZLHDRQw4xJJEXz6a98TJQ0g6xRr6eGOAViQeBj8EBpNrqpJrnLx/1MANeOGT
-         j2WlcbsTuxtKfGbCR4cgKZRQE8vQIV9IqH7DBAy1h1NYEiibm3g0V4QE2pO9qbiNbr29
-         169A==
-X-Gm-Message-State: AOAM533ZrASEn6pcoZfstSzu6oll1zHUT5mwWa7wcFp205hyE832zLU+
-        V4bCx17inoEfN1nhnIxfhyxVZoAgxpg=
-X-Google-Smtp-Source: ABdhPJy8/d1M2tEK7YpCQLDPzUayH/jFBGpmt36k44dz5ewvm7AJnF2TO7BXdDZ9PFXWU9QanZoWXQ==
-X-Received: by 2002:a05:6402:1694:: with SMTP id a20mr10407058edv.286.1599761731975;
-        Thu, 10 Sep 2020 11:15:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fBMnGhFEGtSKYNN1DbAaLO5ZmFvQLZu2d8gj+7Gu1Z8=;
+        b=pSyDc9hUPUsxdjcSGONxGZTaqnevCpPY3QFAUp69kIKPek8jQ2yImxvou/qtryNsww
+         +OLSEzzGbxLf7npy2mZmb77E3jovrQKC4LCB9SD3L9ORHWcJvhOKwww//hRncFDzRd08
+         i581BzfpLlbZ31N0vB9TrJu+Wb06gYBvezZbIGmzqZedBDb8jkxJeQ++uvP/mnPHDPEj
+         bSMtg/sY9YcDAlLRHdlFe5V5CHSx7i1NeYwolgTRWJFfaBc7TMSq1bCigmLfyyFqoV8I
+         YJ2gDmx20aHAXOQXGexH+K4EwP2r9Vgb4HGZjG7KuyNQC6BYv9Vi4/2vHZmVQr5nHrYX
+         BLJw==
+X-Gm-Message-State: AOAM533e2JcAXHNEx7d0jCPjwwYRKXGQ+jYyat563/hVwtnyz0DWs6jG
+        Ys5wL7geoC8hop0ba3RkL2sGE02YAho=
+X-Google-Smtp-Source: ABdhPJxq+VRmWchB2Hm97YbLm3lcmhTMtdB/YvR4vkOmwmhgcdEXajPXP80//lDWcPTFGxJDWVP38Q==
+X-Received: by 2002:aa7:da0f:: with SMTP id r15mr10399804eds.321.1599761729791;
+        Thu, 10 Sep 2020 11:15:29 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id y6sm8636117edj.50.2020.09.10.11.15.29
+        by smtp.gmail.com with ESMTPSA id y6sm8636117edj.50.2020.09.10.11.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:15:30 -0700 (PDT)
+        Thu, 10 Sep 2020 11:15:28 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org, Moti Haimovski <mhaimovski@habana.ai>
-Subject: [PATCH 02/11] habanalabs: rename mmu.c to mmu_v1.c
-Date:   Thu, 10 Sep 2020 21:15:15 +0300
-Message-Id: <20200910181524.21460-2-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
+Subject: [PATCH 01/11] habanalabs: use smallest possible alignment for virtual addresses
+Date:   Thu, 10 Sep 2020 21:15:14 +0300
+Message-Id: <20200910181524.21460-1-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910181524.21460-1-oded.gabbay@gmail.com>
-References: <20200910181524.21460-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moti Haimovski <mhaimovski@habana.ai>
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-In the future we will have MMU v2 code, so we need to prepare the
-driver for it. The first step is to rename the current MMU file to
-mmu_v1.c.
+Change the acquiring of a device virtual address for mapping by using the
+smallest possible alignment, rather than the biggest, depending on the
+page size used by the user for allocating the memory. This will lower the
+virtual space memory consumption.
 
-Signed-off-by: Moti Haimovski <mhaimovski@habana.ai>
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/common/Makefile            | 4 ++--
- drivers/misc/habanalabs/common/{mmu.c => mmu_v1.c} | 0
- 2 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/misc/habanalabs/common/{mmu.c => mmu_v1.c} (100%)
+ drivers/misc/habanalabs/common/memory.c | 86 ++++++++++++++-----------
+ 1 file changed, 48 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/common/Makefile b/drivers/misc/habanalabs/common/Makefile
-index b984bfa4face..e8ed12810517 100644
---- a/drivers/misc/habanalabs/common/Makefile
-+++ b/drivers/misc/habanalabs/common/Makefile
-@@ -3,5 +3,5 @@ HL_COMMON_FILES := common/habanalabs_drv.o common/device.o common/context.o \
- 		common/asid.o common/habanalabs_ioctl.o \
- 		common/command_buffer.o common/hw_queue.o common/irq.o \
- 		common/sysfs.o common/hwmon.o common/memory.o \
--		common/command_submission.o common/mmu.o common/firmware_if.o \
--		common/pci.o
-+		common/command_submission.o common/mmu_v1.o \
-+		common/firmware_if.o common/pci.o
-diff --git a/drivers/misc/habanalabs/common/mmu.c b/drivers/misc/habanalabs/common/mmu_v1.c
-similarity index 100%
-rename from drivers/misc/habanalabs/common/mmu.c
-rename to drivers/misc/habanalabs/common/mmu_v1.c
+diff --git a/drivers/misc/habanalabs/common/memory.c b/drivers/misc/habanalabs/common/memory.c
+index 5ff4688683fd..3324332811bc 100644
+--- a/drivers/misc/habanalabs/common/memory.c
++++ b/drivers/misc/habanalabs/common/memory.c
+@@ -505,41 +505,32 @@ static inline int add_va_block(struct hl_device *hdev,
+ }
+ 
+ /*
+- * get_va_block - get a virtual block with the requested size
+- *
+- * @hdev            : pointer to the habanalabs device structure
+- * @va_range        : pointer to the virtual addresses range
+- * @size            : requested block size
+- * @hint_addr       : hint for request address by the user
+- * @is_userptr      : is host or DRAM memory
++ * get_va_block() - get a virtual block for the given size and alignment.
++ * @hdev: pointer to the habanalabs device structure.
++ * @va_range: pointer to the virtual addresses range.
++ * @size: requested block size.
++ * @hint_addr: hint for requested address by the user.
++ * @va_block_align: required alignment of the virtual block start address.
+  *
+  * This function does the following:
+  * - Iterate on the virtual block list to find a suitable virtual block for the
+- *   requested size
+- * - Reserve the requested block and update the list
+- * - Return the start address of the virtual block
++ *   given size and alignment.
++ * - Reserve the requested block and update the list.
++ * - Return the start address of the virtual block.
+  */
+-static u64 get_va_block(struct hl_device *hdev,
+-			struct hl_va_range *va_range, u64 size, u64 hint_addr,
+-			bool is_userptr)
++static u64 get_va_block(struct hl_device *hdev, struct hl_va_range *va_range,
++			u64 size, u64 hint_addr, u32 va_block_align)
+ {
+ 	struct hl_vm_va_block *va_block, *new_va_block = NULL;
+-	u64 valid_start, valid_size, prev_start, prev_end, page_mask,
++	u64 valid_start, valid_size, prev_start, prev_end, align_mask,
+ 		res_valid_start = 0, res_valid_size = 0;
+-	u32 page_size;
+ 	bool add_prev = false;
+ 
+-	if (is_userptr)
+-		/*
+-		 * We cannot know if the user allocated memory with huge pages
+-		 * or not, hence we continue with the biggest possible
+-		 * granularity.
+-		 */
+-		page_size = hdev->asic_prop.pmmu_huge.page_size;
+-	else
+-		page_size = hdev->asic_prop.dmmu.page_size;
++	align_mask = ~((u64)va_block_align - 1);
+ 
+-	page_mask = ~((u64)page_size - 1);
++	/* check if hint_addr is aligned */
++	if (hint_addr & (va_block_align - 1))
++		hint_addr = 0;
+ 
+ 	mutex_lock(&va_range->lock);
+ 
+@@ -549,9 +540,9 @@ static u64 get_va_block(struct hl_device *hdev,
+ 		/* calc the first possible aligned addr */
+ 		valid_start = va_block->start;
+ 
+-		if (valid_start & (page_size - 1)) {
+-			valid_start &= page_mask;
+-			valid_start += page_size;
++		if (valid_start & (va_block_align - 1)) {
++			valid_start &= align_mask;
++			valid_start += va_block_align;
+ 			if (valid_start > va_block->end)
+ 				continue;
+ 		}
+@@ -863,7 +854,7 @@ static int map_device_va(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 	struct hl_va_range *va_range;
+ 	enum vm_type_t *vm_type;
+ 	u64 ret_vaddr, hint_addr;
+-	u32 handle = 0;
++	u32 handle = 0, va_block_align;
+ 	int rc;
+ 	bool is_userptr = args->flags & HL_MEM_USERPTR;
+ 
+@@ -873,6 +864,8 @@ static int map_device_va(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 	if (is_userptr) {
+ 		u64 addr = args->map_host.host_virt_addr,
+ 			size = args->map_host.mem_size;
++		u32 page_size = hdev->asic_prop.pmmu.page_size,
++			huge_page_size = hdev->asic_prop.pmmu_huge.page_size;
+ 
+ 		rc = dma_map_host_va(hdev, addr, size, &userptr);
+ 		if (rc) {
+@@ -892,6 +885,27 @@ static int map_device_va(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 		vm_type = (enum vm_type_t *) userptr;
+ 		hint_addr = args->map_host.hint_addr;
+ 		handle = phys_pg_pack->handle;
++
++		/* get required alignment */
++		if (phys_pg_pack->page_size == page_size) {
++			va_range = ctx->host_va_range;
++
++			/*
++			 * huge page alignment may be needed in case of regular
++			 * page mapping, depending on the host VA alignment
++			 */
++			if (addr & (huge_page_size - 1))
++				va_block_align = page_size;
++			else
++				va_block_align = huge_page_size;
++		} else {
++			/*
++			 * huge page alignment is needed in case of huge page
++			 * mapping
++			 */
++			va_range = ctx->host_huge_va_range;
++			va_block_align = huge_page_size;
++		}
+ 	} else {
+ 		handle = lower_32_bits(args->map_device.handle);
+ 
+@@ -912,6 +926,10 @@ static int map_device_va(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 		vm_type = (enum vm_type_t *) phys_pg_pack;
+ 
+ 		hint_addr = args->map_device.hint_addr;
++
++		/* DRAM VA alignment is the same as the DRAM page size */
++		va_range = ctx->dram_va_range;
++		va_block_align = hdev->asic_prop.dmmu.page_size;
+ 	}
+ 
+ 	/*
+@@ -933,16 +951,8 @@ static int map_device_va(struct hl_ctx *ctx, struct hl_mem_in *args,
+ 		goto hnode_err;
+ 	}
+ 
+-	if (is_userptr)
+-		if (phys_pg_pack->page_size == hdev->asic_prop.pmmu.page_size)
+-			va_range = ctx->host_va_range;
+-		else
+-			va_range = ctx->host_huge_va_range;
+-	else
+-		va_range = ctx->dram_va_range;
+-
+ 	ret_vaddr = get_va_block(hdev, va_range, phys_pg_pack->total_size,
+-					hint_addr, is_userptr);
++					hint_addr, va_block_align);
+ 	if (!ret_vaddr) {
+ 		dev_err(hdev->dev, "no available va block for handle %u\n",
+ 				handle);
 -- 
 2.17.1
 
