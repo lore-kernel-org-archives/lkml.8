@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35530C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E772CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB97321D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF32521D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VKEofA2O"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="VNrKtroQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgIJCAV (ORCPT
+        id S1730214AbgIJB7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48646 "EHLO
+        Wed, 9 Sep 2020 21:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728611AbgIJBhb (ORCPT
+        with ESMTP id S1728626AbgIJBhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 21:37:31 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on20606.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe59::606])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3278C061342
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:20:30 -0700 (PDT)
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (mail-sn1nam04on0626.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe4c::626])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A399C061343
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:20:32 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZgwNJtwb7/FcApGP+5kHK9+ynaK9mCDErjpGf0oGgZKQ4RAYasDSbxT2dhBBdvd2YTYQXZvI1icoHsj0RMMuQmrCxk0e2YGbt6ptJQ15p4VD8boQDf5ED4gcbp1IwbZQS8aLQv6bN6kp4gnZpvBLkb/zzllL6+xm9EMryIO6Oa+WxSLYOm4o/sz/1oYvQ/TXbYFIp+eBb28lFzeqceOfsMoNQoI4+LZWIfCQupjch0Z/xOjWRtz5Efz0ovPyOTZ7g1MyM9HIC/byxpUWiLq2hcToJTgAs9G7s3/J5uIZIn52SC4sdCihgthrLTT1z2VqS1kLhz5KnBRVtDU1PChwTQ==
+ b=HqdUYRsx9yXavQhrKs+qzhZi1J1sLgaAv3OjfERjcQ8K1aDcZ0qX4+ZlIQ+llaNpiixf/ObNN+LXiPc7JnxLwGOEdTR0GZx3ZoM3An1JlSj9fxT9Y4Pu+EWMqIYftOSUACBaUWb6qR8x4Z9NlHE74FH7/Mbxoa/yhfrBG0ftzhh8nYdyW+EQhJIlCw/cCryzCx0RuN3ogUaSz511ZBJQon6EX4lRcYwRtvWXIji9Yyg6pSpyy2WL3MxpsSrKYm7gvyt4cEiOLqkRRNUqfr0bUObB5/wONz+8BHvcDvreCFAT/sITKZdXgn8ybe5XI5mBtaoNzJx8G59y4Npxi4U9IQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k34GbCKNhs5oVWSpXkK5XyHxD3fgz/UVd2dZGEfcxBE=;
- b=XvhHBSBz6gT0QviTSQcE5XuzsnpgYxevj//pxB5RTOILKGtSB49qJaeMkufihXSTioRGgmEx+O+2EOAq2/SbV607a9Nc3DmOWtB1pHN92bXU4sfvsYd3EbXMPfNN3jTiziSO+bn3CuqaA/pyNyHvelcqKu8A1/RLzjuDgAiCrTs+qEO9NCfx2OpDVn6ANQpEKe7vuRUMkCtf+v657ROyOH9R1fVjM63G5IgTqB0rfv+97vARvc3yk++3oUQzmCaHaTkUTo8+tueN4bG/yaPnuz2a3vcvTYEtcw82gbp6NVmvud4bRPV4HDsrs03QxGjf/3JKCqksI/Jl9QLHK9pk+A==
+ bh=0oJbVftP5GZ8OS1xyRkZm/DV0t/DZEYm/aH36t+sg8U=;
+ b=Z3RoimXiD0MNRFisV7AXOPgEkiY8CdAHNfTwdfyGi3pw7alYbkny+VWNR3yvWyqEXYSjkwQ5YFQfxpKszkEIio6xRv4lHlPCvjZSpw3fOmpTpKIEFZjOlpaqVfS1+Ow0XVBGKjpB9Jtbl6tb7iiRCJLUnoluTXP9QxVRHL4+pJtcLWqCuVtsyK58/yRoC/nCtv1T0gc+EEljZF0pVcRUi1Za5LkxpvEfirDWOsrt7rxsMeIhMOhfjm+Wnx2JjHLPfkCJa3KkRD8DMMoJYBip8wEiiDoSGMuTNiEkSZmBSZpW0RpUJOqXAlWAx2WL6hP4SVZGcfzDdL9FeceSKwuOJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -40,18 +40,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k34GbCKNhs5oVWSpXkK5XyHxD3fgz/UVd2dZGEfcxBE=;
- b=VKEofA2OLHKteMWxOJtpohVW+Cdnxzo/3Rox9MLIpMuo15FC3sby/M6ya+jcHYM9wcH4avYRZ3dEHpnw02x87Nc2IF3FX8wVoKRwlvQPrkGoNRhzWKRU83jAnct7Ld/mXvkA8GEte5hyM8tmbmVtfgmoCfHuByCRnwsAndWyxLM=
-Received: from CY4PR04CA0046.namprd04.prod.outlook.com (2603:10b6:903:c6::32)
- by SN6PR02MB4319.namprd02.prod.outlook.com (2603:10b6:805:ac::26) with
+ bh=0oJbVftP5GZ8OS1xyRkZm/DV0t/DZEYm/aH36t+sg8U=;
+ b=VNrKtroQaZGJnre/6IX9kUIZm2DBZcLSThYeJzq3I0gj7WcjJWRt9hIPKOmL/ddWxxZ1iSaVSZilIXaVJchueU+LwaJd3CLt0B4eC9IYWjGf1KRgXynXrd5YfO30Ki3H9/qDS/7r9j8U2/KTCwU3AQsh0L0zULfRRUmE82t/MO8=
+Received: from SN6PR05CA0002.namprd05.prod.outlook.com (2603:10b6:805:de::15)
+ by SN6PR02MB5357.namprd02.prod.outlook.com (2603:10b6:805:75::28) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
- 2020 00:20:13 +0000
-Received: from CY1NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:c6:cafe::77) by CY4PR04CA0046.outlook.office365.com
- (2603:10b6:903:c6::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend
- Transport; Thu, 10 Sep 2020 00:20:12 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Thu, 10 Sep
+ 2020 00:20:11 +0000
+Received: from SN1NAM02FT051.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:de:cafe::e9) by SN6PR05CA0002.outlook.office365.com
+ (2603:10b6:805:de::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5 via Frontend
+ Transport; Thu, 10 Sep 2020 00:20:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -60,24 +60,24 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT021.mail.protection.outlook.com (10.152.75.187) with Microsoft SMTP
- Server id 15.20.3348.17 via Frontend Transport; Thu, 10 Sep 2020 00:20:11
+ SN1NAM02FT051.mail.protection.outlook.com (10.152.73.103) with Microsoft SMTP
+ Server id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 00:20:11
  +0000
-Received: from [149.199.38.66] (port=46259 helo=smtp.xilinx.com)
+Received: from [149.199.38.66] (port=46184 helo=smtp.xilinx.com)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1kGAJf-0007M4-4S; Wed, 09 Sep 2020 17:19:55 -0700
+        id 1kGAJe-0007Ly-SI; Wed, 09 Sep 2020 17:19:54 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by smtp.xilinx.com with smtp (Exim 4.63)
         (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1kGAJv-0006Qx-HQ; Wed, 09 Sep 2020 17:20:11 -0700
+        id 1kGAJv-0006Qx-8v; Wed, 09 Sep 2020 17:20:11 -0700
 Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 08A0K6Dd001924;
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 08A0K6aH001929;
         Wed, 9 Sep 2020 17:20:06 -0700
 Received: from [10.18.5.8] (helo=xsjamitsuni51.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1kGAJq-0006Dg-0i; Wed, 09 Sep 2020 17:20:06 -0700
+        id 1kGAJq-0006Dg-50; Wed, 09 Sep 2020 17:20:06 -0700
 From:   Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
 To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
         gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
@@ -87,9 +87,9 @@ To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         rajan.vaja@xilinx.com, jolly.shah@xilinx.com,
         Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-Subject: [PATCH 1/3] firmware: xilinx: Add validation check for IOCTL
-Date:   Wed,  9 Sep 2020 17:20:02 -0700
-Message-Id: <1599697204-32103-2-git-send-email-amit.sunil.dhamne@xilinx.com>
+Subject: [PATCH 3/3] firmware: xilinx: Add sysfs to get last reset reason
+Date:   Wed,  9 Sep 2020 17:20:04 -0700
+Message-Id: <1599697204-32103-4-git-send-email-amit.sunil.dhamne@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599697204-32103-1-git-send-email-amit.sunil.dhamne@xilinx.com>
 References: <1599697204-32103-1-git-send-email-amit.sunil.dhamne@xilinx.com>
@@ -101,26 +101,26 @@ X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 14c5ebb9-c08e-4049-1352-08d8551f484b
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4319:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB43195DD378AF1A61FD6235B7A7270@SN6PR02MB4319.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 85746a71-5ab6-49d1-8ae8-08d8551f4836
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5357:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB535718DAD321BD49CF884220A7270@SN6PR02MB5357.namprd02.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-MS-Oob-TLC-OOBClassifiers: OLM:321;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6U9fJgUYmWTpHB4GdC/MXniwipBn8L+mMleBaS6zmlObiiN7eYYXeyL/bg+rn2FTDk2AqD5CQ1ZLXIp1Bztgeqtf2ZS7WZobZ0LRVPf+KYb82KlBqOFWegywYKRnzTRN9iNnZJ6MKhN78KD8pOF8ZGniY9JJnLcCSyc05roUv2eD40mKMzCj7OnmxweDBrIqo/kWhT41F710pVJlJyW/l4CfFx9zvGbspY8Ox1zePqiyiwB8UHxfjdN9W8CBzeKyL/YCvTnG55rmeNE9/aOAk9BxNMPV20/ytd8+L10+CAedjzIm3i8DtGi8tpLCPY8syYue+PDuzLZmM+XsNNgeB3AaObex5/to4hDf0LS0AYy7fyk+w06E313uqiY3sL3ZrRl1jMJTps1kVBZkNX+QrwTE1rtltCs7qTbGKHvva34=
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(346002)(376002)(39860400002)(136003)(396003)(46966005)(426003)(6666004)(82740400003)(6636002)(2616005)(316002)(478600001)(336012)(7696005)(8936002)(107886003)(5660300002)(2906002)(70206006)(4326008)(8676002)(70586007)(186003)(356005)(26005)(7416002)(83380400001)(47076004)(36756003)(82310400003)(81166007)(9786002)(921003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Yllcl5yFj5B/GoCaZedNtqqHrkJwLSDnCXMDC64HKU/w0KAbCxh3/FASGDhzp1SUQA8DYZY3WBPAo6wpnadNE2KKakAfUu5yoa/UCFspRPi1zsfwV06rommNY15qbcKv8VLZXD66+/89OhSpvLAMr4z0I+fLur5oYTJ+w4VUtfnf7h9uuygoJE1fVyHUjTJ4SfwoQNjiOTFEXQ5jENt68AJkyNeJcQqrLf6NrvCrGOJMVB8q/8f5Xq5WTbuGnybXfC3ExLvLToxYcBk0exfFHLDgTSHlehczd/Ks9GNWYLgNBdrv7VQzcXpfPqmF0ChmhEpF6xxpZtMP/RPnHYwoGvVIeIoU11aKNK5GMus+GuSggZEMoIOeOnHsOH4IsnHi2YfsZUgHq+ODpRaRiDMV3XuGVHYfyB5S5Um41vEIw3Y=
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(376002)(346002)(396003)(39860400002)(136003)(46966005)(81166007)(36756003)(70206006)(9786002)(2616005)(2906002)(47076004)(8936002)(82310400003)(7696005)(426003)(70586007)(8676002)(356005)(6636002)(4326008)(316002)(83380400001)(186003)(478600001)(7416002)(107886003)(82740400003)(5660300002)(336012)(26005)(921003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 00:20:11.8022
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 00:20:11.6676
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14c5ebb9-c08e-4049-1352-08d8551f484b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85746a71-5ab6-49d1-8ae8-08d8551f4836
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT021.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT051.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4319
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5357
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -128,235 +128,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tejas Patel <tejas.patel@xilinx.com>
 
-Validate IOCTL ID for ZynqMP and Versal before calling
-zynqmp_pm_invoke_fn().
+Add sysfs to get last reset reason.
 
 Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
 Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c | 117 +++++++++++++++++++++++++++++++----=
-----
- 1 file changed, 95 insertions(+), 22 deletions(-)
+ .../ABI/stable/sysfs-driver-firmware-zynqmp        | 13 ++++++++
+ drivers/firmware/xilinx/zynqmp.c                   | 37 ++++++++++++++++++=
+++++
+ include/linux/firmware/xlnx-zynqmp.h               | 11 +++++++
+ 3 files changed, 61 insertions(+)
 
+diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Docume=
+ntation/ABI/stable/sysfs-driver-firmware-zynqmp
+index 00fa04c..96a5760 100644
+--- a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
++++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
+@@ -101,3 +101,16 @@ Description:
+                # echo 0 > /sys/devices/platform/firmware\:zynqmp-firmware/=
+health_status
+
+ Users:         Xilinx
++
++What:          /sys/devices/platform/firmware\:zynqmp-firmware/last_reset_=
+reason
++Date:          June 2020
++KernelVersion: 5.9.0
++Contact:       "Tejas Patel" <tejasp@xilinx.com>
++Description:
++               This sysfs interface allows to get last reset reason.
++
++               Usage:
++               Get last reset reason
++               # cat /sys/devices/platform/firmware\:zynqmp-firmware/last_=
+reset_reason
++
++Users:         Xilinx
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zyn=
 qmp.c
-index 8d1ff24..8fe0912 100644
+index c5db34f..f590856 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -514,6 +514,89 @@ int zynqmp_pm_clock_getparent(u32 clock_id, u32 *paren=
-t_id)
- EXPORT_SYMBOL_GPL(zynqmp_pm_clock_getparent);
+@@ -1266,6 +1266,42 @@ static DEVICE_ATTR_RW(pggs1);
+ static DEVICE_ATTR_RW(pggs2);
+ static DEVICE_ATTR_RW(pggs3);
 
- /**
-+ * versal_is_valid_ioctl() - Check whether IOCTL ID is valid or not for ve=
-rsal
-+ * @ioctl_id:  IOCTL ID
-+ *
-+ * Return: 1 if IOCTL is valid else 0
-+ */
-+static inline int versal_is_valid_ioctl(u32 ioctl_id)
++static ssize_t last_reset_reason_show(struct device *device,
++                                     struct device_attribute *attr, char *=
+buf)
 +{
-+       switch (ioctl_id) {
-+       case IOCTL_SD_DLL_RESET:
-+       case IOCTL_SET_SD_TAPDELAY:
-+       case IOCTL_SET_PLL_FRAC_MODE:
-+       case IOCTL_GET_PLL_FRAC_MODE:
-+       case IOCTL_SET_PLL_FRAC_DATA:
-+       case IOCTL_GET_PLL_FRAC_DATA:
-+       case IOCTL_WRITE_GGS:
-+       case IOCTL_READ_GGS:
-+       case IOCTL_WRITE_PGGS:
-+       case IOCTL_READ_PGGS:
-+       case IOCTL_SET_BOOT_HEALTH_STATUS:
-+               return 1;
++       int ret;
++       u32 ret_payload[PAYLOAD_ARG_CNT];
++
++       ret =3D zynqmp_pm_get_last_reset_reason(ret_payload);
++       if (-EINVAL =3D=3D ret)
++               return sprintf(buf, "Feature not supported\n");
++       else if (ret)
++               return ret;
++
++       switch (ret_payload[1]) {
++       case PM_RESET_REASON_EXT_POR:
++               return sprintf(buf, "ext_por\n");
++       case PM_RESET_REASON_SW_POR:
++               return sprintf(buf, "sw_por\n");
++       case PM_RESET_REASON_SLR_POR:
++               return sprintf(buf, "sl_por\n");
++       case PM_RESET_REASON_ERR_POR:
++               return sprintf(buf, "err_por\n");
++       case PM_RESET_REASON_DAP_SRST:
++               return sprintf(buf, "dap_srst\n");
++       case PM_RESET_REASON_ERR_SRST:
++               return sprintf(buf, "err_srst\n");
++       case PM_RESET_REASON_SW_SRST:
++               return sprintf(buf, "sw_srst\n");
++       case PM_RESET_REASON_SLR_SRST:
++               return sprintf(buf, "slr_srst\n");
 +       default:
-+               return 0;
++               return sprintf(buf, "unknown reset\n");
 +       }
 +}
 +
-+/**
-+ * zynqmp_is_valid_ioctl() - Check whether IOCTL ID is valid or not
-+ * @ioctl_id:  IOCTL ID
-+ *
-+ * Return: 1 if IOCTL is valid else 0
-+ */
-+static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
-+{
-+       switch (ioctl_id) {
-+       case IOCTL_SD_DLL_RESET:
-+       case IOCTL_SET_SD_TAPDELAY:
-+       case IOCTL_SET_PLL_FRAC_MODE:
-+       case IOCTL_GET_PLL_FRAC_MODE:
-+       case IOCTL_SET_PLL_FRAC_DATA:
-+       case IOCTL_GET_PLL_FRAC_DATA:
-+       case IOCTL_WRITE_GGS:
-+       case IOCTL_READ_GGS:
-+       case IOCTL_WRITE_PGGS:
-+       case IOCTL_READ_PGGS:
-+       case IOCTL_SET_BOOT_HEALTH_STATUS:
-+               return 1;
-+       default:
-+               return 0;
-+       }
-+}
++static DEVICE_ATTR_RO(last_reset_reason);
 +
-+/**
-+ * zynqmp_pm_ioctl() - PM IOCTL API for device control and configs
-+ * @node_id:   Node ID of the device
-+ * @ioctl_id:  ID of the requested IOCTL
-+ * @arg1:      Argument 1 to requested IOCTL call
-+ * @arg2:      Argument 2 to requested IOCTL call
-+ * @out:       Returned output value
-+ *
-+ * This function calls IOCTL to firmware for device control and configurat=
-ion.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
-+                          u32 *out)
-+{
-+       struct device_node *np;
+ static struct attribute *zynqmp_firmware_attrs[] =3D {
+        &dev_attr_ggs0.attr,
+        &dev_attr_ggs1.attr,
+@@ -1277,6 +1313,7 @@ static struct attribute *zynqmp_firmware_attrs[] =3D =
+{
+        &dev_attr_pggs3.attr,
+        &dev_attr_shutdown_scope.attr,
+        &dev_attr_health_status.attr,
++       &dev_attr_last_reset_reason.attr,
+        NULL,
+ };
+
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/=
+xlnx-zynqmp.h
+index 90c8664..f7cb0a9 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -302,6 +302,17 @@ enum zynqmp_pm_shutdown_subtype {
+        ZYNQMP_PM_SHUTDOWN_SUBTYPE_SYSTEM,
+ };
+
++enum pm_reset_reason {
++       PM_RESET_REASON_EXT_POR =3D 0,
++       PM_RESET_REASON_SW_POR =3D 1,
++       PM_RESET_REASON_SLR_POR =3D 2,
++       PM_RESET_REASON_ERR_POR =3D 3,
++       PM_RESET_REASON_DAP_SRST =3D 7,
++       PM_RESET_REASON_ERR_SRST =3D 8,
++       PM_RESET_REASON_SW_SRST =3D 9,
++       PM_RESET_REASON_SLR_SRST =3D 10,
++};
 +
-+       np =3D of_find_compatible_node(NULL, NULL, "xlnx,versal");
-+       if (np) {
-+               if (!versal_is_valid_ioctl(ioctl_id))
-+                       return -EINVAL;
-+       } else {
-+               if (!zynqmp_is_valid_ioctl(ioctl_id))
-+                       return -EINVAL;
-+       }
-+       of_node_put(np);
-+
-+       return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, ioctl_id, arg1, arg2,
-+                                  out);
-+}
-+
-+/**
-  * zynqmp_pm_set_pll_frac_mode() - PM API for set PLL mode
-  *
-  * @clk_id:    PLL clock ID
-@@ -525,8 +608,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_clock_getparent);
-  */
- int zynqmp_pm_set_pll_frac_mode(u32 clk_id, u32 mode)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_PLL_FRAC_MODE,
--                                  clk_id, mode, NULL);
-+       return zynqmp_pm_ioctl(0, IOCTL_SET_PLL_FRAC_MODE, clk_id, mode, NU=
-LL);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_set_pll_frac_mode);
-
-@@ -542,8 +624,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_set_pll_frac_mode);
-  */
- int zynqmp_pm_get_pll_frac_mode(u32 clk_id, u32 *mode)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_GET_PLL_FRAC_MODE,
--                                  clk_id, 0, mode);
-+       return zynqmp_pm_ioctl(0, IOCTL_GET_PLL_FRAC_MODE, clk_id, 0, mode)=
-;
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_get_pll_frac_mode);
-
-@@ -560,8 +641,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_get_pll_frac_mode);
-  */
- int zynqmp_pm_set_pll_frac_data(u32 clk_id, u32 data)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_PLL_FRAC_DATA,
--                                  clk_id, data, NULL);
-+       return zynqmp_pm_ioctl(0, IOCTL_SET_PLL_FRAC_DATA, clk_id, data, NU=
-LL);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_set_pll_frac_data);
-
-@@ -577,8 +657,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_set_pll_frac_data);
-  */
- int zynqmp_pm_get_pll_frac_data(u32 clk_id, u32 *data)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_GET_PLL_FRAC_DATA,
--                                  clk_id, 0, data);
-+       return zynqmp_pm_ioctl(0, IOCTL_GET_PLL_FRAC_DATA, clk_id, 0, data)=
-;
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_get_pll_frac_data);
-
-@@ -595,8 +674,8 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_get_pll_frac_data);
-  */
- int zynqmp_pm_set_sd_tapdelay(u32 node_id, u32 type, u32 value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, IOCTL_SET_SD_TAPDELAY=
-,
--                                  type, value, NULL);
-+       return zynqmp_pm_ioctl(node_id, IOCTL_SET_SD_TAPDELAY, type, value,
-+                              NULL);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_set_sd_tapdelay);
-
-@@ -612,8 +691,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_set_sd_tapdelay);
-  */
- int zynqmp_pm_sd_dll_reset(u32 node_id, u32 type)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, IOCTL_SET_SD_TAPDELAY=
-,
--                                  type, 0, NULL);
-+       return zynqmp_pm_ioctl(node_id, IOCTL_SET_SD_TAPDELAY, type, 0, NUL=
-L);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_sd_dll_reset);
-
-@@ -628,8 +706,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_sd_dll_reset);
-  */
- int zynqmp_pm_write_ggs(u32 index, u32 value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_WRITE_GGS,
--                                  index, value, NULL);
-+       return zynqmp_pm_ioctl(0, IOCTL_WRITE_GGS, index, value, NULL);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_write_ggs);
-
-@@ -644,8 +721,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_write_ggs);
-  */
- int zynqmp_pm_read_ggs(u32 index, u32 *value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_READ_GGS,
--                                  index, 0, value);
-+       return zynqmp_pm_ioctl(0, IOCTL_READ_GGS, index, 0, value);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_read_ggs);
-
-@@ -661,8 +737,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_read_ggs);
-  */
- int zynqmp_pm_write_pggs(u32 index, u32 value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_WRITE_PGGS, index, va=
-lue,
--                                  NULL);
-+       return zynqmp_pm_ioctl(0, IOCTL_WRITE_PGGS, index, value, NULL);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_write_pggs);
-
-@@ -678,8 +753,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_write_pggs);
-  */
- int zynqmp_pm_read_pggs(u32 index, u32 *value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_READ_PGGS, index, 0,
--                                  value);
-+       return zynqmp_pm_ioctl(0, IOCTL_READ_PGGS, index, 0, value);
- }
- EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
-
-@@ -694,8 +768,7 @@ EXPORT_SYMBOL_GPL(zynqmp_pm_read_pggs);
-  */
- int zynqmp_pm_set_boot_health_status(u32 value)
- {
--       return zynqmp_pm_invoke_fn(PM_IOCTL, 0, IOCTL_SET_BOOT_HEALTH_STATU=
-S,
--                                  value, 0, NULL);
-+       return zynqmp_pm_ioctl(0, IOCTL_SET_BOOT_HEALTH_STATUS, value, 0, N=
-ULL);
- }
-
  /**
+  * struct zynqmp_pm_query_data - PM query data
+  * @qid:       query ID
 --
 2.7.4
 
