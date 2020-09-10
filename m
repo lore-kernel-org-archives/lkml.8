@@ -2,95 +2,174 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C32C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ED2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B53207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NP92OmHM"
+	by mail.kernel.org (Postfix) with ESMTP id 46427207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725372AbgIJFEB (ORCPT
+        id S1726642AbgIJFER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 01:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgIJFDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 01:03:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19C5C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 22:03:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 7so3575315pgm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 22:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZqFRgh97zYu+FiBtzR+Vdczm0u9Myix9WNoAZc4j270=;
-        b=NP92OmHMm5OYxrBJAvqsBp+an2H6o2R6aDzTTLrZxaTjAhfBtVUlOpAqSqFbbQqo6X
-         54MpqdxDG5zhecLsL02YcQw0qjGWRhq29kn94o2vBOUHWjJLAhLlE9Q6QFMWHrfg7SIu
-         3jguHE2y4BA0rFUbFTU/uigpnhhX81BnzQg7PFFvryc+rgdzn40GDqRTXJdOjy4EC0qB
-         R8hDzcEbs0y+bmKHuQgBY0dusah5bwmCME3Cb2mEIejaldbh2YLxj2W5sW+fcyt9Npjd
-         8s3CpiqA43jZnXxhvbznexwo5RNsychyE1Xg0/d80mOb7KHQ1eGQRtk5a52fQdTRVu5A
-         79qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZqFRgh97zYu+FiBtzR+Vdczm0u9Myix9WNoAZc4j270=;
-        b=S9B4FXaXDPpSohpmUwpjI6IQdZvRR+jH86sluprDxkm6nt+tTuNae+mxLjgjOagUx0
-         5acHWJujfnH2yyPsrfVO4REAIARCRyXgPc/JeLR3Tv+hoj8l5Edj+QLXpCbqola+Szth
-         dL20vQCoDBXpgJp6Dq2AkGRblwbp2kG0xIXXkEmMibi/y5yQyjvuvbn5v0614jgpDho+
-         jui6ixyiiLYpbbHO0UTo2W4OV1mvT+tlSAxxjTM+6lwkoHzSC9Kj8yGpbUCeks0zYvML
-         XmvxxVZohR1hxzcGB2+j5DeqneD2YU8I9T4oWoIBhgtG5erBin7St8SzrQduS931rtgh
-         IP1g==
-X-Gm-Message-State: AOAM530YP+sPJaiaWlBIMv+fUqu4w5lMl1AtLemWjb6oL5ZXxOEqQuKW
-        YCaGvXOh/j2wLhiBwPZrVHcO+g==
-X-Google-Smtp-Source: ABdhPJwH/JmaRVcMaXXgABEcKfk5wgZ5e88Hcz2jgqPwYhGXAf90BF9F/3AHEnm7w8Xe2lIp1WsRbA==
-X-Received: by 2002:a65:5bcf:: with SMTP id o15mr3080223pgr.126.1599714229100;
-        Wed, 09 Sep 2020 22:03:49 -0700 (PDT)
-Received: from localhost ([122.181.54.133])
-        by smtp.gmail.com with ESMTPSA id gb19sm707678pjb.38.2020.09.09.22.03.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 22:03:48 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 10:33:41 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v7] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-Message-ID: <20200910050341.pgyieq3q7ijitosn@vireshk-i7>
-References: <1599712262-8819-1-git-send-email-hector.yuan@mediatek.com>
+        Thu, 10 Sep 2020 01:04:17 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13864 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725855AbgIJFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 01:04:14 -0400
+IronPort-SDR: 9Mn8EGTRJkxZLhPruU5sv0or40z3kvi1XrFo3qQ0fMbjfJKVASkRPbYc9irV509+v5lNT9hFyI
+ nB9pwt1A7EzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155929597"
+X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
+   d="scan'208";a="155929597"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 22:04:13 -0700
+IronPort-SDR: giKSZ97bAcEPsKSl2Gh6CC9pNy5654GgHPAQPoMyGewdnl7NN80U+HoFoXC9OmHd+4ANtUAQQk
+ doEoB5TcNmbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
+   d="scan'208";a="344126832"
+Received: from lkp-server01.sh.intel.com (HELO 12ff3cf3f2e9) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 09 Sep 2020 22:04:11 -0700
+Received: from kbuild by 12ff3cf3f2e9 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kGEkl-0000jS-4J; Thu, 10 Sep 2020 05:04:11 +0000
+Date:   Thu, 10 Sep 2020 13:03:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:WIP.x86/seves] BUILD SUCCESS
+ 1ac0dc494a9796d6f94ff392f16e0c9a8cea7021
+Message-ID: <5f59b3a9.XsYhjv28rfjcwzlj%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599712262-8819-1-git-send-email-hector.yuan@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-09-20, 12:31, Hector Yuan wrote:
-> The CPUfreq HW present in some Mediatek chipsets offloads the steps necessary for changing the frequency of CPUs. 
-> The driver implements the cpufreq driver interface for this hardware engine. 
-> 
-> This patch depends on the MT6779 DTS patch submitted by Hanks Chen
->  https://lkml.org/lkml/2020/8/4/1094
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/seves
+branch HEAD: 1ac0dc494a9796d6f94ff392f16e0c9a8cea7021  x86/sev-es: Check required CPU features for SEV-ES
 
-Thanks for hanging there. Looks good to me. I will apply it once Rob
-Ack's the binding patch.
+elapsed time: 720m
 
--- 
-viresh
+configs tested: 100
+configs skipped: 7
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+h8300                       h8s-sim_defconfig
+mips                      fuloong2e_defconfig
+sh                         apsh4a3a_defconfig
+arm                      footbridge_defconfig
+sh                         ecovec24_defconfig
+powerpc                     powernv_defconfig
+powerpc                      mgcoge_defconfig
+arm                        neponset_defconfig
+m68k                        stmark2_defconfig
+arm                         lpc18xx_defconfig
+mips                           jazz_defconfig
+m68k                       m5249evb_defconfig
+parisc                generic-32bit_defconfig
+arm                         assabet_defconfig
+arm                            dove_defconfig
+arm                         cm_x300_defconfig
+sh                ecovec24-romimage_defconfig
+csky                                defconfig
+i386                                defconfig
+sh                          polaris_defconfig
+m68k                        mvme16x_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+mips                  maltasmvp_eva_defconfig
+alpha                               defconfig
+sh                              ul2_defconfig
+powerpc                        cell_defconfig
+m68k                          multi_defconfig
+arm                         nhk8815_defconfig
+sh                           se7206_defconfig
+xtensa                    xip_kc705_defconfig
+mips                          rb532_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20200909
+x86_64               randconfig-a006-20200909
+x86_64               randconfig-a003-20200909
+x86_64               randconfig-a001-20200909
+x86_64               randconfig-a005-20200909
+x86_64               randconfig-a002-20200909
+i386                 randconfig-a004-20200909
+i386                 randconfig-a005-20200909
+i386                 randconfig-a006-20200909
+i386                 randconfig-a002-20200909
+i386                 randconfig-a001-20200909
+i386                 randconfig-a003-20200909
+i386                 randconfig-a016-20200909
+i386                 randconfig-a015-20200909
+i386                 randconfig-a011-20200909
+i386                 randconfig-a013-20200909
+i386                 randconfig-a014-20200909
+i386                 randconfig-a012-20200909
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a013-20200909
+x86_64               randconfig-a016-20200909
+x86_64               randconfig-a011-20200909
+x86_64               randconfig-a012-20200909
+x86_64               randconfig-a015-20200909
+x86_64               randconfig-a014-20200909
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
