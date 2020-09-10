@@ -2,161 +2,200 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BDCC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B08CC07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD762087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A083B21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EgTXBW4y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPZzWyhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgIJSxu (ORCPT
+        id S1727095AbgIJSyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:53:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36669 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbgIJSw4 (ORCPT
+        Thu, 10 Sep 2020 14:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgIJSuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:52:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599763973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KkaYcC4r9CnQPKRFQbJspK1ku3ZqxcVTouDc6fHIVAg=;
-        b=EgTXBW4yFKzxjxDdw8uDJb6Q4fpTvB+59k7s0Ba6ZX7EvRrCFpBswZwK0qftQftX2+w79C
-        wR5VMRRSOof2Hl6ZkU6eJaEK8dTSae7fh/zvjTFGYGh9+Gzmtoqx2eqT0J3ZhMDg9pqxFR
-        VXvoO4SIy1dVwlzAIlkyO0uIi1alfXA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-MmffAxY7PsOXl4PCaX0n3g-1; Thu, 10 Sep 2020 14:52:51 -0400
-X-MC-Unique: MmffAxY7PsOXl4PCaX0n3g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D4EE80BCA1;
-        Thu, 10 Sep 2020 18:52:50 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-5.gru2.redhat.com [10.97.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A22060BF1;
-        Thu, 10 Sep 2020 18:52:50 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id C252A41853FD; Thu, 10 Sep 2020 15:51:00 -0300 (-03)
-Date:   Thu, 10 Sep 2020 15:51:00 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: [patch 2/2] nohz: try to avoid IPI when setting tick dependency
- for task
-Message-ID: <20200910185100.GA23968@fuller.cnet>
-References: <20200825184147.948670309@fuller.cnet>
- <20200825184414.486721471@fuller.cnet>
- <20200903150152.GA5353@lenoir>
+        Thu, 10 Sep 2020 14:50:11 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8B2C061573;
+        Thu, 10 Sep 2020 11:50:10 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id c196so5322554pfc.0;
+        Thu, 10 Sep 2020 11:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aYjJfcYyIA8Xv1f/xwx7IbaGd+zm7NTIJSkG9721wPA=;
+        b=JPZzWyhSb2c1eLwB3oxY/HV7INbOfJZ0uTRy5P1lBCRUyHB/Hfyybjo7hEZswy1iS0
+         awYvyjTox1dA6pYcpe8vznyhrPtDY9+XCgqRfLsyHnfOJXrBNQ1ie2pma/QZJGBnVKFg
+         zVqBW3AbAjl4/9US0Hvfc1VON4eobYnBvxxx2sjafJinQvdVN2uqxBgwMcF523e/vAmH
+         86k16kpiiwYTK2DWMe/wKfznuz2KUiH9RV4JfvMxg8v5kjQaJ8cyrAredtW6dmqVcLRM
+         tkHHCU660eBPvJ+KEDAjJUVx3tHLklBINRy7InXylmS6HwdGf15F3NfykCR9LcjIYinz
+         JGwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aYjJfcYyIA8Xv1f/xwx7IbaGd+zm7NTIJSkG9721wPA=;
+        b=O9FBfyAwgL+gj2XRk+liWiDNFZ1csGrFaBYGP7iQqdvd+7RqlUrK0kIvh2mmsk/gYU
+         3CqXQUXy17MjjWiRSM3GMQkX+JaXCgjH1AJEqYnG05xtqt86EJR8daL1VyXLN1p6qwqg
+         6k8ULGg6lbLFLcZCmwG+nzRSTm0L4DMiRW4Qd5AGDqBcVqm2UUGN7My/Mkp5zWI9WBAx
+         wq3koY7rg/IzMyEcSyAsyBlBMP6ZTB1F7BJWU7Tr5ndH8Q5VetHbe+0rEvTHEuYxGHuZ
+         Jv3PK2sHzaVrb7i6modVMwYsZjR6E/Xs+niLXmbbKlZzapLKwW1ciRrTDpFf/DTqQ2j0
+         YrXw==
+X-Gm-Message-State: AOAM533MgQtAWzIr19Ysq9NcCcVqn4+XmP9F1y7QhHi4i1mH+2lXs3xq
+        SUVBrv/m/a3LEiUzzmK5CDfgk0zPHOo=
+X-Google-Smtp-Source: ABdhPJxeeYQs18O8YvaouZsBUCc33xkxtb909We38aM7ZCEaoYMy0JTvu+bVOUzUuGB6112/rN5Ktg==
+X-Received: by 2002:a63:471b:: with SMTP id u27mr5681257pga.139.1599763809889;
+        Thu, 10 Sep 2020 11:50:09 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i17sm6723289pfa.29.2020.09.10.11.50.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 11:50:09 -0700 (PDT)
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+To:     Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Scott Branden <scott.branden@broadcom.com>
+References: <20200910184627.GA804924@bjorn-Precision-5520>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fb964c3b-9619-2df3-8661-da90d58a297d@gmail.com>
+Date:   Thu, 10 Sep 2020 11:50:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903150152.GA5353@lenoir>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200910184627.GA804924@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 05:01:53PM +0200, Frederic Weisbecker wrote:
-> On Tue, Aug 25, 2020 at 03:41:49PM -0300, Marcelo Tosatti wrote:
-> > When enabling per-CPU posix timers, an IPI to nohz_full CPUs might be
-> > performed (to re-read the dependencies and possibly not re-enter
-> > nohz_full on a given CPU).
-> > 
-> > A common case is for applications that run on nohz_full= CPUs
-> > to not use POSIX timers (eg DPDK).
-> > 
-> > This patch optimizes tick_nohz_dep_set_task to avoid kicking
-> > all nohz_full= CPUs in case the task allowed mask does not
-> > intersect with nohz_full= CPU mask,
-> > when going through tick_nohz_dep_set_task.
-> > 
-> > This reduces interruptions to nohz_full= CPUs.
-> > 
-> > ---
-> >  kernel/time/tick-sched.c |    9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > Index: linux-2.6/kernel/time/tick-sched.c
-> > ===================================================================
-> > --- linux-2.6.orig/kernel/time/tick-sched.c
-> > +++ linux-2.6/kernel/time/tick-sched.c
-> > @@ -383,11 +383,16 @@ void tick_nohz_dep_set_task(struct task_
-> >  			tick_nohz_full_kick();
-> >  			preempt_enable();
-> >  		} else {
-> > +			unsigned long flags;
-> > +
-> >  			/*
-> >  			 * Some future tick_nohz_full_kick_task()
-> > -			 * should optimize this.
-> > +			 * should further optimize this.
-> >  			 */
-> > -			tick_nohz_full_kick_all();
-> > +			raw_spin_lock_irqsave(&tsk->pi_lock, flags);
-> > +			if (cpumask_intersects(&tsk->cpus_mask, tick_nohz_full_mask))
-> > +				tick_nohz_full_kick_all();
-> > +			raw_spin_unlock_irqrestore(&tsk->pi_lock, flags);
-> >  		}
-> >  	}
-> >  }
-> > 
-> > 
-> 
-> Not long ago, Peterz suggested that we simply do:
-> 
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index f0199a4ba1ad..42ce8e458013 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -357,17 +357,26 @@ EXPORT_SYMBOL_GPL(tick_nohz_dep_clear_cpu);
->  void tick_nohz_dep_set_task(struct task_struct *tsk, enum tick_dep_bits bit)
->  {
->  	if (!atomic_fetch_or(BIT(bit), &tsk->tick_dep_mask)) {
-> -		if (tsk == current) {
-> -			preempt_disable();
-> -			tick_nohz_full_kick();
-> -			preempt_enable();
-> -		} else {
-> -			/*
-> -			 * Some future tick_nohz_full_kick_task()
-> -			 * should optimize this.
-> -			 */
-> -			tick_nohz_full_kick_all();
-> -		}
-> +		int cpu = task_cpu(tsk);
-> +
-> +		/*
-> +		 * If the task concurrently migrates to another cpu,
-> +		 * we guarantee it sees the new tick dependency upon
-> +		 * schedule.
-> +		 *
-> +		 * set_task_cpu(p, cpu);
-> +		 *   STORE p->cpu = @cpu
-> +		 * __schedule() (switch to task 'p')
-> +		 *   LOCK rq->lock
-> +		 *   smp_mb__after_spin_lock()		STORE p->tick_dep_mask
-> +		 *   tick_nohz_task_switch()		smp_mb() (atomic_fetch_or())
-> +		 *      LOAD p->tick_dep_mask		LOAD p->cpu
-> +		 */
-> +
-> +		preempt_disable();
-> +		if (cpu_online(cpu))
-> +			tick_nohz_full_kick_cpu(cpu);
-> +		preempt_enable();
->  	}
->  }
->  EXPORT_SYMBOL_GPL(tick_nohz_dep_set_task);
 
-This can also be used for the signal case... thanks.
 
+On 9/10/2020 11:46 AM, Bjorn Helgaas wrote:
+> On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+>> On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>
+>>> [+cc Mark, Florian, Rob, Scott]
+>>>
+>>> On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+>>>> Do not use printk in raw_spinlocks,
+>>>> it will cause BUG: Invalid wait context.
+>>>>
+>>>> The trace reported by lockdep follows.
+>>>>
+>>>> [    2.986113] =============================
+>>>> [    2.986115] [ BUG: Invalid wait context ]
+>>>> [    2.986116] 5.8.0-rc1+ #11 Not tainted
+>>>> [    2.986118] -----------------------------
+>>>> [    2.986120] swapper/0/1 is trying to lock:
+>>>> [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+>>>> [    2.986130] other info that might help us debug this:
+>>>> [    2.986132] context-{5:5}
+>>>> [    2.986134] 3 locks held by swapper/0/1:
+>>>> [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+>>>> [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+>>>> [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+>>>> [    2.986161] stack backtrace:
+>>>> [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+>>>> [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+>>>> [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+>>>> [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+>>>> [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+>>>> [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+>>>> [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+>>>> [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+>>>> [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+>>>> [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+>>>> [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+>>>> [    2.986245]         ...
+>>>> [    2.986250] Call Trace:
+>>>> [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+>>>> [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+>>>> [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+>>>> [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+>>>> [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+>>>> [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+>>>> [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+>>>> [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+>>>> [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+>>>> [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+>>>> [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+>>>> [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+>>>> [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+>>>> [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+>>>> [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+>>>> [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+>>>> [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+>>>> [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+>>>> [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+>>>> [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+>>>> [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+>>>> [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+>>>> [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+>>>> [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+>>>> [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+>>>> [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+>>>> [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+>>>> [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+>>>> [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+>>>>
+>>>> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+>>>> ---
+>>>>   drivers/pci/access.c | 3 ---
+>>>>   1 file changed, 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>>>> index 79c4a2e..b3fc164 100644
+>>>> --- a/drivers/pci/access.c
+>>>> +++ b/drivers/pci/access.c
+>>>> @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>>>>         * write happen to have any RW1C (write-one-to-clear) bits set, we
+>>>>         * just inadvertently cleared something we shouldn't have.
+>>>>         */
+>>>> -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+>>>> -                          size, pci_domain_nr(bus), bus->number,
+>>>> -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+>>>
+>>> We just changed this printk (see [1]), but I think we still have this
+>>> lockdep problem even after Mark's change.  So I guess we need another
+>>> think about this.
+>>>
+>>> Maybe we can print something when registering pci_ops that use
+>>> pci_generic_config_write32()?
+>>
+>> That was my suggestion, but as Mark pointed out that doesn't work if
+>> pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+>>
+>> Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+>> writes to a bridge going to cause problems? For xgene, interestingly,
+>> with DT _write32 is needed, but for ACPI it is not (only _read32). I
+>> think xgene is practically dead though a few people still have
+>> systems, but likely xgene with DT is really dead. The ECAM case was
+>> for QCom server which is also pretty much dead. SA1100 nano-engine is
+>> really old and something only a few people have at most (Russell
+>> King). So ignoring all those, we're left with just loongson and iproc.
+>> Maybe just remove the warning?
+> 
+> Sigh, removing it sounds like the best option.
+
+Given that we have to go by a list of drivers, how about we add another 
+pci_bus_flags_t flag to indicate 32-bit configuration space accessors 
+are used and key off that bit to issue the warning?
+-- 
+Florian
