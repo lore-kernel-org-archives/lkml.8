@@ -2,111 +2,129 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CEBC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1287421556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1641621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKVS6dK7"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="RZyE479e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgIJTlV (ORCPT
+        id S1728081AbgIJTlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731316AbgIJPgr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:36:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2217C06138E
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:36:47 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w7so4853063pfi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:36:47 -0700 (PDT)
+        Thu, 10 Sep 2020 15:41:45 -0400
+Received: from mail-eopbgr750051.outbound.protection.outlook.com ([40.107.75.51]:42510
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730886AbgIJPfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:35:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sq3FmL6PfgQkoZ5OTvFHXmtIda03ZOvyoPVdrOXRidRKQ61a1ARVVQoH2FWLzBm5HpE9BUIDUy3xluukMvXz4ADv/13jtpzHiVFf6FghvLwevaUyz7br4Y77U0r43/p9mMJXgSefBZNFI+AhL7y7XZq5JvwAo2aKHb2yvNKmvJHetmbnTAUwGtCN4SyKkvvS6+7fI3SH+pMdY+fJ+Z42Kf5/I2w90+G6j3Tb0ZTHdGr4K/uTUEo2TGV9WFPOCIaspJ53763Xdk7K2P/1CCZfjlssLo9vAGpnRFe4JxYfrHnghgZORX/2CmUHtman+N6hb4vaSOG+3HQ5755cbb5Zfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lIV3+JJlx7srWtGGABzob7MYMJ7FcNqDiitRjtd+mGo=;
+ b=SBzh6yoBLPyHmMrrbotlfjQqY17Iel7LXx9DszBSP9YURYfOGzblQ6D/gmyhTG4irxlAtl8kEgkcMVhqDfGC58sn+oI7/6j8dAQ1BmVyD2yA7b4PuQUDY5ZNvAdK1s1nNnZYRrQRn3WRLg0GkRQKuofMRuGF52XAUO+vf/r2LuFxjYDYNTudXrt00kkwbaCipN66/ed3lNm90HXPtlDMEDg7lLkf50TxF/5O0MU/7+7NwEH5IEvTKFQyoN29CHWZEK973fqtGZyDjWET5FD3qk8TI4Kklp1KKX+CPdN4/aK2IJnfR6BdltnVB8O0mRJY1mxVQIj5wLYKmQ2j1+PNIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+NphFAz+bbbGOLPoViKWvapYAGN08JtmjYnLzZIKOxo=;
-        b=GKVS6dK77bx/0jZLujlXrhsPEnEfKJjffubPbjyONPpDBt8aKV+/WikhO98lFUcqBg
-         fknNlKQUgg0UcuMI4rvH6oQicx7azui4MD9+lZC8HzP87Vi4TbpnL5wsy+KtaRvsh2LC
-         56er56VCnPG1cwnDpL+FZu4sdinoEO6m0lag595MpAp4J3HgJxKTp/ftgfAClZ5xpG9e
-         IGh4od5fDmnNKVRLqhekiwgA0ji4hW/l6rP7Ub0rdSacgB+QsToPnSt5fJEOro/bh0y5
-         tfWDEo6mZ+GCGnCsbnFxd4FHFyfq+MjpuaQe3PdZTqbmYXIk7DHpN7njMs/8y0p1rs/E
-         iOwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+NphFAz+bbbGOLPoViKWvapYAGN08JtmjYnLzZIKOxo=;
-        b=LDxbVRX/9O6Ak8TXqgctU2zsmxggeRzdSOCBjtTahYK8aGhDiemCMvRqFd15DLfql5
-         1Mrx/r1SVvg+PsQAI2QY2X9UjOFmaCxEXPqGp/5DV5jFjbBOqdNGqkkgAVbGnHfa7qyR
-         GZyxQfyKcYGXDQUjZmNfvxvNRkZj4kWXgcxyNMF3QAw78Y8+j9yER/SSCphOsEHfO7fz
-         1ane7AUQeqm/1nXgemBR666+PMihDrUTJSoF33uS4aKGWJiAdeBOFcSwQi60JuUiIjVc
-         8mR/Zdx0xwtrQF8HyD3MQkfjezH3rqO0y/LZPhJyTSZOUzP71q3LTPUa1M0dEN6Nm47f
-         4DVg==
-X-Gm-Message-State: AOAM530VoUJL4fY0yBiSHfpbup8Nfm7tigEByG0UPHVgXvDk8h1N3Z4A
-        6B0Qqbk7sN2wCpYdKrrOG1XvmA==
-X-Google-Smtp-Source: ABdhPJxIZ4y5XTc4IrXUnrqP73HVFyQx7PSmSplY3yEEr1jJKnjEfVZhyGyxvSD2g5MX5wlOI8kPiA==
-X-Received: by 2002:aa7:8bd4:0:b029:13c:1611:6538 with SMTP id s20-20020aa78bd40000b029013c16116538mr6137309pfd.10.1599752207202;
-        Thu, 10 Sep 2020 08:36:47 -0700 (PDT)
-Received: from [192.168.1.11] ([71.212.141.89])
-        by smtp.gmail.com with ESMTPSA id s187sm6690150pfc.134.2020.09.10.08.36.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 08:36:46 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
-To:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
-        Juan Quintela <quintela@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Peter Maydell <Peter.Maydell@arm.com>,
-        Haibo Xu <Haibo.Xu@arm.com>
-References: <20200904160018.29481-1-steven.price@arm.com>
- <8e661984-70bc-790c-8636-39dcd8b00131@linaro.org>
- <842807ac-562a-36ce-8061-aa323341b605@arm.com>
-From:   Richard Henderson <richard.henderson@linaro.org>
-Message-ID: <c6043c5c-4bf1-e42c-1337-a892e6fd7402@linaro.org>
-Date:   Thu, 10 Sep 2020 08:36:44 -0700
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lIV3+JJlx7srWtGGABzob7MYMJ7FcNqDiitRjtd+mGo=;
+ b=RZyE479epyiylW2I8CMGtyWs8r2ocEQ8udBM9Qpkix5C0vcDU057pvZvxDumr8s4bWvCtIBQUaL3vgV+fPT41xDo1es7vOcwObWxvedNrC0G6erU/SB1YZCIPZADJtwHNGQipqz2rorQXlD7iRAH90VsRB5sQH7gRLLpExiJ4gc=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4379.namprd12.prod.outlook.com (2603:10b6:303:5e::11)
+ by MW3PR12MB4379.namprd12.prod.outlook.com (2603:10b6:303:5e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 15:35:18 +0000
+Received: from MW3PR12MB4379.namprd12.prod.outlook.com
+ ([fe80::5dc0:bafc:6040:a8fe]) by MW3PR12MB4379.namprd12.prod.outlook.com
+ ([fe80::5dc0:bafc:6040:a8fe%2]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 15:35:18 +0000
+Subject: Re: [PATCH -next] drm/amd/display: Create trigger_hotplug entry
+To:     YueHaibing <yuehaibing@huawei.com>, sunpeng.li@amd.com,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, mikita.lipski@amd.com,
+        eryk.brol@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200910031352.39992-1-yuehaibing@huawei.com>
+From:   Harry Wentland <harry.wentland@amd.com>
+Message-ID: <dcdc327c-c0d1-85cb-28fa-5b7cb5d4e555@amd.com>
+Date:   Thu, 10 Sep 2020 11:35:15 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <842807ac-562a-36ce-8061-aa323341b605@arm.com>
-Content-Type: text/plain; charset=utf-8
+ Thunderbird/68.11.0
+In-Reply-To: <20200910031352.39992-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1PR01CA0147.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::26) To MW3PR12MB4379.namprd12.prod.outlook.com
+ (2603:10b6:303:5e::11)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.29.235.206] (165.204.55.250) by YT1PR01CA0147.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 15:35:17 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7d431826-ef87-476f-0d57-08d8559f1f13
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4379:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW3PR12MB4379CDE5871D14CCC007D3CF8C270@MW3PR12MB4379.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:296;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2LF79ldZOjaHWcPxbffaso1OqNaV+svLC/v2/ugcGTkxzHh87MhVzTHnhUu4/ukmKiCEay7EgaRqWP7sVLX3k06rtENl+kP5XzMuoa2+V8ZwRUInSqbP/XJVi0Li6RfIvns7qBWC5txGX9O9neZmrCuyq0fAQPeyqtLoFMIZDZJa54VcHm3SqFFXUfWMIxhqQ/ikyw8ZmGeSVhEQrSNcH0MvSaBRwp4+jX6izTXgJcSuvGiIhBKz0mJkpEyLUSIhqKstaf7nTLfnAmUS4zZp8IaLq1PPbhxt05kDisWEBGREkUYdkOqUnJaAg4B4KjrFTI1JMJLMf5KtaHWKNWlbXt7mjIOLMNtDE0uc52dwXwBX/31RKa7A9B3qhPHClTJd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(346002)(136003)(39860400002)(26005)(2616005)(66946007)(956004)(36756003)(86362001)(6636002)(6486002)(8936002)(8676002)(66476007)(66556008)(4326008)(478600001)(31686004)(31696002)(186003)(44832011)(5660300002)(53546011)(16526019)(2906002)(316002)(16576012)(52116002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: IvXRaheIc0EmL1/gxqEjgtIv6HqunWa9lMXBy/miEyUj80CVpACy1+/t3n/PjgNEDd/nktmW+FAjOo9SEbJxE+nO30H52A3Ib+O3AFS8CUSp3Xd43cj5ypxPoyz78GUFwqdK5QaRjF9mLmINEiakJse8ZIP7G7Z1/CSioz7KPFd+ZYe+nkLyBSj3/WzGd/1Rd+LLUppuQOpKlbmjnNN15gu1yD3PUUxoIj194hvwPGeALrFb+WvaHo1tDkXK2pgS5gD4lzrR5g2mK6fEN7lODE/WB6qPKrypichETFCLfHg2jbri/S+CA8BwL8YKQKl00z4rMC0r/1zuv4gNVOpuRdr3cm10vAEOhQeinbzDWZDhLTml561/LBk7vINNKPASW5nBZToNs1asCR9x1pd2UiyzlB9+0fJF4ZXHrlSE0WpIUv+FgE+AkOhdTi2Nf7uPI1/fXCH9Vp4jgXukFMcW2YM/98CUaVSQN7kpmag6RhyU1uPhS/sO/uF5Dzyqc6ikjClWcyEvd6+4LrqEkwMm1QUNmjcayqWUBsgpRiaBMsGhasMuY0TKRKyCHmfU0VWuQI9HJMjXpewW5uhl3r5Xh+U6yzQahCCNUPgXJefgZTm4CBqtpdbbXRN6tmqptSfYZ4MT/Jo1j386qp6M9/MP4w==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d431826-ef87-476f-0d57-08d8559f1f13
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 15:35:18.4325
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hYJOFPP0E/PE4atlOLRKmcOAISYA0GU3gX/ErLSt1bSb23gF3rgI0H5CEeVvt/7Tjigja5itoRvmabFU+xSaCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4379
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 3:24 AM, Steven Price wrote:
-> It is a shame, however I suspect this is because to use those instructions you
-> need to know the block size held in GMID_EL1. And at least in theory that could
-> vary between CPUs.
+On 2020-09-09 11:13 p.m., YueHaibing wrote:
+> Add trigger_hotplug debugfs entry.
+> 
+> Fixes: 6f77b2ac6280 ("drm/amd/display: Add connector HPD trigger debugfs entry")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Which is no different from having to read DCZID_EL0 in order to implement
-memset, in my opinion.  But, whatever.
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 
+Harry
 
-> When we have some real hardware it would be worth profiling this. At the moment
-> I've no idea whether the kernel entry overhead would make such an interface
-> useful from a performance perspective or not.
-
-Yep.
-
-
-r~
+> ---
+>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> index 94fcb086154c..83da24aced45 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> @@ -2098,6 +2098,7 @@ static const struct {
+>   	const struct file_operations *fops;
+>   } dp_debugfs_entries[] = {
+>   		{"link_settings", &dp_link_settings_debugfs_fops},
+> +		{"trigger_hotplug", &dp_trigger_hotplug_debugfs_fops},
+>   		{"phy_settings", &dp_phy_settings_debugfs_fop},
+>   		{"test_pattern", &dp_phy_test_pattern_fops},
+>   #ifdef CONFIG_DRM_AMD_DC_HDCP
+> 
