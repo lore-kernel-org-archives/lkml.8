@@ -2,185 +2,212 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E66C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C24C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E085921D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B587A21D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsIlPa7k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XE1hxXcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbgIJVER (ORCPT
+        id S1726789AbgIJVFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Thu, 10 Sep 2020 17:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731176AbgIJOhg (ORCPT
+        with ESMTP id S1731167AbgIJOhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:37:36 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734F8C061796;
-        Thu, 10 Sep 2020 07:25:09 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g128so7223528iof.11;
-        Thu, 10 Sep 2020 07:25:09 -0700 (PDT)
+        Thu, 10 Sep 2020 10:37:23 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93810C0617AB;
+        Thu, 10 Sep 2020 07:35:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q13so9040781ejo.9;
+        Thu, 10 Sep 2020 07:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NJbG0wJxu+3OkwLFEOd0Ennw5o6VsPA/l71MgV2bL8A=;
-        b=CsIlPa7kgf5QyQFS8hC4+hb0L/bF/jNeX8ymjdfPGndzk6+fjtb6UPlyyDOgn9T/Rj
-         dcNmQZtqRILJ5b0WMWAc4ARCiPRsOwn3OAskLXH4wSnP6Fci/pDDyc9GoV3CkuB65CRE
-         gCg/SteaRqwF7agvOR3wOsgUovXU4Sk9WMgkXj7yL2Q8Osfwx9Q9xYGiSHVOIpXEQ5A/
-         yTEI8iUxit6bTdUVaNNcOqXYtIqzxR47TjMSxqbx8tT+xNLFdbC99+e8WoQz4furBy7G
-         kgFpOOKohzSXDEmsL3JJgxTPGBG3JAgnQ2qg4iT0sUE0gv9NfreIR9dAMEP/R00EWqml
-         ypGQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=T3i3qXMnhJ5Pfez9h/HWjHE3nazk6XcC2fJXvr78eKk=;
+        b=XE1hxXcFnJJOnwWXrIxwiW2HrxFHccyG+wLSuBNlS110t5JdPOcFyuEcDzcAwGqwsf
+         kg30G7OmWlEzmZGb5s4ub+rjsJNugFWL3WYd9CXPjwnwWVOpB9+Uz5IFkGPFqQGGQ6yS
+         O2jVO3oEye1D8vvqdHXK9lNam/rw4NQeUQilGtWUQ4zBd6whelBB4rgUSQym+GsqQnf4
+         WWsg/8mRRUxrQ9qn1KaKR1Ida8UPPRVpl/5iqiafbFQXAADPWkd4xDaSPbRyeOhh4CIQ
+         modZoQeFhDCNMbyuMcrOza3HAH2wMa/dU5qq3FuaDuvbuM21pP75apRskyKwjhgiMcYz
+         HuRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NJbG0wJxu+3OkwLFEOd0Ennw5o6VsPA/l71MgV2bL8A=;
-        b=m305sujl89sqGb3s93TS12t8M3gcv94pf0kVCn9YMYkglB841PjXYCqgiBKU9bYinG
-         q742Pzm1OKoxTb0qklN2+oOrl+1y2VnMXTu+odTd6w6aT7pI21uP1IJ4pQzgiT5F0Mg+
-         JTKLcMy9psarNhE6VUqFr2y5IP855ZZMyXupnh5kJIigoptUKbmOFfjZ9mMxoCo16fNq
-         +zmYdXdYBfevZXiyl+pNA+bXOMT81nneI7wKqDnMZYCe/nce4UzADf2Lym8SYsajgp5n
-         YZUxOL/GkuMs/oe1VqDUopj4CevUrCBQshEvFZBHTxTjcSoEYD8wW+Ylp7y5/ptw1zGu
-         n6Jg==
-X-Gm-Message-State: AOAM531h5gcPtFfQHdXUg2FXuYUUZUOSlZ5CCxiWXtsMf8nBViXysbVq
-        UDjh/DRM2H22LJT6IaZE8OgLpLmv4ilK3BqVSfM=
-X-Google-Smtp-Source: ABdhPJyHLAehFart54v04ZVzdd9dYoO1X/9VyzBD35P5qq8nrYTHzo/wmLH9Bi9dzeOL0T4JorwX9diu/ssyuf15Fzg=
-X-Received: by 2002:a05:6602:240c:: with SMTP id s12mr7606501ioa.5.1599747907552;
- Thu, 10 Sep 2020 07:25:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=T3i3qXMnhJ5Pfez9h/HWjHE3nazk6XcC2fJXvr78eKk=;
+        b=TbaK9FbHvYVtzoS3fXCwQ0jiAG4j8MsWeiCnNiDZDuHahghfzqe+b1KqKu9F9UNSCL
+         CWa9eG5f5t81kCK2SH3DOBIkn/kY2zL9XkABE1F/HLtjpBSZHxI13Ddhezri8otTIhXJ
+         RNn825P9RhUxrCPrM2WebZvyrZi3uwAZA3nMPyxWT8DCSVhZZjUfaRG9NTRKEDvE6WiH
+         MR5fSi915PtclTWaaEha3GPzQHwMSTmAj5r62ua3l7NU9sTxoh+KtJacqJ9Uta3xDcnG
+         U3yIBntPRQiA8SFL3SpPozXcb8ctubhhWf8PLHmPciIEDrueBJkGw0HjyIRkDyqKUEX4
+         //Gw==
+X-Gm-Message-State: AOAM5331f9Fo8zqXD3zfU5Jh39iC2gCtBRdjcqakj2V9RI1r5Ry5Fp+K
+        uTvgSJw5wGOtnbQvmBZ9JEs=
+X-Google-Smtp-Source: ABdhPJzK8qE8+S3d6bWZO57JfOB2xqDtq4ntdMlxomIVjovtPXSzMq9l3+nxOhieFaaCFSpmkfiFnw==
+X-Received: by 2002:a17:906:24d6:: with SMTP id f22mr8828364ejb.85.1599748526997;
+        Thu, 10 Sep 2020 07:35:26 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id l10sm7466796edr.12.2020.09.10.07.35.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Sep 2020 07:35:26 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 3A4A827C00A1;
+        Thu, 10 Sep 2020 10:35:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 10:35:23 -0400
+X-ME-Sender: <xms:qzlaX2QvWxEkTCC2tui21cV517yBUkBYIcAPqkac3WkIKTRr8Dt3kg>
+    <xme:qzlaX7whjQAkRTdLrm400vh4FhUPYaV9uGsu_zBg67Lg3aSxdgGxaIo_lyU0nJvdb
+    N9nKNQNc_sYDLZs2w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgjedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgjfhgggfes
+    tdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnh
+    hgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeehvdevteefgfeiudettdef
+    vedvvdelkeejueffffelgeeuhffhjeetkeeiueeuleenucfkphephedvrdduheehrdduud
+    durdejudenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
+    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
+    ihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:qzlaXz2dFiF-XVT6Xa7SerHC87GJdLPpdDRIYF8NLMWx-iSTJz5tVw>
+    <xmx:qzlaXyAtBYeQvz735bPXqVmK7YFKVgtpxcGb2UmF2eBaQdU1K40CPQ>
+    <xmx:qzlaX_i6grllRqMzAioAYnIzJQgvUh7L_TS4jFr1qCBLBr0_8JjQxQ>
+    <xmx:qzlaX6TLLzI22LvgOTgTc5C9eSB2SCYOLJpbj9kGY48iNyMhY4jsla5LFiM>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 779C03280065;
+        Thu, 10 Sep 2020 10:35:22 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
+        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
+        mark.rutland@arm.com, maz@kernel.org,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v3 11/11] scsi: storvsc: Support PAGE_SIZE larger than 4K
+Date:   Thu, 10 Sep 2020 22:34:55 +0800
+Message-Id: <20200910143455.109293-12-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910143455.109293-1-boqun.feng@gmail.com>
+References: <20200910143455.109293-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
- <alpine.LSU.2.11.2008241231460.1065@eggly.anvils> <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
- <alpine.LSU.2.11.2009081640070.7256@eggly.anvils> <CAKgT0Uc_L-Tz_rVJiHc5GUK_ZWOs2wRvez4QGf2wwEjx38qnbg@mail.gmail.com>
- <alpine.LSU.2.11.2009091640490.10087@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2009091640490.10087@eggly.anvils>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 10 Sep 2020 07:24:56 -0700
-Message-ID: <CAKgT0Ucive3RreD3TJt1Fjch_BH2ygFfUnpAJ_1BhsHy74w88g@mail.gmail.com>
-Subject: Re: [PATCH v18 00/32] per memcg lru_lock: reviews
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, shy828301@gmail.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 5:32 PM Hugh Dickins <hughd@google.com> wrote:
->
-> On Wed, 9 Sep 2020, Alexander Duyck wrote:
-> > On Tue, Sep 8, 2020 at 4:41 PM Hugh Dickins <hughd@google.com> wrote:
-> > > [PATCH v18 28/32] mm/compaction: Drop locked from isolate_migratepages_block
-> > > Most of this consists of replacing "locked" by "lruvec", which is good:
-> > > but please fold those changes back into 20/32 (or would it be 17/32?
-> > > I've not yet looked into the relationship between those two), so we
-> > > can then see more clearly what change this 28/32 (will need renaming!)
-> > > actually makes, to use lruvec_holds_page_lru_lock(). That may be a
-> > > good change, but it's mixed up with the "locked"->"lruvec" at present,
-> > > and I think you could have just used lruvec for locked all along
-> > > (but of course there's a place where you'll need new_lruvec too).
-> >
-> > I am good with my patch being folded in. No need to keep it separate.
->
-> Thanks.  Though it was only the "locked"->"lruvec" changes I was
-> suggesting to fold back, to minimize the diff, so that we could
-> see your use of lruvec_holds_page_lru_lock() more clearly - you
-> had not introduced that function at the stage of the earlier patches.
->
-> But now that I stare at it again, using lruvec_holds_page_lru_lock()
-> there doesn't look like an advantage to me: when it decides no, the
-> same calculation is made all over again in mem_cgroup_page_lruvec(),
-> whereas the code before only had to calculate it once.
->
-> So, the code before looks better to me: I wonder, do you think that
-> rcu_read_lock() is more expensive than I think it?  There can be
-> debug instrumentation that makes it heavier, but by itself it is
-> very cheap (by design) - not worth branching around.
+Hyper-V always use 4k page size (HV_HYP_PAGE_SIZE), so when
+communicating with Hyper-V, a guest should always use HV_HYP_PAGE_SIZE
+as the unit for page related data. For storvsc, the data is
+vmbus_packet_mpb_array. And since in scsi_cmnd, sglist of pages (in unit
+of PAGE_SIZE) is used, we need convert pages in the sglist of scsi_cmnd
+into Hyper-V pages in vmbus_packet_mpb_array.
 
-Actually what I was more concerned with was the pointer chase that
-required the RCU lock. With this function we are able to compare a
-pair of pointers from the page and the lruvec and avoid the need for
-the RCU lock. The way the old code was working we had to crawl through
-the memcg to get to the lruvec before we could compare it to the one
-we currently hold. The general idea is to use the data we have instead
-of having to pull in some additional cache lines to perform the test.
+This patch does the conversion by dividing pages in sglist into Hyper-V
+pages, offset and indexes in vmbus_packet_mpb_array are recalculated
+accordingly.
 
-> >
-> > > [PATCH v18 29/32] mm: Identify compound pages sooner in isolate_migratepages_block
-> > > NAK. I agree that isolate_migratepages_block() looks nicer this way, but
-> > > take a look at prep_new_page() in mm/page_alloc.c: post_alloc_hook() is
-> > > where set_page_refcounted() changes page->_refcount from 0 to 1, allowing
-> > > a racing get_page_unless_zero() to succeed; then later prep_compound_page()
-> > > is where PageHead and PageTails get set. So there's a small race window in
-> > > which this patch could deliver a compound page when it should not.
-> >
-> > So the main motivation for the patch was to avoid the case where we
-> > are having to reset the LRU flag.
->
-> That would be satisfying.  Not necessary, but I agree satisfying.
-> Maybe depends also on your "skip" change, which I've not looked at yet?
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ drivers/scsi/storvsc_drv.c | 54 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 47 insertions(+), 7 deletions(-)
 
-My concern is that we have scenarios where isolate_migratepages_block
-could possibly prevent another page from being able to isolate a page.
-I'm mostly concerned with us potentially creating something like an
-isolation leak if multiple threads are doing something like clearing
-and then resetting the LRU flag. In my mind if we clear the LRU flag
-we should be certain we are going to remove the page as otherwise
-another thread would have done it if it would have been allowed
-access.
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 8f5f5dc863a4..119b76ca24a1 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1739,23 +1739,63 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 	payload_sz = sizeof(cmd_request->mpb);
+ 
+ 	if (sg_count) {
+-		if (sg_count > MAX_PAGE_BUFFER_COUNT) {
++		unsigned int hvpgoff = 0;
++		unsigned long hvpg_offset = sgl->offset & ~HV_HYP_PAGE_MASK;
++		unsigned int hvpg_count = HVPFN_UP(hvpg_offset + length);
++		u64 hvpfn;
+ 
+-			payload_sz = (sg_count * sizeof(u64) +
++		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
++
++			payload_sz = (hvpg_count * sizeof(u64) +
+ 				      sizeof(struct vmbus_packet_mpb_array));
+ 			payload = kzalloc(payload_sz, GFP_ATOMIC);
+ 			if (!payload)
+ 				return SCSI_MLQUEUE_DEVICE_BUSY;
+ 		}
+ 
++		/*
++		 * sgl is a list of PAGEs, and payload->range.pfn_array
++		 * expects the page number in the unit of HV_HYP_PAGE_SIZE (the
++		 * page size that Hyper-V uses, so here we need to divide PAGEs
++		 * into HV_HYP_PAGE in case that PAGE_SIZE > HV_HYP_PAGE_SIZE.
++		 */
+ 		payload->range.len = length;
+-		payload->range.offset = sgl[0].offset;
++		payload->range.offset = sgl[0].offset & ~HV_HYP_PAGE_MASK;
++		hvpgoff = sgl[0].offset >> HV_HYP_PAGE_SHIFT;
+ 
+ 		cur_sgl = sgl;
+-		for (i = 0; i < sg_count; i++) {
+-			payload->range.pfn_array[i] =
+-				page_to_pfn(sg_page((cur_sgl)));
+-			cur_sgl = sg_next(cur_sgl);
++		for (i = 0; i < hvpg_count; i++) {
++			/*
++			 * 'i' is the index of hv pages in the payload and
++			 * 'hvpgoff' is the offset (in hv pages) of the first
++			 * hv page in the the first page. The relationship
++			 * between the sum of 'i' and 'hvpgoff' and the offset
++			 * (in hv pages) in a payload page ('hvpgoff_in_page')
++			 * is as follow:
++			 *
++			 * |------------------ PAGE -------------------|
++			 * |   NR_HV_HYP_PAGES_IN_PAGE hvpgs in total  |
++			 * |hvpg|hvpg| ...              |hvpg|... |hvpg|
++			 * ^         ^                                 ^                 ^
++			 * +-hvpgoff-+                                 +-hvpgoff_in_page-+
++			 *           ^                                                   |
++			 *           +--------------------- i ---------------------------+
++			 */
++			unsigned int hvpgoff_in_page =
++				(i + hvpgoff) % NR_HV_HYP_PAGES_IN_PAGE;
++
++			/*
++			 * Two cases that we need to fetch a page:
++			 * 1) i == 0, the first step or
++			 * 2) hvpgoff_in_page == 0, when we reach the boundary
++			 *    of a page.
++			 */
++			if (hvpgoff_in_page == 0 || i == 0) {
++				hvpfn = page_to_hvpfn(sg_page(cur_sgl));
++				cur_sgl = sg_next(cur_sgl);
++			}
++
++			payload->range.pfn_array[i] = hvpfn + hvpgoff_in_page;
+ 		}
+ 	}
+ 
+-- 
+2.28.0
 
-> > One question I would have is what if
-> > we swapped the code block with the __isolate_lru_page_prepare section?
-> > WIth that we would be taking a reference on the page, then verifying
-> > the LRU flag is set, and then testing for compound page flag bit.
-> > Would doing that close the race window since the LRU flag being set
-> > should indicate that the allocation has already been completed has it
-> > not?
->
-> Yes, I think that would be safe, and would look better.  But I am
-> very hesitant to give snap assurances here (I've twice missed out
-> a vital PageLRU check from this sequence myself): it is very easy
-> to deceive myself and only see it later.
-
-I'm not looking for assurances, just sanity checks to make sure I am
-not missing something obvious.
-
-> If you can see a bug in what's there before these patches, certainly
-> we need to fix it.  But adding non-essential patches to the already
-> overlong series risks delaying it.
-
-My concern ends up being that if we are clearing the bit and restoring
-it while holding the LRU lock we can effectively cause pages to become
-pseudo-pinned on the LRU. In my mind I would want us to avoid clearing
-the LRU flag until we know we are going to be pulling the page from
-the list once we take the lruvec lock. I interpret clearing of the
-flag to indicate the page has already been pulled, it just hasn't left
-the list yet. With us resetting the bit we are violating that which I
-worry will lead to issues.
