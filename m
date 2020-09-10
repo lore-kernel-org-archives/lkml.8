@@ -2,111 +2,145 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 01:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 01:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0357F206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 01:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416C1206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 01:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VGtjo6KJ";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="HMxIXv5U"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="B1jq+S1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgIJB7B (ORCPT
+        id S1729993AbgIJB7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 21:59:01 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:57668
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728363AbgIJBhS (ORCPT
+        Wed, 9 Sep 2020 21:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgIJBhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:37:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599695807;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=l4FYBGdELu+UT/43hvHKaWHmD+LJV7nzWAyhKyqC2ag=;
-        b=VGtjo6KJhXt1Bh4flUMrEAQ5D0jIgKxycT/rcbbYDdW2tXxHZLXllrhSXvJTvwH0
-        X/4ILow0foPIh/aBMoeZ+/5a+eyaMFhy0CBvZF/J3dETlVK8yBw+fdA1K9Rv5QarPNc
-        dWAMQnNSHtQ2MDx4hnqDBLJ3qBwFZ3Vv0LCA/qRQ=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599695807;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=l4FYBGdELu+UT/43hvHKaWHmD+LJV7nzWAyhKyqC2ag=;
-        b=HMxIXv5U/9CdNvVZL4oxoVcnniDEVlAJKAxIE5aTpViEu/29aJs5VWjwEGjW0Yvj
-        TyiDtAg1Pn0+q2CBNKR9uz5kP6fr224OyvFvpQ2MPUzxBBTOC07hNWQJM6qVwrJY+j8
-        6anfkaBd4Oxeuvq47JfoEPe5Wprp2IH8Tlnc1KrI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3D976C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=tingweiz@codeaurora.org
-Date:   Wed, 9 Sep 2020 23:56:47 +0000
-From:   Tingwei Zhang <tingweiz@codeaurora.org>
-To:     tsoni@codeaurora.org
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mian Yousaf Kaukab <ykaukab@suse.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v9 00/24] coresight: allow to build coresight as modules
-Message-ID: <01010174754ce1c8-c53380ae-5d29-492f-a6c9-64bd0e16197d-000000@us-west-2.amazonses.com>
-References: <20200820054718.20115-1-tingwei@codeaurora.org>
- <CANLsYkwhypfEkmhg=wK+_F6TxxGiuoSqpgGR0REqsOqC-X-3mg@mail.gmail.com>
- <0101017470c9475d-00e296fc-1173-4afa-95cb-22ac70d85d5b-000000@us-west-2.amazonses.com>
- <20200909161523.GA553266@xps15>
- <c8737d9935a1b7a7372c41492939648d@codeaurora.org>
+        Wed, 9 Sep 2020 21:37:31 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062a.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eae::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8117CC061344
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:20:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mW57OrhCnN4uBw+wqMcUW8gCrR8Ge7qbBYraXcKn4eianAAjo2sQqozkZf19rBFvMi8S1upsefRQ+OfyQnL5PkXpPBA/it6K7/xRKhR7GgWpc9fIJw91FSGgR+vVgpizfBLS5me1v6v5LArTvAFf0P6OvHCM6c0PeE7Qs2B1Vb5Amtzr7owRi7RUsszK664elz2YCxpArlWjYehOaNJC3300t+13oMVtK1vLTR/TiP6oF+uPMqdf5OjONRyaZM+VQqh/X9PkU5pHkKBb7AFebt06OMD5P5+R+py0mTu2b9Mx2DrLAKf7cRue302IWI2A8sdEIOwKroC675J+ipLm1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7sVEN/5C6w6Un8NnYDVrTdtV1UPUdXTEKgYPTTmb1o=;
+ b=d9woZ5ipwLXRf2uMqO1Cx4wmbieRhXYz+EHoL9JA/uiRTTOt1JJryrRRfJ8DJzGCbusxb2nKRj6JsV+YJRP2SBUhA8iOMVdh3Fme1mCH5YMmwuOSwDKn82S0t2shADwiT5SF3b+dyVjdzdlWYpvOTaf82OY23qVLE4nyLuXpOvyN/hVILL/JhhrUay/BGEofyrJFNRa5UDWEPzmPtaEwsukEDRf7h7/apOIt1ZsETGf0qlO6BoSAAMmuPZ7XjlKQqI60k1Cj1ngw62InrZfekgr81vnbs6zPuLOIJ4y8neZwNS4poRcYCrqT7iV7XqY5z6jmRelNhns+vmYBBKxbAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m7sVEN/5C6w6Un8NnYDVrTdtV1UPUdXTEKgYPTTmb1o=;
+ b=B1jq+S1OldURZvYyBzw0vqrRk8Nwb/RhlsI0xWjM7ZgP6gtIcvrbotT1QrYULp7yXxPYEPUxZZzCrQAj9wW7CoUCLL9n4WQKBI6M+6F5EK39Aab/e1M1N6pOdps+y6npcQ7vij5GrY2HetgYCqCQSgNMZJjxYbYHrXc3CU1A7A8=
+Received: from SN1PR12CA0050.namprd12.prod.outlook.com (2603:10b6:802:20::21)
+ by MWHPR02MB3264.namprd02.prod.outlook.com (2603:10b6:301:65::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Thu, 10 Sep
+ 2020 00:20:12 +0000
+Received: from SN1NAM02FT019.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:802:20:cafe::18) by SN1PR12CA0050.outlook.office365.com
+ (2603:10b6:802:20::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Thu, 10 Sep 2020 00:20:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT019.mail.protection.outlook.com (10.152.72.130) with Microsoft SMTP
+ Server id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 00:20:11
+ +0000
+Received: from [149.199.38.66] (port=46238 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <amit.sunil.dhamne@xilinx.com>)
+        id 1kGAJf-0007M1-21; Wed, 09 Sep 2020 17:19:55 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <amit.sunil.dhamne@xilinx.com>)
+        id 1kGAJv-0006Qx-F9; Wed, 09 Sep 2020 17:20:11 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 08A0K6QC001918;
+        Wed, 9 Sep 2020 17:20:08 -0700
+Received: from [10.18.5.8] (helo=xsjamitsuni51.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <amit.sunil.dhamne@xilinx.com>)
+        id 1kGAJp-0006Dg-Uy; Wed, 09 Sep 2020 17:20:06 -0700
+From:   Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
+        rajanv@xilinx.com, tejas.patel@xilinx.com, jollys@xilinx.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        rajan.vaja@xilinx.com, jolly.shah@xilinx.com,
+        Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+Subject: [PATCH 0/3] firmware: xilinx: Add support to get last reset reason
+Date:   Wed,  9 Sep 2020 17:20:01 -0700
+Message-Id: <1599697204-32103-1-git-send-email-amit.sunil.dhamne@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8737d9935a1b7a7372c41492939648d@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-SES-Outgoing: 2020.09.10-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 90033435-b578-4347-3e60-08d8551f4853
+X-MS-TrafficTypeDiagnostic: MWHPR02MB3264:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB3264688778B6057DAF3865E8A7270@MWHPR02MB3264.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 44pXPqnZ04v3se/vujX5mOl9pmrfqXWsESkWs7TQr4QETwbJfYrGNdz7NVRZcdgnR3E5/Xp5joJ8mm5wdWHYjx/t7K+8S5LC0wkq+1SyE3i23Dhy2nJtBdfKa1OEhSVkTjkOJhwFCkrq093E9mYIwSIdxZnin81yU/+HrbK7Qwqszw15jV6skCSc+7+bRzmARmNJcfKJc67vC+NKdntcmJOBSorOipo/Qh+0oLK2MLJWVfKYtStBFszrXdoNMGggI5bDEPTaRLe1Yqz7sdl/UTH8MGS7f7Bc4s0w7QzDIJk4uB4yP/OGap3SmHyKqeV9p1SIGLImLWr7ASeH3L7qpMTpehCSGVrSllskJqT0ti/rgQHNMWj0VKZKWC/UuxfZOhjWlKyNWJAjnx8YvyQ8bys1MP3RWfESJ6kCZCKuYgg=
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(39860400002)(346002)(376002)(136003)(396003)(46966005)(2906002)(7416002)(82740400003)(8936002)(9786002)(83380400001)(81166007)(356005)(70206006)(70586007)(82310400003)(4744005)(5660300002)(8676002)(107886003)(6636002)(36756003)(4326008)(47076004)(7696005)(6666004)(426003)(2616005)(316002)(478600001)(26005)(186003)(336012)(921003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 00:20:11.8427
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90033435-b578-4347-3e60-08d8551f4853
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT019.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3264
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 04:45:52AM +0800, tsoni@codeaurora.org wrote:
-> On 2020-09-09 09:15, Mathieu Poirier wrote:
-> >On Wed, Sep 09, 2020 at 02:54:33AM +0000, Tingwei Zhang wrote:
-> >>On Wed, Sep 09, 2020 at 01:53:51AM +0800, Mathieu Poirier wrote:
-> >>> Hi Tingwei,
-> >>>
-> >>> Apologies for the untimely response to this set, I am hoping to get
-> to
-> >>> it in the next two weeks.
-> >>>
-> >>
-> >>It's fine, Mathieu. Please let me know your comments once you have time.
-> >>I'm targeting to get these set merged in 5.10 Kernel.
-> >
-> >From the above it is not clear if you want this set to be _in_ the 5.10
-> >cycle
-> >or added to my list _during_ the 5.10 cycle, which would make it part of
-> >the
-> >5.11 cycle.  In any case the latter seems more realistic.
-> 
-> Tingwei can correct me here, but we prefer to have patches to be part of the
-> 5.10 release. It means they should get merged in Linus's tree in the next
-> merge window.
+Add support to get last reset reason for Xilinx Versal platform.
 
-Yes.  The target is to merge this series into Linus's tree in 5.10 Kernel.
+Tejas Patel (3):
+  firmware: xilinx: Add validation check for IOCTL
+  firmware: xilinx: Add support for GET_LAST_RESET_REASON IOCTL
+  firmware: xilinx: Add sysfs to get last reset reason
 
-Thanks,
-Tingwei
+ .../ABI/stable/sysfs-driver-firmware-zynqmp        |  13 ++
+ drivers/firmware/xilinx/zynqmp.c                   | 174 +++++++++++++++++=
++---
+ include/linux/firmware/xlnx-zynqmp.h               |  18 +++
+ 3 files changed, 183 insertions(+), 22 deletions(-)
 
-> 
-> ---Trilok Soni
+--
+2.7.4
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
