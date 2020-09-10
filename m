@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83179C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33481C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47BD721D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82AB221E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q31h2nnq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="srLSW/vA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgIJVTq (ORCPT
+        id S1728003AbgIJVTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
+        Thu, 10 Sep 2020 17:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgIJVOP (ORCPT
+        with ESMTP id S1725935AbgIJVOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:15 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D41C0613ED;
-        Thu, 10 Sep 2020 14:14:14 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id a9so2104642wmm.2;
-        Thu, 10 Sep 2020 14:14:14 -0700 (PDT)
+        Thu, 10 Sep 2020 17:14:37 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0844C061796;
+        Thu, 10 Sep 2020 14:14:17 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w2so1973520wmi.1;
+        Thu, 10 Sep 2020 14:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eDnzDkzS7un/T3HQQEdcrFP62+pebf6XutqN/w48ZaY=;
-        b=q31h2nnqPmjjXuIUt8EkDVn4Nt6SLWQXISTfw21Xrr6xyXDzm73mo2MNAy5hH+CrWL
-         S0ojhRlFr4VYBapqcBT/yTW8V9aAK2SSQpnnJHfB7FvconofM+QETzrl4kDTuCqAJk2x
-         fSu9ru9JI9PSbgdJvoBwpE/YCAft4DI19gehkJf8xQis91hn2+o6WDKhsaYAhA7HkvEq
-         MyuzGy+/gGIb9a8QcxYBPCedWiAK4nJWJ6poyr7CfAjBIhbIybTYwjgE36hsR3sXI/i+
-         YbwCqferTIGINx2YIH376VBMzKzCkEZGCQrpt0O8/LWI1rfzcoca3+6aZG+vupLjs3RO
-         +RAQ==
+        bh=2Zyy9i7u9pP0d3zFPaoDB6rzkQG+Aljjr+FC6Rnxpos=;
+        b=srLSW/vAvmZ2XkG0kA1bsK1bSBdtXA7MrhX9Ar1rjOk8AOEKKebi9a3GJ88hJLJlkg
+         dir94kYAHvad6xVPnPRJeTUO9unFMbgJen2gBbg0GWJLqabiHPIzlTw3BLnA43oLiG+N
+         hZFUUOSp9t4vuJHKOLnHIuEpj4k58pALNlVEOIbgg5Q5f+hJMj0zj1+PHwV/471vOYP7
+         K2s7cy7M1g4c7zzCKJXtkOHcd7KS9ZfXJZSFWqky5IdH+UEsryhMuy6L4J1ofTaK67f7
+         wo+I8wuDEB8XeOXc8HdY0AztI0njAVUjcQ9Lu6svuHFqM9XGkgWe4PeGRkGNXCZs8d7X
+         rC8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eDnzDkzS7un/T3HQQEdcrFP62+pebf6XutqN/w48ZaY=;
-        b=mDPnO+jisVh6yNrO5+5RhQeeMeOmPUnvXy0DXbTRw7HFcKEbW1A0uIcPi1zrRBnZWf
-         AaYsavvYkTtoZsQ62R/CpZ2R0eLROZp9E97/1ev2dfizmYAxjrYDlO/Zs24u5CMtp8fW
-         sZjyXGPkCb64lu/dlHRrdUdq/YfbyVjZgrQXlcy3nyY03M/3V2YktzJg+N9uKxeDoubP
-         eZsdwrH2Go130E1LLUR/YbkjSGk4VkJ948c08DuFx0bjQbNMsaoIAPW0VxZNTwdW+dZW
-         AtDMpVdAU6lEe17JU/ROMp7SKJ6kqMV3yBOP0ta0mvvjUaGkP6odZEDWISp4PEsDhvnY
-         ZaTA==
-X-Gm-Message-State: AOAM532pBXfuVPN60pzGXl0ED73mL5+xEeWL1y6RyeCpzA+ards+crKU
-        i/xyA9zO2xSCDoj3vTpaRs49ef5vddCT8w==
-X-Google-Smtp-Source: ABdhPJwr5kxBSqKAn0AhOROeSmVy21Z4EUpZ8oZSpiyOGxZeHmGemNv3rFUJ8f1ltvkYrj8HRR+kKg==
-X-Received: by 2002:a1c:2bc7:: with SMTP id r190mr1979391wmr.116.1599772453314;
-        Thu, 10 Sep 2020 14:14:13 -0700 (PDT)
+        bh=2Zyy9i7u9pP0d3zFPaoDB6rzkQG+Aljjr+FC6Rnxpos=;
+        b=IDnne8TNaX0NM3t091eeAINJJqur5sX0JJt3gSdVemn39Lyw5AcFLbO345h9NljJEw
+         NXisPMyrfiO0vnttsK/wllYweXBOBbXnHTbgPlixPZHu3Bz886p722op/ApZRHd0vb1U
+         EdYHrmTqpngDnjAlm2LLaeaCh8hM93a5bHzaNeJfipLxKfl0abs9rqTtZQE92dpnw0pR
+         tLFxxwihXSHhmb8eenSSuRbQiTAn3SLpLnmwaUp+G+wOzwEmLicjma9RvAsezkZ6fVeN
+         T3wfiLLN1rJN/hJ5aj4Q//PornL1ajCPwcZU98hl54W4vQKv1lxVVxiCrNDqZ/E4Z2TJ
+         mcBQ==
+X-Gm-Message-State: AOAM533Xm3LF2J+AVKgD5ztSlSlhKUrGwYwjRDg3orUTVtbX1ySjVQzS
+        lBSQqGghrITf6VErP4ocZDn+QiLCQvTCSg==
+X-Google-Smtp-Source: ABdhPJxXtkBi496qrak4fdMkhYCzXl9kroV8XoB1Yj0UM3h1E1JtW5jOEJvjGKRNJJKwLqSO5595jQ==
+X-Received: by 2002:a1c:20d3:: with SMTP id g202mr1978379wmg.54.1599772456542;
+        Thu, 10 Sep 2020 14:14:16 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.12
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:12 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:16 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 03/24] timerfd_create.2: Use 'PRIxN' macros when printing C99 fixed-width integer types
-Date:   Thu, 10 Sep 2020 23:13:24 +0200
-Message-Id: <20200910211344.3562-4-colomar.6.4.3@gmail.com>
+Subject: [PATCH 06/24] timer_create.2: Cast to 'unsigned long' rathen than 'long' when printing with "%lx"
+Date:   Thu, 10 Sep 2020 23:13:27 +0200
+Message-Id: <20200910211344.3562-7-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -79,32 +79,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man2/timerfd_create.2 | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ man2/timer_create.2 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/man2/timerfd_create.2 b/man2/timerfd_create.2
-index 67a13dba3..90e35d9b5 100644
---- a/man2/timerfd_create.2
-+++ b/man2/timerfd_create.2
-@@ -624,6 +624,7 @@ a.out 3 1 100
- #include <sys/timerfd.h>
- #include <time.h>
- #include <unistd.h>
-+#include <inttypes.h>      /* Definition of PRIu64 */
- #include <stdlib.h>
- #include <stdio.h>
- #include <stdint.h>        /* Definition of uint64_t */
-@@ -706,9 +707,7 @@ main(int argc, char *argv[])
+diff --git a/man2/timer_create.2 b/man2/timer_create.2
+index e9a8b8503..9c9907739 100644
+--- a/man2/timer_create.2
++++ b/man2/timer_create.2
+@@ -390,7 +390,7 @@ print_siginfo(siginfo_t *si)
+     tidp = si\->si_value.sival_ptr;
  
-         tot_exp += exp;
-         print_elapsed_time();
--        printf("read: %llu; total=%llu\en",
--                (unsigned long long) exp,
--                (unsigned long long) tot_exp);
-+        printf("read: %"PRIu64"; total=%"PRIu64"\en", exp, tot_exp);
-     }
+     printf("    sival_ptr = %p; ", si\->si_value.sival_ptr);
+-    printf("    *sival_ptr = 0x%lx\en", (long) *tidp);
++    printf("    *sival_ptr = 0x%lx\en", (unsigned long) *tidp);
  
-     exit(EXIT_SUCCESS);
+     or = timer_getoverrun(*tidp);
+     if (or == \-1)
+@@ -454,7 +454,7 @@ main(int argc, char *argv[])
+     if (timer_create(CLOCKID, &sev, &timerid) == \-1)
+         errExit("timer_create");
+ 
+-    printf("timer ID is 0x%lx\en", (long) timerid);
++    printf("timer ID is 0x%lx\en", (unsigned long) timerid);
+ 
+     /* Start the timer */
+ 
 -- 
 2.28.0
 
