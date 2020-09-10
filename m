@@ -2,145 +2,219 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC08C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FFDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8992820B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="DpeInDNA";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eVUq/LdL"
+	by mail.kernel.org (Postfix) with ESMTP id 8989F20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgIJHyC (ORCPT
+        id S1729251AbgIJHyl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:54:02 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:37933 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730180AbgIJHxp (ORCPT
+        Thu, 10 Sep 2020 03:54:41 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:29869 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgIJHyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:53:45 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2D75F580430;
-        Thu, 10 Sep 2020 03:53:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 10 Sep 2020 03:53:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=4IwUSWnhrsr8imxfyk4VF7uLol/
-        6Va9L4vcVGrq/KUg=; b=DpeInDNAleYGgRXYx5yZL9OHtS5DeNQcN2Gg0do++SH
-        YSMmizLhTlgbIzCCwaj45lba97oInLSBoC6AM+6WQWjQ1TmCDYqt07Mc3PpHmGVA
-        VgqCogEuSPN7Rt8IpT1Kly4QyyGlvulQZ0R8/MIhZWxwclIhIWi7Rl6zGA4OJYxg
-        BCh3npgBVQM6Rg5KNjmQHx9tJcSUXP9EvBi2AulzSfn6rvIsvd1/SbhJyoD4a7Zf
-        Prt9485zxgfMob9e4ivtEOn6BGnKvsDWUQCTSqMjUSoKIf8htP96RlQsa5m/zwVN
-        3lGi46OxtSJpzKQoiZ9ZnOfuHrCCxT5BYTBVXsUb4bg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4IwUSW
-        nhrsr8imxfyk4VF7uLol/6Va9L4vcVGrq/KUg=; b=eVUq/LdLkUmCzqUDe5XjHQ
-        6gQaMja5JKFL9P9rWSs6PvHNXbHt4Mhyk4bUxnldBp/HUyCRVPR/p2fse6aLXfuL
-        p2FwfdgB45G4oWXpGcza34nuXlS66nvkahnM8uzTtSYJDiDbp2V8bB4TOG2/4jhX
-        h99ut2OUengbFRdqwvQSGakPaub230xTJCKFZaVYsWuFB58LHQ5Hx354UZh0dYVw
-        PCo3EB4GKBH9Xop2bbTsvLGZ3eHmkSY7iCXIHw62TmeG/DEAMtqRfUyHQF/b77/p
-        jM4PInh8wwP50Dj5r/NjPhp6NRMzEBwaPR+KMImvvyZi0uW66CTCdq1rQRKeZtwA
-        ==
-X-ME-Sender: <xms:httZX2bEkdb-6xbpM0Gy3unGo1mEokpb2i4nwc1asaSi0EsUNYRRNw>
-    <xme:httZX5ZfghwWmJCGxGZkMtskcUnPoh3-9owhrrTtvkUVoZYyCe_oApefsaJUFkTjq
-    wrXeHGxcGhhhA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedguddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
-    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
-    fedrkeeirdejgedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:httZXw_PC2-hN3lbCWXZPNhoI7ya91a6T95ugFHV-s2JEndE3J8W-A>
-    <xmx:httZX4oPxgyUOuJjTMKBYzSiseIs1alu69_7qFSnbpL6IndtEfbiLg>
-    <xmx:httZXxpexp38l6Jtr_EOif9jZQf7-0VYCOQddV7wetbhUkTk3goDNA>
-    <xmx:iNtZX8AUUp7WbntFrnfozKyPES4R0GmgBnTEqST-zruj-BkHlu38bw>
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 291DA3280065;
-        Thu, 10 Sep 2020 03:53:42 -0400 (EDT)
-Date:   Thu, 10 Sep 2020 09:53:51 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org,
-        Russell King <linux@armlinux.org.uk>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/3] dma-mapping: introduce DMA range map, supplanting
- dma_pfn_offset
-Message-ID: <20200910075351.GA1092435@kroah.com>
-References: <20200910054038.324517-1-hch@lst.de>
- <20200910054038.324517-4-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910054038.324517-4-hch@lst.de>
+        Thu, 10 Sep 2020 03:54:40 -0400
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSfXA0N8oI="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id n03b0dw8A7qcbdz
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Thu, 10 Sep 2020 09:52:38 +0200 (CEST)
+Subject: Re: [PATCH v8 5/6] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1589898923-60048-7-git-send-email-zhouyanjie@wanyeetech.com>
+Date:   Thu, 10 Sep 2020 09:52:37 +0200
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tsbogend@alpha.franken.de,
+        paulburton@kernel.org, jiaxun.yang@flygoat.com, chenhc@lemote.com,
+        tglx@linutronix.de, robh+dt@kernel.org, daniel.lezcano@linaro.org,
+        keescook@chromium.org, paul@crapouillou.net, krzk@kernel.org,
+        ebiederm@xmission.com, dongsheng.qiu@ingenic.com,
+        yanfei.li@ingenic.com, rick.tyliu@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Content-Transfer-Encoding: 8BIT
+Message-Id: <8EBCE2D3-8683-4E57-912F-41D03C943CC9@goldelico.com>
+References: <1589898923-60048-1-git-send-email-zhouyanjie@wanyeetech.com> <1589898923-60048-7-git-send-email-zhouyanjie@wanyeetech.com>
+To:     =?utf-8?Q?=22=E5=91=A8=E7=90=B0=E6=9D=B0_=28Zhou_Yanjie=29=22?= 
+        <zhouyanjie@wanyeetech.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:40:38AM +0200, Christoph Hellwig wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
+Hi Zhou Yanjie,
+what is the status of this series? It does not seem to have arrived in linux-next for v5.10-rc1.
+
+BR and thanks,
+Nikolaus
+
+
+> Am 19.05.2020 um 16:35 schrieb 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>:
 > 
-> The new field 'dma_range_map' in struct device is used to facilitate the
-> use of single or multiple offsets between mapping regions of cpu addrs and
-> dma addrs.  It subsumes the role of "dev->dma_pfn_offset" which was only
-> capable of holding a single uniform offset and had no region bounds
-> checking.
+> Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
+> and x1000.dtsi files.
 > 
-> The function of_dma_get_range() has been modified so that it takes a single
-> argument -- the device node -- and returns a map, NULL, or an error code.
-> The map is an array that holds the information regarding the DMA regions.
-> Each range entry contains the address offset, the cpu_start address, the
-> dma_start address, and the size of the region.
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Tested-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
 > 
-> of_dma_configure() is the typical manner to set range offsets but there are
-> a number of ad hoc assignments to "dev->dma_pfn_offset" in the kernel
-> driver code.  These cases now invoke the function
-> dma_attach_offset_range(dev, cpu_addr, dma_addr, size).
+> Notes:
+>    v1->v2:
+>    No change.
+> 
+>    v2->v3:
+>    No change.
+> 
+>    v3->v4:
+>    Rebase on top of kernel 5.6-rc1.
+> 
+>    v4->v5:
+>    No change.
+> 
+>    v5->v6:
+>    No change.
+> 
+>    v6->v7:
+>    Update compatible strings.
+> 
+>    v7->v8:
+>    No change.
+> 
+> arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
+> arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
+> arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
+> arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
+> 4 files changed, 65 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index a3301ba..1f2f896 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -7,6 +7,20 @@
+> 	#size-cells = <1>;
+> 	compatible = "ingenic,jz4740";
+> 
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "ingenic,xburst-mxu1.0";
+> +			reg = <0>;
+> +
+> +			clocks = <&cgu JZ4740_CLK_CCLK>;
+> +			clock-names = "cpu";
+> +		};
+> +	};
+> +
+> 	cpuintc: interrupt-controller {
+> 		#address-cells = <0>;
+> 		#interrupt-cells = <1>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> index 0bfb9ed..12c7101 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> @@ -1,5 +1,4 @@
+> // SPDX-License-Identifier: GPL-2.0
+> -
+> #include <dt-bindings/clock/jz4770-cgu.h>
+> 
+> / {
+> @@ -7,6 +6,20 @@
+> 	#size-cells = <1>;
+> 	compatible = "ingenic,jz4770";
+> 
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +			reg = <0>;
+> +
+> +			clocks = <&cgu JZ4770_CLK_CCLK>;
+> +			clock-names = "cpu";
+> +		};
+> +	};
+> +
+> 	cpuintc: interrupt-controller {
+> 		#address-cells = <0>;
+> 		#interrupt-cells = <1>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index bb89653..03aeeff 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -8,6 +8,29 @@
+> 	#size-cells = <1>;
+> 	compatible = "ingenic,jz4780";
+> 
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +			reg = <0>;
+> +
+> +			clocks = <&cgu JZ4780_CLK_CPU>;
+> +			clock-names = "cpu";
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +			reg = <1>;
+> +
+> +			clocks = <&cgu JZ4780_CLK_CORE1>;
+> +			clock-names = "cpu";
+> +		};
+> +	};
+> +
+> 	cpuintc: interrupt-controller {
+> 		#address-cells = <0>;
+> 		#interrupt-cells = <1>;
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> index 147f7d5..2205e1b 100644
+> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -8,6 +8,20 @@
+> 	#size-cells = <1>;
+> 	compatible = "ingenic,x1000", "ingenic,x1000e";
+> 
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
+> +			reg = <0>;
+> +
+> +			clocks = <&cgu X1000_CLK_CPU>;
+> +			clock-names = "cpu";
+> +		};
+> +	};
+> +
+> 	cpuintc: interrupt-controller {
+> 		#address-cells = <0>;
+> 		#interrupt-cells = <1>;
+> -- 
+> 2.7.4
+> 
 
-So if an error happens, we don't do anything?
-
-ice_init(dev->dev);
-> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-> index 6197938dcc2d8f..935ee98e049f65 100644
-> --- a/drivers/usb/core/message.c
-> +++ b/drivers/usb/core/message.c
-> @@ -1956,10 +1956,11 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
->  		intf->dev.groups = usb_interface_groups;
->  		/*
->  		 * Please refer to usb_alloc_dev() to see why we set
-> -		 * dma_mask and dma_pfn_offset.
-> +		 * dma_mask and dma_range_map.
->  		 */
->  		intf->dev.dma_mask = dev->dev.dma_mask;
-> -		intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
-> +		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
-> +			dev_err(&dev->dev, "failed to copy DMA map\n");
-
-We tell the user, but then just keep on running?  Is there anything that
-we can do here?
-
-If not, why not have dma_direct_copy_range_map() print out the error?
-
-thanks,
-
-greg k-h
