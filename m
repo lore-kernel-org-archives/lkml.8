@@ -2,145 +2,120 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF8DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF543C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C082078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9651320770
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M7wdL6CN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgIJIqf (ORCPT
+        id S1730150AbgIJIqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:46:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12816 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730077AbgIJIpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:45:25 -0400
-IronPort-SDR: +SAY9a30C7N5311mbKCJ+fr/1gPJY4FoEJFZGAq6BLhuHDwmbsPuwXcLpsJtZm05AgVyE12+I7
- VQhic4MT9/VQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243310048"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="243310048"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 01:45:24 -0700
-IronPort-SDR: ErUPBrPQIPAp8qnsEykBXGR/atSeeL4VciSJhRKcapa0y7p/v4iNRlCMvQmRhLGzCOgHptsQTC
- +4Isk07Gc28w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="300474111"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 10 Sep 2020 01:45:22 -0700
-Date:   Thu, 10 Sep 2020 16:41:06 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH 1/3] fpga: dfl: move dfl_device_id to mod_devicetable.h
-Message-ID: <20200910084106.GB16318@yilunxu-OptiPlex-7050>
-References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
- <1599544129-17594-2-git-send-email-yilun.xu@intel.com>
- <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
+        Thu, 10 Sep 2020 04:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730224AbgIJIpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:45:08 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F70C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:45:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id z25so6166954iol.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vc9DogxoLgngfubJ0u33iUTXXgPBqlfWnxisJuHVigk=;
+        b=M7wdL6CNysKj2I2uFNxFP98crOR6oki0Kv9eRzGJ/PUHBswh1K2Yef8UbV955S99ID
+         CtqGAsbh6F1xTWPhc6/mzKjL8BLWEH41oqA7SEHhpbQr9ftZ+z7DZWEIjmkFp1Ft+YVc
+         k8p/nOP2BaHgcfiFrb0kKX0UeiprgHQqBSDwk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vc9DogxoLgngfubJ0u33iUTXXgPBqlfWnxisJuHVigk=;
+        b=qly5C/nTi3oJ/1cscWUtRqwhGRsCYmCF525x2+EEcWGWUzTxVO+QmYfLs+gyhr95xB
+         mR44AgpHEAZAQ385wPMgpBWWx7pu5UT3nDEHhAHgcNxfOzIM9tmd0n8Hd/dyV7BROAgW
+         2QvWxB+/nRuFa/DOZ4z3pDT2p9HBSniCPbFjB8H3el4VRv0tdSJazrfEdMRUTKsH5Q9u
+         YPswdxzBoXnH5ti0pLHXv6CqhkmL5FwY0fcMQ1mFP5wCogz+l9YIUanKb9Zv/uUWtJWL
+         DafsusDmF4hhNtWlhTrIm8CGZhX2Ivl0rPH+JKr9cCoI9nSMVjvxeQOo4QSq5zVYK3q/
+         3Dsg==
+X-Gm-Message-State: AOAM532iHe5suD++9ompoKzR+QNjbeeBSH9pxp4P7ODAmhWP5vqK9LA6
+        nAKmjB30OHZECOz+M6C1txGxZ49saPonsijiyV6GQg==
+X-Google-Smtp-Source: ABdhPJz/GqbhJlGBoiOlJ5GNckLlLrZXvPr+cXRexeJo/NhSRwi3XrdA0NDkw8Xgcs52YM7DxFPmui+9bnlO4Y0Zf7w=
+X-Received: by 2002:a5e:930d:: with SMTP id k13mr6689385iom.40.1599727505770;
+ Thu, 10 Sep 2020 01:45:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200910054635.3337487-1-hsinyi@chromium.org> <ba77586c-7902-9ce4-0f4f-ad1743596d85@collabora.com>
+ <CAJMQK-j_Syejw1Bc53fN8OuRYppns7g_=EQW+PUDkQDhnwxvSw@mail.gmail.com> <944325c1-818e-934c-907d-7ff0493446b4@collabora.com>
+In-Reply-To: <944325c1-818e-934c-907d-7ff0493446b4@collabora.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 10 Sep 2020 16:44:39 +0800
+Message-ID: <CAJMQK-gVO53a1SnsjsJPu-ZR-NoNb4TGXrOpb-naD71pmjExCw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: mt8173: elm: Set uart0 to mmio32 iotype
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 05:55:33AM -0700, Tom Rix wrote:
-> 
-> On 9/7/20 10:48 PM, Xu Yilun wrote:
-> > In order to support MODULE_DEVICE_TABLE() for dfl device driver, this
-> > patch moves struct dfl_device_id to mod_devicetable.h
+On Thu, Sep 10, 2020 at 4:16 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Hsin-Yi,
+>
+> On 10/9/20 9:57, Hsin-Yi Wang wrote:
+> > On Thu, Sep 10, 2020 at 3:20 PM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> >>
+> >> Hi Hsin-Yi,
+> >>
+> >> On 10/9/20 7:46, Hsin-Yi Wang wrote:
+> >>> Set uart0 iotype to mmio32 to make earlycon work with stdout-path.
+> >>>
+> >>> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> >>> ---
+> >>>  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> >>> index a5a12b2599a4a..d54e62f72c65d 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> >>> @@ -1160,6 +1160,8 @@ &thermal {
+> >>>  };
+> >>>
+> >>>  &uart0 {
+> >>> +     reg-io-width = <4>;
+> >>> +     reg-shift = <2>;
+> >>
+> >> I am wondering if these properties are common enough to go to mt8173.dtsi
+> >> instead of here.
+> >>
+> > Since stdout-path is set on elm.dtsi (using uart0), so I add this
+> > attribute here.
 > >
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > ---
-> >  drivers/fpga/dfl.h              | 13 +------------
-> >  include/linux/mod_devicetable.h | 12 ++++++++++++
-> >  2 files changed, 13 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > index 5dc758f..d5b0760 100644
-> > --- a/drivers/fpga/dfl.h
-> > +++ b/drivers/fpga/dfl.h
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/uuid.h>
-> >  #include <linux/fpga/fpga-region.h>
-> > +#include <linux/mod_devicetable.h>
-> >  
-> >  /* maximum supported number of ports */
-> >  #define MAX_DFL_FPGA_PORT_NUM 4
-> > @@ -526,18 +527,6 @@ enum dfl_id_type {
-> >  };
-> >  
-> >  /**
-> > - * struct dfl_device_id -  dfl device identifier
-> > - * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-> > - * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-> > - * @driver_data: driver specific data.
-> > - */
-> > -struct dfl_device_id {
-> > -	u8 type;
-> > -	u16 feature_id;
-> > -	unsigned long driver_data;
-> > -};
-> > -
-> > -/**
-> >   * struct dfl_device - represent an dfl device on dfl bus
-> >   *
-> >   * @dev: generic device interface.
-> > diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> > index 5b08a47..407d8dc 100644
-> > --- a/include/linux/mod_devicetable.h
-> > +++ b/include/linux/mod_devicetable.h
-> > @@ -838,4 +838,16 @@ struct mhi_device_id {
-> >  	kernel_ulong_t driver_data;
-> >  };
-> >  
-> > +/**
-> > + * struct dfl_device_id -  dfl device identifier
-> > + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-> > + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-> > + * @driver_data: driver specific data.
-> > + */
-> > +struct dfl_device_id {
-> > +	__u8 type;
-> > +	__u16 feature_id;
-> 
-> I thought i saw feature id's going to 64 bit, does this type need to expand ?
-
-Feature id is a 12bit field in DFL spec. Previously we define it u64
-cause we are considering it may expand sometime. But now seems GUID will
-be used in future design.
-
-And the header file will be used by modpost, which is not supporting u64
-now. So it is not necessary we use u64 for extra work. A patch is
-already applied for this change - "change data type of feature id to u16"
-
-Thanks,
-Yilun
-
-> 
-> Tom 
-> 
-> > +	kernel_ulong_t driver_data;
-> > +};
-> > +
-> >  #endif /* LINUX_MOD_DEVICETABLE_H */
+>
+> Why needs to be defined in the same place that stdout-path is set?
+>
+> My guess is that reg-io-width and reg-shift are SoC specific, as they define how
+> the IO access to the register is done. In fact, I think that these properties
+> should be added in all the uarts, not only the one that has defined the stdout-path.
+>
+Okay, I'll apply them to all uart. Thanks.
