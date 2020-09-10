@@ -2,113 +2,139 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273A2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A317DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7394206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B20206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jeOPEFs4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoOzMGSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgIJTXO (ORCPT
+        id S1727908AbgIJTXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:23:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41844 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731399AbgIJPuf (ORCPT
+        Thu, 10 Sep 2020 15:23:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31543 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726588AbgIJTXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:50:35 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AF2oQe195661;
-        Thu, 10 Sep 2020 11:18:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=JOgiBh8i9eFcK4L0kZnRCGl04BXJvtGSR/Tg8yzhjsY=;
- b=jeOPEFs48b5qUFmLoBvDeWqzuMQqGiTGhTaO4DFmJ//sjxRN8AEuuhBVjzMzpAwLOhx9
- ihQFalyLmpJbPSz8VN0JA/pPNOKU96XKTo0sRNfScil2lBXJeFJxwg9ukyC87XkF7j/W
- OjWDucynNoYBS+wXJAdZYjPtBe37T5ivzObYSv6esO+1Q5/48RtDQkCwLFjMYzzmgxKH
- VlitlS8enCrkZUuK+RlUNgqCh9NXRJ+jTjSrvJe97vYOqbc0e6G1dzLbMgs5PBSUPwas
- 7PBCHIDE9u3OuaUU01y5NDc3MpYx4HKs8sLGA4ahTUu1MjHo9qlCU2AkVA02mAL/bib4 lw== 
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fmme3y7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:18:51 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AFCBRZ021811;
-        Thu, 10 Sep 2020 15:18:43 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04dal.us.ibm.com with ESMTP id 33c2a9teqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 15:18:43 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AFIgYF65143224
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 15:18:42 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 54AFE6E04C;
-        Thu, 10 Sep 2020 15:18:42 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5D136E04E;
-        Thu, 10 Sep 2020 15:18:41 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.211.140.115])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 15:18:41 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-fsi@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, alistair@popple.id.au,
-        jk@ozlabs.org
-Subject: [PATCH 1/4] dt-bindings: clock: Add AST2600 APLLdivN definition
-Date:   Thu, 10 Sep 2020 10:18:37 -0500
-Message-Id: <20200910151840.25333-2-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200910151840.25333-1-eajames@linux.ibm.com>
-References: <20200910151840.25333-1-eajames@linux.ibm.com>
+        Thu, 10 Sep 2020 15:23:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599765782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aO5Uccl5Oi5KJ41E3z0pO/LdRmt1WMvp7bc2MBKi/rk=;
+        b=UoOzMGSvwbWInCk+u+9ShoKW5LcZK+mjOID7XFDhIuX6U7Yw3INVhKRTLrDd9XMNbFBulT
+        Ob0NBmaK7gfZR9eaDRvqd2aAFAwsCxgnfSS011AaNhU72OWCYNOpORp+7SrFALM9RvzjUl
+        vOCts1I6nRQ6f9ClIXEdRzLNqQb55bY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-nH1tbEipMPOnT8j1YMvhfA-1; Thu, 10 Sep 2020 15:23:00 -0400
+X-MC-Unique: nH1tbEipMPOnT8j1YMvhfA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 271FC1008550;
+        Thu, 10 Sep 2020 19:22:58 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-5.gru2.redhat.com [10.97.112.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA28360BF4;
+        Thu, 10 Sep 2020 19:22:54 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 2E4E541853FD; Thu, 10 Sep 2020 16:22:08 -0300 (-03)
+Date:   Thu, 10 Sep 2020 16:22:08 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, frederic@kernel.org,
+        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
+Subject: Re: [RFC][Patch v1 3/3] PCI: Limit pci_alloc_irq_vectors as per
+ housekeeping CPUs
+Message-ID: <20200910192208.GA24845@fuller.cnet>
+References: <20200909150818.313699-1-nitesh@redhat.com>
+ <20200909150818.313699-4-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_04:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- impostorscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=1 mlxscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909150818.313699-4-nitesh@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new clock definition for the "APLLdivN" as described in the
-AST2600 specification. This clock is simply the APLL divided by a
-factor defined in the SCU registers. It is the input to the FSI
-bus.
+On Wed, Sep 09, 2020 at 11:08:18AM -0400, Nitesh Narayan Lal wrote:
+> This patch limits the pci_alloc_irq_vectors max vectors that is passed on
+> by the caller based on the available housekeeping CPUs by only using the
+> minimum of the two.
+> 
+> A minimum of the max_vecs passed and available housekeeping CPUs is
+> derived to ensure that we don't create excess vectors which can be
+> problematic specifically in an RT environment. This is because for an RT
+> environment unwanted IRQs are moved to the housekeeping CPUs from
+> isolated CPUs to keep the latency overhead to a minimum. If the number of
+> housekeeping CPUs are significantly lower than that of the isolated CPUs
+> we can run into failures while moving these IRQs to housekeeping due to
+> per CPU vector limit.
+> 
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  include/linux/pci.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 835530605c0d..750ba927d963 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -38,6 +38,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/resource_ext.h>
+> +#include <linux/sched/isolation.h>
+>  #include <uapi/linux/pci.h>
+>  
+>  #include <linux/pci_ids.h>
+> @@ -1797,6 +1798,21 @@ static inline int
+>  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  		      unsigned int max_vecs, unsigned int flags)
+>  {
+> +	unsigned int num_housekeeping = num_housekeeping_cpus();
+> +	unsigned int num_online = num_online_cpus();
+> +
+> +	/*
+> +	 * Try to be conservative and at max only ask for the same number of
+> +	 * vectors as there are housekeeping CPUs. However, skip any
+> +	 * modification to the of max vectors in two conditions:
+> +	 * 1. If the min_vecs requested are higher than that of the
+> +	 *    housekeeping CPUs as we don't want to prevent the initialization
+> +	 *    of a device.
+> +	 * 2. If there are no isolated CPUs as in this case the driver should
+> +	 *    already have taken online CPUs into consideration.
+> +	 */
+> +	if (min_vecs < num_housekeeping && num_housekeeping != num_online)
+> +		max_vecs = min_t(int, max_vecs, num_housekeeping);
+>  	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+>  					      NULL);
+>  }
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- include/dt-bindings/clock/ast2600-clock.h | 1 +
- 1 file changed, 1 insertion(+)
+If min_vecs > num_housekeeping, for example:
 
-diff --git a/include/dt-bindings/clock/ast2600-clock.h b/include/dt-bindings/clock/ast2600-clock.h
-index 62b9520a00fd..5a9ae0a1d574 100644
---- a/include/dt-bindings/clock/ast2600-clock.h
-+++ b/include/dt-bindings/clock/ast2600-clock.h
-@@ -87,6 +87,7 @@
- #define ASPEED_CLK_MAC2RCLK		68
- #define ASPEED_CLK_MAC3RCLK		69
- #define ASPEED_CLK_MAC4RCLK		70
-+#define ASPEED_CLK_APLLN		71
- 
- /* Only list resets here that are not part of a gate */
- #define ASPEED_RESET_ADC		55
--- 
-2.26.2
+/* PCI MSI/MSIx support */
+#define XGBE_MSI_BASE_COUNT     4
+#define XGBE_MSI_MIN_COUNT      (XGBE_MSI_BASE_COUNT + 1)
+
+Then the protection fails.
+
+How about reducing max_vecs down to min_vecs, if min_vecs >
+num_housekeeping ?
+
 
