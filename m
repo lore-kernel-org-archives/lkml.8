@@ -2,120 +2,151 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFDA7221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F45221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oalS+ESh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lJm0/tYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgIJUIM (ORCPT
+        id S1726994AbgIJUIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgIJUF6 (ORCPT
+        Thu, 10 Sep 2020 16:08:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730859AbgIJPAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:05:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBD9C061573;
-        Thu, 10 Sep 2020 13:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=c2OmDmw3CBNdMhbSUreC74RlMC1GtRl7G6wTRWdIDhg=; b=oalS+EShumiM+wP4ntMj+va6+Q
-        Nh1j9337AoOX5aS6ehlDvYBnbeH5wAQR/9ls36am10xynQpwjAzNspdirI5ohbUmCjgytsp6ExJhu
-        61TqiAGlfQvDFqi1JocYtyt1E3SBqZt+RHR5ElNE0185BXyGVupHaZe0djMdV/ttf1KoyzZ8hdeFJ
-        z0CoXaDzfHr5fh5hlf6Gt1AywT/4OZMjRpww4aVwjYJG+OoB5dzIFkkHg42E79TUXRRyuDmQBueyp
-        KAqaQ+Hi5YPbc5abQpTeFLdmAJTJqOQETXvwfl9CDwTes6XA46M10L1IXyJSp5ODcSg+CifPThbbA
-        V4gIP2hA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGSpD-0003dj-CF; Thu, 10 Sep 2020 20:05:43 +0000
-Date:   Thu, 10 Sep 2020 21:05:43 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
-Message-ID: <20200910200543.GY6583@casper.infradead.org>
-References: <20200910164612.114215-1-mic@digikod.net>
- <20200910170424.GU6583@casper.infradead.org>
- <f6e2358c-8e5e-e688-3e66-2cdd943e360e@digikod.net>
- <a48145770780d36e90f28f1526805a7292eb74f6.camel@linux.ibm.com>
- <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
- <20200910184033.GX6583@casper.infradead.org>
- <20200910200010.GF1236603@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200910200010.GF1236603@ZenIV.linux.org.uk>
+        Thu, 10 Sep 2020 11:00:43 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AEi4YI192630;
+        Thu, 10 Sep 2020 11:00:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=5VXKsHTc2YlCV3PXBFCbmF1hTMHTSBXPxb9CKodxcuc=;
+ b=lJm0/tYKVnLWLps2+W6cAz1a9vrIWBEiP+kwk1q2U+Ibr3tK9hHfmZoMaZ7sHL4AOzFG
+ U8MF73hxTxtHjYbp0vBLEb92NkHzmKnOhS/u21GYrVf3OdLrsa7h7TQHZKyALnhekAjo
+ nKXwusdMDgbyylGqJ1WSDugrkjpm2fcrQ+t0h8aSm/92l+ZV3JK/cliqzGPxJ4jZlzMZ
+ da2I0XmeJAYCxvHw+l7r2ceDyk78W3+gRRTLx1nHTrEG94Euogl/XhE/by94e7BT5SNn
+ 48fbqOVVb7A3D2xgiKi3CzcaUtJ8k2udWAmivgmg0FDa3PkDt/Z/Kpfc5gNYS1a2gcgF zA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wgf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AEq17J025485;
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:00:06 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AEqMb2000343;
+        Thu, 10 Sep 2020 15:00:06 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 33c2a9jbjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:00:05 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AF00At32702764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 15:00:00 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 984DF7806E;
+        Thu, 10 Sep 2020 15:00:02 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0909778064;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v5 0/3] vfio/pci: Restore MMIO access for s390 detached VFs
+Date:   Thu, 10 Sep 2020 10:59:54 -0400
+Message-Id: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxlogscore=864 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 09:00:10PM +0100, Al Viro wrote:
-> On Thu, Sep 10, 2020 at 07:40:33PM +0100, Matthew Wilcox wrote:
-> > On Thu, Sep 10, 2020 at 08:38:21PM +0200, Mickaël Salaün wrote:
-> > > There is also the use case of noexec mounts and file permissions. From
-> > > user space point of view, it doesn't matter which kernel component is in
-> > > charge of defining the policy. The syscall should then not be tied with
-> > > a verification/integrity/signature/appraisal vocabulary, but simply an
-> > > access control one.
-> > 
-> > permission()?
-> 
-> int lsm(int fd, const char *how, char *error, int size);
-> 
-> Seriously, this is "ask LSM to apply special policy to file"; let's
-> _not_ mess with flags, etc. for that; give it decent bandwidth
-> and since it's completely opaque for the rest of the kernel,
-> just a pass a string to be parsed by LSM as it sees fit.
+Changes from v4:
+- Switch from dev_flags to a bitfield
+- Scrubbed improper use of MSE acronym
+- Restored the fixes tag to patch 3 (but the other 2 patches are
+  now pre-reqs -- cc stable 5.8?) 
 
-Hang on, it does have some things which aren't BD^W^WLSM.  It lets
-the interpreter honour the mount -o noexec option.  I presume it's
-not easily defeated by
-	cat /home/salaun/bin/bad.pl | perl -
+Since commit abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO
+access on disabled memory") VFIO now rejects guest MMIO access when the
+PCI_COMMAND_MEMORY bit is OFF.  This is however not the case for VFs
+(fixed in commit ebfa440ce38b ("vfio/pci: Fix SR-IOV VF handling with
+MMIO blocking")).  Furthermore, on s390 where we always run with at
+least a bare-metal hypervisor (LPAR) PCI_COMMAND_MEMORY, unlike Device/
+Vendor IDs and BARs, is not emulated when VFs are passed-through to the
+OS independently.
+
+Based upon Bjorn's most recent comment [1], I investigated the notion of
+setting is_virtfn=1 for VFs passed-through to Linux and not linked to a
+parent PF (referred to as a 'detached VF' in my prior post).  However,
+we rapidly run into issues on how to treat an is_virtfn device with no
+linked PF. Further complicating the issue is when you consider the guest
+kernel has a passed-through VF but has CONFIG_PCI_IOV=n as in many 
+locations is_virtfn checking is ifdef'd out altogether and the device is
+assumed to be an independent PCI function.
+
+The decision made by VFIO whether to require or emulate a PCI feature 
+(in this case PCI_COMMAND_MEMORY) is based upon the knowledge it has 
+about the device, including implicit expectations of what/is not
+emulated below VFIO. (ex: is it safe to read vendor/id from config
+space?) -- Our firmware layer attempts similar behavior by emulating
+things such as vendor/id/BAR access - without these an unlinked VF would
+not be usable. But what is or is not emulated by the layer below may be
+different based upon which entity is providing the emulation (vfio,
+LPAR, some other hypervisor)
+
+So, the proposal here aims to fix the immediate issue of s390
+pass-through VFs becoming suddenly unusable by vfio by using a new 
+bit to identify a VF feature that we know is hardwired to 0 for any
+VF (PCI_COMMAND_MEMORY) and de-coupling the need for emulating
+PCI_COMMAND_MEMORY from the is_virtfn flag. The exact scope of is_virtfn
+and physfn for bare-metal vs guest scenarios and identifying what
+features are / are not emulated by the lower-level hypervisors is a much
+bigger discussion independent of this limited proposal.
+
+[1]: https://marc.info/?l=linux-pci&m=159856041930022&w=2
+
+
+
+Matthew Rosato (3):
+  PCI/IOV: Mark VFs as not implementing PCI_COMMAND_MEMORY
+  s390/pci: Mark all VFs as not implementing PCI_COMMAND_MEMORY
+  vfio/pci: Decouple PCI_COMMAND_MEMORY bit checks from is_virtfn
+
+ arch/s390/pci/pci_bus.c            |  5 +++--
+ drivers/pci/iov.c                  |  1 +
+ drivers/vfio/pci/vfio_pci_config.c | 24 ++++++++++++++----------
+ include/linux/pci.h                |  1 +
+ 4 files changed, 19 insertions(+), 12 deletions(-)
+
+-- 
+1.8.3.1
 
