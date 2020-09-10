@@ -2,179 +2,102 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E247C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85355C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244E4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DrAKXqiv"
+	by mail.kernel.org (Postfix) with ESMTP id 420BD208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599773895;
+	bh=qJqfgEjM1JHkm7fFx5w2wAwPbg8pDBoa1SA0YP/hTRw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=NJ8adaIa0wzpqJPU0dVji5YbY/HDggYWy6nBdibOQlvwZ839997/jgpSDiRx/+Zv/
+	 2OtvHXU0ticeIh/4lCK+MjfG/Jz+HwB5yaCgoX+spi3Q7BAb/AmXcWgva4CmgobGqK
+	 9xwsHeZkeH2eVtCTrlp3I/S3gD+nY/DAP6urUaus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgIJVh4 (ORCPT
+        id S1728407AbgIJViM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:37:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31877 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730821AbgIJNdZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:33:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599744760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F4qA3qviw6m2U5bouThH9BshQDOJ+dWQbRHt8FhhG/I=;
-        b=DrAKXqivoB7+qssZLRActQm7l92dVHgi6WrJbyaIt0048wZlnGN9oZTA/6uH7pbhJfM4tb
-        EWxO7WjlGDn2DMURKYt9EDfLFXxjgiyp4g48vDLYl4ntXZytMJzkIPicKM8ePc8RstujBA
-        XZSra5i/JtCYwwNpR17gXucc3ghkWOQ=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-NL2UZqZVOWCwqTe4R3y8BQ-1; Thu, 10 Sep 2020 09:32:38 -0400
-X-MC-Unique: NL2UZqZVOWCwqTe4R3y8BQ-1
-Received: by mail-qk1-f200.google.com with SMTP id w64so3581145qkc.14
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=F4qA3qviw6m2U5bouThH9BshQDOJ+dWQbRHt8FhhG/I=;
-        b=WNPi6AOkUnBKCyZRjN+XT5bBD5DqMxg4xWs1SsUEGku2iRj3/mg9AsG5GqrQ9iF2R3
-         uFh7rEw3BlURDDQlpDEPMcp09/99MURXH8ZGVYSWk5xqakR9+usykSFIxgSPloWtxJYc
-         BmXeUBmJ1G84YUbI7DltKcoUyUiPnZz0TgKsz3+u4sw3Yi51Gb9kkZcXQiS3bXgmpTZ5
-         W2WLRtG9s5Nh7SoNOeT77Q8SQbCCzcC2xvJeuebfx9zJ8sBv9b/QT66rkJhEHeJPdVu7
-         GF1KoFhguvgU+Anp7agDHzYH8yXhuawugf667f/NA2guJNwZz9/1XoV2ogyOtST/DJem
-         Vdog==
-X-Gm-Message-State: AOAM530fgPBze5Bnjh1nipvs8O9ZudUxB35WwW1HCd5gaINKUcfVRH4d
-        peYf4PRgx6T2Urwihb0ab+Ttv80Z4REYXqcE1RrizSkmeqUJodHw0NzN2wdr40a1Kl1nFWg0KVJ
-        UUqDbM38VlYaH0KnCv/WF8iK2
-X-Received: by 2002:a05:620a:211c:: with SMTP id l28mr7583806qkl.395.1599744758388;
-        Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxBV7Ulx+mj0dlREn3NNIDAGe2qZipF1FAEAN8uT1JX7RkZ6JX1bJbKzHE5pqTU+xaACTCxoQ==
-X-Received: by 2002:a05:620a:211c:: with SMTP id l28mr7583779qkl.395.1599744758095;
-        Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b199sm6426926qkg.116.2020.09.10.06.32.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 06:32:37 -0700 (PDT)
-Subject: Re: [PATCH 1/3] fpga: dfl: move dfl_device_id to mod_devicetable.h
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
- <1599544129-17594-2-git-send-email-yilun.xu@intel.com>
- <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
- <20200910084106.GB16318@yilunxu-OptiPlex-7050>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <ad9ba1cf-e02f-c09e-f639-2df60f080e5f@redhat.com>
-Date:   Thu, 10 Sep 2020 06:32:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 10 Sep 2020 17:38:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730717AbgIJNdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:33:24 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E553C20809;
+        Thu, 10 Sep 2020 13:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599744717;
+        bh=qJqfgEjM1JHkm7fFx5w2wAwPbg8pDBoa1SA0YP/hTRw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=G+knM3WxDFUjRMS6LVKoufrc8iZ7RkD3+M3b6Iob39UGeFuC0yx1StLvAZSXrk3eE
+         90m2/vrAEnLx+FvxIKkDDAOt8feCA2zXVZg7Cv/lO2RBnkYBvDz72xi2x1C2HRBRVn
+         VR4cjlxWJ8K2MwKk8up580rEFdZa64hoWb+OzyP4=
+Date:   Thu, 10 Sep 2020 08:31:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND PATCH v1] PCI: pcie_bus_config can be set at build time
+Message-ID: <20200910133155.GA782074@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200910084106.GB16318@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNzyuVm4gw2socQuQtdrXWCam3GfQj61jYJEUa75fnbvtQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 9/10/20 1:41 AM, Xu Yilun wrote:
-> On Wed, Sep 09, 2020 at 05:55:33AM -0700, Tom Rix wrote:
->> On 9/7/20 10:48 PM, Xu Yilun wrote:
->>> In order to support MODULE_DEVICE_TABLE() for dfl device driver, this
->>> patch moves struct dfl_device_id to mod_devicetable.h
->>>
->>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
->>> Signed-off-by: Wu Hao <hao.wu@intel.com>
->>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
->>> ---
->>>  drivers/fpga/dfl.h              | 13 +------------
->>>  include/linux/mod_devicetable.h | 12 ++++++++++++
->>>  2 files changed, 13 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
->>> index 5dc758f..d5b0760 100644
->>> --- a/drivers/fpga/dfl.h
->>> +++ b/drivers/fpga/dfl.h
->>> @@ -26,6 +26,7 @@
->>>  #include <linux/slab.h>
->>>  #include <linux/uuid.h>
->>>  #include <linux/fpga/fpga-region.h>
->>> +#include <linux/mod_devicetable.h>
->>>  
->>>  /* maximum supported number of ports */
->>>  #define MAX_DFL_FPGA_PORT_NUM 4
->>> @@ -526,18 +527,6 @@ enum dfl_id_type {
->>>  };
->>>  
->>>  /**
->>> - * struct dfl_device_id -  dfl device identifier
->>> - * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
->>> - * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
->>> - * @driver_data: driver specific data.
->>> - */
->>> -struct dfl_device_id {
->>> -	u8 type;
->>> -	u16 feature_id;
->>> -	unsigned long driver_data;
->>> -};
->>> -
->>> -/**
->>>   * struct dfl_device - represent an dfl device on dfl bus
->>>   *
->>>   * @dev: generic device interface.
->>> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
->>> index 5b08a47..407d8dc 100644
->>> --- a/include/linux/mod_devicetable.h
->>> +++ b/include/linux/mod_devicetable.h
->>> @@ -838,4 +838,16 @@ struct mhi_device_id {
->>>  	kernel_ulong_t driver_data;
->>>  };
->>>  
->>> +/**
->>> + * struct dfl_device_id -  dfl device identifier
->>> + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
->>> + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
->>> + * @driver_data: driver specific data.
->>> + */
->>> +struct dfl_device_id {
->>> +	__u8 type;
->>> +	__u16 feature_id;
->> I thought i saw feature id's going to 64 bit, does this type need to expand ?
-> Feature id is a 12bit field in DFL spec. Previously we define it u64
-> cause we are considering it may expand sometime. But now seems GUID will
-> be used in future design.
+On Thu, Sep 10, 2020 at 08:57:10AM -0400, Jim Quinlan wrote:
+> Hi Bjorn,
+> 
+> On Wed, Sep 9, 2020 at 10:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Sep 08, 2020 at 12:32:48PM -0400, Jim Quinlan wrote:
+> > > The Kconfig is modified so that the pcie_bus_config setting can be done at
+> > > build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
+> > > pci_bus_config setting may still be overridden by the bootline param.
+> >
+> > I guess...  I really hate these build-time config settings for both
+> > ASPM and MPS/MRRS.  But Linux just isn't smart or flexible enough to
+> > do the right thing at run-time, so I guess we're kind of stuck.
+> >
+> > I guess you have systems where you need a different default?
 >
-> And the header file will be used by modpost, which is not supporting u64
-> now. So it is not necessary we use u64 for extra work. A patch is
-> already applied for this change - "change data type of feature id to u16"
+> Yes, we've been shipping our kernel with the DEFAULT and since we do
+> not have FW it is not configured optimally.  Some customers have
+> noticed and I tell them to put 'pci=pcie_bus_safe' on their bootline
+> but I'd rather have this setting work for all customers as it yields
+> the option we want.
+
+I'm guessing you probably don't have any hotplug slots.  Seems like we
+ought to be able to recognize that and pick pcie_bus_safe
+automatically.  Someday.
+
+Maybe that's part of the description: if you have a closed system with
+no possibility of adding new devices, we can use the largest MPS
+that's supported by all devices, i.e., pcie_bus_safe.
+
+> > It'd be nice if we could put a little more detail in the Kconfig to
+> > help users choose the correct one.  "Ensure MPS matches upstream
+> > bridge" is *accurate*, but it doesn't really tell me why I would
+> > choose this rather than a different one.
 >
-> Thanks,
-> Yilun
+> IIRC I just copied the comments that were in the bootline settings.
+> I'm concerned about there being the same comment in two places; sooner
+> or later someone will update one place and not the other.
 
-Thanks for the explanation.
+True.  It'd be nice if we at least had *one* place with a useful
+description.  I don't think we have any today.
 
-Reviewed-by: Tom Rix <trix@redhat.com>
-
->
->> TomÃ‚Â 
->>
->>> +	kernel_ulong_t driver_data;
->>> +};
->>> +
->>>  #endif /* LINUX_MOD_DEVICETABLE_H */
-
+Bjorn
