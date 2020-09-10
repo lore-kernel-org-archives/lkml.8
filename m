@@ -2,95 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94268C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6135BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD8220639
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599768342;
-	bh=WS19ZBo0ef+CGLGrHmxodx5pBqJ8vMkf9RgKcGYwaKo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZfzudJZYfynazl7r+JvCSiANOb+yHh159Xp+hbkbZgeLSKblH9QJ8TNgfDRMc7E+x
-	 UYwBMDUgoo7CXV94SfDyNYTVc47s5mWtzTh9ZUf1en0/G9CHwZzkZso7+RCnq265eX
-	 5XtMphS0LSBx8W1zCNXwdBkWIzv33qOFpOnBLOKc=
+	by mail.kernel.org (Postfix) with ESMTP id 2D3FB221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgIJUFi (ORCPT
+        id S1726837AbgIJUGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgIJUCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:02:12 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B642D221E2;
-        Thu, 10 Sep 2020 20:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599768075;
-        bh=WS19ZBo0ef+CGLGrHmxodx5pBqJ8vMkf9RgKcGYwaKo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=drqevlSGw8/2zSQ4kUDRh9JhcYW397iJT2Mz1J8WZUcJOFOUasV4QrD/vY3nN/SdS
-         gf7jmJbqZnupvyDjZoCwi4p3amL/jUvCRt+/dwuQ9OGoYk8Z8GOdxiIlN1wBbDDAWe
-         U+/RitedG089zCmQXSVpbc3YmHQt5HFRXt+Z1hFg=
-Date:   Thu, 10 Sep 2020 13:01:12 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
-        davem@davemloft.net
-Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-Message-ID: <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200910161126.30948-1-oded.gabbay@gmail.com>
-References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+        Thu, 10 Sep 2020 16:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726639AbgIJUAy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:00:54 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6317C061757;
+        Thu, 10 Sep 2020 13:00:47 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGSjq-00DvEU-NI; Thu, 10 Sep 2020 20:00:10 +0000
+Date:   Thu, 10 Sep 2020 21:00:10 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
+Message-ID: <20200910200010.GF1236603@ZenIV.linux.org.uk>
+References: <20200910164612.114215-1-mic@digikod.net>
+ <20200910170424.GU6583@casper.infradead.org>
+ <f6e2358c-8e5e-e688-3e66-2cdd943e360e@digikod.net>
+ <a48145770780d36e90f28f1526805a7292eb74f6.camel@linux.ibm.com>
+ <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
+ <20200910184033.GX6583@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910184033.GX6583@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
->  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
->  create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
+On Thu, Sep 10, 2020 at 07:40:33PM +0100, Matthew Wilcox wrote:
+> On Thu, Sep 10, 2020 at 08:38:21PM +0200, Mickaël Salaün wrote:
+> > There is also the use case of noexec mounts and file permissions. From
+> > user space point of view, it doesn't matter which kernel component is in
+> > charge of defining the policy. The syscall should then not be tied with
+> > a verification/integrity/signature/appraisal vocabulary, but simply an
+> > access control one.
+> 
+> permission()?
 
-The relevant code needs to live under drivers/net/(ethernet/).
-For one thing our automation won't trigger for drivers in random
-(/misc) part of the tree.
+int lsm(int fd, const char *how, char *error, int size);
+
+Seriously, this is "ask LSM to apply special policy to file"; let's
+_not_ mess with flags, etc. for that; give it decent bandwidth
+and since it's completely opaque for the rest of the kernel,
+just a pass a string to be parsed by LSM as it sees fit.
