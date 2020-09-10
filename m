@@ -2,203 +2,169 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18627C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA4AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E4D21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120D820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QqSA5OLv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYRIVK9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgIJUXb (ORCPT
+        id S1726871AbgIJUYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
+        Thu, 10 Sep 2020 16:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgIJUWD (ORCPT
+        with ESMTP id S1726997AbgIJUWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:22:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B64CC0617B9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:21:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kk9so583138pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:21:23 -0700 (PDT)
+        Thu, 10 Sep 2020 16:22:53 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03AFC061573;
+        Thu, 10 Sep 2020 13:22:53 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 37so6491912oto.4;
+        Thu, 10 Sep 2020 13:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fekJawXuRCxGrjYQI8OQvxsZTGlCFbLJj9FaUGr/A7E=;
-        b=QqSA5OLvk2Qdik/W7fOSu9hkPXdjQzGi3H6oVrZUyklZ+UzgX6HE9UM609d6dK+kyh
-         54tXPlf8gvwGJYpP5jiKL4Mqt3GvS4R+0mJa2dhY7V+8gDdXSbCJ3tIl9uerrba1ObNl
-         fq3FyNkenrkMAEkbOEdq32NFyGXYfubBxsfyo=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mk7sGg44/yfsC54l9DhzF/KZwI1G0H7I8q5/FXcWot8=;
+        b=dYRIVK9q1YNOCb/49YAdSVDbKASdIkffMCjYsBImAED8c5cPTuP2fAfOx5qKE26+i+
+         Lqov4lgCQVgxsVxmC+intTJOZv1wMIAPWQnswyf3pwdeP+Zg3NcY2WxABiZHEm5KzSXP
+         n4bODewAAaXPMYryXbxmRQmw0lKUuWz3HaVNju1rAf0OzbIWw2ZrP0e2GaYWRE55mOe9
+         M2xlYN5RbybDV0fqt1Fm+vAVOXIB6Ad3gk8+pf+3/ls+IhgaZlS0hFLfyuAGrnHpUzLr
+         +52yA4icGa5AywGoCQwy44waGPhL4ClayeL8i0p/GeggKkUao8euYDZFyCXpgWzCsYlu
+         T2/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fekJawXuRCxGrjYQI8OQvxsZTGlCFbLJj9FaUGr/A7E=;
-        b=JtXHTFB1nUiEbBW+OdTzGvhPANQGAk/VZH4fgroKWRqZ5XQh/I2km95WkkQ8B1ZwNB
-         ySvIcLr4B/rtnYGIsh8OMALSjUODrQrWb1Yh+dXcDZkOtdUhum85YZggSmdC6QL4NIip
-         2l5ncKVcRlyevGwNWzwL1akTGFARZ7Dmxycr2DWAhgtndMsLOhmxPD8i8Kmp6tFWfeks
-         1A9RgEVdfmZT2KSaP54DX3jJF2myT99PjHk2euNcGbSHRi4V4nC1XebtX8ZE1kgYfKC2
-         LrPWT0WHdR3IRcasOw2WPa1+r3Euiyp3g+IHgYvx05tY68NEOjhuNa+K5k16Hw3n7RCo
-         otKg==
-X-Gm-Message-State: AOAM531K4e7x0uCCBRLqt8H9+0KiKRwKerZUhhtCDENhdqieXT/lM4WI
-        77KFKBdqtmJ3nxiJbhP5G5Vxyw==
-X-Google-Smtp-Source: ABdhPJymFVJ+9HWBVHudVut19/nL7d3aLa8ZpMZHZNa4qlaiqrKo1FAhdiapRQw62yOFnHB/LJtf8A==
-X-Received: by 2002:a17:90b:a51:: with SMTP id gw17mr1654063pjb.118.1599769282707;
-        Thu, 10 Sep 2020 13:21:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i17sm6876859pfa.2.2020.09.10.13.21.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 13:21:21 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [RFC PATCH 5/6] security/fbfam: Detect a fork brute force attack
-Date:   Thu, 10 Sep 2020 13:21:06 -0700
-Message-Id: <20200910202107.3799376-6-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200910202107.3799376-1-keescook@chromium.org>
-References: <20200910202107.3799376-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mk7sGg44/yfsC54l9DhzF/KZwI1G0H7I8q5/FXcWot8=;
+        b=fI0b8YQaN7rmBbftFIuSXMbaXAQWtSEMxYN0fdcJsLPF9Yo5FXpVYFxF3TrIggCHyU
+         4zSg8ijDwNcWFJqBdHRsY9meKrSRKihrhFOM7v50Cf/DWKPg6mDnF2M8NgycKHXFMa5j
+         NEcqpGrjAzrooRsAFNuRAmRN4IxIr3aVXfrdIkuUuNzmcsP9ZE0WtuwWIIaZKR69gNKs
+         JaZ2YJlwy/7ni6Tz4kBo0yr6mFVB2orgSuM06ujTS8Ayw9ge1HQjWlRzCzrrSZdhZSzL
+         P0oHn6Wg5SXYQDmdubfqDACl/9VvKmjJ4W4/B3NvwOFdblPw2Xxay3AnhHonwk5mpBM9
+         /Qkw==
+X-Gm-Message-State: AOAM531pWL1ZtTzxEc9UhsZxrmfN6ALKy+O1NpatafKGSOupO9I4YgPh
+        NlLQ1PD1S+UoP46rcEl6fcKaqMPjOpSKI2e6Q4w=
+X-Google-Smtp-Source: ABdhPJzodRgtioNMRusqjX8bwcL7duveaj8vNv5MRDuM5tBV9WmgYZ/S4Z9o5pf1y4JwpSguO5WvxeE+Dq2FBOnuHl4=
+X-Received: by 2002:a9d:66cf:: with SMTP id t15mr5324699otm.143.1599769373093;
+ Thu, 10 Sep 2020 13:22:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910161126.30948-14-oded.gabbay@gmail.com>
+ <20200910201951.GG3354160@lunn.ch>
+In-Reply-To: <20200910201951.GG3354160@lunn.ch>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 10 Sep 2020 23:22:25 +0300
+Message-ID: <CAFCwf10W_gzrZi4PtiQpjHCvi+ioS9xCS42q9sWSxOd0VOA4xg@mail.gmail.com>
+Subject: Re: [PATCH 13/15] habanalabs/gaudi: Add ethtool support using coresight
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Wood <john.wood@gmx.com>
+On Thu, Sep 10, 2020 at 11:19 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > +static int gaudi_nic_get_link_ksettings(struct net_device *netdev,
+> > +                                     struct ethtool_link_ksettings *cmd)
+> > +{
+> > +     struct gaudi_nic_device **ptr = netdev_priv(netdev);
+> > +     struct gaudi_nic_device *gaudi_nic = *ptr;
+> > +     struct hl_device *hdev = gaudi_nic->hdev;
+> > +     u32 port = gaudi_nic->port, speed = gaudi_nic->speed;
+>
+> Please go through the code and fixup Reverse Christmas tree.
+Of course, we will fix this.
 
-To detect a fork brute force attack it is necessary to compute the
-crashing rate of the application. This calculation is performed in each
-fatal fail of a task, or in other words, when a core dump is triggered.
-If this rate shows that the application is crashing quickly, there is a
-clear signal that an attack is happening.
+>
+> > +
+> > +     cmd->base.speed = speed;
+> > +     cmd->base.duplex = DUPLEX_FULL;
+> > +
+> > +     ethtool_link_ksettings_zero_link_mode(cmd, supported);
+> > +     ethtool_link_ksettings_zero_link_mode(cmd, advertising);
+> > +
+> > +     ethtool_add_mode(cmd, supported, 100000baseCR4_Full);
+> > +     ethtool_add_mode(cmd, supported, 100000baseSR4_Full);
+> > +     ethtool_add_mode(cmd, supported, 100000baseKR4_Full);
+> > +     ethtool_add_mode(cmd, supported, 100000baseLR4_ER4_Full);
+> > +
+> > +     ethtool_add_mode(cmd, supported, 50000baseSR2_Full);
+> > +     ethtool_add_mode(cmd, supported, 50000baseCR2_Full);
+> > +     ethtool_add_mode(cmd, supported, 50000baseKR2_Full);
+> > +
+> > +     if (speed == SPEED_100000) {
+> > +             ethtool_add_mode(cmd, advertising, 100000baseCR4_Full);
+> > +             ethtool_add_mode(cmd, advertising, 100000baseSR4_Full);
+> > +             ethtool_add_mode(cmd, advertising, 100000baseKR4_Full);
+> > +             ethtool_add_mode(cmd, advertising, 100000baseLR4_ER4_Full);
+> > +
+> > +             cmd->base.port = PORT_FIBRE;
+> > +
+> > +             ethtool_add_mode(cmd, supported, FIBRE);
+> > +             ethtool_add_mode(cmd, advertising, FIBRE);
+> > +
+> > +             ethtool_add_mode(cmd, supported, Backplane);
+> > +             ethtool_add_mode(cmd, advertising, Backplane);
+> > +     } else if (speed == SPEED_50000) {
+> > +             ethtool_add_mode(cmd, advertising, 50000baseSR2_Full);
+> > +             ethtool_add_mode(cmd, advertising, 50000baseCR2_Full);
+> > +             ethtool_add_mode(cmd, advertising, 50000baseKR2_Full);
+> > +     } else {
+> > +             dev_err(hdev->dev, "unknown speed %d, port %d\n", speed, port);
+> > +             return -EFAULT;
+> > +     }
+> > +
+> > +     ethtool_add_mode(cmd, supported, Autoneg);
+> > +
+> > +     if (gaudi_nic->auto_neg_enable) {
+> > +             ethtool_add_mode(cmd, advertising, Autoneg);
+> > +             cmd->base.autoneg = AUTONEG_ENABLE;
+> > +             if (gaudi_nic->auto_neg_resolved)
+> > +                     ethtool_add_mode(cmd, lp_advertising, Autoneg);
+> > +     } else {
+> > +             cmd->base.autoneg = AUTONEG_DISABLE;
+> > +     }
+> > +
+> > +     ethtool_add_mode(cmd, supported, Pause);
+> > +
+> > +     if (gaudi_nic->pfc_enable)
+> > +             ethtool_add_mode(cmd, advertising, Pause);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int gaudi_nic_set_link_ksettings(struct net_device *netdev,
+> > +                             const struct ethtool_link_ksettings *cmd)
+> > +{
+> > +     struct gaudi_nic_device **ptr = netdev_priv(netdev);
+> > +     struct gaudi_nic_device *gaudi_nic = *ptr;
+> > +     struct hl_device *hdev = gaudi_nic->hdev;
+> > +     u32 port = gaudi_nic->port;
+> > +     int rc = 0, speed = cmd->base.speed;
+> > +     bool auto_neg = cmd->base.autoneg == AUTONEG_ENABLE;
+>
+> It appears you only support speed and auto_neg. You should check that
+> all other things which could be configured are empty, e.g. none of the
+> bits are set in cmd->link_modes.advertising. If you are requested to
+> configure something which is not supported, you need to return
+> -EOPNOTSUPP.
+>
+>         Andrew
 
-Since the crashing rate is computed in milliseconds per fault, if this
-rate goes under a certain threshold a warning is triggered.
-
-Signed-off-by: John Wood <john.wood@gmx.com>
----
- fs/coredump.c          |  2 ++
- include/fbfam/fbfam.h  |  2 ++
- security/fbfam/fbfam.c | 39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 43 insertions(+)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 76e7c10edfc0..d4ba4e1828d5 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -51,6 +51,7 @@
- #include "internal.h"
- 
- #include <trace/events/sched.h>
-+#include <fbfam/fbfam.h>
- 
- int core_uses_pid;
- unsigned int core_pipe_limit;
-@@ -825,6 +826,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
- fail_creds:
- 	put_cred(cred);
- fail:
-+	fbfam_handle_attack(siginfo->si_signo);
- 	return;
- }
- 
-diff --git a/include/fbfam/fbfam.h b/include/fbfam/fbfam.h
-index 2cfe51d2b0d5..9ac8e33d8291 100644
---- a/include/fbfam/fbfam.h
-+++ b/include/fbfam/fbfam.h
-@@ -12,10 +12,12 @@ extern struct ctl_table fbfam_sysctls[];
- int fbfam_fork(struct task_struct *child);
- int fbfam_execve(void);
- int fbfam_exit(void);
-+int fbfam_handle_attack(int signal);
- #else
- static inline int fbfam_fork(struct task_struct *child) { return 0; }
- static inline int fbfam_execve(void) { return 0; }
- static inline int fbfam_exit(void) { return 0; }
-+static inline int fbfam_handle_attack(int signal) { return 0; }
- #endif
- 
- #endif /* _FBFAM_H_ */
-diff --git a/security/fbfam/fbfam.c b/security/fbfam/fbfam.c
-index 9be4639b72eb..3aa669e4ea51 100644
---- a/security/fbfam/fbfam.c
-+++ b/security/fbfam/fbfam.c
-@@ -4,7 +4,9 @@
- #include <linux/errno.h>
- #include <linux/gfp.h>
- #include <linux/jiffies.h>
-+#include <linux/printk.h>
- #include <linux/refcount.h>
-+#include <linux/signal.h>
- #include <linux/slab.h>
- 
- /**
-@@ -172,3 +174,40 @@ int fbfam_exit(void)
- 	return 0;
- }
- 
-+/**
-+ * fbfam_handle_attack() - Fork brute force attack detection.
-+ * @signal: Signal number that causes the core dump.
-+ *
-+ * The crashing rate of an application is computed in milliseconds per fault in
-+ * each crash. So, if this rate goes under a certain threshold there is a clear
-+ * signal that the application is crashing quickly. At this moment, a fork brute
-+ * force attack is happening.
-+ *
-+ * Return: -EFAULT if the current task doesn't have statistical data. Zero
-+ *         otherwise.
-+ */
-+int fbfam_handle_attack(int signal)
-+{
-+	struct fbfam_stats *stats = current->fbfam_stats;
-+	u64 delta_jiffies, delta_time;
-+	u64 crashing_rate;
-+
-+	if (!stats)
-+		return -EFAULT;
-+
-+	if (!(signal == SIGILL || signal == SIGBUS || signal == SIGKILL ||
-+	      signal == SIGSEGV || signal == SIGSYS))
-+		return 0;
-+
-+	stats->faults += 1;
-+
-+	delta_jiffies = get_jiffies_64() - stats->jiffies;
-+	delta_time = jiffies64_to_msecs(delta_jiffies);
-+	crashing_rate = delta_time / (u64)stats->faults;
-+
-+	if (crashing_rate < (u64)sysctl_crashing_rate_threshold)
-+		pr_warn("fbfam: Fork brute force attack detected\n");
-+
-+	return 0;
-+}
-+
--- 
-2.25.1
-
+Thanks Andrew,
+We will do that and send an updated version.
+Oded
