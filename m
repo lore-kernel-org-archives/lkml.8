@@ -2,118 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE58CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BB1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4AD214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE6D20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0o4Jr5P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FabsM6mH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgIJUhr (ORCPT
+        id S1726931AbgIJUif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:37:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60128 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726781AbgIJUbU (ORCPT
+        Thu, 10 Sep 2020 16:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgIJUbD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:31:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599769875;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oG4VtYBGXuzb613fx5hBBNMTZQ49H6hy0YeFdmvTD8g=;
-        b=N0o4Jr5PcYTMPx6n//feqv4Uglx21vVaPykquu5MNn4Dh+IzDcuxuQgiCVDjxkw2YAhZ6m
-        zgbDPdutXNRV1OAlMnbgXmD9M5bU4FdpghIfYMDnPHScdJ3hytILcB0/Zts5NZxI4EpDgR
-        0F1BFFCFhKxUiE2FvzJ51d0Y+wddX6o=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-hirjGdpVMoCeQMCuV-R7GQ-1; Thu, 10 Sep 2020 16:31:12 -0400
-X-MC-Unique: hirjGdpVMoCeQMCuV-R7GQ-1
-Received: by mail-ej1-f71.google.com with SMTP id e13so3387861ejk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:31:11 -0700 (PDT)
+        Thu, 10 Sep 2020 16:31:03 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA2DC061573;
+        Thu, 10 Sep 2020 13:31:03 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id m12so6532382otr.0;
+        Thu, 10 Sep 2020 13:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8LiDEfXSWfpsbBSoq6IWpeigMyRkjdi4v6vinxD3gBY=;
+        b=FabsM6mH8zl+nq3wFo2aBTClQ77IW9YtTEQFjPcUypqarW6Iii0RBqd67QFSN9BuFu
+         VZIqrihaQjBjdDfqPFldmfMLxe12KhJz6DD6rvh8lXjCJ2JMOPSew1oK7YtjtdGuuVFb
+         /sfvaxRn8ZJy54x2Re3L9TlWOFoBX/xtitpeYmbSxYcSkf9QUQq7VXu+QXyYcFunHp2s
+         7Zhd+zWAP/cqQVXHQjf0b66oadOYLZYPes0gQ/D4mqlYx3MYzr1bS5FBdS6d5r5H3k5l
+         fECRvuuR1tHGOp0bKkR1nGOilK6OAFT8Tiedz8ao63+B0rNM1KVwHz+Op9o96yHZEyHi
+         xpzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=oG4VtYBGXuzb613fx5hBBNMTZQ49H6hy0YeFdmvTD8g=;
-        b=UbvsBQXVc9KxfjP/kXEY51rjTxuMn5ix5r+XzF9iCnJ0B8wr4+f/sKK9tZjV1YdI7F
-         GHGkbWeZwY3UarUCOVMoMCNDBo+vgNnXwiRgtX1xetVAOvv52OB3Su+a0kxyOza97gXW
-         wpZAAO5kxienDggm8q3NB3EpKtaboDeAAV9N1qz84HE5yLUZe0DH4TcHWzFUaVfOWd+p
-         yJGInEHyiKPVYTuvBnIvmgz1VJiLnJqny3EvzJWWZt1h6aaxgc9sONWi53wjaXcITdWw
-         DoNX60qBA0QrxjgjwVJcIs1OMUgCxGIMS7dopj6hi5PV3V4xjfG+rXg7/pLKGr0dUb0K
-         P2XA==
-X-Gm-Message-State: AOAM533ZRPkR+hyLaMOTNdP3KEXpZYDF3nr17GWu6yZjtMJUaazTYKMK
-        hMFkZ2iU3xMnd1D4dwsiLoKtpSFRkUZHVlsuuN+VYxe92BTzRlk6mmtX4UDyzmL9Xu/fZoySrgO
-        KG4d7a2FM3AAXmvCM0kE9OPlo
-X-Received: by 2002:a17:906:4d4d:: with SMTP id b13mr10371714ejv.221.1599769871000;
-        Thu, 10 Sep 2020 13:31:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwH4nFbqdIdClpGW3cyhzIHHW/NNlAPR9E4pCL3OlvSjq9ChPfVJPacAk9tIeJ6YFp4UpQGsg==
-X-Received: by 2002:a17:906:4d4d:: with SMTP id b13mr10371701ejv.221.1599769870830;
-        Thu, 10 Sep 2020 13:31:10 -0700 (PDT)
-Received: from [192.168.3.122] (p5b0c6042.dip0.t-ipconnect.de. [91.12.96.66])
-        by smtp.gmail.com with ESMTPSA id d6sm21881edm.31.2020.09.10.13.31.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 13:31:10 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device ?
-Date:   Thu, 10 Sep 2020 22:31:09 +0200
-Message-Id: <3E00A442-7107-48DA-8172-EED95F6E1663@redhat.com>
-References: <f14f7f00-0501-bb93-88cc-780ae4fbaad3@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        =?utf-8?Q?Jan_H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <f14f7f00-0501-bb93-88cc-780ae4fbaad3@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-X-Mailer: iPhone Mail (17G68)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8LiDEfXSWfpsbBSoq6IWpeigMyRkjdi4v6vinxD3gBY=;
+        b=finJoVG/cqrjPnjmSTE5rDwS48uI68DkE95vYNKPzsMCzKB0e+JZjcqyLSDPJlvQy1
+         nZu8nx5d6YC+VVWG86x+dO8lbP0oJ6nKx+yePwfUG4rM9dnYS71H7j+Rl4NJoMF6wI5s
+         oAlX6HKEtL0If4ozVRifQqZr+5S4TqBaB4bAHMNzty9OJiDphQWq2gIDjdcB1y+WT1Gf
+         gw4cXyQU7iVNuMuauXyVvdEU+5B1SRjsdS8qYr1EqGPgl86wnNbpX1W9sv3gnuyLC2hQ
+         ZFf22VGxnVbVVkmympjLju7sv6RsmrFyq9tIyuQd7zdQ/w2zx9GpPc5WDWbdamh0D1Zg
+         02og==
+X-Gm-Message-State: AOAM5319B2KLVd+dH2fOjlLkDBuGni6DRZX1Qk0e5VjYBBHJaL5ZI1PZ
+        BBnf9WAkaj7KvwD0Nx3X6gxwrnTkaDBuFjSLB6M=
+X-Google-Smtp-Source: ABdhPJyZq/S5WVawGZRevjQg8KzxPj8flrds48iTlaqbZPlhYQvrKF9MAceJac0DCZ1GeyVad8svHQ51AYjmda3iBZI=
+X-Received: by 2002:a9d:6d95:: with SMTP id x21mr5300130otp.339.1599769862040;
+ Thu, 10 Sep 2020 13:31:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com> <20200910202513.GH3354160@lunn.ch>
+In-Reply-To: <20200910202513.GH3354160@lunn.ch>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 10 Sep 2020 23:30:33 +0300
+Message-ID: <CAFCwf11P7pEJ+Av9oiwdQFor5Kh9JeKvVTBXnMzWusKCRz7mHw@mail.gmail.com>
+Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 10, 2020 at 11:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > Can you please elaborate on how to do this with a single driver that
+> > is already in misc ?
+> > As I mentioned in the cover letter, we are not developing a
+> > stand-alone NIC. We have a deep-learning accelerator with a NIC
+> > interface.
+>
+> This sounds like an MFD.
+>
+>      Andrew
 
+Yes and no. There is only one functionality - training of deep
+learning (Accelerating compute operations) :)
+The rdma is just our method of scaling-out - our method of
+intra-connection between GAUDI devices (similar to NVlink or AMD
+crossfire).
+So the H/W exposes a single physical function at the PCI level. And
+thus Linux can call a single driver for it during the PCI probe.
 
-> Am 10.09.2020 um 22:01 schrieb Dave Hansen <dave.hansen@intel.com>:
->=20
-> =EF=BB=BFOn 9/10/20 3:20 AM, David Hildenbrand wrote:
->> I was just exploring how /sys/devices/system/memory/memoryX/phys_device
->> is/was used. It's one of these interfaces that most probably never
->> should have been added but now we are stuck with it.
->=20
-> While I'm all for cleanups, what specific problems is phys_device causing?=
-
->=20
-
-Mostly stumbling over it, understanding that it is basically unused with new=
- userspace for good reason, questioning its existence.
-
-E.g., I am working on virtio-mem support for s390x. Displaying misleading/wr=
-ong phys_device indications isn=E2=80=98t particularly helpful - especially o=
-nce there are different ways to hotplug memory for an architecture.
-
-> Are you hoping that we can just remove users of memoryX/* until there
-> are no more left, and this is the easiest place to start?
-
-At least reducing it to a minimum with clear semantics. Even with automatic o=
-nlining there are still reasons why we need to keep the interface for now (e=
-.g., reloading kexec to update the kdump headers on memory hot(un)plug). But=
- also standby memory handling on s399x requires it (->manual onlining).=
-
+I hope that in future generations we will improve that, but it is what
+it is for GAUDI.
+I don't see how to do it otherwise currently but if you have ideas please share.
+Oded
