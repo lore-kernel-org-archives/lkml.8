@@ -2,143 +2,180 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF39C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7769F20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227E220BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYKUQC5o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gan/aKLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgIJKVX (ORCPT
+        id S1730827AbgIJKV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgIJKVQ (ORCPT
+        Thu, 10 Sep 2020 06:21:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730588AbgIJKUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:21:16 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252F3C061573;
-        Thu, 10 Sep 2020 03:21:16 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id m17so6493945ioo.1;
-        Thu, 10 Sep 2020 03:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WIDx3q32OpBxKEzp9SHVTFYjF0eHn3L4CiEBr1eEYX8=;
-        b=oYKUQC5oEjTGVYlyuczxuT6b7kACfyNUTuZFp1lSBBL3ll9Or6GRfh7NRSIqx90O91
-         Hx5ekTT6/oMjOiWlB2w+d77l5x2U6QWDuv7WYUG60skCp34fFti8QvHlMR/HD1KJ8TIk
-         WgHNbMPIL/wi/hn7tenhJAkUuX5RVNVEeUTWhxOHHDVuxOIFw8LZdcB60aZ9Gh480Tcm
-         Tu3+TEBdMInqLZVK6+Xb6xRKVG1BaQMVGYoEMpul6pMU5BX9fyWXyGC6Ell3MJ7PViWX
-         nF2LKkJvD3NRCzQBd6e0sS6rCcIyuL8Sw1A+2oP0mZn9BVXq0ZYpjr0miAijY156Y4g+
-         4hsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WIDx3q32OpBxKEzp9SHVTFYjF0eHn3L4CiEBr1eEYX8=;
-        b=BipR/uvWEidtyL2rCSUsDGMnA2VJW13mx5PfKYXQqnPkLuNEWjnUMrNB+u7ex28c+f
-         4Ft/X8XcUxm60Ci1iW6MMi15sOedSKmWRqwowkeRNhbhMVOdwhrcR279wBBWgqz0cueU
-         7YuWKZond81wPjPomwfkMPHA9GQAiDMshDF2pK2/lrVion4HzWuKxHdvawnhqfoHQrr0
-         d/BcXXNPFpuwBTw6FC2gmZC4X6k18iAnSM+wIF2xdaUledJLaVW+1L8TDoJkfDIHOO6Y
-         D1EbxJveNlCgSNS64MzZixi9HeljtMpFxI3+tOOvQ63mUxd1NNrjENVNU3V2G0Zynq1l
-         XOiQ==
-X-Gm-Message-State: AOAM532+cIygu7zIXoQHOCdy+qbMUf2ime62GIUmkOYs20nz+5F7haWO
-        qdXnTYz3vHsNgkL6Rz4F44+ozb7CPgyeVX1kHGlwfUlEb1BzuA==
-X-Google-Smtp-Source: ABdhPJyKrLNjNzW8T4M7sVP8p/JDi1lpUGIbQO8F+0rLuAnOAy6XRJ9V5vmfjSSBb9vmL7XayBvdWjtRLiQBt04fDPY=
-X-Received: by 2002:a05:6602:2245:: with SMTP id o5mr7064224ioo.105.1599733275286;
- Thu, 10 Sep 2020 03:21:15 -0700 (PDT)
+        Thu, 10 Sep 2020 06:20:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599733243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:autocrypt:autocrypt;
+        bh=xiogVMZcF/3t6f2QYe0II+QsOuZb/cf7Ohd7CwObGpc=;
+        b=Gan/aKLZfTSPQMFnzCiZg6tMoQxHzvPPp8zP6EPYJNtC9jz7b7bnS8bwz4yyM+RvEP0+qC
+        O3r4u+BhzOBYsezrz6SGZFeIDHmmabWhhdK5MPUdvZduhINUJJ8R3G7TFGUJcqVk9s3TKI
+        m+OpcuHCZrIjjxrFYLPOZGaX4hL6G4U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-flWAhErEPxiTnxL7ZJ-TKw-1; Thu, 10 Sep 2020 06:20:39 -0400
+X-MC-Unique: flWAhErEPxiTnxL7ZJ-TKw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA6A1802B6C;
+        Thu, 10 Sep 2020 10:20:37 +0000 (UTC)
+Received: from [10.36.113.88] (ovpn-113-88.ams2.redhat.com [10.36.113.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B97D25D9E8;
+        Thu, 10 Sep 2020 10:20:35 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Subject: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device ?
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
+Date:   Thu, 10 Sep 2020 12:20:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200903012224.GL11695@sjchrist-ice> <20200903162304.19694-1-jiangshanlai@gmail.com>
-In-Reply-To: <20200903162304.19694-1-jiangshanlai@gmail.com>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Thu, 10 Sep 2020 18:21:04 +0800
-Message-ID: <CAJhGHyDQMsdtEe8gxDW4A_YOgu4SeCmmm18pBcPA-S4sRhSiMw@mail.gmail.com>
-Subject: Re: [PATCH V3] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Paolo
+Hi everybody,
 
-Could you pick the patch please?
+I was just exploring how /sys/devices/system/memory/memoryX/phys_device
+is/was used. It's one of these interfaces that most probably never
+should have been added but now we are stuck with it.
 
-I think it'd be better to be merged before v5.9 is released
-since it fixes a flaw.
+"phys_device" was used on s390x in older versions of lsmem[2]/chmem[3],
+back when they were still part of s390x-tools. They were later replaced
+[5] by the variants in linux-utils. For example, RHEL6 and RHEL7 contain
+lsmem/chmem from s390-utils. RHEL8 switched to versions from util-linux
+on s390x [4].
 
-Thanks
-Lai
+"phys_device" was added with sysfs support for memory hotplug in commit
+3947be1969a9 ("[PATCH] memory hotplug: sysfs and add/remove functions")
+in 2005. It always returned 0.
 
-On Thu, Sep 3, 2020 at 11:22 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
->
-> From: Lai Jiangshan <laijs@linux.alibaba.com>
->
-> When kvm_mmu_get_page() gets a page with unsynced children, the spt
-> pagetable is unsynchronized with the guest pagetable. But the
-> guest might not issue a "flush" operation on it when the pagetable
-> entry is changed from zero or other cases. The hypervisor has the
-> responsibility to synchronize the pagetables.
->
-> The linux kernel behaves correctly as above for many years, but a recent
-> commit 8c8560b83390 ("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for
-> MMU specific flushes") inadvertently included a line of code to change it
-> without giving any reason in the changelog. It is clear that the commit's
-> intention was to change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT,
-> so we don't unneedlesly flush other contexts but one of the hunks changed
-> nearby KVM_REQ_MMU_SYNC instead.
->
-> This patch changes it back.
->
-> Fixes: 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
-> Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> ---
-> Changed from v1:
->         update patch description
->
-> Changed form v2:
->         update patch description
->
->  arch/x86/kvm/mmu/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 4e03841f053d..9a93de921f2b 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
->                 }
->
->                 if (sp->unsync_children)
-> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> +                       kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
->
->                 __clear_sp_write_flooding_count(sp);
->
-> --
-> 2.19.1.6.gb485710b
->
+s390x started returning something != 0 on some setups (if sclp.rzm is
+set by HW) in 2010 via commit 57b552ba0b2f("memory hotplug/s390: set
+phys_device").
+
+For s390x, it allowed for identifying which memory block devices belong
+to the same memory increment (RZM). Only if all memory block devices
+comprising a single memory increment were offline, the memory could
+actually be removed in the hypervisor.
+
+Since commit e5d709bb5fb7 ("s390/memory hotplug: provide
+memory_block_size_bytes() function") in 2013 a memory block devices
+spans at least one memory increment - which is why the interface isn't
+really helpful/used anymore (except by old lsmem/chmem tools).
+
+There were once RFC patches to make use of it in ACPI, but it could be
+solved using different interfaces [1].
+
+
+While I'd love to rip it out completely, I think it would break old
+lsmem/chmem completely - and I assume that's not acceptable. I was
+wondering what would be considered safe to do now/in the future:
+
+1. Make it always return 0 (just as if "sclp.rzm" would be set to 0 on
+s390x). This will make old lsmem/chmem behave differently after
+switching to a new kernel, like if sclp.rzm would not be set by HW -
+AFAIU, it will assume all memory is in a single memory increment. Do we
+care?
+2. Restrict it to s390x only. It always returned 0 on other
+architectures, I was not able to find any user.
+
+I think 2 should be safe to do (never used on other archs). I do wonder
+what the feelings are about 1.
+
+Thoughts?
+
+
+[1] https://patchwork.kernel.org/patch/2163871/
+[2] https://github.com/ibm-s390-tools/s390-tools/blob/v2.1.0/zconf/lsmem
+[3] https://github.com/ibm-s390-tools/s390-tools/blob/v2.1.0/zconf/chmem
+[4] https://bugzilla.redhat.com/show_bug.cgi?id=1504134
+[5]
+https://github.com/ibm-s390-tools/s390-tools/commit/778292e771fb00cfcbd7ff6535ee3d9fde612dc5#diff-82c32a7f4c597c50db90157ed0c581b3
+
+-- 
+Thanks,
+
+David / dhildenb
+
