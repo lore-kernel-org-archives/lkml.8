@@ -2,89 +2,118 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0149DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A01E42076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599740038;
-	bh=xfinSNc0Rk06xPtfQRWYjBtz2AOXa7N9s9orv6qw3pc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GaHLQgdhRZCxrP14fnUXpB2n/lJAQ9vvJqqogfPzro3xq7DJxnvogimW03EofMwZ/
-	 zZsz4MIKBUghxFdJ8Wvy0Poo9X1PjQUGdVSq5HqArIfEocB1OJthckkAhYCsLh+hes
-	 JIY+YMu5VNonagC9+vtjtUwai1LqAJhbUlekTwUk=
+	by mail.kernel.org (Postfix) with ESMTP id 42EBE2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCN4TzrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbgIJMNm (ORCPT
+        id S1730410AbgIJMRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730179AbgIJMKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:10:35 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B114F20672;
-        Thu, 10 Sep 2020 12:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599739831;
-        bh=xfinSNc0Rk06xPtfQRWYjBtz2AOXa7N9s9orv6qw3pc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YKkrDluJms68RxWu1I4Mws1SowUefhzGlVOZYbx3EJDJW0xbY306SgYwX3SYCBzmb
-         yi9sSgVpJNMEC+VNAU38Zp5WGvOnRKwgEgbETYqdwh4E9W/5sBQrBXlEniwr0qDI0E
-         7GH3ldV4ldY3voMsnIDqyU3g2uLCVKHjmXUeR8hQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE95A40D3D; Thu, 10 Sep 2020 09:10:29 -0300 (-03)
-Date:   Thu, 10 Sep 2020 09:10:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] perf test: Introduce script for Arm CoreSight testing
-Message-ID: <20200910121029.GC4018363@kernel.org>
-References: <20200907130154.9601-1-leo.yan@linaro.org>
- <20200908191207.GB506647@xps15>
+        Thu, 10 Sep 2020 08:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgIJMOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:14:52 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34936C061573;
+        Thu, 10 Sep 2020 05:14:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g4so6454825wrs.5;
+        Thu, 10 Sep 2020 05:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jyI3JGvS09pRlrarbYuzfD+zuLzW1NzCe2jGGYIBcDE=;
+        b=mCN4TzrIUYpBOLakJPG6xEQSIk24b2s2JhsfEOEXfv8izTbw5LDD7HpLEQQFB1B/4o
+         7poO/MckeBmzEyoRZeLqUmtBJT/BgRpxXan6y3yAo0Cq3p4BGymtAWta1iXvGQgFa/xf
+         9QrEKLfTpszTgWAsI1Lo+2KuYgEM1QyW9NmShGNEhUZw+LHAYWYPIJo6BHLtcLhEmzBR
+         nbHJWz1zwCfb6pqHoz7zssivnvdugnRGsPkPL8kCZb9ASRvEH6uN+2TyAA/kAU1rR2kf
+         4WWQKJW6KDfzTftL6qgyUdgLEPA8YW2CnOyQqJDbFJOF31kwHxUvVNYETfbiCJxYt0Vt
+         YFCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jyI3JGvS09pRlrarbYuzfD+zuLzW1NzCe2jGGYIBcDE=;
+        b=MM0eB/azjqKmS1TjtUVLbkUEnNnfNqvjXnbw4xOTXI1mdm1Sq5UMj9jVFq+j3eYOEs
+         elryHkc5t095Ijp5jcZE878NpYegkWoWBFSTXsMVC7MNJcZZ5Gg7+xZwpJwrIZ+mVauJ
+         xZsWD6f/iFNMieccFjcnP9aUDAAmNfBcNjunfZeg0fNF07J+zDymqcuADMJx1fVZVU6L
+         Wt8jDZuyixnP39n+GKq7qoKmouQmx5hWmm0PeBiYrtSpR5FRik/fjRgexgRdLn4kzMsI
+         wUIRPlsPdavD+4o7TQ0BhcODmx53jOnrQeqKzo5BFnjA5nBvCtBlu1a5LM5H3dXFJg+N
+         9KIA==
+X-Gm-Message-State: AOAM531oYwJnn+35cNmJaSJoqvnYbYOO24m7YsldZehCS4rPUATQxae+
+        3ERi03vjMyF/hzXFjD0xHg==
+X-Google-Smtp-Source: ABdhPJzVfN023eROnRibeOiKUBH6YA47852elVbFAQPB+EmQUFMR4DFZREXxGNzrGwvFm2Rl/vKjpg==
+X-Received: by 2002:adf:e852:: with SMTP id d18mr9414224wrn.40.1599740090780;
+        Thu, 10 Sep 2020 05:14:50 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.248.229])
+        by smtp.gmail.com with ESMTPSA id k8sm3510926wma.16.2020.09.10.05.14.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 05:14:50 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 15:14:48 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Tom Hromatka <tom.hromatka@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org
+Subject: Re: [RESEND PATCH 2/2] /proc/stat: Simplify iowait and idle
+ calculations when cpu is offline
+Message-ID: <20200910121448.GA59606@localhost.localdomain>
+References: <20200909144122.77210-1-tom.hromatka@oracle.com>
+ <20200909144122.77210-3-tom.hromatka@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200908191207.GB506647@xps15>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200909144122.77210-3-tom.hromatka@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Sep 08, 2020 at 01:12:07PM -0600, Mathieu Poirier escreveu:
-> On Mon, Sep 07, 2020 at 09:01:54PM +0800, Leo Yan wrote:
-> > We need a simple method to test Perf with Arm CoreSight drivers, this
-> > could be used for smoke testing when new patch is coming for perf or
-> > CoreSight drivers, and we also can use the test to confirm if the
-> > CoreSight has been enabled successfully on new platforms.
-> > 
-> > This patch introduces the shell script test_arm_coresight.sh which is
-> > under the 'pert test' framework.  This script provides three testing
-> > scenarios:
+On Wed, Sep 09, 2020 at 08:41:22AM -0600, Tom Hromatka wrote:
+>  static u64 get_idle_time(struct kernel_cpustat *kcs, int cpu)
+>  {
+> -	u64 idle, idle_usecs = -1ULL;
+> +	u64 idle, idle_usecs;
+>  
+> -	if (cpu_online(cpu))
+> -		idle_usecs = get_cpu_idle_time_us(cpu, NULL);
+> -
+> -	if (idle_usecs == -1ULL)
+> -		/* !NO_HZ or cpu offline so we can rely on cpustat.idle */
+> -		idle = kcs->cpustat[CPUTIME_IDLE];
+> -	else
+> -		idle = idle_usecs * NSEC_PER_USEC;
+> +	idle_usecs = get_cpu_idle_time_us(cpu, NULL);
+> +	idle = idle_usecs * NSEC_PER_USEC;
+>  
+>  	return idle;
+>  }
+>  
+>  static u64 get_iowait_time(struct kernel_cpustat *kcs, int cpu)
+>  {
+> -	u64 iowait, iowait_usecs = -1ULL;
+> -
+> -	if (cpu_online(cpu))
+> -		iowait_usecs = get_cpu_iowait_time_us(cpu, NULL);
+> +	u64 iowait, iowait_usecs;
+>  
+> -	if (iowait_usecs == -1ULL)
+> -		/* !NO_HZ or cpu offline so we can rely on cpustat.iowait */
+> -		iowait = kcs->cpustat[CPUTIME_IOWAIT];
+> -	else
+> -		iowait = iowait_usecs * NSEC_PER_USEC;
+> +	iowait_usecs = get_cpu_iowait_time_us(cpu, NULL);
+> +	iowait = iowait_usecs * NSEC_PER_USEC;
 
-<SNIP>
+You can gc variables in both cases:
 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-Thanks, applied.
-
-- Arnaldo
+	return get_cpu_iowait_time_us() * NSEC_PER_USEC;
