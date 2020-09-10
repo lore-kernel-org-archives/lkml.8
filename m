@@ -2,74 +2,82 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDDAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7082AC2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B601C2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599728633;
-	bh=PXXK58jPCqS6xYVS0F97ACb3SCnVEU4nMHvu1m+Yjww=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=P3waaVplrPld4u1sMrQjjU5z7wJGzPJ0iWpvq+EkfmmaBLESSpkQuxUUvyQ4kB5Qu
-	 6g9PYa+Hs6AK3UWaAZeLFr6TSzv0vjOr8TmAe9ko26hYLLazHfYDj6ftxerEp27xtp
-	 9OXrYCU+2UdmZ087OE3bw4/Tf8XuJxOby/Hm70/I=
+	by mail.kernel.org (Postfix) with ESMTP id 1E034206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgIJJDw (ORCPT
+        id S1729005AbgIJJED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgIJJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:03:51 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06455206A1;
-        Thu, 10 Sep 2020 09:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599728631;
-        bh=PXXK58jPCqS6xYVS0F97ACb3SCnVEU4nMHvu1m+Yjww=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=u5/cueTq+S2bdNS+dHMZ3rey0YBx20X/O3idxF7MPKKoBFhB4uB8oNjCldahtEx29
-         gXpFp9cGK6chH8HZamzspUrTZUyCWy7c6pYp8umQlTBTawp8P0wRXER6fvIUcjF3vS
-         oc6q2KtIBUxFLCVYO6B4DrQaVY2hD8J95MCWeWVg=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Sep 2020 05:04:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46576 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbgIJJEB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:04:01 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u126so5202631oif.13;
+        Thu, 10 Sep 2020 02:04:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vyZ7f5uXtM7ISWgSMBc6d2lGqzDhzGCA2R8PUpwU1as=;
+        b=PL2G/FMnhH8YF8exjS2fYXePnacjxyvhHjEGc/N9PYjxvY6H6JiD4mMXRVQYFGvR0N
+         gPmC0GeDLlArjX2Lg2tvQ5wkVulTXWQH9icnW0aYxunxlDVQIG67G4n44Ztiq2bdtnZe
+         O9hUOCwFYmtMgbdBJPZdHowsSPfiDeK9I0im4qkkKWUMmGWESK1F8yUBT0JZBiqQ05fG
+         2FE7cwviHMhXQyyqzqHHzkfWHrBSv6EJVtqpOAX17OeVls72tdD7zIFtOagnV6l1ivMk
+         aJnPjSUjc5kO1Dl0zR66cXv5TT5ZcD/F/uQNAKBIfsjg1joNqr/Nr97UegXg9p9Z3AnV
+         oYLw==
+X-Gm-Message-State: AOAM532rAunHoppwPrJ0eMIQ3cv8fOD4iKiarqiuL/hnTcIQhzfocSR5
+        gWy1zHHUtp2N+0MqplnRdXf4ppHcblJDenmgv78aGUm4
+X-Google-Smtp-Source: ABdhPJwK9joVgz1WweswXwyB16kFHPWfbKTRZyivUL59SmLk3d2uai4kHvjqbeTX6rdOTm5Fwy2TiNP8DwpVO8PJgIE=
+X-Received: by 2002:aca:b742:: with SMTP id h63mr2973435oif.148.1599728640909;
+ Thu, 10 Sep 2020 02:04:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200827141629.101802-1-jingxiangfeng@huawei.com>
-References: <20200827141629.101802-1-jingxiangfeng@huawei.com>
-Subject: Re: [PATCH] clk: qcom: lpass: Correct goto target in lpass_core_sc7180_probe()
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jingxiangfeng@huawei.com
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
-        tdas@codeaurora.org
-Date:   Thu, 10 Sep 2020 02:03:49 -0700
-Message-ID: <159972862952.2295844.10882678924928944990@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200907155541.2011-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200907155541.2011-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200907155541.2011-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Sep 2020 11:03:49 +0200
+Message-ID: <CAMuHMdV9Ydnqp-XXVDGaRCVMT+-hyb6a96tVsBz5R=x-C4K3Ag@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] ARM: dts: r8a7742-iwg21d-q7: Add SPI NOR support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jing Xiangfeng (2020-08-27 07:16:29)
-> lpass_core_sc7180_probe() misses to call pm_clk_destroy() and
-> pm_runtime_disable() in error paths. Correct goto target to fix it.
-> This issue is found by code inspection.
->=20
-> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> ---
+On Mon, Sep 7, 2020 at 5:56 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for the SPI NOR device which is connected to MSIOF0 interface
+> on the iWave RainboW-G21d-q7 board.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-HMm.. presumably
+Thanks for the update, will queue in renesas-devel for v5.10.
 
-Fixes: edab812d802d ("clk: qcom: lpass: Add support for LPASS clock control=
-ler for SC7180")
+Gr{oetje,eeting}s,
 
-should be added?
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
