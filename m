@@ -2,276 +2,153 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE8EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14D94208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE1620BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AFLnWfAh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fsi8tMgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgIJMhF (ORCPT
+        id S1730750AbgIJMhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:37:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43390 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbgIJMdL (ORCPT
+        Thu, 10 Sep 2020 08:37:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18212 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730629AbgIJMdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:33:11 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08ACX7Eq023252;
-        Thu, 10 Sep 2020 07:33:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599741187;
-        bh=9MfYfkkDqOw/trWck0yzA/hd6grSgCWN8JA+FBuRH3I=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=AFLnWfAhSK5UtAC/1ofsRVTJlstRnJRQsEwqMtD4iXsBZmziEwCZUAuxhky9Up1pb
-         f5roRuurQ1OEuIsU2a8Xxd8h/49cllRNVVBqX7ty4VAIPTFGK7b1LChxEZT/EUis/v
-         u+uo+YbPLndDzIekaZPDSBZIw70Q4uMgw7XdwoqU=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08ACX7NU045957
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 07:33:07 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Sep 2020 07:33:07 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Sep 2020 07:33:07 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08ACX56O010384;
-        Thu, 10 Sep 2020 07:33:06 -0500
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Use soc_device_match() for SoC
- dependent parameters
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linux-kernel@vger.kernel.org>, <lokeshvutla@ti.com>, <nm@ti.com>
-References: <20200904120009.30941-1-peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <34734bc8-6013-cbed-4f20-b7c19146fadd@ti.com>
-Date:   Thu, 10 Sep 2020 15:33:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 08:33:04 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ACREPD090926;
+        Thu, 10 Sep 2020 08:32:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=UdKC4iFr09EHp/EEFoTiuPzvrqhtYISXi8fJ0IdZ1U4=;
+ b=Fsi8tMgrKCaZM/lqBoa2qSpERUH5S91V3ByKmF+YAD67ZEANtVL1NA9J0ohIQIR2Y5M8
+ 6PxDDW0pKLCscdEeChDIJZrLNKfLc1ykfCXEOFiOCnff0vsBVKlEsIANMwbhcnbnon1w
+ JHmOHYM4oldJiWuf4myBfgLex3q2DfCd0VKuCN+LwruH/Ua0YQSM4Jyf15RSUrASIadW
+ ABgzScRuZope//9SZkjS+8mrOPlDI1BXQp4GYQaSwnedR/KKx2/1NsYaSqMTha/3qGcF
+ MjjHsfdnSgX0FKmP+kUj9RNMTaSPTM7BLk4yp5zvfoKYi30Tkwy16NACOdG+viy47lXK WA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fkta0vhs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 08:32:17 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ACRdDG092327;
+        Thu, 10 Sep 2020 08:32:11 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fkta0vfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 08:32:10 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08ACVBX7011978;
+        Thu, 10 Sep 2020 12:32:07 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 33c2a83fse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 12:32:06 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08ACUU5K63570418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 12:30:31 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3FEDA405B;
+        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F2B4A4053;
+        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.147.189])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org,
+        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+ <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <20200909105914.GF7348@dhcp22.suse.cz>
+ <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+ <20200910072331.GB28354@dhcp22.suse.cz>
+ <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+ <20200910111246.GE28354@dhcp22.suse.cz>
+ <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+ <20200910120343.GA6635@linux>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <5104d47f-9b39-6f51-2cee-f2a153fab1df@linux.ibm.com>
+Date:   Thu, 10 Sep 2020 14:32:02 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200904120009.30941-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200910120343.GA6635@linux>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 10/09/2020 à 14:03, Oscar Salvador a écrit :
+> On Thu, Sep 10, 2020 at 01:35:32PM +0200, Laurent Dufour wrote:
+>   
+>> That points has been raised by David, quoting him here:
+>>
+>>> IIRC, ACPI can hotadd memory while SCHEDULING, this patch would break that.
+>>>
+>>> Ccing Oscar, I think he mentioned recently that this is the case with ACPI.
+>>
+>> Oscar told that he need to investigate further on that.
+> 
+> I think my reply got lost.
+> 
+> We can see acpi hotplugs during SYSTEM_SCHEDULING:
+> 
+> $QEMU -enable-kvm -machine pc -smp 4,sockets=4,cores=1,threads=1 -cpu host -monitor pty \
+>          -m size=$MEM,slots=255,maxmem=4294967296k  \
+>          -numa node,nodeid=0,cpus=0-3,mem=512 -numa node,nodeid=1,mem=512 \
+>          -object memory-backend-ram,id=memdimm0,size=134217728 -device pc-dimm,node=0,memdev=memdimm0,id=dimm0,slot=0 \
+>          -object memory-backend-ram,id=memdimm1,size=134217728 -device pc-dimm,node=0,memdev=memdimm1,id=dimm1,slot=1 \
+>          -object memory-backend-ram,id=memdimm2,size=134217728 -device pc-dimm,node=0,memdev=memdimm2,id=dimm2,slot=2 \
+>          -object memory-backend-ram,id=memdimm3,size=134217728 -device pc-dimm,node=0,memdev=memdimm3,id=dimm3,slot=3 \
+>          -object memory-backend-ram,id=memdimm4,size=134217728 -device pc-dimm,node=1,memdev=memdimm4,id=dimm4,slot=4 \
+>          -object memory-backend-ram,id=memdimm5,size=134217728 -device pc-dimm,node=1,memdev=memdimm5,id=dimm5,slot=5 \
+>          -object memory-backend-ram,id=memdimm6,size=134217728 -device pc-dimm,node=1,memdev=memdimm6,id=dimm6,slot=6 \
+> 
+> kernel: [    0.753643] __add_memory: nid: 0 start: 0100000000 - 0108000000 (size: 134217728)
+> kernel: [    0.756950] register_mem_sect_under_node: system_state= 1
+> 
+> kernel: [    0.760811]  register_mem_sect_under_node+0x4f/0x230
+> kernel: [    0.760811]  walk_memory_blocks+0x80/0xc0
+> kernel: [    0.760811]  link_mem_sections+0x32/0x40
+> kernel: [    0.760811]  add_memory_resource+0x148/0x250
+> kernel: [    0.760811]  __add_memory+0x5b/0x90
+> kernel: [    0.760811]  acpi_memory_device_add+0x130/0x300
+> kernel: [    0.760811]  acpi_bus_attach+0x13c/0x1c0
+> kernel: [    0.760811]  acpi_bus_attach+0x60/0x1c0
+> kernel: [    0.760811]  acpi_bus_scan+0x33/0x70
+> kernel: [    0.760811]  acpi_scan_init+0xea/0x21b
+> kernel: [    0.760811]  acpi_init+0x2f1/0x33c
+> kernel: [    0.760811]  do_one_initcall+0x46/0x1f4
 
-
-On 04/09/2020 15.00, Peter Ujfalusi wrote:
-> Use separate data for SoC dependent parameters. These parameters depend=
-s
-> on the DMA integration (either in HW or in SYSFW), the DMA controller
-> itself remains compatible with either the am654 or j721e variant.
->=20
-> j7200 have the same DMA as j721e with different number of channels, whi=
-ch
-> can be queried from HW, but SYSFW defines different rchan_oes_offset
-> number for j7200 (0x80) compared to j721e (0x400).
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi Vinod,
->=20
-> this patch is going to be needed when the j7200 support is upstream (we=
- already
-> have the psil map in dmaengine/next for the UDMA).
->=20
-> Since the hardware itself is the same (but different number of channels=
-) I
-> wanted to avoid a new set of compatible just becase STSFW is not using =
-the same
-> rchan_oes_offset value for j7200 and j721e.
->=20
-> Vinod: this patch will not apply cleanly on dmaengine/next because it i=
-s on top
-> of dmaengine/next + the dmaengine/fixes. This might cause issues.
->=20
-> "dmaengine: ti: k3-udma: Update rchan_oes_offset for am654 SYSFW ABI 3.=
-0" in
-> fixes changes the rchan_oes_offset for am654 from 0x2000 to 0x200 and t=
-his patch
-> assumes 0x200...
->=20
-> is there anything I can do to make it easier for you?
->=20
-> Regards,
-> Peter
->=20
->  drivers/dma/ti/k3-udma.c | 42 +++++++++++++++++++++++++++++++++-------=
-
->  1 file changed, 35 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 9a7048bcf0f1..ec7c5f320f7f 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -16,6 +16,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
-> +#include <linux/sys_soc.h>
->  #include <linux/of.h>
->  #include <linux/of_dma.h>
->  #include <linux/of_device.h>
-> @@ -91,6 +92,9 @@ struct udma_match_data {
->  	bool enable_memcpy_support;
->  	u32 flags;
->  	u32 statictr_z_mask;
-> +};
-> +
-> +struct udma_soc_data {
->  	u32 rchan_oes_offset;
->  };
-> =20
-> @@ -117,6 +121,7 @@ struct udma_dev {
->  	struct device *dev;
->  	void __iomem *mmrs[MMR_LAST];
->  	const struct udma_match_data *match_data;
-> +	const struct udma_soc_data *soc_data;
-> =20
->  	u8 tpl_levels;
->  	u32 tpl_start_idx[3];
-> @@ -1679,7 +1684,7 @@ static int udma_alloc_chan_resources(struct dma_c=
-han *chan)
->  {
->  	struct udma_chan *uc =3D to_udma_chan(chan);
->  	struct udma_dev *ud =3D to_udma_dev(chan->device);
-> -	const struct udma_match_data *match_data =3D ud->match_data;
-> +	const struct udma_soc_data *soc_data =3D ud->soc_data;
->  	struct k3_ring *irq_ring;
->  	u32 irq_udma_idx;
->  	int ret;
-> @@ -1779,7 +1784,7 @@ static int udma_alloc_chan_resources(struct dma_c=
-han *chan)
->  					K3_PSIL_DST_THREAD_ID_OFFSET;
-> =20
->  		irq_ring =3D uc->rflow->r_ring;
-> -		irq_udma_idx =3D match_data->rchan_oes_offset + uc->rchan->id;
-> +		irq_udma_idx =3D soc_data->rchan_oes_offset + uc->rchan->id;
-> =20
->  		ret =3D udma_tisci_rx_channel_config(uc);
->  		break;
-> @@ -3091,14 +3096,12 @@ static struct udma_match_data am654_main_data =3D=
- {
->  	.psil_base =3D 0x1000,
->  	.enable_memcpy_support =3D true,
->  	.statictr_z_mask =3D GENMASK(11, 0),
-> -	.rchan_oes_offset =3D 0x200,
->  };
-> =20
->  static struct udma_match_data am654_mcu_data =3D {
->  	.psil_base =3D 0x6000,
->  	.enable_memcpy_support =3D false,
->  	.statictr_z_mask =3D GENMASK(11, 0),
-> -	.rchan_oes_offset =3D 0x200,
->  };
-> =20
->  static struct udma_match_data j721e_main_data =3D {
-> @@ -3106,7 +3109,6 @@ static struct udma_match_data j721e_main_data =3D=
- {
->  	.enable_memcpy_support =3D true,
->  	.flags =3D UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
->  	.statictr_z_mask =3D GENMASK(23, 0),
-> -	.rchan_oes_offset =3D 0x400,
->  };
-> =20
->  static struct udma_match_data j721e_mcu_data =3D {
-> @@ -3114,7 +3116,6 @@ static struct udma_match_data j721e_mcu_data =3D =
-{
->  	.enable_memcpy_support =3D false, /* MEM_TO_MEM is slow via MCU UDMA =
-*/
->  	.flags =3D UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
->  	.statictr_z_mask =3D GENMASK(23, 0),
-> -	.rchan_oes_offset =3D 0x400,
->  };
-> =20
->  static const struct of_device_id udma_of_match[] =3D {
-> @@ -3135,6 +3136,25 @@ static const struct of_device_id udma_of_match[]=
- =3D {
->  	{ /* Sentinel */ },
->  };
-> =20
-> +struct udma_soc_data am654_soc_data =3D {
-> +	.rchan_oes_offset =3D 0x200,
-> +};
-> +
-> +struct udma_soc_data j721e_soc_data =3D {
-> +	.rchan_oes_offset =3D 0x400,
-> +};
-> +
-> +struct udma_soc_data j7200_soc_data =3D {
-> +	.rchan_oes_offset =3D 0x80,
-> +};
-
-These should have been marked as static, I'll send a v2
-
-> +
-> +static const struct soc_device_attribute k3_soc_devices[] =3D {
-> +	{ .family =3D "AM65X", .data =3D &am654_soc_data },
-> +	{ .family =3D "J721E", .data =3D &j721e_soc_data },
-> +	{ .family =3D "J7200", .data =3D &j7200_soc_data },
-> +	{ /* sentinel */ }
-> +};
-> +
->  static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev=
- *ud)
->  {
->  	struct resource *res;
-> @@ -3277,7 +3297,7 @@ static int udma_setup_resources(struct udma_dev *=
-ud)
->  	rm_res =3D tisci_rm->rm_ranges[RM_RANGE_RCHAN];
->  	for (j =3D 0; j < rm_res->sets; j++, i++) {
->  		irq_res.desc[i].start =3D rm_res->desc[j].start +
-> -					ud->match_data->rchan_oes_offset;
-> +					ud->soc_data->rchan_oes_offset;
->  		irq_res.desc[i].num =3D rm_res->desc[j].num;
->  	}
->  	ret =3D ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
-> @@ -3487,6 +3507,7 @@ static void udma_dbg_summary_show(struct seq_file=
- *s,
->  static int udma_probe(struct platform_device *pdev)
->  {
->  	struct device_node *navss_node =3D pdev->dev.parent->of_node;
-> +	const struct soc_device_attribute *soc;
->  	struct device *dev =3D &pdev->dev;
->  	struct udma_dev *ud;
->  	const struct of_device_id *match;
-> @@ -3551,6 +3572,13 @@ static int udma_probe(struct platform_device *pd=
-ev)
->  	}
->  	ud->match_data =3D match->data;
-> =20
-> +	soc =3D soc_device_match(k3_soc_devices);
-> +	if (!soc) {
-> +		dev_err(dev, "No compatible SoC found\n");
-> +		return -ENODEV;
-> +	}
-> +	ud->soc_data =3D soc->data;
-> +
->  	dma_cap_set(DMA_SLAVE, ud->ddev.cap_mask);
->  	dma_cap_set(DMA_CYCLIC, ud->ddev.cap_mask);
-> =20
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Thanks Oscar!
