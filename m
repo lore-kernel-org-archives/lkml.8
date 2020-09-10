@@ -2,145 +2,108 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06C9C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF843C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4469207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:56:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UVSPAVfN"
+	by mail.kernel.org (Postfix) with ESMTP id 802492075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgIJOz4 (ORCPT
+        id S1728443AbgIJO40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731055AbgIJOwg (ORCPT
+        Thu, 10 Sep 2020 10:56:26 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:52374 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730920AbgIJOze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:52:36 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DC0C061799
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:42:44 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id s127so1623973vkg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xn2z91UfCtrgcaftSJI2dNlH0TFk/vXw21rz//Drd/M=;
-        b=UVSPAVfNwE3+6oK7YYZjhiud+K7lnkgA2zgaHh02Rowe50M2AyiZS9odTByUXmtVxF
-         Di08SfgpXs/tjHW3UcuczZMqEczt1J/Rek8K66sVerDDfqDSau4pvge+N0mcHDWOLNBL
-         nHy3s4N6+sgOwEX3D20NKo0xUVYSDGqfM97OU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xn2z91UfCtrgcaftSJI2dNlH0TFk/vXw21rz//Drd/M=;
-        b=blGYNsEz69LUgx4Y+owAaXinFXUhrwoiZVMdDiWoKQq3A6hs7Ggqa/uVmZT2csP8mt
-         RmLcY/SSuBU98M2zGODdlV7r++Cc0JsObOGi8nGJH/+SeMwO+lrg3Bh8rH97TcSjhuFg
-         omQJZacEI/2274hoqGS3g8N49mT3Ykqne+goHaBZVaWDdvQhG3Q0CPhgKxTbt7ku+Bs5
-         QEkvQhsUV1vnbWz8MPM9UDb1mG8DSdW/SwbfAud5a9PVEYRIwtUnOZLq4kIwvF4NCYli
-         wPdSlBa+pU2j42/AwK8uATJfD/6Gl0S0STvIKChchVz9gT1eO0CoG9+vzb2rEGAheAly
-         nIfA==
-X-Gm-Message-State: AOAM532KWqFukTOZ2z3oQA9FOUBYldT3ipG5DQ/+sh08JO9HD1hm/4Jp
-        pk08khteg+su7wlSrbp0ydHSHyG3kXiy7Q==
-X-Google-Smtp-Source: ABdhPJzHV3eJF3p0mKcm9cE8cMQ3QAQPktmoU4sOuzG4xlV7qQ4WFtR6qpflj7feLg7imr8qwira7A==
-X-Received: by 2002:a1f:988f:: with SMTP id a137mr4170220vke.8.1599748962984;
-        Thu, 10 Sep 2020 07:42:42 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id a59sm498393uaa.12.2020.09.10.07.42.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 07:42:42 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id a16so3498779vsp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:42:42 -0700 (PDT)
-X-Received: by 2002:a67:d907:: with SMTP id t7mr4555810vsj.8.1599748961645;
- Thu, 10 Sep 2020 07:42:41 -0700 (PDT)
+        Thu, 10 Sep 2020 10:55:34 -0400
+Date:   Thu, 10 Sep 2020 09:37:51 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Rob Landley <rob@landley.net>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-sh@vger.kernel.org,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: Re: [PATCH] sh: fix syscall tracing
+Message-ID: <20200910133751.GE3265@brightrain.aerifal.cx>
+References: <20200903054803.GX3265@brightrain.aerifal.cx>
+ <e456a455-62cd-4f76-a69a-84d1e5b4d153@physik.fu-berlin.de>
+ <20200903161639.GE3265@brightrain.aerifal.cx>
+ <1a3f0f7e-f6e6-db4e-06ad-9c7d560a6265@physik.fu-berlin.de>
+ <20200907174436.GK3265@brightrain.aerifal.cx>
+ <3b8d5e6a-38d6-6eca-a49a-69e06680ec1c@physik.fu-berlin.de>
+ <c0685f0b-e997-39e9-8ae9-ee22c8e74a01@landley.net>
 MIME-Version: 1.0
-References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org> <1599742438-16811-4-git-send-email-skakit@codeaurora.org>
-In-Reply-To: <1599742438-16811-4-git-send-email-skakit@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 10 Sep 2020 07:42:30 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wxo6ggLN39UMtMNwd6GOQwnEjA1MCxHjB6cmE9RTRMPA@mail.gmail.com>
-Message-ID: <CAD=FV=Wxo6ggLN39UMtMNwd6GOQwnEjA1MCxHjB6cmE9RTRMPA@mail.gmail.com>
-Subject: Re: [PATCH V5 3/4] arm64: dts: qcom: sc7180-trogdor: Add pinctrl and
- interrupt config for BT UART
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0685f0b-e997-39e9-8ae9-ee22c8e74a01@landley.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Sep 10, 2020 at 06:02:05AM -0500, Rob Landley wrote:
+> On 9/10/20 4:55 AM, John Paul Adrian Glaubitz wrote:
+> > Hi Rich!
+> > 
+> > On 9/7/20 7:44 PM, Rich Felker wrote:
+> >>> Can we still get this merged as a hotfix for 5.9?
+> >>
+> >> Yes, fixes for regressions in the same release cycle are in-scope (the
+> >> whole point of having -rc's). I have at least one other fix that needs
+> >> to go in too and was just giving it a little time to make sure
+> >> everything's ok now and that there are no more.
+> > 
+> > Let me know if there is anything else left for testing.
+> 
+> Could you also merge the fix the build break, ala:
+> 
+> > The vmlinux image is a current vanilla Linux kernel using an initramfs filesystem:
+> > 
+> >   make ARCH=sh CROSS_COMPILE=sh2eb-linux-muslfdpic- j2_defconfig vmlinux
+> > 
+> > And trying to do that in current git dies with:
+> > 
+> >   CC      init/version.o
+> > In file included from ./include/linux/spinlock.h:318,
+> >                  from ./arch/sh/include/asm/smp.h:11,
+> >                  from ./include/linux/smp.h:82,
+> >                  from ./include/linux/lockdep.h:14,
+> >                  from ./include/linux/rcupdate.h:29,
+> >                  from ./include/linux/rculist.h:11,
+> >                  from ./include/linux/pid.h:5,
+> >                  from ./include/linux/sched.h:14,
+> >                  from ./include/linux/utsname.h:6,
+> >                  from init/version.c:14:
+> > ./include/linux/spinlock_api_smp.h: In function '__raw_spin_trylock':
+> > ./include/linux/spinlock_api_smp.h:90:3: error: implicit declaration of function
+> > 'spin_acquire'; did you mean 'xchg_acquire'? [-Werror=implicit-function-declaration]
+> >    90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+> >       |   ^~~~~~~~~~~~
+> >       |   xchg_acquire
+> > ./include/linux/spinlock_api_smp.h:90:21: error: 'raw_spinlock_t' {aka 'struct
+> > raw_spinlock'} has no member named 'dep_map'
+> >    90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+> >       |                     ^~
+> > 
+> > And so on and so forth for pages. I bisected it to:
+> > 
+> > commit 0cd39f4600ed4de859383018eb10f0f724900e1b
+> > Author: Peter Zijlstra <peterz@infradead.org>
+> > Date:   Thu Aug 6 14:35:11 2020 +0200
+> > 
+> >     locking/seqlock, headers: Untangle the spaghetti monster
+> 
+> Which I reported to Rich on the 2nd and he had me test a one line patch fixing
+> it (adding an extra #include) on the 3rd, but I just did a fresh pull and the
+> j2_defconfig build still broke a week later.
 
-On Thu, Sep 10, 2020 at 5:55 AM satya priya <skakit@codeaurora.org> wrote:
->
-> Add a suitable sleep configuration for uart3 to support Bluetooth wakeup.
->
-> If QUP function is selected in sleep state, UART RTS/RFR is pulled high
-> during suspend and BT SoC not able to send wakeup bytes. So, configure
-> GPIO mode in sleep state to keep it low during suspend.
->
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> ---
-> Changes in V5:
->  - Newly added in V5. This patch adds wakeup support for trogdor board files.
->
->  arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi | 48 ++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
+Yes, that's presently the other regression fix I have queued for the
+second pull request.
 
-Note: I can't find this email on any of the mailing lists.  Can you
-check your config?  I tried:
-
-http://lore.kernel.org/r/1599742438-16811-4-git-send-email-skakit@codeaurora.org
-
-...and also checked patchwork servers.  I only see patch 1 and 2.  I
-think Bjorn usually applies from patchwork so this'll likely be a
-problem...
-
-
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> index a6b9beb..96b5331 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> @@ -792,6 +792,11 @@ ap_spi_fp: &spi10 {
->  #include <arm/cros-ec-sbs.dtsi>
->
->  &uart3 {
-> +       pinctrl-names = "default", "sleep";
-> +       pinctrl-1 = <&qup_uart3_sleep>;
-> +       interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-> +                               <&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
-> +
->         status = "okay";
-
-Same comments here as for patch #2.
-
-
->         bluetooth: bluetooth {
-> @@ -1345,4 +1350,47 @@ ap_spi_fp: &spi10 {
->                         drive-strength = <2>;
->                 };
->         };
-> +
-> +       qup_uart3_sleep: qup-uart3-sleep {
-
-I believe things in this section are supposed to be sorted
-alphabetically.  Thus "qup..." should be sorted before "trackpad..."
+Rich
