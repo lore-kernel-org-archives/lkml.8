@@ -2,431 +2,140 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCBFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE78C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3DB20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0B820720
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="gBWl3EZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgIJOhN (ORCPT
+        id S1730438AbgIJOgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731146AbgIJOci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:32:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201E8C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:32:38 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C7DEE29B8EA
-Subject: Re: [PATCH v2] platform/chrome: Don't populate lightbar device if it
- isn't there
-To:     Guenter Roeck <groeck@google.com>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>
-References: <20200909224226.2177401-1-swboyd@chromium.org>
- <CABXOdTeWfuZHLywMU1d+No-NSZ4uusAgkhs=2hNZGFM-uYz2wA@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <c3ba5d92-8bfe-30d7-44f0-c8a3e40d1906@collabora.com>
-Date:   Thu, 10 Sep 2020 16:32:31 +0200
+        Thu, 10 Sep 2020 10:36:19 -0400
+Received: from mail-co1nam11on2055.outbound.protection.outlook.com ([40.107.220.55]:37088
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731139AbgIJOcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:32:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nUu13nCcldwfj0zDc8IcJLuhodqXOfoC5WPqC6rXUlCl5tX2vcfIFQ+cwkNrwG78UAlK0QytAUHdb2eBESTc8N1GZt/ZnsYDFe8mdDs7/w+mQMzA3gnPZQNlgLuc7KKVmNPLpKv7OBxrJBFAJRAK1fnnkSxJ/rO55el6dC86c+XxXJ4cQ2bnaI8h9TaYthNUHS3j6Pr3TZjnPCHEgzTtj7A3aCcPrDQgn3vtOk3HRP1cRf+HG/Z09k5foAGctm/60TPSzUi8O70dCX3BIirRx/rel9tpartU7lp3YpMlIys1w+ryDW2NXO9iG17SLIW+MXtoJCl8uvXm9UWSPl06QQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WW4FB5BAqYyM/jWrbRbi4oI5x6RGXYhuHWhEq5RQO2s=;
+ b=lTeaJPx0dBx0ZoEOn60kcXlr9ZKG066KEwoM7Bm3soqi3HWlSh8DI6HZOR24tNWEBe6scHhmEIjLoBfv5n4ec70NfiKkvnFOjjgtMy1BIYLt5t/1FZReW5WnjAzFQJu7Pz/CcHddFzkbWl5/tOrs82Jfqo646K60ERsfyMaGwuYskU3+UfAiJr0O/KTEKoknaLVYVMizB+kymvnTZ7hhh/1gwyxpDJ+BV7x7m5AR/SdpwQ5tfELrecRrLyMJAhbsj4WGMGFZgIYzdVyqPJNZn76jmq6AvgQHqC+ikRigyImxHUs9/6avDqHTbmVUeqi/EkSpA4rPSvoVV8wytXkZRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WW4FB5BAqYyM/jWrbRbi4oI5x6RGXYhuHWhEq5RQO2s=;
+ b=gBWl3EZNKiZqnT82uHhfeWUUJtD1wrSZlfAQaZmTsnDhHWIJHeD5Da3qxF2mVp7p3LVciiOSRWbexd8InjhuqqbbBEniWkCJaLmfcLC0sZfstU0zcu6Gqx9icUkcqw1pDdH18YcRr9eLBka04Gnzjs4/bHIg09mkmtC9+YNd2AY=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SN1PR12MB2447.namprd12.prod.outlook.com (2603:10b6:802:27::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Thu, 10 Sep
+ 2020 14:32:24 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::d548:1236:cb4f:1be9]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::d548:1236:cb4f:1be9%7]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 14:32:24 +0000
+Subject: Re: [PATCH v2 -next] drm/amdkfd: Fix -Wunused-const-variable warning
+To:     YueHaibing <yuehaibing@huawei.com>, alexander.deucher@amd.com,
+        christian.koenig@amd.com, airlied@linux.ie, daniel@ffwll.ch,
+        Yong.Zhao@amd.com, ray.huang@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200910025532.19616-1-yuehaibing@huawei.com>
+ <20200910075006.41484-1-yuehaibing@huawei.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <a0dec097-399e-f29e-c252-cd741862ac9e@amd.com>
+Date:   Thu, 10 Sep 2020 10:32:22 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <CABXOdTeWfuZHLywMU1d+No-NSZ4uusAgkhs=2hNZGFM-uYz2wA@mail.gmail.com>
+ Thunderbird/68.10.0
+In-Reply-To: <20200910075006.41484-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YTOPR0101CA0012.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:15::25) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.2.100] (142.116.113.11) by YTOPR0101CA0012.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 14:32:23 +0000
+X-Originating-IP: [142.116.113.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e6eb3b03-0934-4442-1003-08d85596559f
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2447:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB244721BF2BE36D48FDFBD5A192270@SN1PR12MB2447.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1xbb+LmSeQvoJg1HqNY84Khxzh9bLz/Z/bd14BG0XeeNfArYH/wQbABxtbDVa4EE5O3lHD1X4EE0+11ceWyeeubhbggY3lF5WcrKpfwm49tlpG2lJ718MaNMkcQEWDB320T5XLkWQGcbYrboHq5AAy9GTnAUq8GYEES7EJyoMnESx+0t70uUelKIPHTyvCI6c/7PEiJ6gra7iJnCwzVV+I9AtRkxpYcnmdLKT0XyX8U83epd3HHai4LrYLYtkR9MVyHcGN51qbZusV6ZcVaAGYIoqUW7gpPrZdEp3tlL1zexmKtMhzuHcImHPEfOYimMJWPJC2ARv78hZVGD1424JQCscF+szdLNJ3j9LetVhsNM9xfCsd9XPHNw4AFaL6iw
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(6486002)(8936002)(956004)(86362001)(26005)(16526019)(186003)(52116002)(31696002)(2906002)(5660300002)(478600001)(66476007)(36756003)(66556008)(6636002)(16576012)(2616005)(316002)(4326008)(83380400001)(8676002)(31686004)(44832011)(66946007)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: rytbtlN4TnT8ytyNZoWffpNkmMZ4iKDKV1Ojw2br06oT0hzTw/ayYXwGQfSQNVLHA4E2CDzzYN102iQIkF4uNDhjxycfB6StSze48eIlyX7GU75UbOKLjiQzxr7glgc0BBC2pPasxxYEZLsSaf12H++38WeURGxWSWl/T6gUwbnrcgW5cEQg4qN1W5Dnfw3Y1C9GjNSgA5d9c50GTwdXggZE0C6h7D4XFmRxklzZcNLifqrMltbB2p1sAUcYqEVBaDp02dVnwExXxpYzRUk1YtDJq1J2UBL09xFJZ+HDQXlQ3QA3MmuqnVH+RF0ep6aWqgP5ziopuETTb0ctx8FXe1P2T49F5xE0AEA6FxVVr67V++BhkIvm475ZmS5bkZpMrFWTVq2+aI+wbafafX/11qzCqU8FEdHRgs6HDRYy3tJ242zf2ypp8O9uzzloMF/D7IZ5gqxCSWTaPqdApCdNyERNSAB9aViOpgMSzu4ms8VlrqZGOGLKYSiMUHPJ2VD+Z9qD0SDvnODq2fVeGzEAQslQWeTztHT1U0mmb7YpHZ5QHC4cctAABhlHbIWoFC1Vh51DcU8inkcpVod1nBzuvsb2tfgPeww84yuXESMe8m1mZq7SBTGS6HpkNM284CofpgKx6ubLfBZQwrNK0mNfmg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6eb3b03-0934-4442-1003-08d85596559f
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2414.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 14:32:24.4537
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mXtRMXSs9qwmXy8kIXMxZz+vCBpTtAnU9W16lRwBuUnG6bKXCM+u4ONtHEdoswfli7uUtG/2ODtnjOF+3fNN5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2447
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Am 2020-09-10 um 3:50 a.m. schrieb YueHaibing:
+> If KFD_SUPPORT_IOMMU_V2 is not set, gcc warns:
+>
+> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_device.c:121:37: warning: ‘raven_device_info’ defined but not used [-Wunused-const-variable=]
+>  static const struct kfd_device_info raven_device_info = {
+>                                      ^~~~~~~~~~~~~~~~~
+>
+> As Huang Rui suggested, Raven already has the fallback path,
+> so it should be out of IOMMU v2 flag.
+>
+> Suggested-by: Huang Rui <ray.huang@amd.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-On 10/9/20 16:18, Guenter Roeck wrote:
-> On Wed, Sep 9, 2020 at 3:42 PM Stephen Boyd <swboyd@chromium.org> wrote:
->>
->> The cros ec lightbar driver has a check in probe to fail early if the ec
->> device isn't the cros_ec one or if it can't read the lightbar version
->> from the EC. Let's move this check to the place where the lightbar
->> device is registered. This way we don't expose devices that aren't
->> actually there on devices that don't have a lightbar.
->>
->> This should improve memory and possibly performance too because struct
->> devices don't exactly have a small memory footprint and they contribute
->> to suspend/resume regardless of driver attachment.
->>
->> Cc: Gwendal Grignou <gwendal@chromium.org>
->> Cc: Guenter Roeck <groeck@chromium.org>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->> ---
->>
->> Changes from v1:
->>  * Rebased on linux-next patches to this file
->>
->>  drivers/mfd/cros_ec_dev.c                   |  16 ++-
->>  drivers/platform/chrome/cros_ec_lightbar.c  | 102 ++------------------
->>  drivers/platform/chrome/cros_ec_proto.c     |  84 ++++++++++++++++
->>  include/linux/platform_data/cros_ec_proto.h |   4 +
->>  4 files changed, 111 insertions(+), 95 deletions(-)
->>
->> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
->> index d07b43d7c761..9e98b2ec5d92 100644
->> --- a/drivers/mfd/cros_ec_dev.c
->> +++ b/drivers/mfd/cros_ec_dev.c
->> @@ -74,6 +74,10 @@ static const struct mfd_cell cros_ec_cec_cells[] = {
->>         { .name = "cros-ec-cec", },
->>  };
->>
->> +static const struct mfd_cell cros_ec_lightbar_cells[] = {
->> +       { .name = "cros-ec-lightbar", },
->> +};
->> +
->>  static const struct mfd_cell cros_ec_rtc_cells[] = {
->>         { .name = "cros-ec-rtc", },
->>  };
->> @@ -112,7 +116,6 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
->>  static const struct mfd_cell cros_ec_platform_cells[] = {
->>         { .name = "cros-ec-chardev", },
->>         { .name = "cros-ec-debugfs", },
->> -       { .name = "cros-ec-lightbar", },
->>         { .name = "cros-ec-sysfs", },
->>  };
->>
->> @@ -206,6 +209,17 @@ static int ec_device_probe(struct platform_device *pdev)
->>                 }
->>         }
->>
->> +       if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
->> +           !cros_ec_get_lightbar_version(ec, NULL, NULL)) {
-> 
-> Any idea why the lightbar code doesn't use cros_ec_check_features() ?
-> There is a definition for EC_FEATURE_LIGHTBAR, but it doesn't seem to
-> be used. It would be much more convenient if that feature check could
-> be used instead of moving the get_lightbar_version command and its
-> helper function around.
-> 
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
 
-IIRC it was to support a very old device, the Pixel Chromebook (Link). This flag
-is not set in this device but has a lightbar, hence we had this 'weird' way to
-detect the lightbar.
+I applied your patch to the amd-staging-drm-next branch.
 
-> Thanks,
-> Guenter
-> 
->> +               retval = mfd_add_hotplug_devices(ec->dev,
->> +                               cros_ec_lightbar_cells,
->> +                               ARRAY_SIZE(cros_ec_lightbar_cells));
->> +               if (retval)
->> +                       dev_err(ec->dev,
->> +                               "failed to add lightbar device: %d\n",
->> +                               retval);
->> +       }
->> +
->>         /*
->>          * The PD notifier driver cell is separate since it only needs to be
->>          * explicitly added on platforms that don't have the PD notifier ACPI
->> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
->> index de8dfb12e486..a7cfde90c8e5 100644
->> --- a/drivers/platform/chrome/cros_ec_lightbar.c
->> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
->> @@ -82,77 +82,6 @@ static int lb_throttle(void)
->>         return ret;
->>  }
->>
->> -static struct cros_ec_command *alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
->> -{
->> -       struct cros_ec_command *msg;
->> -       int len;
->> -
->> -       len = max(sizeof(struct ec_params_lightbar),
->> -                 sizeof(struct ec_response_lightbar));
->> -
->> -       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
->> -       if (!msg)
->> -               return NULL;
->> -
->> -       msg->version = 0;
->> -       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
->> -       msg->outsize = sizeof(struct ec_params_lightbar);
->> -       msg->insize = sizeof(struct ec_response_lightbar);
->> -
->> -       return msg;
->> -}
->> -
->> -static int get_lightbar_version(struct cros_ec_dev *ec,
->> -                               uint32_t *ver_ptr, uint32_t *flg_ptr)
->> -{
->> -       struct ec_params_lightbar *param;
->> -       struct ec_response_lightbar *resp;
->> -       struct cros_ec_command *msg;
->> -       int ret;
->> -
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> -       if (!msg)
->> -               return 0;
->> -
->> -       param = (struct ec_params_lightbar *)msg->data;
->> -       param->cmd = LIGHTBAR_CMD_VERSION;
->> -       msg->outsize = sizeof(param->cmd);
->> -       msg->result = sizeof(resp->version);
->> -       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->> -       if (ret < 0 && ret != -EINVAL) {
->> -               ret = 0;
->> -               goto exit;
->> -       }
->> -
->> -       switch (msg->result) {
->> -       case EC_RES_INVALID_PARAM:
->> -               /* Pixel had no version command. */
->> -               if (ver_ptr)
->> -                       *ver_ptr = 0;
->> -               if (flg_ptr)
->> -                       *flg_ptr = 0;
->> -               ret = 1;
->> -               goto exit;
->> -
->> -       case EC_RES_SUCCESS:
->> -               resp = (struct ec_response_lightbar *)msg->data;
->> -
->> -               /* Future devices w/lightbars should implement this command */
->> -               if (ver_ptr)
->> -                       *ver_ptr = resp->version.num;
->> -               if (flg_ptr)
->> -                       *flg_ptr = resp->version.flags;
->> -               ret = 1;
->> -               goto exit;
->> -       }
->> -
->> -       /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
->> -       ret = 0;
->> -exit:
->> -       kfree(msg);
->> -       return ret;
->> -}
->> -
->>  static ssize_t version_show(struct device *dev,
->>                             struct device_attribute *attr, char *buf)
->>  {
->> @@ -165,7 +94,7 @@ static ssize_t version_show(struct device *dev,
->>                 return ret;
->>
->>         /* This should always succeed, because we check during init. */
->> -       if (!get_lightbar_version(ec, &version, &flags))
->> +       if (cros_ec_get_lightbar_version(ec, &version, &flags))
->>                 return -EIO;
->>
->>         return scnprintf(buf, PAGE_SIZE, "%d %d\n", version, flags);
->> @@ -184,7 +113,7 @@ static ssize_t brightness_store(struct device *dev,
->>         if (kstrtouint(buf, 0, &val))
->>                 return -EINVAL;
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -222,7 +151,7 @@ static ssize_t led_rgb_store(struct device *dev, struct device_attribute *attr,
->>         unsigned int val[4];
->>         int ret, i = 0, j = 0, ok = 0;
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -289,7 +218,7 @@ static ssize_t sequence_show(struct device *dev,
->>         int ret;
->>         struct cros_ec_dev *ec = to_cros_ec_dev(dev);
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -324,7 +253,7 @@ static int lb_send_empty_cmd(struct cros_ec_dev *ec, uint8_t cmd)
->>         struct cros_ec_command *msg;
->>         int ret;
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -352,7 +281,7 @@ static int lb_manual_suspend_ctrl(struct cros_ec_dev *ec, uint8_t enable)
->>         struct cros_ec_command *msg;
->>         int ret;
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -399,7 +328,7 @@ static ssize_t sequence_store(struct device *dev, struct device_attribute *attr,
->>                         return ret;
->>         }
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -444,7 +373,7 @@ static ssize_t program_store(struct device *dev, struct device_attribute *attr,
->>                 return -EINVAL;
->>         }
->>
->> -       msg = alloc_lightbar_cmd_msg(ec);
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>         if (!msg)
->>                 return -ENOMEM;
->>
->> @@ -531,24 +460,9 @@ static struct attribute_group cros_ec_lightbar_attr_group = {
->>  static int cros_ec_lightbar_probe(struct platform_device *pd)
->>  {
->>         struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
->> -       struct cros_ec_platform *pdata = dev_get_platdata(ec_dev->dev);
->>         struct device *dev = &pd->dev;
->>         int ret;
->>
->> -       /*
->> -        * Only instantiate the lightbar if the EC name is 'cros_ec'. Other EC
->> -        * devices like 'cros_pd' doesn't have a lightbar.
->> -        */
->> -       if (strcmp(pdata->ec_name, CROS_EC_DEV_NAME) != 0)
->> -               return -ENODEV;
->> -
->> -       /*
->> -        * Ask then for the lightbar version, if it's 0 then the 'cros_ec'
->> -        * doesn't have a lightbar.
->> -        */
->> -       if (!get_lightbar_version(ec_dev, NULL, NULL))
->> -               return -ENODEV;
->> -
->>         /* Take control of the lightbar from the EC. */
->>         lb_manual_suspend_ctrl(ec_dev, 1);
->>
->> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
->> index dda182132a6a..a08747eec36a 100644
->> --- a/drivers/platform/chrome/cros_ec_proto.c
->> +++ b/drivers/platform/chrome/cros_ec_proto.c
->> @@ -922,3 +922,87 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
->>         return sensor_count;
->>  }
->>  EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
->> +
->> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
->> +{
->> +       struct cros_ec_command *msg;
->> +       int len;
->> +
->> +       len = max(sizeof(struct ec_params_lightbar),
->> +                 sizeof(struct ec_response_lightbar));
->> +
->> +       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
->> +       if (!msg)
->> +               return NULL;
->> +
->> +       msg->version = 0;
->> +       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
->> +       msg->outsize = sizeof(struct ec_params_lightbar);
->> +       msg->insize = sizeof(struct ec_response_lightbar);
->> +
->> +       return msg;
->> +}
->> +EXPORT_SYMBOL_GPL(cros_ec_alloc_lightbar_cmd_msg);
->> +
->> +/**
->> + * cros_ec_get_lightbar_version() - Get the EC lightbar version
->> + *
->> + * @ec: EC device, does not have to be connected directly to the AP,
->> + *      can be daisy chained through another device.
->> + * @ver_ptr: Detected lightbar version number
->> + * @flag_ptr: Detected lightbar flags
->> + *
->> + * Call this function to determine the EC's lightbar version and flags
->> + * information. If it doesn't exist then this function returns a negative
->> + * error value.
->> + *
->> + * Return: 0 on success, negative errno on failure to detect a lightbar.
->> + */
->> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
->> +                                uint32_t *flg_ptr)
->> +{
->> +       struct ec_params_lightbar *param;
->> +       struct ec_response_lightbar *resp;
->> +       struct cros_ec_command *msg;
->> +       int ret;
->> +
->> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->> +       if (!msg)
->> +               return -ENOMEM;
->> +
->> +       param = (struct ec_params_lightbar *)msg->data;
->> +       param->cmd = LIGHTBAR_CMD_VERSION;
->> +       msg->outsize = sizeof(param->cmd);
->> +       msg->result = sizeof(resp->version);
->> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->> +       if (ret < 0 && ret != -EINVAL)
->> +               goto exit;
->> +
->> +       switch (msg->result) {
->> +       case EC_RES_INVALID_PARAM:
->> +               /* Pixel had no version command. */
->> +               if (ver_ptr)
->> +                       *ver_ptr = 0;
->> +               if (flg_ptr)
->> +                       *flg_ptr = 0;
->> +               ret = 0;
->> +               break;
->> +       case EC_RES_SUCCESS:
->> +               resp = (struct ec_response_lightbar *)msg->data;
->> +
->> +               /* Future devices w/lightbars should implement this command */
->> +               if (ver_ptr)
->> +                       *ver_ptr = resp->version.num;
->> +               if (flg_ptr)
->> +                       *flg_ptr = resp->version.flags;
->> +               ret = 0;
->> +               break;
->> +       default:
->> +               /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
->> +               ret = -ENODEV;
->> +       }
->> +exit:
->> +       kfree(msg);
->> +       return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(cros_ec_get_lightbar_version);
->> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
->> index 4a415ae851ef..50221254956c 100644
->> --- a/include/linux/platform_data/cros_ec_proto.h
->> +++ b/include/linux/platform_data/cros_ec_proto.h
->> @@ -229,6 +229,10 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->>
->>  int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
->>
->> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec);
->> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
->> +                                uint32_t *flg_ptr);
->> +
->>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
->>
->>  /**
->>
->> base-commit: 1e7913ff5f9f1b73146ad8522958bd266f22a510
->> --
->> Sent by a computer, using git, on the internet
->>
+Thank you,
+  Felix
+
+> ---
+>  drivers/gpu/drm/amd/amdkfd/kfd_device.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+> index 0e71a0543f98..e3fc6ed7b79c 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
+> @@ -503,8 +503,8 @@ static const struct kfd_device_info *kfd_supported_devices[][2] = {
+>  #ifdef KFD_SUPPORT_IOMMU_V2
+>  	[CHIP_KAVERI] = {&kaveri_device_info, NULL},
+>  	[CHIP_CARRIZO] = {&carrizo_device_info, NULL},
+> -	[CHIP_RAVEN] = {&raven_device_info, NULL},
+>  #endif
+> +	[CHIP_RAVEN] = {&raven_device_info, NULL},
+>  	[CHIP_HAWAII] = {&hawaii_device_info, NULL},
+>  	[CHIP_TONGA] = {&tonga_device_info, NULL},
+>  	[CHIP_FIJI] = {&fiji_device_info, &fiji_vf_device_info},
