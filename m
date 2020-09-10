@@ -2,135 +2,242 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B52C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33312065E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA98208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Md9/FDi2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IcAkD4z1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgIJUZq (ORCPT
+        id S1726890AbgIJU0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        Thu, 10 Sep 2020 16:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgIJUXZ (ORCPT
+        with ESMTP id S1726833AbgIJUWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:23:25 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72470C061756;
-        Thu, 10 Sep 2020 13:23:22 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id a12so7645397eds.13;
-        Thu, 10 Sep 2020 13:23:22 -0700 (PDT)
+        Thu, 10 Sep 2020 16:22:02 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4694C0617BA
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:21:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q4so575279pjh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:21:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dW7YjxHc1ZzJ6SX3ZapZTyVcg2BZ2MrVhHy85wYAM7s=;
-        b=Md9/FDi2UjXqMZ/r9zTDvWPc7EStWF1BrZkVX0n0rB6Plr9i6GajBhtdIytxV3tKuX
-         rgEuLKaAvTuXJnRCs8eDnunMlw7oe9kT+MLG4tXOH6el8N3ZQwISu5/L/Bu9YEtUicla
-         iOhWNNLMURqUJ+LO3LLtuDmtQvpHsdwz+WDLjF0vvuDVySEH1qig9lfrF6nu2cVQGcQr
-         I/87h+NoyYId+iaX2/sZQrMw342JCxOwhgjf+hW2vos7DOoRnmVTIjgUEBcOe2Qow6v3
-         u4UxPzPTvmwMl5FZv9AvU3DuxVXQU+vpkM6rEpSe99BS+70BxtwObtsc056guNjXKbmx
-         Mwjw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AfgkhWr5TvQdUsjIexLihHefc7s9wXFiV4jpjvqj+P4=;
+        b=IcAkD4z1/2S2dWxK0asptEvpDVQMKoSNKpWAR+6zYzikYLiAPypGc6/bX5F0imPsE7
+         MkE0O1TZK8LaTu5qFlEQkg4K5glh23k39a6UqEbwmlwKwof7KYPT/0hXh4MNToieMUdR
+         JYV1fCi//9FyuuJt8WiHG8zeHG9pAxzJd/fSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dW7YjxHc1ZzJ6SX3ZapZTyVcg2BZ2MrVhHy85wYAM7s=;
-        b=iI74UfLJe5BosuLAaH8M6rBgEGu3kEIe6sr02T/KLlORmyDMPscfva1fvJpTUlME9e
-         hUnjrTYyNvPU4HfMZjxyOp0+zjLyU9twd1YrJo0sWgzBDNDMRGKAtmm3NXO5ksSkkZgZ
-         Xl1zmfS83tUn1x3CiFx5UQoWGJDw5a3Lnoqsnx6P43jcXWMpDV4bZRH1JFpYPoIvGKso
-         5k86UUJd6komcV9iHgVAkCf04m9TfBYQ3Mz+DbDY4GrOvHA/aPWgoHAJWNJu59LKaNyP
-         +6d9pOptRm54R5EdbMJSRwYX/OANOPIv5oCOCV1bOVXqxXkVmLlrZonLRnenqdw9GLNU
-         Oixw==
-X-Gm-Message-State: AOAM530/BRECKKYQ2FZ90bCGv8/DK6lASR3Tti+Vyid9+Pi0cmhGiVst
-        XX023RHeMdbb/yhTNTu1IZ4=
-X-Google-Smtp-Source: ABdhPJz5MaQV71/AFS75F/hFw0qE/EwQO1ZoaAl2WyDBhKG+riuqvQJ28JycZSAGOmthz7MbQu3otw==
-X-Received: by 2002:aa7:dc16:: with SMTP id b22mr11083008edu.252.1599769401165;
-        Thu, 10 Sep 2020 13:23:21 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:a856:4fc0:9f1:73f6? ([2a01:110f:b59:fd00:a856:4fc0:9f1:73f6])
-        by smtp.gmail.com with ESMTPSA id dh3sm8455572edb.84.2020.09.10.13.23.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 13:23:20 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
-To:     Pavel Machek <pavel@ucw.cz>,
-        Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     robh+dt@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
- <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
- <20200908222544.GF1005@bug>
- <CAE+NS34h9qbdHkYDYDnHGgk+9mFNTRpKEMKNEFZ+Secf6JyoZg@mail.gmail.com>
- <20200910122958.GF7907@duo.ucw.cz>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <489fc92f-f6f5-839e-e417-7761d404e6ae@gmail.com>
-Date:   Thu, 10 Sep 2020 22:23:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AfgkhWr5TvQdUsjIexLihHefc7s9wXFiV4jpjvqj+P4=;
+        b=qYYw8kOd2IbW4SDkolSJCpcz8A7g/F+3EdMCNjs+q5jQshF/FHFfQT+5ooxr5mISxF
+         W153+CsmP/hV4s0//npHMAyG6v0zr1X6gEGI05baP4AVBsryx62IGvkyy7haPFWRNM9n
+         sAK8S0h1N3UZU2y/uc2YplNZ2JVtNZstcJVigvnRqJPGiJXObK59cgKMGuqXSPO+wqBb
+         Dd9+098Ouwpnerc2LtX0bpWBE4Lv8AM3VUAwmejrDuLE8o2NjlCV0ELMNXl9mh2MdiFY
+         JbExd3AViwCgsv54w7iqjuqtwvFoVPkZQakHv9Lt1L0pykDS7T5zVGwDQOXRPIpy+u9e
+         JXWA==
+X-Gm-Message-State: AOAM533vZVcCzqowjKvJh7kDGKj5nD14FNGb25Ge/iI9rj6Gkw+gHjdX
+        Q4mbDTiLuWdxVjNN23uYC7tT6w==
+X-Google-Smtp-Source: ABdhPJzB6YHe1rp5zg2xo+FQRvAQwCLx++qVkJQa5at9cU43jBjrpf+5y4Cf716aA6XzEhbVIBp+Zw==
+X-Received: by 2002:a17:90a:cc0e:: with SMTP id b14mr1520840pju.166.1599769283338;
+        Thu, 10 Sep 2020 13:21:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r123sm7002776pfc.187.2020.09.10.13.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 13:21:21 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     kernel-hardening@lists.openwall.com
+Cc:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [RFC PATCH 6/6] security/fbfam: Mitigate a fork brute force attack
+Date:   Thu, 10 Sep 2020 13:21:07 -0700
+Message-Id: <20200910202107.3799376-7-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200910202107.3799376-1-keescook@chromium.org>
+References: <20200910202107.3799376-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200910122958.GF7907@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 2:29 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> +{
->>>> +     struct mt6360_led *led = container_of(lcdev, struct mt6360_led, flash.led_cdev);
->>>> +     struct mt6360_priv *priv = led->priv;
->>>> +     u32 enable_mask = MT6360_TORCHEN_MASK | MT6360_FLCSEN_MASK(led->led_no);
->>>> +     u32 val = (level) ? MT6360_FLCSEN_MASK(led->led_no) : 0;
->>>> +     u32 prev = priv->fled_torch_used, curr;
->>>> +     int ret;
->>>> +
->>>> +     dev_dbg(lcdev->dev, "[%d] brightness %d\n", led->led_no, level);
->>>> +     if (priv->fled_strobe_used) {
->>>> +             dev_warn(lcdev->dev, "Please disable strobe first [%d]\n", priv->fled_strobe_used);
->>>> +             return -EINVAL;
->>>> +     }
->>>
->>> So... how does its userland interface look like?
->>>
->>
->> 1. set FLED1 brightness
->> # echo 1 > /sys/class/leds/white:flash1/flash_brightness
->> 2. enable FLED1 strobe
->> # echo 1 > /sys/class/leds/white:flash1/flash_strobe
->> 3 . turn off FLED1 strobe (just used to gaurantee the strobe mode
->> flash leds must be turned off)
->> # echo 0 > /sys/class/leds/white:flash1/flash_strobe
-> 
-> I believe I'd preffer only exposing torch functionality in
-> /sys/class/leds. .. strobe can be supported using v4l2 APIs.
+From: John Wood <john.wood@gmx.com>
 
-Actually having LED flash class without strobe is pointless.
-If you looked at led_classdev_flash_register_ext() you would see that
-it fails with uninitialized strobe_set op. And V4L2 API for strobing
-flash calls strobe_set from LED flash class beneath.
+In order to mitigate a fork brute force attack it is necessary to kill
+all the offending tasks. This tasks are all the ones that share the
+statistical data with the current task (the task that has crashed).
 
-That was the idea behind LED and V4L2 flash API unification - there
-is one hardware driver needed, the V4L2 Flash layer just takes over
-control over it when needed.
+Since the attack detection is done in the function fbfam_handle_attack()
+that is called every time a core dump is triggered, only is needed to
+kill the others tasks that share the same statistical data, not the
+current one as this is in the path to be killed.
 
+When the SIGKILL signal is sent to the offending tasks from the function
+fbfam_kill_tasks(), this one will be called again during the core dump
+due to the shared statistical data shows a quickly crashing rate. So, to
+avoid kill again the same tasks due to a recursive call of this
+function, it is necessary to disable the attack detection.
+
+To disable this attack detection, add a condition in the function
+fbfam_handle_attack() to not compute the crashing rate when the jiffies
+stored in the statistical data are set to zero.
+
+Signed-off-by: John Wood <john.wood@gmx.com>
+---
+ security/fbfam/fbfam.c | 76 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 71 insertions(+), 5 deletions(-)
+
+diff --git a/security/fbfam/fbfam.c b/security/fbfam/fbfam.c
+index 3aa669e4ea51..173a6122390f 100644
+--- a/security/fbfam/fbfam.c
++++ b/security/fbfam/fbfam.c
+@@ -4,8 +4,11 @@
+ #include <linux/errno.h>
+ #include <linux/gfp.h>
+ #include <linux/jiffies.h>
++#include <linux/pid.h>
+ #include <linux/printk.h>
++#include <linux/rcupdate.h>
+ #include <linux/refcount.h>
++#include <linux/sched/signal.h>
+ #include <linux/signal.h>
+ #include <linux/slab.h>
+ 
+@@ -24,7 +27,8 @@ unsigned long sysctl_crashing_rate_threshold = 30000;
+  * struct fbfam_stats - Fork brute force attack mitigation statistics.
+  * @refc: Reference counter.
+  * @faults: Number of crashes since jiffies.
+- * @jiffies: First fork or execve timestamp.
++ * @jiffies: First fork or execve timestamp. If zero, the attack detection is
++ *           disabled.
+  *
+  * The purpose of this structure is to manage all the necessary information to
+  * compute the crashing rate of an application. So, it holds a first fork or
+@@ -175,13 +179,69 @@ int fbfam_exit(void)
+ }
+ 
+ /**
+- * fbfam_handle_attack() - Fork brute force attack detection.
++ * fbfam_kill_tasks() - Kill the offending tasks
++ *
++ * When a fork brute force attack is detected it is necessary to kill all the
++ * offending tasks. Since this function is called from fbfam_handle_attack(),
++ * and so, every time a core dump is triggered, only is needed to kill the
++ * others tasks that share the same statistical data, not the current one as
++ * this is in the path to be killed.
++ *
++ * When the SIGKILL signal is sent to the offending tasks, this function will be
++ * called again during the core dump due to the shared statistical data shows a
++ * quickly crashing rate. So, to avoid kill again the same tasks due to a
++ * recursive call of this function, it is necessary to disable the attack
++ * detection setting the jiffies to zero.
++ *
++ * To improve the for_each_process loop it is possible to end it when all the
++ * tasks that shared the same statistics are found.
++ *
++ * Return: -EFAULT if the current task doesn't have statistical data. Zero
++ *         otherwise.
++ */
++static int fbfam_kill_tasks(void)
++{
++	struct fbfam_stats *stats = current->fbfam_stats;
++	struct task_struct *p;
++	unsigned int to_kill, killed = 0;
++
++	if (!stats)
++		return -EFAULT;
++
++	to_kill = refcount_read(&stats->refc) - 1;
++	if (!to_kill)
++		return 0;
++
++	/* Disable the attack detection */
++	stats->jiffies = 0;
++	rcu_read_lock();
++
++	for_each_process(p) {
++		if (p == current || p->fbfam_stats != stats)
++			continue;
++
++		do_send_sig_info(SIGKILL, SEND_SIG_PRIV, p, PIDTYPE_PID);
++		pr_warn("fbfam: Offending process with PID %d killed\n",
++			p->pid);
++
++		killed += 1;
++		if (killed >= to_kill)
++			break;
++	}
++
++	rcu_read_unlock();
++	return 0;
++}
++
++/**
++ * fbfam_handle_attack() - Fork brute force attack detection and mitigation.
+  * @signal: Signal number that causes the core dump.
+  *
+  * The crashing rate of an application is computed in milliseconds per fault in
+  * each crash. So, if this rate goes under a certain threshold there is a clear
+  * signal that the application is crashing quickly. At this moment, a fork brute
+- * force attack is happening.
++ * force attack is happening. Under this scenario it is necessary to kill all
++ * the offending tasks in order to mitigate the attack.
+  *
+  * Return: -EFAULT if the current task doesn't have statistical data. Zero
+  *         otherwise.
+@@ -195,6 +255,10 @@ int fbfam_handle_attack(int signal)
+ 	if (!stats)
+ 		return -EFAULT;
+ 
++	/* The attack detection is disabled */
++	if (!stats->jiffies)
++		return 0;
++
+ 	if (!(signal == SIGILL || signal == SIGBUS || signal == SIGKILL ||
+ 	      signal == SIGSEGV || signal == SIGSYS))
+ 		return 0;
+@@ -205,9 +269,11 @@ int fbfam_handle_attack(int signal)
+ 	delta_time = jiffies64_to_msecs(delta_jiffies);
+ 	crashing_rate = delta_time / (u64)stats->faults;
+ 
+-	if (crashing_rate < (u64)sysctl_crashing_rate_threshold)
+-		pr_warn("fbfam: Fork brute force attack detected\n");
++	if (crashing_rate >= (u64)sysctl_crashing_rate_threshold)
++		return 0;
+ 
++	pr_warn("fbfam: Fork brute force attack detected\n");
++	fbfam_kill_tasks();
+ 	return 0;
+ }
+ 
 -- 
-Best regards,
-Jacek Anaszewski
+2.25.1
+
