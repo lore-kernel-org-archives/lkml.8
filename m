@@ -4,88 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D397C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B132DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074DB206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A55F207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599742729;
-	bh=UD5TaEy8wxsIp8mgrsHiGFMm82kAp/qRHT62V05wZ/c=;
+	s=default; t=1599742782;
+	bh=9KB16qa8g5UTcrA9KtTZtF7YLYI9dYOREEUfdrIPmMs=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=d5A3eLiXUBWc3z+4viVDRGxzcWaVaKv2GMsaQj/9KysMllTiGj62YPcVCsG+swj7g
-	 Tt8QYmwQ98az7/UN6OcxUR3MijrV8oC7qrUK4AImZQjTjmBCjbL0tQrfrgpuXPAoIV
-	 ka2l0uM2nudw92V4MVpoO9NpCxSfQtr0/CqVYJp0=
+	b=ngKDCBYLfBQ4OxbjGd7eVD7b9Dt5h+UH2b2LFFVhmdm8Nh33LPJIKHwYAvUV4VJxv
+	 G2ahVRmQfqOLTvufCuqpn9JY3w75y1/lED32dDK5NnOoHaDvyqCgtBjhDI7Iz+v8TC
+	 /sDr8l1TZQprFQcXBL6KOmvMQOPh/JFKWPSfzw+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbgIJM6M (ORCPT
+        id S1730544AbgIJM7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35868 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 08:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgIJMwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:52:07 -0400
+        id S1730777AbgIJMwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:52:49 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB0B208FE;
-        Thu, 10 Sep 2020 12:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 351E720C09;
+        Thu, 10 Sep 2020 12:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599742327;
-        bh=UD5TaEy8wxsIp8mgrsHiGFMm82kAp/qRHT62V05wZ/c=;
+        s=default; t=1599742343;
+        bh=9KB16qa8g5UTcrA9KtTZtF7YLYI9dYOREEUfdrIPmMs=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pigTNppn4yTAbkkFsKlwZKc5rp/cZDxXMIjQKcrl38XBMQDNgsoeyJbc+xT2FrbuE
-         5hwVtobENa27f1/CUF47R+egESEI/eWR8qsrXlzO8BJIfLORRvXcBxqvHpmEZbL/yi
-         cFr835WK9hubS7YEGVv8FrkwYDn/yzJ6a4jERk6g=
-Date:   Thu, 10 Sep 2020 13:51:22 +0100
+        b=Z7DT/ye01xUUhaR1XSTIZ4ytI/pnBQsOyg6nWptrYe6Ox4sP+ZiCaery0N1X3OObd
+         q4qPLqBtvbJNUppqH6ACZmsWYvAkJ1LS4eX3cBFyHIVSTJF1kh3U8d0FRwJuJCfb21
+         nMSMlyZI/xtYjGEJxhlTuG2q/6UWC6b0v0syyfe8=
+Date:   Thu, 10 Sep 2020 13:51:38 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     alsa-devel@alsa-project.org, plai@codeaurora.org,
-        lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com,
-        bgoswami@codeaurora.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
-References: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/8] ASoC: q6dsp: Add support to Codec Ports.
-Message-Id: <159974228224.39114.1744393464890136484.b4-ty@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>,
+        matti.vaittinen@fi.rohmeurope.com, lgirdwood@gmail.com
+Cc:     linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200910034240.37268-1-yuehaibing@huawei.com>
+References: <20200910034240.37268-1-yuehaibing@huawei.com>
+Subject: Re: [PATCH -next] regulator: bd718x7: Make some variable static
+Message-Id: <159974229313.39285.15320584146723145441.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 11:17:24 +0100, Srinivas Kandagatla wrote:
-> LPASS IP on SoCs like SM8250 has Digital Codec part integrated into it.
-> This ports are exposed in Q6DSP as Codec ports. This patchset adds
-> support to those q6afe ports along with q6routing and q6afe-dai.
+On Thu, 10 Sep 2020 11:42:40 +0800, YueHaibing wrote:
+> Fix sparse warnings:
 > 
-> This patchset has been tested along with other patches on
-> Qualcomm Robotics RB5 Platform with Soundwire and WSA8815 Codec.
-> 
-> [...]
+> drivers/regulator/bd718x7-regulator.c:576:28: warning: symbol 'bd71847_swcontrol_ops' was not declared. Should it be static?
+> drivers/regulator/bd718x7-regulator.c:585:28: warning: symbol 'bd71847_hwcontrol_ops' was not declared. Should it be static?
+> drivers/regulator/bd718x7-regulator.c:902:28: warning: symbol 'bd71837_swcontrol_ops' was not declared. Should it be static?
+> drivers/regulator/bd718x7-regulator.c:913:28: warning: symbol 'bd71837_hwcontrol_ops' was not declared. Should it be static?
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/8] ASoC: q6dsp: q6afe: add support to Codec DMA ports
-      commit: 150b2e86c54ad09c26e60f32925aeaf1fca1a5d3
-[2/8] ASoC: q6dsp: q6routing: add support to Codec DMA ports
-      commit: 825492cb518bcf654e9205b3c723585191314d1a
-[3/8] ASoC: q6dsp: q6afe: prepare afe_apr_send_pkt to take response opcode
-      commit: 342a4f8ca12b1cac812151b05f8a837eebc6885c
-[4/8] ASoC: q6dsp: q6afe: add global q6afe waitqueue
-      commit: 181202d021f51d4c0442e71adc34e9629a35a6d8
-[5/8] ASoC: q6dsp: q6afe: add lpass hw voting support
-      commit: 55e07531d922540c656c7fc2e21d76e1b751f279
-[6/8] ASoC: q6dsp: q6afe: update q6afe_set_param to support global clocks
-      commit: 84ab3b9f19f6ff0bb5df6c6deea75ab4c1d2aff8
-[7/8] ASoC: q6dsp: q6afe: add codec lpass clocks
-      commit: 0c3e35fc1ebe22a5254ba3bff2599a2c49b00abe
-[8/8] ASoC: q6dsp: q6afe-dai: add support to Codec DMA ports
-      commit: 1fdbcfa9fdee6f9cc00129f0f5ed0ff29cfef646
+[1/1] regulator: bd718x7: Make some variable static
+      commit: 02f8eaab0cb644478c170237f354db32b718e5ff
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
