@@ -2,191 +2,107 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF063C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4AD420719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A214A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0oo/YKN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PNzhRz1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725974AbgIJRFF (ORCPT
+        id S1727856AbgIJRF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
+        Thu, 10 Sep 2020 13:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgIJQzd (ORCPT
+        with ESMTP id S1727843AbgIJREh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:55:33 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE65C061389;
-        Thu, 10 Sep 2020 09:53:21 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id t76so6555107oif.7;
-        Thu, 10 Sep 2020 09:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OF9x9aCRYQId9DTEeUUlbYKv+AnvnaiO1HEaClAF3pU=;
-        b=G0oo/YKN3aMocisM9YvUVUXZ6P0HjlzEh1aN0JBLSr1UF685NZz4FvV9yy9ciETOdg
-         MkSjfl7r3DqSkVXT67uAu6Cs2Ab2eoYVWMIWpwvCFIAkW6cxwts4h7e338HO1cNgygv/
-         UNG5BeaCdOu6SLhPNATJBf1TX3engBh5U0LPzR0T43v9Dv5WU3udl29CuTakPLk9fVSg
-         XMr5C0iW6krWRxoIOi9+eNgeFsuyZFfZj8VSp+lrT88zXcFS85Z/7aeVmjK0iD2DrBWX
-         1J1UF1RLPaSpGBD1CGMMCODa+LIKZirT7cdKdRVaQnAwKBpDYi76Eb8ZesKvUiROGD4i
-         rQWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OF9x9aCRYQId9DTEeUUlbYKv+AnvnaiO1HEaClAF3pU=;
-        b=Xb8Y+dLmLVl/zabUA59PyyOneY37HHoEiwTTG+SYvwLhcuR1skaq0fwN5bOpMVW6fv
-         XXNKAZtJKX5IRSWwEYzSUGU3cxfeNYJyXW4PuOVWS1EpUlpasNyoyLuYTBUkxyRKagKY
-         RaEVgITQP21ze+WdEfmn5vwhakcahw6ToK09XoVEexjtpNRC/gcu0Yl0+obdYshs/q5C
-         uv/CINimL14DFFLd+UlmJctnnbOnMfkPz+R1unnmvtJJFlsSFpwVRI5kXHOxXzBxCcs7
-         R6C0dMJPQo0u9u6V2Tsz5oGQx8HgqPzIc1oLoHATX1Ya6XINKwynqn4oHSN3iRISkpRR
-         8mfA==
-X-Gm-Message-State: AOAM532zuGFyBxOHh2meR5FE8v0SigBnar6JQwDgOqZW/XgS0AeYX7yE
-        1xERQfzUEdveF3sPPMig6GCl5tbTw8w=
-X-Google-Smtp-Source: ABdhPJxxQYeAOeg3pQKmRgUNcP8siZqU1f68A6vskafhEbE4hH+ZCtk/VqtxCUvbHWW164Fa89jkYw==
-X-Received: by 2002:a54:4e84:: with SMTP id c4mr586085oiy.22.1599756799753;
-        Thu, 10 Sep 2020 09:53:19 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b1sm1004074oof.8.2020.09.10.09.53.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 09:53:18 -0700 (PDT)
-Subject: Re: [PATCH 2/2] watchdog: sp5100_tco: Enable watchdog on Family 17h
- devices if disabled
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200910163109.235136-1-linux@roeck-us.net>
- <20200910163109.235136-2-linux@roeck-us.net>
- <30f69c2c-d4c8-a143-6bfa-34394b6361cf@siemens.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6ff3df92-3465-f619-7c21-eed421ff719d@roeck-us.net>
-Date:   Thu, 10 Sep 2020 09:53:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 13:04:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99F84C061573;
+        Thu, 10 Sep 2020 10:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=OyXzjCB63mYRe0BvSmc1T78HrhzEXzQ566vkrNeunqA=; b=PNzhRz1iWp6AsZIRd/72enP4n6
+        0cGLlHpItHhRrb4V65JwvV3zyrBFvKYVo7bXAjFWgtvpAGHhyayXpGt/uOkz4CdqT81VeYf3/wKF0
+        dXdbNkOXmfBwjUe/8WbUJI+7Vk5iQf0emhN7GpuPd3c1HZw1T/xWQ/usVNovNbEbO3dRSZMv8JA9H
+        OKXxTeHazmHVvtSSMEOViFLnER1ZFjPDzrdQwYHy6uhKo7rXrBo2NV67Q4zlWAafMgPlX0XLrLhKw
+        SbjsUxcCvBG1XQYoYuuVkZSevrSXz3Hxd8Tl2n4dv5NKRrECTXUzBKQ5zFpZ27FcC/z0JgqFihe9Z
+        QR+thY4g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGPzk-000804-44; Thu, 10 Sep 2020 17:04:24 +0000
+Date:   Thu, 10 Sep 2020 18:04:24 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
+Message-ID: <20200910170424.GU6583@casper.infradead.org>
+References: <20200910164612.114215-1-mic@digikod.net>
 MIME-Version: 1.0
-In-Reply-To: <30f69c2c-d4c8-a143-6bfa-34394b6361cf@siemens.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910164612.114215-1-mic@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+On Thu, Sep 10, 2020 at 06:46:09PM +0200, Mickaël Salaün wrote:
+> This ninth patch series rework the previous AT_INTERPRETED and O_MAYEXEC
+> series with a new syscall: introspect_access(2) .  Access check are now
+> only possible on a file descriptor, which enable to avoid possible race
+> conditions in user space.
 
-On 9/10/20 9:34 AM, Jan Kiszka wrote:
-> On 10.09.20 18:31, Guenter Roeck wrote:
->> On Family 17h (Ryzen) devices, the WatchdogTmrEn bit of PmDecodeEn not only
->> enables watchdog memory decoding at 0xfeb00000, it also enables the
->> watchdog hardware itself. Use this information to enable the watchdog if
->> it is not already enabled.
->>
->> Cc: Jan Kiszka <jan.kiszka@siemens.com>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>  drivers/watchdog/sp5100_tco.c | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
->> index 85e9664318c9..a730ecbf78cd 100644
->> --- a/drivers/watchdog/sp5100_tco.c
->> +++ b/drivers/watchdog/sp5100_tco.c
->> @@ -17,6 +17,12 @@
->>   *	    AMD Publication 51192 "AMD Bolton FCH Register Reference Guide"
->>   *	    AMD Publication 52740 "BIOS and Kernel Developerâ€™s Guide (BKDG)
->>   *				for AMD Family 16h Models 30h-3Fh Processors"
->> + *	    AMD Publication 55570-B1-PUB "Processor Programming Reference (PPR)
->> + *				for AMD Family 17h Model 18h, Revision B1
->> + *				Processors (PUB)
->> + *	    AMD Publication 55772-A1-PUB "Processor Programming Reference (PPR)
->> + *				for AMD Family 17h Model 20h, Revision A1
->> + *				Processors (PUB)
->>   */
->>  
->>  /*
->> @@ -241,6 +247,18 @@ static int sp5100_tco_setupdevice(struct device *dev,
->>  		break;
->>  	case efch:
->>  		dev_name = SB800_DEVNAME;
->> +		/*
->> +		 * On Family 17h devices, the EFCH_PM_DECODEEN_WDT_TMREN bit of
->> +		 * EFCH_PM_DECODEEN not only enables the EFCH_PM_WDT_ADDR memory
->> +		 * region, it also enables the watchdog itself.
->> +		 */
->> +		if (boot_cpu_data.x86 == 0x17) {
->> +			val = sp5100_tco_read_pm_reg8(EFCH_PM_DECODEEN);
->> +			if (!(val & EFCH_PM_DECODEEN_WDT_TMREN)) {
->> +				sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN, 0xff,
->> +							  EFCH_PM_DECODEEN_WDT_TMREN);
->> +			}
->> +		}
->>  		val = sp5100_tco_read_pm_reg8(EFCH_PM_DECODEEN);
->>  		if (val & EFCH_PM_DECODEEN_WDT_TMREN)
->>  			mmio_addr = EFCH_PM_WDT_ADDR;
->>
-> 
-> Won't that bring us EFCH_PM_WDT_ADDR as address, rather than
-> EFCH_PM_ACPI_MMIO_ADDR which worked in my case? Or is one an alias of
-> the other.
-> 
+But introspection is about examining _yourself_.  This isn't about
+doing that.  It's about doing ... something ... to a script that you're
+going to execute.  If the script were going to call the syscall, then
+it might be introspection.  Or if the interpreter were measuring itself,
+that would be introspection.  But neither of those would be useful things
+to do, because an attacker could simply avoid doing them.
 
-Yes, it does use EFCH_PM_WDT_ADDR. EFCH_PM_ACPI_MMIO_ADDR works as well,
-but is meant to be a fallback. Both point to the watchdog memory space.
+So, bad name.  What might be better?  sys_security_check()?
+sys_measure()?  sys_verify_fd()?  I don't know.
 
-Thanks,
-Guenter
