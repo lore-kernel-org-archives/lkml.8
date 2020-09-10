@@ -2,134 +2,97 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F98C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA994C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D63CD20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599732223;
-	bh=tE0vK+lGJxMKuPHT7CyqR99KxgsVoHl0G44/ulvB++M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=suTcaQwpPq2dq6D/cPRO/7vAq/wR1QSArEwxKPCyjX482pYvqk2pO+YXjAf7UW6Rj
-	 wdOdW8y6h+rDLgrQgdfUiS5bgDo2f63/W3J1wHAZOYbaju5Cs3lMfQfwS1lQnfjK8s
-	 5JpNaJW5AoRcNud0ys+L7yz7QtWlpNmB0TVszWJM=
+	by mail.kernel.org (Postfix) with ESMTP id 6D5DD2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHjrnz+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbgIJKDm (ORCPT
+        id S1730560AbgIJKEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgIJKDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:03:33 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB9FC20882;
-        Thu, 10 Sep 2020 10:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599732211;
-        bh=tE0vK+lGJxMKuPHT7CyqR99KxgsVoHl0G44/ulvB++M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zefGfOxBbwaSpki54+vicMmqXgta+12bh5+L7P042Jk3UT1kOyugF1j48BCQT5K1f
-         admq6xZ9rrOd39q+l+mDaIE43fhDRuYF6WDbSKPQiTn29AfTmxpB1vR+Uzo7ljeMU+
-         19Ssj3SMgMUG2d7sSAMTm+yTLyqr3sINLSa2YF54=
-Received: by mail-ot1-f49.google.com with SMTP id c10so4827134otm.13;
-        Thu, 10 Sep 2020 03:03:31 -0700 (PDT)
-X-Gm-Message-State: AOAM531IfcQvbUYgVhRZx4xldab69NMoQbrjywsIY9NssDNSz9KWxrDv
-        MmqpxX6yct1WXYIBRCxG9/mLWfnbFcEzJTO5Gnw=
-X-Google-Smtp-Source: ABdhPJzM2MRG8rMTJKJfOP0RduKJh1ex1F4fmkrYko4U7RrgeomKqV16KFW80Wu4mw/3mRmN6RhDx+WrrWyMEKFvB5Q=
-X-Received: by 2002:a9d:6250:: with SMTP id i16mr3635338otk.77.1599732210910;
- Thu, 10 Sep 2020 03:03:30 -0700 (PDT)
+        Thu, 10 Sep 2020 06:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729781AbgIJKD5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:03:57 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330A0C061573;
+        Thu, 10 Sep 2020 03:03:57 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id r9so6437284ioa.2;
+        Thu, 10 Sep 2020 03:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y2JcHZ6MFjyHAlvpoNmjBZx8lY6aHDHdPBn5/fOR/C0=;
+        b=SHjrnz+amdW+kH6msAJS1SjMD4qKf//Oke1bSThNY6pdCjvbQ+x27OU9YlV9B+SYEj
+         x4WGit+P6lzFULpqfB7FM8A7DBakbna0aDoBRBFhMpId+FTvnxVfdSZkL+7UBKf6R7Li
+         Qcwq03DQg64ECu81QBftLC7POFMrjdMmsyy3+USM1cM0a37HSojGGcOCLkCDzAtOUwGK
+         CIURbhZ42k7j/+YCP7SNIquHjrH+i0bOrZQqdbBLNZOfz6En+Jn7mMcXdMSqXCC+jQZD
+         lYjq+VOUPTp8EL0T/MjzHs07HO7C27K2v1VXkWq9+vJ2IE9wwkcgALGw9zQQ/fsUdMbG
+         yKEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y2JcHZ6MFjyHAlvpoNmjBZx8lY6aHDHdPBn5/fOR/C0=;
+        b=eqkKb3q/k0KPTurrPFsz/XQHlr3eoD9uwTT91lNrSHalFDowkik302pJW3vnTzUT8z
+         yYq6o1Lm6njI9GGPCJEvpfZrDkdDIlqp60qT480a6/NOuHQUdEq1K6xoOfPZNAV7ATDs
+         +krvct4Wy8RBusCo5Dq0SlUlAIgfRpvMV+XcVQVO72e5yTseWlVrQZAACSQ8JHuw3jbo
+         t0Wd+9+00AqunpNGI2c/qWAN0sqcpWY/5+b3wOCRnpVDp95FNfj5bd2tjyqFZXajosGi
+         7Vune+DZJInZTjI/W7z1BirwMUQZaUYhmAj3/jvQsEq+H1VVHppz/BxP6MdRcRTRKkkD
+         w6ZQ==
+X-Gm-Message-State: AOAM533qR4iGZNs3/0jCRcC19D/Bv4FwnlKG1ADm0ZZIU1Yf/SwfUz4T
+        jG4fRSMyumEUuJomZNjc/hkXNeEQJ0cHP8J/fvY=
+X-Google-Smtp-Source: ABdhPJyLZcGsxd4Zx+mCdXy45ufEwo0KPMGwBXhtsOyHb64xVG7npyu9cbgFOz4UWOemWTgujXWUOhR54K4+16Md/2Y=
+X-Received: by 2002:a5d:8b4c:: with SMTP id c12mr6859868iot.167.1599732236621;
+ Thu, 10 Sep 2020 03:03:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904155025.55718-1-xypron.glpk@gmx.de> <CAMj1kXGYpMMrQPgL-SNde75EbDX8RZBDrboEuMcjJ7-cyEJUXg@mail.gmail.com>
- <CAOnJCU+DrXt=Fvq08dMJX=Nn0bEJr_V_1nPJvh6sRA-GqgV3OQ@mail.gmail.com>
-In-Reply-To: <CAOnJCU+DrXt=Fvq08dMJX=Nn0bEJr_V_1nPJvh6sRA-GqgV3OQ@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 10 Sep 2020 13:03:19 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXFKrD172-AU_45fd4UHXdxOKfjyy9R=teXxEAr9nFKP6w@mail.gmail.com>
-Message-ID: <CAMj1kXFKrD172-AU_45fd4UHXdxOKfjyy9R=teXxEAr9nFKP6w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>
+References: <20200910091340.8654-1-david@redhat.com> <20200910091340.8654-5-david@redhat.com>
+In-Reply-To: <20200910091340.8654-5-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 10 Sep 2020 12:03:45 +0200
+Message-ID: <CAM9Jb+j=8-Fpyg2fizM_3FenF649y2AKA8rsWaQzwCgX8Da7+g@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] mm/memory_hotplug: MEMHP_MERGE_RESOURCE to specify
+ merging of System RAM resources
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux MM <linux-mm@kvack.org>, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>, Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 at 23:37, Atish Patra <atishp@atishpatra.org> wrote:
->
-> On Wed, Sep 9, 2020 at 1:17 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > (+ Atish, Palmer)
-> >
-> > On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-> > >
-> > > In the memory map the regions with the lowest addresses may be of type
-> > > EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
-> > > rest of the memory. So for calculating the maximum loading address for the
-> > > device tree and the initial ramdisk image these reserved areas should not
-> > > be taken into account.
-> > >
-> > > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > > ---
-> > >  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> > > index c2484bf75c5d..13058ac75765 100644
-> > > --- a/drivers/firmware/efi/libstub/efi-stub.c
-> > > +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> > > @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
-> > >         map.map_end = map.map + map_size;
-> > >
-> > >         for_each_efi_memory_desc_in_map(&map, md) {
-> > > -               if (md->attribute & EFI_MEMORY_WB) {
-> > > +               if (md->attribute & EFI_MEMORY_WB &&
-> > > +                   md->type != EFI_RESERVED_TYPE) {
-> > >                         if (membase > md->phys_addr)
-> > >                                 membase = md->phys_addr;
-> > >                 }
-> > > --
-> > > 2.28.0
-> > >
-> >
-> > This is not the right fix - on RPi2, for instance, which has some
-> > reserved memory at the base of DRAM, this change will result in the
-> > first 16 MB of memory to be wasted.
-> >
-> > What I would prefer to do is get rid of get_dram_base() entirely -
-> > arm64 does not use its return value in the first place, and for ARM,
-> > the only reason we need it is so that we can place the uncompressed
-> > kernel image as low in memory as possible, and there are probably
-> > better ways to do that. RISC-V just started using it too, but only
-> > passes it from handle_kernel_image() to efi_relocate_kernel(), and
-> > afaict, passing 0x0 there instead would not cause any problems.
->
-> Yes. Passing 0x0 to efi_relocate_kernel will result in a failure in
-> efi_bs_call and it will fallback to
-> efi_low_alloc_above which will try to assign the lowest possible
-> available memory with 2MB alignment restriction.
-> The only disadvantage is an extra unnecessary call to UEFI firmware
-> which should be okay as it is not in the hotpath.
->
+Looks good to me.
 
-The point is really that get_dram_base() does a similar call to
-GetMemoryMap() under the hood, so once we remove it, the worst case
-still does that once (in efi_low_alloc_above() invoked from
-efi_relocate_kernel) whereas the optimal case will no longer call it
-at all.
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
