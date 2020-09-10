@@ -2,120 +2,121 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF5C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA782075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLZJoPgV"
+	by mail.kernel.org (Postfix) with ESMTP id BB5482075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599739257;
+	bh=gPPcyn/tq/4FUyBAZRHDVT1Hgp+0p85nxiUqeEM9stk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZOE2YL7tm4ov/oB7s+8FAn+cqZug1il2qlNtslTzi1e1MTjh1OmR9eeMvuxf8uzXD
+	 p/sHB9u0wv226+eKrsxXGAont4V4O+3DhGo1MwQYASn7dZGvC1/FD0EfNw3tV/UEBZ
+	 hzNUoJNMWBj1HdmeREor8G9tyL3nstjgcLRO1xKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgIJL6S (ORCPT
+        id S1728211AbgIJL7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730474AbgIJLxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:53:34 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF47C061795;
-        Thu, 10 Sep 2020 04:28:53 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f2so2062225pgd.3;
-        Thu, 10 Sep 2020 04:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LJV3WNyaxrzsPvTQXCjdL06gQE6s3VLAjqwsh5YtZqk=;
-        b=HLZJoPgVtada0k+w1Vlw/QLgbERepcdMoG+DxIvIFv3PKXozfpFlpSnx7jhG3wpKbX
-         1Sk+GNgSzf33FKosgqOnB4m0NL7hj6vdEfWsQNmzZ0OAODJt4BXR6/q6oNz4Dy4anWu2
-         XW4593ULZa56fABgR41HUf79lnU4yu9KiO5tBiPVPOgYs423FLhlIFsb2uw3y95R2jtZ
-         wsXLmBu1xKqGwFu5WzlgrJJKot41DNWTVAOWMlM3imFDl3g5QSorIN/vboPGQLZi1mOu
-         Zui06kRkTckKo1HX9AoJT0GxxTC10s1EgrzMexLBXwZDbzLWz1Ua1qT2T7sAix/QmYCm
-         U5Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LJV3WNyaxrzsPvTQXCjdL06gQE6s3VLAjqwsh5YtZqk=;
-        b=k3x91Z0CofGl2AvzYo4JqyY2KdlYTjg5hHeex0mxqxZyjykuWb+m//lVbaV9T+qxNA
-         Pymcu1AyQPQLRVW2zdip/Y2vOruCyhSth0hTj5JF/5QWpHO3Gxs0ygVIpQ4qm7WQx49+
-         BqiXSl5AZhglQN/CZeT0tSJSk0OCmGq7kIlYxLDnGSt2WuOmd3+Ds1Q26NpjXsWYzoHe
-         FeWL7J3suQC/Daf4EQI1Wqh0QyKrk058oh5AvSGNcYGZtAhgzPeNr9Gy3cQj/QETnZLw
-         vmkF+YQJ1lBBCWMs2si476n6pJu+bWOrlB3VWyDUt3iRR84OsgOwM5kCsddlWLCHC/sZ
-         wL/g==
-X-Gm-Message-State: AOAM530bFBTl/qB0Ncg9iXDjLXza52T/wKfw+pNSdbERbxqf482KzFOB
-        4N4buT36W6mCI9BgEzLcn3fyuB3726FtZaempx7JpI6Ri7gqfg==
-X-Google-Smtp-Source: ABdhPJw59PgWYSINH/x1vfIB1iJzf2BJ0ZGlPsG3JS8wXt6v/msJq5KIv5VXRTlwElVmtZP+ooDW8H8U6+oXO3hnm9c=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr4194253pgd.203.1599737333085;
- Thu, 10 Sep 2020 04:28:53 -0700 (PDT)
+        Thu, 10 Sep 2020 07:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730544AbgIJLzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:55:31 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDE0E2075B;
+        Thu, 10 Sep 2020 11:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599738931;
+        bh=gPPcyn/tq/4FUyBAZRHDVT1Hgp+0p85nxiUqeEM9stk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R+2PJqwvb/POPURnczQeZytNBDYrwNG3cB3AxjkMkIDgQ2PiA/mtKTPP9OocKvh3P
+         tCdzJDhwilBH0uR9FbsthykDsqEQTJL43DvQfiq0598xDxbq5GkCAKt0EwHNelHHEk
+         QKAMCW5EyF/wN8ScDWDAtYYVf53p29eWzzesmjHQ=
+Received: by mail-ed1-f48.google.com with SMTP id g4so6044279edk.0;
+        Thu, 10 Sep 2020 04:55:30 -0700 (PDT)
+X-Gm-Message-State: AOAM530so6r8TNeqlaylpuph2Ypc/7lSeivC5ylmR59aX/SQlgVk0bB7
+        8nCVM/XXzLmH/0lDHj0n/LXZAeUAK8Hiw2Wxllc=
+X-Google-Smtp-Source: ABdhPJx3loxbsLcMOjqHauv2rzhE2oJfoWMPP91+KqTvxXBJf5pfIsbyDngaUG90FaVG80CRKYGIpNE+nfedlmzEzm8=
+X-Received: by 2002:a05:6402:180a:: with SMTP id g10mr8750346edy.18.1599738929240;
+ Thu, 10 Sep 2020 04:55:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904165222.18444-1-vadym.kochan@plvision.eu>
- <20200904165222.18444-2-vadym.kochan@plvision.eu> <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
- <20200910082512.GE20411@plvision.eu>
-In-Reply-To: <20200910082512.GE20411@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Sep 2020 14:28:35 +0300
-Message-ID: <CAHp75Vf9DJZhOMcaAebtQoz_biY1kFS34W1Fp0kdDFiDm4T7vg@mail.gmail.com>
-Subject: Re: [PATCH net-next v7 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
+References: <20200907161141.31034-1-krzk@kernel.org> <20200907161141.31034-3-krzk@kernel.org>
+ <20200908202544.GB846754@bogus>
+In-Reply-To: <20200908202544.GB846754@bogus>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 10 Sep 2020 13:55:17 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdvfb2xY0nCh_Dyf1545b+q-BMYQJFrxLuLk6rh1acVoQ@mail.gmail.com>
+Message-ID: <CAJKOXPdvfb2xY0nCh_Dyf1545b+q-BMYQJFrxLuLk6rh1acVoQ@mail.gmail.com>
+Subject: Re: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second
+ interrupt with touch screen
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 11:25 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> On Fri, Sep 04, 2020 at 10:12:07PM +0300, Andy Shevchenko wrote:
-> > On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-
-
-> > > +               .param = {.admin_state = admin_state}
-> >
-> > + white spaces? Whatever you choose, just be consistent among all
-> > similar definitions.
-> >
+On Tue, 8 Sep 2020 at 22:25, Rob Herring <robh@kernel.org> wrote:
 >
-> Can I use following format for one-liner embedded struct ?
-
-Of course. It's just a style matter.
-My point that you need to be consistent over all similar cases in the code.
-
->         .param = {
->                 .admin_state = admin_state,
->         }
-> > ...
+> On Mon, Sep 07, 2020 at 06:11:18PM +0200, Krzysztof Kozlowski wrote:
+> > The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
+> > screen.  In such case the second interrupt is required.  This second
+> > interrupt can be anyway provided, even without touch screens.  This
+> > fixes dtbs_check warnings like:
 > >
+> >   arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../bindings/iio/adc/samsung,exynos-adc.yaml      | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > index cc3c8ea6a894..89b4f9c252a6 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > @@ -41,7 +41,10 @@ properties:
+> >      maxItems: 2
+> >
+> >    interrupts:
+> > -    maxItems: 1
+> > +    description:
+> > +      ADC interrupt followed by optional touchscreen interrupt.
+> > +    minItems: 1
+> > +    maxItems: 2
+> >
+> >    "#io-channel-cells":
+> >      const: 1
+> > @@ -107,6 +110,16 @@ allOf:
+> >            items:
+> >              - const: adc
+> >
+> > +  - if:
+> > +      properties:
+> > +        has-touchscreen:
+> > +          true
 >
-> I think it looks better when all of the members filled looks similar
-> (even if it requires 2 additional lines) instead of having:
->
->     .member = { E } ?
+> This evaluates as true if 'has-touchscreen' is not present too. You
+> should use 'required' here.
 
-I like the former one (as you do), but in some cases when you have one
-member or an array it's convenient to have them one one line.
+I see, thanks. I'll send a v2.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Krzysztof
