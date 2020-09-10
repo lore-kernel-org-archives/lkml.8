@@ -2,245 +2,112 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9157C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7399C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AADD121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826A121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DChiCwze"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Zdsfz/te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgIJTmd (ORCPT
+        id S1726301AbgIJToc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
+        Thu, 10 Sep 2020 15:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbgIJPdi (ORCPT
+        with ESMTP id S1731327AbgIJPdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 11:33:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBC2C061365
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:17:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh1so1072152plb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:17:23 -0700 (PDT)
+Received: from mail-oi1-x264.google.com (mail-oi1-x264.google.com [IPv6:2607:f8b0:4864:20::264])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C1DC061373
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:26:25 -0700 (PDT)
+Received: by mail-oi1-x264.google.com with SMTP id d189so6246629oig.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:26:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tPQ89cuIIRpR65Gxj5ecjevE7KdkPR+rkFKg2EWJ1Wo=;
-        b=DChiCwzeZGIWq9/ed/gKC6HSdKRqhEs7Cl7tIqKCGERK9KOYJoH5HR7PeRQFbOp0ZQ
-         khZeS1vnyB3+LRhvPvqPzg1++dxbQ65OlIG3+zElXCaofAPycZykfEboSqoECnwgYkc8
-         MjBJnNXFCtUW2Ff6DrHl+sxDflI9XbnpK+uT5XCk1aFiT5HbdZScO79bQK/bPprVs9ke
-         AKI0Gc5Gmjyb5KEUqFWbhTCjq+hID3NQ5SFYjD5nGdby6rdJDucAdfiBRYrvqN5RUvSp
-         a/e3IDc7KLOgC5+PLCtG+ltNKm9AU2kQQzP0O8rhwbvaICVCr6rc7DiwJMJDGG5odV8E
-         t8+w==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fJHhgYEwWxBGPZV0ck5d43o8h1NDMA91jT0wBqCfnwY=;
+        b=Zdsfz/texQfzXW2RGAHepIO+zcBnvTWRPvI9uTSQnnv62NJZBg2LJ6xmh15MhBIyrw
+         v2XZbgrWLuNbsmf/JyNDTQY9RgOzmk6Cbd/1ypznE5opXiubVRfp31r9c36Og/nxYeMK
+         GKaoaYgBHLRuJDDj4YQAG9m6P0os4YS4Trbzg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tPQ89cuIIRpR65Gxj5ecjevE7KdkPR+rkFKg2EWJ1Wo=;
-        b=DPlKblQEoOZky+Y5Z5MEEpEOX9rvIhP6mfs1VQRb7yMB6G3Ak2gFrt+o7LczvGYhSW
-         Z+i5PNEAkdKda9f6YDSQPb9xnNorB/H3ac3uOmWYqsDmTDX6cMqChNesorOnSSqh26AO
-         Rh8Bqc9NMUHbM9LC/u1wogphcFExSPEyT1O27zO2sYSgmdeUy3FN8BVm89+QBDzUiP0o
-         E9BwMs58GpJG0NDUyXSt44aRm8YT8ar9HtLK2sVg4m/LeiEUFACxI8+x88FLXqg3TvgO
-         R3Tva8wfxJGcb+ICKgEhSZZ+OdNbM56NQuNkdP01UZHy20QK5MQgt+csz82znAEVxmN2
-         JOsg==
-X-Gm-Message-State: AOAM530eHJhMlsIeb/520ft6/fOteo9Ux6BUWpcvWO3AGL0NXijf5lh4
-        cDeC/699JEmBTdgNHo/Iy8Uj6A==
-X-Google-Smtp-Source: ABdhPJzN/GMDnhYVZz/m1t04YSzXdezukOM0X0fLu2KC5nqmbsead/T/1/lyPGlr1z5YJ1TUoUk/HA==
-X-Received: by 2002:a17:90b:1915:: with SMTP id mp21mr407790pjb.116.1599751042106;
-        Thu, 10 Sep 2020 08:17:22 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id z23sm5241512pgv.57.2020.09.10.08.17.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fJHhgYEwWxBGPZV0ck5d43o8h1NDMA91jT0wBqCfnwY=;
+        b=jSsUhs8eZcTfdmH1hpcjHw++9vizsDj1eFrtVi5PAANQmvmEDsqvPozGHwRGqz4MGm
+         ujHyF0H7HSyIbW8/EXTL72Eg+HwMk54ghGEQjRKF0hIrtsJcNB5oJixFnT5eS0VF+VIe
+         h7mhk4n8bk/zvkZC+mdG4kK6k3z3w0upkzfUyViVoNGl5RjLGIEvYIVb9r5rYWW3azlx
+         alceeC7VEtUA8UZXYC4LjAqbKpzaZ8Q/FUahPrf29Pd3sPNUXi/geXGlKeDbjlpzLq5L
+         91YFfl0Mb47Vxp4rv5WgAoiWSL6Xd4Gin4uhRNpqQ1mbtwBAee+rwjIHWfA3CKlNZgk9
+         TGkw==
+X-Gm-Message-State: AOAM5308iGSD0kAlLNZbtBFii4QRCF5ZJk34iS4KWfCLWLijkqQQU48Z
+        ml0oEXqSWa/SjFD3Bhec4jLzqWs/tLWjhv3gmyIANmN2EQ1L
+X-Google-Smtp-Source: ABdhPJyG0h05fMgSeA0kb5tHFjfFMkLwJoDKu0c8WIRTzJdH0BccQ194jKVgXJ9oEvffUNNs8qjWbXf25PZO
+X-Received: by 2002:aca:d54d:: with SMTP id m74mr336105oig.3.1599751584954;
+        Thu, 10 Sep 2020 08:26:24 -0700 (PDT)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp-relay.gmail.com with ESMTPS id h4sm943004oom.19.2020.09.10.08.26.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 08:17:20 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 08:17:15 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
-Message-ID: <20200910151715.GB2041735@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
- <20200908234643.GF1060586@google.com>
- <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
+        Thu, 10 Sep 2020 08:26:24 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+From:   Ray Jui <ray.jui@broadcom.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH 4/4] spi: bcm-qspi: Clean up 7425, 7429, and 7435 settings
+Date:   Thu, 10 Sep 2020 08:25:39 -0700
+Message-Id: <20200910152539.45584-4-ray.jui@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910152539.45584-1-ray.jui@broadcom.com>
+References: <20200910152539.45584-1-ray.jui@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:18:05AM +0900, Masahiro Yamada wrote:
-> On Wed, Sep 9, 2020 at 8:46 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > On Sun, Sep 06, 2020 at 09:24:38AM +0900, Masahiro Yamada wrote:
-> > > On Fri, Sep 4, 2020 at 5:30 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > > >
-> > > > This patch series adds support for building x86_64 and arm64 kernels
-> > > > with Clang's Link Time Optimization (LTO).
-> > > >
-> > > > In addition to performance, the primary motivation for LTO is
-> > > > to allow Clang's Control-Flow Integrity (CFI) to be used in the
-> > > > kernel. Google has shipped millions of Pixel devices running three
-> > > > major kernel versions with LTO+CFI since 2018.
-> > > >
-> > > > Most of the patches are build system changes for handling LLVM
-> > > > bitcode, which Clang produces with LTO instead of ELF object files,
-> > > > postponing ELF processing until a later stage, and ensuring initcall
-> > > > ordering.
-> > > >
-> > > > Note that patches 1-4 are not directly related to LTO, but are
-> > > > needed to compile LTO kernels with ToT Clang, so I'm including them
-> > > > in the series for your convenience:
-> > > >
-> > > >  - Patches 1-3 are required for building the kernel with ToT Clang,
-> > > >    and IAS, and patch 4 is needed to build allmodconfig with LTO.
-> > > >
-> > > >  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
-> > > >
-> > >
-> > >
-> > > I still do not understand how this patch set works.
-> > > (only me?)
-> > >
-> > > Please let me ask fundamental questions.
-> > >
-> > >
-> > >
-> > > I applied this series on top of Linus' tree,
-> > > and compiled for ARCH=arm64.
-> > >
-> > > I compared the kernel size with/without LTO.
-> > >
-> > >
-> > >
-> > > [1] No LTO  (arm64 defconfig, CONFIG_LTO_NONE)
-> > >
-> > > $ llvm-size   vmlinux
-> > >    text    data     bss     dec     hex filename
-> > > 15848692 10099449 493060 26441201 19375f1 vmlinux
-> > >
-> > >
-> > >
-> > > [2] Clang LTO  (arm64 defconfig + CONFIG_LTO_CLANG)
-> > >
-> > > $ llvm-size   vmlinux
-> > >    text    data     bss     dec     hex filename
-> > > 15906864 10197445 490804 26595113 195cf29 vmlinux
-> > >
-> > >
-> > > I compared the size of raw binary, arch/arm64/boot/Image.
-> > > Its size increased too.
-> > >
-> > >
-> > >
-> > > So, in my experiment, enabling CONFIG_LTO_CLANG
-> > > increases the kernel size.
-> > > Is this correct?
-> >
-> > Yes. LTO does produce larger binaries, mostly due to function
-> > inlining between translation units, I believe. The compiler people
-> > can probably give you a more detailed answer here. Without -mllvm
-> > -import-instr-limit, the binaries would be even larger.
-> >
-> > > One more thing, could you teach me
-> > > how Clang LTO optimizes the code against
-> > > relocatable objects?
-> > >
-> > >
-> > >
-> > > When I learned Clang LTO first, I read this document:
-> > > https://llvm.org/docs/LinkTimeOptimization.html
-> > >
-> > > It is easy to confirm the final executable
-> > > does not contain foo2, foo3...
-> > >
-> > >
-> > >
-> > > In contrast to userspace programs,
-> > > kernel modules are basically relocatable objects.
-> > >
-> > > Does Clang drop unused symbols from relocatable objects?
-> > > If so, how?
-> >
-> > I don't think the compiler can legally drop global symbols from
-> > relocatable objects, but it can rename and possibly even drop static
-> > functions.
-> 
-> 
-> Compilers can drop static functions without LTO.
-> Rather, it is a compiler warning
-> (-Wunused-function), so the code should be cleaned up.
-> 
-> 
-> 
-> > This is why we need global wrappers for initcalls, for
-> > example, to have stable symbol names.
-> >
-> > Sami
-> 
-> 
-> 
-> At first, I thought the motivation of LTO
-> was to remove unused global symbols, and
-> to perform further optimization.
-> 
-> 
-> It is true for userspace programs.
-> In fact, the example of
-> https://llvm.org/docs/LinkTimeOptimization.html
-> produces a smaller binary.
-> 
-> 
-> In contrast, this patch set produces a bigger kernel
-> because LTO cannot remove any unused symbol.
-> 
-> So, I do not understand what the benefit is.
-> 
-> 
-> Is inlining beneficial?
-> I am not sure.
-> 
-> 
-> Documentation/process/coding-style.rst
-> "15) The inline disease"
-> mentions that inlining is not always
-> a good thing.
-> 
-> 
-> As a whole, I still do not understand
-> the motivation of this patch set.
+The Broadcom QSPI driver now falls back to no MSPI_DEV support as the
+default setting in the generic compatible string, explicit settings for
+STB chips 7425, 7429, and 7435 can be removed.
 
-Clang produces faster code with LTO even if unused functions are not
-removed, and I'm not sure how many unused globals there really are in
-the kernel that aren't exported for modules. However, as I mentioned in
-the cover letter, we also need LTO for Control-Flow Integrity (CFI),
-which we have used in Pixel kernels for a couple of years now, and plan
-to use in more Android devices in future:
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+---
+ drivers/spi/spi-bcm-qspi.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-  https://clang.llvm.org/docs/ControlFlowIntegrity.html
+diff --git a/drivers/spi/spi-bcm-qspi.c b/drivers/spi/spi-bcm-qspi.c
+index b78d47a4403c..14c9d0133bce 100644
+--- a/drivers/spi/spi-bcm-qspi.c
++++ b/drivers/spi/spi-bcm-qspi.c
+@@ -1281,18 +1281,6 @@ static const struct bcm_qspi_data bcm_qspi_spcr3_data = {
+ };
+ 
+ static const struct of_device_id bcm_qspi_of_match[] = {
+-	{
+-		.compatible = "brcm,spi-bcm7425-qspi",
+-		.data = &bcm_qspi_no_rev_data,
+-	},
+-	{
+-		.compatible = "brcm,spi-bcm7429-qspi",
+-		.data = &bcm_qspi_no_rev_data,
+-	},
+-	{
+-		.compatible = "brcm,spi-bcm7435-qspi",
+-		.data = &bcm_qspi_no_rev_data,
+-	},
+ 	{
+ 		.compatible = "brcm,spi-bcm7445-qspi",
+ 		.data = &bcm_qspi_rev_data,
+-- 
+2.17.1
 
-Sami
