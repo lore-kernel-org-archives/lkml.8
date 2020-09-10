@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD10C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0EEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA77C22204
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA5A21941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730925AbgIJOCp (ORCPT
+        id S1731052AbgIJODs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:02:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11777 "EHLO huawei.com"
+        Thu, 10 Sep 2020 10:03:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11775 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730927AbgIJNyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730993AbgIJNyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 09:54:49 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D7ED8128FEC0F2373102;
+        by Forcepoint Email with ESMTP id DD6926A6D308E9EA3F40;
         Thu, 10 Sep 2020 21:52:30 +0800 (CST)
 Received: from huawei.com (10.90.53.225) by DGGEMS404-HUB.china.huawei.com
  (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
@@ -32,9 +32,9 @@ To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
         <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH -next 1/3] rtlwifi: rtl8188ee: fix comparison pointer to bool warning in phy.c
-Date:   Thu, 10 Sep 2020 21:59:15 +0800
-Message-ID: <20200910135917.143723-2-zhengbin13@huawei.com>
+Subject: [PATCH -next 2/3] rtlwifi: rtl8188ee: fix comparison pointer to bool warning in trx.c
+Date:   Thu, 10 Sep 2020 21:59:16 +0800
+Message-ID: <20200910135917.143723-3-zhengbin13@huawei.com>
 X-Mailer: git-send-email 2.26.0.106.g9fadedd
 In-Reply-To: <20200910135917.143723-1-zhengbin13@huawei.com>
 References: <20200910135917.143723-1-zhengbin13@huawei.com>
@@ -50,26 +50,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes coccicheck warning:
 
-drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c:1584:14-18: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c:735:5-9: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c:776:5-9: WARNING: Comparison to bool
 
 Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-index 63ec5a20b67b..38d4432767e8 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-@@ -1581,7 +1581,7 @@ static void _rtl88e_phy_path_adda_on(struct ieee80211_hw *hw,
- 	u32 i;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
+index 8f7689225393..b9775eec4c54 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
+@@ -732,7 +732,7 @@ void rtl88ee_set_desc(struct ieee80211_hw *hw, u8 *pdesc8,
+ {
+ 	__le32 *pdesc = (__le32 *)pdesc8;
 
- 	pathon = is_patha_on ? 0x04db25a4 : 0x0b1b25a4;
--	if (false == is2t) {
-+	if (!is2t) {
- 		pathon = 0x0bdb25a0;
- 		rtl_set_bbreg(hw, addareg[0], MASKDWORD, 0x0b1b25a0);
- 	} else {
+-	if (istx == true) {
++	if (istx) {
+ 		switch (desc_name) {
+ 		case HW_DESC_OWN:
+ 			set_tx_desc_own(pdesc, 1);
+@@ -773,7 +773,7 @@ u64 rtl88ee_get_desc(struct ieee80211_hw *hw,
+ 	u32 ret = 0;
+ 	__le32 *pdesc = (__le32 *)pdesc8;
+
+-	if (istx == true) {
++	if (istx) {
+ 		switch (desc_name) {
+ 		case HW_DESC_OWN:
+ 			ret = get_tx_desc_own(pdesc);
 --
 2.26.0.106.g9fadedd
 
