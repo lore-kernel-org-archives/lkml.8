@@ -2,123 +2,61 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A1C2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300C9C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5F822204
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:52:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dytL7qeh"
+	by mail.kernel.org (Postfix) with ESMTP id DA8AE20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgIJJwf (ORCPT
+        id S1730544AbgIJJxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730418AbgIJJvS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:51:18 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B0AC061573;
-        Thu, 10 Sep 2020 02:51:17 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a9so2767626pjg.1;
-        Thu, 10 Sep 2020 02:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Blehx/RsCjxhexTNdBAbuV+NrcKDgCDuzEEOkebWnFE=;
-        b=dytL7qehQzztnlbUdBSM8T5hf+VxNOCBpL/24z5fs4Kg5gVwvOyEerh/JykbVMXXv0
-         tn2DODpVzgu0YUGpAWKe8ATUON1qJzdQAui4lTpWUKwofInyzwM38QOuzvw0L6YJg1bP
-         MVrI0CCBWnOJUoHBFq+Spuvz+5ehyQG7A4wbKWIsz5YEgf5weqcwLIy5h9YHj4BIdZte
-         i5HVgsh1Ok4N9OGMMT5k8YDlHj6U/iVS8U1hYWGkuEy0eWkeOzj33blIpajczrVEEflB
-         SyQ54fiGEPRmC7axVm3rWj0itegV1UObql+KQTgHNfDgE4GLUXWzuoPr8RHDCnXd/E3M
-         VAWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Blehx/RsCjxhexTNdBAbuV+NrcKDgCDuzEEOkebWnFE=;
-        b=h57be6nbsS8N5yCvInj0Y9rK/HiqpH4Lt0w8RhS1V7MBofeQkdndYJgSWCx8xyogWM
-         XeDEbLhQ17Z/Xhb67lPxtCaVG/dQbN1T70Prxp7qBXTEZ8mIuNW3LWlX556BMwGxaM5Z
-         4S6cuAeYsEDB0BI+QN3QM2wFNVta1ZhasH7h3hFbaB4989ACCa3tqAV5W1OQwLNOt2uX
-         TJAHCzZR8J4jAWq2UlHuIgUmMKR1G6Yz5gEuogDUT5/ReQmRbByJayWpS0zyIjz4sCL/
-         cSK7t8tB9JruwMbAW1ercSwDOWFFSh3qElQqNsLnF9mo9ahkaOxcVT8Wanif+LvuwCTl
-         DMvg==
-X-Gm-Message-State: AOAM5329rHmfJQv0vzx471rdPedvXEnwHFiR2vz+QS17JY0Jc8Q3wcza
-        J/phQJoX2FkGTjxqeTkokyvjYVejYMc=
-X-Google-Smtp-Source: ABdhPJyQezQj+HJONXN4Ke47XI1Q9agwTLjxeb7n5zht75GG9c5NPJXGphDDb74zuOyJ46e84mNGYg==
-X-Received: by 2002:a17:90a:4687:: with SMTP id z7mr4537393pjf.144.1599731476796;
-        Thu, 10 Sep 2020 02:51:16 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id e1sm2576534pfl.162.2020.09.10.02.51.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 02:51:16 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Paul K ." <kronenpj@kronenpj.dyndns.org>,
-        "# v5 . 8-rc1+" <stable@vger.kernel.org>
-Subject: [PATCH v2 7/9] KVM: SVM: Get rid of handle_fastpath_set_msr_irqoff()
-Date:   Thu, 10 Sep 2020 17:50:42 +0800
-Message-Id: <1599731444-3525-8-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599731444-3525-1-git-send-email-wanpengli@tencent.com>
-References: <1599731444-3525-1-git-send-email-wanpengli@tencent.com>
+        Thu, 10 Sep 2020 05:53:33 -0400
+Received: from muru.com ([72.249.23.125]:44526 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730553AbgIJJvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:51:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A9A1980F9;
+        Thu, 10 Sep 2020 09:51:54 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 12:52:37 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH next 0/6] ARM: dts: am57xx/dra7x: switch to new cpsw
+ switch drv
+Message-ID: <20200910095237.GE7101@atomide.com>
+References: <20200907202125.22943-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907202125.22943-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+* Grygorii Strashko <grygorii.strashko@ti.com> [200907 23:21]:
+> Hi Tony,
+> 
+> Since Kernel v5.5 commits:
+>  111cf1ab4da3 ("net: ethernet: ti: introduce cpsw switchdev based driver part 2 - switch")
+>  ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+> the new CPSW driver with switchdev support has been introduced and one
+> am571x-idk board was converted to use it. And since that time (Nov 2019) no
+> significant issues were reported for the new CPSW driver.
+> 
+> Therefore it's time to switch all am57xx/dra7x boards to use new cpsw switch
+> driver. Those boards have 1 or 2 Ext. port wired and configured in dual_mac mode
+> by default. The dual_mac mode has been preserved the same way between
+> legacy and new driver it's safe to switch drivers.
 
-Analysis from Sean:
+OK thanks applying into omap-for-v5.10/dt.
 
- | svm->next_rip is reset in svm_vcpu_run() only after calling
- | svm_exit_handlers_fastpath(), which will cause SVM's
- | skip_emulated_instruction() to write a stale RIP.
-
-Let's get rid of handle_fastpath_set_msr_irqoff() in svm_exit_handlers_fastpath()
-to have a quick fix.
-
-Reported-by: Paul K. <kronenpj@kronenpj.dyndns.org>
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Paul K. <kronenpj@kronenpj.dyndns.org>
-Cc: <stable@vger.kernel.org> # v5.8-rc1+
-Fixes: 404d5d7bff0d (KVM: X86: Introduce more exit_fastpath_completion enum values)
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/svm/svm.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 19e622a..c61bc3b 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3349,11 +3349,6 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
- 
- static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
- {
--	if (!is_guest_mode(vcpu) &&
--	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
--	    to_svm(vcpu)->vmcb->control.exit_info_1)
--		return handle_fastpath_set_msr_irqoff(vcpu);
--
- 	return EXIT_FASTPATH_NONE;
- }
- 
--- 
-2.7.4
-
+Tony
