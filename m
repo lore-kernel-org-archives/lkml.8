@@ -2,168 +2,131 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D47C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64231C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D82A3208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA34208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5+ESoK8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wDduFtR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbgIJMdf (ORCPT
+        id S1730244AbgIJMeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:33:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729935AbgIJM1X (ORCPT
+        Thu, 10 Sep 2020 08:34:04 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42372 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730520AbgIJM1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:27:23 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8966C061756;
-        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so4513301pfp.11;
-        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7NG7rD1syICfupcmPdJmvgHTE4y0/rSK73sDdgxajwU=;
-        b=B5+ESoK8bYrXvgx3dHxcsnIUuKwHmo7iP0GnnhuWXhHO+oGi7QOG6Gzvc/S1lyGmeL
-         DOELZMXCR8VyF+mIOASF5yT/C/sCzgKGkt4s2fVLDKIZ0TG2ee2zFmT/p7dMwrsBY5F7
-         vj0prJpvaH5LR3kJlajXeb8FIDVQ2ZB9eA1wqGvvDvL8upL9jxw0ltlsWOPUminvEwmP
-         wmQYNyQRXc9N7xzwmx8Epz7x5A5ME+bJkUYmd7lQtHdKYtqDpR41mTsKEDA3IqwZ8kGG
-         9qRLGPHwf3SpswbaoFfK2s/aMCnOn+6FtVvsC8Y2bTLADg8FRQiszk8tgxF1SGIwA1HW
-         eCSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7NG7rD1syICfupcmPdJmvgHTE4y0/rSK73sDdgxajwU=;
-        b=EsOscAEfvU9sYI8EmapsTWwxRhMuO+HV2GdlLt/3wpxY23cF9tqEhh5VFw9LmJjoE+
-         mTkJdxd9OQBIMxfq9GQZ7vF7Ujn5kMFnvDsxwO6hwreINiIToKSiM19upkwiZhMDKQy7
-         0Y67pFBuCCPlnBK2VVFn6yU8io7TA1NZ82O7EUodprnBrTXV/4ZmMWemQyW2DIxQ4pLc
-         OOXgFJIS6w/dOMPSFRzVhWNuMoCTX1rYafWu/NGiHyFA94qmDXUfEQ4NH3ZDE8EtzTTL
-         8S14WHiyXBezUCj0fOcZXa3oPWE4NLf31686UPmejEefQRXWhWK+uQr1GZUic6bP2LHU
-         TwYg==
-X-Gm-Message-State: AOAM531dE5D1ycYEMgn+NiiGYyOCZ3RVWlUKpCR5nbCBWi/CO1nWLI/K
-        0w9w9fiGBwsJAl8CYWYQn4qRSc3QviU=
-X-Google-Smtp-Source: ABdhPJzQycYAfd7DwXTyyhYFiu3ZXgujt6tDccJKfSYJJyQ3N1CQ2BEtP9Fn7pJYAc49eqXwgB3DWw==
-X-Received: by 2002:a63:5ec5:: with SMTP id s188mr4339691pgb.218.1599740843198;
-        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
-        by smtp.gmail.com with ESMTPSA id b18sm5181687pgk.36.2020.09.10.05.27.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 05:27:22 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH] iio: gyro: adxrs290: use hook for devm resource unwinding
-Date:   Thu, 10 Sep 2020 17:57:11 +0530
-Message-Id: <20200910122711.16670-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Sep 2020 08:27:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08ACQo4g021584;
+        Thu, 10 Sep 2020 07:26:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599740810;
+        bh=aSRRKgMiRYB3BUkLsakdjF41LClHJbgT9tc8NKlD2lI=;
+        h=From:To:CC:Subject:Date;
+        b=wDduFtR1B/RiVlS+/8as01OdH913gKeAYyj2jdDuNgcxbVxC6Uz8uVMfrXiEfUXSb
+         qP0PsWgFnyiAjtYY5sb2Y9uHMAJ8Vk0EfyKnmyklkq6pZFtYHtQ3uOWjl81Cv5CCzd
+         I7fUDO7tbjj90eQXsovRSJdcY/7ioWGiXwixR3Cc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08ACQoCf090907
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 07:26:50 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 07:26:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 07:26:50 -0500
+Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08ACQlC9035892;
+        Thu, 10 Sep 2020 07:26:48 -0500
+From:   Aswath Govindraju <a-govindraju@ti.com>
+CC:     Aswath Govindraju <a-govindraju@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Mark Brown <broonie@kernel.org>,
+        Vignesh R <vigneshr@ti.com>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] Revert "spi: omap2-mcspi: Switch to readl_poll_timeout()"
+Date:   Thu, 10 Sep 2020 17:56:24 +0530
+Message-ID: <20200910122624.8769-1-a-govindraju@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of devm_add_action_or_reset() hook to switch device into STANDBY
-mode during standard resource unwinding. The patch includes a helper
-function, in the form of adxrs290_set_mode(), to realise driving the
-device into STANDBY mode.
+This reverts commit 13d515c796adc49a49b0cd2212ccd7f43a37fc5a.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+The amount of time spent polling for the MCSPI_CHSTAT bits to be set on
+AM335x-icev2 platform is less than 1us (about 0.6us) in most cases, with
+or without using DMA. So, in most cases the function need not sleep.
+Also, setting the sleep_usecs to zero would not be optimal here because
+ktime_add_us() used in readl_poll_timeout() is slower compared to the
+direct addition used after the revert. So, it is sub-optimal to use
+readl_poll_timeout in this case. 
+
+When DMA is not enabled, this revert results in an increase of about 27%
+in throughput and decrease of about 20% in CPU usage. However, the CPU
+usage and throughput are almost the same when used with DMA. 
+
+Therefore, fix this by reverting the commit which switched to using
+readl_poll_timeout().
+
+Fixes: 13d515c796ad ("spi: omap2-mcspi: Switch to readl_poll_timeout()")
+Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
 ---
- drivers/iio/gyro/adxrs290.c | 61 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 58 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
-index ff989536d2fb..2864eb443957 100644
---- a/drivers/iio/gyro/adxrs290.c
-+++ b/drivers/iio/gyro/adxrs290.c
-@@ -192,15 +192,70 @@ static int adxrs290_set_filter_freq(struct iio_dev *indio_dev,
- 	return adxrs290_spi_write_reg(st->spi, ADXRS290_REG_FILTER, val);
- }
+ drivers/spi/spi-omap2-mcspi.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 1c9478e6e5d9..d4c9510af393 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -24,7 +24,6 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/gcd.h>
+-#include <linux/iopoll.h>
  
-+static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
-+{
-+	struct adxrs290_state *st = iio_priv(indio_dev);
-+	int val, ret;
-+
-+	if (st->mode == mode)
-+		return 0;
-+
-+	mutex_lock(&st->lock);
-+
-+	ret = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
-+	if (ret < 0)
-+		goto out_unlock;
-+
-+	val = ret;
-+
-+	switch (mode) {
-+	case ADXRS290_MODE_STANDBY:
-+		val &= ~ADXRS290_MEASUREMENT;
-+		break;
-+	case ADXRS290_MODE_MEASUREMENT:
-+		val |= ADXRS290_MEASUREMENT;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	ret = adxrs290_spi_write_reg(st->spi, ADXRS290_REG_POWER_CTL, val);
-+	if (ret < 0) {
-+		dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
-+		goto out_unlock;
-+	}
-+
-+	/* update cached mode */
-+	st->mode = mode;
-+
-+out_unlock:
-+	mutex_unlock(&st->lock);
-+	return ret;
-+}
-+
-+static void adxrs290_chip_off_action(void *data)
-+{
-+	struct iio_dev *indio_dev = data;
-+
-+	adxrs290_set_mode(indio_dev, ADXRS290_MODE_STANDBY);
-+}
-+
- static int adxrs290_initial_setup(struct iio_dev *indio_dev)
+ #include <linux/spi/spi.h>
+ 
+@@ -348,9 +347,19 @@ static void omap2_mcspi_set_fifo(const struct spi_device *spi,
+ 
+ static int mcspi_wait_for_reg_bit(void __iomem *reg, unsigned long bit)
  {
- 	struct adxrs290_state *st = iio_priv(indio_dev);
-+	struct spi_device *spi = st->spi;
-+	int ret;
+-	u32 val;
+-
+-	return readl_poll_timeout(reg, val, val & bit, 1, MSEC_PER_SEC);
++	unsigned long timeout;
 +
-+	ret = adxrs290_spi_write_reg(spi, ADXRS290_REG_POWER_CTL,
-+				     ADXRS290_MEASUREMENT | ADXRS290_TSM);
-+	if (ret < 0)
-+		return ret;
- 
- 	st->mode = ADXRS290_MODE_MEASUREMENT;
- 
--	return adxrs290_spi_write_reg(st->spi,
--				      ADXRS290_REG_POWER_CTL,
--				      ADXRS290_MEASUREMENT | ADXRS290_TSM);
-+	return devm_add_action_or_reset(&spi->dev, adxrs290_chip_off_action,
-+					indio_dev);
++	timeout = jiffies + msecs_to_jiffies(1000);
++	while (!(readl_relaxed(reg) & bit)) {
++		if (time_after(jiffies, timeout)) {
++			if (!(readl_relaxed(reg) & bit))
++				return -ETIMEDOUT;
++			else
++				return 0;
++		}
++		cpu_relax();
++	}
++	return 0;
  }
  
- static int adxrs290_read_raw(struct iio_dev *indio_dev,
+ static int mcspi_wait_for_completion(struct  omap2_mcspi *mcspi,
+
+base-commit: dff9f829e5b0181d4ed9d35aa62d695292399b54
 -- 
-2.20.1
+2.17.1
 
