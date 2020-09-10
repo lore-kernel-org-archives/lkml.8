@@ -2,89 +2,79 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FDDC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D27B20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8B420684
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cIB5Z/m3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgIJLRB (ORCPT
+        id S1729521AbgIJLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:17:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47476 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730255AbgIJLNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:13:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D08DFABB2;
-        Thu, 10 Sep 2020 11:13:02 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 13:12:46 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200910111246.GE28354@dhcp22.suse.cz>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
- <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+        Thu, 10 Sep 2020 07:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730295AbgIJLNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:13:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5738C061757;
+        Thu, 10 Sep 2020 04:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=s+ol+PXubNrmJOSYnY96WBz+SWC8FNGcvNY7shjniI8=; b=cIB5Z/m36eTnnu3QrGnKe3a0PA
+        WRTWVFl1aVcQY+DUURUIB7nMKIML+LXd0yZVK+1A9h4c56740wxJ1uF3EamahmblovoT/8gOBlbUY
+        skVQoaV5sjFuWMbzfU7FyXUBNp1XzUGOFXr93zptKZ/XQ2mJcz/17PS2WPVOlJVzpyjz7RgO5T2Vt
+        0WjUDtRC+OfNBIXqiGBi8qlhHgSHyFb/VCNjSIjtvP3qJH0T0+GVuhi7ScW3j9XBuUaMADhEj4ntk
+        oymZAI65/UXqu5Gzjco69deKaKmE+jqqkHdOFJhvT70jvLnP1R13/gnISnUYrqaikl/7DvbH+eRTr
+        T6JV4zCQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGKW2-00038W-5P; Thu, 10 Sep 2020 11:13:22 +0000
+Date:   Thu, 10 Sep 2020 12:13:22 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/14] XArray: docs: add missing kernel-doc parameters
+ for xas_split_alloc()
+Message-ID: <20200910111322.GQ6583@casper.infradead.org>
+References: <cover.1599732764.git.mchehab+huawei@kernel.org>
+ <17aed0aeb9dad9ad3a1ca97da11bec16a6283f3c.1599732764.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+In-Reply-To: <17aed0aeb9dad9ad3a1ca97da11bec16a6283f3c.1599732764.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10-09-20 09:51:39, Laurent Dufour wrote:
-> Le 10/09/2020 à 09:23, Michal Hocko a écrit :
-> > On Wed 09-09-20 18:07:15, Laurent Dufour wrote:
-> > > Le 09/09/2020 à 12:59, Michal Hocko a écrit :
-> > > > On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
-> > [...]
-> > > > > For the point a, using the enum allows to know in
-> > > > > register_mem_sect_under_node() if the link operation is due to a hotplug
-> > > > > operation or done at boot time.
-> > > > 
-> > > > Yes, but let me repeat. We have a mess here and different paths check
-> > > > for the very same condition by different ways. We need to unify those.
-> > > 
-> > > What are you suggesting to unify these checks (using a MP_* enum as
-> > > suggested by David, something else)?
-> > 
-> > We do have system_state check spread at different places. I would use
-> > this one and wrap it behind a helper. Or have I missed any reason why
-> > that wouldn't work for this case?
+On Thu, Sep 10, 2020 at 12:23:56PM +0200, Mauro Carvalho Chehab wrote:
+>  /**
+> - * Allocate memory for splitting an entry of @order size into the order
+> - * stored in the @xas.
+> + * xas_split_alloc() - Allocate memory for splitting an entry of
+> + *		       @order size into the order stored in the @xas.
+> + *
+> + * @xas: is the 'xarray operation state'.  It may be either a pointer to
+> + * an xa_state, or an xa_state stored on the stack.  This is an unfortunate
+> + * ambiguity.
+> + * @entry: refers to something stored in a slot in the xarray
+> + * @order: size of each entry
+> + * @gfp: GFP allocation flags
+>   */
+
+No.  I'll do this properly.  Sorry for forgetting to document the arguments.
+
+>  void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
+>  		gfp_t gfp)
+> -- 
+> 2.26.2
 > 
-> That would not work in that case because memory can be hot-added at the
-> SYSTEM_SCHEDULING system state and the regular memory is also registered at
-> that system state too. So system state is not enough to discriminate between
-> the both.
-
-If that is really the case all other places need a fix as well.
-Btw. could you be more specific about memory hotplug during early boot?
-How that happens? I am only aware of https://lkml.kernel.org/r/20200818110046.6664-1-osalvador@suse.de
-and that doesn't happen as early as SYSTEM_SCHEDULING.
-
--- 
-Michal Hocko
-SUSE Labs
