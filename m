@@ -2,194 +2,217 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53870C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF79207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599718958;
-	bh=4IPFakKxzCsxB21yUqCQDDxngDYpAepaZS+PAyfbns4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D+P8bkAjMRgQazXxVaBn36DZx9foXVtFEsddols3aNLbFfEIXCXhK1W2yha857OxP
-	 u9eW1yo/BunktG9Dd2NHjQ2gkVAV/EH3bhe88+7qFw+26YpJY/xfRfRXLwdWNLAtBV
-	 xEnIyTP54X0d2mBrc3RT2nk6itOZcylbUAjUHL1c=
+	by mail.kernel.org (Postfix) with ESMTP id 19132207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgIJGWg (ORCPT
+        id S1727775AbgIJGWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 02:22:45 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:42091 "EHLO h3cspam01-ex.h3c.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgIJGW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:22:29 -0400
-Received: from localhost (unknown [122.179.50.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD041207DE;
-        Thu, 10 Sep 2020 06:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599718948;
-        bh=4IPFakKxzCsxB21yUqCQDDxngDYpAepaZS+PAyfbns4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkPFlWhbcUUDju8orcFfc7uiu2NTNaneNNJk9inedNMHK+CDwlUq3lfrRKix2KCyB
-         bwbWqD5oaZ51QvBOjO9CJMz2RXQsytp2DJN6ur266+wcEvZHBs9ASTLDsZWUzWQykM
-         aIsAANuZF5golAhB7qrlTDwnhu48fF6oSj0xJT8U=
-Date:   Thu, 10 Sep 2020 11:52:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
-        gregkh@linuxfoundation.org,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] soundwire: SDCA: add helper macro to access
- controls
-Message-ID: <20200910062223.GQ77521@vkoul-mobl>
-References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
- <20200901162225.33343-3-pierre-louis.bossart@linux.intel.com>
- <20200904050244.GT2639@vkoul-mobl>
- <f35a0ae7-2779-0c69-9ef3-0d0e298888ac@linux.intel.com>
- <20200909075555.GK77521@vkoul-mobl>
- <184867c2-9f0c-bffe-2eb7-e9c5735614b0@linux.intel.com>
+        id S1725971AbgIJGWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:22:37 -0400
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam01-ex.h3c.com with ESMTPS id 08A6Lve4044174
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 14:21:57 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 10 Sep 2020 14:21:59 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <tj@kernel.org>, <axboe@kernel.dk>
+CC:     <cgroups@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] [v2] blkcg: add plugging support for punt bio
+Date:   Thu, 10 Sep 2020 14:15:06 +0800
+Message-ID: <20200910061506.45704-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <184867c2-9f0c-bffe-2eb7-e9c5735614b0@linux.intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 08A6Lve4044174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-09-20, 08:48, Pierre-Louis Bossart wrote:
-> 
-> > > > > + *	25		0 (Reserved)
-> > > > > + *	24:22		Function Number [2:0]
-> > > > > + *	21		Entity[6]
-> > > > > + *	20:19		Control Selector[5:4]
-> > > > > + *	18		0 (Reserved)
-> > > > > + *	17:15		Control Number[5:3]
-> > > > > + *	14		Next
-> > > > > + *	13		MBQ
-> > > > > + *	12:7		Entity[5:0]
-> > > > > + *	6:3		Control Selector[3:0]
-> > > > > + *	2:0		Control Number[2:0]
-> > > > > + */
-> > > > > +
-> > > > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)						\
-> > > > > +	(BIT(30)							|	\
-> > > > 
-> > > > Programmatically this is fine, but then since we are defining for the
-> > > > description above, IMO it would actually make sense for this to be defined
-> > > > as FIELD_PREP:
-> > > > 
-> > > >           FIELD_PREP(GENMASK(30, 26), 1)
-> > > > 
-> > > > or better
-> > > > 
-> > > >           u32_encode_bits(GENMASK(30, 26), 1)
-> > > > 
-> > > > > +	FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))	|	\
-> > > > 
-> > > > Why not use u32_encode_bits(GENMASK(24, 22), (fun)) instead for this and
-> > > > below?
-> > > 
-> > > Because your comment for the v1 review was to use FIELD_PREP/FIELD_GET, and
-> > > your other patches for bitfield access only use FIELD_PREP/FIELD_GET.
-> > 
-> > yes and looking at this, I feel u32_encode_bits(GENMASK(24, 22), (fun))
-> > would look better than FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))
-> > 
-> > Do you agree?
-> 
-> The Function (fun) case is the easy one: the value is not split in two.
-> 
-> But look at the entity case, it's split in two:
-> 
-> FIELD_PREP(BIT(21), FIELD_GET(BIT(6), (ent)))			FIELD_PREP(GENMASK(12, 7),
-> FIELD_GET(GENMASK(5, 0), (ent)))
-> 
-> same for control
-> 
-> FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
-> FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
-> 
-> and same for channel number
-> 
-> FIELD_PREP(GENMASK(17, 15), FIELD_GET(GENMASK(5, 3), (ch)))	|	
-> FIELD_PREP(GENMASK(2, 0), FIELD_GET(GENMASK(2, 0), (ch))))
-> 
-> I don't see how we can avoid using the FIELD_GET to extract the relevant
-> bits from entity, control, channel number values.
+The test and the explaination of the patch as bellow.
 
-No, you dont need FIELD_GET, that would be pointless for this helper if
-that was the case
+Before test we added more debug code in blkg_async_bio_workfn():
+	int count = 0
+	if (bios.head && bios.head->bi_next) {
+		need_plug = true;
+		blk_start_plug(&plug);
+	}
+	while ((bio = bio_list_pop(&bios))) {
+		/*io_punt is a sysctl user interface to control the print*/
+		if(io_punt) {
+			printk("[%s:%d] bio start,size:%llu,%d count=%d plug?%d\n",
+				current->comm, current->pid, bio->bi_iter.bi_sector,
+				(bio->bi_iter.bi_size)>>9, count++, need_plug);
+		}
+		submit_bio(bio);
+	}
+	if (need_plug)
+		blk_finish_plug(&plug);
 
-> 
-> Or I am missing your point completely.
+Steps that need to be set to trigger *PUNT* io before testing:
+	mount -t btrfs -o compress=lzo /dev/sda6 /btrfs
+	mount -t cgroup2 nodev /cgroup2
+	mkdir /cgroup2/cg3
+	echo "+io" > /cgroup2/cgroup.subtree_control
+	echo "8:0 wbps=1048576000" > /cgroup2/cg3/io.max #1000M/s
+	echo $$ > /cgroup2/cg3/cgroup.procs
 
-Correct
+Then use dd command to test btrfs PUNT io in current shell:
+	dd if=/dev/zero of=/btrfs/file bs=64K count=100000
 
-It should be:
+Test hardware environment as below:
+	[root@localhost btrfs]# lscpu
+	Architecture:          x86_64
+	CPU op-mode(s):        32-bit, 64-bit
+	Byte Order:            Little Endian
+	CPU(s):                32
+	On-line CPU(s) list:   0-31
+	Thread(s) per core:    2
+	Core(s) per socket:    8
+	Socket(s):             2
+	NUMA node(s):          2
+	Vendor ID:             GenuineIntel
 
-        foo |= u32_encode_bits(val, FOO_MASK_A);
+With above debug code, test command and test environment, I did the
+tests under 3 different system loads, which are triggered by stress:
+1, Run 64 threads by command "stress -c 64 &"
+	[53615.975974] [kworker/u66:18:1490] bio start,size:45583056,8 count=0 plug?1
+	[53615.975980] [kworker/u66:18:1490] bio start,size:45583064,8 count=1 plug?1
+	[53615.975984] [kworker/u66:18:1490] bio start,size:45583072,8 count=2 plug?1
+	[53615.975987] [kworker/u66:18:1490] bio start,size:45583080,8 count=3 plug?1
+	[53615.975990] [kworker/u66:18:1490] bio start,size:45583088,8 count=4 plug?1
+	[53615.975993] [kworker/u66:18:1490] bio start,size:45583096,8 count=5 plug?1
+	... ...
+	[53615.977041] [kworker/u66:18:1490] bio start,size:45585480,8 count=303 plug?1
+	[53615.977044] [kworker/u66:18:1490] bio start,size:45585488,8 count=304 plug?1
+	[53615.977047] [kworker/u66:18:1490] bio start,size:45585496,8 count=305 plug?1
+	[53615.977050] [kworker/u66:18:1490] bio start,size:45585504,8 count=306 plug?1
+	[53615.977053] [kworker/u66:18:1490] bio start,size:45585512,8 count=307 plug?1
+	[53615.977056] [kworker/u66:18:1490] bio start,size:45585520,8 count=308 plug?1
+	[53615.977058] [kworker/u66:18:1490] bio start,size:45585528,8 count=309 plug?1
 
-which would write val into bits represented by FOO_MASK_A by
-appropriately shifting val and masking it with FOO_MASK_A
+2, Run 32 threads by command "stress -c 32 &"
+	[50586.290521] [kworker/u66:6:32351] bio start,size:45806496,8 count=0 plug?1
+	[50586.290526] [kworker/u66:6:32351] bio start,size:45806504,8 count=1 plug?1
+	[50586.290529] [kworker/u66:6:32351] bio start,size:45806512,8 count=2 plug?1
+	[50586.290531] [kworker/u66:6:32351] bio start,size:45806520,8 count=3 plug?1
+	[50586.290533] [kworker/u66:6:32351] bio start,size:45806528,8 count=4 plug?1
+	[50586.290535] [kworker/u66:6:32351] bio start,size:45806536,8 count=5 plug?1
+	... ...
+	[50586.299640] [kworker/u66:5:32350] bio start,size:45808576,8 count=252 plug?1
+	[50586.299643] [kworker/u66:5:32350] bio start,size:45808584,8 count=253 plug?1
+	[50586.299646] [kworker/u66:5:32350] bio start,size:45808592,8 count=254 plug?1
+	[50586.299649] [kworker/u66:5:32350] bio start,size:45808600,8 count=255 plug?1
+	[50586.299652] [kworker/u66:5:32350] bio start,size:45808608,8 count=256 plug?1
+	[50586.299663] [kworker/u66:5:32350] bio start,size:45808616,8 count=257 plug?1
+	[50586.299665] [kworker/u66:5:32350] bio start,size:45808624,8 count=258 plug?1
+	[50586.299668] [kworker/u66:5:32350] bio start,size:45808632,8 count=259 plug?1
 
-So net result is bits in FOO_MASK_A are modified with val, rest of the
-bits are not touched
+3, Don't run thread by stress
+	[50861.355246] [kworker/u66:19:32376] bio start,size:13544504,8 count=0 plug?0
+	[50861.355288] [kworker/u66:19:32376] bio start,size:13544512,8 count=0 plug?0
+	[50861.355322] [kworker/u66:19:32376] bio start,size:13544520,8 count=0 plug?0
+	[50861.355353] [kworker/u66:19:32376] bio start,size:13544528,8 count=0 plug?0
+	[50861.355392] [kworker/u66:19:32376] bio start,size:13544536,8 count=0 plug?0
+	[50861.355431] [kworker/u66:19:32376] bio start,size:13544544,8 count=0 plug?0
+	[50861.355468] [kworker/u66:19:32376] bio start,size:13544552,8 count=0 plug?0
+	[50861.355499] [kworker/u66:19:32376] bio start,size:13544560,8 count=0 plug?0
+	[50861.355532] [kworker/u66:19:32376] bio start,size:13544568,8 count=0 plug?0
+	[50861.355575] [kworker/u66:19:32376] bio start,size:13544576,8 count=0 plug?0
+	[50861.355618] [kworker/u66:19:32376] bio start,size:13544584,8 count=0 plug?0
+	[50861.355659] [kworker/u66:19:32376] bio start,size:13544592,8 count=0 plug?0
+	[50861.355740] [kworker/u66:0:32346] bio start,size:13544600,8 count=0 plug?1
+	[50861.355748] [kworker/u66:0:32346] bio start,size:13544608,8 count=1 plug?1
+	[50861.355962] [kworker/u66:2:32347] bio start,size:13544616,8 count=0 plug?0
+	[50861.356272] [kworker/u66:7:31962] bio start,size:13544624,8 count=0 plug?0
+	[50861.356446] [kworker/u66:7:31962] bio start,size:13544632,8 count=0 plug?0
+	[50861.356567] [kworker/u66:7:31962] bio start,size:13544640,8 count=0 plug?0
+	[50861.356707] [kworker/u66:19:32376] bio start,size:13544648,8 count=0 plug?0
+	[50861.356748] [kworker/u66:15:32355] bio start,size:13544656,8 count=0 plug?0
+	[50861.356825] [kworker/u66:17:31970] bio start,size:13544664,8 count=0 plug?0
 
-> 
-> 
-> > > > And while at it, consider defining masks for various fields rather than
-> > > > using numbers in GENMASK() above, that would look better, be more
-> > > > readable and people can reuse it.
-> > > 
-> > > Actually on this one I disagree. These fields are not intended to be used by
-> > > anyone, the goal is precisely to hide them behind regmap, and the use of raw
-> > > numbers makes it easier to cross-check the documentation and the code.
-> > > Adding a separate set of definitions would not increase readability.
-> > 
-> > Which one would you prefer:
-> > 
-> >          #define SDCA_FUN_MASK           GENMASK(24, 22)
-> > 
-> >          foo |= u32_encode_bits(SDCA_FUN_MASK, fun)
-> > 
-> > Or the one proposed...?
-> 
-> Same as above, let's see what this does with the control case where we'd
-> need to have four definitions:
-> 
-> #define SDCA_CONTROL_DEST_MASK1 GENMASK(20, 19)
-> #define SDCA_CONTROL_ORIG_MASK1 GENMASK(5, 4)
-> #define SDCA_CONTROL_DEST_MASK2 GENMASK(6, 3)
-> #define SDCA_CONTROL_ORIG_MASK2 GENMASK(3, 0)
-> 
-> And the code would look like
-> 
-> foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK1,
-> FIELD_GET(SDCA_CONTROL_ORIG_MASK1, fun));
-> foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK2,
-> FIELD_GET(SDCA_CONTROL_ORIG_MASK2, fun));
-> 
-> The original suggestion was:
-> 
-> FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
-> FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
-> 
-> I prefer the original... Adding these defines doesn't really add value
-> because
-> a) the values will not be reused anywhere else.
-> b) we need 12 of those defines
-> b) we need a prefix for those defines which makes the code heavier
+Analysis of above 3 test results with different system load:
+From above test, we can see more and more continuous bios can be plugged
+with system load increasing. When run "stress -c 64 &", 310 continuous
+bios are plugged; When run "stress -c 32 &", 260 continuous bios are
+plugged; When don't run stress, at most only 2 continuous bios are
+plugged, in most cases, bio_list only contains one single bio.
 
+How to explain above phenomenon:
+We know, in submit_bio(), if the bio is a REQ_CGROUP_PUNT io, it will
+queue a work to workqueue blkcg_punt_bio_wq. But when the workqueue is
+scheduled, it depends on the system load.  When system load is low, the
+workqueue will be quickly scheduled, and the bio in bio_list will be
+quickly processed in blkg_async_bio_workfn(), so there is less chance
+that the same io submit thread can add multiple continuous bios to
+bio_list before workqueue is scheduled to run. The analysis aligned with
+above test "3".
+When system load is high, there is some delay before the workqueue can
+be scheduled to run, the higher the system load the greater the delay.
+So there is more chance that the same io submit thread can add multiple
+continuous bios to bio_list. Then when the workqueue is scheduled to run,
+there are more continuous bios in bio_list, which will be processed in
+blkg_async_bio_workfn(). The analysis aligned with above test "1" and "2".
+
+According to test, we can get io performance improved with the patch,
+especially when system load is higher. Another optimazition is to use
+the plug only when bio_list contains at least 2 bios.
+
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+---
+ block/blk-cgroup.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
+index c195365c9..f35a205d5 100644
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -119,6 +119,8 @@ static void blkg_async_bio_workfn(struct work_struct *work)
+ 					     async_bio_work);
+ 	struct bio_list bios = BIO_EMPTY_LIST;
+ 	struct bio *bio;
++	struct blk_plug plug;
++	bool need_plug = false;
+ 
+ 	/* as long as there are pending bios, @blkg can't go away */
+ 	spin_lock_bh(&blkg->async_bio_lock);
+@@ -126,8 +128,15 @@ static void blkg_async_bio_workfn(struct work_struct *work)
+ 	bio_list_init(&blkg->async_bios);
+ 	spin_unlock_bh(&blkg->async_bio_lock);
+ 
++	/* start plug only when bio_list contains at least 2 bios */
++	if (bios.head && bios.head->bi_next) {
++		need_plug = true;
++		blk_start_plug(&plug);
++	}
+ 	while ((bio = bio_list_pop(&bios)))
+ 		submit_bio(bio);
++	if (need_plug)
++		blk_finish_plug(&plug);
+ }
+ 
+ /**
 -- 
-~Vinod
+2.17.1
+
