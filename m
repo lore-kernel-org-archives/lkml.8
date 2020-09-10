@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C02C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A8DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A29421556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745A021582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jxugAxJZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PtJZyPTe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f+fvQKgZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wqWYfqNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgIJJXm (ORCPT
+        id S1730437AbgIJJXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:23:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38770 "EHLO
+        Thu, 10 Sep 2020 05:23:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38734 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730269AbgIJJWT (ORCPT
+        with ESMTP id S1730223AbgIJJWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 05:22:19 -0400
-Date:   Thu, 10 Sep 2020 09:22:09 -0000
+Date:   Thu, 10 Sep 2020 09:22:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729729;
+        s=2020; t=1599729725;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Y1AUgNSiQy8jDCztLpQfApwLLEWCSFdLJ5/aNdjzixU=;
-        b=jxugAxJZtD61kUFg7C0fRxe+FEIlOlXPms0dzC7Qs2n5lT5lq0ODQiePieldLBzvSplYBx
-        5TYy7AtQjI4k+dNQAPuOsdV853Fj65A3JGSvbgctot8x3Z9etNEJxfTStnnLehWy64Yf8s
-        nw1NPAlSHI87cYgy51YI5T/rus/up09J/zKJz4pd2B7Nm0EWUmxV0zNogX7Hsho94eHf99
-        VnYf2kWZOv6h5D/h4w00tyIaVHCbDH9biYuUnAnFdOcco9U3nZTl40GmtOYjzpxSlokO3p
-        /5YUvyv8WuFQUgKxdRv3HLoWiM2yyMFFtjetgdHouwr3JSCVkaN5zWhlpDSzmw==
+        bh=kkC3Uo7XNJDg4jGF18WR5gMyrzBCb+gzMY+iUOcwdrU=;
+        b=f+fvQKgZeyhs40MxGig4XVMYT5m31x3jVkutEbiY9g+wqzuD9kV4SDAXXtcUqHjMOb3Tdt
+        6aSf3jFSloZV1wVYW8MehAe/W6W99Hrjk0bDbpPsEWgsJVbfsyZdWzVpIbllIKqZdkDtXI
+        buUifT8/fpVnLV41r1BNDGo71GoHDTq9rJrf9/GnltZFiqBQ2sOr3WXnSYIZNHStdoknO5
+        t3vy9/kW3ds9aoZH7ASasGkFs7iQRmmRiP63kSSIvT3EaOOTUQJ8oB7Soaao3aT49IJj59
+        nrtrcQCl6ybcDpCGC7b+3uflygMmUu35ZI6k1nRNWU6yqwHfVsAuwS2VFboezQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729729;
+        s=2020e; t=1599729725;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Y1AUgNSiQy8jDCztLpQfApwLLEWCSFdLJ5/aNdjzixU=;
-        b=PtJZyPTe6zl6tdbLJd7b/9CkGF34Tb0DnY5BHrjOsiAKeuar8toLT40uc1dByj8hlQ6Jga
-        5FJAaUfPmfREXyBw==
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+        bh=kkC3Uo7XNJDg4jGF18WR5gMyrzBCb+gzMY+iUOcwdrU=;
+        b=wqWYfqNzkJbCglRFEA7iAD07kHDOBdvoTcoAUCcb0N4log0YmmjsCgH1pS2LdOEc35iHBc
+        OkHasef3kLQeZ4CA==
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/sev-es: Handle RDPMC Events
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/seves] x86/realmode: Add SEV-ES specific trampoline entry point
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-56-joro@8bytes.org>
-References: <20200907131613.12703-56-joro@8bytes.org>
+In-Reply-To: <20200907131613.12703-66-joro@8bytes.org>
+References: <20200907131613.12703-66-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972972929.20229.2332220384218041484.tip-bot2@tip-bot2>
+Message-ID: <159972972517.20229.2323269831339763947.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,64 +69,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     5d55cf78a8785a7496919462f3d1a4689f62fb1d
-Gitweb:        https://git.kernel.org/tip/5d55cf78a8785a7496919462f3d1a4689f62fb1d
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Mon, 07 Sep 2020 15:15:56 +02:00
+Commit-ID:     bf5ff276448f64f1f9ef9ffc9e231026e3887d3d
+Gitweb:        https://git.kernel.org/tip/bf5ff276448f64f1f9ef9ffc9e231026e3887d3d
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Mon, 07 Sep 2020 15:16:06 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
 CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
 
-x86/sev-es: Handle RDPMC Events
+x86/realmode: Add SEV-ES specific trampoline entry point
 
-Implement a handler for #VC exceptions caused by RDPMC instructions.
+The code at the trampoline entry point is executed in real-mode. In
+real-mode, #VC exceptions can't be handled so anything that might cause
+such an exception must be avoided.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
+In the standard trampoline entry code this is the WBINVD instruction and
+the call to verify_cpu(), which are both not needed anyway when running
+as an SEV-ES guest.
+
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-56-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20200907131613.12703-66-joro@8bytes.org
 ---
- arch/x86/kernel/sev-es.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/x86/include/asm/realmode.h      |  3 +++
+ arch/x86/realmode/rm/header.S        |  3 +++
+ arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 4d468ec..b2d7287 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -853,6 +853,25 @@ static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
- 	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
- }
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 96118fb..4d4d853 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -21,6 +21,9 @@ struct real_mode_header {
+ 	/* SMP trampoline */
+ 	u32	trampoline_start;
+ 	u32	trampoline_header;
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	u32	sev_es_trampoline_start;
++#endif
+ #ifdef CONFIG_X86_64
+ 	u32	trampoline_pgd;
+ #endif
+diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
+index af04512..8c1db5b 100644
+--- a/arch/x86/realmode/rm/header.S
++++ b/arch/x86/realmode/rm/header.S
+@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
+ 	/* SMP trampoline */
+ 	.long	pa_trampoline_start
+ 	.long	pa_trampoline_header
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	.long	pa_sev_es_trampoline_start
++#endif
+ #ifdef CONFIG_X86_64
+ 	.long	pa_trampoline_pgd;
+ #endif
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 251758e..84c5d1b 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
+ 	testl   %eax, %eax		# Check for return code
+ 	jnz	no_longmode
  
-+static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+{
-+	enum es_result ret;
++.Lswitch_to_protected:
+ 	/*
+ 	 * GDT tables in non default location kernel can be beyond 16MB and
+ 	 * lgdt will not be able to load the address as in real mode default
+@@ -80,6 +81,25 @@ no_longmode:
+ 	jmp no_longmode
+ SYM_CODE_END(trampoline_start)
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/* SEV-ES supports non-zero IP for entry points - no alignment needed */
++SYM_CODE_START(sev_es_trampoline_start)
++	cli			# We should be safe anyway
 +
-+	ghcb_set_rcx(ghcb, ctxt->regs->cx);
++	LJMPW_RM(1f)
++1:
++	mov	%cs, %ax	# Code and data in the same place
++	mov	%ax, %ds
++	mov	%ax, %es
++	mov	%ax, %ss
 +
-+	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_RDPMC, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
++	# Setup stack
++	movl	$rm_stack_end, %esp
 +
-+	if (!(ghcb_rax_is_valid(ghcb) && ghcb_rdx_is_valid(ghcb)))
-+		return ES_VMM_ERROR;
++	jmp	.Lswitch_to_protected
++SYM_CODE_END(sev_es_trampoline_start)
++#endif	/* CONFIG_AMD_MEM_ENCRYPT */
 +
-+	ctxt->regs->ax = ghcb->save.rax;
-+	ctxt->regs->dx = ghcb->save.rdx;
-+
-+	return ES_OK;
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -870,6 +889,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_RDTSCP:
- 		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
- 		break;
-+	case SVM_EXIT_RDPMC:
-+		result = vc_handle_rdpmc(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_CPUID:
- 		result = vc_handle_cpuid(ghcb, ctxt);
- 		break;
+ #include "../kernel/verify_cpu.S"
+ 
+ 	.section ".text32","ax"
