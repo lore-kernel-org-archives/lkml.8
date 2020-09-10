@@ -7,61 +7,58 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B10C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B041C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACE921556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B964A21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c+as8mnz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kl92oT2e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yv7lhRfB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bC35LwbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgIJJgG (ORCPT
+        id S1730493AbgIJJfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730397AbgIJJWh (ORCPT
+        Thu, 10 Sep 2020 05:35:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38770 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730416AbgIJJWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:22:37 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57B3C06179A;
-        Thu, 10 Sep 2020 02:22:16 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 09:22:10 -0000
+        Thu, 10 Sep 2020 05:22:51 -0400
+Date:   Thu, 10 Sep 2020 09:22:23 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729731;
+        s=2020; t=1599729744;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QvRFdvfhfoVKWWGeCfMZBsRDYcT75pRGqc3JbPoxo+Y=;
-        b=c+as8mnzG2bsSHSPGHp3tOnDBoVFM+Y9+SaRthdfDfy12nc2YYvbVgsQ4LjOGxOCojN7Xj
-        NAnP+PKfNQ+uAZFMgonrYXOpIlnbwf3fPgFYbRIl7SRyAz6J1D9N62mseDMBuZWSzzKyFk
-        I75pMnsCrkqqTPjT+MQcc4MAi+5oZY9CnNM2JJHHEvAsLQW5qJVu0BBYI0zVq0JYJ3PWEm
-        RkSPt/oQfn8s30jz8FIdKSS1QpPN02f57CM4YZqJrEtB8A5RMy1J34K3R9jK+awvFmFYsa
-        F5g6aqWlC64GHlW8Pv2NBe5NfUchYxrZbXflVJf3PSmPktsJzPZydevkCNy+iQ==
+        bh=NW1Y3mx7e6uQL7A6qRu67hi0QDn47vmBbfStr+QZW64=;
+        b=yv7lhRfBAZ6Ym893EkbA7wNiuWIFinUaVw+NhkpvXEZsVk/DLvPXZXe4OEpKjOxqSv104L
+        +y5cIaiSvqTZDE/+5btXZFn26Bx0UYKDhLO9Z7Ic0g5xsTAfzlcec1eDAVA7w9DkSQ0RHg
+        ++GCMelQZb8Kmafz5V26ifR59CDtLiTA4cJ9bjia08kj3l9V1QPlh+nk+/R7oq4KPil+fd
+        Fvc5nD1rBoNi25ykvcnirjT1a0//0eRu+VFlkP5fl/INoXwmdtIy+opc6hsotmmpDraBEh
+        OoCmMXsSOrTHt+XdSstQCQownKlUMY7Q4z+GcCyM4QGCL4bzK5W3cesKbXMpxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729731;
+        s=2020e; t=1599729744;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QvRFdvfhfoVKWWGeCfMZBsRDYcT75pRGqc3JbPoxo+Y=;
-        b=Kl92oT2e9VOPA16cdTGFrkkvspg7C0wi5D3g6aKI7TtSBjErLBRxEO8r6rH/WrhM+1OoOY
-        O2rXE5iWC2a6NrDA==
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+        bh=NW1Y3mx7e6uQL7A6qRu67hi0QDn47vmBbfStr+QZW64=;
+        b=bC35LwbK+RDkDKOQNj+JrBBFrrl+lEYyL9h1B2NZnRbqKZPJpVfg1KaHAQ4LJoYY66YXEG
+        VQlQzy/FLYV2HNCQ==
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/sev-es: Handle DR7 read/write events
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/seves] x86/boot/compressed/64: Check return value of
+ kernel_ident_mapping_init()
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-53-joro@8bytes.org>
-References: <20200907131613.12703-53-joro@8bytes.org>
+In-Reply-To: <20200907131613.12703-22-joro@8bytes.org>
+References: <20200907131613.12703-22-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972973057.20229.2773010329298619685.tip-bot2@tip-bot2>
+Message-ID: <159972974392.20229.3455617519149103991.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,155 +70,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     479a7bf5c1f7f14eb37c6d6aeb401562efc1fcad
-Gitweb:        https://git.kernel.org/tip/479a7bf5c1f7f14eb37c6d6aeb401562efc1fcad
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Mon, 07 Sep 2020 15:15:53 +02:00
+Commit-ID:     4b3fdca64a7e8ad90c87cad1fbc6991471f48dc7
+Gitweb:        https://git.kernel.org/tip/4b3fdca64a7e8ad90c87cad1fbc6991471f48dc7
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Mon, 07 Sep 2020 15:15:22 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
+CommitterDate: Mon, 07 Sep 2020 19:45:25 +02:00
 
-x86/sev-es: Handle DR7 read/write events
+x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
 
-Add code to handle #VC exceptions on DR7 register reads and writes.
-This is needed early because show_regs() reads DR7 to print it out.
+The function can fail to create an identity mapping, check for that
+and bail out if it happens.
 
-Under SEV-ES, there is currently no support for saving/restoring the
-DRx registers but software expects to be able to write to the DR7
-register. For now, cache the value written to DR7 and return it on
-read attempts, but do not touch the real hardware DR7.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Adapt to #VC handling framework
-                   - Support early usage ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-53-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20200907131613.12703-22-joro@8bytes.org
 ---
- arch/x86/kernel/sev-es.c | 85 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+)
+ arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 6205100..391b9c7 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -29,6 +29,8 @@
- #include <asm/traps.h>
- #include <asm/svm.h>
- 
-+#define DR7_RESET_VALUE        0x400
-+
- /* For early boot hypervisor communication in SEV-ES enabled guests */
- static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
- 
-@@ -76,6 +78,13 @@ struct sev_es_runtime_data {
- 	 */
- 	bool ghcb_active;
- 	bool backup_ghcb_active;
-+
-+	/*
-+	 * Cached DR7 value - write it on DR7 writes and return it on reads.
-+	 * That value will never make it to the real hardware DR7 as debugging
-+	 * is currently unsupported in SEV-ES guests.
-+	 */
-+	unsigned long dr7;
- };
- 
- struct ghcb_state {
-@@ -519,6 +528,21 @@ static long *vc_insn_get_reg(struct es_em_ctxt *ctxt)
- 	return reg_array + offset;
- }
- 
-+static long *vc_insn_get_rm(struct es_em_ctxt *ctxt)
-+{
-+	long *reg_array;
-+	int offset;
-+
-+	reg_array = (long *)ctxt->regs;
-+	offset    = insn_get_modrm_rm_off(&ctxt->insn, ctxt->regs);
-+
-+	if (offset < 0)
-+		return NULL;
-+
-+	offset /= sizeof(long);
-+
-+	return reg_array + offset;
-+}
- static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 				 unsigned int bytes, bool read)
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index b4f2a5f..aa91beb 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -91,6 +91,8 @@ static struct x86_mapping_info mapping_info;
+  */
+ static void add_identity_map(unsigned long start, unsigned long end)
  {
-@@ -768,6 +792,61 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 	return ret;
++	int ret;
++
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -98,8 +100,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ 		return;
+ 
+ 	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
++	if (ret)
++		error("Error: kernel_ident_mapping_init() failed\n");
  }
  
-+static enum es_result vc_handle_dr7_write(struct ghcb *ghcb,
-+					  struct es_em_ctxt *ctxt)
-+{
-+	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
-+	long val, *reg = vc_insn_get_rm(ctxt);
-+	enum es_result ret;
-+
-+	if (!reg)
-+		return ES_DECODE_FAILED;
-+
-+	val = *reg;
-+
-+	/* Upper 32 bits must be written as zeroes */
-+	if (val >> 32) {
-+		ctxt->fi.vector = X86_TRAP_GP;
-+		ctxt->fi.error_code = 0;
-+		return ES_EXCEPTION;
-+	}
-+
-+	/* Clear out other reserved bits and set bit 10 */
-+	val = (val & 0xffff23ffL) | BIT(10);
-+
-+	/* Early non-zero writes to DR7 are not supported */
-+	if (!data && (val & ~DR7_RESET_VALUE))
-+		return ES_UNSUPPORTED;
-+
-+	/* Using a value of 0 for ExitInfo1 means RAX holds the value */
-+	ghcb_set_rax(ghcb, val);
-+	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WRITE_DR7, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (data)
-+		data->dr7 = val;
-+
-+	return ES_OK;
-+}
-+
-+static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
-+					 struct es_em_ctxt *ctxt)
-+{
-+	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
-+	long *reg = vc_insn_get_rm(ctxt);
-+
-+	if (!reg)
-+		return ES_DECODE_FAILED;
-+
-+	if (data)
-+		*reg = data->dr7;
-+	else
-+		*reg = DR7_RESET_VALUE;
-+
-+	return ES_OK;
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -775,6 +854,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	enum es_result result;
- 
- 	switch (exit_code) {
-+	case SVM_EXIT_READ_DR7:
-+		result = vc_handle_dr7_read(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_WRITE_DR7:
-+		result = vc_handle_dr7_write(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_CPUID:
- 		result = vc_handle_cpuid(ghcb, ctxt);
- 		break;
+ /* Locates and clears a region for a new top level page table. */
