@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C809C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2DA8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D1C214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="Ai2vmMkD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="fNUWxPRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgIJRKr (ORCPT
+        id S1726591AbgIJRLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
+        Thu, 10 Sep 2020 13:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgIJRIZ (ORCPT
+        with ESMTP id S1727032AbgIJRJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:08:25 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC82C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:08:25 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id o14so4657330qtq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:08:25 -0700 (PDT)
+        Thu, 10 Sep 2020 13:09:16 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F82C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:09:16 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id bg5so1311413plb.18
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:message-id:mime-version:subject:from:to;
         bh=BZ6YdwlTkATP6YcNm1nCerDB1v94oBKP5AayFPJUuNg=;
-        b=Ai2vmMkDkdZ6vRWJ0lhs98xNTLunr8RFYDvleWom+E/NgDXjIOGxYdIbHucuJziRuD
-         WQE5erR0AlX8OvVIaY9JSqtcY6ddr5jk/BG7S5PgV4hBp5yeKSIDKT0J9nPW3tQKDGdy
-         H4/csGumgf+Ez3Ljm7rsmwPRlvpQP+wM/+INkoVJvNMiLF+z4Vhsnsm8hcGnNyHk6MUG
-         vg9A0q0P9dbr46dkU0Iu3fPQoSosoDokIM+2SQL4D23DM7lv3uwivM34d7/vHubKGzGL
-         vT39UfQbLX5diR645KJR/SDLnp+VLfpjLN9oXiHe1elMf6sSYIZGHHdy/C8ESoljftjJ
-         QhtA==
+        b=fNUWxPRqJeQUZ6YDlSAgmDDsvwxVfzblFY2p1ci7EGZbYmnUUg/DsZmeO+lxF/TRii
+         +Ni2x8RXrw8eiE97Q6bEG+RDk/9nQ+iTYTnYmgEYBI7Jfv3pwwE4+OtIcaqR5/g9g170
+         VovVoljQhlNw9EYmYvZr7N5x8apNcubTckVzVxbtswDOXxkYJNa0E+Yy3uOthBhRfM2n
+         xgOjbeMg21Cy0+KcNJ2TNQRO/FDzPTP8tkKYPeK/IcMjV62Ir1HdvXxRl26ATHtBO7Oi
+         kKtoaCGjiTiDesqTcj7ToD3/MeBJRSjnSJPRWT+ZTbYmLBplDU49MXCGhq5zr/aqIxJS
+         ZzPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
          :to;
         bh=BZ6YdwlTkATP6YcNm1nCerDB1v94oBKP5AayFPJUuNg=;
-        b=DSN1PMzvQw/LfDSSIDFrQV5ORjsuQZBCD20DvDoarUyJc6b/c1DN45GIU19vF7Fsw1
-         bTHWK3Md5XeKMtTbjFKSVoyG8VU1NWsmX2sJPhJgbahLbEN4P+uInJuB+UXJnYmqXW6C
-         rqNkDPurx8KiTvq3PI1DJZSGvuGmngjk8GcEqsF3R/R7/0N+NYP98mJm2nl6fg7a2A4C
-         E/M/+OXB1K2Czh86j2gNKOsrnDeOa57Cl4js2Di7bBHBRegvYnnuBWA8OdffqDgRKuiZ
-         2ahsXJsRSaJq//P1Wyqe/pb0HKZGsHmJL7BOS0Y9qILzdmrHQBLQz5jn4hWUpqd7Kqrb
-         b+Aw==
-X-Gm-Message-State: AOAM531CjUuWdJ1okNIG7mu6W5wJxqvFUYK+4fJosTq8xgXJpmYZKaAT
-        GLX12pvW0pgMxiIeoqduHqx9iyh88O4RFAKT
-X-Google-Smtp-Source: ABdhPJx+7OOyKHKXz87Yhbi4VvnetfXmdc6s4b1LWLln9dKwcSBoRl9SCrIo0G9osX3kRPdS3m47zSNu3rjcRW/b
+        b=GC64Lg5bu/GRKMus/gzh2Rpo4BsQHJwWCId7BiEpqz6Bs3qBj+Y6KDdPdki/gE+iMi
+         gjCtqKN0khAW3/rU5QacPaKBbrLgT4Y9G8hGDEXHkHP6JNf/Eij4qHclDzFoTfyIsP8m
+         AQty0XoLxQqxMOZgfuL8FkYh4krdJgNC/WeZAxm1q+RffNodMLjfV9LxZmJXS0ubKI3t
+         NMFOEWqZRDToM+yKkhfJTHJLOcGZjOuR/UxsF3hIwlTat5rVzirf+kqs3TI99ecq2467
+         krL9ZZouDbLWBPrner/9Szp7lkjSDLpjGkIvRHHPoqRqnvCPnoGkvtmsxLPhn5UsdSIj
+         3S1Q==
+X-Gm-Message-State: AOAM530V7Y8knph1YSP8upZ7K9J+3LH8Y/HXq3lpTIGsuhesXUsJ0yyN
+        8FtaIOlfX8TUeaiCCeelI3PpqfM/sQclA/rU
+X-Google-Smtp-Source: ABdhPJwZ01Mgx0DKAaM8vzoyP8ZZKsF7ddI+fm7+3NEsc2EjFne7JbOL+YmmPt0q+3OXeFXMg2vfeYJLO+WZTj3C
 X-Received: from chu-dev.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:3cfb])
- (user=linchuyuan job=sendgmr) by 2002:ad4:43e5:: with SMTP id
- f5mr9086510qvu.12.1599757704282; Thu, 10 Sep 2020 10:08:24 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 17:08:21 +0000
-Message-Id: <20200910170821.1988467-1-linchuyuan@google.com>
+ (user=linchuyuan job=sendgmr) by 2002:a17:902:6ac7:b029:d0:89f3:28d1 with
+ SMTP id i7-20020a1709026ac7b02900d089f328d1mr6356139plt.13.1599757753178;
+ Thu, 10 Sep 2020 10:09:13 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 17:09:10 +0000
+Message-Id: <20200910170910.1990578-1-linchuyuan@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 Subject: [PATCH] hwmon: pmbus: max20730: adjust the vout reading given voltage divider
