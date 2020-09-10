@@ -2,49 +2,51 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EE6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D0AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B8E20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2071820C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgIJLHh (ORCPT
+        id S1730359AbgIJLI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:07:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41812 "EHLO mx2.suse.de"
+        Thu, 10 Sep 2020 07:08:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:33124 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbgIJLFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:05:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 67064AF2C;
-        Thu, 10 Sep 2020 11:05:33 +0000 (UTC)
-Subject: Re: [RFC 5/5] mm, page_alloc: disable pcplists during page isolation
+        id S1730635AbgIJK7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:59:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11EFA31B;
+        Thu, 10 Sep 2020 03:59:19 -0700 (PDT)
+Received: from [10.163.71.250] (unknown [10.163.71.250])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2963F68F;
+        Thu, 10 Sep 2020 03:59:15 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually
+ contiguous memory
 To:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mel Gorman <mgorman@techsingularity.net>
-References: <20200907163628.26495-1-vbabka@suse.cz>
- <20200907163628.26495-6-vbabka@suse.cz>
- <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
- <20200909113647.GG7348@dhcp22.suse.cz>
- <b057e618-94f1-3f5a-a4f6-55fc93ac34eb@suse.cz>
- <5c5753b4-8cb9-fa02-a0fa-d5ca22731cbb@redhat.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <3d3b53db-aeaa-ff24-260b-36427fac9b1c@suse.cz>
-Date:   Thu, 10 Sep 2020 13:05:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sudarshan Rajagopalan <sudaraja@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Price <steven.price@arm.com>
+References: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
+ <0475e813-cb95-0992-39e4-593bfd5cdbf8@arm.com>
+ <372df305-3bff-bf8e-e2a3-a03932df58d5@redhat.com>
+Message-ID: <f772d6ea-001b-be8f-843a-1e56c316814f@arm.com>
+Date:   Thu, 10 Sep 2020 16:28:43 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <5c5753b4-8cb9-fa02-a0fa-d5ca22731cbb@redhat.com>
+In-Reply-To: <372df305-3bff-bf8e-e2a3-a03932df58d5@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,118 +55,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 12:29 PM, David Hildenbrand wrote:
-> On 09.09.20 13:55, Vlastimil Babka wrote:
->> On 9/9/20 1:36 PM, Michal Hocko wrote:
->>> On Wed 09-09-20 12:48:54, Vlastimil Babka wrote:
->>>> Here's a version that will apply on top of next-20200908. The first 4 patches need no change.
->>>> For callers that pair start_isolate_page_range() with
->>>> undo_isolated_page_range() properly, this is transparent. Currently that's
->>>> alloc_contig_range(). __offline_pages() doesn't call undo_isolated_page_range()
->>>> in the succes case, so it has to be carful to handle restoring pcp->high and batch
->>>> and unlocking pcp_batch_high_lock.
->>>
->>> I was hoping that it would be possible to have this completely hidden
->>> inside start_isolate_page_range code path.
->> 
->> I hoped so too, but we can't know the moment when all processes that were in the
->> critical part of freeing pages to pcplists have moved on (they might have been
->> rescheduled).
->> We could change free_unref_page() to disable IRQs sooner, before
->> free_unref_page_prepare(), or at least the get_pfnblock_migratetype() part. Then
->> after the single drain, we should be safe, AFAICS?
+
+
+On 09/10/2020 01:38 PM, David Hildenbrand wrote:
+> On 10.09.20 08:45, Anshuman Khandual wrote:
+>> Hello Sudarshan,
+>>
+>> On 09/10/2020 11:35 AM, Sudarshan Rajagopalan wrote:
+>>> When section mappings are enabled, we allocate vmemmap pages from physically
+>>> continuous memory of size PMD_SZIE using vmemmap_alloc_block_buf(). Section> mappings are good to reduce TLB pressure. But when system is highly fragmented
+>>> and memory blocks are being hot-added at runtime, its possible that such
+>>> physically continuous memory allocations can fail. Rather than failing the
+>>
+>> Did you really see this happen on a system ?
+>>
+>>> memory hot-add procedure, add a fallback option to allocate vmemmap pages from
+>>> discontinuous pages using vmemmap_populate_basepages().
+>>
+>> Which could lead to a mixed page size mapping in the VMEMMAP area.
 > 
-> At least moving it before getting the migratetype should not be that severe?
+> Right, with gives you a slight performance hit - nobody really cares,
+> especially if it happens in corner cases only.
+
+On performance impact, will probably let Catalin and others comment from
+arm64 platform perspective, because I might not have all information here.
+But will do some more audit regarding possible impact of a mixed page size
+vmemmap mapping.
+
 > 
->> RT guys might not be happy though, but it's much simpler than this patch. I
->> still like some of the cleanups in 1-4 though tbh :)
+> At least x86_64 (see vmemmap_populate_hugepages()) and s390x (added
+> recently by me) implement that behavior.
 > 
-> It would certainly make this patch much simpler. Do you have a prototype
-> lying around?
+> Assume you run in a virtualized environment where your hypervisor tries
+> to do some smart dynamic guest resizing - like monitoring the guest
+> memory consumption and adding more memory on demand. You much rather
+> want hotadd to succeed (in these corner cases) that failing just because
+> you weren't able to grab a huge page in one instance.
+> 
+> Examples include XEN balloon, Hyper-V balloon, and virtio-mem. We might
+> see some of these for arm64 as well (if don't already do).
 
-Below is the critical part, while writing it I realized that there's also
-free_unref_page_list() where it's more ugly.
+Makes sense.
 
-So free_unref_page() simply moves the "determine migratetype" part under
-disabled interrupts. For free_unref_page_list() we optimistically determine them
-without disabling interrupts, and with disabled interrupts we check if zone has
-isolated pageblocks and thus we should not trust that value anymore. That's same
-pattern as free_pcppages_bulk uses.
+> 
+>> Allocation failure in vmemmap_populate() should just cleanly fail
+>> the memory hot add operation, which can then be retried. Why the
+>> retry has to be offloaded to kernel ?
+> 
+> (not sure what "offloaded to kernel" really means here - add_memory() is
 
-But unfortunately it means an extra page_zone() plus a test for each page on the
-list :/
+Offloaded here referred to the responsibility to retry or just fallback.
+If the situation can be resolved by user retrying hot add operation till
+it succeeds, compared to kernel falling back on allocating normal pages.
 
-----8<----
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index defefed79cfb..57e2a341c95c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3103,18 +3103,21 @@ void mark_free_pages(struct zone *zone)
- }
- #endif /* CONFIG_PM */
- 
--static bool free_unref_page_prepare(struct page *page, unsigned long pfn)
-+static bool free_unref_page_prepare(struct page *page)
- {
--	int migratetype;
--
- 	if (!free_pcp_prepare(page))
- 		return false;
- 
--	migratetype = get_pfnblock_migratetype(page, pfn);
--	set_pcppage_migratetype(page, migratetype);
- 	return true;
- }
- 
-+static inline void free_unref_page_set_migratetype(struct page *page, unsigned long pfn)
-+{
-+	int migratetype	= get_pfnblock_migratetype(page, pfn);
-+
-+	set_pcppage_migratetype(page, migratetype);
-+}
-+
- static void free_unref_page_commit(struct page *page, unsigned long pfn)
- {
- 	struct zone *zone = page_zone(page);
-@@ -3156,10 +3159,17 @@ void free_unref_page(struct page *page)
- 	unsigned long flags;
- 	unsigned long pfn = page_to_pfn(page);
- 
--	if (!free_unref_page_prepare(page, pfn))
-+	if (!free_unref_page_prepare(page))
- 		return;
- 
-+	/*
-+	 * by disabling interrupts before reading pageblock's migratetype,
-+	 * we can guarantee that after changing a pageblock to MIGRATE_ISOLATE
-+	 * and drain_all_pages(), there's nobody who would read the old
-+	 * migratetype and put a page from isoalted pageblock to pcplists
-+	 */
- 	local_irq_save(flags);
-+	free_unref_page_set_migratetype(page, pfn);
- 	free_unref_page_commit(page, pfn);
- 	local_irq_restore(flags);
- }
-@@ -3176,9 +3186,10 @@ void free_unref_page_list(struct list_head *list)
- 	/* Prepare pages for freeing */
- 	list_for_each_entry_safe(page, next, list, lru) {
- 		pfn = page_to_pfn(page);
--		if (!free_unref_page_prepare(page, pfn))
-+		if (!free_unref_page_prepare(page))
- 			list_del(&page->lru);
- 		set_page_private(page, pfn);
-+		free_unref_page_set_migratetype(page, pfn);
- 	}
- 
- 	local_irq_save(flags);
-@@ -3187,6 +3198,8 @@ void free_unref_page_list(struct list_head *list)
- 
- 		set_page_private(page, 0);
- 		trace_mm_page_free_batched(page);
-+		if (has_isolate_pageblock(page_zone(page)))
-+			free_unref_page_set_migratetype(page, pfn);
- 		free_unref_page_commit(page, pfn);
- 
- 		/*
+> also just triggered from the kernel) I disagree, we should try our best
+> to add memory and make it available, especially when short on memory
+> already.
 
-
+Okay.
