@@ -2,217 +2,97 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645A0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513A1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA32214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E0D205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fu9Np2Ub"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5athZhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgIJSkQ (ORCPT
+        id S1727010AbgIJSkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
+        Thu, 10 Sep 2020 14:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbgIJSis (ORCPT
+        with ESMTP id S1726850AbgIJSUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:38:48 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A677BC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:38:47 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f133200806c26bf29ee8a02.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:3200:806c:26bf:29ee:8a02])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C11961EC04BF;
-        Thu, 10 Sep 2020 20:38:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599763125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sDl/npz/0gYc9uruwF4kz3L9c/GWyK4BlY36lc1d+eM=;
-        b=Fu9Np2UbMcbCHoTU7S93SO/NQvSsSXdmbGOraA1pbeDwodaGZ6P76w/8DfOzQU4kBQDSAE
-        wHLpem+Z01v0fEeB4mYmdDUi7P1VUFamyiHeFdLgae5F799wDQGSgXfLzc7MSYEv/nU4AM
-        NP/r7S5rsCqC+8su00k5ChcoA54tUOw=
-Date:   Thu, 10 Sep 2020 20:38:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH -v2] x86/mce: Make mce_rdmsrl() panic on an inaccessible MSR
-Message-ID: <20200910183845.GL8357@zn.tnic>
-References: <20200906212130.GA28456@zn.tnic>
- <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
- <20200908094650.GA25236@zn.tnic>
- <20200908100837.GC25236@zn.tnic>
- <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
- <20200908152539.GE25236@zn.tnic>
- <20200909113022.GA12237@zn.tnic>
- <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
- <20200909200321.GG12237@zn.tnic>
- <20200910182901.GK8357@zn.tnic>
+        Thu, 10 Sep 2020 14:20:53 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D46C061756;
+        Thu, 10 Sep 2020 11:20:39 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d9so5121906pfd.3;
+        Thu, 10 Sep 2020 11:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7f5zfLapjrOeUnEF6tF5o8o5qdLx0mGVKUldOV+8fa8=;
+        b=k5athZhXAoz3gKeFZICNXz/zipgsus7YOCsmzF2wDrh5A1n2NinLPf/1OCfylkuzXU
+         i+YlXpWZoSHPahi0INB0w512mwllw43YDm6lFlZqOpq5HTGbvJZT2TuapfYe2OGB2LLk
+         EU72wO3UqmbkimkB+qxVWTLBrv3aw0SrdZBI9yqWQZItS5zXvTahp8jNyBWgyByAw3xV
+         efp/67knPISFJR8LFdwK7pnoaGIzwja039JX8BmphhPfJj15FVJcqD+M2Z6CAlAjmegg
+         yne4H2OiStmbnmcXXm4+iY92VISHz4B/kjzl8+ZMbGa63g9NXosOk2CXgtIgqvSdxJ5b
+         Nhmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7f5zfLapjrOeUnEF6tF5o8o5qdLx0mGVKUldOV+8fa8=;
+        b=cuMXMayThYb/kOfW7Tu1teE+wMWV81aMIu5JcPCf6NtkB9T3PlqZChMzF8iZcQdtMe
+         UWKZCIZJCkPUwEJ1+a3XOsQT3aJT5tZ970TVq5NlKxh488RrfgeKlzBG3rwSlZ3cnEON
+         Bgh6/t1O77BTJvjmnBv6inlJklFQNvIOZ8EXpXWwzgxUorNbS7jY05dT5DJUX5QkrIL2
+         xwsIPbgN+6I3DILktCqb7oX2UUkruzZWwTukOYHOHvIHwbh6rmIa4pLc2MswdYVA9Opy
+         zEekGIHGsTqXwVtN+Lmme7RJ50T8Gf+n+sVX8alRdzcF/9avnTjq6OC1lvQpo1vQarc3
+         cKdA==
+X-Gm-Message-State: AOAM5310dYQz2v5sBHd0y4spJiQxMe63MciZUgm66HWZG0fsL3cm+DSh
+        W8gh6Sct62D1yQSQiLxC93c=
+X-Google-Smtp-Source: ABdhPJwNzmq0uYJ+DXXMAs0kt24uhw3yEYjPTpAhBHvCPtQyzx/uMGCCTTcWyCDba+rytCmT6RCJ/Q==
+X-Received: by 2002:a17:902:b188:b029:d1:920c:bf98 with SMTP id s8-20020a170902b188b02900d1920cbf98mr3663834plr.28.1599762038752;
+        Thu, 10 Sep 2020 11:20:38 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f6sm6700168pfq.82.2020.09.10.11.20.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 11:20:38 -0700 (PDT)
+Subject: Re: [PATCH 4/4] spi: bcm-qspi: Clean up 7425, 7429, and 7435 settings
+To:     Ray Jui <ray.jui@broadcom.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+References: <20200910152539.45584-1-ray.jui@broadcom.com>
+ <20200910152539.45584-4-ray.jui@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <b3259f70-2c02-e68a-5207-80da89a23601@gmail.com>
+Date:   Thu, 10 Sep 2020 11:20:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200910182901.GK8357@zn.tnic>
+In-Reply-To: <20200910152539.45584-4-ray.jui@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
 
-If an exception needs to be handled while reading an MSR - which is in
-most of the cases caused by a #GP on a non-existent MSR - then this
-is most likely the incarnation of a BIOS or a hardware bug. Such bug
-violates the architectural guarantee that MSR banks are present with all
-MSRs belonging to them.
 
-The proper fix belongs in the hardware/firmware - not in the kernel.
+On 9/10/2020 8:25 AM, Ray Jui wrote:
+> The Broadcom QSPI driver now falls back to no MSPI_DEV support as the
+> default setting in the generic compatible string, explicit settings for
+> STB chips 7425, 7429, and 7435 can be removed.
+> 
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 
-Handling an #MC exception which is raised while an NMI is being handled
-would cause the nasty NMI nesting issue because of the shortcoming of
-IRET of reenabling NMIs when executed. And the machine is in an #MC
-context already so <Deity> be at its side.
-
-Tracing MSR accesses while in #MC is another no-no due to tracing being
-inherently a bad idea in atomic context:
-
-  vmlinux.o: warning: objtool: do_machine_check()+0x4a: call to mce_rdmsrl() leaves .noinstr.text section
-
-so remove all that "additional" functionality from mce_rdmsrl() and
-provide it with a special exception handler which panics the machine
-when that MSR is not accessible.
-
-The exception handler prints a human-readable message explaining what
-the panic reason is but, what is more, it panics while in the #GP
-handler and latter won't have executed an IRET, thus opening the NMI
-nesting issue in the case when the #MC has happened while handling
-an NMI. (#MC itself won't be reenabled until MCG_STATUS hasn't been
-cleared).
-
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/kernel/cpu/mce/core.c | 72 ++++++++++++++++++++++++++++------
- 1 file changed, 60 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 0ba24dfffdb2..a697baee9aa0 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -373,10 +373,28 @@ static int msr_to_offset(u32 msr)
- 	return -1;
- }
- 
-+__visible bool ex_handler_rdmsr_fault(const struct exception_table_entry *fixup,
-+				      struct pt_regs *regs, int trapnr,
-+				      unsigned long error_code,
-+				      unsigned long fault_addr)
-+{
-+	pr_emerg("MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
-+		 (unsigned int)regs->cx, regs->ip, (void *)regs->ip);
-+
-+	show_stack_regs(regs);
-+
-+	panic("MCA architectural violation!\n");
-+
-+	while (true)
-+		cpu_relax();
-+
-+	return true;
-+}
-+
- /* MSR access wrappers used for error injection */
- static u64 mce_rdmsrl(u32 msr)
- {
--	u64 v;
-+	DECLARE_ARGS(val, low, high);
- 
- 	if (__this_cpu_read(injectm.finished)) {
- 		int offset = msr_to_offset(msr);
-@@ -386,21 +404,43 @@ static u64 mce_rdmsrl(u32 msr)
- 		return *(u64 *)((char *)this_cpu_ptr(&injectm) + offset);
- 	}
- 
--	if (rdmsrl_safe(msr, &v)) {
--		WARN_ONCE(1, "mce: Unable to read MSR 0x%x!\n", msr);
--		/*
--		 * Return zero in case the access faulted. This should
--		 * not happen normally but can happen if the CPU does
--		 * something weird, or if the code is buggy.
--		 */
--		v = 0;
--	}
-+	/*
-+	 * RDMSR on MCA MSRs should not fault. If they do, this is very much an
-+	 * architectural violation and needs to be reported to hw vendor. Panic
-+	 * the box to not allow any further progress.
-+	 */
-+	asm volatile("1: rdmsr\n"
-+		     "2:\n"
-+		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_rdmsr_fault)
-+		     : EAX_EDX_RET(val, low, high) : "c" (msr));
- 
--	return v;
-+
-+	return EAX_EDX_VAL(val, low, high);
-+}
-+
-+__visible bool ex_handler_wrmsr_fault(const struct exception_table_entry *fixup,
-+				      struct pt_regs *regs, int trapnr,
-+				      unsigned long error_code,
-+				      unsigned long fault_addr)
-+{
-+	pr_emerg("MSR access error: WRMSR to 0x%x (tried to write 0x%08x%08x) at rIP: 0x%lx (%pS)\n",
-+		 (unsigned int)regs->cx, (unsigned int)regs->dx, (unsigned int)regs->ax,
-+		  regs->ip, (void *)regs->ip);
-+
-+	show_stack_regs(regs);
-+
-+	panic("MCA architectural violation!\n");
-+
-+	while (true)
-+		cpu_relax();
-+
-+	return true;
- }
- 
- static void mce_wrmsrl(u32 msr, u64 v)
- {
-+	u32 low, high;
-+
- 	if (__this_cpu_read(injectm.finished)) {
- 		int offset = msr_to_offset(msr);
- 
-@@ -408,7 +448,15 @@ static void mce_wrmsrl(u32 msr, u64 v)
- 			*(u64 *)((char *)this_cpu_ptr(&injectm) + offset) = v;
- 		return;
- 	}
--	wrmsrl(msr, v);
-+
-+	low  = (u32)v;
-+	high = (u32)(v >> 32);
-+
-+	/* See comment in mce_rdmsrl() */
-+	asm volatile("1: wrmsr\n"
-+		     "2:\n"
-+		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_wrmsr_fault)
-+		     : : "c" (msr), "a"(low), "d" (high) : "memory");
- }
- 
- /*
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Florian
