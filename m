@@ -2,89 +2,137 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593CBC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DD921D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E4F221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUDAZHWm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkZ1RzxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgIJVMF (ORCPT
+        id S1726773AbgIJVM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731135AbgIJOcg (ORCPT
+        Thu, 10 Sep 2020 17:12:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39207 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731133AbgIJOc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:32:36 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A72CC0617AA;
-        Thu, 10 Sep 2020 07:20:48 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id q21so6530339edv.1;
-        Thu, 10 Sep 2020 07:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DqYP69u6EXo/SysyWBW0+nlQMG0J6Ocm49GIaUZelBo=;
-        b=bUDAZHWm9YF4plGhsM1Nza1WuKrIrg3kVvCIilsl7y96mCWYP/2edjQVFXlzqm3LqA
-         z1x0oHSkiWBt5dCCVloB6KxbVuT6zXqQ7NoRmvRoQQk+0nGhemZ4vL1XItmz7eCQwCIk
-         O4zJNB2Vw4K/+ywSpq+x4ByKQ9pV5wFVdvj9E4SaLWJlriRaONdbZbF5IVjwQH8rB5z6
-         wmMRd4LQzwo7OHoFvxxpAblyj94sW+WzZiUhNtOujX9L3XDfPjiPV/yPq9BF/W6Dmygy
-         w3Rs/8EK5FAhW2k3Iw4IUDJL09YJTyi7yT0rXZqqH+6oozTtBDZoVDWMOjoPPNu5C1+x
-         ArWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DqYP69u6EXo/SysyWBW0+nlQMG0J6Ocm49GIaUZelBo=;
-        b=ufhuVXPdzBnXaXPNc43K989KJFpD+pCNFyAXx1fd9x2T6VoExGYLJ7eVbtR4DZByfW
-         HeRVTBQ9vEoYe4z40IZhHWTa9SnbMC1L0qmJ9yZQ0so+msgx/doE01pgxVDJUULrRyet
-         YujIYB3u0tt4E/tF7vV0k32Cf+gozcXNdWGIaRWnk3ckKXXoivkpv0adC1ZuXSdSKLuP
-         0LFy6DADk9dErJsRL8/+g+TZDcNb81twtbjX3LFTueBG8ILlpHVAZYJIUDjVUeILNPQm
-         FkBsbXGco3ZiUrA1TKsLY/wyly0GhZOAGaJqNC1eQGEliQjSJcPoiWzxURxOyysGJFZ6
-         8A/g==
-X-Gm-Message-State: AOAM532EQxnKTWtCXIy+ij1Wjm7TCDFZK6G7P2d50pIcWZedUVgyzbn9
-        C8KdpdaOEzPq335FVuShfxkosNVnrmGzmVfwkkvZ66OWBRI=
-X-Google-Smtp-Source: ABdhPJz1awMw7XZ11QjIEJ4q0d1xkTs1E/NS/8CmOFBaVYYqxRVkRHSm8uiDeK4OOuiOKf9v4V/YZ0XXO9+OvrdlPy8=
-X-Received: by 2002:aa7:c504:: with SMTP id o4mr9794775edq.82.1599747646976;
- Thu, 10 Sep 2020 07:20:46 -0700 (PDT)
+        Thu, 10 Sep 2020 10:32:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599748336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YSWFx/cofNH1Si60n2IPG1OZBCpHlootSbq1tR7ZiH4=;
+        b=GkZ1RzxRumXzA60Pr9RhtXueGukrQ4OqRKuXBZomIxqNboQg9z0F2FptI4a+AMbNagJaUv
+        dXjPJW2oaC5G1HxkYlq0VOPTZkQLLN4rW1rQtJvGJ3NaIinlSrE8naIeXpjDoncSf4zFja
+        +FZ2pk1CAYki8kckHXeC2H+NxaMA0TQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-524-FLFqHds8Mi23NWWVl2_QoQ-1; Thu, 10 Sep 2020 09:56:28 -0400
+X-MC-Unique: FLFqHds8Mi23NWWVl2_QoQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E42B1084C80;
+        Thu, 10 Sep 2020 13:56:26 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1DECB81C51;
+        Thu, 10 Sep 2020 13:56:20 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 15:56:18 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Peter Maydell <Peter.Maydell@arm.com>,
+        linux-kernel@vger.kernel.org, Juan Quintela <quintela@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        qemu-devel@nongnu.org,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
+Message-ID: <20200910135618.cvnlrgvhuy3amv6s@kamzik.brq.redhat.com>
+References: <20200904160018.29481-1-steven.price@arm.com>
+ <20200909152540.ylnrljd6aelxoxrf@kamzik.brq.redhat.com>
+ <857566df-1b98-84f7-9268-d092722dc749@arm.com>
+ <20200910062958.o55apuvdxmf3uiqb@kamzik.brq.redhat.com>
+ <37663bb6-d3a7-6f53-d0cd-88777633a2b2@arm.com>
 MIME-Version: 1.0
-References: <CADxRZqwGH3c5SvByBB3WSQhR_0NLCY=3RZ6541m8afX-scA4HA@mail.gmail.com>
- <20200910134040.GZ1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200910134040.GZ1362448@hirez.programming.kicks-ass.net>
-From:   Anatoly Pugachev <matorola@gmail.com>
-Date:   Thu, 10 Sep 2020 17:20:35 +0300
-Message-ID: <CADxRZqyQo5XhMeyGy2regB4rcRp6tm4DLd=LK6DOJ=c-RTmHww@mail.gmail.com>
-Subject: Re: [sparc64] kernel OOPS bisected from "lockdep: improve
- current->(hard|soft)irqs_enabled synchronisation with actual irq state"
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37663bb6-d3a7-6f53-d0cd-88777633a2b2@arm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 4:40 PM <peterz@infradead.org> wrote:
+On Thu, Sep 10, 2020 at 10:21:04AM +0100, Steven Price wrote:
+> On 10/09/2020 07:29, Andrew Jones wrote:
+> > But if userspace created the memslots with memory already set with
+> > PROT_MTE, then this wouldn't be necessary, right? And, as long as
+> > there's still a way to access the memory with tag checking disabled,
+> > then it shouldn't be a problem.
+> 
+> Yes, so one option would be to attempt to validate that the VMM has provided
+> memory pages with the PG_mte_tagged bit set (e.g. by mapping with PROT_MTE).
+> The tricky part here is that we support KVM_CAP_SYNC_MMU which means that
+> the VMM can change the memory backing at any time - so we could end up in
+> user_mem_abort() discovering that a page doesn't have PG_mte_tagged set - at
+> that point there's no nice way of handling it (other than silently upgrading
+> the page) so the VM is dead.
+> 
+> So since enforcing that PG_mte_tagged is set isn't easy and provides a
+> hard-to-debug foot gun to the VMM I decided the better option was to let the
+> kernel set the bit automatically.
 >
-> On Thu, Sep 10, 2020 at 02:43:13PM +0300, Anatoly Pugachev wrote:
-> > Hello!
-> >
-> > The following git patch 044d0d6de9f50192f9697583504a382347ee95ca
-> > (linux git master branch) introduced the following kernel OOPS upon
-> > kernel boot on my sparc64 T5-2 ldom (VM):
->
-> https://lkml.kernel.org/r/20200908154157.GV1362448@hirez.programming.kicks-ass.net
 
-Peter, thanks!
+The foot gun still exists when migration is considered, no? If userspace
+is telling a guest it can use MTE on its normal memory, but then doesn't
+prepare that memory correctly, or remember to migrate the tags correctly
+(which requires knowing the memory has tags and knowing how to get them),
+then I guess the VM is in trouble one way or another.
 
-That fixes the issue for me.
+I feel like we should trust the VMM to ensure MTE will work on any memory
+the guest could use it on, and change the action in user_mem_abort() to
+abort the guest with a big error message if it sees the flag is missing.
+ 
+> > > > 
+> > > > If userspace needs to write to guest memory then it should be due to
+> > > > a device DMA or other specific hardware emulation. Those accesses can
+> > > > be done with tag checking disabled.
+> > > 
+> > > Yes, the question is can the VMM (sensibly) wrap the accesses with a
+> > > disable/renable tag checking for the process sequence. The alternative at
+> > > the moment is to maintain a separate (untagged) mapping for the purpose
+> > > which might present it's own problems.
+> > 
+> > Hmm, so there's no easy way to disable tag checking when necessary? If we
+> > don't map the guest ram with PROT_MTE and continue setting the attribute
+> > in KVM, as this series does, then we don't need to worry about it tag
+> > checking when accessing the memory, but then we can't access the tags for
+> > migration.
+> 
+> There's a "TCO" (Tag Check Override) bit in PSTATE which allows disabling
+> tag checking, so if it's reasonable to wrap accesses to the memory you can
+> simply set the TCO bit, perform the memory access and then unset TCO. That
+> would mean a single mapping with MTE enabled would work fine. What I don't
+> have a clue about is whether it's practical in the VMM to wrap guest
+> accesses like this.
+> 
+
+At least QEMU goes through many abstractions to get to memory already.
+There may already be a hook we could use, if not, it probably wouldn't
+be too hard to add one (famous last words).
+
+Thanks,
+drew
+
