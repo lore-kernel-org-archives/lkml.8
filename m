@@ -2,244 +2,200 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E57C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE77C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23885206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D97206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lO1VWBQF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyUqp0qm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgIJStk (ORCPT
+        id S1727837AbgIJSzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        Thu, 10 Sep 2020 14:55:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgIJQMn (ORCPT
+        with ESMTP id S1726805AbgIJSyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:12:43 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B20C0617B1;
-        Thu, 10 Sep 2020 09:12:23 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id o8so9522442ejb.10;
-        Thu, 10 Sep 2020 09:12:23 -0700 (PDT)
+        Thu, 10 Sep 2020 14:54:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39748C061573;
+        Thu, 10 Sep 2020 11:54:13 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so465246pjb.5;
+        Thu, 10 Sep 2020 11:54:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3UPlh3Kyd3Y4TY4RZl2rxdxtBbfraaBRvID8Rle5+Mg=;
-        b=lO1VWBQFmH6VbAkxjDb2ACXNSiPX+dHed6wE3ZYfJr4XS+bsNTjLsh1JadXJWQjo97
-         ezKKVRjyorByCxs0EJR///Z/AG9qHjwHmdxyhDwTrprz1oLzWENWRZQDh6U6hZWjs9gx
-         u7rb+oiIWdynm21MstjSZIRPW5LRXGfbWE6xTV/eeVl94zA0ZsmRUMfRcDmmPGo/UqVc
-         u7X7cT7Y9/zesxbdMBysvW9q2rybKJSn3sIwf0Ejgo2cJQS9tYIv85D8NCXjzEjxOAJ1
-         zCQkShSr2MtvlOqHGJvPua1AyIYFPb7iDC4QEvpN/KSg95+Xdga1+B+2rZ8qJA1RFbuu
-         oezw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2Xa8adrS68p10V9uAlCA1zNdv/U/GcBjRclFrOXiS48=;
+        b=gyUqp0qm8ln6pVCngaN7s20aFFvyFckMVpNQYk128QI9pagHu2mKSdbTs2JYRvLeTK
+         QZcDep/Q1nfAj+q4hDlRXJi6rPbvXBDSBsJmKscnozvrOE4ZXFin9qMBfsNR/Kd5uRWQ
+         AJU7KZXE3Qk2dx3F5SvDaOIsRk33Msb1vjmUs76kSEwzhV1MVUhBShgA48EsUp6R4UZM
+         iheF35RSl5eFN2WlsfiPmK5FP4jfrO5Juu+2kLVkqxd/kC3Ks5us3yM2XfsONuWghrjU
+         s6D23HcupvG31AT9riVU0ZCWFpOMbzasmrRbM020VO4nHlycpm3HPj5odRw83zXlr/nx
+         SMnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3UPlh3Kyd3Y4TY4RZl2rxdxtBbfraaBRvID8Rle5+Mg=;
-        b=ZiZOKIF5OQc335QVFBTe/HkZCDHqA3brukBup/592tFn0MeWgH1uGD3FO1h4+le55x
-         s8Z6tedvI43m0srCJ7anYiSowtxvZ/TYu2lkUTOSRyiRfulSgt0gekKIm/EOvOYObfUR
-         kTVn7EeLCja6TRFMMPSsb/y6XmILRnGAD6+fMfb8y9PKjK2/Q51BUv0/0EKMWfF2Jt+F
-         umvFCw0m8MM3507kHUEysrumVeSNvQm/o4MEykICOu2ZfqEH3zBB7GyUel9NVvsdH2vx
-         AR9ZUB7Ue/EVMM4Fkr1GXYpdxIz6HZ2665KPfRJ9/RFrqIrjpemcoKj62krSSmK4KvIB
-         At2A==
-X-Gm-Message-State: AOAM5316/hdlhzHZdtWrZqv+etFdjSHHNZpu0UJqTighPx52VvgdFx0v
-        RMkfKajohNn6I68m8h4o8qFhOagH7AI=
-X-Google-Smtp-Source: ABdhPJwuPFVkddrm9qgD0Me87o7ek6S63oGuv2UvRGFK5ilTr/vcltRTOb35DXF9pe6B2rAzYrYNOQ==
-X-Received: by 2002:a17:906:cf82:: with SMTP id um2mr9523837ejb.49.1599754341751;
-        Thu, 10 Sep 2020 09:12:21 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id k8sm7282911ejz.60.2020.09.10.09.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:12:20 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
-        davem@davemloft.net, kuba@kernel.org,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 14/15] habanalabs/gaudi: support DCB protocol
-Date:   Thu, 10 Sep 2020 19:11:25 +0300
-Message-Id: <20200910161126.30948-15-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910161126.30948-1-oded.gabbay@gmail.com>
-References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2Xa8adrS68p10V9uAlCA1zNdv/U/GcBjRclFrOXiS48=;
+        b=cEcs7EZ7h9H3qTLAyrkudkdLquqaygZOZ5NMc80TZIc9eiu5VfqhJwVQTHkqkRi+NO
+         6E0zGoBJAHBWuAKE+M57XtV5Wk6WdjL4+XAxsw/EiCugjZdtxAsPRUaZ7j26eN1BklsS
+         QpArm8xfWLFHo44D1mt/LP/hrUbL8MoG4N/+MmShieGLxlhK1jwLreBtYPCko4sHVZCQ
+         1UOzVR44TwvJUALmfRBUeFh8tLvgiVzux663kjGgB338wXxR0HD9+JvH7lhhXenrNymI
+         ulMphmgO/aF61idz44MOfXT3J5UIyxbYjvMXb9/RjyUGyq/UIaxFKm1jPLT33SpMOKd5
+         AKyA==
+X-Gm-Message-State: AOAM5337CsCqtKfE517wMSvwffMSv/hSgi49QZ1AbMyTm3WalAALrT52
+        hqZzYR6SSZTp6FsVSqi9o4yx2/v6TOs=
+X-Google-Smtp-Source: ABdhPJyQypWjMN7zIVrB/qW+UZo9cXIHTKKUrEfZmWYJCb4LBOJuMS5AQaKJfMkXxnrwyDS3ChDf7g==
+X-Received: by 2002:a17:90a:13c7:: with SMTP id s7mr1309300pjf.124.1599764052289;
+        Thu, 10 Sep 2020 11:54:12 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id v205sm6620706pfc.110.2020.09.10.11.54.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 11:54:11 -0700 (PDT)
+Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
+To:     Rob Herring <robh@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-5-james.quinlan@broadcom.com>
+ <20200910155637.GA423872@bogus>
+ <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com>
+ <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <027ee22c-0981-f49f-52be-0c8aa3a3699b@gmail.com>
+Date:   Thu, 10 Sep 2020 11:54:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
 
-Add DCB support to configure the NIC's Priority Flow Control (PFC).
-The added support is minimal because a full support is not
-currently required.
 
-A summary of the supported callbacks:
+On 9/10/2020 11:50 AM, Rob Herring wrote:
+> On Thu, Sep 10, 2020 at 10:42 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>>
+>> On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
+>>>
+>>> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
+>>>> From: Jim Quinlan <jquinlan@broadcom.com>
+>>>>
+>>>> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+>>>> and resume.  Now the PCIe driver may do so as well.
+>>>>
+>>>> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+>>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>   drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+>>>>   1 file changed, 47 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+>>>> index c2b3d2946a36..3d588ab7a6dd 100644
+>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
+>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
+>>>> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+>>>>        brcm_pcie_bridge_sw_init_set(pcie, 1);
+>>>>   }
+>>>>
+>>>> +static int brcm_pcie_suspend(struct device *dev)
+>>>> +{
+>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+>>>> +
+>>>> +     brcm_pcie_turn_off(pcie);
+>>>> +     clk_disable_unprepare(pcie->clk);
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int brcm_pcie_resume(struct device *dev)
+>>>> +{
+>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+>>>> +     void __iomem *base;
+>>>> +     u32 tmp;
+>>>> +     int ret;
+>>>> +
+>>>> +     base = pcie->base;
+>>>> +     clk_prepare_enable(pcie->clk);
+>>>> +
+>>>> +     /* Take bridge out of reset so we can access the SERDES reg */
+>>>> +     brcm_pcie_bridge_sw_init_set(pcie, 0);
+>>>> +
+>>>> +     /* SERDES_IDDQ = 0 */
+>>>> +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+>>>> +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+>>>> +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+>>>> +
+>>>> +     /* wait for serdes to be stable */
+>>>> +     udelay(100);
+>>>
+>>> Really needs to be a spinloop?
+>>>
+>>>> +
+>>>> +     ret = brcm_pcie_setup(pcie);
+>>>> +     if (ret)
+>>>> +             return ret;
+>>>> +
+>>>> +     if (pcie->msi)
+>>>> +             brcm_msi_set_regs(pcie->msi);
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>>   static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+>>>>   {
+>>>>        brcm_msi_remove(pcie);
+>>>> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+>>>>
+>>>>   MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+>>>>
+>>>> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
+>>>> +     .suspend_noirq = brcm_pcie_suspend,
+>>>> +     .resume_noirq = brcm_pcie_resume,
+>>>
+>>> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
+>>> and 1352 of .suspend in the tree.
+>>
+>> I will test switching this to  suspend_late/resume_early.
+> 
+> Why not just the 'regular' flavor suspend/resume?
 
-- ieee_getpfc: get the current PFC configuration. PFC is enabled by
-               default.
-- ieee_setpfc: set PFC configuration. Only 0 or all 4 priorities can be
-               enabled, no subset is allowed.
-- getdcbx: get DCBX capability.
-- setdcbx: set DCBX capability. Only host LLDP agent and IEEE protocol
-           flavors are supported.
+We must have inherited this from when the driver was not a 
+platform_device back in our 3.14 downstream kernel and we used 
+syscore_ops to do the system suspend/resume.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/gaudi/Makefile        |   2 +-
- drivers/misc/habanalabs/gaudi/gaudi_nic.c     |   3 +
- .../misc/habanalabs/gaudi/gaudi_nic_dcbnl.c   | 108 ++++++++++++++++++
- 3 files changed, 112 insertions(+), 1 deletion(-)
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-
-diff --git a/drivers/misc/habanalabs/gaudi/Makefile b/drivers/misc/habanalabs/gaudi/Makefile
-index e3002dc34a74..9757c8ba1cb0 100644
---- a/drivers/misc/habanalabs/gaudi/Makefile
-+++ b/drivers/misc/habanalabs/gaudi/Makefile
-@@ -3,5 +3,5 @@ HL_GAUDI_FILES := gaudi/gaudi.o gaudi/gaudi_hwmgr.o gaudi/gaudi_security.o \
- 	gaudi/gaudi_coresight.o
- 
- HL_GAUDI_FILES += gaudi/gaudi_nic.o gaudi/gaudi_phy.o \
--	gaudi/gaudi_nic_ethtool.o \
-+	gaudi/gaudi_nic_ethtool.o gaudi/gaudi_nic_dcbnl.o \
- 	gaudi/gaudi_nic_debugfs.o
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi_nic.c b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-index 108db990efa8..1ea410cdafdf 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-@@ -2745,6 +2745,9 @@ static int port_register(struct hl_device *hdev, int port)
- 
- 	ndev->netdev_ops = &gaudi_nic_netdev_ops;
- 	ndev->ethtool_ops = &gaudi_nic_ethtool_ops;
-+#ifdef CONFIG_DCB
-+	ndev->dcbnl_ops = &gaudi_nic_dcbnl_ops;
-+#endif
- 	ndev->watchdog_timeo = NIC_TX_TIMEOUT;
- 	ndev->min_mtu = ETH_MIN_MTU;
- 	ndev->max_mtu = NIC_MAX_MTU;
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c b/drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-new file mode 100644
-index 000000000000..b8f37fd0d3cf
---- /dev/null
-+++ b/drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright 2018-2020 HabanaLabs, Ltd.
-+ * All Rights Reserved.
-+ */
-+
-+#include "gaudi_nic.h"
-+
-+#define PFC_PRIO_NUM		4
-+#define PFC_PRIO_MASK_ALL	GENMASK(PFC_PRIO_NUM - 1, 0)
-+#define PFC_PRIO_MASK_NONE	0
-+#define PFC_STAT_TX_OFFSET	17
-+#define PFC_STAT_RX_OFFSET	27
-+
-+#ifdef CONFIG_DCB
-+static int gaudi_nic_dcbnl_ieee_getpfc(struct net_device *netdev,
-+					struct ieee_pfc *pfc)
-+{
-+	struct gaudi_nic_device **ptr = netdev_priv(netdev);
-+	struct gaudi_nic_device *gaudi_nic = *ptr;
-+	struct hl_device *hdev = gaudi_nic->hdev;
-+	u32 port = gaudi_nic->port;
-+	int rc = 0, i, tx_idx, rx_idx;
-+
-+	if (disabled_or_in_reset(gaudi_nic)) {
-+		dev_info_ratelimited(hdev->dev,
-+				"port %d is in reset, can't get PFC", port);
-+		return -EBUSY;
-+	}
-+
-+	pfc->pfc_en = gaudi_nic->pfc_enable ? PFC_PRIO_MASK_ALL :
-+							PFC_PRIO_MASK_NONE;
-+	pfc->pfc_cap = PFC_PRIO_NUM;
-+
-+	for (i = 0 ; i < PFC_PRIO_NUM ; i++) {
-+		tx_idx = PFC_STAT_TX_OFFSET + i;
-+		rx_idx = PFC_STAT_RX_OFFSET + i;
-+
-+		pfc->requests[i] = gaudi_nic_read_mac_stat_counter(hdev, port,
-+								tx_idx, false);
-+		pfc->indications[i] = gaudi_nic_read_mac_stat_counter(hdev,
-+							port, rx_idx, true);
-+	}
-+
-+	return rc;
-+}
-+
-+static int gaudi_nic_dcbnl_ieee_setpfc(struct net_device *netdev,
-+					struct ieee_pfc *pfc)
-+{
-+	struct gaudi_nic_device **ptr = netdev_priv(netdev);
-+	struct gaudi_nic_device *gaudi_nic = *ptr;
-+	struct hl_device *hdev = gaudi_nic->hdev;
-+	u32 port = gaudi_nic->port;
-+	u8 curr_pfc_en;
-+
-+	if (pfc->pfc_en & ~PFC_PRIO_MASK_ALL) {
-+		dev_info_ratelimited(hdev->dev,
-+					"PFC supports %d priorities only, port %d\n",
-+					PFC_PRIO_NUM, port);
-+		return -EINVAL;
-+	}
-+
-+	if ((pfc->pfc_en != PFC_PRIO_MASK_NONE) &&
-+			(pfc->pfc_en != PFC_PRIO_MASK_ALL)) {
-+		dev_info_ratelimited(hdev->dev,
-+					"PFC should be enabled/disabled on all priorities, port %d\n",
-+					port);
-+		return -EINVAL;
-+	}
-+
-+	if (disabled_or_in_reset(gaudi_nic)) {
-+		dev_info_ratelimited(hdev->dev,
-+				"port %d is in reset, can't set PFC", port);
-+		return -EBUSY;
-+	}
-+
-+	curr_pfc_en = gaudi_nic->pfc_enable ? PFC_PRIO_MASK_ALL :
-+							PFC_PRIO_MASK_NONE;
-+
-+	if (pfc->pfc_en == curr_pfc_en)
-+		return 0;
-+
-+	gaudi_nic->pfc_enable = !gaudi_nic->pfc_enable;
-+
-+	gaudi_nic_set_pfc(gaudi_nic);
-+
-+	return 0;
-+}
-+
-+static u8 gaudi_nic_dcbnl_getdcbx(struct net_device *netdev)
-+{
-+	return DCB_CAP_DCBX_HOST | DCB_CAP_DCBX_VER_IEEE;
-+}
-+
-+static u8 gaudi_nic_dcbnl_setdcbx(struct net_device *netdev, u8 mode)
-+{
-+	return !(mode == (DCB_CAP_DCBX_HOST | DCB_CAP_DCBX_VER_IEEE));
-+}
-+
-+const struct dcbnl_rtnl_ops gaudi_nic_dcbnl_ops = {
-+	.ieee_getpfc	= gaudi_nic_dcbnl_ieee_getpfc,
-+	.ieee_setpfc	= gaudi_nic_dcbnl_ieee_setpfc,
-+	.getdcbx	= gaudi_nic_dcbnl_getdcbx,
-+	.setdcbx	= gaudi_nic_dcbnl_setdcbx
-+};
-+#endif
+Later on, we sort of mechanically made those _noirq() to preserve the 
+semantics of syscore_ops, but in hindsight it should not be necessary, 
+the regular suspsend/resume should work and the device driver model 
+ordering between parent/child should take care of the bridge being 
+suspended last within the PCI bus type that is.
 -- 
-2.17.1
-
+Florian
