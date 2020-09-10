@@ -2,120 +2,70 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97509C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CBC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434182078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599756960;
-	bh=hmwqeyOJ8vtU9vWDDDRSh/hJNMq7VqWq5NgxvK7Fj+4=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=cmTPcJBRMFHZ2eU8Gxpy+fUbJfzzaClitfpvOLznhrlDHw+6ImWvq2pWCj+zyDJSI
-	 VPqPtshi0lPUdse3SFsswUYQmdm+VkdRPyK9l7et6lHL0mvzFW+ASX+sLdJolLgNnh
-	 02qIIQw5K2tPZpiACw/qprpjvA3cCBjleTXjGTm4=
+	by mail.kernel.org (Postfix) with ESMTP id BDE912078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgIJQzg (ORCPT
+        id S1727775AbgIJQ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:55:36 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33638 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgIJQxP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:53:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g4so7055591edk.0;
-        Thu, 10 Sep 2020 09:53:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3nk4XRQ2S4e5AEFEFMDuymF8Jl6oZV0YsM2IeVg++t0=;
-        b=On72LEkIvNUnORcGqc2Mc5kYADQ9+AadLn2X03TvyU8wdNzl4tfhMPVmOlnvSy3wXN
-         bWe5KFO0NP+xVA5HoyCU2hN5bJSA51CDpTjAmRM+/LTjOPkWrbHmbmbxytPYtPelVea8
-         qK0fQ/NEU+xxHC3hUJLCI+m0D1NkJkii8hu7+OB4B5uOtw7OAXH/FMrQODG8Ar6CjeJy
-         9m4JHxxzFocIkhMZNS83qpCcbL8vJkNftdPPl2ougT50A2aQbcUXTPrgJq46vXr295Lt
-         W3d1QrP76+VgGlGK09vHvz8m7T/PYv/dwdD+FfAzDFZ8CevwM46A6Xk5g5hakU86oyyK
-         U0DQ==
-X-Gm-Message-State: AOAM531ZVBsjjG46HtWGuxd3w55CmkGPfkPKcfclxjqGOvJBVGsHAhia
-        hLcmbycsBsyz5CNufdF9Ks0=
-X-Google-Smtp-Source: ABdhPJyquD6+nZSxDAFxh5wceHTIih3xdZbNqTBnMJD615DtbqdBY7qzu8F3twgU/y/4F0Tvr77Hdg==
-X-Received: by 2002:a05:6402:cb4:: with SMTP id cn20mr10351438edb.369.1599756792337;
-        Thu, 10 Sep 2020 09:53:12 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id 35sm7851689edg.71.2020.09.10.09.53.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Sep 2020 09:53:10 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 18:53:08 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH 4/6] ARM: dts: aspeed: Fix PCA95xx GPIO expander
- properties on Portwell
-Message-ID: <20200910165308.GA11510@kozik-lap>
-References: <20200829094024.31842-1-krzk@kernel.org>
- <20200829094024.31842-4-krzk@kernel.org>
+        Thu, 10 Sep 2020 12:56:11 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42262 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgIJQxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:53:09 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 4126D35A;
+        Thu, 10 Sep 2020 16:53:08 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 10:53:07 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/30] .gitignore: docs: ignore sphinx_*/ directories
+Message-ID: <20200910105307.0d255bd6@lwn.net>
+In-Reply-To: <ac4e23d556c7d95cb11d6d5c605f43e425b2c3c7.1599660067.git.mchehab+huawei@kernel.org>
+References: <cover.1599660067.git.mchehab+huawei@kernel.org>
+        <ac4e23d556c7d95cb11d6d5c605f43e425b2c3c7.1599660067.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200829094024.31842-4-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 11:40:22AM +0200, Krzysztof Kozlowski wrote:
-> The PCA95xx GPIO expander requires GPIO controller properties to operate
-> properly.
+On Wed,  9 Sep 2020 16:10:32 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> The default way of building documentation is to use
+> Sphinx toolchain installed via pip, inside the
+> Kernel tree main directory. That's what's recommended by:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts | 2 ++
->  1 file changed, 2 insertions(+)
-
-Hi everyone,
-
-Any comments here?
-
-Best regards,
-Krzysztof
-
-
+> 	scripts/sphinx-pre-install
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-> index 4a1ca8f5b6a7..03c161493ffc 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-portwell-neptune.dts
-> @@ -121,6 +121,8 @@
->  	pca9555@27 {
->  		compatible = "nxp,pca9555";
->  		reg = <0x27>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
->  	};
->  };
->  
-> -- 
-> 2.17.1
+> As it usually provides a better version of this package
+> than the one installed, specially on LTS distros.
 > 
+> So, add the directories created by running the commands
+> suggested by the script.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Applied, thanks.
+
+Also applied parts 2, 5, 6, 7, 12, 14, 16, 17, 19, 20, and 23.  Many of
+the others don't apply at all; they're going to need to go to the relevant
+maintainers.
+
+Thanks,
+
+jon
