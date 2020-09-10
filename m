@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D130DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D362C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F74221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AEED21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzHsxghq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPIy73KW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgIJVR2 (ORCPT
+        id S1728091AbgIJVRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
+        Thu, 10 Sep 2020 17:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728036AbgIJVOr (ORCPT
+        with ESMTP id S1728066AbgIJVPI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:47 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A97C0617A1;
-        Thu, 10 Sep 2020 14:14:26 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id z1so8762930wrt.3;
-        Thu, 10 Sep 2020 14:14:26 -0700 (PDT)
+        Thu, 10 Sep 2020 17:15:08 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289FAC0617AA;
+        Thu, 10 Sep 2020 14:14:34 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id z9so2109678wmk.1;
+        Thu, 10 Sep 2020 14:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kVpAIfBHlKKnBhZV8vhXwdUPQ2Bvfn5GqICMyE+J7Ms=;
-        b=ZzHsxghq7dnyH0+9+wcEhtX+ZJO5fL+hOdeFcbgAMFcp2THuM7HHaNBFz1cSF/ZQ42
-         xTWpNaly0y6nJa8QeyiMIp2uJn5mGaUjSPq6tr5n/o7Ztl66a1XwrsB4E8FpUliAkEYn
-         Za+/n0AJXus5Afu6QU5EwpLnl1x3ABgeBUgzz+TjGjtcQTnT6R4Hl6VhkEBgjXvo3Z5f
-         ta1drycf71PzWqo098QwQjs1K29rQrlI+z9UuY3UCIE+d90QBw/mCzZ/pN5pltnRi+PC
-         K9P15+7EZyZdZDBTgqigLhZqLp2fiXF0pBsg2d8ve4fhCY2BPgi3Lxa7peRTQc15Tfg6
-         fLOA==
+        bh=NEcMV7mwVCcBwDSicVrtyHLbk/vsYwT0ZunUd30Uoo8=;
+        b=rPIy73KWkAhX2hCOZ0I2FLsmAtunpa9hbQEtQnuo9kHWRAjhPYPO9hgVQtJ6cS3OPY
+         XKSX7rMiBHIXLxiaVDH+W3E2njbzekc6qmVibnGzEuv1XrOpxR0deWkXE51wMlelEm3D
+         Rl5+mJq2haAI8jAh9m5XOR9/H255CT2YXKXo2eikrQck0STffjzKXUWoj6ZxnlA3PPqO
+         /N5kLN1y3dj1NPKpF2IXyT6yLj0K5nqYei9Z+Idznay2IlyL3zoKCrzcqd1AOZ2VTGFz
+         hlROGgD6hyHZBrREJFrQYruNJISiVCiOSpsJfVa6+neDishFD6hvFNc4hob7+mfB4E7b
+         c3TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kVpAIfBHlKKnBhZV8vhXwdUPQ2Bvfn5GqICMyE+J7Ms=;
-        b=H69ulZWPXJNcAFWBFEMJip7FCRogp8kxJeslAhL0KK//DZBJodMRSQYCy+8Z2/KMz2
-         9qWdzhfp0rV7/60fh8KM+1/oBSVKdMcYCDARcCrOQ6MkkQy9PENj0voDwTHjFBU+pwE5
-         V5l6sPrDmffwiPxVvH7rr2wmS4oBu+En/a3fe6unRcq64uO56pwSByGaTFwkeu3Q9yT9
-         72gFNrdU+LnQVmycrRHLzThqg5BankYKZrhn9V0lU34P+C+k6kfKggdR5XlIFDYMymgO
-         KbeyD6Tgiafpq1BjGuDT8kyTRCAR98lYvehxzJIRlow7MqhD5j4r81UEVz65jtEQf1UN
-         68BQ==
-X-Gm-Message-State: AOAM532jIMI8HyDjPX5mFUKv5xai9qoG0oI9BypOMSZqBbBfryV5MIzz
-        h4O72Atq7f5h53g9DvhfZCA=
-X-Google-Smtp-Source: ABdhPJwYz7zdqFqJrfyGx+gesPs5OJdM14z1j+mzMxn58UVkLVWI0E66+WnLJ8uLHogySW16htb7/Q==
-X-Received: by 2002:a5d:5042:: with SMTP id h2mr11048791wrt.409.1599772465334;
-        Thu, 10 Sep 2020 14:14:25 -0700 (PDT)
+        bh=NEcMV7mwVCcBwDSicVrtyHLbk/vsYwT0ZunUd30Uoo8=;
+        b=YMe0Cg9m+Y4q02V9SSmGhrbZa6osO2OR5QXjfjJGdO9/cR0G1NvlglnCz/X5KqWC4G
+         UAxqNj0WbKtrZ8nOVRt2ZuMBwO079+KqqSsyB7aQYbnjIsrBcCXAKt6pJvLPQmHJAfja
+         ZWYZ3zDUAERgp8KcuusW3a4G4DUoFqDFlOE0PMNYxuGHbQ6LOiK6fvVqWXI6NPJcJEeU
+         ORCzANQoVV7WdoF2MUtwm28yiIKIAdQNUNghPUxxk03Lv8kYHGA3VGEhRFPFrChMZSwh
+         ek45UPxGbBX9dgJbEkNoJog50iL+Qh3/Hy9AoOgsgO4iBQYUtzgi1Lf1hmtp5QKdnFYV
+         aIhw==
+X-Gm-Message-State: AOAM533L4RDtkEUtXLQfoMbV0R/mecMZ0KT0iye+tNC4vBbn+QAuXWf0
+        n64a2jOFC8gL342nxuQu3pg=
+X-Google-Smtp-Source: ABdhPJyuLc4DzI4rDLXr6PE8oBRsxPYsgLyd3pYeR4Z/O3AJ/84z11b5/Llx8qqq6HngXmQ7UxBfRg==
+X-Received: by 2002:a1c:dfc2:: with SMTP id w185mr697784wmg.15.1599772472828;
+        Thu, 10 Sep 2020 14:14:32 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.24
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:24 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:32 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 14/24] fread.3: Move ARRAY_SIZE logic into macro
-Date:   Thu, 10 Sep 2020 23:13:35 +0200
-Message-Id: <20200910211344.3562-15-colomar.6.4.3@gmail.com>
+Subject: [PATCH 21/24] aio.7: Use perror() directly
+Date:   Thu, 10 Sep 2020 23:13:42 +0200
+Message-Id: <20200910211344.3562-22-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -79,33 +79,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man3/fread.3 | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ man7/aio.7 | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/man3/fread.3 b/man3/fread.3
-index 4c5dc3dbc..8e71e620e 100644
---- a/man3/fread.3
-+++ b/man3/fread.3
-@@ -136,6 +136,8 @@ Class: 0x02
- #include <stdio.h>
- #include <stdlib.h>
+diff --git a/man7/aio.7 b/man7/aio.7
+index ff099885e..9b2c44c48 100644
+--- a/man7/aio.7
++++ b/man7/aio.7
+@@ -257,8 +257,6 @@ aio_return():
  
-+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
-+
- int
- main(void)
- {
-@@ -147,9 +149,7 @@ main(void)
+ #define errExit(msg) do { perror(msg); exit(EXIT_FAILURE); } while (0)
  
-     unsigned char buffer[4];
+-#define errMsg(msg)  do { perror(msg); } while (0)
+-
+ struct ioRequest {      /* Application\-defined structure for tracking
+                            I/O requests */
+     int           reqNum;
+@@ -390,7 +388,7 @@ main(int argc, char *argv[])
+                     else if (s == AIO_ALLDONE)
+                         printf("I/O all done\en");
+                     else
+-                        errMsg("aio_cancel");
++                        perror("aio_cancel");
+                 }
+             }
  
--    size_t ret =
--        fread(buffer, sizeof(buffer) / sizeof(*buffer), sizeof(*buffer),
--              fp);
-+    size_t ret = fread(buffer, ARRAY_SIZE(buffer), sizeof(*buffer), fp);
-     if (ret != sizeof(*buffer)) {
-         fprintf(stderr, "fread() failed: %zu\en", ret);
-         exit(EXIT_FAILURE);
+@@ -418,7 +416,7 @@ main(int argc, char *argv[])
+                     printf("Canceled\en");
+                     break;
+                 default:
+-                    errMsg("aio_error");
++                    perror("aio_error");
+                     break;
+                 }
+ 
 -- 
 2.28.0
 
