@@ -2,102 +2,95 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB68C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB94FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C429E2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7289207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:07:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599739651;
+	bh=v53EoE8bqhd2SDGsudACsBhjqvxwdQvTpE2YUAmq6Eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=18Wz8iwtAGD5AV0YW1P/D0zLyUbvboPPBs0CvQBKTZ2dUICfWMkjszyx+ho5YYAXC
+	 CX11mKlokt6xf7qxwQ4CY2sdI2akYwtfHjolqrxG737M1sFPJLXedow+kiCysOu66i
+	 BQuTVwmKjaWddI8epwRNxizJMWVRmLuC0QWC0/Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgIJMHA (ORCPT
+        id S1729779AbgIJMH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:07:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42522 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbgIJME1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:04:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 66909AD52;
-        Thu, 10 Sep 2020 12:04:06 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 14:03:48 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org,
-        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200910120343.GA6635@linux>
-References: <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
- <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
- <20200910111246.GE28354@dhcp22.suse.cz>
- <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+        Thu, 10 Sep 2020 08:07:27 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:34406 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgIJMFz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:05:55 -0400
+Received: by mail-ej1-f66.google.com with SMTP id gr14so8362351ejb.1;
+        Thu, 10 Sep 2020 05:05:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7tM/BCTp6djkJQeLJysbRkWMDhxj2LN3m5UHBQH6ccU=;
+        b=C9pNV/pK4XdsSBZ5A+vmV2f6XMBoQr4VA7peVX2uxlevWPNxk21vROab8biimrwxb3
+         9OMHvruPjq+yvn/tjgpSlggs/I00NQQkxbIaH8bl3HRmxml28THB1TSHG8YRh+Y9uc7z
+         T43XFPv0Xdge+PIYtENXTg2QVkNzxXgm5yrI3X3QqvbfB8BFbedgdoQjFiSPNx9gJ80+
+         pSBXkklJEEoO8jPN0zTBdAg54MqITabgkzeM8DXP7upr5qSy1n6zqAWaGvz/1r9zIckB
+         mtr4Pf5Tge5BsuS82s2MI5jxn1HqfN2lIL+M4qKY4qEvJc/uVp/GJBks+YvlDXwZczu5
+         eqlw==
+X-Gm-Message-State: AOAM533AP4ZYtVPKds56uWyJKwuIyqVfIVFx6KQtA6grPxqkllriGJ43
+        SXcBFEvby392/wjooB9F0t8=
+X-Google-Smtp-Source: ABdhPJyZwVEFfKPhtn6QkU34ffKYQ7jiuFIUovhlfd0F4j57UiTnX4ZBNq4ZmO+8ldaYZwU/1C+zRQ==
+X-Received: by 2002:a17:907:43f6:: with SMTP id mu6mr8802421ejb.244.1599739553701;
+        Thu, 10 Sep 2020 05:05:53 -0700 (PDT)
+Received: from pi3 ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id d6sm7239479edm.31.2020.09.10.05.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 05:05:52 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 14:05:50 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        lukasz.luba@arm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v3 1/3] PM / devfreq: Add devfreq_get_devfreq_by_node
+ function
+Message-ID: <20200910120550.GA2206@pi3>
+References: <20200908102447.15097-1-cw00.choi@samsung.com>
+ <CGME20200908101230epcas1p25f1ae5d3230f802a8326bfaa7e49c159@epcas1p2.samsung.com>
+ <20200908102447.15097-2-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200908102447.15097-2-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 01:35:32PM +0200, Laurent Dufour wrote:
- 
-> That points has been raised by David, quoting him here:
+On Tue, Sep 08, 2020 at 07:24:45PM +0900, Chanwoo Choi wrote:
+> From: Leonard Crestez <leonard.crestez@nxp.com>
 > 
-> > IIRC, ACPI can hotadd memory while SCHEDULING, this patch would break that.
-> > 
-> > Ccing Oscar, I think he mentioned recently that this is the case with ACPI.
+> Split off part of devfreq_get_devfreq_by_phandle into a separate
+> function. This allows callers to fetch devfreq instances by enumerating
+> devicetree instead of explicit phandles.
 > 
-> Oscar told that he need to investigate further on that.
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> [cw00.choi: Export devfreq_get_devfreq_by_node function and
+>  add function to devfreq.h when CONFIG_PM_DEVFREQ is enabled.]
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/devfreq/devfreq.c | 46 +++++++++++++++++++++++++++++----------
+>  include/linux/devfreq.h   |  6 +++++
+>  2 files changed, 41 insertions(+), 11 deletions(-)
 
-I think my reply got lost.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-We can see acpi hotplugs during SYSTEM_SCHEDULING:
-
-$QEMU -enable-kvm -machine pc -smp 4,sockets=4,cores=1,threads=1 -cpu host -monitor pty \
-        -m size=$MEM,slots=255,maxmem=4294967296k  \
-        -numa node,nodeid=0,cpus=0-3,mem=512 -numa node,nodeid=1,mem=512 \
-        -object memory-backend-ram,id=memdimm0,size=134217728 -device pc-dimm,node=0,memdev=memdimm0,id=dimm0,slot=0 \
-        -object memory-backend-ram,id=memdimm1,size=134217728 -device pc-dimm,node=0,memdev=memdimm1,id=dimm1,slot=1 \
-        -object memory-backend-ram,id=memdimm2,size=134217728 -device pc-dimm,node=0,memdev=memdimm2,id=dimm2,slot=2 \
-        -object memory-backend-ram,id=memdimm3,size=134217728 -device pc-dimm,node=0,memdev=memdimm3,id=dimm3,slot=3 \
-        -object memory-backend-ram,id=memdimm4,size=134217728 -device pc-dimm,node=1,memdev=memdimm4,id=dimm4,slot=4 \
-        -object memory-backend-ram,id=memdimm5,size=134217728 -device pc-dimm,node=1,memdev=memdimm5,id=dimm5,slot=5 \
-        -object memory-backend-ram,id=memdimm6,size=134217728 -device pc-dimm,node=1,memdev=memdimm6,id=dimm6,slot=6 \
-
-kernel: [    0.753643] __add_memory: nid: 0 start: 0100000000 - 0108000000 (size: 134217728)
-kernel: [    0.756950] register_mem_sect_under_node: system_state= 1
-
-kernel: [    0.760811]  register_mem_sect_under_node+0x4f/0x230
-kernel: [    0.760811]  walk_memory_blocks+0x80/0xc0
-kernel: [    0.760811]  link_mem_sections+0x32/0x40
-kernel: [    0.760811]  add_memory_resource+0x148/0x250
-kernel: [    0.760811]  __add_memory+0x5b/0x90
-kernel: [    0.760811]  acpi_memory_device_add+0x130/0x300
-kernel: [    0.760811]  acpi_bus_attach+0x13c/0x1c0
-kernel: [    0.760811]  acpi_bus_attach+0x60/0x1c0
-kernel: [    0.760811]  acpi_bus_scan+0x33/0x70
-kernel: [    0.760811]  acpi_scan_init+0xea/0x21b
-kernel: [    0.760811]  acpi_init+0x2f1/0x33c
-kernel: [    0.760811]  do_one_initcall+0x46/0x1f4
-
-
-
--- 
-Oscar Salvador
-SUSE L3
+Best regards,
+Krzysztof
