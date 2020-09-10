@@ -2,87 +2,139 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08241C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB95C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B168C20C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEC020BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599760655;
-	bh=q4PfSN/iGfvSKBF5OqA0xnoo0M75rGDiILB3JNyi3Sc=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbXKYL1WjCaQPo7AG4CmAPTaonquygtxN37UMw0345RyeiIF4l9bakQSKbgVWhQUK
-	 zbXA7FFb0ooMbmgBZ6wPwksWWxItuw2QHs3Lmx1l7viicvoxS2SpjVgVNLI7YheiwK
-	 s6Cv3Kev5I4/JpSmJ6MIaPhA5z9d1MQ8SbIzOp1E=
+	s=default; t=1599760750;
+	bh=muQ6zjVn/mf+iXsfCUdXzl3dZG6B8J8l8bbNbkMxaHs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mpqIzMGedlci0L9dmH6nCkTjMx/D+ukUVvvPPvaAIt29GJr8mzoD0Vx0Jq6bfWMLR
+	 eaeV7nf2YlT2cp/7yB7gT6PmghHaI4IGbUhL2SCWJhMb/Z9zrnzbbNvLTY+IcuYN1L
+	 X5cOeaXiFxqmjSRvFNYT23qibaYx6XHaMyyLlyWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgIJR5T (ORCPT
+        id S1725877AbgIJR6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 13:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgIJQPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:15:13 -0400
+        id S1725807AbgIJR5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:57:48 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C81E20BED;
-        Thu, 10 Sep 2020 16:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3808820BED;
+        Thu, 10 Sep 2020 17:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599754367;
-        bh=q4PfSN/iGfvSKBF5OqA0xnoo0M75rGDiILB3JNyi3Sc=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=DZLIVNDF3f/+Zb8igN7FHQTHTiyncQABGWe6n7i8pQ0p8yF5+sEd6nVCPwBng9eUX
-         qK9fkl2lh5OsLE75J0gWVdfHa1jteXtCVZ417b83Qw+CFXF9C5dvRC74HfLtSs0OhT
-         FYDhSgoGTQZrDE56CAThmMnbqWSjhbEPZUQoyUg4=
+        s=default; t=1599760667;
+        bh=muQ6zjVn/mf+iXsfCUdXzl3dZG6B8J8l8bbNbkMxaHs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1/dJz17PLrZMeRIjQd6sFEAce0o7eu4K+r0dL+zosiqq0luiYlHoWB51FielsPqaO
+         Wa3TSJxOyAyZi6SExx28ze23dGlUmJasReiKbjSU4S7it/I5rb2rMggP0mkbcOPGUV
+         cSry5a/sdkrgJlogKXiGfjplhGDzzPpiCOwVMjVI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Krzysztof Opasiak <k.opasiak@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v3 5/8] nfc: s3fwrn5: Add missing CRYPTO_HASH dependency
-Date:   Thu, 10 Sep 2020 18:12:16 +0200
-Message-Id: <20200910161219.6237-6-krzk@kernel.org>
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 00/15] ARM: dts: / gpio: Add dtschema for NXP PCA953x and correct dts
+Date:   Thu, 10 Sep 2020 19:57:18 +0200
+Message-Id: <20200910175733.11046-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910161219.6237-1-krzk@kernel.org>
-References: <20200910161219.6237-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver uses crypto hash functions so it needs to select CRYPTO_HASH.
-This fixes build errors:
+Hi,
 
-  arc-linux-ld: drivers/nfc/s3fwrn5/firmware.o: in function `s3fwrn5_fw_download':
-  firmware.c:(.text+0x152): undefined reference to `crypto_alloc_shash'
+Changes since v1:
+1. Patch 1: Use additionalProperties, Add wakeup-source, Add hogs, Extend example with hogs.
+2. New patches: 3, 4, 5, 6, 7, 9, 10, 12, 14 and 15.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/nfc/s3fwrn5/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+The patches could be picked up independently if dtschema makes sense.
+The fixes for pins make sense anyway, regardless of dtschema.
 
-diff --git a/drivers/nfc/s3fwrn5/Kconfig b/drivers/nfc/s3fwrn5/Kconfig
-index af9d18690afe..3f8b6da58280 100644
---- a/drivers/nfc/s3fwrn5/Kconfig
-+++ b/drivers/nfc/s3fwrn5/Kconfig
-@@ -2,6 +2,7 @@
- config NFC_S3FWRN5
- 	tristate
- 	select CRYPTO
-+	select CRYPTO_HASH
- 	help
- 	  Core driver for Samsung S3FWRN5 NFC chip. Contains core utilities
- 	  of chip. It's intended to be used by PHYs to avoid duplicating lots
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (15):
+  dt-bindings: gpio: convert bindings for NXP PCA953x family to dtschema
+  dt-bindings: gpio: convert bindings for Maxim MAX732x family to
+    dtschema
+  arm64: dts: mediatek: fix tca6416 reset GPIOs in pumpkin
+  arm64: dts: mediatek: align GPIO hog names with dtschema
+  arm64: dts: renesas: align GPIO hog names with dtschema
+  arm64: dts: ti: align GPIO hog names with dtschema
+  arm64: dts: xilinx: align GPIO hog names with dtschema
+  ARM: dts: am335x: lxm: fix PCA9539 GPIO expander properties
+  ARM: dts: am335x: t335: align GPIO hog names with dtschema
+  ARM: dts: am3874: iceboard: fix GPIO expander reset GPIOs
+  ARM: dts: aspeed: fix PCA95xx GPIO expander properties on Portwell
+  ARM: dts: aspeed: align GPIO hog names with dtschema
+  ARM: dts: dove: fix PCA95xx GPIO expander properties on A510
+  ARM: dts: armada: align GPIO hog names with dtschema
+  ARM: dts: imx6q: align GPIO hog names with dtschema
+
+ .../devicetree/bindings/gpio/gpio-max732x.txt |  58 -----
+ .../devicetree/bindings/gpio/gpio-pca953x.txt |  90 -------
+ .../bindings/gpio/gpio-pca95xx.yaml           | 234 ++++++++++++++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ arch/arm/boot/dts/am335x-lxm.dts              |   4 +
+ arch/arm/boot/dts/am335x-sbc-t335.dts         |   4 +-
+ arch/arm/boot/dts/am3874-iceboard.dts         |   8 +-
+ arch/arm/boot/dts/armada-388-clearfog.dts     |   4 +-
+ arch/arm/boot/dts/armada-388-clearfog.dtsi    |  10 +-
+ arch/arm/boot/dts/armada-388-helios4.dts      |   6 +-
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts  |   2 +-
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts   |  16 +-
+ .../boot/dts/aspeed-bmc-portwell-neptune.dts  |   2 +
+ arch/arm/boot/dts/dove-sbc-a510.dts           |   1 +
+ arch/arm/boot/dts/imx6q-b450v3.dts            |  14 +-
+ arch/arm/boot/dts/imx6q-b650v3.dts            |  12 +-
+ arch/arm/boot/dts/imx6q-b850v3.dts            |   4 +-
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi           |  12 +-
+ .../boot/dts/mediatek/pumpkin-common.dtsi     |  28 +--
+ .../boot/dts/renesas/r8a77951-salvator-xs.dts |   2 +-
+ .../boot/dts/renesas/r8a77965-salvator-xs.dts |   2 +-
+ arch/arm64/boot/dts/renesas/ulcb-kf.dtsi      |  14 +-
+ .../dts/ti/k3-j721e-common-proc-board.dts     |   4 +-
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    |   8 +-
+ 24 files changed, 316 insertions(+), 227 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
+
 -- 
 2.17.1
 
