@@ -2,87 +2,83 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61512C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0246AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2547520719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599775148;
-	bh=hwbguJAyWYPwpsu2D9i8rT7/tZ9bdITwH1YQjeqWGeY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2VYm9t40KuAowrFxfJqRy2l9p2Rwn6GtlaS6zWicC0qf7TjtkVPwY2yR+k/U+rFNG
-	 EPRuekzCau626V1MdAbIuk5iOK4lAJTTUsV7VQ4f3lGSpKUN/Xs95rdnIfSG9ZRoEt
-	 Nl5/YtmLJWvYZgRDIuOtpXQEkSXsxFXYnpruOWmI=
+	by mail.kernel.org (Postfix) with ESMTP id AFD9920719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbgIJV7D (ORCPT
+        id S1725882AbgIJV72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 17:59:28 -0400
+Received: from mga14.intel.com ([192.55.52.115]:18184 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgIJLLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:11:02 -0400
-Received: from mail.kernel.org (ip5f5ad5ac.dynamic.kabel-deutschland.de [95.90.213.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C788220684;
-        Thu, 10 Sep 2020 11:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599736256;
-        bh=hwbguJAyWYPwpsu2D9i8rT7/tZ9bdITwH1YQjeqWGeY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yU9kK7kDFEFEj4H2bNq6YF57ElD9FDd6tMPu4RNKVVzIr6NO1swabRB0YYIl1rBus
-         cH149spIdCImg539GhPPFyBg20iIAuna9Qwz4jgm9JwX/Qu2UfzxF9Ng5PcL7eqdLn
-         hUaQNH1qaHSsJAtSudoIgt0yJyK17f3H90cv+0AE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kGKTd-00ELvC-8a; Thu, 10 Sep 2020 13:10:53 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH] drm: kernel-doc: add description for a new function parameter
-Date:   Thu, 10 Sep 2020 13:10:51 +0200
-Message-Id: <c089fc458b7347e5ab287dab9fb661979736566d.1599736241.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1730668AbgIJLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:10:30 -0400
+IronPort-SDR: H4cSjfvoeqxq8R1PNVJauz376Xa843CnFVvVZIlsFJP6rTkJPRR/VzMTnPU3Veeh4+At/g/LDL
+ PT1ieuJF6VWw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="157790726"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="157790726"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 04:10:21 -0700
+IronPort-SDR: Rf6AqbrvlPtt/XYMILfRvF4fyk8hmsstyZFoh95B7GC8FZsKavm0GCaZhQla7+fQEY46quKLGb
+ 0tqvM3wufowQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="334143904"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 04:10:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kGKT3-00FfiW-6k; Thu, 10 Sep 2020 14:10:17 +0300
+Date:   Thu, 10 Sep 2020 14:10:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
+Message-ID: <20200910111017.GT1891694@smile.fi.intel.com>
+References: <20200827140020.159627-1-warthog618@gmail.com>
+ <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
+ <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by "make htmldocs":
+On Thu, Aug 27, 2020 at 06:02:03PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Aug 27, 2020 at 5:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-	./drivers/gpu/drm/drm_prime.c:808: warning: Function parameter or member 'dev' not described in 'drm_prime_pages_to_sg'
+> please hold it maybe for one more week - I'd love to have some more
+> people take a look at the user facing header at least. Andy is usually
+> very thorough in his reviews so I'm Ccing him here.
+> 
+> I'll too skim through the series one more time.
 
-Add a description for the new parameter.
+Thank you, Bart.
 
-Fixes: 707d561f77b5 ("drm: allow limiting the scatter list size.")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/gpu/drm/drm_prime.c | 1 +
- 1 file changed, 1 insertion(+)
+I think you, guys know how to do that best. Unfortunately I was almost squeezed
+under pile of several tasks and didn't find time for this.
 
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index 8a6a3c99b7d8..45e70ecdfa45 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -793,6 +793,7 @@ static const struct dma_buf_ops drm_gem_prime_dmabuf_ops =  {
- 
- /**
-  * drm_prime_pages_to_sg - converts a page array into an sg list
-+ * @dev: DRM device
-  * @pages: pointer to the array of page pointers to convert
-  * @nr_pages: length of the page vector
-  *
+Meanwhile I have sent an updated fix for v1 as suggested by Arnd. It works for
+me.
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
