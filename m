@@ -2,132 +2,160 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38055C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E303C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15D820731
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4F7208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tAiMT4Wz"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GZ2G1BNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIJUK4 (ORCPT
+        id S1726588AbgIJULM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:10:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50270 "EHLO
+        Thu, 10 Sep 2020 16:11:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57032 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730854AbgIJPAR (ORCPT
+        by vger.kernel.org with ESMTP id S1731029AbgIJPAm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:00:17 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AEj6vj187669;
-        Thu, 10 Sep 2020 11:00:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=+OUmHMAzekDWnfUWHy+QvXx0etSZ8Wq/8Ekd3eDbQ+M=;
- b=tAiMT4WzrMUI13Hc4ew/XyEGMJCdvtYvfWWT1oVWREzC+2BXsqPo/bfkJktX0QngcePF
- svtBxfmofu8nZYK9KwxkHtT6jJ4KMwNdL51+aq7xsYNwJGxOtpyrA5s5YRF4pAnYyYBD
- XDa05luz0NuHFN979/r3CH1lxhGLOGolmr/P9f9NGLn7zu1J/qhTNMoKSNeCv6fELhto
- aeRCDEx70fvrmA6oTT9p+DzztoQvrXJZflkGf1/2wIfa7Leaho6nEj14VFQd7el4qeCx
- jmYHHnRFSpxyUP2ZGpUVvGGAs9o66Xh76moXSxxNH6D/7DO6yKR9CcN1/AvNYbxbnZBH yw== 
+        Thu, 10 Sep 2020 11:00:42 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ADVwbj156061;
+        Thu, 10 Sep 2020 09:55:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=uAJ358VnHFKZvUebteG+ZwkjrTg7lzgNh1aBoFkoHpk=;
+ b=GZ2G1BNy+s9Zu39AdCM8v721KGKk26Vt/6LGxwvE4CfsTkJyANcLma4ZKsQYFkae9NfG
+ s25+sWBk3wJF9/nJBeFH27CoQh17AO4byjDzUHqfe0nWMrHgtM5hyfk41xyirKwL3mBG
+ w4/6kQRbpkG+sqS1w2BP0ihz2ZqUIRDt+tJ0mMDXCjV1MIxNKnkcZQg7fnG1RoBFNICY
+ 9QsdVhNGSbMnZqU6YstDD1xlgdiajDyFjNSNubeglI6AtVJlasZvMrQe7vBhJCEtwz66
+ 9XHHW8ONZZO0BNMIsODWT42eV6X/yMj4x5I27JO++Zb6W1s/FCaUB8xku+jURKNhwWHT QA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fp698ex9-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fn1x0xd2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:00:08 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AEk6Sb190560;
-        Thu, 10 Sep 2020 11:00:07 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fp698eve-1
+        Thu, 10 Sep 2020 09:55:42 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ADWGVT157762;
+        Thu, 10 Sep 2020 09:55:42 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fn1x0xcm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:00:07 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AEqW13018133;
-        Thu, 10 Sep 2020 15:00:06 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 33c2a9t8g5-1
+        Thu, 10 Sep 2020 09:55:42 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08ADqBZ1008486;
+        Thu, 10 Sep 2020 13:55:41 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04dal.us.ibm.com with ESMTP id 33c2a9snn8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 15:00:05 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AF04Rb53346702
+        Thu, 10 Sep 2020 13:55:41 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08ADtaZ823200424
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 15:00:04 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 362EC78069;
-        Thu, 10 Sep 2020 15:00:04 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC0167807B;
-        Thu, 10 Sep 2020 15:00:02 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 15:00:02 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v5 1/3] PCI/IOV: Mark VFs as not implementing PCI_COMMAND_MEMORY
-Date:   Thu, 10 Sep 2020 10:59:55 -0400
-Message-Id: <1599749997-30489-2-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
+        Thu, 10 Sep 2020 13:55:36 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4943C6062;
+        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 470DDC605D;
+        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
+Received: from [9.211.140.115] (unknown [9.211.140.115])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
+Subject: Re: [PATCH v3 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     linux-input@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-i2c@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        wsa@kernel.org, rentao.bupt@gmail.com,
+        Ryan Chen <ryan_chen@aspeedtech.com>
+References: <20200909203059.23427-1-eajames@linux.ibm.com>
+ <20200909203059.23427-4-eajames@linux.ibm.com>
+ <CAFd5g46ghV7ArmM8LnMkGa-Nip_fT934+3cPOkVxS-b5odZXYw@mail.gmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <b092f884-9aa9-5d0b-1a90-36af558e43a8@linux.ibm.com>
+Date:   Thu, 10 Sep 2020 08:55:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAFd5g46ghV7ArmM8LnMkGa-Nip_fT934+3cPOkVxS-b5odZXYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=879
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009100130
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For VFs, the Memory Space Enable bit in the Command Register is
-hard-wired to 0.
 
-Add a new bit to signify devices where the Command Register Memory
-Space Enable bit does not control the device's response to MMIO
-accesses.
+On 9/10/20 4:00 AM, Brendan Higgins wrote:
+> On Wed, Sep 9, 2020 at 1:31 PM Eddie James <eajames@linux.ibm.com> wrote:
+>> Mask the IRQ status to only the bits that the driver checks. This
+>> prevents excessive driver warnings when operating in slave mode
+>> when additional bits are set that the driver doesn't handle.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
+> Sorry, looks like I didn't get my comment in in time.
+>
+> Looks good in principle. One minor comment below:
+>
+>> ---
+>>   drivers/i2c/busses/i2c-aspeed.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+>> index 31268074c422..724bf30600d6 100644
+>> --- a/drivers/i2c/busses/i2c-aspeed.c
+>> +++ b/drivers/i2c/busses/i2c-aspeed.c
+>> @@ -69,6 +69,7 @@
+>>    * These share bit definitions, so use the same values for the enable &
+>>    * status bits.
+>>    */
+>> +#define ASPEED_I2CD_INTR_RECV_MASK                     0xf000ffff
+> Could we define ASPEED_I2CD_INTR_RECV_MASK to be ASPEED_I2CD_INTR_ALL ?
 
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/pci/iov.c   | 1 +
- include/linux/pci.h | 1 +
- 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index b37e08c..4afd4ee 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
- 	virtfn->device = iov->vf_device;
- 	virtfn->is_virtfn = 1;
- 	virtfn->physfn = pci_dev_get(dev);
-+	virtfn->no_command_memory = 1;
- 
- 	if (id == 0)
- 		pci_read_vf_config_common(virtfn);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8355306..3ff72312 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -445,6 +445,7 @@ struct pci_dev {
- 	unsigned int	is_probed:1;		/* Device probing in progress */
- 	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
- 	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-+	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
- 	pci_dev_flags_t dev_flags;
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
- 
--- 
-1.8.3.1
+That was my original thought... there is another define for that already 
+a few lines down though.
 
+
+Thanks,
+
+Eddie
+
+
+>
+>>   #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT                        BIT(14)
+>>   #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE              BIT(13)
+>>   #define ASPEED_I2CD_INTR_SLAVE_MATCH                   BIT(7)
+>> @@ -604,6 +605,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>>          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+>>                 bus->base + ASPEED_I2C_INTR_STS_REG);
+>>          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+>> +       irq_received &= ASPEED_I2CD_INTR_RECV_MASK;
+>>          irq_remaining = irq_received;
+>>
+>>   #if IS_ENABLED(CONFIG_I2C_SLAVE)
+>> --
+>> 2.26.2
+>>
