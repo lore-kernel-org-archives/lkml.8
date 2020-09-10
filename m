@@ -2,506 +2,185 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E04C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2479AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CF821D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8A02053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n+X6iN44"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="TtAS9CXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgIJDZ1 (ORCPT
+        id S1730242AbgIJDZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 23:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729622AbgIJDXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 23:23:01 -0400
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (mail-co1nam04on0616.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe4d::616])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313ECC061798
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 16:17:49 -0700 (PDT)
+        Wed, 9 Sep 2020 23:25:48 -0400
+Received: from mail-co1nam11on2064.outbound.protection.outlook.com ([40.107.220.64]:33473
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729622AbgIJDZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 23:25:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YPMZVYRk5WMIASLZQMvrj9GX4ILF6tSNl70Gz5acVGbHWNQCvsuM5Rhcn+nU6Wghdrzx7fu8bG3+qgcDlw5Kn1N0/vy1MBRn7SBZkQRlkzppaNDriA7E7XjuTKmhkat9tJarno6I/RsByjxVyUv9i+wGF7EAEEIMnmN186ODEqwzEQKPBTDCM5rE/Id4Z7uH2gX3B4xMUcXXEoMGcoUM1JDLkCLqsmAeY9tm0te0xX2dYCBa76nXR3SYmuxAuquN9afMYjD3T7ZiAdGTDUxEituzQiXngaxKZdSz1TR4mXPK/+Ba0oCc1oaySvRJshuqfcYCmdQu6h46GwSsfrJzIA==
+ b=jfQyFtk/MFur9sQv9npVk0YfBJs2IFhEVsAh8m18BgyrMlORSla5v0ad4PqD6LW4YmjSa8ZeryVnN+0Elzs5I3AxPeVR0SOk1dnwbrubqHwK6qfcUzmhSkbkwb+ElRLw5rKACEiYn4T79aSYpPfetoMgH0bArZ7H3qsCReBVvNhnEOjHqddboCfcYhSeQMF6zZ+BTXrM+ZPaFlhhwocdc/l/KgPHxNeBGicmqBGq6QzCkjZvh57HR+1WzoFGyqo3/5/lGpC1oqJEzzVLtDXuCo06XpNYJsh6vVJaOZ3OiZTOd6nAOmDpnmJyUb+8/IbZgork0L563wwI//ZyfSJkDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=weOxQUQB5RUpbq6rgfqy3vqokZqHIdeAziqdnzCsEsA=;
- b=SS40Xw+QSWlxLGT72A90jyV83Pnk4vHvM3NYS1OrspcDjY/khHGLEo5DJWcXBOhnDYQNZcyAl5WZa1LerW9X8QusjQJSUvYbeEJcRAJTET5Ug2ZuFz0cyGtuGU6efNcvQNgdIVIcwK41OF3tYUq053JfqQDrBgbwMeUpXJGoD6ekszP42OTV1/2VQSEupckrlzm5DfTCR6Jzeq2IFdw0CK9QJYN3ootNFXgZfgThX+AevAHGDkQt+7EEkBE86y7Yrwwa0m2lsshP23rolzj90zCCxUbL3Df7kQVtUh7f8q3VzJMr3gMfW8w6jB3iFct77X8j4HrqOzYgHCUL9y8uuw==
+ bh=/a0pLtH3FMtmYY8qhLGOrzYTOrxVfCp+1WruXjFAsMY=;
+ b=VJkdZeRZbjdhuKBcLJTbFhdK8raPjkK4n6h3KRVRDR1jFturpCAdfw29pDH0Y/Q2nB04Zl87mxXz1QeTqbUgHWilj5f8ur/oNEbs8QQK65F3+CxC2W6t0dzcOEMO/UoWY6xT8bjZEyDgSGxNcS2x7TSm1XrDV+B/v+OAO0bnEaorZ713xunlaivPykPipmfS3b3GojTXdlWLzTchCA4JjV9MVdHXRXpames6H+LPp4gGffQZ4pYSm3OZX2BTsg3774MKSBNjsvvTTMymOwOyUcbX/re2EvwLkSU6ysDwL6a1Q/nqNYR8VekU+PIskosBBagcOQuhw4YGBByfF7VUWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=weOxQUQB5RUpbq6rgfqy3vqokZqHIdeAziqdnzCsEsA=;
- b=n+X6iN44kI8XKILhiY3Ml9e0IaHNuNk98iqTHX4Ivg/mL0a+NWucH/6liTanCcuM1U3ujFfLJz5NmHnJh49/GLkZ3E+TXsrJQkkFNruVBh2xbmBw3Qww3ID5kgx+NLRWdmJW1DeLIawzBBZmhWvmO+o963dtRhLvEJ/5G+YRY50=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20)
- by DM6PR12MB2986.namprd12.prod.outlook.com (2603:10b6:5:39::11) with
+ bh=/a0pLtH3FMtmYY8qhLGOrzYTOrxVfCp+1WruXjFAsMY=;
+ b=TtAS9CXBKpmYdmKjhmBXVLb0x9/Y0LvhODjY6Vy6VSsSbBBoXOnCx8dCdaWopspZQNKkiWj04DfqWdSNlcmL/u9sKy5GqrdHNiiQu+62lsELnLIMiNbC7pHRGVkhLQmfX0VTCouZAHWsGqleLZWDwcO/QMuqXil06RcUblPtHC0=
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
+ by BYAPR11MB2840.namprd11.prod.outlook.com (2603:10b6:a02:c9::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.18; Wed, 9 Sep
- 2020 22:54:36 +0000
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e]) by DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e%8]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 22:54:36 +0000
-From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        hersenxs.wu@amd.com
-Subject: [PATCH 2/3] drm/amd/display: Add tracepoint for amdgpu_dm
-Date:   Wed,  9 Sep 2020 18:53:51 -0400
-Message-Id: <20200909225352.4072030-3-Rodrigo.Siqueira@amd.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-References: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::22) To DM6PR12MB4124.namprd12.prod.outlook.com
- (2603:10b6:5:221::20)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 03:25:28 +0000
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::21a8:8895:6487:5126]) by BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::21a8:8895:6487:5126%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 03:25:28 +0000
+From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+To:     "paulmck@kernel.org" <paulmck@kernel.org>
+CC:     Joel Fernandes <joel@joelfernandes.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?u9i4tDogUkNVOiAgUXVlc3Rpb24gICByY3VfcHJlZW1wdF9ibG9ja2VkX3Jl?=
+ =?gb2312?B?YWRlcnNfY2dwICBpbiAgcmN1X2dwX2Zxc19sb29wIGZ1bmM=?=
+Thread-Topic: RCU:  Question   rcu_preempt_blocked_readers_cgp  in
+  rcu_gp_fqs_loop func
+Thread-Index: AQHWhnNgdtT3KSvnnU6Qd/KLSreZGalf2jJUgABP9oCAAQtz+g==
+Date:   Thu, 10 Sep 2020 03:25:27 +0000
+Message-ID: <BYAPR11MB2632658A901238BB518A53F4FF270@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200818220245.GO27891@paulmck-ThinkPad-P72>
+ <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
+ <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <20200819135654.GB3875610@google.com>
+ <20200819152159.GX27891@paulmck-ThinkPad-P72> <20200819155808.GA8817@pc636>
+ <20200820223957.GB120898@google.com>
+ <20200821153328.GH2855@paulmck-ThinkPad-P72>
+ <BYAPR11MB263285B19261BE8096D87F65FF260@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <BYAPR11MB2632FD34F68A89CCE039018BFF260@BYAPR11MB2632.namprd11.prod.outlook.com>,<20200909112241.GE29330@paulmck-ThinkPad-P72>
+In-Reply-To: <20200909112241.GE29330@paulmck-ThinkPad-P72>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=windriver.com;
+x-originating-ip: [60.247.85.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9bcd49ba-355d-4692-a2e8-08d855392a18
+x-ms-traffictypediagnostic: BYAPR11MB2840:
+x-microsoft-antispam-prvs: <BYAPR11MB2840817EA2BA907E984DBADFFF270@BYAPR11MB2840.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mh/LynNVM0yS261uxtTlvpuaoRNA8ngFSw2G3FLxtEHSn1KWCW7xCbiOYt9cQuJegs3jQQ0LpI9HDjK4YW6eZ4KWB4RHMEBzUu6wPxx8haaBsOLzUlcnLZRHb+UigIO1qeGi0uR4Nblptifv8iQdH7JlLv0GVwJgsjY1MvHPKs1upQ04SA5qOxPiIVD+0Q/U0+CLT5W0HFCaqVHk87pi+5e9sbYSYLUtuaujq9FZ1vR/pOYMbsZ/0hNIqTmCDut3ZRMDpWmiu46LDSfaMbL749R9kvHWT0wrCxeT7BhTr76LFMNEh3EelVcYEC6+Alz8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(39850400004)(396003)(136003)(64756008)(66476007)(83380400001)(6506007)(55016002)(54906003)(91956017)(2906002)(7696005)(316002)(86362001)(4326008)(224303003)(76116006)(66446008)(66556008)(66946007)(9686003)(478600001)(52536014)(186003)(71200400001)(26005)(8936002)(33656002)(5660300002)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: uHYWqpji8Q31iUUNAQxYfgaHf08OuznVEmYRXv0453epyFiDmS7d7yFAZwvHCxnZJQosGeNnmOZ6/4LvMUQoBv/LKoWiEkEPnrV3+YBuj0M+IkA5PLBgJZfEPsRrX7SfwTasOcL+d8ziRwAtWjOH2AFLiph2ok1k/PMEDbEl/tgtDwmH/xPBGptSSpCG/iVAe2gWyHwcpM4R9B06LbeHbKOLBSigG/N8COBK8dhJy9mTXzzPTT32sJ1V/41DHKRnOnF9MNMiYlehrQdzlAeedElNTHo3Dq3wmGFurjgbQcCYzNkzVjteWSlQiyJPtKNyEjYUuLHAqOh8hdCCRkQrEmvZQ9NMdRYDoZAeqtbP8NMO2nA/97wYogw4HRFv5o4i63Jakfwp0hWmTqIr+hD9jBXFIctEAzce/Uf8oyWoiqly3gN7Qom2AYgUVYlbpbXVbuicLd3WDZMjVcImprRVrmtiABecAR9Xgkd5Jltenq4pAfMT58XerMItVzHOv1+kXSPhEh5fxnz30ZZxF5l4/BR5pwCUKd9uTGkLuNY2s2h/vdm4PmZ2T+yT5G0GJBG/HSVlv204ERxH6TNxMCxGYsNptrIhaJF5ptRe1Hok+OerhbGsvF1bdyOfRTHSO2pNjiWr2K+4ZEE666djdcP43A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from atma2.hitronhub.home (2607:fea8:56e0:6d60::10ec) by YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 22:54:35 +0000
-X-Mailer: git-send-email 2.28.0
-X-Originating-IP: [2607:fea8:56e0:6d60::10ec]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d8dcce8b-eddb-4524-2772-08d855135316
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2986:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB29860A1938416DE7B38EB67B98260@DM6PR12MB2986.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:83;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rCNFw9to8Vpan/qr/VaK3XGSC8vs9IoNfm4tF1XMeFo+0SnbpwifTV1G6WgNxcH2jXozcNvTQ3DO2W6t/093FVaZBJayN0ZSF8M29VDOlOIdmO01KSWIytcj3KFbn+oBlIt7T9HijdJpYFar17HhxRtJO3HYG5Fw/ZTHfIJLCtVBgM4udd5qlcK7e+Oqp+jkI10qUxhF6JdRmYfqn5v/q8OUjnTS8BIExrAVYKYoAnk8cxQPei/yqPXbEbWFT8UIWtb5yDOoV35IB1DBSR5iDSkPtq+NoH2i6POUU9oWRSVTPfrLibFANiihhh6KVFunwUicaPp8MW6PP9ibwAoUvg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4124.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39860400002)(2906002)(8936002)(6486002)(30864003)(6512007)(5660300002)(16526019)(186003)(478600001)(83380400001)(4326008)(8676002)(52116002)(316002)(1076003)(66476007)(6506007)(6666004)(86362001)(2616005)(66556008)(54906003)(36756003)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2sfFgZr0gI2y2aCiKMZQz3WuHBN7IcfJlac9mYUplU79f735a4jAJZSer7XnKFO5bubmk6cBSI35Py27C9mV+21PtVXu/LzOPIsDp4I7jed5nqdwhJH3YtXBnuNR/eCcNFWW84YJ6qUSR+P1W4yFPTB0gW0JgZXiZWtRWI4Hz766cmu2t9W6ejfqhQb1v+jhPOAdunR57wSCkwJlBTWf4DNbzGxtwmoziK5IObctRs0mbieEtIcx861gryRZ8qcEpyrxBmoCffbOssaPH/XZrIfpjW/XbxA32kHWqjye+P1xxo8av5ZDw7pfgxCS4xCCNMjzO53Jd7YxcHY6BvhBgCmpZCGXjJdOE+e4Y0ieNkdmThuCGG4FdR3rm9wAyreSRYWJuKtHBh0gcB1lXruOfs5YGhHeh7TL+YXVf2Zl1iuGb9cNOOZrY9FfZtJ8pcx2YvjRwe2r9JCAxRVK7e299TBUk19xYaMmdGh12+WcAf+ZtyHjAa2nH/pir9PSjcHp8QvdwTxgRC2TP1gKNCPPsQ1iXzHtwUxZXPWAZ7b44eLo2ep+4/56hvxtnB5AROUbOXcU1wXFG1PRLLZUnWSJhfq4+9cRRBHoCCVSGimt4Pu0GO8WWrdF/xlTJGaVF9BoMX4myw1SwYgileZyFfJrFZpXX41EPSgqOGjwSoCfHp5DxmQLTB3XExuPUsKUXLRK
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8dcce8b-eddb-4524-2772-08d855135316
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4124.namprd12.prod.outlook.com
+X-OriginatorOrg: windriver.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 22:54:36.1437
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bcd49ba-355d-4692-a2e8-08d855392a18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 03:25:27.9590
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N+Ky+lwguFwaSjF7kKEiSYFfyNCWy4X5x9m2WxEmu//angxmTVTRH8CsDTCa1gRgPcIMdms5zsXScKL8G2Ntxg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2986
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QR+jSxG4d+OGWYMQlp9251IyG5audR7hEapfr2uFAu0KwGIK6KCmviFWG+gVTXhKzlMfKB3m7A0/SFso85ac1KJwhI3Q/krHbFqLhoe7qeQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2840
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debug amdgpu_dm could be a complicated task, therefore, this commit adds
-tracepoints in some convenient functions such as plane and connector
-check inside amdgpu_dm.
-
-Co-developed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
----
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  17 ++
- .../amd/display/amdgpu_dm/amdgpu_dm_trace.h   | 287 ++++++++++++++++++
- 2 files changed, 304 insertions(+)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index cb624ee70545..552ca67c2a71 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -5424,6 +5424,8 @@ amdgpu_dm_connector_atomic_check(struct drm_connector *conn,
- 	struct drm_crtc_state *new_crtc_state;
- 	int ret;
- 
-+	trace_amdgpu_dm_connector_atomic_check(new_con_state);
-+
- 	if (!crtc)
- 		return 0;
- 
-@@ -5542,6 +5544,8 @@ static int dm_crtc_helper_atomic_check(struct drm_crtc *crtc,
- 	struct dm_crtc_state *dm_crtc_state = to_dm_crtc_state(state);
- 	int ret = -EINVAL;
- 
-+	trace_amdgpu_dm_crtc_atomic_check(state);
-+
- 	dm_update_crtc_active_planes(crtc, state);
- 
- 	if (unlikely(!dm_crtc_state->stream &&
-@@ -5916,6 +5920,8 @@ static int dm_plane_atomic_check(struct drm_plane *plane,
- 	struct drm_crtc_state *new_crtc_state;
- 	int ret;
- 
-+	trace_amdgpu_dm_plane_atomic_check(state);
-+
- 	dm_plane_state = to_dm_plane_state(state);
- 
- 	if (!dm_plane_state->dc_state)
-@@ -5956,6 +5962,8 @@ static void dm_plane_atomic_async_update(struct drm_plane *plane,
- 	struct drm_plane_state *old_state =
- 		drm_atomic_get_old_plane_state(new_state->state, plane);
- 
-+	trace_amdgpu_dm_atomic_update_cursor(new_state);
-+
- 	swap(plane->state->fb, new_state->fb);
- 
- 	plane->state->src_x = new_state->src_x;
-@@ -7546,6 +7554,8 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
- 	int crtc_disable_count = 0;
- 	bool mode_set_reset_required = false;
- 
-+	trace_amdgpu_dm_atomic_commit_tail_begin(state);
-+
- 	drm_atomic_helper_update_legacy_modeset_state(dev, state);
- 
- 	dm_state = dm_atomic_get_new_state(state);
-@@ -8616,6 +8626,8 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
- 	int ret, i;
- 	bool lock_and_validation_needed = false;
- 
-+	trace_amdgpu_dm_atomic_check_begin(state);
-+
- 	ret = drm_atomic_helper_check_modeset(dev, state);
- 	if (ret)
- 		goto fail;
-@@ -8912,6 +8924,9 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
- 
- 	/* Must be success */
- 	WARN_ON(ret);
-+
-+	trace_amdgpu_dm_atomic_check_finish(state, ret);
-+
- 	return ret;
- 
- fail:
-@@ -8922,6 +8937,8 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
- 	else
- 		DRM_DEBUG_DRIVER("Atomic check failed with err: %d \n", ret);
- 
-+	trace_amdgpu_dm_atomic_check_finish(state, ret);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-index dd34e11b1079..5fb4c4a5c349 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-@@ -30,6 +30,12 @@
- #define _AMDGPU_DM_TRACE_H_
- 
- #include <linux/tracepoint.h>
-+#include <drm/drm_connector.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_plane.h>
-+#include <drm/drm_fourcc.h>
-+#include <drm/drm_encoder.h>
-+#include <drm/drm_atomic.h>
- 
- DECLARE_EVENT_CLASS(amdgpu_dc_reg_template,
- 		    TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
-@@ -89,6 +95,287 @@ TRACE_EVENT(amdgpu_dc_performance,
- 			(unsigned long)__entry->write_delta,
- 			(unsigned long)__entry->writes)
- );
-+
-+TRACE_EVENT(amdgpu_dm_connector_atomic_check,
-+	    TP_PROTO(const struct drm_connector_state *state),
-+	    TP_ARGS(state),
-+
-+	    TP_STRUCT__entry(
-+			     __field(uint32_t, conn_id)
-+			     __field(const struct drm_connector_state *, conn_state)
-+			     __field(const struct drm_atomic_state *, state)
-+			     __field(const struct drm_crtc_commit *, commit)
-+			     __field(uint32_t, crtc_id)
-+			     __field(uint32_t, best_encoder_id)
-+			     __field(enum drm_link_status, link_status)
-+			     __field(bool, self_refresh_aware)
-+			     __field(enum hdmi_picture_aspect, picture_aspect_ratio)
-+			     __field(unsigned int, content_type)
-+			     __field(unsigned int, hdcp_content_type)
-+			     __field(unsigned int, content_protection)
-+			     __field(unsigned int, scaling_mode)
-+			     __field(u32, colorspace)
-+			     __field(u8, max_requested_bpc)
-+			     __field(u8, max_bpc)
-+	    ),
-+
-+	    TP_fast_assign(
-+			   __entry->conn_id = state->connector->base.id;
-+			   __entry->conn_state = state;
-+			   __entry->state = state->state;
-+			   __entry->commit = state->commit;
-+			   __entry->crtc_id = state->crtc ? state->crtc->base.id : 0;
-+			   __entry->best_encoder_id = state->best_encoder ?
-+						      state->best_encoder->base.id : 0;
-+			   __entry->link_status = state->link_status;
-+			   __entry->self_refresh_aware = state->self_refresh_aware;
-+			   __entry->picture_aspect_ratio = state->picture_aspect_ratio;
-+			   __entry->content_type = state->content_type;
-+			   __entry->hdcp_content_type = state->hdcp_content_type;
-+			   __entry->content_protection = state->content_protection;
-+			   __entry->scaling_mode = state->scaling_mode;
-+			   __entry->colorspace = state->colorspace;
-+			   __entry->max_requested_bpc = state->max_requested_bpc;
-+			   __entry->max_bpc = state->max_bpc;
-+	    ),
-+
-+	    TP_printk("conn_id=%u conn_state=%p state=%p commit=%p crtc_id=%u "
-+		      "best_encoder_id=%u link_status=%d self_refresh_aware=%d "
-+		      "picture_aspect_ratio=%d content_type=%u "
-+		      "hdcp_content_type=%u content_protection=%u scaling_mode=%u "
-+		      "colorspace=%u max_requested_bpc=%u max_bpc=%u",
-+		      __entry->conn_id, __entry->conn_state, __entry->state,
-+		      __entry->commit, __entry->crtc_id, __entry->best_encoder_id,
-+		      __entry->link_status, __entry->self_refresh_aware,
-+		      __entry->picture_aspect_ratio, __entry->content_type,
-+		      __entry->hdcp_content_type, __entry->content_protection,
-+		      __entry->scaling_mode, __entry->colorspace,
-+		      __entry->max_requested_bpc, __entry->max_bpc)
-+);
-+
-+TRACE_EVENT(amdgpu_dm_crtc_atomic_check,
-+	    TP_PROTO(const struct drm_crtc_state *state),
-+	    TP_ARGS(state),
-+
-+	    TP_STRUCT__entry(
-+			     __field(const struct drm_atomic_state *, state)
-+			     __field(const struct drm_crtc_state *, crtc_state)
-+			     __field(const struct drm_crtc_commit *, commit)
-+			     __field(uint32_t, crtc_id)
-+			     __field(bool, enable)
-+			     __field(bool, active)
-+			     __field(bool, planes_changed)
-+			     __field(bool, mode_changed)
-+			     __field(bool, active_changed)
-+			     __field(bool, connectors_changed)
-+			     __field(bool, zpos_changed)
-+			     __field(bool, color_mgmt_changed)
-+			     __field(bool, no_vblank)
-+			     __field(bool, async_flip)
-+			     __field(bool, vrr_enabled)
-+			     __field(bool, self_refresh_active)
-+			     __field(u32, plane_mask)
-+			     __field(u32, connector_mask)
-+			     __field(u32, encoder_mask)
-+	    ),
-+
-+	    TP_fast_assign(
-+			   __entry->state = state->state;
-+			   __entry->crtc_state = state;
-+			   __entry->crtc_id = state->crtc->base.id;
-+			   __entry->commit = state->commit;
-+			   __entry->enable = state->enable;
-+			   __entry->active = state->active;
-+			   __entry->planes_changed = state->planes_changed;
-+			   __entry->mode_changed = state->mode_changed;
-+			   __entry->active_changed = state->active_changed;
-+			   __entry->connectors_changed = state->connectors_changed;
-+			   __entry->zpos_changed = state->zpos_changed;
-+			   __entry->color_mgmt_changed = state->color_mgmt_changed;
-+			   __entry->no_vblank = state->no_vblank;
-+			   __entry->async_flip = state->async_flip;
-+			   __entry->vrr_enabled = state->vrr_enabled;
-+			   __entry->self_refresh_active = state->self_refresh_active;
-+			   __entry->plane_mask = state->plane_mask;
-+			   __entry->connector_mask = state->connector_mask;
-+			   __entry->encoder_mask = state->encoder_mask;
-+	    ),
-+
-+	    TP_printk("crtc_id=%u crtc_state=%p state=%p commit=%p changed("
-+		      "planes=%d mode=%d active=%d conn=%d zpos=%d color_mgmt=%d) "
-+		      "state(enable=%d active=%d async_flip=%d vrr_enabled=%d "
-+		      "self_refresh_active=%d no_vblank=%d) mask(plane=%x conn=%x "
-+		      "enc=%x)",
-+		      __entry->crtc_id, __entry->crtc_state, __entry->state,
-+		      __entry->commit, __entry->planes_changed,
-+		      __entry->mode_changed, __entry->active_changed,
-+		      __entry->connectors_changed, __entry->zpos_changed,
-+		      __entry->color_mgmt_changed, __entry->enable, __entry->active,
-+		      __entry->async_flip, __entry->vrr_enabled,
-+		      __entry->self_refresh_active, __entry->no_vblank,
-+		      __entry->plane_mask, __entry->connector_mask,
-+		      __entry->encoder_mask)
-+);
-+
-+DECLARE_EVENT_CLASS(amdgpu_dm_plane_state_template,
-+	    TP_PROTO(const struct drm_plane_state *state),
-+	    TP_ARGS(state),
-+	    TP_STRUCT__entry(
-+			     __field(uint32_t, plane_id)
-+			     __field(enum drm_plane_type, plane_type)
-+			     __field(const struct drm_plane_state *, plane_state)
-+			     __field(const struct drm_atomic_state *, state)
-+			     __field(uint32_t, crtc_id)
-+			     __field(uint32_t, fb_id)
-+			     __field(uint32_t, fb_format)
-+			     __field(uint8_t, fb_planes)
-+			     __field(uint64_t, fb_modifier)
-+			     __field(const struct dma_fence *, fence)
-+			     __field(int32_t, crtc_x)
-+			     __field(int32_t, crtc_y)
-+			     __field(uint32_t, crtc_w)
-+			     __field(uint32_t, crtc_h)
-+			     __field(uint32_t, src_x)
-+			     __field(uint32_t, src_y)
-+			     __field(uint32_t, src_w)
-+			     __field(uint32_t, src_h)
-+			     __field(u32, alpha)
-+			     __field(uint32_t, pixel_blend_mode)
-+			     __field(unsigned int, rotation)
-+			     __field(unsigned int, zpos)
-+			     __field(unsigned int, normalized_zpos)
-+			     __field(enum drm_color_encoding, color_encoding)
-+			     __field(enum drm_color_range, color_range)
-+			     __field(bool, visible)
-+	    ),
-+
-+	    TP_fast_assign(
-+			   __entry->plane_id = state->plane->base.id;
-+			   __entry->plane_type = state->plane->type;
-+			   __entry->plane_state = state;
-+			   __entry->state = state->state;
-+			   __entry->crtc_id = state->crtc ? state->crtc->base.id : 0;
-+			   __entry->fb_id = state->fb ? state->fb->base.id : 0;
-+			   __entry->fb_format = state->fb ? state->fb->format->format : 0;
-+			   __entry->fb_planes = state->fb ? state->fb->format->num_planes : 0;
-+			   __entry->fb_modifier = state->fb ? state->fb->modifier : 0;
-+			   __entry->fence = state->fence;
-+			   __entry->crtc_x = state->crtc_x;
-+			   __entry->crtc_y = state->crtc_y;
-+			   __entry->crtc_w = state->crtc_w;
-+			   __entry->crtc_h = state->crtc_h;
-+			   __entry->src_x = state->src_x >> 16;
-+			   __entry->src_y = state->src_y >> 16;
-+			   __entry->src_w = state->src_w >> 16;
-+			   __entry->src_h = state->src_h >> 16;
-+			   __entry->alpha = state->alpha;
-+			   __entry->pixel_blend_mode = state->pixel_blend_mode;
-+			   __entry->rotation = state->rotation;
-+			   __entry->zpos = state->zpos;
-+			   __entry->normalized_zpos = state->normalized_zpos;
-+			   __entry->color_encoding = state->color_encoding;
-+			   __entry->color_range = state->color_range;
-+			   __entry->visible = state->visible;
-+	    ),
-+
-+	    TP_printk("plane_id=%u plane_type=%d plane_state=%p state=%p "
-+		      "crtc_id=%u fb(id=%u fmt=%c%c%c%c planes=%u mod=%llu) "
-+		      "fence=%p crtc_x=%d crtc_y=%d crtc_w=%u crtc_h=%u "
-+		      "src_x=%u src_y=%u src_w=%u src_h=%u alpha=%u "
-+		      "pixel_blend_mode=%u rotation=%u zpos=%u "
-+		      "normalized_zpos=%u color_encoding=%d color_range=%d "
-+		      "visible=%d",
-+		      __entry->plane_id, __entry->plane_type, __entry->plane_state,
-+		      __entry->state, __entry->crtc_id, __entry->fb_id,
-+		      (__entry->fb_format & 0xff) ? (__entry->fb_format & 0xff) : 'N',
-+		      ((__entry->fb_format >> 8) & 0xff) ? ((__entry->fb_format >> 8) & 0xff) : 'O',
-+		      ((__entry->fb_format >> 16) & 0xff) ? ((__entry->fb_format >> 16) & 0xff) : 'N',
-+		      ((__entry->fb_format >> 24) & 0x7f) ? ((__entry->fb_format >> 24) & 0x7f) : 'E',
-+		      __entry->fb_planes,
-+		      __entry->fb_modifier, __entry->fence, __entry->crtc_x,
-+		      __entry->crtc_y, __entry->crtc_w, __entry->crtc_h,
-+		      __entry->src_x, __entry->src_y, __entry->src_w, __entry->src_h,
-+		      __entry->alpha, __entry->pixel_blend_mode, __entry->rotation,
-+		      __entry->zpos, __entry->normalized_zpos,
-+		      __entry->color_encoding, __entry->color_range,
-+		      __entry->visible)
-+);
-+
-+DEFINE_EVENT(amdgpu_dm_plane_state_template, amdgpu_dm_plane_atomic_check,
-+	     TP_PROTO(const struct drm_plane_state *state),
-+	     TP_ARGS(state));
-+
-+DEFINE_EVENT(amdgpu_dm_plane_state_template, amdgpu_dm_atomic_update_cursor,
-+	     TP_PROTO(const struct drm_plane_state *state),
-+	     TP_ARGS(state));
-+
-+TRACE_EVENT(amdgpu_dm_atomic_state_template,
-+	    TP_PROTO(const struct drm_atomic_state *state),
-+	    TP_ARGS(state),
-+
-+	    TP_STRUCT__entry(
-+			     __field(const struct drm_atomic_state *, state)
-+			     __field(bool, allow_modeset)
-+			     __field(bool, legacy_cursor_update)
-+			     __field(bool, async_update)
-+			     __field(bool, duplicated)
-+			     __field(int, num_connector)
-+			     __field(int, num_private_objs)
-+	    ),
-+
-+	    TP_fast_assign(
-+			   __entry->state = state;
-+			   __entry->allow_modeset = state->allow_modeset;
-+			   __entry->legacy_cursor_update = state->legacy_cursor_update;
-+			   __entry->async_update = state->async_update;
-+			   __entry->duplicated = state->duplicated;
-+			   __entry->num_connector = state->num_connector;
-+			   __entry->num_private_objs = state->num_private_objs;
-+	    ),
-+
-+	    TP_printk("state=%p allow_modeset=%d legacy_cursor_update=%d "
-+		      "async_update=%d duplicated=%d num_connector=%d "
-+		      "num_private_objs=%d",
-+		      __entry->state, __entry->allow_modeset, __entry->legacy_cursor_update,
-+		      __entry->async_update, __entry->duplicated, __entry->num_connector,
-+		      __entry->num_private_objs)
-+);
-+
-+DEFINE_EVENT(amdgpu_dm_atomic_state_template, amdgpu_dm_atomic_commit_tail_begin,
-+	     TP_PROTO(const struct drm_atomic_state *state),
-+	     TP_ARGS(state));
-+
-+DEFINE_EVENT(amdgpu_dm_atomic_state_template, amdgpu_dm_atomic_commit_tail_finish,
-+	     TP_PROTO(const struct drm_atomic_state *state),
-+	     TP_ARGS(state));
-+
-+DEFINE_EVENT(amdgpu_dm_atomic_state_template, amdgpu_dm_atomic_check_begin,
-+	     TP_PROTO(const struct drm_atomic_state *state),
-+	     TP_ARGS(state));
-+
-+TRACE_EVENT(amdgpu_dm_atomic_check_finish,
-+	    TP_PROTO(const struct drm_atomic_state *state, int res),
-+	    TP_ARGS(state, res),
-+
-+	    TP_STRUCT__entry(
-+			     __field(const struct drm_atomic_state *, state)
-+			     __field(int, res)
-+			     __field(bool, async_update)
-+			     __field(bool, allow_modeset)
-+	    ),
-+
-+	    TP_fast_assign(
-+			   __entry->state = state;
-+			   __entry->res = res;
-+			   __entry->async_update = state->async_update;
-+			   __entry->allow_modeset = state->allow_modeset;
-+	    ),
-+
-+	    TP_printk("state=%p res=%d async_update=%d allow_modeset=%d",
-+		      __entry->state, __entry->res,
-+		      __entry->async_update, __entry->allow_modeset)
-+);
-+
- #endif /* _AMDGPU_DM_TRACE_H_ */
- 
- #undef TRACE_INCLUDE_PATH
--- 
-2.28.0
-
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCreivP7IyzogUGF1bCBF
+LiBNY0tlbm5leSA8cGF1bG1ja0BrZXJuZWwub3JnPgq3osvNyrG85DogMjAyMMTqOdTCOcjVIDE5
+OjIyCsrVvP7IyzogWmhhbmcsIFFpYW5nCrOty806IEpvZWwgRmVybmFuZGVzOyBVbGFkemlzbGF1
+IFJlemtpOyBKb3NoIFRyaXBsZXR0OyBTdGV2ZW4gUm9zdGVkdDsgTWF0aGlldSBEZXNub3llcnM7
+IExhaSBKaWFuZ3NoYW47IHJjdTsgTEtNTArW98ziOiBSZTogUkNVOiAgUXVlc3Rpb24gICByY3Vf
+cHJlZW1wdF9ibG9ja2VkX3JlYWRlcnNfY2dwICBpbiAgcmN1X2dwX2Zxc19sb29wIGZ1bmMKCk9u
+IFdlZCwgU2VwIDA5LCAyMDIwIGF0IDA3OjAzOjM5QU0gKzAwMDAsIFpoYW5nLCBRaWFuZyB3cm90
+ZToKPgo+IFdoZW4gY29uZmlnIHByZWVtcHQgUkNVLCAgYW5kIHRoZW4gIHRoZXJlIGFyZSBtdWx0
+aXBsZSBsZXZlbHMgIG5vZGUsICB0aGUgY3VycmVudCB0YXNrIGlzIHByZWVtcHRlZCAgaW4gcmN1
+ICByZWFkIGNyaXRpY2FsIHJlZ2lvbi4KPiB0aGUgY3VycmVudCB0YXNrIGJlIGFkZCB0byAicm5w
+LT5ibGtkX3Rhc2tzIiBsaW5rIGxpc3QsICBhbmQgdGhlICJybnAtPmdwX3Rhc2tzIiAgbWF5IGJl
+IGFzc2lnbmVkIGEgdmFsdWUgLiAgdGhlc2Ugcm5wIGlzIGxlYWYgbm9kZSBpbiBSQ1UgdHJlZS4K
+Pgo+IEJ1dCBpbiAicmN1X2dwX2Zxc19sb29wIiBmdW5jLCB3ZSBjaGVjayBibG9ja2VkIHJlYWRl
+cnMgaW4gcm9vdCBub2RlLgo+Cj4gc3RhdGljIHZvaWQgcmN1X2dwX2Zxc19sb29wKHZvaWQpCj4g
+IHsKPiAgICAgICAgICAgICAuLi4uLgo+ICAgICAgICAgICAgIHN0cnVjdCByY3Vfbm9kZSAqcm5w
+ID0gcmN1X2dldF9yb290KCk7Cj4gICAgICAgICAgICAgLi4uLi4KPiAgICAgICAgICAgICBpZiAo
+IVJFQURfT05DRShybnAtPnFzbWFzaykgJiYKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIXJjdV9wcmVlbXB0X2Jsb2NrZWRfcmVhZGVyc19jZ3Aocm5wKSkgICAgLS0tLS0tPiBybnAg
+aXMgcm9vdCBub2RlCj4gICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gICAgICAgICAgICAg
+Li4uLgo+IH0KPgo+IHRoZSByb290IG5vZGUncyBibGtkX3Rhc2tzIG5ldmVyIGFkZCB0YXNrLCB0
+aGUgInJucC0+Z3BfdGFza3MiIGlzIG5ldmVyIGJlIGFzc2lnbmVkIHZhbHVlLCAgdGhpcyBjaGVj
+ayBpcyBpbnZhaWxlZC4KPiAgU2hvdWxkIHdlIGNoZWNrIGxlYWYgbm9kZXMgbGlrZSB0aGlzCgo+
+VGhlcmUgYXJlIHR3byBjYXNlczoKCj4xLiAgICAgIFRoZXJlIGlzIG9ubHkgYSBzaW5nbGUgcmN1
+X25vZGUgc3RydWN0dXJlLCB3aGljaCBpcyBib3RoIHJvb3QKPiAgICAgICBhbmQgbGVhZi4gIElu
+IHRoaXMgY2FzZSwgdGhlIGN1cnJlbnQgY2hlY2sgaXMgcmVxdWlyZWQ6ICBCb3RoCj4gICAgICAg
+LT5xc21hc2sgYW5kIHRoZSAtPmJsa2RfdGFza3MgbGlzdCBtdXN0IGJlIGNoZWNrZWQuICBZb3Vy
+Cj4gICAgICAgIHJjdV9wcmVlbXB0X2Jsb2NrZWRfcmVhZGVycygpIHdvdWxkIHdvcmsgaW4gdGhp
+cyBjYXNlLCBidXQKPiAgICAgICAgdGhlIGN1cnJlbnQgY29kZSBpcyBhIGJpdCBmYXN0ZXIgYmVj
+YXVzZSBpdCBkb2VzIG5vdCBuZWVkCj4gICAgICAgIHRvIGFjcXVpcmUgdGhlIC0+bG9jayBub3Ig
+ZG9lcyBpdCBuZWVkIHRoZSBsb29wIG92ZXJoZWFkLgoKPjIuICAgICAgVGhlcmUgYXJlIG11bHRp
+cGxlIGxldmVscy4gIEluIHRoaXMgY2FzZSwgYXMgeW91IHNheSwgdGhlIHJvb3QKPiAgICAgICAg
+cmN1X25vZGUgc3RydWN0dXJlJ3MgLT5ibGtkX3Rhc2tzIGxpc3Qgd2lsbCBhbHdheXMgYmUgZW1w
+dHkuCj4gICAgICAgIEJ1dCBhbHNvIGluIHRoaXMgY2FzZSwgdGhlIHJvb3QgcmN1X25vZGUgc3Ry
+dWN0dXJlJ3MgLT5xc21hc2sKPiAgICAgICAgY2Fubm90IGJlIHplcm8gdW50aWwgYWxsIHRoZSBs
+ZWFmIHJjdV9ub2RlIHN0cnVjdHVyZXMnIC0+cXNtYXNrCj4gICAgICAgIGZpZWxkcyBhcmUgemVy
+byBhbmQgdGhlaXIgLT5ibGtkX3Rhc2tzIGxpc3RzIG5vIGxvbmdlciBoYXZlCj4gICAgICAgIHRh
+c2tzIGJsb2NraW5nIHRoZSBjdXJyZW50IGdyYWNlIHBlcmlvZC4gIFRoaXMgbWVhbnMgdGhhdCB5
+b3VyCiA+ICAgICAgIHJjdV9wcmVlbXB0X2Jsb2NrZWRfcmVhZGVycygpIGZ1bmN0aW9uIHdvdWxk
+IG5ldmVyIHJldHVybgogPiAgICAgICB0cnVlIGluIHRoaXMgY2FzZS4KCj5TbyB0aGUgY3VycmVu
+dCBjb2RlIGlzIGZpbmUuCgo+QXJlIHlvdSBzZWVpbmcgZmFpbHVyZXMgb24gbWFpbmxpbmUga2Vy
+bmVscz8gIElmIHNvLCB3aGF0IGlzIHRoZSBmYWlsdXJlCj5tb2RlPwoKIFllcyBpdCdzIHJpZ2h0
+LCB0aGFuayB5b3UgZm9yIHlvdXIgZXhwbGFuYXRpb24uCiAgCiAgdGhhbmtzCiAgUWlhbmcKCiA+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFRo
+YW54LCBQYXVsCgo+IC0tLSBhL2tlcm5lbC9yY3UvdHJlZS5jCj4gKysrIGIva2VybmVsL3JjdS90
+cmVlLmMKPiBAQCAtMTg0Niw2ICsxODQ2LDI1IEBAIHN0YXRpYyBib29sIHJjdV9ncF9pbml0KHZv
+aWQpCj4gICAgICAgcmV0dXJuIHRydWU7Cj4gIH0KPgo+ICtzdGF0aWMgYm9vbCByY3VfcHJlZW1w
+dF9ibG9ja2VkX3JlYWRlcnModm9pZCkKPiArewo+ICsgICAgIHN0cnVjdCByY3Vfbm9kZSAqcm5w
+Owo+ICsgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7Cj4gKyAgICAgYm9vbCByZXQgPSBmYWxzZTsK
+PiArCj4gKyAgICAgcmN1X2Zvcl9lYWNoX2xlYWZfbm9kZShybnApIHsKPiArICAgICAgICAgICAg
+IHJhd19zcGluX2xvY2tfaXJxc2F2ZV9yY3Vfbm9kZShybnAsIGZsYWdzKTsKPiArICAgICAgICAg
+ICAgIGlmIChyY3VfcHJlZW1wdF9ibG9ja2VkX3JlYWRlcnNfY2dwKHJucCkpIHsKPiArICAgICAg
+ICAgICAgICAgICAgICAgcmV0ID0gdHJ1ZTsKPiArICAgICAgICAgICAgICAgICAgICAgcmF3X3Nw
+aW5fdW5sb2NrX2lycXJlc3RvcmVfcmN1X25vZGUocm5wLCBmbGFncyk7Cj4gKyAgICAgICAgICAg
+ICAgICAgICAgIGJyZWFrOwo+ICsgICAgICAgICAgICAgfQo+ICsgICAgICAgICAgICAgcmF3X3Nw
+aW5fdW5sb2NrX2lycXJlc3RvcmVfcmN1X25vZGUocm5wLCBmbGFncyk7Cj4gKyAgICAgfQo+ICsK
+PiArICAgICByZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICAvKgo+ICAgKiBIZWxwZXIgZnVuY3Rpb24g
+Zm9yIHN3YWl0X2V2ZW50X2lkbGVfZXhjbHVzaXZlKCkgd2FrZXVwIGF0IGZvcmNlLXF1aWVzY2Vu
+dC1zdGF0ZQo+ICAgKiB0aW1lLgo+IEBAIC0xODY0LDcgKzE4ODMsNyBAQCBzdGF0aWMgYm9vbCBy
+Y3VfZ3BfZnFzX2NoZWNrX3dha2UoaW50ICpnZnApCj4gICAgICAgICAgICAgICByZXR1cm4gdHJ1
+ZTsKPgo+ICAgICAgIC8vIFRoZSBjdXJyZW50IGdyYWNlIHBlcmlvZCBoYXMgY29tcGxldGVkLgo+
+IC0gICAgIGlmICghUkVBRF9PTkNFKHJucC0+cXNtYXNrKSAmJiAhcmN1X3ByZWVtcHRfYmxvY2tl
+ZF9yZWFkZXJzX2NncChybnApKQo+ICsgICAgIGlmICghUkVBRF9PTkNFKHJucC0+cXNtYXNrKSAm
+JiAhcmN1X3ByZWVtcHRfYmxvY2tlZF9yZWFkZXJzKCkpCj4gICAgICAgICAgICAgICByZXR1cm4g
+dHJ1ZTsKPgo+ICAgICAgIHJldHVybiBmYWxzZTsKPiBAQCAtMTkyNyw3ICsxOTQ2LDcgQEAgc3Rh
+dGljIHZvaWQgcmN1X2dwX2Zxc19sb29wKHZvaWQpCj4gICAgICAgICAgICAgICAvKiBMb2NraW5n
+IHByb3ZpZGVzIG5lZWRlZCBtZW1vcnkgYmFycmllcnMuICovCj4gICAgICAgICAgICAgICAvKiBJ
+ZiBncmFjZSBwZXJpb2QgZG9uZSwgbGVhdmUgbG9vcC4gKi8KPiAgICAgICAgICAgICAgIGlmICgh
+UkVBRF9PTkNFKHJucC0+cXNtYXNrKSAmJgo+IC0gICAgICAgICAgICAgICAgICFyY3VfcHJlZW1w
+dF9ibG9ja2VkX3JlYWRlcnNfY2dwKHJucCkpCj4gKyAgICAgICAgICAgICAgICAgIXJjdV9wcmVl
+bXB0X2Jsb2NrZWRfcmVhZGVycygpKQo+ICAgICAgICAgICAgICAgICAgICAgICBicmVhazsKPiAg
+ICAgICAgICAgICAgIC8qIElmIHRpbWUgZm9yIHF1aWVzY2VudC1zdGF0ZSBmb3JjaW5nLCBkbyBp
+dC4gKi8KPiAgICAgICAgICAgICAgIGlmICghdGltZV9hZnRlcihyY3Vfc3RhdGUuamlmZmllc19m
+b3JjZV9xcywgamlmZmllcykgfHwKPiAtLQo+Cj4KPiB0aGFua3MKPiBRaWFuZwo=
