@@ -2,266 +2,191 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F2C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2270CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6120C20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88E4214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXNIrZm4"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OIVqx+bt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbgIJQQE (ORCPT
+        id S1726773AbgIJQRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:16:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        Thu, 10 Sep 2020 12:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgIJQLf (ORCPT
+        with ESMTP id S1731458AbgIJQHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:11:35 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FF3C061757;
-        Thu, 10 Sep 2020 09:11:33 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id n13so6840268edo.10;
-        Thu, 10 Sep 2020 09:11:33 -0700 (PDT)
+        Thu, 10 Sep 2020 12:07:09 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EB6C061796
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:07:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s65so3414816pgb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:07:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YxVn4Zbme0obY4xg7KEutnAEvJ86ItKrhQOb0G4NIT0=;
-        b=PXNIrZm4N4a9wacThF0t8skTVZkBcy//jIg99gs5FlLylbGtIxtmGHee7gkUuyonwh
-         rDt9yf6zjELtKDAgRzCFOAPUmlR7BrI3E/vYHO1M82lxfKbGW+ay0CxodxILA7kFexGQ
-         i9W2jUUUdO8AvogeD1qK0C1Dgw/u0TVFAwwPW3q8XeY4w6x9iEGE9C2WmZPjJum5UF++
-         GO1Xsnj9ZTI9RtxLPimMi0lRE3rsXkTGGfiIMqs8R+AVUyi5n+zSyN0rSBglpa77Lz12
-         OTFdKPdTQH+EiFNnZvxrP2v5RnJ/IXQK8YNjV89YmE6JJtmtbASZWm7MYdYVGiPTmhbf
-         QaOw==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=LfE73yOOahYubZuB90a7b8ODoJ2hGtXRmEbov2Aw4Ko=;
+        b=OIVqx+btR+JejqM8zDT5mHEu5X2WoQw+caZP4YpE/sSrHl0EVKFGCkKjam+acqyOX3
+         Tx30ZTl/rSn0zxpdBa/+DQ8s2aNwuaeghoRZ5zzWs7MVo+qiBrs+jnu3cuMJKB4wKew+
+         mUecQ+9yCqMBm5bNZ2/ToNf2i02SG2W6XBxNU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YxVn4Zbme0obY4xg7KEutnAEvJ86ItKrhQOb0G4NIT0=;
-        b=tkPqVZ5pNCCMu/un25ZyinvfDXjjio4tsvQIqAYXpqCsb19vpJ54DqXqcz8fOBgwo8
-         qs96lUnZVBgQMEqFT6kijz/UUiKl1gDNfMYHakdU3Iad4B2RL193VftVgebEFsgJ/Z5y
-         tOntulILXNVbIvu3TCHhot1zM4+YWn1xxC5mDfd2fVdqCtit0C2xsdcAT4uWtSBFPSy7
-         lHcASJiPeeT7lHnzO6K/9WYy9xyf0zDIQMpM75aRwBNJmoQ4e9msJUXsHf8P/ojYq9pf
-         JgBbQjWPFxrGOyCubtQFnbbqPdz2FcF3yQoQjY4uG049mBMgxTB1MkVuRNX9Hew0n98l
-         fZnw==
-X-Gm-Message-State: AOAM532sceo/0JY8wmn7+fT3bK0qKTIn+VDPxf524+YPPcPDa083YUkB
-        VeMw8QKLSVwDdo3ywd9Yn1q6d1l5grE=
-X-Google-Smtp-Source: ABdhPJytt1pyCAzdvEg6IQfDRSf25DP0w7m3e7RnygYQeTF1lSbbh5GTtg3q8WHvXgTVda6eQ9zvjQ==
-X-Received: by 2002:a05:6402:44e:: with SMTP id p14mr10319607edw.1.1599754290148;
-        Thu, 10 Sep 2020 09:11:30 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id k8sm7282911ejz.60.2020.09.10.09.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:11:28 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
-        davem@davemloft.net, kuba@kernel.org
-Subject: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-Date:   Thu, 10 Sep 2020 19:11:11 +0300
-Message-Id: <20200910161126.30948-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=LfE73yOOahYubZuB90a7b8ODoJ2hGtXRmEbov2Aw4Ko=;
+        b=T/fLt5ONvXDrEO2ABd+jT7OKsbzsYGAYELVD4z4RXoR1Mh1rVEKtE9Sb6tCbYcxXJW
+         d+8zCiHSArtzQMhzHufZhWZ+8iKNu6Appzth4UccCWSpc0BwGCjT8+IOvPXEtU3JjBVk
+         y1BMdGNsMCYVMtNOILt/mppHXGI9VQdH+Z8iBHEQg9MwPSSYtldrz9IzIIS+fcgS3+iT
+         rngW+/A2pcNQXSXKxQXEmI2SsOkDG2vaPSn/B3c3IEt/wP9PJMMHuEAVocDwCObzYznP
+         JIDzcqYbmcm9CZ6lU4r5o1bCccb9Oa1fnlgCVxhSl1gr+i3JvM1aUJUY2W2lY1z+GFnU
+         i/Vg==
+X-Gm-Message-State: AOAM531r5xb6KB3iL7/bndtOgSU9z/84cY/pwmxFF3OC7+38mTxV4Uhy
+        G4I5volKCtLopG+6SDvj5jdPgw95QPm88IGW
+X-Google-Smtp-Source: ABdhPJx/Y2FsDJnyr8fyoG/+/PqQ0cFCxFJMcBPH8lXVKia75C2ynOwRNxM6KBi2ATPpANYBDzMs5A==
+X-Received: by 2002:a63:ec4c:: with SMTP id r12mr4964334pgj.74.1599754027805;
+        Thu, 10 Sep 2020 09:07:07 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d20sm2414327pjv.39.2020.09.10.09.07.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 09:07:06 -0700 (PDT)
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+To:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <1596245149-28628-1-git-send-email-suxingxing@loongson.cn>
+ <20200910020742.GA748627@bjorn-Precision-5520>
+ <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <3ec38bf3-8ffa-455d-4a06-bd99b2e6cac5@broadcom.com>
+Date:   Thu, 10 Sep 2020 09:07:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set adds support for initializing and using the GAUDI NIC ports,
-functioning as scale-out interconnect when doing distributed Deep Learning
-training. The training can be performed over tens of thousands of GAUDIs
-and it is done using the RDMA-over-converged-Ethernet (RoCE) v2 protocol.
-
-Each GAUDI exposes 10x100GbE ports that are designed to scale-out the
-inter-GAUDI communication by integrating a complete communication engine
-on-die. This native integration allows users to use the same scaling
-technology, both inside the server and rack (termed as scale-up), as well
-as for scaling across racks (scale-out). The racks can be connected
-directly between GAUDI processors, or through any number of standard
-Ethernet switches.
-
-The driver exposes the NIC ports to the user as standard Ethernet ports by
-registering each port to the networking subsystem. This allows the user to
-manage the ports with standard tools such as ifconfig, ethtool, etc. It
-also enables us to connect to the Linux networking stack and thus support
-standard networking protocols, such as IPv4, IPv6, TCP, etc. In addition,
-we can also leverage protocols such as DCB for dynamically configuring
-priorities to avoid congestion.
-
-For each NIC port there is a matching QMAN entity. For RoCE, the user
-submits workloads to the NIC through the QMAN, same as he does for the
-compute engines. For regular Ethernet, the user sends and receives packets
-through the standard Ethernet sockets. Those sockets are used only as a
-control path. The data path that is used for AI training goes through the
-RoCE interface.
-
-It is important to note that there are some limitations and uniqueness
-in GAUDI's NIC H/W, compared to other networking adapters that enforced us
-to use a less-than-common driver design:
-
-1. The NIC functionality is NOT exposed as different PCI Physical
-   Functions. There is a single PF which is used for compute and
-   networking, as the main goal of the NIC ports is to be used as
-   intra-communication and not as standard network interfaces. This
-   implies we can't connect different drivers to handle the networking
-   ports because it is the same device, from the kernel POV, as the
-   compute. Therefore, we must integrate the networking code into the
-   main habanalabs driver.
-
-2. Although our communication engine implements RDMA, and the driver code
-   uses well-known RDMA concepts such as QP context, CQ, WQ, etc., the
-   GAUDI architecture does NOT support other basic IBverbs concepts, such
-   as MR and protection domain. Therefore, we can't connect to the standard
-   IBverb infrastructure in the user-space and kernel (rdma-core library
-   and infiniband subsystem, respectively) because the standard RDMA s/w
-   and tools won't work on our H/W. Instead, we added a new IOCTL to the
-   driver's existing IOCTL API. The new IOCTL exposes the available
-   NIC control operations to the user (e.g. Create a QP context).
-
-3. The die-on communication engine provides minimal offloading for standard
-   Ethernet and TCP/IP protocols, as those are only used for control plane.
-   E.g. the packets are copied rather than using descriptors.
-   Therefore, the Ethernet performance is quite low compared to standard
-   Ethernet adapters.
-
-4. There is no virtualization support per port.
-
-Most or all of the above limitations will hopefully be improved in future
-ASIC generations.
-
-Patch-set organization:
-
-- Patches 1 & 2 are just adding some auto-generated register header files
-  and NIC-related definitions to the interface between the driver and the
-  GAUDI firmware. 
-
-- Patch 3 adds initialization of security restrictions on the NIC engines.
-
-- Patch 4 adds initialization of the NIC QMANs. The QMANs are needed to
-  send RDMA packets through the NIC engines.
-
-- Patches 5-11 adds the NIC driver code. It contains the basic Ethernet
-  driver and H/W initialization, the NIC PHY driver code and the new NIC
-  control IOCTL operations.
-
-- Patch 12-14 adds support for debugfs, ethtool and DCB.
-
-- Patch 15 adds the implementation of the high-level init/fini functions
-  and their calls from the common code. This is the patch that actually
-  enables the NIC ports and allows the user to work with them.
-
-Thanks,
-Oded
 
 
-Omer Shpigelman (15):
-  habanalabs/gaudi: add NIC H/W and registers definitions
-  habanalabs/gaudi: add NIC firmware-related definitions
-  habanalabs/gaudi: add NIC security configuration
-  habanalabs/gaudi: add support for NIC QMANs
-  habanalabs/gaudi: add NIC Ethernet support
-  habanalabs/gaudi: add NIC PHY code
-  habanalabs/gaudi: allow user to get MAC addresses in INFO IOCTL
-  habanalabs/gaudi: add a new IOCTL for NIC control operations
-  habanalabs/gaudi: add CQ control operations
-  habanalabs/gaudi: add WQ control operations
-  habanalabs/gaudi: add QP error handling
-  habanalabs/gaudi: add debugfs entries for the NIC
-  habanalabs/gaudi: Add ethtool support using coresight
-  habanalabs/gaudi: support DCB protocol
-  habanalabs/gaudi: add NIC init/fini calls from common code
-
- .../ABI/testing/debugfs-driver-habanalabs     |   69 +
- drivers/misc/habanalabs/common/context.c      |    1 +
- drivers/misc/habanalabs/common/device.c       |   24 +-
- drivers/misc/habanalabs/common/firmware_if.c  |   44 +
- drivers/misc/habanalabs/common/habanalabs.h   |   33 +-
- .../misc/habanalabs/common/habanalabs_drv.c   |   11 +
- .../misc/habanalabs/common/habanalabs_ioctl.c |  151 +-
- drivers/misc/habanalabs/common/pci.c          |    1 +
- drivers/misc/habanalabs/gaudi/Makefile        |    4 +
- drivers/misc/habanalabs/gaudi/gaudi.c         |  958 +++-
- drivers/misc/habanalabs/gaudi/gaudiP.h        |  333 +-
- .../misc/habanalabs/gaudi/gaudi_coresight.c   |  144 +
- drivers/misc/habanalabs/gaudi/gaudi_nic.c     | 4063 +++++++++++++++++
- drivers/misc/habanalabs/gaudi/gaudi_nic.h     |  354 ++
- .../misc/habanalabs/gaudi/gaudi_nic_dcbnl.c   |  108 +
- .../misc/habanalabs/gaudi/gaudi_nic_debugfs.c |  402 ++
- .../misc/habanalabs/gaudi/gaudi_nic_ethtool.c |  582 +++
- drivers/misc/habanalabs/gaudi/gaudi_phy.c     | 1272 ++++++
- .../misc/habanalabs/gaudi/gaudi_security.c    | 3973 ++++++++++++++++
- drivers/misc/habanalabs/goya/goya.c           |   44 +
- .../misc/habanalabs/include/common/cpucp_if.h |   34 +-
- .../include/gaudi/asic_reg/gaudi_regs.h       |   26 +-
- .../include/gaudi/asic_reg/nic0_qm0_masks.h   |  800 ++++
- .../include/gaudi/asic_reg/nic0_qm0_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic0_qm1_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic0_qpc0_masks.h  |  500 ++
- .../include/gaudi/asic_reg/nic0_qpc0_regs.h   |  710 +++
- .../include/gaudi/asic_reg/nic0_qpc1_regs.h   |  710 +++
- .../include/gaudi/asic_reg/nic0_rxb_regs.h    |  508 +++
- .../include/gaudi/asic_reg/nic0_rxe0_masks.h  |  354 ++
- .../include/gaudi/asic_reg/nic0_rxe0_regs.h   |  158 +
- .../include/gaudi/asic_reg/nic0_rxe1_regs.h   |  158 +
- .../include/gaudi/asic_reg/nic0_stat_regs.h   |  518 +++
- .../include/gaudi/asic_reg/nic0_tmr_regs.h    |  184 +
- .../include/gaudi/asic_reg/nic0_txe0_masks.h  |  336 ++
- .../include/gaudi/asic_reg/nic0_txe0_regs.h   |  264 ++
- .../include/gaudi/asic_reg/nic0_txe1_regs.h   |  264 ++
- .../include/gaudi/asic_reg/nic0_txs0_masks.h  |  336 ++
- .../include/gaudi/asic_reg/nic0_txs0_regs.h   |  214 +
- .../include/gaudi/asic_reg/nic0_txs1_regs.h   |  214 +
- .../include/gaudi/asic_reg/nic1_qm0_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic1_qm1_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic2_qm0_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic2_qm1_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic3_qm0_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic3_qm1_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic4_qm0_regs.h    |  834 ++++
- .../include/gaudi/asic_reg/nic4_qm1_regs.h    |  834 ++++
- drivers/misc/habanalabs/include/gaudi/gaudi.h |   12 +
- .../habanalabs/include/gaudi/gaudi_fw_if.h    |   24 +
- .../habanalabs/include/gaudi/gaudi_masks.h    |   15 +
- .../include/hw_ip/nic/nic_general.h           |   13 +
- include/uapi/misc/habanalabs.h                |  296 +-
- 53 files changed, 27497 insertions(+), 62 deletions(-)
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
- create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
- create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
- create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
-
--- 
-2.17.1
+On 2020-09-10 7:21 a.m., Rob Herring wrote:
+> On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> [+cc Mark, Florian, Rob, Scott]
+>>
+>> On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+>>> Do not use printk in raw_spinlocks,
+>>> it will cause BUG: Invalid wait context.
+>>>
+>>> The trace reported by lockdep follows.
+>>>
+>>> [    2.986113] =============================
+>>> [    2.986115] [ BUG: Invalid wait context ]
+>>> [    2.986116] 5.8.0-rc1+ #11 Not tainted
+>>> [    2.986118] -----------------------------
+>>> [    2.986120] swapper/0/1 is trying to lock:
+>>> [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+>>> [    2.986130] other info that might help us debug this:
+>>> [    2.986132] context-{5:5}
+>>> [    2.986134] 3 locks held by swapper/0/1:
+>>> [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+>>> [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+>>> [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+>>> [    2.986161] stack backtrace:
+>>> [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+>>> [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+>>> [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+>>> [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+>>> [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+>>> [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+>>> [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+>>> [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+>>> [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+>>> [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+>>> [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+>>> [    2.986245]         ...
+>>> [    2.986250] Call Trace:
+>>> [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+>>> [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+>>> [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+>>> [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+>>> [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+>>> [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+>>> [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+>>> [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+>>> [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+>>> [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+>>> [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+>>> [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+>>> [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+>>> [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+>>> [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+>>> [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+>>> [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+>>> [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+>>> [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+>>> [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+>>> [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+>>> [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+>>> [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+>>> [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+>>> [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+>>> [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+>>> [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+>>> [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+>>> [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+>>>
+>>> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+>>> ---
+>>>  drivers/pci/access.c | 3 ---
+>>>  1 file changed, 3 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>>> index 79c4a2e..b3fc164 100644
+>>> --- a/drivers/pci/access.c
+>>> +++ b/drivers/pci/access.c
+>>> @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>>>        * write happen to have any RW1C (write-one-to-clear) bits set, we
+>>>        * just inadvertently cleared something we shouldn't have.
+>>>        */
+>>> -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+>>> -                          size, pci_domain_nr(bus), bus->number,
+>>> -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+>> We just changed this printk (see [1]), but I think we still have this
+>> lockdep problem even after Mark's change.  So I guess we need another
+>> think about this.
+>>
+>> Maybe we can print something when registering pci_ops that use
+>> pci_generic_config_write32()?
+> That was my suggestion, but as Mark pointed out that doesn't work if
+> pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+>
+> Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> writes to a bridge going to cause problems? For xgene, interestingly,
+> with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> think xgene is practically dead though a few people still have
+> systems, but likely xgene with DT is really dead. The ECAM case was
+> for QCom server which is also pretty much dead. SA1100 nano-engine is
+> really old and something only a few people have at most (Russell
+> King). So ignoring all those, we're left with just loongson and iproc.
+> Maybe just remove the warning?
+Yes, removing the warning works fine.
+>
+> Rob
 
