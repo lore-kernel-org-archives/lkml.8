@@ -7,60 +7,58 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77590C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945CDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 201F5207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B40207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pyLwfHRW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dOH5v8bG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g7CJem3E";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w8caVlwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgIJJey (ORCPT
+        id S1730720AbgIJJfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgIJJW5 (ORCPT
+        Thu, 10 Sep 2020 05:35:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38768 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730136AbgIJJW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:22:57 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28518C0617A0;
-        Thu, 10 Sep 2020 02:22:18 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 09:22:12 -0000
+        Thu, 10 Sep 2020 05:22:58 -0400
+Date:   Thu, 10 Sep 2020 09:22:25 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729733;
+        s=2020; t=1599729746;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0wQGee5XyeUCiOLgXJu8CVETXL9+G6zfp1LXqqcOz54=;
-        b=pyLwfHRWMBvt7Bq2XOEQzr0Fm3/aoHozALGFyKyF3eyy70vbVqHFYYir8D4h/b/+70U1nn
-        K3E0+BFCB82aOZNZG6P+SHMzRIsBGQqvp+ZLdwdKixZZcHflnGB+DwV0zL+vJvSzS2+o4y
-        O3EYkJHkX6+zIL8LWBsA1pir7ksOLFdnOgGRPexETvjpeojXye5ZENUsHPccSXuJ3XjRr4
-        ZhsK9Zxpnq+pS/h6SPcZlodLSdnxuQZdYRxQHdKEUS30fV0GwtVCpL91YIX2j4Q4qTFd6K
-        fu0iuI1IrUtssQSRgI54hbUpWakgS28Shi9v/kylu5eat7vga4X8/esWBoA1lA==
+        bh=gJjYcqsckT6+vW42p3bICGLzydehGxynGVCYwIg/Azc=;
+        b=g7CJem3EqVKibzvVj90nVO6VZZFlKOkKTK+lpZ8y/GOfk21630hLPmF48YmeeF6mc2d7CM
+        PQcC328IA54oofBjayKVvbcByxzdxrl0qnPxs8LesvUVdL2BZOBxiOKBXq4fLHffkSeU8G
+        YyvJoWq0/xFqRsTWszG1rIbpcjXox8D42kDdNVO4PX2ykESTYac9OlCyvlvhwSg8mMmuDf
+        YpJmE9nVPps8fbYv+G6bKjk/Z/NfAucdZ6MaptmI131+Q52mqg4T3GAo7quge0UmWnlhBp
+        sIcmnt6MQqNPElqOMs9CEYJQxeKNlAJIj1vGi3YFXDXA/ffhEqVYUL4ds427DA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729733;
+        s=2020e; t=1599729746;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0wQGee5XyeUCiOLgXJu8CVETXL9+G6zfp1LXqqcOz54=;
-        b=dOH5v8bGLcNL21XVIciZRNN5oXKZuI43+ASj3pdhINm7uCG/xSiIHnMgK4lRYTzw7xLDxT
-        QgKBs9plBjqpIXDA==
+        bh=gJjYcqsckT6+vW42p3bICGLzydehGxynGVCYwIg/Azc=;
+        b=w8caVlwo53Qrr7zmie/e9ll095pQzpt8doY6XZ8F2fzb2xsf31LVdVUGnSGRYbijcZzA58
+        x8GAqxUEmbgZ8aDA==
 From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/sev-es: Wire up existing #VC exit-code handlers
+Subject: [tip: x86/seves] x86/boot/compressed/64: Don't pre-map memory in KASLR code
 Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-48-joro@8bytes.org>
-References: <20200907131613.12703-48-joro@8bytes.org>
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-18-joro@8bytes.org>
+References: <20200907131613.12703-18-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972973268.20229.9735553422722311923.tip-bot2@tip-bot2>
+Message-ID: <159972974561.20229.17749457811513210209.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,65 +70,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     d3529bb73f76d0ec8aafaca505226fa0971c1dc9
-Gitweb:        https://git.kernel.org/tip/d3529bb73f76d0ec8aafaca505226fa0971c1dc9
+Commit-ID:     8570978ea030757839747aa9944ea576708be3d4
+Gitweb:        https://git.kernel.org/tip/8570978ea030757839747aa9944ea576708be3d4
 Author:        Joerg Roedel <jroedel@suse.de>
-AuthorDate:    Mon, 07 Sep 2020 15:15:48 +02:00
+AuthorDate:    Mon, 07 Sep 2020 15:15:18 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 09 Sep 2020 11:33:19 +02:00
+CommitterDate: Mon, 07 Sep 2020 19:45:25 +02:00
 
-x86/sev-es: Wire up existing #VC exit-code handlers
+x86/boot/compressed/64: Don't pre-map memory in KASLR code
 
-Re-use the handlers for CPUID- and IOIO-caused #VC exceptions in the
-early boot handler.
+With the page-fault handler in place, he identity mapping can be built
+on-demand. So remove the code which manually creates the mappings and
+unexport/remove the functions used for it.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-48-joro@8bytes.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200907131613.12703-18-joro@8bytes.org
 ---
- arch/x86/kernel/sev-es-shared.c | 7 +++----
- arch/x86/kernel/sev-es.c        | 6 ++++++
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c |  6 ++----
+ arch/x86/boot/compressed/kaslr.c        | 24 +-----------------------
+ arch/x86/boot/compressed/misc.h         | 10 +----------
+ 3 files changed, 3 insertions(+), 37 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 53e3de0..491b557 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -325,8 +325,7 @@ static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
- 	return ES_OK;
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index ecf9353..c63257b 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -87,11 +87,9 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+ static struct x86_mapping_info mapping_info;
+ 
+ /*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
++ * Adds the specified range to the identity mappings.
+  */
+-void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long size)
+ {
+ 	unsigned long end = start + size;
+ 
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 8266286..b59547c 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -397,8 +397,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 	 */
+ 	mem_avoid[MEM_AVOID_ZO_RANGE].start = input;
+ 	mem_avoid[MEM_AVOID_ZO_RANGE].size = (output + init_size) - input;
+-	add_identity_map(mem_avoid[MEM_AVOID_ZO_RANGE].start,
+-			 mem_avoid[MEM_AVOID_ZO_RANGE].size);
+ 
+ 	/* Avoid initrd. */
+ 	initrd_start  = (u64)boot_params->ext_ramdisk_image << 32;
+@@ -416,15 +414,11 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 		cmd_line_size = strnlen((char *)cmd_line, COMMAND_LINE_SIZE-1) + 1;
+ 		mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
+ 		mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
+-		add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
+-				 mem_avoid[MEM_AVOID_CMDLINE].size);
+ 	}
+ 
+ 	/* Avoid boot parameters. */
+ 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
+ 	mem_avoid[MEM_AVOID_BOOTPARAMS].size = sizeof(*boot_params);
+-	add_identity_map(mem_avoid[MEM_AVOID_BOOTPARAMS].start,
+-			 mem_avoid[MEM_AVOID_BOOTPARAMS].size);
+ 
+ 	/* We don't need to set a mapping for setup_data. */
+ 
+@@ -433,11 +427,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 
+ 	/* Enumerate the immovable memory regions */
+ 	num_immovable_mem = count_immovable_mem_regions();
+-
+-#ifdef CONFIG_X86_VERBOSE_BOOTUP
+-	/* Make sure video RAM can be used. */
+-	add_identity_map(0, PMD_SIZE);
+-#endif
  }
  
--static enum es_result __maybe_unused
--vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-+static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u64 exit_info_1, exit_info_2;
-@@ -434,8 +433,8 @@ vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	return ret;
- }
+ /*
+@@ -884,19 +873,8 @@ void choose_random_location(unsigned long input,
+ 		warn("Physical KASLR disabled: no suitable memory region!");
+ 	} else {
+ 		/* Update the new physical address location. */
+-		if (*output != random_addr) {
+-			add_identity_map(random_addr, output_size);
++		if (*output != random_addr)
+ 			*output = random_addr;
+-		}
+-
+-		/*
+-		 * This loads the identity mapping page table.
+-		 * This should only be done if a new physical address
+-		 * is found for the kernel, otherwise we should keep
+-		 * the old page table to make it be like the "nokaslr"
+-		 * case.
+-		 */
+-		finalize_identity_maps();
+ 	}
  
--static enum es_result __maybe_unused vc_handle_cpuid(struct ghcb *ghcb,
--						     struct es_em_ctxt *ctxt)
-+static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
-+				      struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
- 	u32 cr4 = native_read_cr4();
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 0d6b66e..b10a62a 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -441,6 +441,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	enum es_result result;
  
- 	switch (exit_code) {
-+	case SVM_EXIT_CPUID:
-+		result = vc_handle_cpuid(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_IOIO:
-+		result = vc_handle_ioio(ghcb, ctxt);
-+		break;
- 	default:
- 		/*
- 		 * Unexpected #VC exception
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index f0e1991..9840c82 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -98,17 +98,7 @@ static inline void choose_random_location(unsigned long input,
+ #endif
+ 
+ #ifdef CONFIG_X86_64
+-void initialize_identity_maps(void);
+-void add_identity_map(unsigned long start, unsigned long size);
+-void finalize_identity_maps(void);
+ extern unsigned char _pgtable[];
+-#else
+-static inline void initialize_identity_maps(void)
+-{ }
+-static inline void add_identity_map(unsigned long start, unsigned long size)
+-{ }
+-static inline void finalize_identity_maps(void)
+-{ }
+ #endif
+ 
+ #ifdef CONFIG_EARLY_PRINTK
