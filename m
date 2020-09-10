@@ -2,205 +2,169 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F254AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A4520882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3D3214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4jMa7dn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="zPte7GDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgIJTJt (ORCPT
+        id S1726991AbgIJTJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:09:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbgIJTIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:08:05 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CFDC061573;
-        Thu, 10 Sep 2020 12:08:05 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z19so5211330pfn.8;
-        Thu, 10 Sep 2020 12:08:05 -0700 (PDT)
+        Thu, 10 Sep 2020 15:09:27 -0400
+Received: from mail-dm6nam10on2105.outbound.protection.outlook.com ([40.107.93.105]:38625
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727776AbgIJTIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:08:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EfgJHRrgSURwo1d7SnAqZavi+p4qVX+/QhVFLJlkn35fZre0/X0bR9Dbm9tt7dkGRpzVmAR+C7sAPPBe64VeRs8IR8VMrNKdyNFBTPzAQSsy39+CfQFdygrrfWDXVbXFkZIXbYWTJ3TsxBE+WxYPA9LtMxlcQUSNFtPiZ6+SasYm2ky2N7EzTWn6QNPPqQYxloY+Wt/ZLNlYhsrtPtSe8C+axTicBanX6tflVHL5Q0IxnYTxcuEPW8S1Oycnf2CMNqZXUGFF2b4cMIFCwrLua5juQtogutZZR+Kq9uh0wEAiuyyooN4AQxWUbN1gKCfo0KtT7U8F19MhIv/dhKyMuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sX4nnm/V0SCt+v6d2qmgPgeeqsS2Lwlmfs6jg+9dn6c=;
+ b=Eunmd7UMIp3F5Q0yYm9+ydwaUugigKQECgjBJ221tTXy8OxbomOqvMrSNAkyVcEfDPR22YmPpdC7u/1yRl6iOzDn2By6K0d4cqPpGwQ77RLhc6Rqev5oh0OGfZGCOiXqjD2I0XuYEeh/PzAqEx/hQabBc6gJgwTJb8E+HzSyMTnq4Upr0mZQOe73n0wlS/TtH6oG+vGgKuUBoW8NxE6dv631Yr9D6FtQgMJjai7Wtu1MiA0/iLQfKTfN5brY9f6wRHPDbo25Iy3XtFPGlQgnqwhFblRPsMZIHaZxC/R1YQhP7uhl7JjJXyKQkntYjtAjqI00G7LYrX0gWj3mmCEuRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dwnpM8JLZbBKIkQgOLZZmnOg2dEyjob2l7NHK0msXlE=;
-        b=b4jMa7dn0K2TKjty1oEv4pSKKxhN/pZpU9t6puz8KR6lVKbaYXRGzjXA+RiPbWeVBP
-         udH0RaAToStag+dEd7hCRA9oTka1aDGdXBR0BSY0A6Y0eFYcKr0zjU0mH+UdhEgXQagN
-         bCO2hecd3FWV0oj1BILyVN0hjm4bkA4wbMFG6baAeXtDOETDKX24d+BrOKsqhFtIHovT
-         QCvk4Nq17lU9V/BlGsGNBGoq4JI8fAp21ns0pq0N7DLfvsZmWiExvotFYYhEHNzUSi/O
-         W43O42D82m8KZewecXfWBMd6xbUMl/1CqdAFfospOkue5EN28FXWZsVYiCtXReVjkslj
-         UOCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dwnpM8JLZbBKIkQgOLZZmnOg2dEyjob2l7NHK0msXlE=;
-        b=pVXfXEktrBqv3n+iFrYl7pD2RSh/K+2h2GmoASflImklZb2Etni+otAuzd5V27gv+6
-         xCIoivPsmftfBDGQi9QB/P3ym9lg5tHh2Cl37k2SGeu70edCbTEkhINqEFz4LAFZ3Mjj
-         rQdKgMRcvAojEceuf02XkLSDiNr6aiZt//stvKQFD6rHVFvyKRrnvFpC6JKLRUMS0ZTL
-         BX9uYIPiy5EW4POPslwwG+nPYcXrOtDjEjUu64aQstBuDVFOx6mgXYtFtUqdJJLv5Gxn
-         cc7xEYxaDlrLNC4YFmyLJsyBT1vOOPdjfG4Pu+Zjfdeofs8ExsOkR6QcQ7Jt/yHLuWnu
-         KRDQ==
-X-Gm-Message-State: AOAM533G9mO+xFUp16dFdELl8V7aXbjZ4d/0apykumcd3v9qV77sB372
-        TCc0stVMLTsRuuZN6nXLMUnZv5k+oko=
-X-Google-Smtp-Source: ABdhPJyukXJbwjvFKYrra3HXc9hr35P0awBCdafHP3LXlMZghA/JirNZoF+3l0EF+sjyWDBOggm7Qg==
-X-Received: by 2002:a63:384b:: with SMTP id h11mr5820171pgn.113.1599764884416;
-        Thu, 10 Sep 2020 12:08:04 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id n127sm6441841pfn.155.2020.09.10.12.07.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 12:08:03 -0700 (PDT)
-Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-5-james.quinlan@broadcom.com>
- <20200910155637.GA423872@bogus>
- <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com>
- <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
- <CA+-6iNwcLZcQcge2E6GUi71rveFaneeCBwxBTfn8MipwhaPvEQ@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <3c6a0acc-8966-fd38-1613-8da7bece81c7@gmail.com>
-Date:   Thu, 10 Sep 2020 12:07:56 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.2.1
+ d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sX4nnm/V0SCt+v6d2qmgPgeeqsS2Lwlmfs6jg+9dn6c=;
+ b=zPte7GDEwNe/H0JEggnyaq17BXbynlf5VCtRX8Dy7/5x4PYqNhdFr676/Q3dp2znRo/WWaT3ck5GKb4XdK8YROl1aG399nbCog6LxDhe3XATM05sf7ZrlLvOcSMEj1cbBAJmpTB2UUNg71Ustk9gZFABLvbsyBAwRT7YYzVCkjk=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none
+ header.from=amperemail.onmicrosoft.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB3686.prod.exchangelabs.com (2603:10b6:a02:8f::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3370.16; Thu, 10 Sep 2020 19:07:54 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::419e:edaf:d4b1:3b29]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::419e:edaf:d4b1:3b29%4]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 19:07:54 +0000
+From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5] perf: arm_dsu: Support DSU ACPI devices
+Date:   Thu, 10 Sep 2020 12:07:52 -0700
+In-Reply-To: <202009102143.A4pW4A7I%lkp@intel.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1599694141-16056-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <202009102143.A4pW4A7I%lkp@intel.com>
+Message-Id: <C7729DCE-57C3-4ADD-AFD4-3992798F1FF9@amperemail.onmicrosoft.com>
+X-Mailer: Apple Mail (2.3654.0.3.2.26)
+X-ClientProxiedBy: CY4PR02CA0028.namprd02.prod.outlook.com
+ (2603:10b6:903:117::14) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-In-Reply-To: <CA+-6iNwcLZcQcge2E6GUi71rveFaneeCBwxBTfn8MipwhaPvEQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (73.151.56.145) by CY4PR02CA0028.namprd02.prod.outlook.com (2603:10b6:903:117::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 19:07:53 +0000
+X-Mailer: Apple Mail (2.3654.0.3.2.26)
+X-Originating-IP: [73.151.56.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 36e5cea4-3c61-4b6e-2849-08d855bcd21d
+X-MS-TrafficTypeDiagnostic: BYAPR01MB3686:
+X-Microsoft-Antispam-PRVS: <BYAPR01MB36864705D038B1137A3FBB7FE0270@BYAPR01MB3686.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:48;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KGTTQEK26+uXPNSqw+++u/5Gs4C6LYUTUiYSzhSTzL9WOuSl3whdRXrn6335yF6dNxjpcpLOk6TSJeaFZLktA+U+UGuhDCxUXKWw1Syr+oYHv3idupN0rcgUrbrA88MU0cb5SSMyvdDmuVKgdIKmlFTVDb8gocLIbxQRQbpICI7FmtCckMVPV7Crg4Vt521AOZY5PsapPY6Ktujn1zZWCaLmGuWMnitrI/ZNPRHnwnJKm/1qW8xu86vOtMdhZFhtxN+Ss1lTkRot5F9MUbLrnmXR+JBXjBSLxkZTbuWmDrq0b3BuDUbsqXad0mwhIrlCkiXWCu4qDR2eFGb6MqsUrYoFFBhPLYAKmUN5C1GmoO/Q7SF5dhBpuVFefbYtx8JbZST5MdLOx7joTk80cGthY0F8m1lDTz6WEaCDbyo/JiOtP+O7/WYirWsJE8AprLXk4XJP69CDtWMVtYWSdQP9GQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39840400004)(346002)(376002)(366004)(396003)(54906003)(2906002)(6512007)(26005)(966005)(52116002)(8676002)(42882007)(8936002)(33656002)(4326008)(53546011)(83170400001)(16526019)(66946007)(66476007)(6506007)(186003)(66556008)(5660300002)(316002)(83080400001)(6486002)(2616005)(109986005)(956004)(83380400001)(478600001)(1758585002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: EsFH4nYod3Teiihp1sQQrMd/VMzT52TGkv778lkE+VDg02uKRBu6+5b6TxtSXDxYsjYqtyIAeeJJMP04F5+9RtTfDmNPRTvz4MHN6V3HdDHPYrGoPF1MQCrR/85+GRUEVCvUEISIrB29ss8RqPwuUg8KSo5f6qtJJclhg5OVyIsLn8XvmTVFmDwTxttd0X1rxYOGGRdJ/gPBMD/haHJprNT2gfLb/nC+UXiU32+gJvuGkYhZ5V7bmZq2I42ntsvPXRZpjdbmvVGi/hHBaDSRTXPMnEDppAb0uCUuoBOEfNAtjFWg+iUQkuYHTKGKObjCRZlPYzqxj6+s7UzY7oqO6NQP4ybs7NoQfBl0cYuG/l3yEJ6ggo/ckM4CpXt/H0M7ZLPrEXCfFHwfTIwbPzFb0jKO3zL5nMI46dbU+4cOQQbwZYhGfyYqBGfMVGEcj2UbKKYeAT9JlpQA7vXQCVQ/hEpTVf0HX7Uj9RJs1gWT+t6WrwFVJ+4ZskliOrhwDDpxa0F1D9FaSlRYk5wPrzXAHUkL+y5kMHvJPLbedqKp6JI8jk8UMlSIqYihKqdy/MoIXqoKgmeywBvfu+Vm0CeZopcCLMVRKUlH8OuMc7aDSzj6NtGn7+pzIpG1Ls51QokpwR+mYu330REP32Ep2H/5eg==
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36e5cea4-3c61-4b6e-2849-08d855bcd21d
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB4598.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 19:07:54.2432
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: chrh7oR1QBOgB9LrRN5V3fecSqetd3tjyFJLaBbkAty1m0WOz9s9fT8VGCiSUrur0V914Eqc7+4yyjhqmyLMrOJbgJLctOshu6R2yD8RgrKazypzbsvBI8fazPedDWy0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB3686
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Will,
 
+> On Sep 10, 2020, at 6:40 AM, kernel test robot <lkp@intel.com> wrote:
+>=20
+> Hi Tuan,
+>=20
+> Thank you for the patch! Perhaps something to improve:
+>=20
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v5.9-rc4 next-20200910]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+>=20
+> url:    https://github.com/0day-ci/linux/commits/Tuan-Phan/perf-arm_dsu-S=
+upport-DSU-ACPI-devices/20200910-105630
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t ab29a807a7ddaa7c84d2f4cb8d29e74e33759072
+> config: arm64-randconfig-r012-20200909 (attached as .config)
+> compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project 0a5d=
+c7effb191eff740e0e7ae7bd8e1f6bdb3ad9)
+> reproduce (this is a W=3D1 build):
+>        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin=
+/make.cross -O ~/bin/make.cross
+>        chmod +x ~/bin/make.cross
+>        # install arm64 cross compiling tool for clang build
+>        # apt-get install binutils-aarch64-linux-gnu
+>        # save the attached .config to linux build tree
+>        COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross ARC=
+H=3Darm64=20
+>=20
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>=20
+> All warnings (new ones prefixed by >>):
+>=20
+>>> drivers/perf/arm_dsu_pmu.c:799:36: warning: unused variable 'dsu_pmu_ac=
+pi_match' [-Wunused-const-variable]
+>   static const struct acpi_device_id dsu_pmu_acpi_match[] =3D {
+>                                      ^
+>   1 warning generated.
+>=20
 
-On 9/10/2020 12:05 PM, Jim Quinlan wrote:
-> On Thu, Sep 10, 2020 at 2:50 PM Rob Herring <robh@kernel.org> wrote:
->>
->> On Thu, Sep 10, 2020 at 10:42 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
->>>
->>> On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
->>>>
->>>> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
->>>>> From: Jim Quinlan <jquinlan@broadcom.com>
->>>>>
->>>>> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
->>>>> and resume.  Now the PCIe driver may do so as well.
->>>>>
->>>>> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
->>>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>> ---
->>>>>   drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
->>>>>   1 file changed, 47 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
->>>>> index c2b3d2946a36..3d588ab7a6dd 100644
->>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
->>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
->>>>> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->>>>>        brcm_pcie_bridge_sw_init_set(pcie, 1);
->>>>>   }
->>>>>
->>>>> +static int brcm_pcie_suspend(struct device *dev)
->>>>> +{
->>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
->>>>> +
->>>>> +     brcm_pcie_turn_off(pcie);
->>>>> +     clk_disable_unprepare(pcie->clk);
->>>>> +
->>>>> +     return 0;
->>>>> +}
->>>>> +
->>>>> +static int brcm_pcie_resume(struct device *dev)
->>>>> +{
->>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
->>>>> +     void __iomem *base;
->>>>> +     u32 tmp;
->>>>> +     int ret;
->>>>> +
->>>>> +     base = pcie->base;
->>>>> +     clk_prepare_enable(pcie->clk);
->>>>> +
->>>>> +     /* Take bridge out of reset so we can access the SERDES reg */
->>>>> +     brcm_pcie_bridge_sw_init_set(pcie, 0);
->>>>> +
->>>>> +     /* SERDES_IDDQ = 0 */
->>>>> +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
->>>>> +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
->>>>> +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
->>>>> +
->>>>> +     /* wait for serdes to be stable */
->>>>> +     udelay(100);
->>>>
->>>> Really needs to be a spinloop?
->>>>
->>>>> +
->>>>> +     ret = brcm_pcie_setup(pcie);
->>>>> +     if (ret)
->>>>> +             return ret;
->>>>> +
->>>>> +     if (pcie->msi)
->>>>> +             brcm_msi_set_regs(pcie->msi);
->>>>> +
->>>>> +     return 0;
->>>>> +}
->>>>> +
->>>>>   static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->>>>>   {
->>>>>        brcm_msi_remove(pcie);
->>>>> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>>>>
->>>>>   MODULE_DEVICE_TABLE(of, brcm_pcie_match);
->>>>>
->>>>> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
->>>>> +     .suspend_noirq = brcm_pcie_suspend,
->>>>> +     .resume_noirq = brcm_pcie_resume,
->>>>
->>>> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
->>>> and 1352 of .suspend in the tree.
->>>
->>> I will test switching this to  suspend_late/resume_early.
->>
->> Why not just the 'regular' flavor suspend/resume?
->>
->> Rob
-> We must have our PCIe driver suspend last and resume first because our
-> current driver turns off/on the power for the EPs.  Note that this
-> code isn't in the driver as we are still figuring out a way to make it
-> upstreamable.
+Do you need me to fix this warning when CONFIG_ACPI not defined?
 
-The suspend/resume ordering should be guaranteed by the Linux device 
-driver model though if not, this is a bug that ought to be fixed. The 
-PCI bridge sits at the top of the pci_device list and all EPs should be 
-child devices, so the suspend order should be from EPs down to the 
-bridge, and the resume the converse.
--- 
-Florian
+Tuan
+> # https://github.com/0day-ci/linux/commit/40c3a0c70d4472e2fe1f5364d50939b=
+863874fa1
+> git remote add linux-review https://github.com/0day-ci/linux
+> git fetch --no-tags linux-review Tuan-Phan/perf-arm_dsu-Support-DSU-ACPI-=
+devices/20200910-105630
+> git checkout 40c3a0c70d4472e2fe1f5364d50939b863874fa1
+> vim +/dsu_pmu_acpi_match +799 drivers/perf/arm_dsu_pmu.c
+>=20
+>   798=09
+>> 799	static const struct acpi_device_id dsu_pmu_acpi_match[] =3D {
+>   800		{ "ARMHD500", 0},
+>   801		{},
+>   802	};
+>   803	MODULE_DEVICE_TABLE(acpi, dsu_pmu_acpi_match);
+>   804=09
+>=20
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> <.config.gz>
+
