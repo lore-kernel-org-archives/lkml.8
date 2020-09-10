@@ -2,95 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00058C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F49AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99EE821D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0935D21941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Op9WewQI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nuYXudjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgIJSm2 (ORCPT
+        id S1726850AbgIJSmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
+        Thu, 10 Sep 2020 14:42:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgIJSSE (ORCPT
+        with ESMTP id S1726755AbgIJSkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:18:04 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C46C061757;
-        Thu, 10 Sep 2020 11:18:03 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id o16so419833pjr.2;
-        Thu, 10 Sep 2020 11:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JFd3P1rOkLJ0aMveQe0KPg1GqwxvSb9Woluh1JdvYp0=;
-        b=Op9WewQIHeEQlS/RoU8M6xE18aOAsW92SSqLEXdoL6DIM5z/cvbSOLwC+TG9fVWhJr
-         kOMVkkvasCDay8WDHAqgzDL2YlJ64YeMuqpraanDfiFh3i7/3kwAX6ckuxPy/KWYt4T4
-         88q3U4GbhB0qu3CCh/tQi68jHL1OS3ODXVKm5yqODXCRmVVac5yQPNlaGwI70/v/EZ7t
-         SBpkwH1th3kNVmk+9VNUru7KzXB43xlOP9zMdh9me0fB1PsFUuVQirvnEBMZxKlwY9jp
-         +YpWAQiaJyPxSCrIeDU0ggjpErGNtb0PDJzN0cvLbPJBuLuaXXeYXERl9FICtmz8nWS/
-         aO8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JFd3P1rOkLJ0aMveQe0KPg1GqwxvSb9Woluh1JdvYp0=;
-        b=sTRSyHNEEyWAtCvPfr3Pl09+8SJusX/WaEI9jzxGbZjF13JrtJyS+He0kLvn69zK64
-         7vY+9qNasDflhAn5nnuWBs647Pv3ORdW/nPcoKuYDnA461WFCPJ76ALyXKvh6Q0IOVp+
-         FnAeCTbNMnF0W5Aw4x/e2XdEUKZfLO1qPQFR9eErv5KExf0ubUJ2Ipc4la73Ht9Izgfu
-         J/aMWEtGe5SSQUR/BUOVrpaI8cigdULI3XBFyKZ2hl5lJZ4wo0+cgtxIC8yXLtsC6kj/
-         byCpYfuL2QuUsYSEY+dKQlyEwAi1yHJL1u5d1tvj2ZCQm4O+kSUZlR2COedDj3HhjJWA
-         d2IA==
-X-Gm-Message-State: AOAM5303ejn7xihi02JuKlh3g8x+b8xF1kPEIe35L8p2DbcS8c3Slkdg
-        EjmXaAySH9B8gUZ6dlBR1yg=
-X-Google-Smtp-Source: ABdhPJzkphfIrGONRGhkOvnxjIuDhqgQ5GuoK+0TLsSJppTv+BMsz6ImMXl+KGDeRe7/jApLXDLN1Q==
-X-Received: by 2002:a17:90a:bd91:: with SMTP id z17mr1101093pjr.139.1599761883254;
-        Thu, 10 Sep 2020 11:18:03 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id ca6sm2551066pjb.53.2020.09.10.11.18.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 11:18:01 -0700 (PDT)
-Subject: Re: [PATCH 1/4] dt-bindings: spi: Add compatible string for brcmstb
- SoCs
-To:     Ray Jui <ray.jui@broadcom.com>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200910152539.45584-1-ray.jui@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <583cb756-409d-afa6-0d4d-47100eb33e74@gmail.com>
-Date:   Thu, 10 Sep 2020 11:18:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.2.1
+        Thu, 10 Sep 2020 14:40:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD032C061573;
+        Thu, 10 Sep 2020 11:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=SVMzvLSxHR4YQ7P25QME/n/EPljnU8bFV5nCGi/Qx44=; b=nuYXudjIOEKrlWaHHeZyFkpQS2
+        wwcSZk0K6RlZlYBKUfyyPTDC6keEIXtAj5sR8cW6zZPcdJenYgtUpeSbsI/A6IqqzX7UwTm3cLU54
+        7NZMZ6oZ/ZnahlBszJVIHI9ljDrIk4+VtqAzRV0N6OKnwAuaXO690x5NJgJOP3DQUNmKZAKgzJFs3
+        oOAuecoKw+/7+aDwFjfO1p5WdkwiGcJj2QfkXDILLlWhYQbcDm5GVAFw3XMqEGiWENVP58kACpBub
+        AqdkMeObcGfzgvZvocq6uoEzPznHnpjFWZBJFcgewoWlHp6VxFSUUTNnxJtmcgtpnGt38QNE919lg
+        kgp2qS6Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGRUn-0005ky-72; Thu, 10 Sep 2020 18:40:33 +0000
+Date:   Thu, 10 Sep 2020 19:40:33 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
+Message-ID: <20200910184033.GX6583@casper.infradead.org>
+References: <20200910164612.114215-1-mic@digikod.net>
+ <20200910170424.GU6583@casper.infradead.org>
+ <f6e2358c-8e5e-e688-3e66-2cdd943e360e@digikod.net>
+ <a48145770780d36e90f28f1526805a7292eb74f6.camel@linux.ibm.com>
+ <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
 MIME-Version: 1.0
-In-Reply-To: <20200910152539.45584-1-ray.jui@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <880bb4ee-89a2-b9b0-747b-0f779ceda995@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 10, 2020 at 08:38:21PM +0200, Mickaël Salaün wrote:
+> There is also the use case of noexec mounts and file permissions. From
+> user space point of view, it doesn't matter which kernel component is in
+> charge of defining the policy. The syscall should then not be tied with
+> a verification/integrity/signature/appraisal vocabulary, but simply an
+> access control one.
 
-
-On 9/10/2020 8:25 AM, Ray Jui wrote:
-> Add compatible string for brcmstb 7445 SoCs.
-> 
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+permission()?
