@@ -2,263 +2,346 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A278C2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB62FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F0F221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C3B20809
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0xcm5Ha"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="nxL6ixWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbgIJJRr (ORCPT
+        id S1730175AbgIJJSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:17:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55398 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727075AbgIJJOQ (ORCPT
+        Thu, 10 Sep 2020 05:18:11 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:43375 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730255AbgIJJRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599729254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0L/VNlFzuDB/95oeV+NVSs6BIkKkE+sXG0xqekszlyk=;
-        b=g0xcm5Hanux7U1zw3r5XNByLH/bojfd/kWEG3cUCQ6jOKG+uAGAliHb0KyU4BOiQ8Ai6l5
-        jyZpLETr3e3MHlVMkp9dHB6rDgA4NHlQ6KTBOT0xbYxSo8QAuqdThciunh7TEuHTrJMXUF
-        fpxgY65A0CIBMxUL/PvmkPI8qfJsvzU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-_e125CRHNGeNx5hwN_T7eg-1; Thu, 10 Sep 2020 05:14:10 -0400
-X-MC-Unique: _e125CRHNGeNx5hwN_T7eg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87B7664082;
-        Thu, 10 Sep 2020 09:14:08 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-88.ams2.redhat.com [10.36.113.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 996B427CCC;
-        Thu, 10 Sep 2020 09:14:01 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v3 1/7] kernel/resource: make release_mem_region_adjustable() never fail
-Date:   Thu, 10 Sep 2020 11:13:34 +0200
-Message-Id: <20200910091340.8654-2-david@redhat.com>
-In-Reply-To: <20200910091340.8654-1-david@redhat.com>
-References: <20200910091340.8654-1-david@redhat.com>
+        Thu, 10 Sep 2020 05:17:47 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id GIi0kYt1SPTBMGIi1kQaZv; Thu, 10 Sep 2020 11:17:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599729464; bh=SOB+0wexHska1Ivgxq6US3wAQZn9sVTIazfeIH88yQ0=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=nxL6ixWoWEXEiGQapeNSq7XtIn4mWLlyNNtzPUmmqSYGrKJJS0YIgPyIqa792QHnw
+         XdBL9VWo9A4Us3G7+ZDYRMmbT2KwgtQGM69loIGxJWEwXMFvZ1SuE/dN6XeLPERSqB
+         3Ok/dq1tb7uPjmRWzTEPo1WZR/y7nHxU4ketZpjOtFFyqyhnCCkgHxqf9MvjoVPh9S
+         QVBx59SDczngil2/NopypYqzD9lLTuQKNRzEGUQKKRCaTV3Uzgi9YSMtIj6eHMDSzD
+         wr7r+CY6Xj7xx3TDMyC+HGsMp2AGGaRXh3W1GsJqRe4e7FKaU7vaQiUhGjTR7Wit8W
+         v9M36n3FB0Flg==
+Subject: Re: [PATCH v10 30/30] videobuf2: use sgtable-based scatterlist
+ wrappers
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+ <CGME20200904133512eucas1p204efa4e252ceb5fb50715239705f9965@eucas1p2.samsung.com>
+ <20200904131711.12950-31-m.szyprowski@samsung.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <e1070a0d-2772-b5e2-7067-9f53ade19aae@xs4all.nl>
+Date:   Thu, 10 Sep 2020 11:17:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200904131711.12950-31-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOyym1s3hFy/wAnDsU5HmkCZJYyTj0QxaN6e/uK7k12aGGra4yqVYNAI11oZgPFnkurAxOfrqhRtT3UeKSK+3Y6xUMlkjhbpk5SqXaBWLGvAC8bcL20U
+ SQl3FQ6ug7sKPMxbQ9nPZ9abpjMmfbsdeKC4HHQE2YYcaNMQ7qict2h/6JShk+yTvN4XM0ZES+Lyb1vnILB077gRCSygCrFB5sCcwJNVbP4AdxQa3VpctLPs
+ WcOQXh/YE2Xw/tNcQ2Ny2bGrLZq++NZwUbCvGVe8FPIvQ7C/7Pc2p+A0wWGkoSUZNDbW92sPKFyYIGBxsCVG0S9K548oSNYUYgniCx159VuyK0gVspmpTJ8e
+ ZzjeqWfrVDuNrKdeM8Nne0gfhl7mX0+5Ep8CvtWuusUWROjdbImIgoaeuN0i813xBDrU5iobK+2ZL9DhtnwI+ZWGC5qwHiRTBnMgeH7WGjIrUcenbPsQW+Cl
+ eCBIEzwASMN9RMaEEwbzJcaZcrLcXPUzNUBrFUdeN3e/GwGG9vWNlGWRvREsKFAuTJkc2/zA1b1zVFwohmjpejqRVae1H7XgwmNR9MKKwe76cNRdWr1d5Bu5
+ 40cz/MOmAYDbV1eddNggEFio1GVwEJwmIBafyh/8UhvK4c/57KpZ0H9DnTdBFNB9ec1H8PypAO7yjhsVDzKvcSBCKBD3ot0N/yuc4hJ9uQUr6D6MEY/WIVfb
+ Po0zpkjQXuKHrpA+HijgkLX/elJC8p10Gfa2xlVh5MprizQIMePbnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's make sure splitting a resource on memory hotunplug will never fail.
-This will become more relevant once we merge selected System RAM
-resources - then, we'll trigger that case more often on memory hotunplug.
+On 04/09/2020 15:17, Marek Szyprowski wrote:
+> Use recently introduced common wrappers operating directly on the struct
+> sg_table objects and scatterlist page iterators to make the code a bit
+> more compact, robust, easier to follow and copy/paste safe.
+> 
+> No functional change, because the code already properly did all the
+> scatterlist related calls.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-In general, this function is already unlikely to fail. When we remove
-memory, we free up quite a lot of metadata (memmap, page tables, memory
-block device, etc.). The only reason it could really fail would be when
-injecting allocation errors.
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-All other error cases inside release_mem_region_adjustable() seem to be
-sanity checks if the function would be abused in different context -
-let's add WARN_ON_ONCE() in these cases so we can catch them.
+Note that I agree with Marek to keep returning -EIO. If we want to propagate
+low-level errors, then that should be done in a separate patch. But I think EIO
+is fine.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/ioport.h |  4 ++--
- kernel/resource.c      | 49 ++++++++++++++++++++++++------------------
- mm/memory_hotplug.c    | 22 +------------------
- 3 files changed, 31 insertions(+), 44 deletions(-)
+Regards,
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 6c2b06fe8beb7..52a91f5fa1a36 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -248,8 +248,8 @@ extern struct resource * __request_region(struct resource *,
- extern void __release_region(struct resource *, resource_size_t,
- 				resource_size_t);
- #ifdef CONFIG_MEMORY_HOTREMOVE
--extern int release_mem_region_adjustable(struct resource *, resource_size_t,
--				resource_size_t);
-+extern void release_mem_region_adjustable(struct resource *, resource_size_t,
-+					  resource_size_t);
- #endif
- 
- /* Wrappers for managed devices */
-diff --git a/kernel/resource.c b/kernel/resource.c
-index f1175ce93a1d5..36b3552210120 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1258,21 +1258,28 @@ EXPORT_SYMBOL(__release_region);
-  *   assumes that all children remain in the lower address entry for
-  *   simplicity.  Enhance this logic when necessary.
-  */
--int release_mem_region_adjustable(struct resource *parent,
--				  resource_size_t start, resource_size_t size)
-+void release_mem_region_adjustable(struct resource *parent,
-+				   resource_size_t start, resource_size_t size)
- {
-+	struct resource *new_res = NULL;
-+	bool alloc_nofail = false;
- 	struct resource **p;
- 	struct resource *res;
--	struct resource *new_res;
- 	resource_size_t end;
--	int ret = -EINVAL;
- 
- 	end = start + size - 1;
--	if ((start < parent->start) || (end > parent->end))
--		return ret;
-+	if (WARN_ON_ONCE((start < parent->start) || (end > parent->end)))
-+		return;
- 
--	/* The alloc_resource() result gets checked later */
--	new_res = alloc_resource(GFP_KERNEL);
-+	/*
-+	 * We free up quite a lot of memory on memory hotunplug (esp., memap),
-+	 * just before releasing the region. This is highly unlikely to
-+	 * fail - let's play save and make it never fail as the caller cannot
-+	 * perform any error handling (e.g., trying to re-add memory will fail
-+	 * similarly).
-+	 */
-+retry:
-+	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
- 
- 	p = &parent->child;
- 	write_lock(&resource_lock);
-@@ -1298,7 +1305,6 @@ int release_mem_region_adjustable(struct resource *parent,
- 		 * so if we are dealing with them, let us just back off here.
- 		 */
- 		if (!(res->flags & IORESOURCE_SYSRAM)) {
--			ret = 0;
- 			break;
- 		}
- 
-@@ -1315,20 +1321,23 @@ int release_mem_region_adjustable(struct resource *parent,
- 			/* free the whole entry */
- 			*p = res->sibling;
- 			free_resource(res);
--			ret = 0;
- 		} else if (res->start == start && res->end != end) {
- 			/* adjust the start */
--			ret = __adjust_resource(res, end + 1,
--						res->end - end);
-+			WARN_ON_ONCE(__adjust_resource(res, end + 1,
-+						       res->end - end));
- 		} else if (res->start != start && res->end == end) {
- 			/* adjust the end */
--			ret = __adjust_resource(res, res->start,
--						start - res->start);
-+			WARN_ON_ONCE(__adjust_resource(res, res->start,
-+						       start - res->start));
- 		} else {
--			/* split into two entries */
-+			/* split into two entries - we need a new resource */
- 			if (!new_res) {
--				ret = -ENOMEM;
--				break;
-+				new_res = alloc_resource(GFP_ATOMIC);
-+				if (!new_res) {
-+					alloc_nofail = true;
-+					write_unlock(&resource_lock);
-+					goto retry;
-+				}
- 			}
- 			new_res->name = res->name;
- 			new_res->start = end + 1;
-@@ -1339,9 +1348,8 @@ int release_mem_region_adjustable(struct resource *parent,
- 			new_res->sibling = res->sibling;
- 			new_res->child = NULL;
- 
--			ret = __adjust_resource(res, res->start,
--						start - res->start);
--			if (ret)
-+			if (WARN_ON_ONCE(__adjust_resource(res, res->start,
-+							   start - res->start)))
- 				break;
- 			res->sibling = new_res;
- 			new_res = NULL;
-@@ -1352,7 +1360,6 @@ int release_mem_region_adjustable(struct resource *parent,
- 
- 	write_unlock(&resource_lock);
- 	free_resource(new_res);
--	return ret;
- }
- #endif	/* CONFIG_MEMORY_HOTREMOVE */
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index baded53b9ff92..4c47b68a9f4b5 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1724,26 +1724,6 @@ void try_offline_node(int nid)
- }
- EXPORT_SYMBOL(try_offline_node);
- 
--static void __release_memory_resource(resource_size_t start,
--				      resource_size_t size)
--{
--	int ret;
--
--	/*
--	 * When removing memory in the same granularity as it was added,
--	 * this function never fails. It might only fail if resources
--	 * have to be adjusted or split. We'll ignore the error, as
--	 * removing of memory cannot fail.
--	 */
--	ret = release_mem_region_adjustable(&iomem_resource, start, size);
--	if (ret) {
--		resource_size_t endres = start + size - 1;
--
--		pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
--			&start, &endres, ret);
--	}
--}
--
- static int __ref try_remove_memory(int nid, u64 start, u64 size)
- {
- 	int rc = 0;
-@@ -1777,7 +1757,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 		memblock_remove(start, size);
- 	}
- 
--	__release_memory_resource(start, size);
-+	release_mem_region_adjustable(&iomem_resource, start, size);
- 
- 	try_offline_node(nid);
- 
--- 
-2.26.2
+	Hans
+
+> ---
+>  .../common/videobuf2/videobuf2-dma-contig.c   | 34 ++++++++-----------
+>  .../media/common/videobuf2/videobuf2-dma-sg.c | 32 +++++++----------
+>  .../common/videobuf2/videobuf2-vmalloc.c      | 12 +++----
+>  3 files changed, 31 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> index ec3446cc45b8..1b242d844dde 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> @@ -58,10 +58,10 @@ static unsigned long vb2_dc_get_contiguous_size(struct sg_table *sgt)
+>  	unsigned int i;
+>  	unsigned long size = 0;
+>  
+> -	for_each_sg(sgt->sgl, s, sgt->nents, i) {
+> +	for_each_sgtable_dma_sg(sgt, s, i) {
+>  		if (sg_dma_address(s) != expected)
+>  			break;
+> -		expected = sg_dma_address(s) + sg_dma_len(s);
+> +		expected += sg_dma_len(s);
+>  		size += sg_dma_len(s);
+>  	}
+>  	return size;
+> @@ -103,8 +103,7 @@ static void vb2_dc_prepare(void *buf_priv)
+>  	if (!sgt)
+>  		return;
+>  
+> -	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+> -			       buf->dma_dir);
+> +	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
+>  }
+>  
+>  static void vb2_dc_finish(void *buf_priv)
+> @@ -115,7 +114,7 @@ static void vb2_dc_finish(void *buf_priv)
+>  	if (!sgt)
+>  		return;
+>  
+> -	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
+> +	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
+>  }
+>  
+>  /*********************************************/
+> @@ -275,8 +274,8 @@ static void vb2_dc_dmabuf_ops_detach(struct dma_buf *dbuf,
+>  		 * memory locations do not require any explicit cache
+>  		 * maintenance prior or after being used by the device.
+>  		 */
+> -		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -				   attach->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
+> +				  DMA_ATTR_SKIP_CPU_SYNC);
+>  	sg_free_table(sgt);
+>  	kfree(attach);
+>  	db_attach->priv = NULL;
+> @@ -301,8 +300,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
+>  
+>  	/* release any previous cache */
+>  	if (attach->dma_dir != DMA_NONE) {
+> -		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -				   attach->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
+> +				  DMA_ATTR_SKIP_CPU_SYNC);
+>  		attach->dma_dir = DMA_NONE;
+>  	}
+>  
+> @@ -310,9 +309,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
+>  	 * mapping to the client with new direction, no cache sync
+>  	 * required see comment in vb2_dc_dmabuf_ops_detach()
+>  	 */
+> -	sgt->nents = dma_map_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -				      dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> -	if (!sgt->nents) {
+> +	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir,
+> +			    DMA_ATTR_SKIP_CPU_SYNC)) {
+>  		pr_err("failed to map scatterlist\n");
+>  		mutex_unlock(lock);
+>  		return ERR_PTR(-EIO);
+> @@ -455,8 +453,8 @@ static void vb2_dc_put_userptr(void *buf_priv)
+>  		 * No need to sync to CPU, it's already synced to the CPU
+>  		 * since the finish() memop will have been called before this.
+>  		 */
+> -		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -				   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> +		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
+> +				  DMA_ATTR_SKIP_CPU_SYNC);
+>  		pages = frame_vector_pages(buf->vec);
+>  		/* sgt should exist only if vector contains pages... */
+>  		BUG_ON(IS_ERR(pages));
+> @@ -553,9 +551,8 @@ static void *vb2_dc_get_userptr(struct device *dev, unsigned long vaddr,
+>  	 * No need to sync to the device, this will happen later when the
+>  	 * prepare() memop is called.
+>  	 */
+> -	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> -	if (sgt->nents <= 0) {
+> +	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
+> +			    DMA_ATTR_SKIP_CPU_SYNC)) {
+>  		pr_err("failed to map scatterlist\n");
+>  		ret = -EIO;
+>  		goto fail_sgt_init;
+> @@ -577,8 +574,7 @@ static void *vb2_dc_get_userptr(struct device *dev, unsigned long vaddr,
+>  	return buf;
+>  
+>  fail_map_sg:
+> -	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -			   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> +	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+>  
+>  fail_sgt_init:
+>  	sg_free_table(sgt);
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> index 0a40e00f0d7e..0dd3b19025e0 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> @@ -148,9 +148,8 @@ static void *vb2_dma_sg_alloc(struct device *dev, unsigned long dma_attrs,
+>  	 * No need to sync to the device, this will happen later when the
+>  	 * prepare() memop is called.
+>  	 */
+> -	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> -	if (!sgt->nents)
+> +	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
+> +			    DMA_ATTR_SKIP_CPU_SYNC))
+>  		goto fail_map;
+>  
+>  	buf->handler.refcount = &buf->refcount;
+> @@ -186,8 +185,8 @@ static void vb2_dma_sg_put(void *buf_priv)
+>  	if (refcount_dec_and_test(&buf->refcount)) {
+>  		dprintk(1, "%s: Freeing buffer of %d pages\n", __func__,
+>  			buf->num_pages);
+> -		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -				   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> +		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
+> +				  DMA_ATTR_SKIP_CPU_SYNC);
+>  		if (buf->vaddr)
+>  			vm_unmap_ram(buf->vaddr, buf->num_pages);
+>  		sg_free_table(buf->dma_sgt);
+> @@ -204,8 +203,7 @@ static void vb2_dma_sg_prepare(void *buf_priv)
+>  	struct vb2_dma_sg_buf *buf = buf_priv;
+>  	struct sg_table *sgt = buf->dma_sgt;
+>  
+> -	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+> -			       buf->dma_dir);
+> +	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
+>  }
+>  
+>  static void vb2_dma_sg_finish(void *buf_priv)
+> @@ -213,7 +211,7 @@ static void vb2_dma_sg_finish(void *buf_priv)
+>  	struct vb2_dma_sg_buf *buf = buf_priv;
+>  	struct sg_table *sgt = buf->dma_sgt;
+>  
+> -	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
+> +	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
+>  }
+>  
+>  static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
+> @@ -256,9 +254,8 @@ static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
+>  	 * No need to sync to the device, this will happen later when the
+>  	 * prepare() memop is called.
+>  	 */
+> -	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+> -				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+> -	if (!sgt->nents)
+> +	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
+> +			    DMA_ATTR_SKIP_CPU_SYNC))
+>  		goto userptr_fail_map;
+>  
+>  	return buf;
+> @@ -284,8 +281,7 @@ static void vb2_dma_sg_put_userptr(void *buf_priv)
+>  
+>  	dprintk(1, "%s: Releasing userspace buffer of %d pages\n",
+>  	       __func__, buf->num_pages);
+> -	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir,
+> -			   DMA_ATTR_SKIP_CPU_SYNC);
+> +	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+>  	if (buf->vaddr)
+>  		vm_unmap_ram(buf->vaddr, buf->num_pages);
+>  	sg_free_table(buf->dma_sgt);
+> @@ -408,8 +404,7 @@ static void vb2_dma_sg_dmabuf_ops_detach(struct dma_buf *dbuf,
+>  
+>  	/* release the scatterlist cache */
+>  	if (attach->dma_dir != DMA_NONE)
+> -		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -			attach->dma_dir);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+>  	sg_free_table(sgt);
+>  	kfree(attach);
+>  	db_attach->priv = NULL;
+> @@ -434,15 +429,12 @@ static struct sg_table *vb2_dma_sg_dmabuf_ops_map(
+>  
+>  	/* release any previous cache */
+>  	if (attach->dma_dir != DMA_NONE) {
+> -		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -			attach->dma_dir);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+>  		attach->dma_dir = DMA_NONE;
+>  	}
+>  
+>  	/* mapping to the client with new direction */
+> -	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -				dma_dir);
+> -	if (!sgt->nents) {
+> +	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
+>  		pr_err("failed to map scatterlist\n");
+>  		mutex_unlock(lock);
+>  		return ERR_PTR(-EIO);
+> diff --git a/drivers/media/common/videobuf2/videobuf2-vmalloc.c b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+> index c66fda4a65e4..bf5ac63a5742 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+> @@ -229,7 +229,7 @@ static int vb2_vmalloc_dmabuf_ops_attach(struct dma_buf *dbuf,
+>  		kfree(attach);
+>  		return ret;
+>  	}
+> -	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
+> +	for_each_sgtable_sg(sgt, sg, i) {
+>  		struct page *page = vmalloc_to_page(vaddr);
+>  
+>  		if (!page) {
+> @@ -259,8 +259,7 @@ static void vb2_vmalloc_dmabuf_ops_detach(struct dma_buf *dbuf,
+>  
+>  	/* release the scatterlist cache */
+>  	if (attach->dma_dir != DMA_NONE)
+> -		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -			attach->dma_dir);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+>  	sg_free_table(sgt);
+>  	kfree(attach);
+>  	db_attach->priv = NULL;
+> @@ -285,15 +284,12 @@ static struct sg_table *vb2_vmalloc_dmabuf_ops_map(
+>  
+>  	/* release any previous cache */
+>  	if (attach->dma_dir != DMA_NONE) {
+> -		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -			attach->dma_dir);
+> +		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+>  		attach->dma_dir = DMA_NONE;
+>  	}
+>  
+>  	/* mapping to the client with new direction */
+> -	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+> -				dma_dir);
+> -	if (!sgt->nents) {
+> +	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
+>  		pr_err("failed to map scatterlist\n");
+>  		mutex_unlock(lock);
+>  		return ERR_PTR(-EIO);
+> 
 
