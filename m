@@ -2,463 +2,194 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DA2C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C90C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47057208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2595208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="q5X62m7E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RB3TPVf8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pUeJ1MNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgIJTxj (ORCPT
+        id S1726976AbgIJTy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:53:39 -0400
-Received: from mail-eopbgr60116.outbound.protection.outlook.com ([40.107.6.116]:17127
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731206AbgIJPDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:03:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GkNRRRVJ2yjOypLCHacCDqsFfutkUD3x6Nwf9KYS8i6+AhZA7ISSd9q8q88CkBxCdSDunysaEaSsvkBhzkkEWXQ1dkmtp9fATzfs6vDY+FAJh0J/8lm057oEtcEgsF3D0klN3upmEPLFlOx6t9svPZGRAWQIFYrPLAY5gxqF8I90BXcaXVaB3hqX8teQT29ibCHYbJpdan0AofcuCH3DigvEVy5vqvwT9/+vSgku/W2qrWCHXy6DBvJH6E0bOOv9WMSEVxTLRx0ABn4BSPxRJWlIx93G/fctgSV73HVulSWtMKaF/0IDTyp24+QIWiuhg4vBiCqavT3J3ROU3ni68w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nshoVx8G68D2WxWY7ETcs9K5UrEl8pgOQQ/qtWFwAaI=;
- b=iE1d35NAJtm3CVxZssNDYpD/cfyINM9AD7vH7c4m0aZLT1wRFrMUNIU9+jp7i//3Hk85/1U3AL5mluY7tex7YPZzjxPOSYehPEdmqMt/eTrrOyRBD/VEj1mLlXlTkWkTMQ5QxNA9cPedHPRoroRwqiUeq6piYlglQ2jCxjq+CLPaz/DcTSXGNbGUUV4BySeJ9Ip4T1KF3lqbgstkKGgjC7YsX47DJKmlu4HliVuNT5ILyL+FOYDb4XXadf/kRkxITWrUQg9oFWoKonUG3WJKlfcAEXKr2qDY7emwZNWpftIeIXzTJ4bSzCOFKfcvgNHDyuiV6YOWkhtjkzwSwyUekQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nshoVx8G68D2WxWY7ETcs9K5UrEl8pgOQQ/qtWFwAaI=;
- b=q5X62m7E5uPOTLa7NwKVbKcMxmhbWZSmlL07MEZV7GhiNxzsBy4dYw8lB7tCJ9zLzPvdAa8q09wQVfGinkPuTRhfwEmp/c1N1NzFd51HVRFj3ewacTiDBhE//J+u6ePx4COnEVUwp3HCw+d8AKTDkY9kIKia64caN0KtcIX5w+4=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0459.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5b::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.19; Thu, 10 Sep 2020 15:01:23 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::c1ab:71de:6bc2:89fe]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::c1ab:71de:6bc2:89fe%6]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
- 15:01:23 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [net-next v8 3/6] net: marvell: prestera: Add basic devlink support
-Date:   Thu, 10 Sep 2020 18:00:52 +0300
-Message-Id: <20200910150055.15598-4-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910150055.15598-1-vadym.kochan@plvision.eu>
-References: <20200910150055.15598-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: BE0P281CA0009.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:a::19) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Thu, 10 Sep 2020 15:54:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42172 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgIJTwg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:52:36 -0400
+Date:   Thu, 10 Sep 2020 19:52:33 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599767554;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dhBA5DB3uM3jz6b3+VK8IjWpmv4Aa40MZCnMXEBoZuw=;
+        b=RB3TPVf8PntijWABrEv+XIuvVRnI6OB5ZNqbYq8qqZNyuFRXgW2NSQUuVfxVtxkEGyUHNr
+        cfvQ4DVHCJli45Mo5pO6xlUpNHbpJgR6nAXL14FYaz1k8jWO+Ok8cucpNQ3k8AcKPwsnF0
+        vf+bg6nKeMvlnY/B8pqRWDrZIobpZ+wbsG7tvSUcBznjANZvZC370fQ6lXMXUO1PHAEC4W
+        BMmNVG4byBvN1NEN67cK+TdIgAIR1SxRb+d2Mz5OrnFwXMHDSVmIUuX+bc63EgCOysmqCV
+        DmM1k1e4DViMZEflni4VcEjY45MKv4SUyWCQcOI6oJ+GyW0g+arKkSoLe/KEvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599767554;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dhBA5DB3uM3jz6b3+VK8IjWpmv4Aa40MZCnMXEBoZuw=;
+        b=pUeJ1MNSBlgV9thU2wkOhXbfk2ehvKBNMupfRnCQShy4VLiuuG4V7gvLaAjr30d8scxT1v
+        tLOxKV23Y52emQCQ==
+From:   "tip-bot2 for Martin Radev" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/seves] x86/sev-es: Check required CPU features for SEV-ES
+Cc:     Martin Radev <martin.b.radev@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-73-joro@8bytes.org>
+References: <20200907131613.12703-73-joro@8bytes.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by BE0P281CA0009.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:a::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.10 via Frontend Transport; Thu, 10 Sep 2020 15:01:19 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a6bc5b9c-f3c0-4055-b24c-08d8559a60a6
-X-MS-TrafficTypeDiagnostic: HE1P190MB0459:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0459772A43A87390BC8EAFD495270@HE1P190MB0459.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1051;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PpDIBYb8e0NA1PmU/NSmo2meFzkRURv6FYkAbUA+nhbM6RU7hbs1o6zWwv4QbqCfUGfV4KORjRDX1KmavQWu/KF0R37aCxSrJC8zzKDyUUvOfxezkHDWNMNoB6RGCT1SFpelAZ8AzV5iKK7IG4+D0ywwxSdAHIFBxLMHFJidUc2gS6988QRI8sUiUTM+Py6qWs7BU3rM/pFra6Hw2iv/g2Ewv3cljwn5erOmtoN8PXh2Lm8uyl5SHk4x07k3R0JF48VjCg5xlpdFvxxXSE99nJaIRUoKsFuCjCt5dXQ6xS6eWwWB9E1JauMmyOvNK7f351UIgq6xgag8Nd6KoEQF+shx5tgjQa4UIPBMbOZdish57G0O7cybdMvbIgB7af2I
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(136003)(39830400003)(396003)(346002)(366004)(376002)(26005)(2906002)(8936002)(110136005)(186003)(16526019)(8676002)(2616005)(83380400001)(44832011)(4326008)(66556008)(66946007)(54906003)(66476007)(30864003)(1076003)(6506007)(5660300002)(6666004)(107886003)(956004)(6486002)(478600001)(86362001)(316002)(6512007)(36756003)(52116002)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: pdxokJDDhQtmlyk/FHTjDJb3kAqDhla+9IIsd05JdP1LbECjV7jJN1Cwd+RQ5KjYFORzntPYvzRtvb6boZV3DHdVnZY051/G5avWhgX4qzWmX6w//7e7dYSiOxJ8OCyMNyUKsvzPCEku8a7UpadE8jOGj4KfzyA76LQ5kgyJJe2IRcbLsp/IZF5cykug03/4ymc7PKQ64nYr8zeqY5b8oD16kf6kGP/vQYzy5fnNug7HM2rz9x83mYdQUNiN8ILgCO0T39Q/dZ0iZYnXn16t6t8/d287XoIiVIM3GovmddfRIiFcHNbhJmB+iGpP7qGiJGTvyQ8NpRbm0cjJd2Ik6mtnpXhpZS4QYEzSwxnJqR1FrLC2k/mc1wYmXOy4swodS3LTtN2N1xSGeWBzhJLwgiHVv1Wp1AeWceCXPNlgRIKV5gX5E2elmM5auvYjYRzq4WSBJ3HKrLWubKrWk1Pf7ZPKWNNCRO0/k4mcD/UveSlfYvFgXOX9iit8nYx6WPVb96kPLna37MjplEQhwa/pRwuP3Yv/Omht2Dsor8xbv2NnagZ8vhsn+YaPd50VSCQe/Ph+zK7vytP8wDxqLTgdEpgJWvlm0SPYJfOZHp6vzFkiwjGaiz52uz3qpDioEcmCDUJURUUyN6ZirQOhfBiWqg==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6bc5b9c-f3c0-4055-b24c-08d8559a60a6
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 15:01:21.0565
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2KqzQOaGu9HkjeeK/bbdZZiuHyddnKTxFTJpd8B3QJQkNsF9KfHlPzIULkW0zjejrRcJ2HSU42O8WqBTMeaiG4N2ErsOikL+OiBeseHDwkM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0459
+Message-ID: <159976755355.20229.4941386595177142074.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add very basic support for devlink interface:
+The following commit has been merged into the x86/seves branch of tip:
 
-    - driver name
-    - fw version
-    - devlink ports
+Commit-ID:     f5ed777586e08e09c4b6f1e87161a145ee1431cf
+Gitweb:        https://git.kernel.org/tip/f5ed777586e08e09c4b6f1e87161a145ee1431cf
+Author:        Martin Radev <martin.b.radev@gmail.com>
+AuthorDate:    Mon, 07 Sep 2020 15:16:13 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 10 Sep 2020 21:49:25 +02:00
 
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+x86/sev-es: Check required CPU features for SEV-ES
+
+Make sure the machine supports RDRAND, otherwise there is no trusted
+source of randomness in the system.
+
+To also check this in the pre-decompression stage, make has_cpuflag()
+not depend on CONFIG_RANDOMIZE_BASE anymore.
+
+Signed-off-by: Martin Radev <martin.b.radev@gmail.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200907131613.12703-73-joro@8bytes.org
 ---
-PATCH v8:
-    1) Put license in one line.
+ arch/x86/boot/compressed/cpuflags.c |  4 ----
+ arch/x86/boot/compressed/misc.h     |  5 +++--
+ arch/x86/boot/compressed/sev-es.c   |  3 +++
+ arch/x86/kernel/sev-es-shared.c     | 15 +++++++++++++++
+ arch/x86/kernel/sev-es.c            |  3 +++
+ 5 files changed, 24 insertions(+), 6 deletions(-)
 
-    2) Use traditional error handling pattern in prestera_devlink_port_register():
-
-       err = F();
-       if (err)
-           return err;
-
-    3) Initialize 'sw' and 'dl' on definition.
-
-PATCH v5:
-    1) Simplified some error path handling by simple return error code in:
-
-       - prestera_dl_info_get(...)
-
-    2) Remove not-needed err assignment in:
-       - prestera_dl_info_get(...)
-
-    3) Use dev_err() in prestera_devlink_register(...).
-
- drivers/net/ethernet/marvell/prestera/Kconfig |   1 +
- .../net/ethernet/marvell/prestera/Makefile    |   2 +-
- .../net/ethernet/marvell/prestera/prestera.h  |   4 +
- .../marvell/prestera/prestera_devlink.c       | 112 ++++++++++++++++++
- .../marvell/prestera/prestera_devlink.h       |  23 ++++
- .../ethernet/marvell/prestera/prestera_main.c |  28 ++++-
- 6 files changed, 165 insertions(+), 5 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-
-diff --git a/drivers/net/ethernet/marvell/prestera/Kconfig b/drivers/net/ethernet/marvell/prestera/Kconfig
-index 2a5945c455cc..b1fcc44f566a 100644
---- a/drivers/net/ethernet/marvell/prestera/Kconfig
-+++ b/drivers/net/ethernet/marvell/prestera/Kconfig
-@@ -6,6 +6,7 @@
- config PRESTERA
- 	tristate "Marvell Prestera Switch ASICs support"
- 	depends on NET_SWITCHDEV && VLAN_8021Q
-+	select NET_DEVLINK
- 	help
- 	  This driver supports Marvell Prestera Switch ASICs family.
+diff --git a/arch/x86/boot/compressed/cpuflags.c b/arch/x86/boot/compressed/cpuflags.c
+index 6448a81..0cc1323 100644
+--- a/arch/x86/boot/compressed/cpuflags.c
++++ b/arch/x86/boot/compressed/cpuflags.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#ifdef CONFIG_RANDOMIZE_BASE
+-
+ #include "../cpuflags.c"
  
-diff --git a/drivers/net/ethernet/marvell/prestera/Makefile b/drivers/net/ethernet/marvell/prestera/Makefile
-index 2146714eab21..babd71fba809 100644
---- a/drivers/net/ethernet/marvell/prestera/Makefile
-+++ b/drivers/net/ethernet/marvell/prestera/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PRESTERA)	+= prestera.o
- prestera-objs		:= prestera_main.o prestera_hw.o prestera_dsa.o \
--			   prestera_rxtx.o
-+			   prestera_rxtx.o prestera_devlink.o
+ bool has_cpuflag(int flag)
+@@ -9,5 +7,3 @@ bool has_cpuflag(int flag)
  
- obj-$(CONFIG_PRESTERA_PCI)	+= prestera_pci.o
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera.h b/drivers/net/ethernet/marvell/prestera/prestera.h
-index c5bf0fe8d59e..0a34d7ca4823 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera.h
-+++ b/drivers/net/ethernet/marvell/prestera/prestera.h
-@@ -7,8 +7,11 @@
- #include <linux/notifier.h>
- #include <linux/skbuff.h>
- #include <linux/workqueue.h>
-+#include <net/devlink.h>
- #include <uapi/linux/if_ether.h>
+ 	return test_bit(flag, cpu.flags);
+ }
+-
+-#endif
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index c0e0ffe..6d31f1b 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -85,8 +85,6 @@ void choose_random_location(unsigned long input,
+ 			    unsigned long *output,
+ 			    unsigned long output_size,
+ 			    unsigned long *virt_addr);
+-/* cpuflags.c */
+-bool has_cpuflag(int flag);
+ #else
+ static inline void choose_random_location(unsigned long input,
+ 					  unsigned long input_size,
+@@ -97,6 +95,9 @@ static inline void choose_random_location(unsigned long input,
+ }
+ #endif
  
-+#define PRESTERA_DRV_NAME	"prestera"
++/* cpuflags.c */
++bool has_cpuflag(int flag);
 +
- struct prestera_fw_rev {
- 	u16 maj;
- 	u16 min;
-@@ -58,6 +61,7 @@ struct prestera_port_caps {
- struct prestera_port {
- 	struct net_device *dev;
- 	struct prestera_switch *sw;
-+	struct devlink_port dl_port;
- 	u32 id;
- 	u32 hw_id;
- 	u32 dev_id;
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-new file mode 100644
-index 000000000000..94c185a0e2b8
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-+/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved */
+ #ifdef CONFIG_X86_64
+ extern int set_page_decrypted(unsigned long address);
+ extern int set_page_encrypted(unsigned long address);
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 2a6c7c3..954cb27 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -145,6 +145,9 @@ void sev_es_shutdown_ghcb(void)
+ 	if (!boot_ghcb)
+ 		return;
+ 
++	if (!sev_es_check_cpu_features())
++		error("SEV-ES CPU Features missing.");
 +
-+#include <net/devlink.h>
+ 	/*
+ 	 * GHCB Page must be flushed from the cache and mapped encrypted again.
+ 	 * Otherwise the running kernel will see strange cache effects when
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 4be8af2..5f83cca 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,6 +9,21 @@
+  * and is included directly into both code-bases.
+  */
+ 
++#ifndef __BOOT_COMPRESSED
++#define error(v)	pr_err(v)
++#define has_cpuflag(f)	boot_cpu_has(f)
++#endif
 +
-+#include "prestera_devlink.h"
-+
-+static int prestera_dl_info_get(struct devlink *dl,
-+				struct devlink_info_req *req,
-+				struct netlink_ext_ack *extack)
++static bool __init sev_es_check_cpu_features(void)
 +{
-+	struct prestera_switch *sw = devlink_priv(dl);
-+	char buf[16];
-+	int err;
-+
-+	err = devlink_info_driver_name_put(req, PRESTERA_DRV_NAME);
-+	if (err)
-+		return err;
-+
-+	snprintf(buf, sizeof(buf), "%d.%d.%d",
-+		 sw->dev->fw_rev.maj,
-+		 sw->dev->fw_rev.min,
-+		 sw->dev->fw_rev.sub);
-+
-+	return devlink_info_version_running_put(req,
-+					       DEVLINK_INFO_VERSION_GENERIC_FW,
-+					       buf);
-+}
-+
-+static const struct devlink_ops prestera_dl_ops = {
-+	.info_get = prestera_dl_info_get,
-+};
-+
-+struct prestera_switch *prestera_devlink_alloc(void)
-+{
-+	struct devlink *dl;
-+
-+	dl = devlink_alloc(&prestera_dl_ops, sizeof(struct prestera_switch));
-+
-+	return devlink_priv(dl);
-+}
-+
-+void prestera_devlink_free(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+
-+	devlink_free(dl);
-+}
-+
-+int prestera_devlink_register(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+	int err;
-+
-+	err = devlink_register(dl, sw->dev->dev);
-+	if (err)
-+		dev_err(prestera_dev(sw), "devlink_register failed: %d\n", err);
-+
-+	return err;
-+}
-+
-+void prestera_devlink_unregister(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+
-+	devlink_unregister(dl);
-+}
-+
-+int prestera_devlink_port_register(struct prestera_port *port)
-+{
-+	struct prestera_switch *sw = port->sw;
-+	struct devlink *dl = priv_to_devlink(sw);
-+	struct devlink_port_attrs attrs = {};
-+	int err;
-+
-+	attrs.flavour = DEVLINK_PORT_FLAVOUR_PHYSICAL;
-+	attrs.phys.port_number = port->fp_id;
-+	attrs.switch_id.id_len = sizeof(sw->id);
-+	memcpy(attrs.switch_id.id, &sw->id, attrs.switch_id.id_len);
-+
-+	devlink_port_attrs_set(&port->dl_port, &attrs);
-+
-+	err = devlink_port_register(dl, &port->dl_port, port->fp_id);
-+	if (err) {
-+		dev_err(prestera_dev(sw), "devlink_port_register failed: %d\n", err);
-+		return err;
++	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
++		error("RDRAND instruction not supported - no trusted source of randomness available\n");
++		return false;
 +	}
 +
-+	return 0;
++	return true;
 +}
 +
-+void prestera_devlink_port_unregister(struct prestera_port *port)
-+{
-+	devlink_port_unregister(&port->dl_port);
-+}
-+
-+void prestera_devlink_port_set(struct prestera_port *port)
-+{
-+	devlink_port_type_eth_set(&port->dl_port, port->dev);
-+}
-+
-+void prestera_devlink_port_clear(struct prestera_port *port)
-+{
-+	devlink_port_type_clear(&port->dl_port);
-+}
-+
-+struct devlink_port *prestera_devlink_get_port(struct net_device *dev)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+
-+	return &port->dl_port;
-+}
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.h b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-new file mode 100644
-index 000000000000..51bee9f75415
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
-+/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved. */
-+
-+#ifndef _PRESTERA_DEVLINK_H_
-+#define _PRESTERA_DEVLINK_H_
-+
-+#include "prestera.h"
-+
-+struct prestera_switch *prestera_devlink_alloc(void);
-+void prestera_devlink_free(struct prestera_switch *sw);
-+
-+int prestera_devlink_register(struct prestera_switch *sw);
-+void prestera_devlink_unregister(struct prestera_switch *sw);
-+
-+int prestera_devlink_port_register(struct prestera_port *port);
-+void prestera_devlink_port_unregister(struct prestera_port *port);
-+
-+void prestera_devlink_port_set(struct prestera_port *port);
-+void prestera_devlink_port_clear(struct prestera_port *port);
-+
-+struct devlink_port *prestera_devlink_get_port(struct net_device *dev);
-+
-+#endif /* _PRESTERA_DEVLINK_H_ */
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_main.c b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-index eb695e2ebda3..47cd2bc367bf 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_main.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-@@ -12,6 +12,7 @@
- #include "prestera.h"
- #include "prestera_hw.h"
- #include "prestera_rxtx.h"
-+#include "prestera_devlink.h"
- 
- #define PRESTERA_MTU_DEFAULT	1536
- 
-@@ -186,6 +187,7 @@ static const struct net_device_ops prestera_netdev_ops = {
- 	.ndo_change_mtu = prestera_port_change_mtu,
- 	.ndo_get_stats64 = prestera_port_get_stats64,
- 	.ndo_set_mac_address = prestera_port_set_mac_address,
-+	.ndo_get_devlink_port = prestera_devlink_get_port,
- };
- 
- static int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
-@@ -250,9 +252,13 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
- 					&port->fp_id);
- 	if (err) {
- 		dev_err(prestera_dev(sw), "Failed to get port(%u) info\n", id);
--		goto err_port_init;
-+		goto err_port_info_get;
- 	}
- 
-+	err = prestera_devlink_port_register(port);
-+	if (err)
-+		goto err_dl_port_register;
-+
- 	dev->features |= NETIF_F_NETNS_LOCAL;
- 	dev->netdev_ops = &prestera_netdev_ops;
- 
-@@ -313,11 +319,16 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
- 	if (err)
- 		goto err_register_netdev;
- 
-+	prestera_devlink_port_set(port);
-+
- 	return 0;
- 
- err_register_netdev:
- 	prestera_port_list_del(port);
- err_port_init:
-+	prestera_devlink_port_unregister(port);
-+err_dl_port_register:
-+err_port_info_get:
- 	free_netdev(dev);
- 	return err;
- }
-@@ -327,8 +338,10 @@ static void prestera_port_destroy(struct prestera_port *port)
- 	struct net_device *dev = port->dev;
- 
- 	cancel_delayed_work_sync(&port->cached_hw_stats.caching_dw);
-+	prestera_devlink_port_clear(port);
- 	unregister_netdev(dev);
- 	prestera_port_list_del(port);
-+	prestera_devlink_port_unregister(port);
- 	free_netdev(dev);
- }
- 
-@@ -446,6 +459,10 @@ static int prestera_switch_init(struct prestera_switch *sw)
- 	if (err)
- 		goto err_handlers_register;
- 
-+	err = prestera_devlink_register(sw);
-+	if (err)
-+		goto err_dl_register;
-+
- 	err = prestera_create_ports(sw);
- 	if (err)
- 		goto err_ports_create;
-@@ -453,6 +470,8 @@ static int prestera_switch_init(struct prestera_switch *sw)
- 	return 0;
- 
- err_ports_create:
-+	prestera_devlink_unregister(sw);
-+err_dl_register:
- 	prestera_event_handlers_unregister(sw);
- err_handlers_register:
- 	prestera_rxtx_switch_fini(sw);
-@@ -464,6 +483,7 @@ static int prestera_switch_init(struct prestera_switch *sw)
- static void prestera_switch_fini(struct prestera_switch *sw)
+ static void sev_es_terminate(unsigned int reason)
  {
- 	prestera_destroy_ports(sw);
-+	prestera_devlink_unregister(sw);
- 	prestera_event_handlers_unregister(sw);
- 	prestera_rxtx_switch_fini(sw);
- 	prestera_hw_switch_fini(sw);
-@@ -474,7 +494,7 @@ int prestera_device_register(struct prestera_device *dev)
- 	struct prestera_switch *sw;
- 	int err;
+ 	u64 val = GHCB_SEV_TERMINATE;
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 8cac9f8..6fcfdd3 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -665,6 +665,9 @@ void __init sev_es_init_vc_handling(void)
+ 	if (!sev_es_active())
+ 		return;
  
--	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
-+	sw = prestera_devlink_alloc();
- 	if (!sw)
- 		return -ENOMEM;
++	if (!sev_es_check_cpu_features())
++		panic("SEV-ES CPU Features missing");
++
+ 	/* Enable SEV-ES special handling */
+ 	static_branch_enable(&sev_es_enable_key);
  
-@@ -483,7 +503,7 @@ int prestera_device_register(struct prestera_device *dev)
- 
- 	err = prestera_switch_init(sw);
- 	if (err) {
--		kfree(sw);
-+		prestera_devlink_free(sw);
- 		return err;
- 	}
- 
-@@ -496,7 +516,7 @@ void prestera_device_unregister(struct prestera_device *dev)
- 	struct prestera_switch *sw = dev->priv;
- 
- 	prestera_switch_fini(sw);
--	kfree(sw);
-+	prestera_devlink_free(sw);
- }
- EXPORT_SYMBOL(prestera_device_unregister);
- 
--- 
-2.17.1
-
