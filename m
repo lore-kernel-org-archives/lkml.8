@@ -2,92 +2,131 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D379C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEFFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B5C2080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599762680;
-	bh=tBuZCR5xiv1qjye1QG9PxK9ZNp+DEVBnbx0PDmvTlWo=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iAOEmGvnxb+BxqdwvueXhx73/s5sqTDe55QeScj3EtTjt8+3uJtHESLReI2i0Z9Hi
-	 79veRQrApNd9eKvD04Vo5p7jpjutB8AAWUN5hSAVydyX5dBf7zG+hRefh0Vkfa/oME
-	 sTcfQSp40kRtBwC8KbN3D2aD74VhKFRB9t6dDXek=
+	by mail.kernel.org (Postfix) with ESMTP id 0FC212087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UCp+FppW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIJSaw (ORCPT
+        id S1726898AbgIJSb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgIJSXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:23:25 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9852B21D90;
-        Thu, 10 Sep 2020 18:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599762181;
-        bh=tBuZCR5xiv1qjye1QG9PxK9ZNp+DEVBnbx0PDmvTlWo=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=w3cgk1iB7ZLIrA0yy4zGNS3HxFo56zh1fZWmQFAAtzadkDP21Fiv0SnhiZh+0WMJA
-         AmzINdUfkal+hH3DceZI9B/uinG7Q+7UzDAwX+m29jbmdXd3siLtVhFF43ymTIka8/
-         Z+2utdvl4stghrFkNMjpUThswNFuPfs9H28bTn5E=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Wolfram Sang <wolfram@the-dreams.de>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] dt-bindings: i2c: imx: Fix i.MX 7 compatible matching
-Date:   Thu, 10 Sep 2020 20:22:44 +0200
-Message-Id: <20200910182244.5815-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910182244.5815-1-krzk@kernel.org>
-References: <20200910182244.5815-1-krzk@kernel.org>
+        Thu, 10 Sep 2020 14:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgIJS3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:29:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CB0C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so432572pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
+        b=UCp+FppW+25RCEWuidrdmD2H7oNwJWAPscXMA2ljdT7Hwfc6emJQQRXJKlonqRXwCr
+         ZNZwT1diexj1oIPFx0vZRCKp8ePiBMfI0fNJK+PDlwitnt2/pXVXXfcmv7xMHDx85MGD
+         jjgpGgVOnGdOdetQ71hUdu1jBGb560fU84u+I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
+        b=A1xCMsoyMIZDYKONvubkV9iiiLUdSo1Uro9A7p/iQ3+3k479Cwf+/xTX9aNim2T5Cn
+         0e2A+0fUGvWwrqgwMhFkkMeCYUonfW1E19v6CFdmLdix9HASQHlenq4jl0MXsmBzwrdQ
+         JETSUeCHTrjVXyxmxp5Dd/G2epZxKxXU7zSKreRt1EkJNf2HgHlolID5DHM6m3eZnnEg
+         L5XYtpxy/UVYTNqW1UNHqGHyInzA8Rv2ZbAcsChbtPvsjOv4uFh3M/kuLmwRhlOZSHEw
+         DFIRn9A+HczcZVHZuMou7V6VioGhRFGEEmS4y2E/Ku7gt1yZlY+NfDESXxUGxeG4Yy95
+         3IBg==
+X-Gm-Message-State: AOAM532v4xfTok9d6QlEzJos4QIFhIhcLwNlZSvdV0c5iDppk1K6UB1S
+        v4HPIksTepGYTkx1KfwZC3LN3Q==
+X-Google-Smtp-Source: ABdhPJwQHia5IxoItB0v8TFyFBQYaMjt9d9oEodKfnuR8Fqxq3O6+WSooIjqvBiG9AzcqTroMIMGDQ==
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr1229702pjb.42.1599762580221;
+        Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z9sm6606733pfk.118.2020.09.10.11.29.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 11:29:39 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 11:29:38 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>, peterz@infradead.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 05/28] objtool: Add a pass for generating __mcount_loc
+Message-ID: <202009101127.28B4414D2A@keescook>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-6-samitolvanen@google.com>
+ <202009031450.31C71DB@keescook>
+ <CABCJKueF1RbpOKHsA8yS_yMujzHi8dzAVz8APwpMJyMTTGhmDA@mail.gmail.com>
+ <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX 7 DTSes use two compatibles so update the binding to fix
-dtbs_check warnings like:
+On Fri, Sep 04, 2020 at 11:31:04AM +0200, peterz@infradead.org wrote:
+> On Thu, Sep 03, 2020 at 03:03:30PM -0700, Sami Tolvanen wrote:
+> > On Thu, Sep 3, 2020 at 2:51 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Thu, Sep 03, 2020 at 01:30:30PM -0700, Sami Tolvanen wrote:
+> > > > From: Peter Zijlstra <peterz@infradead.org>
+> > > >
+> > > > Add the --mcount option for generating __mcount_loc sections
+> > > > needed for dynamic ftrace. Using this pass requires the kernel to
+> > > > be compiled with -mfentry and CC_USING_NOP_MCOUNT to be defined
+> > > > in Makefile.
+> > > >
+> > > > Link: https://lore.kernel.org/lkml/20200625200235.GQ4781@hirez.programming.kicks-ass.net/
+> > > > Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> > >
+> > > Hmm, I'm not sure why this hasn't gotten picked up yet. Is this expected
+> > > to go through -tip or something else?
+> > 
+> > Note that I picked up this patch from Peter's original email, to which
+> > I included a link in the commit message, but it wasn't officially
+> > submitted as a patch. However, the previous discussion seems to have
+> > died, so I included the patch in this series, as it cleanly solves the
+> > problem of whitelisting non-call references to __fentry__. I was
+> > hoping for Peter and Steven to comment on how they prefer to proceed
+> > here.
+> 
+> Right; so I'm obviously fine with this patch and I suppose I can pick it
+> (and the next) into tip/objtool/core, provided Steve is okay with this
+> approach.
 
-  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
-    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is not valid under any of the given schemas (Possible causes of the failure):
+Hello Steven-of-the-future-after-4000-emails![1] ;)
 
-  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
-    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is too long
+Getting your Ack on this would be very welcome, and would unblock a
+portion of this series.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks! :)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-index 19c9daba6e9f..3a0fbeea7aaf 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-@@ -21,6 +21,9 @@ properties:
-       - items:
-           - const: fsl,imx35-i2c
-           - const: fsl,imx1-i2c
-+      - items:
-+          - const: fsl,imx7d-i2c
-+          - const: fsl,imx21-i2c
-       - items:
-           - enum:
-               - fsl,imx25-i2c
+[1] https://twitter.com/srostedt/status/1303697650592755712
+
 -- 
-2.17.1
-
+Kees Cook
