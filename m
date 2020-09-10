@@ -2,86 +2,85 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA99C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE6DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC7E214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7649320C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hc08PSXf"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="ZW+XrCOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbgIJKyy (ORCPT
+        id S1730550AbgIJKz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
+        Thu, 10 Sep 2020 06:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729663AbgIJKwk (ORCPT
+        with ESMTP id S1730423AbgIJKwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:52:40 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77C0C0613ED;
-        Thu, 10 Sep 2020 03:52:38 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id b79so5317202wmb.4;
-        Thu, 10 Sep 2020 03:52:38 -0700 (PDT)
+        Thu, 10 Sep 2020 06:52:42 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B21C061795
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:52:42 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h6so4436264qtd.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xqxwM/Mvfa18vvLY/SDCcgMXW/SBJ2dGdITvWLFzj1E=;
-        b=hc08PSXfEdHk3COElKF3/mNchbHltsWM1NVW016Nef7xJ/Bu/gVPH54E6MsFKRgL3h
-         GKHbCyPIpoZqCeDsQzs5wMDpvQDI4pRY07pPOost7/lMarWSz+k7apLCCdPhDXN1RkGX
-         czsCIFE4B+dW3XXOyBCy1/5/CJac4LLyQjD+peyjlO+cxyRxlYewCTGAS/2oowKqjh+a
-         byRfHewsPXge4IFC+gMrI5ax1hyBFY/5rMBmMfc9KvD2qSyIhqwZ+7hHhk8JqCw3zSbb
-         xMC6QkmkvtdhzCMh6TIDMpAxtn4kCukPD5PHdN5pzWbgnAvGJnS8DqtTqscJYfyyVqZH
-         i3Qw==
+        bh=3bq6Xd8oBWW/kHc7+k0vFqhBls4w6B4cN1d1NTriuls=;
+        b=ZW+XrCOJ9Hh8BdUcXHsXfPQsWDxpPcRlA+Zod0PrwTfm4pqgiZReUjNgCeFIZXPmpD
+         WSg1VkhZnd49D1+mvRomDad172OZhvVlZLSBBc4AXkayC2lVG+pm8OLUf/CZ5Et8uL3W
+         ybvngSICWecytQ4N9qHaCd3ksvrLTd/H81rbEn9lOZ+H5mcJ7uRvQvSPKR/AezVigLbC
+         NlJl/Xzgyq5WF2JFWsWKbHmxkTLe4t5eewOpcQqME8SApDZZ9YRCosJvauJ7P4yP02lI
+         kam36xVAyMsflj7fT1713H6j/vNnlm3K1DFv3DOBQraKHmkn/RC7yev0Kt5TjA5AbUwD
+         Bacw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xqxwM/Mvfa18vvLY/SDCcgMXW/SBJ2dGdITvWLFzj1E=;
-        b=BYW8XkeQ0nEzYFxJQx9LaWDC2wFA8WZcJE7pN1WC3fo6kpKuzAc8pSUbyPEuUZOePF
-         rDwoM8hIvt15DJtJOpo3o8HOFGJxFFivJ7a5mxA8dZZAtE6UuZ3XosdXD/Mb5azlmcf9
-         JN8dV0oBE6qkuYygib4hDM6L2aer88OiuHCzkDFN5+ojvRW4+WDBxvnCNFYGLSBjWOZh
-         qgtbXJAqaUzRdnGeVVPtt8FR7gKS2TFJPAdb2sqLznppKKujutRjsRWmMhdkc0rA793Y
-         z/uWcE5tCskVSRdzz+HosX+s52RqROY4EIgkWhHaMZp0PHB5y861GT2x+9jr0gBaZktM
-         OypQ==
-X-Gm-Message-State: AOAM530WCS188QfU8ThEPRmxNf0/6VCoYjK2ltp/HZzT/DStoPVRWWXh
-        Y66N9zgdFXCRBuLSHeSEGVV66fS6vEo=
-X-Google-Smtp-Source: ABdhPJwk1Wpe3AlLx/+HN1qYohBdzkjzG9xzrHBAw7o7z5BWCvFB04lhR2xSpqcNQYSX+4AgqzKdNg==
-X-Received: by 2002:a1c:cc0d:: with SMTP id h13mr7614433wmb.44.1599735157246;
-        Thu, 10 Sep 2020 03:52:37 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id a74sm3129769wme.11.2020.09.10.03.52.36
+        bh=3bq6Xd8oBWW/kHc7+k0vFqhBls4w6B4cN1d1NTriuls=;
+        b=lZYjl8jlGILHxcVua3X1lEtQNMGRnv6HhiPeWf/+oJExAnTyJUSykK5O4cj3xUxxH6
+         H3HrhDlJrkX4xIBSi8y11aOGkalskJnhXVhRH5h1nYJfPSNdYNtklNCdM2RGs+uwX20r
+         uQsuslaAttCOnOtHk5UwmfIApVMiTJa2u3807xTonxTCGR1HXVxt4BP2kxfaVQ1MVypr
+         bpbhWs2V0tGzWgjcCPFWGA3hHczJc05RbdSXgGbPFqsNHaGdOxKdAtHeya58ZXOfn2nS
+         F14hKHDqIsd/GJlsuDRiUbYlos1Jj0zXWXJoNO61OhZAT+y29v4Wrn1EoamslCOVZgU0
+         xOfg==
+X-Gm-Message-State: AOAM532U8cBuAmruHSoq7jpefaDDSZbWcKacHTXvohUgqANkBi3aECiC
+        MjNAkYyuE0/0pCn/IvvTv7m2eCk0+/YU9g==
+X-Google-Smtp-Source: ABdhPJy6O+/o8/P4gNB4yn6wAiyYvPZg0hNmNysrRDLfOHkpzISuROIy5kgaJXZUaKMI6m3u9qatJw==
+X-Received: by 2002:ac8:7145:: with SMTP id h5mr7571530qtp.110.1599735161446;
+        Thu, 10 Sep 2020 03:52:41 -0700 (PDT)
+Received: from ?IPv6:2607:fb90:5e99:306e:7450:cff:fe32:650b? ([2607:fb90:5e99:306e:7450:cff:fe32:650b])
+        by smtp.gmail.com with ESMTPSA id j31sm6893908qta.6.2020.09.10.03.52.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 03:52:36 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: dts: mt8183-kukui: add scp node
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200909081422.2412795-1-pihsun@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <161d403a-2a3a-3365-1bb2-5067e8fb7cb8@gmail.com>
-Date:   Thu, 10 Sep 2020 12:52:35 +0200
+        Thu, 10 Sep 2020 03:52:40 -0700 (PDT)
+Subject: Re: [PATCH] sh: fix syscall tracing
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Rich Felker <dalias@libc.org>
+Cc:     linux-sh@vger.kernel.org,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+References: <20200903054803.GX3265@brightrain.aerifal.cx>
+ <e456a455-62cd-4f76-a69a-84d1e5b4d153@physik.fu-berlin.de>
+ <20200903161639.GE3265@brightrain.aerifal.cx>
+ <1a3f0f7e-f6e6-db4e-06ad-9c7d560a6265@physik.fu-berlin.de>
+ <20200907174436.GK3265@brightrain.aerifal.cx>
+ <3b8d5e6a-38d6-6eca-a49a-69e06680ec1c@physik.fu-berlin.de>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <c0685f0b-e997-39e9-8ae9-ee22c8e74a01@landley.net>
+Date:   Thu, 10 Sep 2020 06:02:05 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200909081422.2412795-1-pihsun@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3b8d5e6a-38d6-6eca-a49a-69e06680ec1c@physik.fu-berlin.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,82 +88,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/09/2020 10:14, Pi-Hsun Shih wrote:
-> Add scp node to mt8183-kukui
+On 9/10/20 4:55 AM, John Paul Adrian Glaubitz wrote:
+> Hi Rich!
 > 
-> Fixes: 0d5e41709f76 ("arm64: dts: mt8183: add scp node")
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-
-Applied to v5.9-next/dts64
-
-I squashed this fix with the first patch to maintain bisectability.
-
-Thanks!
-
-> ---
+> On 9/7/20 7:44 PM, Rich Felker wrote:
+>>> Can we still get this merged as a hotfix for 5.9?
+>>
+>> Yes, fixes for regressions in the same release cycle are in-scope (the
+>> whole point of having -rc's). I have at least one other fix that needs
+>> to go in too and was just giving it a little time to make sure
+>> everything's ok now and that there are no more.
 > 
-> Change since v1:
-> * Add Fixes tag.
+> Let me know if there is anything else left for testing.
+
+Could you also merge the fix the build break, ala:
+
+> The vmlinux image is a current vanilla Linux kernel using an initramfs filesystem:
 > 
-> ---
->   .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 30 +++++++++++++++++++
->   1 file changed, 30 insertions(+)
+>   make ARCH=sh CROSS_COMPILE=sh2eb-linux-muslfdpic- j2_defconfig vmlinux
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> index f0a070535b34..85f7c33ba446 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
->   		regulator-max-microvolt = <3300000>;
->   	};
->   
-> +	reserved_memory: reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		scp_mem_reserved: scp_mem_region {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0 0x50000000 0 0x2900000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->   	max98357a: codec0 {
->   		compatible = "maxim,max98357a";
->   		sdmode-gpios = <&pio 175 0>;
-> @@ -524,6 +536,13 @@ pins_clk {
->   		};
->   	};
->   
-> +	scp_pins: scp {
-> +		pins_scp_uart {
-> +			pinmux = <PINMUX_GPIO110__FUNC_TP_URXD1_AO>,
-> +				 <PINMUX_GPIO112__FUNC_TP_UTXD1_AO>;
-> +		};
-> +	};
-> +
->   	spi0_pins: spi0 {
->   		pins_spi{
->   			pinmux = <PINMUX_GPIO85__FUNC_SPI0_MI>,
-> @@ -651,6 +670,17 @@ pins_wifi_wakeup {
->   	};
->   };
->   
-> +&scp {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&scp_pins>;
-> +
-> +	cros_ec {
-> +		compatible = "google,cros-ec-rpmsg";
-> +		mtk,rpmsg-name = "cros-ec-rpmsg";
-> +	};
-> +};
-> +
->   &soc_data {
->   	status = "okay";
->   };
+> And trying to do that in current git dies with:
 > 
+>   CC      init/version.o
+> In file included from ./include/linux/spinlock.h:318,
+>                  from ./arch/sh/include/asm/smp.h:11,
+>                  from ./include/linux/smp.h:82,
+>                  from ./include/linux/lockdep.h:14,
+>                  from ./include/linux/rcupdate.h:29,
+>                  from ./include/linux/rculist.h:11,
+>                  from ./include/linux/pid.h:5,
+>                  from ./include/linux/sched.h:14,
+>                  from ./include/linux/utsname.h:6,
+>                  from init/version.c:14:
+> ./include/linux/spinlock_api_smp.h: In function '__raw_spin_trylock':
+> ./include/linux/spinlock_api_smp.h:90:3: error: implicit declaration of function
+> 'spin_acquire'; did you mean 'xchg_acquire'? [-Werror=implicit-function-declaration]
+>    90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+>       |   ^~~~~~~~~~~~
+>       |   xchg_acquire
+> ./include/linux/spinlock_api_smp.h:90:21: error: 'raw_spinlock_t' {aka 'struct
+> raw_spinlock'} has no member named 'dep_map'
+>    90 |   spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
+>       |                     ^~
+> 
+> And so on and so forth for pages. I bisected it to:
+> 
+> commit 0cd39f4600ed4de859383018eb10f0f724900e1b
+> Author: Peter Zijlstra <peterz@infradead.org>
+> Date:   Thu Aug 6 14:35:11 2020 +0200
+> 
+>     locking/seqlock, headers: Untangle the spaghetti monster
+
+Which I reported to Rich on the 2nd and he had me test a one line patch fixing
+it (adding an extra #include) on the 3rd, but I just did a fresh pull and the
+j2_defconfig build still broke a week later.
+
+Rob
