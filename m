@@ -2,210 +2,328 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A1CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB21C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 234D020C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F132078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AA84R5re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgIJLVr (ORCPT
+        id S1730304AbgIJL2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:21:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:33600 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbgIJLRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:17:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CB7613D5;
-        Thu, 10 Sep 2020 04:17:09 -0700 (PDT)
-Received: from [10.163.71.250] (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFE763F68F;
-        Thu, 10 Sep 2020 04:17:05 -0700 (PDT)
-Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually
- contiguous memory
-To:     sudaraja@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     'Mark Rutland' <mark.rutland@arm.com>,
-        'Will Deacon' <will@kernel.org>,
-        'David Hildenbrand' <david@redhat.com>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        'Steven Price' <steven.price@arm.com>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Logan Gunthorpe' <logang@deltatee.com>, pratikp@codeaurora.org
-References: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
- <0475e813-cb95-0992-39e4-593bfd5cdbf8@arm.com>
- <0101017477202341-51a1c9d3-5ba4-4328-b24c-0b29317af168-000000@us-west-2.amazonses.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <a9380c22-c097-eb7e-0668-032a24f8f044@arm.com>
-Date:   Thu, 10 Sep 2020 16:46:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 10 Sep 2020 07:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbgIJLWg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:22:36 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5007BC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 04:12:32 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id b79so5373778wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 04:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qu8JH/be0rcbIWaaAUE3igFaIOUou49hkjsJpPAPR90=;
+        b=AA84R5regpZTTXFRpYdM+Or0tNH+fSOtcqP2pbugiGih/zhtRpJQ9cnshBMxr/2NFT
+         FkZa3oj1Xp06SJZG9wz5iZrx1xBELEnEKGxVH1OlRfHsL0dtvMMG2hk7s6PB8W+kvyir
+         sX9ek/eZRCmuRjUkFR4kKFs7iBNH565OLxk5AwZyOaq9Qz381ztlKjBTf7fJvXjDMtUv
+         k1mlUwbXnd1c0vx4qoZAdUmGXUdFF9d3I2xnTUUYMiE3r4QfZxZNnlyJVqBmH4suoSEl
+         a1udckqFeJUhnzcnBF+GizdyEJvpBbXbmvGn+XytRvONjxBJByJ66ZY3U9h6PWwIDfMo
+         1qZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qu8JH/be0rcbIWaaAUE3igFaIOUou49hkjsJpPAPR90=;
+        b=I3kWMPm8p7wCW0x2S0Vb3crMRPYmXTyigHjPrU1jXzXsEXkNvCK0sEMT8D4BzP9/AD
+         PeSez9PvUYBJckQKD1sqkI9ZXwxjnsTEuj2ppQwWNgL0hlTGAIJy0u6IMuRwEpvawvaJ
+         Su9IhgDswSSBIewZcHkNJr3nSqjLJYxyIp5drk07Rh3J2wcuN8fVRyYIEWrAk+KSt/Ua
+         Q6ddIw+r4ITPBdRrSOby/8gjWyo9X/6J77n++bptVy6zpz+8q1Q//HABIDLazWOAzEbs
+         sYvSTOvfjx/QJeG6CDG/AUzNYANDt37U3JRCOSJLx1S0RSnHGp3bgg1PHO20Bj89lKHw
+         qVaQ==
+X-Gm-Message-State: AOAM5324Trv/eAOIGRae7pixvYuuYV6Jf+tZdBsQIVyYeqncFGblKWhb
+        VcReCAVtZ4bL/UiMUM8abdCUIw==
+X-Google-Smtp-Source: ABdhPJxbK5saNRK5bQpLtP1bvSvZb92KMkAB9oGsS0A6wEs9jJX9P12KvSs4xOamCVaMq+VkbnZhCQ==
+X-Received: by 2002:a1c:4886:: with SMTP id v128mr8080271wma.139.1599736350622;
+        Thu, 10 Sep 2020 04:12:30 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:109:4a0f:cfff:fe4a:6363])
+        by smtp.gmail.com with ESMTPSA id t15sm2953444wmj.15.2020.09.10.04.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 04:12:30 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:12:25 +0100
+From:   Andrew Scull <ascull@google.com>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 03/10] kvm: arm64: Remove __hyp_this_cpu_read
+Message-ID: <20200910111225.GC93664@google.com>
+References: <20200903091712.46456-1-dbrazdil@google.com>
+ <20200903091712.46456-4-dbrazdil@google.com>
 MIME-Version: 1.0
-In-Reply-To: <0101017477202341-51a1c9d3-5ba4-4328-b24c-0b29317af168-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903091712.46456-4-dbrazdil@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 03, 2020 at 11:17:05AM +0200, 'David Brazdil' via kernel-team wrote:
+> this_cpu_ptr is meant for use in kernel proper because it selects between
+> TPIDR_EL1/2 based on nVHE/VHE. __hyp_this_cpu_ptr was used in hyp to always
+> select TPIDR_EL2. Unify all users behind this_cpu_ptr and friends by
+> selecting _EL2 register under __KVM_NVHE_HYPERVISOR__.
+> 
+> Under CONFIG_DEBUG_PREEMPT, the kernel helpers perform a preemption check
+> which is omitted by the hyp helpers. Preserve the behavior for nVHE by
+> overriding the corresponding macros under __KVM_NVHE_HYPERVISOR__. Extend
+> the checks into VHE hyp code.
+> 
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/include/asm/kvm_asm.h          | 20 --------------
+>  arch/arm64/include/asm/percpu.h           | 33 +++++++++++++++++++++--
+>  arch/arm64/kvm/hyp/include/hyp/debug-sr.h |  4 +--
+>  arch/arm64/kvm/hyp/include/hyp/switch.h   |  8 +++---
+>  arch/arm64/kvm/hyp/nvhe/switch.c          |  2 +-
+>  arch/arm64/kvm/hyp/vhe/switch.c           |  2 +-
+>  arch/arm64/kvm/hyp/vhe/sysreg-sr.c        |  4 +--
+>  7 files changed, 41 insertions(+), 32 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 6f98fbd0ac81..9149079f0269 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -149,26 +149,6 @@ extern char __smccc_workaround_1_smc[__SMCCC_WORKAROUND_1_SMC_SZ];
+>  		addr;							\
+>  	})
+>  
+> -/*
+> - * Home-grown __this_cpu_{ptr,read} variants that always work at HYP,
+> - * provided that sym is really a *symbol* and not a pointer obtained from
+> - * a data structure. As for SHIFT_PERCPU_PTR(), the creative casting keeps
+> - * sparse quiet.
+> - */
+> -#define __hyp_this_cpu_ptr(sym)						\
+> -	({								\
+> -		void *__ptr;						\
+> -		__verify_pcpu_ptr(&sym);				\
+> -		__ptr = hyp_symbol_addr(sym);				\
+> -		__ptr += read_sysreg(tpidr_el2);			\
+> -		(typeof(sym) __kernel __force *)__ptr;			\
+> -	 })
+> -
+> -#define __hyp_this_cpu_read(sym)					\
+> -	({								\
+> -		*__hyp_this_cpu_ptr(sym);				\
+> -	 })
+> -
+>  #define __KVM_EXTABLE(from, to)						\
+>  	"	.pushsection	__kvm_ex_table, \"a\"\n"		\
+>  	"	.align		3\n"					\
+> diff --git a/arch/arm64/include/asm/percpu.h b/arch/arm64/include/asm/percpu.h
+> index 0b6409b89e5e..b4008331475b 100644
+> --- a/arch/arm64/include/asm/percpu.h
+> +++ b/arch/arm64/include/asm/percpu.h
+> @@ -19,7 +19,21 @@ static inline void set_my_cpu_offset(unsigned long off)
+>  			:: "r" (off) : "memory");
+>  }
+>  
+> -static inline unsigned long __my_cpu_offset(void)
+> +static inline unsigned long __hyp_my_cpu_offset(void)
+> +{
+> +	unsigned long off;
+> +
+> +	/*
+> +	 * We want to allow caching the value, so avoid using volatile and
+> +	 * instead use a fake stack read to hazard against barrier().
+> +	 */
+> +	asm("mrs %0, tpidr_el2" : "=r" (off) :
+> +		"Q" (*(const unsigned long *)current_stack_pointer));
+> +
+> +	return off;
+> +}
+> +
+> +static inline unsigned long __kern_my_cpu_offset(void)
+>  {
+>  	unsigned long off;
+>  
+> @@ -35,7 +49,12 @@ static inline unsigned long __my_cpu_offset(void)
+>  
+>  	return off;
+>  }
+> -#define __my_cpu_offset __my_cpu_offset()
+> +
+> +#ifdef __KVM_NVHE_HYPERVISOR__
+> +#define __my_cpu_offset __hyp_my_cpu_offset()
 
+Is there a benefit to this being used for __KVM_VHE_HYPERVISOR__ too
+since that is "hyp" too and doesn't need the alternative since it will
+always pick EL2?
 
-On 09/10/2020 01:57 PM, sudaraja@codeaurora.org wrote:
-> Hello Anshuman,
-> 
->> On 09/10/2020 11:35 AM, Sudarshan Rajagopalan wrote:
->>> When section mappings are enabled, we allocate vmemmap pages from 
->>> physically continuous memory of size PMD_SZIE using 
->>> vmemmap_alloc_block_buf(). Section> mappings are good to reduce TLB 
->>> pressure. But when system is highly fragmented and memory blocks are 
->>> being hot-added at runtime, its possible that such physically 
->>> continuous memory allocations can fail. Rather than failing the
->>
->> Did you really see this happen on a system ?
-> 
-> Thanks for the response.
+> +#else
+> +#define __my_cpu_offset __kern_my_cpu_offset()
+> +#endif
+>  
+>  #define PERCPU_RW_OPS(sz)						\
+>  static inline unsigned long __percpu_read_##sz(void *ptr)		\
+> @@ -227,4 +246,14 @@ PERCPU_RET_OP(add, add, ldadd)
+>  
+>  #include <asm-generic/percpu.h>
+>  
+> +/* Redefine macros for nVHE hyp under DEBUG_PREEMPT to avoid its dependencies. */
+> +#if defined(__KVM_NVHE_HYPERVISOR__) && defined(CONFIG_DEBUG_PREEMPT)
+> +#undef	this_cpu_ptr
+> +#define	this_cpu_ptr		raw_cpu_ptr
+> +#undef	__this_cpu_read
+> +#define	__this_cpu_read		raw_cpu_read
+> +#undef	__this_cpu_write
+> +#define	__this_cpu_write	raw_cpu_write
+> +#endif
 
-There seems to be some text alignment problem in your response on this
-thread, please have a look.
+This is an incomplete cherry-picked list of macros that are redefined to
+remove the call to __this_cpu_preempt_check that would result in a
+linker failure since that symbol is not defined for nVHE hyp.
 
-> 
-> Yes, this happened on a system with very low RAM (size ~120MB) where no free order-9 pages were present. Pasting below few kernel logs. On systems with low RAM, its high probability where memory is fragmented and no higher order pages are free. On such scenarios, vmemmap alloc would fail for PMD_SIZE of contiguous memory.
-> 
-> We have a usecase for memory sharing between VMs where one of the VM uses add_memory() to add the memory that was donated by the other VM. This uses something similar to VirtIO-Mem. And this requires memory to be _guaranteed_ to be added in the VM so that the usecase can run without any failure.
-> 
-> vmemmap alloc failure: order:9, mode:0x4cc0(GFP_KERNEL|__GFP_RETRY_MAYFAIL), nodemask=(null),cpuset=/,mems_allowed=0
-> CPU: 1 PID: 294 Comm: -------- Tainted: G S                5.4.50 #1
-> Call trace:
->  dump_stack+0xa4/0xdc
->  warn_alloc+0x104/0x160
->  vmemmap_alloc_block+0xe4/0xf4
->  vmemmap_alloc_block_buf+0x34/0x38
->  vmemmap_populate+0xc8/0x224
->  __populate_section_memmap+0x34/0x54
->  sparse_add_section+0x16c/0x254
->  __add_pages+0xd0/0x138
->  arch_add_memory+0x114/0x1a8
-> 
-> DMA32: 2627*4kB (UMC) 23*8kB (UME) 6*16kB (UM) 8*32kB (UME) 2*64kB (ME) 2*128kB (UE) 1*256kB (M) 2*512kB (ME) 1*1024kB (M) 0*2048kB 0*4096kB = 13732kB
-> 30455 pages RAM
-> 
-> But keeping this usecase aside, won’t this be problematic on any systems with low RAM where order-9 alloc would fail on a fragmented system, and any memory hot-adding would fail? Or other similar users of VirtIO-Mem which uses arch_add_memory.
-> 
->>
->>> memory hot-add procedure, add a fallback option to allocate vmemmap 
->>> pages from discontinuous pages using vmemmap_populate_basepages().
->>
->> Which could lead to a mixed page size mapping in the VMEMMAP area.
-> 
-> Would this be problematic? We would only lose one section mapping per failure and increases slight TLB pressure. Also, we would anyway do discontinuous pages alloc for systems having non-4K pages (ARM64_SWAPPER_USES_SECTION_MAPS will be 0). I only see a small cost to performance due to slight TLB pressure.
-> 
->> Allocation failure in vmemmap_populate() should just cleanly fail the memory hot add operation, which can then be retried. Why the retry has to be offloaded to kernel ?
-> 
-> While a retry can attempted again, but it won’t help in cases where there are no order-9 pages available and any retry would just not succeed again until a order-9 page gets free'ed. Here we are just falling back to use discontinuous pages allocation to help succeed memory hot-add as best as possible.
+I remember there being some dislike of truely defining that symbol with
+an nVHE hyp implementation but I can't see why. Yes, nVHE hyp is always
+has preemption disabled so the implementation is just an empty function
+but why is is preferrable to redefine some of these macros instead?
 
-Understood, seems like there is enough potential use cases and scenarios
-right now, to consider this fallback mechanism and a possible mixed page
-size vmemmap. But I would let others weigh in, on the performance impact.
-
+> +
+>  #endif /* __ASM_PERCPU_H */
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/debug-sr.h b/arch/arm64/kvm/hyp/include/hyp/debug-sr.h
+> index 5e28ea6aa097..4ebe9f558f3a 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/debug-sr.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/debug-sr.h
+> @@ -135,7 +135,7 @@ static inline void __debug_switch_to_guest_common(struct kvm_vcpu *vcpu)
+>  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+>  		return;
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	guest_ctxt = &vcpu->arch.ctxt;
+>  	host_dbg = &vcpu->arch.host_debug_state.regs;
+>  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
+> @@ -154,7 +154,7 @@ static inline void __debug_switch_to_host_common(struct kvm_vcpu *vcpu)
+>  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+>  		return;
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	guest_ctxt = &vcpu->arch.ctxt;
+>  	host_dbg = &vcpu->arch.host_debug_state.regs;
+>  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> index 5b6b8fa00f0a..f150407fa798 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> @@ -386,7 +386,7 @@ static inline bool __hyp_handle_ptrauth(struct kvm_vcpu *vcpu)
+>  	    !esr_is_ptrauth_trap(kvm_vcpu_get_esr(vcpu)))
+>  		return false;
+>  
+> -	ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	__ptrauth_save_key(ctxt, APIA);
+>  	__ptrauth_save_key(ctxt, APIB);
+>  	__ptrauth_save_key(ctxt, APDA);
+> @@ -495,7 +495,7 @@ static inline void __set_guest_arch_workaround_state(struct kvm_vcpu *vcpu)
+>  	 * guest wants it disabled, so be it...
+>  	 */
+>  	if (__needs_ssbd_off(vcpu) &&
+> -	    __hyp_this_cpu_read(arm64_ssbd_callback_required))
+> +	    __this_cpu_read(arm64_ssbd_callback_required))
+>  		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_WORKAROUND_2, 0, NULL);
+>  #endif
+>  }
+> @@ -507,7 +507,7 @@ static inline void __set_host_arch_workaround_state(struct kvm_vcpu *vcpu)
+>  	 * If the guest has disabled the workaround, bring it back on.
+>  	 */
+>  	if (__needs_ssbd_off(vcpu) &&
+> -	    __hyp_this_cpu_read(arm64_ssbd_callback_required))
+> +	    __this_cpu_read(arm64_ssbd_callback_required))
+>  		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_WORKAROUND_2, 1, NULL);
+>  #endif
+>  }
+> @@ -521,7 +521,7 @@ static inline void __kvm_unexpected_el2_exception(void)
+>  
+>  	entry = hyp_symbol_addr(__start___kvm_ex_table);
+>  	end = hyp_symbol_addr(__stop___kvm_ex_table);
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  
+>  	while (entry < end) {
+>  		addr = (unsigned long)&entry->insn + entry->insn;
+> diff --git a/arch/arm64/kvm/hyp/nvhe/switch.c b/arch/arm64/kvm/hyp/nvhe/switch.c
+> index 0970442d2dbc..cc4f8e790fb3 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/switch.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/switch.c
+> @@ -175,7 +175,7 @@ int __kvm_vcpu_run(struct kvm_vcpu *vcpu)
+>  
+>  	vcpu = kern_hyp_va(vcpu);
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	host_ctxt->__hyp_running_vcpu = vcpu;
+>  	guest_ctxt = &vcpu->arch.ctxt;
+>  
+> diff --git a/arch/arm64/kvm/hyp/vhe/switch.c b/arch/arm64/kvm/hyp/vhe/switch.c
+> index c1da4f86ccac..575e8054f116 100644
+> --- a/arch/arm64/kvm/hyp/vhe/switch.c
+> +++ b/arch/arm64/kvm/hyp/vhe/switch.c
+> @@ -108,7 +108,7 @@ static int __kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
+>  	struct kvm_cpu_context *guest_ctxt;
+>  	u64 exit_code;
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	host_ctxt->__hyp_running_vcpu = vcpu;
+>  	guest_ctxt = &vcpu->arch.ctxt;
+>  
+> diff --git a/arch/arm64/kvm/hyp/vhe/sysreg-sr.c b/arch/arm64/kvm/hyp/vhe/sysreg-sr.c
+> index 996471e4c138..2a0b8c88d74f 100644
+> --- a/arch/arm64/kvm/hyp/vhe/sysreg-sr.c
+> +++ b/arch/arm64/kvm/hyp/vhe/sysreg-sr.c
+> @@ -66,7 +66,7 @@ void kvm_vcpu_load_sysregs_vhe(struct kvm_vcpu *vcpu)
+>  	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
+>  	struct kvm_cpu_context *host_ctxt;
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	__sysreg_save_user_state(host_ctxt);
+>  
+>  	/*
+> @@ -100,7 +100,7 @@ void kvm_vcpu_put_sysregs_vhe(struct kvm_vcpu *vcpu)
+>  	struct kvm_cpu_context *guest_ctxt = &vcpu->arch.ctxt;
+>  	struct kvm_cpu_context *host_ctxt;
+>  
+> -	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
+> +	host_ctxt = &this_cpu_ptr(&kvm_host_data)->host_ctxt;
+>  	deactivate_traps_vhe_put();
+>  
+>  	__sysreg_save_el1_state(guest_ctxt);
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
 > 
-> Thanks and Regards,
-> Sudarshan
-> 
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
-> 
-> -----Original Message-----
-> From: Anshuman Khandual <anshuman.khandual@arm.com> 
-> Sent: Wednesday, September 9, 2020 11:45 PM
-> To: Sudarshan Rajagopalan <sudaraja@codeaurora.org>; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Cc: Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Logan Gunthorpe <logang@deltatee.com>; David Hildenbrand <david@redhat.com>; Andrew Morton <akpm@linux-foundation.org>; Steven Price <steven.price@arm.com>
-> Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually contiguous memory
-> 
-> Hello Sudarshan,
-> 
-> On 09/10/2020 11:35 AM, Sudarshan Rajagopalan wrote:
->> When section mappings are enabled, we allocate vmemmap pages from 
->> physically continuous memory of size PMD_SZIE using 
->> vmemmap_alloc_block_buf(). Section> mappings are good to reduce TLB 
->> pressure. But when system is highly fragmented and memory blocks are 
->> being hot-added at runtime, its possible that such physically 
->> continuous memory allocations can fail. Rather than failing the
-> 
-> Did you really see this happen on a system ?
-> 
->> memory hot-add procedure, add a fallback option to allocate vmemmap 
->> pages from discontinuous pages using vmemmap_populate_basepages().
-> 
-> Which could lead to a mixed page size mapping in the VMEMMAP area.
-> Allocation failure in vmemmap_populate() should just cleanly fail the memory hot add operation, which can then be retried. Why the retry has to be offloaded to kernel ?
-> 
->>
->> Signed-off-by: Sudarshan Rajagopalan <sudaraja@codeaurora.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Logan Gunthorpe <logang@deltatee.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Steven Price <steven.price@arm.com>
->> ---
->>  arch/arm64/mm/mmu.c | 15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c index 
->> 75df62f..a46c7d4 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1100,6 +1100,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>  	p4d_t *p4dp;
->>  	pud_t *pudp;
->>  	pmd_t *pmdp;
->> +	int ret = 0;
->>  
->>  	do {
->>  		next = pmd_addr_end(addr, end);
->> @@ -1121,15 +1122,23 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>  			void *p = NULL;
->>  
->>  			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
->> -			if (!p)
->> -				return -ENOMEM;
->> +			if (!p) {
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +				vmemmap_free(start, end, altmap); #endif
-> 
-> The mapping was never created in the first place, as the allocation failed. vmemmap_free() here will free an unmapped area !
-> 
->> +				ret = -ENOMEM;
->> +				break;
->> +			}
->>  
->>  			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
->>  		} else
->>  			vmemmap_verify((pte_t *)pmdp, node, addr, next);
->>  	} while (addr = next, addr != end);
->>  
->> -	return 0;
->> +	if (ret)
->> +		return vmemmap_populate_basepages(start, end, node, altmap);
->> +	else
->> +		return ret;
->>  }
->>  #endif	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
->>  void vmemmap_free(unsigned long start, unsigned long end,
->>
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> -- 
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
 > 
