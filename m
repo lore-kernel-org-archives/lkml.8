@@ -2,108 +2,194 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481D4C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F368F207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF79207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599718867;
-	bh=JWNUxWZbGJJ1fihwnRRpBTK9XQnFPsAPD0+ab1fseg0=;
+	s=default; t=1599718958;
+	bh=4IPFakKxzCsxB21yUqCQDDxngDYpAepaZS+PAyfbns4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bVYBQYt6YHQ8JpwzuVx1glKjaFkGvHeBZq8vZfcSTjWsOyYvhBVhhTH/xavLJkMl3
-	 MOMEOSLuVDyJiqrzf/pj62XD7wA12AZg9mYGPAfCtVUF9cLSgO8DAUPVxYstpFFZcS
-	 52tVa/febNrhSl/x9jgcFqFyyVE4/WOAfk6mW9fg=
+	b=D+P8bkAjMRgQazXxVaBn36DZx9foXVtFEsddols3aNLbFfEIXCXhK1W2yha857OxP
+	 u9eW1yo/BunktG9Dd2NHjQ2gkVAV/EH3bhe88+7qFw+26YpJY/xfRfRXLwdWNLAtBV
+	 xEnIyTP54X0d2mBrc3RT2nk6itOZcylbUAjUHL1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgIJGVF (ORCPT
+        id S1726935AbgIJGWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:21:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48470 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 02:22:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgIJGVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:21:03 -0400
-Received: from localhost (p5486ceec.dip0.t-ipconnect.de [84.134.206.236])
+        id S1725996AbgIJGW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:22:29 -0400
+Received: from localhost (unknown [122.179.50.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BED97207DE;
-        Thu, 10 Sep 2020 06:21:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD041207DE;
+        Thu, 10 Sep 2020 06:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599718862;
-        bh=JWNUxWZbGJJ1fihwnRRpBTK9XQnFPsAPD0+ab1fseg0=;
+        s=default; t=1599718948;
+        bh=4IPFakKxzCsxB21yUqCQDDxngDYpAepaZS+PAyfbns4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fbiWPiLGCvPfrqWWZo5JFgb0/Uw26pu9zVq68ZQqhDRwSWZe7agcZkOIx1SnYzMrh
-         hnkhvpGayepHpld0KmFCoOuDnFXWPZ3SrV6glb+8+a81MN0AIqWOSVgFBX+/2a7T7+
-         cFq8vyvDSlE68w43+QHICEgzMmKiGQGYDpZIWA38=
-Date:   Thu, 10 Sep 2020 08:20:58 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        dmitry.torokhov@gmail.com, joel@jms.id.au, andrew@aj.id.au,
-        benh@kernel.crashing.org, brendanhiggins@google.com,
-        rentao.bupt@gmail.com, ryan_chen@aspeedtech.com
-Subject: Re: [PATCH v3 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-Message-ID: <20200910062058.GC1031@ninjato>
-References: <20200909203059.23427-1-eajames@linux.ibm.com>
- <20200909203059.23427-4-eajames@linux.ibm.com>
- <20200910061813.GB1031@ninjato>
+        b=PkPFlWhbcUUDju8orcFfc7uiu2NTNaneNNJk9inedNMHK+CDwlUq3lfrRKix2KCyB
+         bwbWqD5oaZ51QvBOjO9CJMz2RXQsytp2DJN6ur266+wcEvZHBs9ASTLDsZWUzWQykM
+         aIsAANuZF5golAhB7qrlTDwnhu48fF6oSj0xJT8U=
+Date:   Thu, 10 Sep 2020 11:52:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        gregkh@linuxfoundation.org,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] soundwire: SDCA: add helper macro to access
+ controls
+Message-ID: <20200910062223.GQ77521@vkoul-mobl>
+References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
+ <20200901162225.33343-3-pierre-louis.bossart@linux.intel.com>
+ <20200904050244.GT2639@vkoul-mobl>
+ <f35a0ae7-2779-0c69-9ef3-0d0e298888ac@linux.intel.com>
+ <20200909075555.GK77521@vkoul-mobl>
+ <184867c2-9f0c-bffe-2eb7-e9c5735614b0@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910061813.GB1031@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <184867c2-9f0c-bffe-2eb7-e9c5735614b0@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09-09-20, 08:48, Pierre-Louis Bossart wrote:
+> 
+> > > > > + *	25		0 (Reserved)
+> > > > > + *	24:22		Function Number [2:0]
+> > > > > + *	21		Entity[6]
+> > > > > + *	20:19		Control Selector[5:4]
+> > > > > + *	18		0 (Reserved)
+> > > > > + *	17:15		Control Number[5:3]
+> > > > > + *	14		Next
+> > > > > + *	13		MBQ
+> > > > > + *	12:7		Entity[5:0]
+> > > > > + *	6:3		Control Selector[3:0]
+> > > > > + *	2:0		Control Number[2:0]
+> > > > > + */
+> > > > > +
+> > > > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)						\
+> > > > > +	(BIT(30)							|	\
+> > > > 
+> > > > Programmatically this is fine, but then since we are defining for the
+> > > > description above, IMO it would actually make sense for this to be defined
+> > > > as FIELD_PREP:
+> > > > 
+> > > >           FIELD_PREP(GENMASK(30, 26), 1)
+> > > > 
+> > > > or better
+> > > > 
+> > > >           u32_encode_bits(GENMASK(30, 26), 1)
+> > > > 
+> > > > > +	FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))	|	\
+> > > > 
+> > > > Why not use u32_encode_bits(GENMASK(24, 22), (fun)) instead for this and
+> > > > below?
+> > > 
+> > > Because your comment for the v1 review was to use FIELD_PREP/FIELD_GET, and
+> > > your other patches for bitfield access only use FIELD_PREP/FIELD_GET.
+> > 
+> > yes and looking at this, I feel u32_encode_bits(GENMASK(24, 22), (fun))
+> > would look better than FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))
+> > 
+> > Do you agree?
+> 
+> The Function (fun) case is the easy one: the value is not split in two.
+> 
+> But look at the entity case, it's split in two:
+> 
+> FIELD_PREP(BIT(21), FIELD_GET(BIT(6), (ent)))			FIELD_PREP(GENMASK(12, 7),
+> FIELD_GET(GENMASK(5, 0), (ent)))
+> 
+> same for control
+> 
+> FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
+> FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
+> 
+> and same for channel number
+> 
+> FIELD_PREP(GENMASK(17, 15), FIELD_GET(GENMASK(5, 3), (ch)))	|	
+> FIELD_PREP(GENMASK(2, 0), FIELD_GET(GENMASK(2, 0), (ch))))
+> 
+> I don't see how we can avoid using the FIELD_GET to extract the relevant
+> bits from entity, control, channel number values.
 
---adJ1OR3c6QgCpb/j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, you dont need FIELD_GET, that would be pointless for this helper if
+that was the case
 
-On Thu, Sep 10, 2020 at 08:18:13AM +0200, Wolfram Sang wrote:
-> On Wed, Sep 09, 2020 at 03:30:57PM -0500, Eddie James wrote:
-> > Mask the IRQ status to only the bits that the driver checks. This
-> > prevents excessive driver warnings when operating in slave mode
-> > when additional bits are set that the driver doesn't handle.
-> >=20
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> > Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
->=20
-> I reconsidered and applied it now because this helps whenever slave mode
-> is used. So, applied to for-current, thanks!
+> 
+> Or I am missing your point completely.
 
-If someone could provide a Fixes tag, that would be welcome. For me, not
-knowing the HW it doesn't look trivial to determine.
+Correct
 
+It should be:
 
---adJ1OR3c6QgCpb/j
-Content-Type: application/pgp-signature; name="signature.asc"
+        foo |= u32_encode_bits(val, FOO_MASK_A);
 
------BEGIN PGP SIGNATURE-----
+which would write val into bits represented by FOO_MASK_A by
+appropriately shifting val and masking it with FOO_MASK_A
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9ZxckACgkQFA3kzBSg
-KbZ3iA//cQfh41pbKdqYAo099C5IRm15SZnDi0WxKZpIYlYR22XokN01zfTYj/vX
-AIy+9J85UNFbLBhrASWn/Zuu7/4VkAKQgBPZChEH6EJ4wRe9RGHg6+Em21n0gqR9
-pyWNMkX4S/iSeLdhsi0HZ23Lg9KyN8tFUiw1Wj4DCcQGEDe8W1oOBkW1X1r2YLTk
-p99q/blvdOcfPUqfSFRxBYCKFYwipTllZMAklQ52sHDKpabgIxdNtUsffSrZaabr
-4UNtkX4cf+S5KZb87uXXb3zeVFRpr/tls4CQDAMyJHiqvrMT9gLGmpmKAX93RDy9
-dln32Q1uJbhiTjQc/tTuxQiiCiexc0vpk0uf1yliEbToVzb7rLCXz/ms9sY+oPZM
-tOzbG8/ERYdkUAbdkMIrgASNgDgrQvISH8pyLIIGfrGsiz2FcFBHUCBCONeyZgR8
-kndwyqr0plUr0RsCibBkkyRRKT/D9SkJAAMDBaAg68j2Uj+PEr+ccagf/AH+Fdbb
-gTLE64Mx1awSmGF6RpOHEgvEG+o62GDbZk/TmKD7GIWjeXqpZwoG1OySHc/gmFrJ
-lB4SN2kjxbHhcOB+D0YatsuVmrwEbQFTMMTH01gWjwLRpjNQ9TOxrMgmOhtiMyh/
-C7jkwvhOCiwtvd5zmD2JTn7r/0GhZXU6dg3DLlZQzMsh9NhV45s=
-=24Fn
------END PGP SIGNATURE-----
+So net result is bits in FOO_MASK_A are modified with val, rest of the
+bits are not touched
 
---adJ1OR3c6QgCpb/j--
+> 
+> 
+> > > > And while at it, consider defining masks for various fields rather than
+> > > > using numbers in GENMASK() above, that would look better, be more
+> > > > readable and people can reuse it.
+> > > 
+> > > Actually on this one I disagree. These fields are not intended to be used by
+> > > anyone, the goal is precisely to hide them behind regmap, and the use of raw
+> > > numbers makes it easier to cross-check the documentation and the code.
+> > > Adding a separate set of definitions would not increase readability.
+> > 
+> > Which one would you prefer:
+> > 
+> >          #define SDCA_FUN_MASK           GENMASK(24, 22)
+> > 
+> >          foo |= u32_encode_bits(SDCA_FUN_MASK, fun)
+> > 
+> > Or the one proposed...?
+> 
+> Same as above, let's see what this does with the control case where we'd
+> need to have four definitions:
+> 
+> #define SDCA_CONTROL_DEST_MASK1 GENMASK(20, 19)
+> #define SDCA_CONTROL_ORIG_MASK1 GENMASK(5, 4)
+> #define SDCA_CONTROL_DEST_MASK2 GENMASK(6, 3)
+> #define SDCA_CONTROL_ORIG_MASK2 GENMASK(3, 0)
+> 
+> And the code would look like
+> 
+> foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK1,
+> FIELD_GET(SDCA_CONTROL_ORIG_MASK1, fun));
+> foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK2,
+> FIELD_GET(SDCA_CONTROL_ORIG_MASK2, fun));
+> 
+> The original suggestion was:
+> 
+> FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
+> FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
+> 
+> I prefer the original... Adding these defines doesn't really add value
+> because
+> a) the values will not be reused anywhere else.
+> b) we need 12 of those defines
+> b) we need a prefix for those defines which makes the code heavier
+
+-- 
+~Vinod
