@@ -2,190 +2,101 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCC8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E0CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F30C21941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIgCxUrQ"
+	by mail.kernel.org (Postfix) with ESMTP id 0025B2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599763682;
+	bh=JhOw623KmZjBBWX0PTYpbPtOZstZZ5KRZ2j6lA39E/U=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=iZtB9Tgptqga3/pPk/eIaz6ln1A1Ha2L6Xl1JHpDqFBmhTofVc13JCJKDKlJjBrwv
+	 ZeIg9CehQzRTvBh9i6BDWjVC7Cc4erJm3KMigc1J6TK/pHlGLL0vogG7Mup//BBdG4
+	 JqVxWERv4DIoH3eyqA3A9ajOB36UEsxUhYxvUIos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgIJSrw (ORCPT
+        id S1727818AbgIJSrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbgIJSrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:47:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43675C061573;
-        Thu, 10 Sep 2020 11:47:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id u13so4746643pgh.1;
-        Thu, 10 Sep 2020 11:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=424l1MWPbS/ON1GRg0DetsLYxUXYchwHArTK6auJOEk=;
-        b=YIgCxUrQkyCOpWEZvBl36B/2BtAyPgmv8YOBishJRRckJddXUNWTdKa2SjJroCGC6c
-         mb7iklS28ksdFo8mjJiaxOQIw9wJb1Bnm3swGVBtDZOYa3P9CxsWOpPuHqXkSt5nDDYT
-         k4SNl9vZFwyBdSTC/XUUxuIHsIAjms8SmJA1mnfgTCpsk2vykBWFd//Zwtu1xYG0t+4D
-         tDas9zB0Jq9DUvUgxYc2e56WMnZMyUU4yf+zshuTMw8+T7zjYDkubH4+9hy2Tdnr0Dyp
-         Izjd/kB8FL5Tp8Vn7VUbwn7cBNuVMIspKxplnnmE/1gxLY6wAFcs7q3ObibCdMuPMK3J
-         ZNdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=424l1MWPbS/ON1GRg0DetsLYxUXYchwHArTK6auJOEk=;
-        b=YEi17Fl7IrLYwPMZth+wc7ESRCPzJElPEy75d/FNKI7CL4ySYg0Uy33c+SkcGS81kg
-         bOSAKSaMaCB6rMd61iQMT1CZ4i0nMInA/mM6E0iNGyGtLB+JP1YhXUc9+wnrLieuw09p
-         mUtg5aLid4TgUoe+BDhkqqaGU223PX3NftKeoCl5NwlQTChl3ZI2YfSwI06XykGuO/cA
-         y22x1ihz6lRb5X0TgkQGkrw4lJt3SyNr+A17vsIAyuDLdyRJ8rC2K70xRbLgKc2wdD2S
-         kzU9KPFJtgn3imqWlLTjgBqGGxR+XQey4ADyRgCpmgQfXJ/LKZY1HmVuJYr1k+6Tl/MD
-         nksQ==
-X-Gm-Message-State: AOAM531jGUL7QKy1JKNzsql/BLYWtOSKEjOzTeyvYkxuRtvmwjPN5k/F
-        NBr9LqiLvGwv3KNaEvKAsv5l9DHLXf8=
-X-Google-Smtp-Source: ABdhPJwmxeE6OZg5TekYzKbCaPzO9u6oZpsgdf2gwxq5xNrvkL1KFBdPRlzijgJTftcw/V/JHfwphw==
-X-Received: by 2002:a62:1a95:0:b029:13c:1611:6539 with SMTP id a143-20020a621a950000b029013c16116539mr6480616pfa.11.1599763625562;
-        Thu, 10 Sep 2020 11:47:05 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x4sm6610411pfm.86.2020.09.10.11.47.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 11:47:05 -0700 (PDT)
-To:     Rob Herring <robh@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-5-james.quinlan@broadcom.com>
- <20200910155637.GA423872@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
-Message-ID: <4ae713d2-14d3-8ef8-e589-fdc55f5b1731@gmail.com>
-Date:   Thu, 10 Sep 2020 11:47:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200910155637.GA423872@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Sep 2020 14:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726662AbgIJQNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:13:15 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D7A206A1;
+        Thu, 10 Sep 2020 16:12:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599754351;
+        bh=JhOw623KmZjBBWX0PTYpbPtOZstZZ5KRZ2j6lA39E/U=;
+        h=From:To:Subject:Date:From;
+        b=ClnfGNMmJjyHNJZRcZRkTbL6v51e9FpL4NSkzP8h/hIgijqenCo0olUYJQPmUg0k7
+         Rig5O7O38k14zzJ15FsHkgYeZJU8oHTI+XqHi6xJ3X9LGOzYgPyZA5Ie6m9bnYTQiz
+         YxZv1cb9KRiFxdhIzCa41oYtVTg/g8pT9njMlV5o=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v3 0/8] nfc: s3fwrn5: Few cleanups
+Date:   Thu, 10 Sep 2020 18:12:11 +0200
+Message-Id: <20200910161219.6237-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+Changes since v2:
+1. Fix dtschema ID after rename (patch 1/8).
+2. Apply patch 9/9 (defconfig change).
 
-On 9/10/2020 8:56 AM, Rob Herring wrote:
-> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
->> From: Jim Quinlan <jquinlan@broadcom.com>
->>
->> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
->> and resume.  Now the PCIe driver may do so as well.
->>
->> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
->> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>   drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
->>   1 file changed, 47 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
->> index c2b3d2946a36..3d588ab7a6dd 100644
->> --- a/drivers/pci/controller/pcie-brcmstb.c
->> +++ b/drivers/pci/controller/pcie-brcmstb.c
->> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->>   	brcm_pcie_bridge_sw_init_set(pcie, 1);
->>   }
->>   
->> +static int brcm_pcie_suspend(struct device *dev)
->> +{
->> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
->> +
->> +	brcm_pcie_turn_off(pcie);
->> +	clk_disable_unprepare(pcie->clk);
->> +
->> +	return 0;
->> +}
->> +
->> +static int brcm_pcie_resume(struct device *dev)
->> +{
->> +	struct brcm_pcie *pcie = dev_get_drvdata(dev);
->> +	void __iomem *base;
->> +	u32 tmp;
->> +	int ret;
->> +
->> +	base = pcie->base;
->> +	clk_prepare_enable(pcie->clk);
->> +
->> +	/* Take bridge out of reset so we can access the SERDES reg */
->> +	brcm_pcie_bridge_sw_init_set(pcie, 0);
->> +
->> +	/* SERDES_IDDQ = 0 */
->> +	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
->> +	u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
->> +	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
->> +
->> +	/* wait for serdes to be stable */
->> +	udelay(100);
-> 
-> Really needs to be a spinloop?
-> 
->> +
->> +	ret = brcm_pcie_setup(pcie);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (pcie->msi)
->> +		brcm_msi_set_regs(pcie->msi);
->> +
->> +	return 0;
->> +}
->> +
->>   static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->>   {
->>   	brcm_msi_remove(pcie);
->> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->>   
->>   MODULE_DEVICE_TABLE(of, brcm_pcie_match);
->>   
->> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
->> +	.suspend_noirq = brcm_pcie_suspend,
->> +	.resume_noirq = brcm_pcie_resume,
-> 
-> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
-> and 1352 of .suspend in the tree.
-> 
-> Is doing a clk unprepare even safe in .suspend_noirq? IIRC,
-> prepare/unprepare can sleep.
+Changes since v1:
+1. Rename dtschema file and add additionalProperties:false, as Rob
+   suggested,
+2. Add Marek's tested-by,
+3. New patches: #4, #5, #6, #7 and #9.
 
-Yes, it is safe, provided that your clock provider (clk-scmi.c in our 
-case) supports it, too. In our case the underlying mailbox driver has 
-its interrupts flagged with IRQF_NOSUSPEND such that they can still be 
-processed at _noirq time.
+Best regards,
+Krzysztof
 
-I think the rationale was to ensure that this would be done much later 
-after other subsystem have been made quiescent, but given the Linux 
-device driver model, the PCI bridge should be suspended after all 
-pci_device child device, so it should be safe not to use _noirq.
+Krzysztof Kozlowski (8):
+  dt-bindings: net: nfc: s3fwrn5: Convert to dtschema
+  dt-bindings: net: nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+  nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+  nfc: s3fwrn5: Remove unneeded 'ret' variable
+  nfc: s3fwrn5: Add missing CRYPTO_HASH dependency
+  nfc: s3fwrn5: Constify s3fwrn5_fw_info when not modified
+  MAINTAINERS: Add Krzysztof Kozlowski to Samsung S3FWRN5 and remove
+    Robert
+  arm64: dts: exynos: Use newer S3FWRN5 GPIO properties in Exynos5433
+    TM2
+
+ CREDITS                                       |  4 +
+ .../devicetree/bindings/net/nfc/s3fwrn5.txt   | 25 -------
+ .../bindings/net/nfc/samsung,s3fwrn5.yaml     | 73 +++++++++++++++++++
+ MAINTAINERS                                   |  5 +-
+ .../dts/exynos/exynos5433-tm2-common.dtsi     |  4 +-
+ drivers/nfc/s3fwrn5/Kconfig                   |  1 +
+ drivers/nfc/s3fwrn5/firmware.c                |  4 +-
+ drivers/nfc/s3fwrn5/firmware.h                |  2 +-
+ drivers/nfc/s3fwrn5/i2c.c                     | 24 +++---
+ 9 files changed, 101 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
+
 -- 
-Florian
+2.17.1
+
