@@ -2,164 +2,145 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D07C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF8DC2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 250862078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="fW03118K"
+	by mail.kernel.org (Postfix) with ESMTP id D1C082078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgIJIqL (ORCPT
+        id S1730312AbgIJIqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729990AbgIJInk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:43:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06924C061796
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b124so4196291pfg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DydHZR1p/a4YgWod1jge5YOze1r87n8O9ViW1sroOHE=;
-        b=fW03118K7OqoKHn0n/T5KvrtUYFGItUGF5N6guUzhftq5pe6S/cCuNZOc7HvKn8Eey
-         IDNdM9hwsCF4NZkTkAwKmCSYy5a2dFlOA9lp46ncqkgd1q3DoUJBFxmUZUZt6kufBXDw
-         pYTgoq8v1ApLaGpSc4X6a84Kaosdt95njNvvWGVCbOHsa7bfTKEnm+5pbShj746vZxEM
-         b+3wSM92YFInqZYqb9WhPEDbL8IxDn5xD9kvQ3mFFAd9hJY0Ini76LCw7FtbXR+ymhl4
-         VUof+fRcGtKEQQO3SOy6ZDwd0/xU/N2QLdSZhnFwnfuFkKPNnJZKNuYqkAsm/aEf/aXB
-         rmLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DydHZR1p/a4YgWod1jge5YOze1r87n8O9ViW1sroOHE=;
-        b=tlNTbDDqscXpqWMlI9nNso1efUJF4K+rkjqmfapmJ13ZkJnMp2UJJtmXjkCOxJLA43
-         i7nm0MLdaWgy1oMBzLpIC4NRLeq9vJVOnyvaZZTn/8224T6cuOwGXlhhbwd9IEN/aK2z
-         36tcPTa7qjwdLm4clGfVR9pjl2qrtZLC1u6va9Byq5GR8tbw/kcZA66hSitmFIS6wDeM
-         tsxVxB56j482ubrcK3dXCjIejZEwyTWCbTHhJ7SvaKJLzEk3JHGIsxJqgplJA3tLyG0c
-         yz6vEjBRip8Euk0OhIpPaU3qdL515qMOK5ZOuRNL0lL/jvwbEph4bBGER9VACr0NDk7d
-         HMmQ==
-X-Gm-Message-State: AOAM533fLy35UQulEXsGNttVQ4SaGmfu95OEKFpH1r14oZMdcNRPcdFn
-        CnI2W6wtctfjzQNGPDvb9dV6gg==
-X-Google-Smtp-Source: ABdhPJw1G2Xl2QigaSTG41KX4+ivGSijQkSvMrzle/xljTr3qEDQNI3MjDlu9qARs4whVg2vcMPJEw==
-X-Received: by 2002:a63:f53:: with SMTP id 19mr3741250pgp.26.1599727395106;
-        Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
-Received: from Smcdef-MBP.local.net ([103.136.221.71])
-        by smtp.gmail.com with ESMTPSA id n21sm4447567pgl.7.2020.09.10.01.43.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 01:43:14 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] mm: memcontrol: Add the missing numa stat of anon and file for cgroup v2
-Date:   Thu, 10 Sep 2020 16:42:58 +0800
-Message-Id: <20200910084258.22293-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Thu, 10 Sep 2020 04:46:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12816 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730077AbgIJIpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:45:25 -0400
+IronPort-SDR: +SAY9a30C7N5311mbKCJ+fr/1gPJY4FoEJFZGAq6BLhuHDwmbsPuwXcLpsJtZm05AgVyE12+I7
+ VQhic4MT9/VQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243310048"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="243310048"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 01:45:24 -0700
+IronPort-SDR: ErUPBrPQIPAp8qnsEykBXGR/atSeeL4VciSJhRKcapa0y7p/v4iNRlCMvQmRhLGzCOgHptsQTC
+ +4Isk07Gc28w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="300474111"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga003.jf.intel.com with ESMTP; 10 Sep 2020 01:45:22 -0700
+Date:   Thu, 10 Sep 2020 16:41:06 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: Re: [PATCH 1/3] fpga: dfl: move dfl_device_id to mod_devicetable.h
+Message-ID: <20200910084106.GB16318@yilunxu-OptiPlex-7050>
+References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
+ <1599544129-17594-2-git-send-email-yilun.xu@intel.com>
+ <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the cgroup v1, we have a numa_stat interface. This is useful for
-providing visibility into the numa locality information within an
-memcg since the pages are allowed to be allocated from any physical
-node. One of the use cases is evaluating application performance by
-combining this information with the application's CPU allocation.
-But the cgroup v2 does not. So this patch adds the missing information.
+On Wed, Sep 09, 2020 at 05:55:33AM -0700, Tom Rix wrote:
+> 
+> On 9/7/20 10:48 PM, Xu Yilun wrote:
+> > In order to support MODULE_DEVICE_TABLE() for dfl device driver, this
+> > patch moves struct dfl_device_id to mod_devicetable.h
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > ---
+> >  drivers/fpga/dfl.h              | 13 +------------
+> >  include/linux/mod_devicetable.h | 12 ++++++++++++
+> >  2 files changed, 13 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> > index 5dc758f..d5b0760 100644
+> > --- a/drivers/fpga/dfl.h
+> > +++ b/drivers/fpga/dfl.h
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/fpga/fpga-region.h>
+> > +#include <linux/mod_devicetable.h>
+> >  
+> >  /* maximum supported number of ports */
+> >  #define MAX_DFL_FPGA_PORT_NUM 4
+> > @@ -526,18 +527,6 @@ enum dfl_id_type {
+> >  };
+> >  
+> >  /**
+> > - * struct dfl_device_id -  dfl device identifier
+> > - * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+> > - * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+> > - * @driver_data: driver specific data.
+> > - */
+> > -struct dfl_device_id {
+> > -	u8 type;
+> > -	u16 feature_id;
+> > -	unsigned long driver_data;
+> > -};
+> > -
+> > -/**
+> >   * struct dfl_device - represent an dfl device on dfl bus
+> >   *
+> >   * @dev: generic device interface.
+> > diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> > index 5b08a47..407d8dc 100644
+> > --- a/include/linux/mod_devicetable.h
+> > +++ b/include/linux/mod_devicetable.h
+> > @@ -838,4 +838,16 @@ struct mhi_device_id {
+> >  	kernel_ulong_t driver_data;
+> >  };
+> >  
+> > +/**
+> > + * struct dfl_device_id -  dfl device identifier
+> > + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+> > + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+> > + * @driver_data: driver specific data.
+> > + */
+> > +struct dfl_device_id {
+> > +	__u8 type;
+> > +	__u16 feature_id;
+> 
+> I thought i saw feature id's going to 64 bit, does this type need to expand ?
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- mm/memcontrol.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 2 deletions(-)
+Feature id is a 12bit field in DFL spec. Previously we define it u64
+cause we are considering it may expand sometime. But now seems GUID will
+be used in future design.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 75cd1a1e66c8..c779673f29b2 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1492,10 +1492,34 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
- 	return false;
- }
- 
-+#ifdef CONFIG_NUMA
-+static unsigned long memcg_node_page_state(struct mem_cgroup *memcg,
-+					   unsigned int nid,
-+					   enum node_stat_item idx)
-+{
-+	long x;
-+	struct mem_cgroup_per_node *pn;
-+	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
-+
-+	VM_BUG_ON(nid >= nr_node_ids);
-+
-+	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-+	x = atomic_long_read(&pn->lruvec_stat[idx]);
-+#ifdef CONFIG_SMP
-+	if (x < 0)
-+		x = 0;
-+#endif
-+	return x;
-+}
-+#endif
-+
- static char *memory_stat_format(struct mem_cgroup *memcg)
- {
- 	struct seq_buf s;
- 	int i;
-+#ifdef CONFIG_NUMA
-+	int nid;
-+#endif
- 
- 	seq_buf_init(&s, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
- 	if (!s.buffer)
-@@ -1512,12 +1536,30 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
- 	 * Current memory state:
- 	 */
- 
--	seq_buf_printf(&s, "anon %llu\n",
-+	seq_buf_printf(&s, "anon %llu",
- 		       (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
- 		       PAGE_SIZE);
--	seq_buf_printf(&s, "file %llu\n",
-+#ifdef CONFIG_NUMA
-+	for_each_node_state(nid, N_MEMORY)
-+		seq_buf_printf(&s, " N%d=%llu", nid,
-+			       (u64)memcg_node_page_state(memcg, nid,
-+							  NR_ANON_MAPPED) *
-+			       PAGE_SIZE);
-+#endif
-+	seq_buf_putc(&s, '\n');
-+
-+	seq_buf_printf(&s, "file %llu",
- 		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
- 		       PAGE_SIZE);
-+#ifdef CONFIG_NUMA
-+	for_each_node_state(nid, N_MEMORY)
-+		seq_buf_printf(&s, " N%d=%llu", nid,
-+			       (u64)memcg_node_page_state(memcg, nid,
-+							  NR_FILE_PAGES) *
-+			       PAGE_SIZE);
-+#endif
-+	seq_buf_putc(&s, '\n');
-+
- 	seq_buf_printf(&s, "kernel_stack %llu\n",
- 		       (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
- 		       1024);
--- 
-2.20.1
+And the header file will be used by modpost, which is not supporting u64
+now. So it is not necessary we use u64 for extra work. A patch is
+already applied for this change - "change data type of feature id to u16"
 
+Thanks,
+Yilun
+
+> 
+> Tom 
+> 
+> > +	kernel_ulong_t driver_data;
+> > +};
+> > +
+> >  #endif /* LINUX_MOD_DEVICETABLE_H */
