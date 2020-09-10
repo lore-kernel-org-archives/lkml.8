@@ -2,160 +2,155 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53B2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F00DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F2A2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XGa+1wti"
+	by mail.kernel.org (Postfix) with ESMTP id D840A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599775197;
+	bh=HTszp/ytn0CEGJpXVag3BgkL2GSz7yzU9v7ODyQefvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0/CREFwuqCtjR6nYshaQh7/89RhupDd8TfGZKdck543UMo0AUpBLLp62WJziioRnp
+	 glOoj3DThUT3GekkxwoBekRb4r05WuCcv+OPi18DCNpSv2zprtLeEpB6faQs3tUc+8
+	 pKGarcBb6zHa3SrJ6Vq3oe0qsrC1A9TMs3G2DBc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbgIJV7m (ORCPT
+        id S1725907AbgIJV74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgIJV7Y (ORCPT
+        Thu, 10 Sep 2020 17:59:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35845 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730636AbgIJLKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:59:24 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6D9C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:59:24 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g72so7736837qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RBvq+OOZpOHz7JVY1b9A66StBw0lh3lNMqv01GrhYLE=;
-        b=XGa+1wtiJPkykbDWCfESpB/MvI1RBtyH5dvDVcm14/sCZlt15vU51OB/uvdf8x4ZQa
-         kQYpCVOD4ExSpYHPDOteT1PnQSYpcVDio5gc9zCACzdojqAlh6SwMKMRY4M2jHdso8pC
-         o1SCOD1e7CU5P94+lNcRXuJe4cmvhxIpYDyRzl6AlKYd1iDVs+vkgkgFbjeoHTVRj1ST
-         1yBIDBY0FM4tBgJQZxvv5cNNGM4bu8ROu2teyjXMmbtUrBhHsMF7QLWMp1o0b0abexEB
-         POsgnb1rV2g2SN+GvDFk4nRwxlB7GR1NoIs/6jzxofpKRolvj4glG/Y8VK7FoDyzwgcR
-         PZcQ==
+        Thu, 10 Sep 2020 07:10:24 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r24so7650738ljm.3;
+        Thu, 10 Sep 2020 04:10:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RBvq+OOZpOHz7JVY1b9A66StBw0lh3lNMqv01GrhYLE=;
-        b=WRZ3/7FSHSkKJ6meo6FE2lNIhqRVXCKI78jY1x2Zoj6Zdo2OuMFWbE2cfmhxWGb8cA
-         xGhdOi/T2uSKyWJJ95Z1iLi9ZBEYps9Je/tGHQxdP+XcpnUESOnXOrbQadnJ3x/YHPOC
-         CPFgyjoMQJoUY1hHPt9WnqyR/MjDvquiH25QXO6yFS/fRb9GI3aikBGIIxB0Twi7kq78
-         RHuMFoM8fwQXCRJTDNjcHl/zI9IlGFhs3bYucLmFkfR52KfK92AafFMS6K4MWzkNc5ZB
-         KAApE6uhv8zlpJNNu18WXlsf7ba4JNX4CceLaZx8yllFLfcn/PfXecpBlsNI6Au5UZxi
-         bsNg==
-X-Gm-Message-State: AOAM530+xlfSauh1dTMwkC069cAXPay5LKaEhIA6HrC8VaZymgnILvIf
-        rAk8DsgH5mFDHtFP9qNNeIaFqw==
-X-Google-Smtp-Source: ABdhPJzg7+n4mPFpbsKeMom2f+wjc9snf2MnK4gNUYWrTQr71TGF5AizTC8kCaHgs9VlFTOngDCTww==
-X-Received: by 2002:ae9:c015:: with SMTP id u21mr10626371qkk.268.1599775163249;
-        Thu, 10 Sep 2020 14:59:23 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id j88sm32038qte.96.2020.09.10.14.59.22
+        bh=khsISv6KrMDMd3j57rJbO3CE20Pfs/l3bC/RR73dbF4=;
+        b=YcLdyUsHp/qQnTy5Xw0TQwgBcNeDgwAlOYNJ8SwNmKzSha5n8+lFdk6T/Lz6DGWM7I
+         E/OsKLldIY4iEMpfnPnHnH53F50ryBUHMrE2sQE1Aan5oKF+YnOuHOMkoTS8xfN3OKUQ
+         GUph7HfsQ2+xsBjVS5kH/dVzeQNekilVfpuiQGP07BQjt3CP3bJxvI1kP5bIdIosmvoF
+         sk25YVnKGQkEi0W7BwFC+XhJ8+0yDA1TBo1IDfxd5zwKlq0PWB8SieaekHbgnThr7ViC
+         EsM2kOMcsgoUiLMoxN37NCTj2+uMCyy7Za8EkkUwtJErixfa28WxpfamBrixFIezqSLf
+         ahMw==
+X-Gm-Message-State: AOAM532KB5A5NSjo3uKbpydEMvFPCkI0GzWW3BoncNY7xQWC7CNUkS+y
+        F1zakHXHBQrp2Q4fCP1Wiew=
+X-Google-Smtp-Source: ABdhPJxE2eVsfsgDJpsGn8d/K4cY6mYTZqt67kV/mH7Rg97qgCPm6khS6FyHNSOfUaFmKUJ/C0/beA==
+X-Received: by 2002:a05:651c:319:: with SMTP id a25mr4059203ljp.281.1599736219850;
+        Thu, 10 Sep 2020 04:10:19 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id k14sm1280483lfm.90.2020.09.10.04.10.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:59:22 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kGUbB-004RUb-H7; Thu, 10 Sep 2020 18:59:21 -0300
-Date:   Thu, 10 Sep 2020 18:59:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200910215921.GP87483@ziepe.ca>
-References: <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad>
- <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com>
- <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
- <20200910181319.GO87483@ziepe.ca>
- <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
- <20200910211010.46d064a7@thinkpad>
- <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
+        Thu, 10 Sep 2020 04:10:19 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1kGKT1-0006qV-S1; Thu, 10 Sep 2020 13:10:15 +0200
+Date:   Thu, 10 Sep 2020 13:10:15 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Johan Hovold <johan@kernel.org>, Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] serial: core: fix console port-lock regression
+Message-ID: <20200910111015.GE24441@localhost>
+References: <20200909143101.15389-1-johan@kernel.org>
+ <20200909143101.15389-3-johan@kernel.org>
+ <20200909154815.GD1891694@smile.fi.intel.com>
+ <20200910073527.GC24441@localhost>
+ <20200910092715.GM1891694@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
+In-Reply-To: <20200910092715.GM1891694@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:32:05PM -0700, Linus Torvalds wrote:
-> Yeah, I get hung up on naming sometimes. I don't tend to care much
-> about private local variables ("i" is a perfectly fine variable name),
-> but these kinds of somewhat subtle cross-architecture definitions I
-> feel matter.
+On Thu, Sep 10, 2020 at 12:27:15PM +0300, Andy Shevchenko wrote:
+> +Cc: Tony, let me add Tony to the discussion.
+> 
+> On Thu, Sep 10, 2020 at 09:35:27AM +0200, Johan Hovold wrote:
+> > On Wed, Sep 09, 2020 at 06:48:15PM +0300, Andy Shevchenko wrote:
+> > > On Wed, Sep 09, 2020 at 04:31:01PM +0200, Johan Hovold wrote:
+> > > > Fix the port-lock initialisation regression introduced by commit
+> > > > a3cb39d258ef ("serial: core: Allow detach and attach serial device for
+> > > > console") by making sure that the lock is again initialised during
+> > > > console setup.
+> > > > 
+> > > > The console may be registered before the serial controller has been
+> > > > probed in which case the port lock needs to be initialised during
+> > > > console setup by a call to uart_set_options(). The console-detach
+> > > > changes introduced a regression in several drivers by effectively
+> > > > removing that initialisation by not initialising the lock when the port
+> > > > is used as a console (which is always the case during console setup).
+> > > > 
+> > > > Add back the early lock initialisation and instead use a new
+> > > > console-reinit flag to handle the case where a console is being
+> > > > re-attached through sysfs.
+> > > > 
+> > > > The question whether the console-detach interface should have been added
+> > > > in the first place is left for another discussion.
+> > > 
+> > > It was discussed in [1]. TL;DR: OMAP would like to keep runtime PM available
+> > > for UART while at the same time we disable it for kernel consoles in
+> > > bedb404e91bb.
+> > > 
+> > > [1]: https://lists.openwall.net/linux-kernel/2018/09/29/65
+> > 
+> > Yeah, I remember that. My fear is just that the new interface opens up a
+> > can of worms as it removes the earlier assumption that the console would
+> > essentially never be deregistered without really fixing all those
+> > drivers, and core functions, written under that assumption. Just to
+> > mention a few issues; we have drivers enabling clocks and other
+> > resources during console setup which can now be done repeatedly,
+> 
+> The series introduced the console ->exit() callback, so it should be
+> easy to fix.
 
-One of the first replys to this patch was to ask "when would I use
-_orig vs normal", so you are not alone. The name should convey it..
+I'm not saying it's necessarily hard, I'm suggesting it should have been
+considered before merging. But there could still be complications as the
+console have always been considered a special case that's been hacked
+around.
 
-So, I suggest pXX_offset_unlocked()
+> >	and
+> > several drivers whose setup callbacks are marked __init and will oops
+> > the minute you reattach the console.
+> 
+> I believe this can be fixed relatively easy. As a last resort it can
+> be a quirk that disables console detachment for problematic consoles.
 
-Since it is safe to call without the page table lock, while pXX_offset()
-requires the page table lock to be held as the internal *pXX is a data
-race otherwise.
+Sure, but just removing the __init without vetting the drivers and
+testing the new interface may not be much better than letting them oops.
 
-Patch 1 might be OK for a stable backport, but to get to a clear
-pXX_offset_unlocked() all the arches would want to be changed to
-implement that API and the generic code would provide the wrapper:
+> > And what about power management
+> > which was the reason for wanting this on OMAP in the first place; tty
+> > core never calls shutdown() for a console port, not even when it's been
+> > detached using the new interface.
+> 
+> That is interesting... Tony, do we have OMAP case working because of luck?
+> 
+> > I know, the console setup is all a mess, but this still seems a little
+> > rushed to me. I'm even inclined to suggest a revert until the above and
+> > similar issues have been addressed properly rather keeping a known buggy
+> > interface.
+> 
+> You know that it will be a dead end. Any solution how to move forward?
 
-#define pXX_offset(pXXp, address) pXX_offset_unlocked(pXXp, *(pXXp), address)
+I guess that depends on how broken this is. I only gave a few examples
+of the top of my head of issues that needs to be considered. 
 
-Arches would not have a *pXX inside their code.
+But if this is to stay then making the feature opt-in by only exposing
+the attribute for console drivers that implement the new exit() callback
+or some other serial-driver flag might work.
 
-Then we can talk about auditing call sites of pXX_offset and think
-about using the _unlocked version in places where the page table lock
-is not held.
-
-For instance mm/pagewalk.c should be changed. So should
-huge_pte_offset() and probably other places. These places might
-already be exsting data-race bugs.
-
-It is code-as-documentation indicating an unlocked page table walk.
-
-Now it is not just a S390 story but a change that makes the data
-concurrency much clearer, so I think I prefer this version to the
-addr_end one too.
-
-Regards,
-Jason
+Johan
