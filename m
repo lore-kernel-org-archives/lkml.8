@@ -2,197 +2,151 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53866C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4750AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A5520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB9321D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ai11IEn3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBOuVfCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgIJVIf (ORCPT
+        id S1727033AbgIJVJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33768 "EHLO
+        Thu, 10 Sep 2020 17:09:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgIJVHw (ORCPT
+        with ESMTP id S1731161AbgIJOfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:07:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77975C061573;
-        Thu, 10 Sep 2020 14:07:52 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f18so5473592pfa.10;
-        Thu, 10 Sep 2020 14:07:52 -0700 (PDT)
+        Thu, 10 Sep 2020 10:35:19 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A025C0617A1;
+        Thu, 10 Sep 2020 07:35:17 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c10so6550316edk.6;
+        Thu, 10 Sep 2020 07:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Li0nSbFdz+mC8RxoTVun9cvaUm8qgoK6MsIzH+38R3k=;
-        b=Ai11IEn3h4Xt+T9ffcUkHU+kkaykAv/kILQu8/Z8FY1WqSniTbyVBCnwUp3rQKOlo0
-         EgqUbCF4+pWHU8e3Td0WqI215nOfB7YNPaLf/4lHgM6mQcBJHfSP1mz7cI4KLI4RyEjP
-         /rqVgueX4UKU7lrR6snDLpSA2Q+SlnHDZo3fby5V20hA42M+4oSgBEQO/Q+kjxhYCxCe
-         fncaKXDQmhfqdaXUJvr7ao8yT0nlucHs1qfMs4jqVepjTwePWgaNwY6ffIK2/KW5hLQA
-         hXMMTq+6dAm7I/Dlx6Mr0CMs/NCG87mITKJfZW3bw+KJjuBA1qj6uJOqbOx7jaePcxdo
-         lVTA==
+        bh=CqVajLbzBylhgfGAcsTOQbCfA2sTjaEeoT2LMxZ+IiM=;
+        b=XBOuVfCpG1rZMmR8+fzX2Iw0HyxjJyHpHSUZ13UXZNNaNP2MkaNQ5naNzlJnQr69MW
+         txU08URc4XylmgF4L3W+Lbe9IVn0CWmYAQjTIVmhwm2VRGuMysnKzLIp2tWA4TR+4QUR
+         f6PPWMysmhTzSbGNqoXtzjrfZxy6hLPieCB+zF/9UlCQEKVjGWHh6Z4BMy5VSCFhXc6N
+         l/ieOxJHGv53pm8Ok+aySt4J/0GV3EQepNRybxtebZIqxALpwm7jXvPMxrC/OBs7WJdn
+         n6DAxVWK4h4E1Fk5c4rz/gEi58CZYEtfZHINaFM+a93Vg3d0Pxc/kX0jOdeb1DbBnxXA
+         3e4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=Li0nSbFdz+mC8RxoTVun9cvaUm8qgoK6MsIzH+38R3k=;
-        b=ZhyCU+AtnSq6XnkYq02vRj2Va1NlOouAqS7zX3+bJ39bQop/Ois6lsWeF2zJK7xnqn
-         c21WHbJRmmBYFQEemF2A/Eprw07IvZNA56D3hl5TEe7eFpODDjha9F8xeVp5D8ZYuLK4
-         RoZ3/lBnXpgjAYiZOGF6XL1CQ5cW4/2os1qpk0B0TunwklFieXi5oNnlp0UoIFgCeXDM
-         1Oo6Z3IKhNtR3BOVOFgoH/K+0KkqOCibL9DCqWtXS3oN9iwShgZL+WdheAUV5MOBbldl
-         GCBBebg4GVxO561foQDk0xVOZH6D0XzZfIFUm84k+OuRTPz2Bh/xSa9NLCPqqw/bAgk/
-         qVqA==
-X-Gm-Message-State: AOAM533Guu13ggaWupTLPUYQl2QANbnJmP6V1OowTizgfN6g/f5Ph2iZ
-        UMtgFJhC3b82RbaX3ir6NFM=
-X-Google-Smtp-Source: ABdhPJwFSjYOfpYq2rhihinFKuvAuIMZshJtCpVBe+dFyMykRxvaNxrYHAtXApgbXopQWYCIZKz6gw==
-X-Received: by 2002:a63:500e:: with SMTP id e14mr6019051pgb.36.1599772071871;
-        Thu, 10 Sep 2020 14:07:51 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id a10sm6779410pfn.219.2020.09.10.14.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:07:51 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 14:07:43 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     Paolo Abeni <pabeni@redhat.com>,
-        Kehuan Feng <kehuan.feng@gmail.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Message-ID: <5f5a959fbe236_c295820892@john-XPS-13-9370.notmuch>
-In-Reply-To: <CAM_iQpVqdVc5_LkhO4Qie7Ff+XXRTcpiptZsEVNh=o9E0GkcRQ@mail.gmail.com>
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com>
- <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
- <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
- <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
- <20200822032800.16296-1-hdanton@sina.com>
- <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
- <20200825032312.11776-1-hdanton@sina.com>
- <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
- <20200825162329.11292-1-hdanton@sina.com>
- <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
- <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
- <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
- <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
- <20200827125747.5816-1-hdanton@sina.com>
- <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
- <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
- <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
- <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com>
- <5f51cbad3cc2_3eceb208fc@john-XPS-13-9370.notmuch>
- <CAM_iQpVqdVc5_LkhO4Qie7Ff+XXRTcpiptZsEVNh=o9E0GkcRQ@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CqVajLbzBylhgfGAcsTOQbCfA2sTjaEeoT2LMxZ+IiM=;
+        b=OYCGQ4Ss405f5vjIkmxhY6ThjiVfLp0Y25fCNSsHqMmRYf3Ihxw+PUv0xPPXe4nTr5
+         okCCHvCqWbO617Y22A/3Nle+YtO91fj/DN6itb6mCfP62g0FkP8d4NbOb/O5eL3jJSRG
+         U9WpXdUGg4rsY0pKfzoLEHNuHXbVoNBl1PqlndlTWf6zb3kK0kn00uAPGOUUifkBSDGq
+         sr6oSn5BJONUjxY/a02s4W8IL2j9gwIuSSBw8XNY00N6wZqyuibv29m76Y50tZOXkuBC
+         uh6lETHMUumbLFSnGNIptITnXsDRXCefE3Cm5rW3mt+476Y7iao2+/leK/h0AosR69QW
+         YeuQ==
+X-Gm-Message-State: AOAM533uyzt8tXHiFE0lN6zsSDWslzwVnxpja1zoI68bvDXTn83yElD/
+        k1VUfTbEOqeI9mEUS7Wwrdo=
+X-Google-Smtp-Source: ABdhPJw2J6znE3xmbVz2se2YcLJ0No17Heg3y5yq6t4TgIrRRQk+Flrj2jGaX1lvFVts919IEO5+cg==
+X-Received: by 2002:aa7:dcc1:: with SMTP id w1mr9281936edu.360.1599748515729;
+        Thu, 10 Sep 2020 07:35:15 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id m14sm7647191ejn.8.2020.09.10.07.35.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Sep 2020 07:35:13 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id DFAB827C00A4;
+        Thu, 10 Sep 2020 10:35:09 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 10:35:09 -0400
+X-ME-Sender: <xms:nTlaXycIk9c1V30GYRYQD7LGT4vNFbJJb11yC7uf6bSca5mSyOVFew>
+    <xme:nTlaX8Oe14Dxi7auU4ZlZmrTIAlJQPakSpF3KaUD3irp8RZ2MkUYvL_WPuvKQJrTD
+    ZaNWeW5B8L90ky4Lg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgjedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgjfhgggfes
+    tdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnh
+    hgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeehvdevteefgfeiudettdef
+    vedvvdelkeejueffffelgeeuhffhjeetkeeiueeuleenucfkphephedvrdduheehrdduud
+    durdejudenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
+    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
+    ihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:nTlaXzgjlgElV5qAdyb5fav0nK2VSx58wTDpFTORKxASyRbB8u8kRA>
+    <xmx:nTlaX_-6FN1UUx_hxhodsVGe-ltTn32xau1u9EPzfzLI4qS8OzssZA>
+    <xmx:nTlaX-t8LIMgIw0vxfY7RUMuOOFmANjNfWctojCW-uY1ree9kfAnkA>
+    <xmx:nTlaX-dByvsZfukcCTrY0ao4LC9B5nCg-LnbNWBkwlbfL2YbQtsK3eCr9Ug>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 284573064683;
+        Thu, 10 Sep 2020 10:35:09 -0400 (EDT)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
+        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
+        mark.rutland@arm.com, maz@kernel.org,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [PATCH v3 04/11] Drivers: hv: Use HV_HYP_PAGE in hv_synic_enable_regs()
+Date:   Thu, 10 Sep 2020 22:34:48 +0800
+Message-Id: <20200910143455.109293-5-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910143455.109293-1-boqun.feng@gmail.com>
+References: <20200910143455.109293-1-boqun.feng@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cong Wang wrote:
-> On Thu, Sep 3, 2020 at 10:08 PM John Fastabend <john.fastabend@gmail.com> wrote:
-> > Maybe this would unlock us,
-> >
-> > diff --git a/net/core/dev.c b/net/core/dev.c
-> > index 7df6c9617321..9b09429103f1 100644
-> > --- a/net/core/dev.c
-> > +++ b/net/core/dev.c
-> > @@ -3749,7 +3749,7 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
-> >
-> >         if (q->flags & TCQ_F_NOLOCK) {
-> >                 rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
-> > -               qdisc_run(q);
-> > +               __qdisc_run(q);
-> >
-> >                 if (unlikely(to_free))
-> >                         kfree_skb_list(to_free);
-> >
-> >
-> > Per other thread we also need the state deactivated check added
-> > back.
-> 
-> I guess no, because pfifo_dequeue() seems to require q->seqlock,
-> according to comments in qdisc_run(), so we can not just get rid of
-> qdisc_run_begin()/qdisc_run_end() here.
-> 
-> Thanks.
+Both the base_*_gpa should use the guest page number in Hyper-V page, so
+use HV_HYP_PAGE instead of PAGE.
 
-Seems we would have to revert this as well then,
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ drivers/hv/hv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- commit 021a17ed796b62383f7623f4fea73787abddad77
- Author: Paolo Abeni <pabeni@redhat.com>
- Date:   Tue May 15 16:24:37 2018 +0200
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 7499079f4077..8ac8bbf5b5aa 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -165,7 +165,7 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 	hv_get_simp(simp.as_uint64);
+ 	simp.simp_enabled = 1;
+ 	simp.base_simp_gpa = virt_to_phys(hv_cpu->synic_message_page)
+-		>> PAGE_SHIFT;
++		>> HV_HYP_PAGE_SHIFT;
+ 
+ 	hv_set_simp(simp.as_uint64);
+ 
+@@ -173,7 +173,7 @@ void hv_synic_enable_regs(unsigned int cpu)
+ 	hv_get_siefp(siefp.as_uint64);
+ 	siefp.siefp_enabled = 1;
+ 	siefp.base_siefp_gpa = virt_to_phys(hv_cpu->synic_event_page)
+-		>> PAGE_SHIFT;
++		>> HV_HYP_PAGE_SHIFT;
+ 
+ 	hv_set_siefp(siefp.as_uint64);
+ 
+-- 
+2.28.0
 
-    pfifo_fast: drop unneeded additional lock on dequeue
-    
-    After the previous patch, for NOLOCK qdiscs, q->seqlock is
-    always held when the dequeue() is invoked, we can drop
-    any additional locking to protect such operation.
-
-Then I think it should be safe. Back when I was working on the ptr
-ring implementation I opted not to do a case without the spinlock
-because the performance benefit was minimal in the benchmarks I
-was looking at. I assumed at some point it would be worth going
-back to it, but just changing those to the __ptr_ring* cases is
-not safe without a lock. I remember having a discussion with Tsirkin
-about the details, but would have to go through the mail servers
-to find it.
-
-FWIW the initial perf looked like this, (https://lwn.net/Articles/698135/)
-
-nolock pfifo_fast
-1:  1417597 1407479 1418913 1439601 
-2:  1882009 1867799 1864374 1855950
-4:  1806736 1804261 1803697 1806994
-8:  1354318 1358686 1353145 1356645
-12: 1331928 1333079 1333476 1335544
-
-locked pfifo_fast
-1:  1471479 1469142 1458825 1456788 
-2:  1746231 1749490 1753176 1753780
-4:  1119626 1120515 1121478 1119220
-8:  1001471  999308 1000318 1000776
-12:  989269  992122  991590  986581
-
-As you can see measurable improvement on many cores. But, actually
-worse if you have enough nic queues to map 1:1 with cores.
-
-nolock mq
-1:    1417768  1438712  1449092  1426775
-2:    2644099  2634961  2628939  2712867
-4:    4866133  4862802  4863396  4867423
-8:    9422061  9464986  9457825  9467619
-12:  13854470 13213735 13664498 13213292  
-
-locked mq
-1:   1448374  1444208  1437459  1437088 
-2:   2687963  2679221  2651059  2691630
-4:   5153884  4684153  5091728  4635261
-8:   9292395  9625869  9681835  9711651
-12: 13553918 13682410 14084055 13946138
-
-So only better if you have more cores than hardware queues
-which was the case on some of the devices we had at the time.
-
-Thanks,
-John
