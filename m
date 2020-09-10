@@ -2,110 +2,86 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38A52087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C482087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FMEDkw73"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bITux9EF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbgIJP5U (ORCPT
+        id S1731458AbgIJP6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 11:57:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731513AbgIJPzU (ORCPT
+        Thu, 10 Sep 2020 11:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731452AbgIJP5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:55:20 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AF20KA110560;
-        Thu, 10 Sep 2020 11:18:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=RUjE8geQUfKJdleFxhslp2zP2B33QNPoIINZYifD8iU=;
- b=FMEDkw733leENqm6oVNBrKXrUlkoJX10udLb+AphbqatfaLEA3KgFRC4msJ+iMpDPlZa
- 0+N5Xx28E9/JTDmU9HiExKyuT8T81QDpBTN0onDPC2oZJn/yzvo+N5qiviHDIo+1F4u/
- 16qYfex3vHHgf9hwGfnm86ztj6kyPBQaoM0PZw4GbUXFOZQVL0uUy9+IutDIbV9slfXW
- M9paM6IA2GNodtdoDx6semhD0AR5662XyhCpRbbA6LBproPOOp+xYoxxtq6DsnT3wlts
- CTUAsigwf/ToeNSfItp4vnXL1qdE76O+SzEAZhF8jOz98Som3cPzFjOYWpS6gn09dcTR sA== 
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fp6ss20d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:18:45 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AFCAE0021779;
-        Thu, 10 Sep 2020 15:18:44 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 33c2a9teqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 15:18:44 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AFIe0N47448510
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 15:18:40 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 946946E050;
-        Thu, 10 Sep 2020 15:18:43 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 083AA6E053;
-        Thu, 10 Sep 2020 15:18:43 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.211.140.115])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 15:18:42 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-fsi@lists.ozlabs.org,
-        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, alistair@popple.id.au,
-        jk@ozlabs.org
-Subject: [PATCH 3/4] dt-bindings: fsi: Aspeed master: Add bus-frequency property
-Date:   Thu, 10 Sep 2020 10:18:39 -0500
-Message-Id: <20200910151840.25333-4-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200910151840.25333-1-eajames@linux.ibm.com>
-References: <20200910151840.25333-1-eajames@linux.ibm.com>
+        Thu, 10 Sep 2020 11:57:07 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEA6C061795
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:56:59 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id d18so7591824iop.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Lw00I39tMMHoHHOPSgKttYErvt005RuGUQAb9q20a8A=;
+        b=bITux9EFWpfNdlM5j2+5LAzN74905Ih29yvwShF2RYD0rdrq4WVzARSbVJuvSmQPWY
+         j+to5gM/LtwviynJuV6Xw/wsJke0MBYGFTvqAsfHMn62ENDQNHKZLFd0IqeGy/YXQAkv
+         VzQea9i8kja5dzDE6N1RmEiA7mq7G6VZefYJanQOq9PYYyXW+7SVTKtT7DLY3JQQ6Yaf
+         +LznXIrys7f2IeFYvBnmS1Ki0TO452S54+EFTgcsHoySCF2Om2MslpGe1shaUybTvJ4Z
+         NYXD4pbGxmghN4rFbQnUMh+SSZHjhXFnidMaDDjLyfrIe/7fFBBzJAix6vpXnIjh1sFh
+         cB7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Lw00I39tMMHoHHOPSgKttYErvt005RuGUQAb9q20a8A=;
+        b=OdCIXzsbPbRezNCCnN8ctjvlpsjGjli8vFpvW5Sm0z4RS0WFwf1PiQ9Muzo4VH+WZG
+         qg+jd46+s4IEU3LLn8BUtfAahclTTjNvgkDpWlPIC3EPcoN2XmUcL/GzAUiwzCALPb1o
+         yrYHYvviZHja3Q4br/PVMGV5xpga4V8XcVQONPF9wZ5Qk9Q7swiUi1jTaTyu0SzbUXtm
+         5bA8OOmcO+lBAEMT+0nxaBBOohT+MyjOFwaycGAAcH4IaFZ8ahMoMopbbbqMX/Fw42ew
+         /Ego1RLk/LkDFBMLviDUrHGHnCDEphyn3ckU0zrazf5MZquovcuIGen5YpRsFOoxkZeE
+         f2/w==
+X-Gm-Message-State: AOAM532tUTRVjbpwijEed7stbvJ3w/lFqMjo22teq+ZMl8dHGD74JzAB
+        7CW7ms/JTU+llrj0l7lgdNSj8FWj/krl0Hyk
+X-Google-Smtp-Source: ABdhPJwLFvlr74/NHaaMQeIpR+L/bjIZVmaEteWtsH6Bm9x6kvp/ngajFsz8dvwqEASUe60lfJ+Ljw==
+X-Received: by 2002:a05:6638:1448:: with SMTP id l8mr9177707jad.83.1599753418617;
+        Thu, 10 Sep 2020 08:56:58 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m12sm3225470ilg.55.2020.09.10.08.56.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 08:56:58 -0700 (PDT)
+Subject: Re: [PATCH] [v2] blkcg: add plugging support for punt bio
+To:     Xianting Tian <tian.xianting@h3c.com>, tj@kernel.org
+Cc:     cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200910061506.45704-1-tian.xianting@h3c.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2bf5a5c3-1f1f-6ed1-8871-6e9d3e7b80d4@kernel.dk>
+Date:   Thu, 10 Sep 2020 09:56:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_04:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=1 spamscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100130
+In-Reply-To: <20200910061506.45704-1-tian.xianting@h3c.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bus-frequency property.
+Applied, thanks.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-index a513e65ec0c9..d84bd19526ca 100644
---- a/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-+++ b/Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt
-@@ -17,6 +17,7 @@ Optional properties:
- 
-  - fsi-routing-gpios: GPIO for setting the FSI mux (internal or cabled)
-  - fsi-mux-gpios: GPIO for detecting the desired FSI mux state
-+ - bus-frequency: the frequency of the FSI bus
- 
- 
- Examples:
 -- 
-2.26.2
+Jens Axboe
 
