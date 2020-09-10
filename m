@@ -2,135 +2,143 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D1FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C59C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03E9214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922EE214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599771011;
-	bh=Agzfe7HExjYL6X7cfUQ4kj9lNgyrIBJvfmcOPAa0FdU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gGDOcYdJry/ikEVaQmIGI9ygYjyjElt6w9YQSXoCDiXfGepFn4G8oXGyPz1b241An
-	 l+HAME7azHqCwC2AWX6bBjxGrTghBlC7LtPQgEtzKz3ayCoADs+VPaZlrRmRkTPg1U
-	 5VagVY5PXy4NjEK38bfJT1Pf0RbFsudJpAFz9ODk=
+	s=default; t=1599771014;
+	bh=EN8Ux1f40Gwbt7c8BI9OtZebo/fiQdq5Hs8XaO02MuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kv1ygzfSHkOru+1/h1eR3V3LKhjTYFjCXzkWmoIV54/L57n1Gx64xBnrsoQn8ZTiG
+	 tCZVU1nJ9Ow94+gf5gu+C/iJjG2G9se0lVB1HaJN0Ub4uvyfqUKboSPDH8WNSEOtlU
+	 QMQSLN/jAq06YlxzsVezjDUghvvMd92OunOSh4kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgIJUuL (ORCPT
+        id S1727818AbgIJUuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 10 Sep 2020 16:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgIJUVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:21:09 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726932AbgIJUU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:20:56 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B2D221E3;
-        Thu, 10 Sep 2020 20:21:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8777B221EA;
+        Thu, 10 Sep 2020 20:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599769268;
-        bh=Agzfe7HExjYL6X7cfUQ4kj9lNgyrIBJvfmcOPAa0FdU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vK+DqN966kgApGnPPLKKQldcvc7Yy8MIkyClhRe+/r1L1o57ibi53DRK1Ys6ZzTuW
-         Fzwkj9M3BKYdC/o6+zmVLJRzMtgQ2y2H2esuv4B22W2YpC/kelqAyAXeQlgtnIFKKT
-         PtOYdYdwOtkHsB9d4KhbGU37vWQf23BArjz17acs=
-Date:   Thu, 10 Sep 2020 15:21:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>
-Subject: Re: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device()
- during shutdown
-Message-ID: <20200910202106.GA811000@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910194138.GA808043@bjorn-Precision-5520>
+        s=default; t=1599769255;
+        bh=EN8Ux1f40Gwbt7c8BI9OtZebo/fiQdq5Hs8XaO02MuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cC54oQPVSUHFiKwGk7Ytv6VTyCltQC2OYgYqIL1BN7knZVhOZKy9523c6vulodT6j
+         uw1bWHuvSxSna8xmJFeZcdwzCCjpNygLqz4qpcurELJfipR6uu/j8tEQfaf+HlZuU9
+         qqhlv25t2ibIMDqKO/q7FgPwVVXM7rBpX933Q+4I=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
+        jolsa@redhat.com, bpf@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH RFC tip/core/rcu 4/4] rcu-tasks: Shorten per-grace-period sleep for RCU Tasks Trace
+Date:   Thu, 10 Sep 2020 13:20:52 -0700
+Message-Id: <20200910202052.5073-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200910201956.GA24190@paulmck-ThinkPad-P72>
+References: <20200910201956.GA24190@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Huacai]
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-On Thu, Sep 10, 2020 at 02:41:39PM -0500, Bjorn Helgaas wrote:
-> On Sat, Sep 05, 2020 at 04:33:26PM +0800, Tiezhu Yang wrote:
-> > After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
-> > during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
-> > services during shutdown"), it also calls pci_disable_device() during
-> > shutdown, this seems unnecessary, so just remove it.
-> 
-> I would like to get rid of the portdrv completely by folding its
-> functionality into the PCI core itself, so there would be no portdrv
-> probe or remove.
-> 
-> Does this solve a problem?  If not, I'm inclined to just leave it
-> as-is for now.  But if it fixes something, we should do the fix, of
-> course.
+The various RCU tasks flavors currently wait 100 milliseconds between each
+grace period in order to prevent CPU-bound loops and to favor efficiency
+over latency.  However, RCU Tasks Trace needs to have a grace-period
+latency of roughly 25 milliseconds, which is completely infeasible given
+the 100-millisecond per-grace-period sleep.  This commit therefore reduces
+this sleep duration to 5 milliseconds (or one jiffy, whichever is longer)
+in kernels built with CONFIG_TASKS_TRACE_RCU_READ_MB=y.
 
-This looks awfully similar to [1], so I guess we *do* need to do
-something here.  I'll respond there since it has more details.
+Link: https://lore.kernel.org/bpf/CAADnVQK_AiX+S_L_A4CQWT11XyveppBbQSQgH_qWGyzu_E8Yeg@mail.gmail.com/
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: <bpf@vger.kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tasks.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/r/1596268180-9114-1-git-send-email-chenhc@lemote.com
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index 2b4df23..a0eaed5 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -28,6 +28,7 @@ typedef void (*postgp_func_t)(struct rcu_tasks *rtp);
+  * @kthread_ptr: This flavor's grace-period/callback-invocation kthread.
+  * @gp_func: This flavor's grace-period-wait function.
+  * @gp_state: Grace period's most recent state transition (debugging).
++ * @gp_sleep: Per-grace-period sleep to prevent CPU-bound looping.
+  * @init_fract: Initial backoff sleep interval.
+  * @gp_jiffies: Time of last @gp_state transition.
+  * @gp_start: Most recent grace-period start in jiffies.
+@@ -49,6 +50,7 @@ struct rcu_tasks {
+ 	struct wait_queue_head cbs_wq;
+ 	raw_spinlock_t cbs_lock;
+ 	int gp_state;
++	int gp_sleep;
+ 	int init_fract;
+ 	unsigned long gp_jiffies;
+ 	unsigned long gp_start;
+@@ -233,7 +235,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 			cond_resched();
+ 		}
+ 		/* Paranoid sleep to keep this from entering a tight loop */
+-		schedule_timeout_idle(HZ/10);
++		schedule_timeout_idle(rtp->gp_sleep);
+ 
+ 		set_tasks_gp_state(rtp, RTGS_WAIT_CBS);
+ 	}
+@@ -557,6 +559,7 @@ EXPORT_SYMBOL_GPL(rcu_barrier_tasks);
+ 
+ static int __init rcu_spawn_tasks_kthread(void)
+ {
++	rcu_tasks.gp_sleep = HZ / 10;
+ 	rcu_tasks.init_fract = 10;
+ 	rcu_tasks.pregp_func = rcu_tasks_pregp_step;
+ 	rcu_tasks.pertask_func = rcu_tasks_pertask;
+@@ -690,6 +693,7 @@ EXPORT_SYMBOL_GPL(rcu_barrier_tasks_rude);
+ 
+ static int __init rcu_spawn_tasks_rude_kthread(void)
+ {
++	rcu_tasks_rude.gp_sleep = HZ / 10;
+ 	rcu_spawn_tasks_kthread_generic(&rcu_tasks_rude);
+ 	return 0;
+ }
+@@ -1170,8 +1174,12 @@ EXPORT_SYMBOL_GPL(rcu_barrier_tasks_trace);
+ static int __init rcu_spawn_tasks_trace_kthread(void)
+ {
+ 	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB)) {
++		rcu_tasks_trace.gp_sleep = HZ / 10;
+ 		rcu_tasks_trace.init_fract = 10;
+ 	} else {
++		rcu_tasks_trace.gp_sleep = HZ / 200;
++		if (rcu_tasks_trace.gp_sleep <= 0)
++			rcu_tasks_trace.gp_sleep = 1;
+ 		rcu_tasks_trace.init_fract = HZ / 5;
+ 		if (rcu_tasks_trace.init_fract <= 0)
+ 			rcu_tasks_trace.init_fract = 1;
+-- 
+2.9.5
 
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  drivers/pci/pcie/portdrv_core.c |  1 -
-> >  drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
-> >  2 files changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> > index 50a9522..1991aca 100644
-> > --- a/drivers/pci/pcie/portdrv_core.c
-> > +++ b/drivers/pci/pcie/portdrv_core.c
-> > @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
-> >  {
-> >  	device_for_each_child(&dev->dev, NULL, remove_iter);
-> >  	pci_free_irq_vectors(dev);
-> > -	pci_disable_device(dev);
-> >  }
-> >  
-> >  /**
-> > diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> > index 3a3ce40..cab37a8 100644
-> > --- a/drivers/pci/pcie/portdrv_pci.c
-> > +++ b/drivers/pci/pcie/portdrv_pci.c
-> > @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-> >  	}
-> >  
-> >  	pcie_port_device_remove(dev);
-> > +	pci_disable_device(dev);
-> > +}
-> > +
-> > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> > +{
-> > +	if (pci_bridge_d3_possible(dev)) {
-> > +		pm_runtime_forbid(&dev->dev);
-> > +		pm_runtime_get_noresume(&dev->dev);
-> > +		pm_runtime_dont_use_autosuspend(&dev->dev);
-> > +	}
-> > +
-> > +	pcie_port_device_remove(dev);
-> >  }
-> >  
-> >  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> > @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver = {
-> >  
-> >  	.probe		= pcie_portdrv_probe,
-> >  	.remove		= pcie_portdrv_remove,
-> > -	.shutdown	= pcie_portdrv_remove,
-> > +	.shutdown	= pcie_portdrv_shutdown,
-> >  
-> >  	.err_handler	= &pcie_portdrv_err_handler,
-> >  
-> > -- 
-> > 2.1.0
-> > 
