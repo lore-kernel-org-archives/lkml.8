@@ -2,228 +2,144 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C09BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D16D021D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="TkBtFKeZ"
+	by mail.kernel.org (Postfix) with ESMTP id 19CFA20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgIKPpk (ORCPT
+        id S1726611AbgIKPqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:45:40 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:26544 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgIKPiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:38:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1599838679;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=f6y/bT6EnhntnHIR9T0mnloocs8GUCAF0cvCMCuqaqw=;
-        b=TkBtFKeZXwVmoqL8hTRa09ldIz+oBnR8o93riYLNwvKkjB86UWkwOFU6xvhB7xp1ky
-        K9WWSLYBmv2K2/S1tjXwfDI8Lh34doLyUipY3RAqcLKnOlAY4891mo64Jyy8PP3qTWGs
-        1GXcM/syxNGyrmowE8rxY5vkvZhOK9EJEZi6+SwKQFfAHaZvLt314CKDkUwPxkUOo6fo
-        Qayb5YZkSeEFcrrKniwODAmFM1TyuQj0i2wwhgSMVd38+7V/xRSSy/TcXRz3EA0Vovhb
-        uMRXaS3R1ZlI7xUSW1pB2M39jGkKNYkQtcwuYD2cvtFlfIbbR/7QS6t25HvdjjKF1ZyO
-        Op9A==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEIdhPgVC7iy9yGr7ESbX"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w8BFbuNiG
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 11 Sep 2020 17:37:56 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 17:37:55 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
- OPP core
-Message-ID: <20200911153755.GB2352@gerhold.net>
-References: <20200826093328.88268-1-stephan@gerhold.net>
- <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
- <20200827114422.GA1784@gerhold.net>
- <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
- <20200828095706.GA1865@gerhold.net>
- <20200911083455.GA1591@gerhold.net>
- <20200911092538.jexqm6joww67d4yv@vireshk-i7>
+        Fri, 11 Sep 2020 11:46:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:22606 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbgIKPo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:44:29 -0400
+IronPort-SDR: en5OP5hLpm5gZe+nakhlzsdCPWidqPeqcRSUNXqovSXIiUiIrVRO4Oon39PmCVjVcEqD6H8Lhp
+ Rj/31RpzsbpQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="146483413"
+X-IronPort-AV: E=Sophos;i="5.76,415,1592895600"; 
+   d="scan'208";a="146483413"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 06:28:29 -0700
+IronPort-SDR: WEUbiZZI3ak86hu9e5/kTXYW/2GEu/sbCQDWTGYexAARUGDEcvKGAHAzBJ1IanVuwJ6q1IFwGq
+ Q79oOGiuvs0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,415,1592895600"; 
+   d="scan'208";a="408157988"
+Received: from aubrey-work.sh.intel.com ([10.239.53.113])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Sep 2020 06:28:26 -0700
+From:   Aubrey Li <aubrey.li@intel.com>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        valentin.schneider@arm.com
+Cc:     tim.c.chen@linux.intel.com, linux-kernel@vger.kernel.org,
+        Aubrey Li <aubrey.li@intel.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>
+Subject: [RFC PATCH v1 1/1] sched/fair: select idle cpu from idle cpumask in sched domain
+Date:   Thu, 10 Sep 2020 13:42:03 +0800
+Message-Id: <20200910054203.525420-2-aubrey.li@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200910054203.525420-1-aubrey.li@intel.com>
+References: <20200910054203.525420-1-aubrey.li@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911092538.jexqm6joww67d4yv@vireshk-i7>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 02:55:38PM +0530, Viresh Kumar wrote:
-> > As mentioned in my other mail [1] it turns out I actually have such a
-> > use case. I briefly explained it in [2], basically the clock that
-> > provides higher CPU frequencies has some voltage requirements that
-> > should be voted for using a power domain.
-> > 
-> > The clock that provides the lower CPU frequencies has no such
-> > requirement, so I need to scale (and power on) a power domain only for
-> > some of the OPPs.
-> > 
-> > [1]: https://lore.kernel.org/linux-pm/20200831154938.GA33622@gerhold.net/
-> > [2]: https://lore.kernel.org/linux-arm-msm/20200910162610.GA7008@gerhold.net/
-> > 
-> > So I think it would be good to discuss this use case first before we
-> > decide on this patch (how to enable power domains managed by the OPP
-> > core). I think there are two problems that need to be solved:
-> > 
-> > 1. How can we drop our performance state votes for some of the OPPs?
-> >    I explained that problem earlier already:
-> > 
-> > > 
-> > > I was thinking about something like that, but can you actually drop
-> > > your performance state vote for one of the power domains using
-> > > "required-opps"?
-> > > 
-> > > At the moment it does not seem possible. I tried adding a special OPP
-> > > using opp-level = <0> to reference that from required-opps, but the OPP
-> > > core does not allow this:
-> > > 
-> > > 	vddcx: Not all nodes have performance state set (7: 6)
-> > > 	vddcx: Failed to add OPP table for index 0: -2
-> 
-> This should fix it.
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 214c1619b445..2483e765318a 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2117,9 +2117,6 @@ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table,
->         int dest_pstate = -EINVAL;
->         int i;
->  
-> -       if (!pstate)
-> -               return 0;
-> -
->         /*
->          * Normally the src_table will have the "required_opps" property set to
->          * point to one of the OPPs in the dst_table, but in some cases the
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index e72753be7dc7..1a9cb96484bb 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -842,7 +842,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
->  {
->         struct device_node *np;
-> -       int ret, count = 0, pstate_count = 0;
-> +       int ret, count = 0;
->         struct dev_pm_opp *opp;
->  
->         /* OPP table is already initialized for the device */
-> @@ -876,20 +876,13 @@ static int _of_add_opp_table_v2(struct device *dev, struct opp_table *opp_table)
->                 goto remove_static_opp;
->         }
->  
-> -       list_for_each_entry(opp, &opp_table->opp_list, node)
-> -               pstate_count += !!opp->pstate;
-> -
-> -       /* Either all or none of the nodes shall have performance state set */
-> -       if (pstate_count && pstate_count != count) {
-> -               dev_err(dev, "Not all nodes have performance state set (%d: %d)\n",
-> -                       count, pstate_count);
-> -               ret = -ENOENT;
-> -               goto remove_static_opp;
-> +       list_for_each_entry(opp, &opp_table->opp_list, node) {
-> +               if (opp->pstate) {
-> +                       opp_table->genpd_performance_state = true;
-> +                       break;
-> +               }
->         }
->  
-> -       if (pstate_count)
-> -               opp_table->genpd_performance_state = true;
-> -
->         return 0;
->  
->  remove_static_opp:
-> 
+Added idle cpumask to track idle cpus in sched domain. When a CPU
+enters idle, its corresponding bit in the idle cpumask will be set,
+and when the CPU exits idle, its bit will be cleared.
 
-Thanks, I will test this early next week!
+When a task wakes up to select an idle cpu, scanning idle cpumask
+has low cost than scanning all the cpus in last level cache domain,
+especially when the system is heavily loaded.
 
-> > 2. Where/when to enable the power domains: I need to enable the power
-> >    domain whenever I have a vote for a performance state. In the example
-> >    above the power domain should get enabled for >= 998 MHz and disabled
-> >    otherwise.
-> 
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+---
+ include/linux/sched/topology.h | 13 +++++++++++++
+ kernel/sched/fair.c            |  4 +++-
+ kernel/sched/topology.c        |  2 +-
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-I will answer your questions for my use case, maybe Ulf or someone else
-who knows more about power domains can chime in and say more about the
-general case:
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index fb11091129b3..43a641d26154 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -65,8 +65,21 @@ struct sched_domain_shared {
+ 	atomic_t	ref;
+ 	atomic_t	nr_busy_cpus;
+ 	int		has_idle_cores;
++	/*
++	 * Span of all idle CPUs in this domain.
++	 *
++	 * NOTE: this field is variable length. (Allocated dynamically
++	 * by attaching extra space to the end of the structure,
++	 * depending on how many CPUs the kernel has booted up with)
++	 */
++	unsigned long	idle_cpus_span[];
+ };
+ 
++static inline struct cpumask *sds_idle_cpus(struct sched_domain_shared *sds)
++{
++	return to_cpumask(sds->idle_cpus_span);
++}
++
+ struct sched_domain {
+ 	/* These fields must be setup */
+ 	struct sched_domain __rcu *parent;	/* top domain must be null terminated */
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 6b3b59cc51d6..3b6f8a3589be 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6136,7 +6136,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 
+ 	time = cpu_clock(this);
+ 
+-	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
++	cpumask_and(cpus, sds_idle_cpus(sd->shared), p->cpus_ptr);
+ 
+ 	for_each_cpu_wrap(cpu, cpus, target) {
+ 		if (!--nr)
+@@ -10182,6 +10182,7 @@ static void set_cpu_sd_state_busy(int cpu)
+ 	sd->nohz_idle = 0;
+ 
+ 	atomic_inc(&sd->shared->nr_busy_cpus);
++	cpumask_clear_cpu(cpu, sds_idle_cpus(sd->shared));
+ unlock:
+ 	rcu_read_unlock();
+ }
+@@ -10212,6 +10213,7 @@ static void set_cpu_sd_state_idle(int cpu)
+ 	sd->nohz_idle = 1;
+ 
+ 	atomic_dec(&sd->shared->nr_busy_cpus);
++	cpumask_set_cpu(cpu, sds_idle_cpus(sd->shared));
+ unlock:
+ 	rcu_read_unlock();
+ }
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9079d865a935..92d0aeef86bf 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1769,7 +1769,7 @@ static int __sdt_alloc(const struct cpumask *cpu_map)
+ 
+ 			*per_cpu_ptr(sdd->sd, j) = sd;
+ 
+-			sds = kzalloc_node(sizeof(struct sched_domain_shared),
++			sds = kzalloc_node(sizeof(struct sched_domain_shared) + cpumask_size(),
+ 					GFP_KERNEL, cpu_to_node(j));
+ 			if (!sds)
+ 				return -ENOMEM;
+-- 
+2.25.1
 
-> - Why do you need to enable these power domains like this ?
-
-At the moment power domains seem to have two independent states:
-they can be powered on/off and they can have a performance state.
-Both seem to be managed independently, e.g. a power domain can have a
-non-zero performance state set but at the same time powered off.
-
-The OPP core only calls dev_pm_genpd_set_performance_state(). No matter
-if the power domain is powered on or not this will end up in the
-set_performance_state() callback of the power domain driver.
-
-And this is where behavior varies depending on the power domain driver.
-Some drivers (e.g. qcom-cpr) will set the performance state even if
-powered off, others (in my case: qcom rpmpd) will ignore the performance
-state until their power_on() callback is called.
-
-In general, I would expect that a power domain should be powered on
-whenever there is at least one performance state vote > 0.
-This does not seem to be the case at the moment, though.
-
-> - What will happen if you don't enable them at all ?
-
-If I add the power domains needed for CPUFreq to the CPU OPP table,
-without further changes, nothing will power on the power domains.
-There is no difference for qcom-cpr, but at least rpmpd will ignore all
-the performance state votes.
-
-> - What will happen if you enable them for ever ?
-> 
-> AFAIU, these are kind of virtual domains which are there just to vote in behalf
-> of the OS. Only if the accumulated vote is greater than zero, the actual power
-> domain will start consuming power. Otherwise it should be disabled.
-> 
-> Or is that wrong ?
-> 
-
-Right, at least in case of rpmpd the actual power domain is managed by
-some "RPM" remote processor which accumulates votes from all the CPUs
-running in the SoC.
-
-I believe the power domains in my case are even always-on in the RPM,
-but still the RPM interface seems to provide a way to vote for
-enabling/disabling the power domains. Sadly it is barely documented,
-so I'm not sure what happens if we keep the power domains permanently
-powered on. Maybe it will block certain low power modes?
-
-The current implementation in drivers/soc/qcom/rpmpd.c does suggest that
-we should vote for "power off" when the power domains are no longer
-needed by Linux.
-
-(+CC Bjorn, Andy and linux-arm-msm, maybe they know more...)
-
-Thanks!
-Stephan
