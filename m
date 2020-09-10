@@ -2,198 +2,157 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE15C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5F9C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D54208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQ+sIiio"
+	by mail.kernel.org (Postfix) with ESMTP id 9375E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599773905;
+	bh=HgdV9+FJJihFM3IekafTP1p5UbQd4q92rPxRVRZ/a7E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=krVRx/UeeXj26aCOsEylLX7uCwEJL07MxQ5m3pLGSCcxBjcFpzZ5wsWqAkOEfsoDa
+	 fukmqOiuj0ruKu1HyeTLHXScal6/ji9mkxlO1cEuDIQgNz0NxkXZ0LrKVqMl0B+cFO
+	 XQU6CUCjooZcuha6VOrKvuAx3xru/iTwoPPbykgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgIJViJ (ORCPT
+        id S1728302AbgIJViI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730650AbgIJNdX (ORCPT
+        Thu, 10 Sep 2020 17:38:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53121 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbgIJNdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:33:23 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B7EC061756;
-        Thu, 10 Sep 2020 06:32:13 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id u126so5861841oif.13;
-        Thu, 10 Sep 2020 06:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LGZhpI1u0iTKM9cmTm80fwqZ2nxu550/OcLkA47cd4c=;
-        b=jQ+sIiio9/mNvQNxXrAHxqGLToGgxJ0q59MH0rt8EQ+5rDdl9QDgaqyjOS0UemAOOv
-         quejELK95RU6jXlfTuEJvg/thwd1tnSrgvYqP/Zv7HZUVLgHhNu/UnIVimHKgVb/Toy/
-         ARLDq3GzpX+W/YxKmn2gTotCtahRhLt+oJsTtuAJuc98BrV30wadsVjMNJlheJdapiIj
-         5QiiE+TjsBVxnSWkccDA8jSGX1c8DSB08MNCz+1oEF/jwABMV/JYYnXkuPqAa+Go4Fka
-         MISoonTWHavnjh6ckKh8mH3o0c3ixSAApXJA2C/ghuwXoHl9jOI8KSmf0aUR0X/TNulx
-         dJxg==
+        Thu, 10 Sep 2020 09:33:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q9so67007wmj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:32:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LGZhpI1u0iTKM9cmTm80fwqZ2nxu550/OcLkA47cd4c=;
-        b=oASE7t6cNbnH4tLCB7ASxdHqcQGrY3J0BmjKcSQDNilh5EF5ZH0WyxwsaTMdxfLUyj
-         NPD8fYhtM6y2YaLgUw6GKzvH6g3QmgDCKvKoE3izPeAXrascetBD4Vgxn9ZfE+YEAKfU
-         UImaAzQYmbC/QNrTDYF8McFOV+I1lYb1lz7gn8uZBsvI4baW99+TvmdkG/FZBUBb8f1b
-         FXmHZKJxN6tQMkoKmrnyI9XqSja/DLAHISZtUvWJl99Ti5eXOewj6s2nnIitOdoSHtcs
-         EgB6v8gMo2JFomPJZL/iRxi30q2QsTeqhYEgJHI7ZJL9RKjoR2aZcsThGoW/0tcH1Q1A
-         Cczw==
-X-Gm-Message-State: AOAM530WBd0ARU4uwGNKYxjNNrjn8+hGtvgwRRa4Qno5Q9/2cPI3Mr04
-        H5s9TABCEjm95pHbwBguOetC1VR5zvA=
-X-Google-Smtp-Source: ABdhPJzVYL2nk8PW9W25kgnQjs//6rdhzV9Y58aVZw9/t8k4GUJWBC+sUXo+/dSXbufiq5FXZ3gZdQ==
-X-Received: by 2002:a05:6808:2c5:: with SMTP id a5mr48077oid.123.1599744732547;
-        Thu, 10 Sep 2020 06:32:12 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n10sm925780ooj.19.2020.09.10.06.32.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 06:32:11 -0700 (PDT)
-Subject: Re: [PATCH] hwmon: (pmbus) Expose PEC debugfs attribute
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
-        linux-hwmon@vger.kernel.org
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Jean Delvare <jdelvare@suse.com>, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200910100516.GE12635@kadam>
- <92b193b6-7912-1823-ca38-58cf208e68c4@roeck-us.net>
- <1e1dbb10-1628-4498-9ce2-8c4ce79162c8@www.fastmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <5f1dc45b-433c-4f07-b1cb-1afff985e852@roeck-us.net>
-Date:   Thu, 10 Sep 2020 06:32:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1FQw6dLAP93Aj1WWJXzAvIyFEW1p2iZC9e/7pbv+/is=;
+        b=nTKD6kCDoSi1BkzBIlss2M6gpLk0JqB2pqaesieXks4kfKsk/v7P9JcmpIDi3Vlkx8
+         geuDSiuO4sSpnZ4VkZVn+lgAP3PFrvGOGSDTvjV0h5zFj7AAOuClCwZZNkXDxRkN1V9Z
+         PxOOQtvOtFBq7vt5iDVFOhvk1a9Dtmo2AJ5PfJ1DeoV+fUfZ6PaHvd6nZr7xsomH9+lM
+         1pfVf11yvj1hsO2FXb4OFtCxACbgl3ysgVCt0diyFD4Btkwm+rjwNtFrEW2Giq+07ZKI
+         AR4aJsjmWsdj+6rZ+8UmjMjBjsE3BbkcZ/4zlIsivqyy/zxMmFVcScoUnU9c2fRu67Pw
+         2yUg==
+X-Gm-Message-State: AOAM5339pu/b8M5cgd4pHf8g9BuEk3SRaqEqsYp0u/Ljc4+z3Eu2RytV
+        re4OS4BoyAunnQo0W9mfU6KlSly8v7aIh5nOmJc=
+X-Google-Smtp-Source: ABdhPJy4fvlfg/yr4zT44X06qzG2hdASTCcFsQBtHEDWsMTfAG7CYLT7VEpmf/JkIeNoSQ8iYPQz08ZY99EX0E8q79A=
+X-Received: by 2002:a1c:6341:: with SMTP id x62mr35045wmb.70.1599744774950;
+ Thu, 10 Sep 2020 06:32:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1e1dbb10-1628-4498-9ce2-8c4ce79162c8@www.fastmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200908044228.61197-1-namhyung@kernel.org> <20200910091542.GD1627030@krava>
+ <20200910111020.GA4018363@kernel.org>
+In-Reply-To: <20200910111020.GA4018363@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 10 Sep 2020 22:32:44 +0900
+Message-ID: <CAM9d7cjvid5zoAKnUtHMqwgMTA7FLAbh9fqamCZg5E-_pvD7qQ@mail.gmail.com>
+Subject: Re: [PATCHSET 0/4] perf stat: Add --multiply-cgroup option
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 3:51 AM, Andrew Jeffery wrote:
-> 
-> 
-> On Thu, 10 Sep 2020, at 20:04, Guenter Roeck wrote:
->> On 9/10/20 3:05 AM, Dan Carpenter wrote:
->>> Hi Andrew,
->>>
->>> url:    https://github.com/0day-ci/linux/commits/Andrew-Jeffery/hwmon-pmbus-Expose-PEC-debugfs-attribute/20200910-010642
->>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
->>> config: x86_64-randconfig-m001-20200909 (attached as .config)
->>> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
->>>
->>> smatch warnings:
->>> drivers/hwmon/pmbus/pmbus_core.c:2415 pmbus_debugfs_ops_pec_open() warn: '0x' prefix is confusing together with '%1llu' specifier
->>>
->>> # https://github.com/0day-ci/linux/commit/705b8b5588d4102256d0954086ed16c9bdf9804f
->>> git remote add linux-review https://github.com/0day-ci/linux
->>> git fetch --no-tags linux-review Andrew-Jeffery/hwmon-pmbus-Expose-PEC-debugfs-attribute/20200910-010642
->>> git checkout 705b8b5588d4102256d0954086ed16c9bdf9804f
->>> vim +2415 drivers/hwmon/pmbus/pmbus_core.c
->>>
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2391  static int pmbus_debugfs_set_pec(void *data, u64 val)
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2392  {
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2393  	int rc;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2394  	struct i2c_client *client = data;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2395  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2396  	if (!val) {
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2397  		client->flags &= ~I2C_CLIENT_PEC;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2398  		return 0;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2399  	}
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2400  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2401  	if (val != 1)
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2402  		return -EINVAL;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2403  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2404  	rc = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2405  	if (rc < 0)
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2406  		return rc;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2407  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2408  	if (!(rc & PB_CAPABILITY_ERROR_CHECK))
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2409  		return -ENOTSUPP;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2410  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2411  	client->flags |= I2C_CLIENT_PEC;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2412  
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2413  	return 0;
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2414  }
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09 @2415  DEFINE_DEBUGFS_ATTRIBUTE(pmbus_debugfs_ops_pec, pmbus_debugfs_get_pec,
->>> 705b8b5588d410 Andrew Jeffery 2020-09-09  2416  			 pmbus_debugfs_set_pec, "0x%1llu\n");
->>>                                                                                                  ^^^^^^^
->>> Was the 1 intentional?  Anyway, you probably want to remove the 0x so
->>> it doesn't look like hex.
->>>
->>
->> Nice catch; I didn't notice the 1. It is still there in v2, but it does 
->> seem quite useless.
-> 
-> Do you want to just rebase it out, or would you like me to send
-> a patch removing the stray 1 from v2?
-> 
+Hi Arnaldo,
 
-I'll rebase it.
+On Thu, Sep 10, 2020 at 8:10 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, Sep 10, 2020 at 11:15:42AM +0200, Jiri Olsa escreveu:
+> > On Tue, Sep 08, 2020 at 01:42:24PM +0900, Namhyung Kim wrote:
+> > > When we profile cgroup events with perf stat, it's very annoying to
+> > > specify events and cgroups on the command line as it requires the
+> > > mapping between events and cgroups.  (Note that perf record can use
+> > > cgroup sampling but it's not usable for perf stat).
+>
+> > > I guess most cases we just want to use a same set of events (N) for
+> > > all cgroups (M), but we need to specify NxM events and NxM cgroups.
+> > > This is not good especially when profiling large number of cgroups:
+> > > say M=200.
+>
+> > > So I added --multiply-cgroup option to make it easy for that case.  It
+> > > will create NxM events from N events and M cgroups.  One more upside
+> > > is that it can handle metrics too.
+>
+> > agreed that it's PITA to use -G option ;-)
+>
+> yeah, its great that someone is looking at cgroups improvements, thanks
+> Namyung, its great to have you working on this!
 
-Thanks,
-Guenter
+Thanks! :)
 
+>
+> More below.
+>
+> > > For example, the following example measures IPC metric for 3 cgroups
+>
+> > >   $ cat perf-multi-cgrp.sh
+> > >   #!/bin/sh
+>
+> > >   METRIC=${1:-IPC}
+> > >   CGROUP_DIR=/sys/fs/cgroup/perf_event
+>
+> > >   sudo mkdir $CGROUP_DIR/A $CGROUP_DIR/B $CGROUP_DIR/C
+>
+> > >   # add backgroupd workload for each cgroup
+> > >   echo $$ | sudo tee $CGROUP_DIR/A/cgroup.procs > /dev/null
+> > >   yes > /dev/null &
+> > >   echo $$ | sudo tee $CGROUP_DIR/B/cgroup.procs > /dev/null
+> > >   yes > /dev/null &
+> > >   echo $$ | sudo tee $CGROUP_DIR/C/cgroup.procs > /dev/null
+> > >   yes > /dev/null &
+>
+> > >   # run 'perf stat' in the root cgroup
+> > >   echo $$ | sudo tee $CGROUP_DIR/cgroup.procs > /dev/null
+> > >   perf stat -a -M $METRIC --multiply-cgroup -G A,B,C sleep 1
+> >
+> > would it be easier to have new option for this? like:
+> >
+> >   perf stat -a -M $METRIC --for-cgroup A,B,C
+> >   perf stat -a -M $METRIC --for-each-cgroup A,B,C
+> >   perf stat -a -M $METRIC --attach-cgroup A,B,C
+> >   perf stat -a -M $METRIC --attach-to-cgroup A,B,C
+
+Looks good.  I like the --for-each-cgroup.
+Then we should make it and -G mutually exclusive IMHO.
+
+> >
+> > I'm still not sure how the --multiply-cgroup deals with empty
+> > cgroup A,,C but looks like we don't need this behaviour now?
+
+Yep, it can handle such case and bind the events to the root cgroup.
+
+>
+> Yeah, I also didn't like the --multiply-cgroup thing, perhaps we can use
+> a per-event term? or per group, for example:
+>
+>   perf stat -a -M $METRIC/cgroups=A,B,C/
+>   perf stat -a -e '{cycles,instructions,cache-misses}/cgroups=A,B,C/'
+>
+> Allowing wildcards or regexps would help with some use cases.
+>
+> We already have several terms that allows us to control per event knobs,
+> this would be one more.
+
+At some point, we can support this kind of flexibility, but it'd make the code
+complex when multiple events or metrics have different cgroup membership.
+So I'd like to do the simple case (all events are expanded to same cgroups)
+first..
+
+Thanks
+Namhyung
