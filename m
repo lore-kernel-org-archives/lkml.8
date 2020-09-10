@@ -2,126 +2,135 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A26C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7A8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDDA21D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599766926;
-	bh=xVKQeh6vK/bSUtAb8QmMQzYllSypqGLdxdvE0zPLxSU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=CPbMeyCyjlKwli+NLgpTsLIl9PueNEVA9p5J4JpYeaAEeLNieEh7L+KlsxJvIhLrs
-	 X+9mwMIzFSG0vJHAb+ylLM+LKcBD2RPYTFe5a92e/5sUH1NohkZu35vKIKKhS2aQPv
-	 HN0xBW+ejPRbP4D2R9/d/1Ey7QwdBv/0vEByDdBY=
+	by mail.kernel.org (Postfix) with ESMTP id 295AC21D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Tzaw1A2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgIJTmE (ORCPT
+        id S1728109AbgIJTmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:42:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgIJTlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:41:39 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 442A721556;
-        Thu, 10 Sep 2020 19:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599766899;
-        bh=xVKQeh6vK/bSUtAb8QmMQzYllSypqGLdxdvE0zPLxSU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cv+Tr1pNNaxP2eOUGtBsg7HrYjYKSN2v7JvR6yNY5z7cMXtbl9CCyZJKDi6BZl4eb
-         jKIfC7kah7XB2mcYTWUlU7AXuxJzQaxUgP+gmvu7KW9x0vBn8Xg01KQnA+5QkY+8L4
-         B1pH9L/kzJQUVLSeqKTyzh3q3g7hhGfqaUNaQ8vE=
-Date:   Thu, 10 Sep 2020 14:41:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device()
- during shutdown
-Message-ID: <20200910194138.GA808043@bjorn-Precision-5520>
+        Thu, 10 Sep 2020 15:42:09 -0400
+Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:31038
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731105AbgIJPem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:34:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MMb2pCeXxvDuHzTLe/5M5OzwgmA+6e81dhWr7Vh8MkdFHNJa6NAgFZensPYgtqDbWX3S+q9BBing2Ji3JEDz/5mYd3RaoinWD6NWxe7G8YyLDAnLGr35ttwQ+LKigaaiyZN7XFC8gAselm+cildoYWGE39opYyhXSaB22+wVzL+JqYc7qJaD4HjZ9M2PQ8Qpy14CfxIwRL7pYU0dQuimshLsjyeuM3dI3iPUK9EgNOWFrhSAUu4XLVDQkSFRND/SKpAGnzd2a1G121tB2MgprmIBS9z/yThWbUKLUiZOPP2QzOJmVPfut9EnUd4y8mm0wCzGSh08+/jsmQlHRS5ghA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TDQvN2Wf7R8oj8Cj5LTY4US5V4A/UCxCVK2fc6qpAYw=;
+ b=S0el9BFB8nx0OL9Vs+ArARGyZABiAvwRnrbSrlS4TE/SYAzXjN/2+Fzin06MQdBNXrVw0ZyHCCeHKJ9aXJDhb1fYsjDZ1QXPkySP4Mihyc+kVGOp1j/ACVAJz5fPxlx5Fu+h6669bUmyT506UqyU54l2ATVTg5YQ2H7zAQQwekYoCFj4eYVC7Y9KpBmYkWy/3a7mL0+2gn3N6eZrEZpTLsBXI0pKYalKiTJtfSdh0JD5lhjFB17K/BPglsSMJ2a2rcZqCUWJllT9v872FGPxaqkbugExMvwB7FlJ7ply5JxE9BlVg2t764qguYBffr5wD5XjWyexsTwjIqV+e+4csw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TDQvN2Wf7R8oj8Cj5LTY4US5V4A/UCxCVK2fc6qpAYw=;
+ b=Tzaw1A2aqbnjxqPZzGklE3UfIn9Fgs4unT6vZCeEFiO9ZbFM0cqHW7BMXY4He1IzF4g8gmG6rOqDmQFoVMYlQzzGkRRO2xb/2KbcYXdbYzcwPTiME4GmQJle2wULHeyR2lNLi+3B2DMrxX0SOEr+CzjKP4W3ePV0HdcCnYf/57Q=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4379.namprd12.prod.outlook.com (2603:10b6:303:5e::11)
+ by MWHPR12MB1694.namprd12.prod.outlook.com (2603:10b6:301:11::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 15:34:37 +0000
+Received: from MW3PR12MB4379.namprd12.prod.outlook.com
+ ([fe80::5dc0:bafc:6040:a8fe]) by MW3PR12MB4379.namprd12.prod.outlook.com
+ ([fe80::5dc0:bafc:6040:a8fe%2]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 15:34:37 +0000
+Subject: Re: [PATCH -next] drm/amd/display: Fix possible memleak in
+ dp_trigger_hotplug()
+To:     YueHaibing <yuehaibing@huawei.com>, sunpeng.li@amd.com,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, mikita.lipski@amd.com,
+        eryk.brol@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20200910032636.27296-1-yuehaibing@huawei.com>
+From:   Harry Wentland <harry.wentland@amd.com>
+Message-ID: <62c4312b-9e92-23bb-0823-7f1aca125c0f@amd.com>
+Date:   Thu, 10 Sep 2020 11:34:34 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200910032636.27296-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1PR01CA0148.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:2f::27) To MW3PR12MB4379.namprd12.prod.outlook.com
+ (2603:10b6:303:5e::11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599294806-13889-1-git-send-email-yangtiezhu@loongson.cn>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.29.235.206] (165.204.55.250) by YT1PR01CA0148.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 15:34:35 +0000
+X-Originating-IP: [165.204.55.250]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 294fd88d-10da-45b5-3612-08d8559f0662
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1694:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR12MB16949BBDC03A31EFA489CF4E8C270@MWHPR12MB1694.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1013;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lhNoKU2TARfga15JzKfNFfRxxw6Fyjj1rfv8omMoHxO51sfQ3TCdgFsv9pCThkM0tTrncF6k9AXZV9ZmI4Dd0DuQrmp7zrAkwe9r11279z9eGgGYElkp6s3wusgoQmi9yUJZm6+BWNBWEo+1d2/2r6rCADtQtqhqpEuukVBy3iB4kDUbBwIx8h5m9oxfg9kEfC6x0qMu5ojzHhCr48JVXIOEadIqZ5q2hhKIhQHPHf4Rz2UYhcukVD2PbQ3FuOPuKqOyaCX2ykR1vd6koZ9jKJ9n2jA/fmyfsHVU6/AiPmqIE0yE8+vxcQ353AOx1JK7chfrrKttSQl5XqQqrge0260Ifa432gd34pve4Gp2kIGkPzE+D1ZvFoiHL3kCmJLL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(66556008)(16576012)(36756003)(53546011)(16526019)(478600001)(8936002)(6636002)(186003)(4326008)(6486002)(66476007)(956004)(316002)(66946007)(83380400001)(44832011)(52116002)(31686004)(26005)(8676002)(31696002)(5660300002)(86362001)(2616005)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: uNwPU5UyzaF3Zx4OqeNcjt4+hyNUb7i0eY3T1a/BC+556jG8llP+9LUB5g91MFPj2KjS2TlqMXCsBN/13byXJwHr5ODNvn3c6/rvLGbhey0yxOF1YKCcmBaZgM+xyKpHz6mgQ2nAq7L8ap7YOXLDNv/FpaNLKTzJ3WrOVGyV9NIyp67U0I1WwK8mf2PM7RBvahxcnny6gl23asOUyTY4qjqHu2tMNqjIrVglhhTZKeuBsz40ZJ1lOqw8bChWRB7LHPn4iw9O5vwIJxHR9urE8XkefrshyTG+bWUpnrlMdBSY4FHWSHKuGYCYndDLXA13GQ5ea/9/dKaoSTzmivyCBe0rRrd4RSfBBqc0k00svJa6YArsdf2kk5Qjksn5JHE1/WOQ3SAv8Qi38een+QQWD4UjT6lA2GOU1/SpjLhX2hxuBjpP+77BYKWRjOpEthi7zLOuzmBwJfaDHquHSoXDV4gGFVO2TqFnjHg8dkd48J4YCn7uZHmZ5Pm7cvCnPPLhfTV3rqyoGvmxwDrBuPNrvk2tlkYCVRzgJlLqqQa9fRM6Oufuuv+do7mx+T/K+yF90jDOwRcJey/BUP9H+KLIsyg8xgZnXyrrTDBcfVysKpmu64sunL/uA7yfreoVscPvZEppfgnm5P3wV6L7AOYdVQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 294fd88d-10da-45b5-3612-08d8559f0662
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 15:34:37.0137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UnwJHbnljMRAuq0bnH0efeEo07sewBv6w/Hk2VgTO/845LvKmIjnruodQFZqBxRrFWgz4q1coJKtBMou/SWLfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1694
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 04:33:26PM +0800, Tiezhu Yang wrote:
-> After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
-> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
-> services during shutdown"), it also calls pci_disable_device() during
-> shutdown, this seems unnecessary, so just remove it.
-
-I would like to get rid of the portdrv completely by folding its
-functionality into the PCI core itself, so there would be no portdrv
-probe or remove.
-
-Does this solve a problem?  If not, I'm inclined to just leave it
-as-is for now.  But if it fixes something, we should do the fix, of
-course.
-
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  drivers/pci/pcie/portdrv_core.c |  1 -
->  drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
->  2 files changed, 13 insertions(+), 2 deletions(-)
+On 2020-09-09 11:26 p.m., YueHaibing wrote:
+> If parse_write_buffer_into_params() fails, we should free
+> wr_buf before return.
 > 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522..1991aca 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
->  {
->  	device_for_each_child(&dev->dev, NULL, remove_iter);
->  	pci_free_irq_vectors(dev);
-> -	pci_disable_device(dev);
->  }
->  
->  /**
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 3a3ce40..cab37a8 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->  	}
->  
->  	pcie_port_device_remove(dev);
-> +	pci_disable_device(dev);
-> +}
-> +
-> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> +{
-> +	if (pci_bridge_d3_possible(dev)) {
-> +		pm_runtime_forbid(&dev->dev);
-> +		pm_runtime_get_noresume(&dev->dev);
-> +		pm_runtime_dont_use_autosuspend(&dev->dev);
+> Fixes: 6f77b2ac6280 ("drm/amd/display: Add connector HPD trigger debugfs entry")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+
+Harry
+
+> ---
+>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> index 83da24aced45..11e16fbe484d 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
+> @@ -1089,8 +1089,10 @@ static ssize_t dp_trigger_hotplug(struct file *f, const char __user *buf,
+>   	if (parse_write_buffer_into_params(wr_buf, wr_buf_size,
+>   						(long *)param, buf,
+>   						max_param_num,
+> -						&param_nums))
+> +						&param_nums)) {
+> +		kfree(wr_buf);
+>   		return -EINVAL;
 > +	}
-> +
-> +	pcie_port_device_remove(dev);
->  }
->  
->  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> @@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver = {
->  
->  	.probe		= pcie_portdrv_probe,
->  	.remove		= pcie_portdrv_remove,
-> -	.shutdown	= pcie_portdrv_remove,
-> +	.shutdown	= pcie_portdrv_shutdown,
->  
->  	.err_handler	= &pcie_portdrv_err_handler,
->  
-> -- 
-> 2.1.0
+>   
+>   	if (param_nums <= 0) {
+>   		DRM_DEBUG_DRIVER("user data not be read\n");
 > 
