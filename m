@@ -2,164 +2,127 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A7BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8EBC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B807206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482EC206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfQUYc+5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZyRw62Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgIJCUX (ORCPT
+        id S1730719AbgIJCVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:20:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41403 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730154AbgIJCRq (ORCPT
+        Wed, 9 Sep 2020 22:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730521AbgIJCSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:17:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599704262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0hRuaCM4UO0QYlTpMIEqBgJQxJgieRpUxJTH6YhefOQ=;
-        b=PfQUYc+5peHE5ZERC1xZTp5LKs4GtqKU32MQdHcdbAAKm/LgXUEexm9UpfPpjhAnX3MsVY
-        mMxn1xYrqCQM10lDl2WwxEc1CMRkcZCkhTMkGnXmABYIwpUSPu5XdH9RwJhai11v7W9ADz
-        9pYk58obg5zbmFOZwZDguMuKRG6La4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-levCQ31sNTGtP_svl2bqAA-1; Wed, 09 Sep 2020 22:17:38 -0400
-X-MC-Unique: levCQ31sNTGtP_svl2bqAA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8D7E1882FB0;
-        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC6151002393;
-        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 953A018095FF;
-        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 22:17:35 -0400 (EDT)
-From:   Jason Wang <jasowang@redhat.com>
-To:     Ashok Raj <ashok.raj@intel.com>
-Cc:     dwmw2@infradead.org, baolu lu <baolu.lu@linux.intel.com>,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, eperezma@redhat.com,
-        peterx@redhat.com, mst@redhat.com, stable@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <491540137.16465450.1599704255365.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20200909171056.GF104641@otc-nc-03>
-References: <20200909083432.9464-1-jasowang@redhat.com> <20200909171056.GF104641@otc-nc-03>
-Subject: Re: [PATCH] intel-iommu: don't disable ATS for device without page
- aligned request
+        Wed, 9 Sep 2020 22:18:51 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339CDC06179B;
+        Wed,  9 Sep 2020 19:18:34 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id n2so4493637oij.1;
+        Wed, 09 Sep 2020 19:18:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
+        b=AZyRw62QIBBWqODqgus8QIlDN9ibQ7DqITmcyT1IhPcNEonrlcxsqhKKDp8Ak7WyJj
+         rB/O10IRiA8Hu2uF7zkMR/gTloOBd3ArSRLEnZWOxbM5HvZKROv281KCgRRCK8E1U8+/
+         EnH4Ltms45F4lU3oeU3utrA763/BcUK7OM4BsZ0/6i/ra3vl2MTrh/c2zcL8HraOgp8+
+         AkKRju51Kr/fWnIRVPtDkLhI9RFc6JnO6fembZvQH8X9Xqs8AZgnj2F6vYzH42q9+IAD
+         EIqb+H6j2VTi181/k82+ylN0/UuwaBCLoEMDhT8nqpNkiLTe13hE7lIadoIQG75RsgyB
+         d1fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
+        b=n0PakEsG9HQ2u9vaMxhzCFsFY5g6p6mpX7jPnY9r8V+j2ti7FRm09v6VxLFh1jN58Y
+         vEFYWI9+GAllZ78UtUW/VpoujOsW0uQRmWqlM5U7jRlLo70ad+QZ+WSlsqBarbEQEJrU
+         xNFXE+C8U9DdOl9y6JG1Xxkt9bCf/y0S3us3AVcLkYPE1e1hW5cob4mPJSoPSDta4FUv
+         9l+tPQRDeFo8nZPrtOgGzw+X2Vru1W9q8qoUqRHs7iHjtWTxTVA6kV8fO1zrElYVaaWd
+         2RMHrSvoWHvhd8wX5nSwTr/YwWKyPqWkgMFU6HRPrldsKkQ9pJwVHEcHaGIytz4wIh7t
+         fmSg==
+X-Gm-Message-State: AOAM533jdegbRjy5i/QMYbMGp/WS8oP2vnjgY4jYQE1nMz+V9F2nK5Gh
+        aWlpvI9t1gm/TEjWLT8gwfg0AREqrlbxitMepuP11f01
+X-Google-Smtp-Source: ABdhPJwpsA7xA/pdpr3ILoTVp47C6lLv9rrw4dQ9G6VM5XmEXEcVZC0d3lzZK9HRNJmv413CJZyiiSGNfWvBaOMtIX8=
+X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr2296687oie.150.1599704313667;
+ Wed, 09 Sep 2020 19:18:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.68.5.20, 10.4.195.24]
-Thread-Topic: intel-iommu: don't disable ATS for device without page aligned request
-Thread-Index: OZU0O/7OadpZCvrZzmt7QzTbbYaicg==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <CAPJCdB=HzNJp36tjD0=-R-cs4+8=xhxAfmR-tZ2DkpcyiugH-g@mail.gmail.com>
+ <20200910015950.GA748330@bjorn-Precision-5520>
+In-Reply-To: <20200910015950.GA748330@bjorn-Precision-5520>
+From:   Jiang Biao <benbjiang@gmail.com>
+Date:   Thu, 10 Sep 2020 10:18:22 +0800
+Message-ID: <CAPJCdB=3hjZiC4P3G9T0G5XFnkxRvfpx_+3Qj5AQESAG-kpbEw@mail.gmail.com>
+Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>,
+        Bin Lai <robinlai@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Thu, 10 Sep 2020 at 09:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
+> > Hi,
+> >
+> > On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
+> > > > From: Jiang Biao <benbjiang@tencent.com>
+> > > >
+> > > > pci_read_config() could block several ms in kernel space, mainly
+> > > > caused by the while loop to call pci_user_read_config_dword().
+> > > > Singel pci_user_read_config_dword() loop could consume 130us+,
+> > > >               |    pci_user_read_config_dword() {
+> > > >               |      _raw_spin_lock_irq() {
+> > > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
+> > > > ! 137.582 us  |      }
+> > > >               |      pci_read() {
+> > > >               |        raw_pci_read() {
+> > > >               |          pci_conf1_read() {
+> > > >   0.230 us    |            _raw_spin_lock_irqsave();
+> > > >   0.035 us    |            _raw_spin_unlock_irqrestore();
+> > > >   8.476 us    |          }
+> > > >   8.790 us    |        }
+> > > >   9.091 us    |      }
+> > > > ! 147.263 us  |    }
+> > > > and dozens of the loop could consume ms+.
+> > > >
+> > > > If we execute some lspci commands concurrently, ms+ scheduling
+> > > > latency could be detected.
+> > > >
+> > > > Add scheduling chance in the loop to improve the latency.
+> > >
+> > > Thanks for the patch, this makes a lot of sense.
+> > >
+> > > Shouldn't we do the same in pci_write_config()?
+> > Yes, IMHO, that could be helpful too.
+>
+> If it's feasible, it would be nice to actually verify that it makes a
+> difference.  I know config writes should be faster than reads, but
+> they're certainly not as fast as a CPU can pump out data, so there
+> must be *some* mechanism that slows the CPU down.
+We did catch 5ms+ latency caused by pci_read_config() triggered by
+concurrent lspcis, and latency disappeared after this patch.
+For pci_write_config path, we have not met the case actually.:)
+I'll have some tries to verify that, and would send another patch if verified.
 
------ Original Message -----
-> Hi Jason
-> 
-> On Wed, Sep 09, 2020 at 04:34:32PM +0800, Jason Wang wrote:
-> > Commit 61363c1474b1 ("iommu/vt-d: Enable ATS only if the device uses
-> > page aligned address.") disables ATS for device that can do unaligned
-> > page request.
-> 
-> Did you take a look at the PCI specification?
-> Page Aligned Request is in the ATS capability Register.
-> 
-> ATS Capability Register (Offset 0x04h)
-> 
-> bit (5):
-> Page Aligned Request - If Set, indicates the Untranslated address is always
-> aligned to 4096 byte boundary. Setting this field is recommended. This
-> field permits software to distinguish between implemntations compatible
-> with this specification and those compatible with an earlier version of
-> this specification in which a Requester was permitted to supply anything in
-> bits [11:2].
-
-Yes, my understanding is that this is optional not mandatory.
-
-> 
-> > 
-> > This looks wrong, since the commit log said it's because the page
-> > request descriptor doesn't support reporting unaligned request.
-> 
-> I don't think you can change the definition from ATS to PRI. Both are
-> orthogonal feature.
-
-I may miss something, here's my understanding is that:
-
-- page request descriptor will only be used when PRS is enabled
-- ATS spec allows unaligned request
-
-So any reason for disabling ATS for unaligned request even if PRS is
-not enabled?
-
-> 
-> > 
-> > A victim is Qemu's virtio-pci which doesn't advertise the page aligned
-> > address. Fixing by disable PRI instead of ATS if device doesn't have
-> > page aligned request.
-> 
-> This is a requirement for the Intel IOMMU's.
-> 
-> You say virtio, so is it all emulated device or you talking about some
-> hardware that implemented virtio-pci compliant hw? If you are sure the
-> device actually does comply with the requirement, but just not enumerating
-> the capability, you can maybe work a quirk to overcome that?
-
-So far only emulated devices. But we are helping some vendor to
-implement virtio hardware so  we need to understand the connection
-between ATS alignment and page request descriptor.
-
-> 
-> Now PRI also has an alignment requirement, and Intel IOMMU's requires that
-> as well. If your device supports SRIOV as well, PASID and PRI are
-> enumerated just on the PF and not the VF. You might want to pay attension
-> to that. We are still working on a solution for that problem.
-
-Thanks for the reminding, but it looks to me according to the ATS
-spec, all PRI message is 4096 byte aligned? E.g lower bites were used
-for group index etc.
-
-Thanks
-
-> 
-> I don't think this is the right fix for your problem.
-> 
-> > 
-> > Cc: stable@vger.kernel.org
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >  drivers/iommu/intel/iommu.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> 
-> 
-
+Thx.
+Regards,
+Jiang
