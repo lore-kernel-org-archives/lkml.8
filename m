@@ -2,178 +2,188 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3035C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAAFC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B573A21D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7748520BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATCEs4ia"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VNowW2ly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgIJCYu (ORCPT
+        id S1730911AbgIJCZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:24:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58534 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730682AbgIJCIi (ORCPT
+        Wed, 9 Sep 2020 22:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730187AbgIJCMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:08:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599703717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
-        b=ATCEs4iarH6CiAeGnelgL9WXp+fL2etKppxLdsXEkK3w42lMmjX0/VCN+huEfWEmHk89Po
-        IECVmvxKpbfW9a8Qm5FmV1BTnUuBABUEoiJCGU5hpUwxGqgRD+O6NOAlHQFB3p+Y/mc5vw
-        kRjxnA1JqRa5L+MaH+6hLuKSCW+bU48=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
-X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
-        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
-        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 17:07:46 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-Message-ID: <20200909170746.2286b83a@w520.home>
-In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
-References: <20200903164117.GA312152@bjorn-Precision-5520>
-        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+        Wed, 9 Sep 2020 22:12:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3F5C06135B
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:07 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a9so2177643pjg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
+        b=VNowW2ly+OWfn5GZCmTDhCW9xLT4atxeanWR69s2Rzr4xxAn6MOwk/5Z3N1pfmDbYm
+         s3aKeV7ebDpugOu0L1SpWSxEYCYuN3cmSv1/YT6Wr6t0hN00I2/5e0ohYQ3gQHei8Cu2
+         qGNS0CCGRFY/gn/VDGEkQt97AGutqkEmhdKGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
+        b=OUOUAH17ATdkqsHMXqX4DvNFktxWlTV8te1vlsIYSEmB7ODvuOu2QnQrvzlhfR8T2u
+         1yH+XpGwCJcifyjkmhj+4E2hxg5wcSAbJ7fzZIMbxQGHgyx1MVIWFyKZRx5UDHztx5RI
+         6LqhYTW0f9LUwbqq1g3kwV+jOEb+d3NG6N1r/+E1vtgYoxXW3d4mT4gpd2LsFWSd859y
+         71axIUfBxBELSXor/E+xKBbAV6URt8t012aaVnYFC5G657uAunrSGof41plI+AXLBMX/
+         S4OVSPtzx2N0BzzaJbvqrFd2kLVI0psn4ZmO8Br+/MBcBI3E7B/3Pm+yGrArC1gwejwb
+         LIUw==
+X-Gm-Message-State: AOAM531MjhxSaSeVj08bpFFjY+jozN8n7oqtQAfmI6pUj6+TBWanRI5G
+        xYW5wMPbDvxWhuPjI2rFDf4RCw==
+X-Google-Smtp-Source: ABdhPJweiVf7XGI9JekQmbo0Ln+nbnNIqf+ht1aIYPxTWmEQOz0wAdQpZJbtlAi9hvBRiBFId7uBwQ==
+X-Received: by 2002:a17:90b:4018:: with SMTP id ie24mr3066548pjb.9.1599698946895;
+        Wed, 09 Sep 2020 17:49:06 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 17:49:06 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: [PATCH v3 02/10] phy: qcom-qmp: Move phy mode into struct qmp_phy
+Date:   Wed,  9 Sep 2020 17:48:54 -0700
+Message-Id: <20200910004902.2252694-3-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
+References: <20200910004902.2252694-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 13:10:02 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+The phy mode pertains to the phy itself, i.e. 'struct qmp_phy', not the
+wrapper, i.e. 'struct qcom_qmp'. Move the phy mode into the phy
+structure to more accurately reflect what is going on. This also cleans
+up 'struct qcom_qmp' so that it can eventually be the place where qmp
+wrapper wide data is located, paving the way for the USB3+DP combo phy.
 
-> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
-> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
-> >> Per the PCIe spec, VFs cannot implement the MSE bit
-> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
-> >> Use a dev_flags bit to signify this requirement.  
-> > 
-> > This approach seems sensible to me, but
-> > 
-> >    - This is confusing because while the spec does not use "MSE" to
-> >      refer to the Command Register "Memory Space Enable" bit
-> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
-> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
-> >      course, you're not talking about that here.  Maybe something like
-> >      this?
-> > 
-> >        For VFs, the Memory Space Enable bit in the Command Register is
-> >        hard-wired to 0.
-> > 
-> >        Add a dev_flags bit to signify devices where the Command
-> >        Register Memory Space Enable bit does not control the device's
-> >        response to MMIO accesses.  
-> 
-> Will do.  I'll change the usage of the MSE acronym in the other patches 
-> as well.
-> 
-> > 
-> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
-> >      plan to *use* this, but I'd rather use a term that describes the
-> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
-> 
-> Sure, I will change.
-> 
-> > 
-> >    - How do we decide whether to use dev_flags vs a bitfield like
-> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
-> >      to use dev_flags.  If there's a reason, maybe we could add a
-> >      comment at pci_dev_flags for future reference.
-> >   
-> 
-> Something like:
-> 
-> /*
->   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
->   * device marked is_virtfn, but is also true for any VF passed-through
->   * a lower-level hypervisor where emulation of the Memory Space Enable
->   * bit was not provided.
->   */
-> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
-> 
-> ?
-> 
-> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
-> >      that's what I use for consistency.  
-> 
-> Sure, will do.  I'll roll up a new version once I have feedback from 
-> Alex on the vfio changes.
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: Chandan Uddaraju <chandanu@codeaurora.org>
+Cc: Vara Reddy <varar@codeaurora.org>
+Cc: Tanmay Shah <tanmay@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jonathan Marek <jonathan@marek.ca>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-The usage of MSE threw me a bit too, as Bjorn notes that's specific to
-the SR-IOV capability.  I think this also uncovers a latent bug in our
-calling of vfio_bar_restore(), it really doesn't do a good job of
-determining whether an enable bit is implemented, regardless of whether
-it's a VF or the device simply doesn't use that address space.  For
-example I imagine you could reproduce triggering a reset recovery on
-s390 by trying to write the VF command register to 1 with setpci from a
-guest (since you won't have is_virtfn to bail out of the recovery
-function).  I think we'll still need this dev_flag to differentiate
-unimplmented and enabled versus simply unimplemented to resolve that
-though, so the change looks ok to me. Thanks,
-
-Alex
-
-> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> >> ---
-> >>   drivers/pci/iov.c   | 1 +
-> >>   include/linux/pci.h | 2 ++
-> >>   2 files changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> >> index b37e08c..2bec77c 100644
-> >> --- a/drivers/pci/iov.c
-> >> +++ b/drivers/pci/iov.c
-> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> >>   	virtfn->device = iov->vf_device;
-> >>   	virtfn->is_virtfn = 1;
-> >>   	virtfn->physfn = pci_dev_get(dev);
-> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
-> >>   
-> >>   	if (id == 0)
-> >>   		pci_read_vf_config_common(virtfn);
-> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >> index 8355306..9316cce 100644
-> >> --- a/include/linux/pci.h
-> >> +++ b/include/linux/pci.h
-> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
-> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
-> >>   };
-> >>   
-> >>   enum pci_irq_reroute_variant {
-> >> -- 
-> >> 1.8.3.1
-> >>  
-> 
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 562053ce9455..7ee9e966dc6d 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1812,6 +1812,7 @@ struct qmp_phy_cfg {
+  * @index: lane index
+  * @qmp: QMP phy to which this lane belongs
+  * @lane_rst: lane's reset controller
++ * @mode: current PHY mode
+  */
+ struct qmp_phy {
+ 	struct phy *phy;
+@@ -1825,6 +1826,7 @@ struct qmp_phy {
+ 	unsigned int index;
+ 	struct qcom_qmp *qmp;
+ 	struct reset_control *lane_rst;
++	enum phy_mode mode;
+ };
+ 
+ /**
+@@ -1843,7 +1845,6 @@ struct qmp_phy {
+  * @phy_mutex: mutex lock for PHY common block initialization
+  * @init_count: phy common block initialization count
+  * @phy_initialized: indicate if PHY has been initialized
+- * @mode: current PHY mode
+  * @ufs_reset: optional UFS PHY reset handle
+  */
+ struct qcom_qmp {
+@@ -1861,7 +1862,6 @@ struct qcom_qmp {
+ 	struct mutex phy_mutex;
+ 	int init_count;
+ 	bool phy_initialized;
+-	enum phy_mode mode;
+ 
+ 	struct reset_control *ufs_reset;
+ };
+@@ -2801,9 +2801,8 @@ static int qcom_qmp_phy_set_mode(struct phy *phy,
+ 				 enum phy_mode mode, int submode)
+ {
+ 	struct qmp_phy *qphy = phy_get_drvdata(phy);
+-	struct qcom_qmp *qmp = qphy->qmp;
+ 
+-	qmp->mode = mode;
++	qphy->mode = mode;
+ 
+ 	return 0;
+ }
+@@ -2816,8 +2815,8 @@ static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
+ 	void __iomem *pcs_misc = qphy->pcs_misc;
+ 	u32 intr_mask;
+ 
+-	if (qmp->mode == PHY_MODE_USB_HOST_SS ||
+-	    qmp->mode == PHY_MODE_USB_DEVICE_SS)
++	if (qphy->mode == PHY_MODE_USB_HOST_SS ||
++	    qphy->mode == PHY_MODE_USB_DEVICE_SS)
+ 		intr_mask = ARCVR_DTCT_EN | ALFPS_DTCT_EN;
+ 	else
+ 		intr_mask = ARCVR_DTCT_EN | ARCVR_DTCT_EVENT_SEL;
+@@ -2863,7 +2862,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
+ 	struct qmp_phy *qphy = qmp->phys[0];
+ 	const struct qmp_phy_cfg *cfg = qmp->cfg;
+ 
+-	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qmp->mode);
++	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qphy->mode);
+ 
+ 	/* Supported only for USB3 PHY */
+ 	if (cfg->type != PHY_TYPE_USB3)
+@@ -2889,7 +2888,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
+ 	const struct qmp_phy_cfg *cfg = qmp->cfg;
+ 	int ret = 0;
+ 
+-	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qmp->mode);
++	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qphy->mode);
+ 
+ 	/* Supported only for USB3 PHY */
+ 	if (cfg->type != PHY_TYPE_USB3)
+-- 
+Sent by a computer, using git, on the internet
 
