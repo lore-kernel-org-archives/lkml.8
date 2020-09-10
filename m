@@ -2,111 +2,84 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A986C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F96C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC2921D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599747784;
-	bh=l/M6LZZJZ7DHoVufKas+aer9LD3Hp6q5cd2+VsWkIII=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EaWRAGXmF/JMibk5xkkmrcblvg5QdguaqixPJXVA2mhiDdMF1f50kGXYY2+BK/5YV
-	 48DLYXGhU3g+tOJecx4vY6jIRmsAPABsrCJPNc3VQ2ncT8Nyv/ZkCCTwAxQjsbgome
-	 9fVAML8oczNnMvNPT/KYCIkE63F9aO3fbL/na6tg=
+	by mail.kernel.org (Postfix) with ESMTP id 66FB721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731031AbgIJOW5 (ORCPT
+        id S1731086AbgIJOXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:22:57 -0400
-Received: from condef-05.nifty.com ([202.248.20.70]:33543 "EHLO
-        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730890AbgIJOK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:23:21 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56900 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728350AbgIJOK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 10:10:28 -0400
-Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-05.nifty.com with ESMTP id 08ADtFcv031606;
-        Thu, 10 Sep 2020 22:55:15 +0900
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 08ADpSIv001308;
-        Thu, 10 Sep 2020 22:51:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 08ADpSIv001308
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599745889;
-        bh=JHjawyNi+2UsmyXrYxyqMJXMi2+rCaAViXhyNLVuK8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=buyXflRaxjagpRHTL+9r/eT3QLgJLolWsUxnbjtXoDxjXWHVtUDCUi/5rTnV79Q5S
-         nULaajOuWCSJI3UtGUxIj3U8dZLZDsrJ0+ze+ED/FJXW+xt3ppN745E2vIs/CBKEKE
-         Oj61MLp+NUjjmvwkq5qHBzRP2F1gRnZv2qUgBIrAJkIUh+kg6d1p4fURxH9O4AC1nW
-         0+U0LHAF+8BgK8pkYpXrK5J0WWewIRwz55IN5QdNntD0Oh2JzqAq+wkIjWzaln1li0
-         2FvyHn/jDYwz47/UeJFtzUdUB25T0PvbTemNV53NpFvM23ty3AEwG37txOgD3awkDR
-         7cJBpo5TiyYUA==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] kbuild: remove cc-option test of -fno-strict-overflow
-Date:   Thu, 10 Sep 2020 22:51:17 +0900
-Message-Id: <20200910135120.3527468-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8B386963CF3E2762CCAB;
+        Thu, 10 Sep 2020 22:09:57 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 22:09:47 +0800
+From:   Zheng Bin <zhengbin13@huawei.com>
+To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH -next 1/3] rtlwifi: rtl8723ae: fix comparison pointer to bool warning in rf.c
+Date:   Thu, 10 Sep 2020 22:16:40 +0800
+Message-ID: <20200910141642.127006-2-zhengbin13@huawei.com>
+X-Mailer: git-send-email 2.26.0.106.g9fadedd
+In-Reply-To: <20200910141642.127006-1-zhengbin13@huawei.com>
+References: <20200910141642.127006-1-zhengbin13@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The minimal compiler versions, GCC 4.9 and Clang 10 support this flag.
+Fixes coccicheck warning:
 
-Here is the godbolt:
-https://godbolt.org/z/odq8h9
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c:52:5-22: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c:482:6-14: WARNING: Comparison to bool
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 ---
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- Makefile                          | 2 +-
- arch/arm64/kernel/vdso32/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c
+index ecec8c9f0992..b8ed80c84266 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/rf.c
+@@ -49,7 +49,7 @@ void rtl8723e_phy_rf6052_set_cck_txpower(struct ieee80211_hw *hw,
+ 	if (rtlefuse->eeprom_regulatory != 0)
+ 		turbo_scanoff = true;
 
-diff --git a/Makefile b/Makefile
-index 4b5a305e30d2..059b36f2ea53 100644
---- a/Makefile
-+++ b/Makefile
-@@ -922,7 +922,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
- 
- # disable invalid "can't wrap" optimizations for signed / pointers
--KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
-+KBUILD_CFLAGS	+= -fno-strict-overflow
- 
- # clang sets -fmerge-all-constants by default as optimization, but this
- # is non-conforming behavior for C and in fact breaks the kernel, so we
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index d6adb4677c25..dfffd55175a3 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -90,7 +90,7 @@ VDSO_CFLAGS  += -O2
- # Some useful compiler-dependent flags from top-level Makefile
- VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
- VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
--VDSO_CFLAGS += $(call cc32-option,-fno-strict-overflow)
-+VDSO_CFLAGS += -fno-strict-overflow
- VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
- VDSO_CFLAGS += $(call cc32-option,-Werror=date-time)
- VDSO_CFLAGS += $(call cc32-option,-Werror=incompatible-pointer-types)
--- 
-2.25.1
+-	if (mac->act_scanning == true) {
++	if (mac->act_scanning) {
+ 		tx_agc[RF90_PATH_A] = 0x3f3f3f3f;
+ 		tx_agc[RF90_PATH_B] = 0x3f3f3f3f;
+
+@@ -479,7 +479,7 @@ static bool _rtl8723e_phy_rf6052_config_parafile(struct ieee80211_hw *hw)
+ 			break;
+ 		}
+
+-		if (rtstatus != true) {
++		if (!rtstatus) {
+ 			rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
+ 				"Radio[%d] Fail!!\n", rfpath);
+ 			return false;
+--
+2.26.0.106.g9fadedd
 
