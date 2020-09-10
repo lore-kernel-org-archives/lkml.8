@@ -2,92 +2,122 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10459C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7442C21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF07E20C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GP5wEXl8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cWm3mdOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgIJTSJ (ORCPT
+        id S1726837AbgIJTSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
+        Thu, 10 Sep 2020 15:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgIJTQ7 (ORCPT
+        with ESMTP id S1726512AbgIJTO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:16:59 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43B8C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d6so5232952pfn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
+        Thu, 10 Sep 2020 15:14:59 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C042BC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:14:58 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z9so1491849wmk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WTUCcqNRIoS33fWn/0Jo09nwI98p4mA4fR3hKii5V3g=;
-        b=GP5wEXl8UxhK+wcw6bvQ8Am/4d+n1zlegGhFVlx19po9y+fxYln7mlXhhNrTC3K8aT
-         1Kpc4olKCW9bvLkkS8hjjHSD9uwEbHfJkuYPnUbjnGPZbnVQ6u58EWyooJkMwgGX8n7h
-         EsOtvSQQsa/3CRyuEbiS3dBB8W0i4oB9WOQOA=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NHiy0wGH0Z2PSWBSFDkr8vLYPebD0GpJug29FxTRcRE=;
+        b=cWm3mdOojlugDs8+acBDLk29ETxfONeSctt4U3ukGpeaGbTukDCUj5c36jtb5OM7qq
+         2ubNfIl7Wkf1vqZ5QWFoEVxXNyprjG3T9Fv7GeS9Onsjz2F/EFrRmvQnq78CQjxvWCda
+         dZwoLWf9A64IWB2OXLIN0WBzepkQFLGC21oI9w+cfzpKStwHVw2SFqdjjtJ/OIRaM3ek
+         05FWBDxiafcGejF96W1LWWNrSFWuRJFVoC5S9HuEQ9CqEnDtYJXohPRHjqbWHghBxApb
+         sdN5KZVEJZ89lwHfufyZ7gZanRWIzAlNinvXydN3dfdc5EowzwGLpb4DZj6tk2COwFCJ
+         9yAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WTUCcqNRIoS33fWn/0Jo09nwI98p4mA4fR3hKii5V3g=;
-        b=BuIybvEtcFLgzFlYZRJktUrZ9jFql8AraIfzlmfSL7WByTDFI4FoLr0uVJXADcJGi1
-         j+SVEYwY4ZgcXIQy9zRNcvJv3dtj3eNiQkcziR8QykGZ1oMI0aoHso7WYsjSHBLsZiZu
-         f6hO6Q1zydKb8G5Dx9wSlFsWkf4wDoNLKJxDtMhAy2CtkR1d2y/KxfhfKbsFyijfVwcu
-         +C0H8KNpxwqaVpMTWbzTqaJclWgZAFpGtTEi4pvxKbS0LmEnDe9/BAiZ5IiSKQ0NghGx
-         2N2MqZZ9dpWXyPC8lRfDRAzAn7cbFgl3QYh4GrcveVQ++nFiPsTPktx25Bii5Yoqlmuq
-         s86Q==
-X-Gm-Message-State: AOAM533B88tzoxeldlZdWVslMB3HoIwJnx/XJchxVvQLmAycuHz8UFUq
-        wa5hROxaPX+hJ9gD+HOMqYYuAuipn/vrMOMz
-X-Google-Smtp-Source: ABdhPJxB4PeK4jJudm2ddbNQtmc+Mb5hPIfiGDzHr6/1df0l5PgqUj2b0a/gbvPaj2mmUYK8b9fLJQ==
-X-Received: by 2002:a17:902:8f88:b029:d0:cbe1:e719 with SMTP id z8-20020a1709028f88b02900d0cbe1e719mr7176681plo.39.1599765417304;
-        Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y126sm6981346pfy.138.2020.09.10.12.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 12:16:56 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:16:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Elena Petrova <lenaptr@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched.h: drop in_ubsan field when UBSAN is in trap mode
-Message-ID: <202009101216.1F173BD87D@keescook>
-References: <20200910134802.3160311-1-lenaptr@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NHiy0wGH0Z2PSWBSFDkr8vLYPebD0GpJug29FxTRcRE=;
+        b=O2eBxghKRmzaLA8RciOJTaL1AuC6iGm5/sreGZiCH4wxpzWF0WbAgiOYanao3sLPi8
+         cwhMyh3stBBSaGD90j8ofIK1Qy5LbxfnHS/B3+PXxcG2zkI8Z0p2oTAb+3ZwlXS5isZx
+         CDgY12XgjB5NJ3Gw0eDjAev3ObNYs5TonjX1o07Wx7UOLCWMhW7+f/HX8lK+4zv5c+Y/
+         j3vzQ02SjZcbV2PQVeroYhf/Y4QDLgFn8xv9bUNMY3q7puXeJBLSDmZdROm9J4UoR+Co
+         EMDOEfkdCsRdX1JqRaK8P9h3e22cYy5VWZvromKl0ySppkAB/lAXqjp3e9pr4uoMgGMK
+         J1jw==
+X-Gm-Message-State: AOAM530nibpihl24dn+wyl/DecZPfYqVm3h7gNS0OV9fvgQHmckWWW+J
+        ZAYOxHga4HDuJ8Vt+/b7dTJ4KY7duVM9FaDt
+X-Google-Smtp-Source: ABdhPJyzel4iOt0f1YOCRvX0c73LHI9kOU2nk9MtFaf2OSJgI6rjVeqrNDOQzeRzwi7A+ZtNb2brFg==
+X-Received: by 2002:a05:600c:2109:: with SMTP id u9mr1413131wml.147.1599765296745;
+        Thu, 10 Sep 2020 12:14:56 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d5d9:c908:efdc:8b45? ([2a01:e34:ed2f:f020:d5d9:c908:efdc:8b45])
+        by smtp.googlemail.com with ESMTPSA id y1sm5074204wmd.22.2020.09.10.12.14.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 12:14:56 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] thermal: ti-soc-thermal: Enable addition power
+ management
+To:     Andreas Kemnade <andreas@kemnade.info>,
+        Adam Ford <aford173@gmail.com>
+Cc:     linux-pm@vger.kernel.org, aford@beaconembedded.com,
+        hns@goldelico.com, kernel test robot <lkp@intel.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amitk@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200819125925.2119434-1-aford173@gmail.com>
+ <20200910200152.72cc5d9f@aktux>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4770327e-84fb-0543-097c-6525d762a01f@linaro.org>
+Date:   Thu, 10 Sep 2020 21:14:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910134802.3160311-1-lenaptr@google.com>
+In-Reply-To: <20200910200152.72cc5d9f@aktux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 02:48:02PM +0100, Elena Petrova wrote:
-> in_ubsan field of task_struct is only used in lib/ubsan.c, which in its
-> turn is used only `ifneq ($(CONFIG_UBSAN_TRAP),y)`.
+On 10/09/2020 20:01, Andreas Kemnade wrote:
+> On Wed, 19 Aug 2020 07:59:23 -0500
+> Adam Ford <aford173@gmail.com> wrote:
 > 
-> Removing unnecessary field from a task_struct will help preserve the
-> ABI between vanilla and CONFIG_UBSAN_TRAP'ed kernels. In particular,
-> this will help enabling bounds sanitizer transparently for Android's
-> GKI.
-> 
-> Signed-off-by: Elena Petrova <lenaptr@google.com>
+>> The bandgap sensor can be idled when the processor is too, but it
+>> isn't currently being done, so the power consumption of OMAP3
+>> boards can elevated if the bangap sensor is enabled.
+>>
+>> This patch attempts to use some additional power management
+>> to idle the clock to the bandgap when not needed.
+>>
+>> Signed-off-by: Adam Ford <aford173@gmail.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> ---
+>> V2: Fix issue where variable stating the suspend mode isn't being
+>>     properly set and cleared.
+>>
+> hmm, it is not in linux-next. Can we expect that for v5.10?
 
-Acked-by: Kees Cook <keescook@chromium.org>
+The reason I did not pick this patch is because lkp reported an error on it.
 
-(This should be CCed to akpm who has been taking most of the ubsan
-patches lately.)
+https://marc.info/?l=linux-pm&m=159788472017308&w=2
+
+
+
 
 -- 
-Kees Cook
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
