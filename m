@@ -2,78 +2,78 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A55C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E567120829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAD7214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgIJUjR (ORCPT
+        id S1726434AbgIJUjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:39:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56378 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbgIJUiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:38:54 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kGTLE-00E8So-Ti; Thu, 10 Sep 2020 22:38:48 +0200
-Date:   Thu, 10 Sep 2020 22:38:48 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 10 Sep 2020 16:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgIJUbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:31:20 -0400
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79508C061573;
+        Thu, 10 Sep 2020 13:31:19 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
+        by mail.nic.cz (Postfix) with ESMTPSA id B671E13FD86;
+        Thu, 10 Sep 2020 22:31:12 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 22:31:12 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
+        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-Message-ID: <20200910203848.GJ3354160@lunn.ch>
-References: <20200910161126.30948-1-oded.gabbay@gmail.com>
- <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
- <20200910202513.GH3354160@lunn.ch>
- <CAFCwf11P7pEJ+Av9oiwdQFor5Kh9JeKvVTBXnMzWusKCRz7mHw@mail.gmail.com>
+Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
+ for LEDs controlled by Marvell PHYs
+Message-ID: <20200910223112.26b57dd6@nic.cz>
+In-Reply-To: <20200910183435.GC1551@shell.armlinux.org.uk>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+        <20200909162552.11032-7-marek.behun@nic.cz>
+        <20200910122341.GC7907@duo.ucw.cz>
+        <20200910131541.GD3316362@lunn.ch>
+        <20200910182434.GA22845@duo.ucw.cz>
+        <20200910183154.GF3354160@lunn.ch>
+        <20200910183435.GC1551@shell.armlinux.org.uk>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFCwf11P7pEJ+Av9oiwdQFor5Kh9JeKvVTBXnMzWusKCRz7mHw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 11:30:33PM +0300, Oded Gabbay wrote:
-> On Thu, Sep 10, 2020 at 11:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > Can you please elaborate on how to do this with a single driver that
-> > > is already in misc ?
-> > > As I mentioned in the cover letter, we are not developing a
-> > > stand-alone NIC. We have a deep-learning accelerator with a NIC
-> > > interface.
-> >
-> > This sounds like an MFD.
-> >
-> >      Andrew
+On Thu, 10 Sep 2020 19:34:35 +0100
+Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+
+> On Thu, Sep 10, 2020 at 08:31:54PM +0200, Andrew Lunn wrote:
+> > Generally the driver will default to the hardware reset blink
+> > pattern. There are a few PHY drivers which change this at probe, but
+> > not many. The silicon defaults are pretty good.  
 > 
-> Yes and no. There is only one functionality - training of deep
-> learning (Accelerating compute operations) :)
-> The rdma is just our method of scaling-out - our method of
-> intra-connection between GAUDI devices (similar to NVlink or AMD
-> crossfire).
-> So the H/W exposes a single physical function at the PCI level. And
-> thus Linux can call a single driver for it during the PCI probe.
+> The "right" blink pattern can be a matter of how the hardware is
+> wired.  For example, if you have bi-colour LEDs and the PHY supports
+> special bi-colour mixing modes.
+> 
 
-Yes, it probes the MFD driver. The MFD driver then creates platform
-drivers for the sub functions. i.e. it would create an Ethernet
-platform driver. That then gets probed in the usual way. The child
-device can get access to the parent device, if it needs to share
-things, e.g. a device on a bus. This is typically I2C or SPI, but
-there is no reason it cannot be a PCI device.
+Have you seen such, Russell? This could be achieved via the multicolor
+LED framework, but I don't have a device which uses such LEDs, so I
+did not write support for this in the Marvell PHY driver.
 
-Go look in drivers/mfd.
-
-      Andrew
+(I guess I could test it though, since on my device LED0 and LED1
+are used, and this to can be put into bi-colour LED mode.)
