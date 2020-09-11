@@ -2,268 +2,138 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C12C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A57C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA9C221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVwdx05b"
+	by mail.kernel.org (Postfix) with ESMTP id 7C746221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599842621;
+	bh=ruSye/Xa0SxJovHShAZlpdR9ElD2kkZvl22+l4KTbsk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ak8S8G6lWQpc3OWq6MtYUIKIuE74UyG6Xq3ogVEvp3h5aNjFKgjf1Wv+pannoWogj
+	 ZQDBipvIgX38XLbz+7orl/0Rwxwz/QyHRJXgd6T8cgtdacDd19mWUQF9HIZLVJZdV6
+	 XHI6sRFx0xTK5nP2B4Bq3pZhsk41wxqYm1wTlgOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgIKQmh (ORCPT
+        id S1726472AbgIKQn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:42:37 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40794 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725891AbgIKQl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:41:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599842515;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dCCYRHJfCs9q7+pn8+1DMUQvWPREwMeHDgZW4MhyNFI=;
-        b=EVwdx05b8f3j9tTM/UWO02hRin92bvcu5esIpLZcatz3WgSMs2zT+qz2B4mPNwooMVC51t
-        veBntQg7n20pjne2sncsWQs5EUe4VHlRC1QoJmIeK88rm8HdsQxUBx2jBmbieYOhlGMhCD
-        cxbaoaDO/P7aHGxy3eAIdOA97sm3xMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-ioDUguKaNDO_8rEqEDUcWA-1; Fri, 11 Sep 2020 12:41:51 -0400
-X-MC-Unique: ioDUguKaNDO_8rEqEDUcWA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 11 Sep 2020 12:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726392AbgIKPI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:08:28 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AB601084CA4;
-        Fri, 11 Sep 2020 16:41:48 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 68F247B7D2;
-        Fri, 11 Sep 2020 16:41:28 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 08BGfRwA030406;
-        Fri, 11 Sep 2020 12:41:27 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 08BGfQ8M030402;
-        Fri, 11 Sep 2020 12:41:26 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Fri, 11 Sep 2020 12:41:26 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 2/2] xfs: don't update mtime on COW faults
-In-Reply-To: <20200910060626.GA7964@magnolia>
-Message-ID: <alpine.LRH.2.02.2009111232210.29958@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com> <20200905153652.GA7955@magnolia> <alpine.LRH.2.02.2009051229180.542@file01.intranet.prod.int.rdu2.redhat.com> <20200910060626.GA7964@magnolia>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id 896222242E;
+        Fri, 11 Sep 2020 12:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599829158;
+        bh=ruSye/Xa0SxJovHShAZlpdR9ElD2kkZvl22+l4KTbsk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HPqx8QNuxcROx0RNbeWT5Jj6Dt05mZtao/0Ba5CAcxuGxwxULRfmI2vznE8DX8A3y
+         nqJUF21D5HjtI7X9tUI0XXs6ZakUfdTCluF8dVwvft2upnMQbla4P7rXBMrUAkdyDr
+         5HmIKXmhvG8kIlpGJf3W7Scqn0ILwz/3xrJev2dY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 07/12] bnxt: dont enable NAPI until rings are ready
+Date:   Fri, 11 Sep 2020 14:47:01 +0200
+Message-Id: <20200911122458.776047210@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
+References: <20200911122458.413137406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jakub Kicinski <kuba@kernel.org>
 
+commit 96ecdcc992eb7f468b2cf829b0f5408a1fad4668 upstream.
 
-On Wed, 9 Sep 2020, Darrick J. Wong wrote:
+Netpoll can try to poll napi as soon as napi_enable() is called.
+It crashes trying to access a doorbell which is still NULL:
 
-> On Sat, Sep 05, 2020 at 01:02:33PM -0400, Mikulas Patocka wrote:
-> > > > 
-> > 
-> > I've written this program that tests it - you can integrate it into your 
-> > testsuite.
-> 
-> I don't get it.  You're a filesystem maintainer too, which means you're
-> a regular contributor.  Do you:
-> 
-> (a) not use fstests?  If you don't, I really hope you use something else
-> to QA hpfs.
+ BUG: kernel NULL pointer dereference, address: 0000000000000000
+ CPU: 59 PID: 6039 Comm: ethtool Kdump: loaded Tainted: G S                5.9.0-rc1-00469-g5fd99b5d9950-dirty #26
+ RIP: 0010:bnxt_poll+0x121/0x1c0
+ Code: c4 20 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 41 8b 86 a0 01 00 00 41 23 85 18 01 00 00 49 8b 96 a8 01 00 00 0d 00 00 00 24 <89> 02
+41 f6 45 77 02 74 cb 49 8b ae d8 01 00 00 31 c0 c7 44 24 1a
+  netpoll_poll_dev+0xbd/0x1a0
+  __netpoll_send_skb+0x1b2/0x210
+  netpoll_send_udp+0x2c9/0x406
+  write_ext_msg+0x1d7/0x1f0
+  console_unlock+0x23c/0x520
+  vprintk_emit+0xe0/0x1d0
+  printk+0x58/0x6f
+  x86_vector_activate.cold+0xf/0x46
+  __irq_domain_activate_irq+0x50/0x80
+  __irq_domain_activate_irq+0x32/0x80
+  __irq_domain_activate_irq+0x32/0x80
+  irq_domain_activate_irq+0x25/0x40
+  __setup_irq+0x2d2/0x700
+  request_threaded_irq+0xfb/0x160
+  __bnxt_open_nic+0x3b1/0x750
+  bnxt_open_nic+0x19/0x30
+  ethtool_set_channels+0x1ac/0x220
+  dev_ethtool+0x11ba/0x2240
+  dev_ioctl+0x1cf/0x390
+  sock_do_ioctl+0x95/0x130
 
-I don't use xfstests on HPFS. I was testing it just by using it. Now I use 
-it just a little, but I don't modify it much.
-
-> (b) really think that it's my problem to integrate and submit your
-> regression tests for you?
-> 
-> and (c) what do you want me to do with a piece of code that has no 
-> signoff tag, no copyright, and no license?  This is your patch, and 
-> therefore your responsibility to develop enough of an appropriate 
-> regression test in a proper form that the rest of us can easily 
-> determine we have the rights to contribute to it.
-
-
-If you want a full patch (I copied the script from test 313), I send it 
-here.
-
-Mikulas
-
-
-From: Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH] check ctime and mtime vs mmap
-
-Check ctime and mtime are not updated on COW faults
-and that they are updated on shared faults
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Reported-by: Rob Sherwood <rsher@fb.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- src/Makefile          |    3 +-
- src/mmap-timestamp.c  |   53 ++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/609     |   40 +++++++++++++++++++++++++++++++++++++
- tests/generic/609.out |    2 +
- tests/generic/group   |    1 
- 5 files changed, 98 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Index: xfstests-dev/src/Makefile
-===================================================================
---- xfstests-dev.orig/src/Makefile	2020-09-06 12:38:40.000000000 +0200
-+++ xfstests-dev/src/Makefile	2020-09-11 17:39:04.000000000 +0200
-@@ -17,7 +17,8 @@ TARGETS = dirstress fill fill2 getpagesi
- 	t_mmap_cow_race t_mmap_fallocate fsync-err t_mmap_write_ro \
- 	t_ext4_dax_journal_corruption t_ext4_dax_inline_corruption \
- 	t_ofd_locks t_mmap_collision mmap-write-concurrent \
--	t_get_file_time t_create_short_dirs t_create_long_dirs
-+	t_get_file_time t_create_short_dirs t_create_long_dirs \
-+	mmap-timestamp
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6378,14 +6378,14 @@ static int __bnxt_open_nic(struct bnxt *
+ 		}
+ 	}
  
- LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
- 	preallo_rw_pattern_writer ftrunc trunc fs_perms testx looptest \
-Index: xfstests-dev/src/mmap-timestamp.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ xfstests-dev/src/mmap-timestamp.c	2020-09-11 18:21:40.000000000 +0200
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 Red Hat, Inc. All Rights reserved.
+-	bnxt_enable_napi(bp);
+-
+ 	rc = bnxt_init_nic(bp, irq_re_init);
+ 	if (rc) {
+ 		netdev_err(bp->dev, "bnxt_init_nic err: %x\n", rc);
+-		goto open_err;
++		goto open_err_irq;
+ 	}
+ 
++	bnxt_enable_napi(bp);
 +
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+#include <sys/stat.h>
-+
-+#define FILE_NAME	argv[1]
-+
-+static struct stat st1, st2;
-+
-+int main(int argc, char *argv[])
-+{
-+	int h, r;
-+	char *map;
-+	unlink(FILE_NAME);
-+	h = creat(FILE_NAME, 0600);
-+	if (h == -1) perror("creat"), exit(1);
-+	r = write(h, "x", 1);
-+	if (r != 1) perror("write"), exit(1);
-+	if (close(h)) perror("close"), exit(1);
-+	h = open(FILE_NAME, O_RDWR);
-+	if (h == -1) perror("open"), exit(1);
-+
-+	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE, h, 0);
-+	if (map == MAP_FAILED) perror("mmap"), exit(1);
-+	if (fstat(h, &st1)) perror("fstat"), exit(1);
-+	sleep(2);
-+	*map = 'y';
-+	if (fstat(h, &st2)) perror("fstat"), exit(1);
-+	if (st1.st_mtime != st2.st_mtime) fprintf(stderr, "BUG: COW fault changed mtime!\n"), exit(1);
-+	if (st1.st_ctime != st2.st_ctime) fprintf(stderr, "BUG: COW fault changed ctime!\n"), exit(1);
-+	if (munmap(map, 4096)) perror("munmap"), exit(1);
-+
-+	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, h, 0);
-+	if (map == MAP_FAILED) perror("mmap"), exit(1);
-+	if (fstat(h, &st1)) perror("fstat"), exit(1);
-+	sleep(2);
-+	*map = 'z';
-+	if (msync(map, 4096, MS_SYNC)) perror("msync"), exit(1);
-+	if (fstat(h, &st2)) perror("fstat"), exit(1);
-+	if (st1.st_mtime == st2.st_mtime) fprintf(stderr, "BUG: Shared fault did not change mtime!\n"), exit(1);
-+	if (st1.st_ctime == st2.st_ctime) fprintf(stderr, "BUG: Shared fault did not change ctime!\n"), exit(1);
-+	if (munmap(map, 4096)) perror("munmap"), exit(1);
-+
-+	if (close(h)) perror("close"), exit(1);
-+	if (unlink(FILE_NAME)) perror("unlink"), exit(1);
-+	return 0;
-+}
-Index: xfstests-dev/tests/generic/609
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ xfstests-dev/tests/generic/609	2020-09-11 18:30:30.000000000 +0200
-@@ -0,0 +1,40 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2020 Red Hat, Inc. All Rights Reserved.
-+#
-+# FS QA Test No. 609
-+#
-+# Check ctime and mtime are not updated on COW faults
-+# and that they are updated on shared faults
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+    cd /
-+    rm -f $testfile
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_fs generic
-+_supported_os Linux
-+_require_test
-+
-+testfile=$TEST_DIR/testfile.$seq
-+
-+echo "Silence is golden"
-+
-+$here/src/mmap-timestamp $testfile 2>&1
-+
-+status=0
-+exit
-Index: xfstests-dev/tests/generic/609.out
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ xfstests-dev/tests/generic/609.out	2020-09-11 18:24:24.000000000 +0200
-@@ -0,0 +1,2 @@
-+QA output created by 609
-+Silence is golden
-Index: xfstests-dev/tests/generic/group
-===================================================================
---- xfstests-dev.orig/tests/generic/group	2020-09-06 12:38:40.000000000 +0200
-+++ xfstests-dev/tests/generic/group	2020-09-11 18:25:09.000000000 +0200
-@@ -611,3 +611,4 @@
- 606 auto attr quick dax
- 607 auto attr quick dax
- 608 auto attr quick dax
-+609 auto quick
+ 	if (link_re_init) {
+ 		mutex_lock(&bp->link_lock);
+ 		rc = bnxt_update_phy_setting(bp);
+@@ -6410,9 +6410,6 @@ static int __bnxt_open_nic(struct bnxt *
+ 		bnxt_vf_reps_open(bp);
+ 	return 0;
+ 
+-open_err:
+-	bnxt_disable_napi(bp);
+-
+ open_err_irq:
+ 	bnxt_del_napi(bp);
+ 
+
 
