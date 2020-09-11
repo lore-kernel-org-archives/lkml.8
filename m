@@ -2,129 +2,74 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF22C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD30C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA7DA221E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKX/tDck"
+	by mail.kernel.org (Postfix) with ESMTP id 8D154221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbgIKKNh (ORCPT
+        id S1725897AbgIKKOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgIKKNf (ORCPT
+        Fri, 11 Sep 2020 06:14:43 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:7915 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725851AbgIKKOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:13:35 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451C1C061573;
-        Fri, 11 Sep 2020 03:13:35 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e16so10941336wrm.2;
-        Fri, 11 Sep 2020 03:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gwozpa300aA/BimLNF0pTAIrHFmBGruEELOH7rZVOo8=;
-        b=aKX/tDckdOrqKC1LLyeSaUSbUQUz8Rw79jEb3BnPi8mV+lFwAkbx3F8Iuh1XOKdJpB
-         mSnWHW1/PCO+5XQcl1YErrYtvcVGf2LFEwQsFW8fUF6YJl1j0iHdJ7qtZz2MHn7kuAFf
-         SoQPX7OhYkQbIazoXRKee5rUJrmS+Qsvd1FPduMIPh4pvYt3E+NulabHIIJTi3BcOsF6
-         dp5e5P0JCLe2sOpLdQifORbLcm2HfjXYrpkWx9zswSDu2X5mrO9OdySQ0JZMRLix2IQk
-         SWjATBAsop544clN+Lr7JD5UbtQUFV9XOdV1SOjy8U99J9XjZmT3bAuyV/1XACEA2ZFe
-         kwsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gwozpa300aA/BimLNF0pTAIrHFmBGruEELOH7rZVOo8=;
-        b=IqjFF+hKO2V94PyZnwtXyzZ2iXj8fiIaIxZqKcHfe2y2K5gjdlXjWWRQpRu7g0F33j
-         Fl3U7/Ls7wOtUJaccEWlFqIaB3EyXOvZc1wR/c7qBbKSNvWvSPzJaEKdOQMt7ppp0sAA
-         8mmOuq3k7hE6RnQlPyTDTr+s+9UnPM5PeQ1dTq3k0fGJbG2nIM4g4YWWj6LkDLvTpldF
-         gucpZRKLu3Dc8uzIJzaKZctE8MsU2jQiGzoo/Bdo0innzgEUqz5l16XO52Rot3qTQMIp
-         SOS23qVyr7rJdCcfDZrdUvFnAT14ymuWvSSkX/vqa5U87S4He7x4a3oTGADW6FpDO+m9
-         84dQ==
-X-Gm-Message-State: AOAM531epYOwazWwkUC0QpROsb0t1VEwdIEUdTV8mOIeeSvQXbVRCU16
-        MsQThej3MZXQmxWVsZ3RwdNMGkKB2wM=
-X-Google-Smtp-Source: ABdhPJwuXUQcDNkdgPISaGuQ8LNkw2ozL/HadDDFMw5ILi/7UgZ5zSpM6+KOOBTGpAoI2eOVwh73Jw==
-X-Received: by 2002:adf:dc47:: with SMTP id m7mr1320338wrj.100.1599819213768;
-        Fri, 11 Sep 2020 03:13:33 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id p3sm3133116wmm.40.2020.09.11.03.13.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 03:13:33 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/24] endian.3: Use 'PRIx32' rather than "%x" when
- printing 'uint32_t' values
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-3-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <99b8d630-131e-b8f7-eb81-d8bb1727da59@gmail.com>
-Date:   Fri, 11 Sep 2020 12:13:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-3-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 11 Sep 2020 06:14:35 -0400
+X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
+   d="scan'208";a="56814348"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Sep 2020 19:14:34 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8511F400B9CB;
+        Fri, 11 Sep 2020 19:14:32 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 1/2] media: rcar-vin: Kconfig: Update help description for VIDEO_RCAR_CSI2 config
+Date:   Fri, 11 Sep 2020 11:14:21 +0100
+Message-Id: <20200911101422.20333-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200911101422.20333-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200911101422.20333-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+rcar-csi2 driver is also used on Renesas RZ/G2 SoC's, update the
+same to reflect the description for VIDEO_RCAR_CSI2 config.
 
-Just noting here for completeness: see the discussion in patch 01.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ drivers/media/platform/rcar-vin/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Michael
-
-> ---
->  man3/endian.3 | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/man3/endian.3 b/man3/endian.3
-> index bdf1efd7e..3a898bb02 100644
-> --- a/man3/endian.3
-> +++ b/man3/endian.3
-> @@ -147,6 +147,7 @@ htobe32(x.u32) = 0x11223344
->  \&
->  .EX
->  #include <endian.h>
-> +#include <inttypes.h>
->  #include <stdint.h>
->  #include <stdio.h>
->  #include <stdlib.h>
-> @@ -164,9 +165,9 @@ main(int argc, char *argv[])
->      x.arr[2] = 0x33;
->      x.arr[3] = 0x44;	/* Highest-address byte */
->  
-> -    printf("x.u32 = 0x%x\en", x.u32);
-> -    printf("htole32(x.u32) = 0x%x\en", htole32(x.u32));
-> -    printf("htobe32(x.u32) = 0x%x\en", htobe32(x.u32));
-> +    printf("x.u32 = 0x%"PRIx32"\en", x.u32);
-> +    printf("htole32(x.u32) = 0x%"PRIx32"\en", htole32(x.u32));
-> +    printf("htobe32(x.u32) = 0x%"PRIx32"\en", htobe32(x.u32));
->  
->      exit(EXIT_SUCCESS);
->  }
-> 
-
-
+diff --git a/drivers/media/platform/rcar-vin/Kconfig b/drivers/media/platform/rcar-vin/Kconfig
+index ca0d906dce2f..2669c13a0423 100644
+--- a/drivers/media/platform/rcar-vin/Kconfig
++++ b/drivers/media/platform/rcar-vin/Kconfig
+@@ -9,7 +9,7 @@ config VIDEO_RCAR_CSI2
+ 	select V4L2_FWNODE
+ 	help
+ 	  Support for Renesas R-Car MIPI CSI-2 receiver.
+-	  Supports R-Car Gen3 SoCs.
++	  Supports R-Car Gen3 and RZ/G2 SoCs.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called rcar-csi2.
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
