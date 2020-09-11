@@ -2,187 +2,161 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC06C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83ED12226A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81E222C2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599833216;
-	bh=CxiLQledTtjYLcXI2PL3KnXja4YeJ9jEEbIqHlV6OSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P5peH6x/fvJo8sGGPoBm5GVp0anaxDX0f/7eaF5jMpgf3yH5e5bYEBOMh4WVueRnH
-	 PqSPs6AxLFnvpaxyfPFcmh5Gsx0MBudmJN4oVXqvFXTol8G/jaB/0nOlhT6lxv5zsP
-	 uChltxZcsU9JEEAxrCCM+DYAmvtscpodbHhYcs8A=
+	s=default; t=1599833256;
+	bh=WtLDphGkBiYmdc6BhAHcqBRHKaHreheENgkhJb+8c5k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CiNoHE/TjmTF7Tv5P9n/EM34u6k5gF1XSDDeDPHcUZsI81obfiC6L+fMWz7vqKVjp
+	 w25GKEVC5PDF2onB5CfXczLG1cgHL2JVSWvmeueQAcqU2CaZ8txzCmNipNQ0O4nQCB
+	 imzWQ5dF2qL2AWErY2pSrG1ST0XxuR9Vdn5o1j1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgIKOFR (ORCPT
+        id S1726233AbgIKOGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726230AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:29:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36ABB2224B;
-        Fri, 11 Sep 2020 12:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D246B2220D;
+        Fri, 11 Sep 2020 13:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829193;
-        bh=CxiLQledTtjYLcXI2PL3KnXja4YeJ9jEEbIqHlV6OSg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVZg4Y7JrzO2SCrf8KBd8E41VlKvv0SjyhUpEEoAGbv73dImNGfX3husa96ssMBjC
-         p/9vH+grtQIuiGBre9TU6QnqoF/9/lnY571MtdNGCsh1Dm1oW4KwxCvolfm5xPx3Ko
-         ED46vkR5Rlq4USj0++e4b11EPzYHIBwDfu/Y5rNM=
+        s=default; t=1599829210;
+        bh=WtLDphGkBiYmdc6BhAHcqBRHKaHreheENgkhJb+8c5k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xI+pkjmzFNex8nlX/z6/sow4RrduFhZo7Wd0G+2OWxeooxU4r2XCZyYg6e0MhTiIP
+         BJe2tFp/Mn0i0CdULWZZM8vgmFgJsD9G3jxdOZPliHOZPY/rgpxjRYJ+sUQjcUKkrC
+         MEzlHmamXTN3pOvb8oEQ51z6WnfPNODKpT6qxcRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 04/16] RDMA/cma: Using the standard locking pattern when delivering the removal event
-Date:   Fri, 11 Sep 2020 14:47:21 +0200
-Message-Id: <20200911122459.794964379@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.8 00/16] 5.8.9-rc1 review
+Date:   Fri, 11 Sep 2020 14:47:17 +0200
+Message-Id: <20200911122459.585735377@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
-References: <20200911122459.585735377@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.8.9-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.8.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.8.9-rc1
+X-KernelTest-Deadline: 2020-09-13T12:25+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+This is the start of the stable review cycle for the 5.8.9 release.
+There are 16 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 3647a28de1ada8708efc78d956619b9df5004478 ]
+Responses should be made by Sun, 13 Sep 2020 12:24:42 +0000.
+Anything received after that time might be too late.
 
-Whenever an event is delivered to the handler it should be done under the
-handler_mutex and upon any non-zero return from the handler it should
-trigger destruction of the cm_id.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.9-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+and the diffstat can be found below.
 
-cma_process_remove() skips some steps here, it is not necessarily wrong
-since the state change should prevent any races, but it is confusing and
-unnecessary.
+thanks,
 
-Follow the standard pattern here, with the slight twist that the
-transition to RDMA_CM_DEVICE_REMOVAL includes a cma_cancel_operation().
+greg k-h
 
-Link: https://lore.kernel.org/r/20200723070707.1771101-3-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/cma.c | 62 ++++++++++++++++++++---------------
- 1 file changed, 36 insertions(+), 26 deletions(-)
+-------------
+Pseudo-Shortlog of commits:
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 537eeebde5f4d..04151c301e851 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1925,6 +1925,8 @@ static int cma_cm_event_handler(struct rdma_id_private *id_priv,
- {
- 	int ret;
- 
-+	lockdep_assert_held(&id_priv->handler_mutex);
-+
- 	trace_cm_event_handler(id_priv, event);
- 	ret = id_priv->id.event_handler(&id_priv->id, event);
- 	trace_cm_event_done(id_priv, event, ret);
-@@ -4793,50 +4795,58 @@ free_cma_dev:
- 	return ret;
- }
- 
--static int cma_remove_id_dev(struct rdma_id_private *id_priv)
-+static void cma_send_device_removal_put(struct rdma_id_private *id_priv)
- {
--	struct rdma_cm_event event = {};
-+	struct rdma_cm_event event = { .event = RDMA_CM_EVENT_DEVICE_REMOVAL };
- 	enum rdma_cm_state state;
--	int ret = 0;
--
--	/* Record that we want to remove the device */
--	state = cma_exch(id_priv, RDMA_CM_DEVICE_REMOVAL);
--	if (state == RDMA_CM_DESTROYING)
--		return 0;
-+	unsigned long flags;
- 
--	cma_cancel_operation(id_priv, state);
- 	mutex_lock(&id_priv->handler_mutex);
-+	/* Record that we want to remove the device */
-+	spin_lock_irqsave(&id_priv->lock, flags);
-+	state = id_priv->state;
-+	if (state == RDMA_CM_DESTROYING || state == RDMA_CM_DEVICE_REMOVAL) {
-+		spin_unlock_irqrestore(&id_priv->lock, flags);
-+		mutex_unlock(&id_priv->handler_mutex);
-+		cma_id_put(id_priv);
-+		return;
-+	}
-+	id_priv->state = RDMA_CM_DEVICE_REMOVAL;
-+	spin_unlock_irqrestore(&id_priv->lock, flags);
- 
--	/* Check for destruction from another callback. */
--	if (!cma_comp(id_priv, RDMA_CM_DEVICE_REMOVAL))
--		goto out;
--
--	event.event = RDMA_CM_EVENT_DEVICE_REMOVAL;
--	ret = cma_cm_event_handler(id_priv, &event);
--out:
-+	if (cma_cm_event_handler(id_priv, &event)) {
-+		/*
-+		 * At this point the ULP promises it won't call
-+		 * rdma_destroy_id() concurrently
-+		 */
-+		cma_id_put(id_priv);
-+		mutex_unlock(&id_priv->handler_mutex);
-+		rdma_destroy_id(&id_priv->id);
-+		return;
-+	}
- 	mutex_unlock(&id_priv->handler_mutex);
--	return ret;
-+
-+	/*
-+	 * If this races with destroy then the thread that first assigns state
-+	 * to a destroying does the cancel.
-+	 */
-+	cma_cancel_operation(id_priv, state);
-+	cma_id_put(id_priv);
- }
- 
- static void cma_process_remove(struct cma_device *cma_dev)
- {
--	struct rdma_id_private *id_priv;
--	int ret;
--
- 	mutex_lock(&lock);
- 	while (!list_empty(&cma_dev->id_list)) {
--		id_priv = list_entry(cma_dev->id_list.next,
--				     struct rdma_id_private, list);
-+		struct rdma_id_private *id_priv = list_first_entry(
-+			&cma_dev->id_list, struct rdma_id_private, list);
- 
- 		list_del(&id_priv->listen_list);
- 		list_del_init(&id_priv->list);
- 		cma_id_get(id_priv);
- 		mutex_unlock(&lock);
- 
--		ret = cma_remove_id_dev(id_priv);
--		cma_id_put(id_priv);
--		if (ret)
--			rdma_destroy_id(&id_priv->id);
-+		cma_send_device_removal_put(id_priv);
- 
- 		mutex_lock(&lock);
- 	}
--- 
-2.25.1
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.8.9-rc1
 
+Florian Westphal <fw@strlen.de>
+    mptcp: free acked data before waiting for more memory
+
+Jakub Kicinski <kuba@kernel.org>
+    net: disable netpoll on fresh napis
+
+Tuong Lien <tuong.t.lien@dektech.com.au>
+    tipc: fix using smp_processor_id() in preemptible
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    tipc: fix shutdown() of connectionless socket
+
+Vinicius Costa Gomes <vinicius.gomes@intel.com>
+    taprio: Fix using wrong queues in gate mask
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: not disable bh in the whole sctp_get_port_local()
+
+Kamil Lorenc <kamil@re-ws.pl>
+    net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+
+Paul Moore <paul@paul-moore.com>
+    netlabel: fix problems with mapping removal
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv6: Fix sysctl max for fib_multipath_hash_policy
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv4: Silence suspicious RCU usage warning
+
+Jason Gunthorpe <jgg@nvidia.com>
+    RDMA/cma: Execute rdma_cm destruction from a handler properly
+
+Jason Gunthorpe <jgg@nvidia.com>
+    RDMA/cma: Remove unneeded locking for req paths
+
+Jason Gunthorpe <jgg@nvidia.com>
+    RDMA/cma: Using the standard locking pattern when delivering the removal event
+
+Jason Gunthorpe <jgg@nvidia.com>
+    RDMA/cma: Simplify DEVICE_REMOVAL for internal_id
+
+Pavel Begunkov <asml.silence@gmail.com>
+    io_uring: fix linked deferred ->files cancellation
+
+Pavel Begunkov <asml.silence@gmail.com>
+    io_uring: fix cancel of deferred reqs with ->files
+
+
+-------------
+
+Diffstat:
+
+ Makefile                           |   4 +-
+ drivers/infiniband/core/cma.c      | 257 ++++++++++++++++++-------------------
+ drivers/net/usb/dm9601.c           |   4 +
+ fs/io_uring.c                      |  47 +++++++
+ net/core/dev.c                     |   3 +-
+ net/core/netpoll.c                 |   2 +-
+ net/ipv4/fib_trie.c                |   3 +-
+ net/ipv6/sysctl_net_ipv6.c         |   3 +-
+ net/mptcp/protocol.c               |   3 +-
+ net/netlabel/netlabel_domainhash.c |  59 ++++-----
+ net/sched/sch_taprio.c             |  30 ++++-
+ net/sctp/socket.c                  |  16 +--
+ net/tipc/crypto.c                  |  12 +-
+ net/tipc/socket.c                  |   9 +-
+ 14 files changed, 259 insertions(+), 193 deletions(-)
 
 
