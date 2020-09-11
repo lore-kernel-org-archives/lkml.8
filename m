@@ -2,67 +2,117 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5C5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFD4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F1620731
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CB820731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuZgTYBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgIKHR7 (ORCPT
+        id S1725818AbgIKHSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:17:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:35824 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgIKHR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:17:56 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1376068B02; Fri, 11 Sep 2020 09:17:52 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 09:17:51 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org, Tomasz Figa <tfiga@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH 12/12] dma-mapping: move the
- dma_declare_coherent_memory documentation
-Message-ID: <20200911071751.GG22394@lst.de>
-References: <20200908164758.3177341-1-hch@lst.de> <20200908164758.3177341-13-hch@lst.de> <07c51b70-fb7d-cf44-b5c3-54e3148c11ae@arm.com>
+        Fri, 11 Sep 2020 03:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgIKHSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:18:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD7AC061573;
+        Fri, 11 Sep 2020 00:18:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z4so10412129wrr.4;
+        Fri, 11 Sep 2020 00:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KyjLVfX45KSXSuX8Vg6Kw3nP1R1rfFVQFcRdTFRc1ik=;
+        b=CuZgTYBjPvyld2IOdnG+BsGnfywWsIBPNPolw+WH6JCvSsYBunctm4hZSg9iI/pAKF
+         EkFWpMO3eCEAJA8M9R6StsQjT9/A4W4nGNpgGRFtcNFVR79+0fmC3ni0h+l2fKIWv+Gw
+         g0vShpOh/y27yyZMEvf/+dBrfG+AQe7SZZGHGpfagIL1gTlCTCrbuTnwbuaixu0dz6Tv
+         815Y/rockJPkM/YokD8qlco5vH/jYJd/fIER94P4MbYSnK8FSU2vryYhlAU2P8mB3RgX
+         EgFVKV1Wd88puoDhlfSY1eTg7Jgjlgn6vRkjVm5jQkrq53nkj8F/L46eHiB+XeeaiWdD
+         dM0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KyjLVfX45KSXSuX8Vg6Kw3nP1R1rfFVQFcRdTFRc1ik=;
+        b=R0s1p8Nfhe/IJQJFeXML8mQzVo8oe2F26ZfAHBwcy6IlSac/mSKjgABOMggr+3hEJU
+         8R+6plj4smXAOu1NHms3g6sxEUKg9FyWC/URhWiC4gDzDlOpE88UmOmfUkulM8D7FEKJ
+         Y4LgW7AKLzCVZgNrQLKPkkYFQZaUWvDge6gPMce/MRS3ulUtH/Xj20af4lRch+5J/E2B
+         qT5Jrqkz4ToxBIv9A3x4HOuBU5A/c/TMLTpmfaKGae/zfe/ZZHXi82DKx2rzxk/QuluQ
+         HOaeF43kP/xFSGXihM1T6ypb2WGp4uf90A8gwHkadLbBiLxajD41IxPDtbiYmEjR4JOs
+         8ong==
+X-Gm-Message-State: AOAM53168rA1izDgBCZ6ShEdCmMPHiSD0q7j+jaApJF+y2KThF+Nko+A
+        F+AByrjfyymRt7tdD8MAlKTpPIRTDSU=
+X-Google-Smtp-Source: ABdhPJxG9p9bT+f3dZchsVX8Fy1j8440ouPXphLAq8Ylk1sAHjrKSZrUimOYAr9pffFvCqDg+FONqQ==
+X-Received: by 2002:adf:ee01:: with SMTP id y1mr646358wrn.2.1599808680539;
+        Fri, 11 Sep 2020 00:18:00 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id j135sm2634955wmj.20.2020.09.11.00.17.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 00:18:00 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/24] getpwent_r.3: Use sizeof() to get buffer size
+ (instead of hardcoding macro name)
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-14-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <cea29593-930e-29bc-47cc-376c469fa301@gmail.com>
+Date:   Fri, 11 Sep 2020 09:17:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07c51b70-fb7d-cf44-b5c3-54e3148c11ae@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200910211344.3562-14-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 02:51:47PM +0100, Robin Murphy wrote:
-> On 2020-09-08 17:47, Christoph Hellwig wrote:
->> dma_declare_coherent_memory should not be in a DMA API guide aimed
->> at driver writers (that is consumers of the API).  Move it to a comment
->> near the function instead.
->
-> I still think there might be an occasional valid use for device-local 
-> memory outside the scope of platform code without the driver having to go 
-> full ZONE_DEVICE/HMM/TTM, e.g. with stuff like PCIe-based FPGA prototyping 
-> cards, but the kind of driver I'm imagining for that case would never be 
-> upstream anyway (if it were even written, rather than just using hard-coded 
-> hacks), so meh.
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 
-And I'm not sure this would be the right interface for it.  E.g. NVMe
-has the concept of a Controller Memory buffer (and a similar persistent
-variant not supported by Linux), where the device can do this local DMA
-(in a completely broken way that relies on correlating addresses seen
-by the device and those by the host, but that's another disgression).
-But that memory obviously can also be addresses by other devices using
-PCIe P2P transactions which would also be useful for any HMM-ish devices,
-so we'd need to expose it as P2P memory anyay..
+Thanks, Alex. Patch applied.
+
+Cheers,
+
+Michael
+
+> ---
+>  man3/getpwent_r.3 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/man3/getpwent_r.3 b/man3/getpwent_r.3
+> index 64f27dbfb..0f7581091 100644
+> --- a/man3/getpwent_r.3
+> +++ b/man3/getpwent_r.3
+> @@ -190,7 +190,7 @@ main(void)
+>  
+>      setpwent();
+>      while (1) {
+> -        i = getpwent_r(&pw, buf, BUFLEN, &pwp);
+> +        i = getpwent_r(&pw, buf, sizeof(buf), &pwp);
+>          if (i)
+>              break;
+>          printf("%s (%d)\etHOME %s\etSHELL %s\en", pwp\->pw_name,
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
