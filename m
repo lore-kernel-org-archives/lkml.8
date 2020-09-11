@@ -2,58 +2,75 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF3EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAAA21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C2621D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbgIKHKQ (ORCPT
+        id S1725810AbgIKHKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:10:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:35778 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgIKHKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:10:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DD69168BFE; Fri, 11 Sep 2020 09:10:09 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 09:10:09 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org, Tomasz Figa <tfiga@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH 04/12] dma-mapping: fix DMA_OPS dependencies
-Message-ID: <20200911071009.GC22394@lst.de>
-References: <20200908164758.3177341-1-hch@lst.de> <20200908164758.3177341-5-hch@lst.de> <8404208b-7276-914e-e4da-e65a907a5e9b@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8404208b-7276-914e-e4da-e65a907a5e9b@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Fri, 11 Sep 2020 03:10:44 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:36124 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgIKHKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:10:41 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 8C07CCED19;
+        Fri, 11 Sep 2020 09:17:35 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [RESEND v1 0/2] Close UART port if NON_PERSISTENT_SETUP is set
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1599733843-20311-1-git-send-email-gubbaven@codeaurora.org>
+Date:   Fri, 11 Sep 2020 09:10:39 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        rjliao@codeaurora.org, hbandi@codeaurora.org,
+        abhishekpandit@chromium.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <C4C12227-FA4E-47F9-A161-6ADE490AAA91@holtmann.org>
+References: <1599733843-20311-1-git-send-email-gubbaven@codeaurora.org>
+To:     Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:04:17PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 9/8/20 7:47 PM, Christoph Hellwig wrote:
-> 
-> > Driver that select DMA_OPS need to depend on HAS_DMA support to
-> > work.  The vop driver was missing that dependency, so add it, and also
-> > add a nother depends in DMA_OPS itself.  That won't fix the issue due
-> 
->    Another? :-)
+Hi Venkata,
 
-Yes, fixed.
+> When HCI_QUIRK_NON_PERSISTENT_SETUP is set by drivers,
+> it indicates that BT SoC will be completely powered OFF
+> during BT OFF. On next BT ON firmware must be downloaded
+> again. Holding UART port open during BT OFF is draining
+> the battery. Now during BT OFF, UART port is closed if
+> qurik HCI_QUIRK_NON_PERSISTENT_SETUP is set by clearing
+> HCI_UART_PROTO_READY proto flag. On next BT ON, UART
+> port is opened if HCI_UART_PROTO_READY proto flag is cleared.
+> 
+> Venkata Lakshmi Narayana Gubba (2):
+>  Bluetooth: hci_serdev: Close UART port if NON_PERSISTENT_SETUP is set
+>  Bluetooth: hci_qca: Remove duplicate power off in proto close
+> 
+> drivers/bluetooth/hci_qca.c    |  5 ++---
+> drivers/bluetooth/hci_serdev.c | 36 +++++++++++++++++++++++++++++++++---
+> 2 files changed, 35 insertions(+), 6 deletions(-)
+
+both patches have been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
