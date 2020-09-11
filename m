@@ -2,84 +2,70 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC05DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F518206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACF5221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725952AbgIKKQf (ORCPT
+        id S1725848AbgIKKRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:16:35 -0400
-Received: from smtprelay0189.hostedemail.com ([216.40.44.189]:53700 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725778AbgIKKQc (ORCPT
+        Fri, 11 Sep 2020 06:17:13 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:44300 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725829AbgIKKRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:16:32 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id B249D100E7B42;
-        Fri, 11 Sep 2020 10:16:30 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shelf69_5d05263270ed
-X-Filterd-Recvd-Size: 1890
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 11 Sep 2020 10:16:29 +0000 (UTC)
-Message-ID: <7e513eea8ecf7ff1379d7a87245915469784121c.camel@perches.com>
-Subject: Re: MAINTAINERS: Marking internal distribution lists
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
-Date:   Fri, 11 Sep 2020 03:16:28 -0700
-In-Reply-To: <alpine.DEB.2.21.2009110811520.9220@felia>
-References: <alpine.DEB.2.21.2009110811520.9220@felia>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 11 Sep 2020 06:17:09 -0400
+X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
+   d="scan'208";a="56814567"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 11 Sep 2020 19:17:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id E3B674007526;
+        Fri, 11 Sep 2020 19:17:05 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH] clk: renesas: Kconfig: Update description for CLK_RCAR_GEN3_CPG config
+Date:   Fri, 11 Sep 2020 11:17:03 +0100
+Message-Id: <20200911101703.20521-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-09-11 at 08:37 +0200, Lukas Bulwahn wrote:
-> Hi Joe,
-> 
-> in my continued effort to clean up MAINTAINERS, I came across various 
-> email "lists" that are actually just some kind of internal distribution
-> lists, but we cannot subscribe to them (no archives available) and they 
-> are not affiliated to a specific person.
-> 
-> Some examples are:
-> 
->   - bcm-kernel-feedback-list.broadcom.com
->   - brcm80211-dev-list.cypress.com
->   - brcm80211-dev-list.pdl.broadcom.com
->   - coreteam.netfilter.org
->   - esc.storagedev.microsemi.com
->   - linux-imx.nxp.com
->   - megaraidlinux.pdl.broadcom.com
->   - MPT-FusionLinux.pdl.broadcom.com
->   - ocfs2-devel.oss.oracle.com
->   - oss-drivers.netronome.com
->   - patches.opensource.cirrus.com
->   - qat-linux.intel.com
->   - rds-devel.oss.oracle.com
->   - sparmaintainer.unisys.com
->   - wil6210.qti.qualcomm.com
->   - x86.kernel.org
+rcar-gen3-cpg driver is also used on Renesas RZ/G2 SoC's, update the same
+to reflect the description for CLK_RCAR_GEN3_CPG config.
 
-At one time, those sorts of email addresses were called "exploders"
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ drivers/clk/renesas/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Perhaps mark them as such?
-Maybe like:
-
-L:	megaraidlinux.pdl@broadcom.com (exploder for non-subscribers)
-
+diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
+index 28e8730ce263..1277d5f90389 100644
+--- a/drivers/clk/renesas/Kconfig
++++ b/drivers/clk/renesas/Kconfig
+@@ -162,7 +162,7 @@ config CLK_RCAR_GEN2_CPG
+ 	select CLK_RENESAS_CPG_MSSR
+ 
+ config CLK_RCAR_GEN3_CPG
+-	bool "R-Car Gen3 CPG clock support" if COMPILE_TEST
++	bool "R-Car Gen3 and RZ/G2 CPG clock support" if COMPILE_TEST
+ 	select CLK_RENESAS_CPG_MSSR
+ 
+ config CLK_RCAR_USB2_CLOCK_SEL
+-- 
+2.17.1
 
