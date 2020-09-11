@@ -2,109 +2,193 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15EEC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37DC2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12962078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ey+mNbeC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yvbVhQNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725785AbgIKJx6 (ORCPT
+        id S1725808AbgIKJyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKJxz (ORCPT
+        Fri, 11 Sep 2020 05:54:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54824 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgIKJyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:53:55 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D525EC061573;
-        Fri, 11 Sep 2020 02:53:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s65so5210070pgb.0;
-        Fri, 11 Sep 2020 02:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8V0xBW7DTj25tKrCkSmr/DtXLxDvaz2DIFrG4wH1eVo=;
-        b=Ey+mNbeCTGY96r1CKzPPi32hOjx2VLgLJRjWik6lrEOnatSNRNzRlAuyWB4R6M6c61
-         yUpAAr249xov8mWH64Scr+XgVY/0oQf0bUDtzf/rkIRnQ+7sY8IRmBwgUU7zZ7zI2Dg1
-         8L01CCSPtkV3qmMgZaXrWJZvjHCka1LkKFGi4Z0kTfbgUrEIRoTG+zF+V6bu9Ew8R0cN
-         1S+yoK+yzA9HHMEsiwYhEcL6iN2MYX2TaSEHI3HBMT77kvOpP5DuM4VRwAvNvDuly4NP
-         z6uICgdESJtQ5RMM6N/uPUoHdzkO/0+YKKvP5gnlBZq6fWdReGIwR8MattrFGzrFohwU
-         1ecg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8V0xBW7DTj25tKrCkSmr/DtXLxDvaz2DIFrG4wH1eVo=;
-        b=MtlgBais9YduR6rtZQwuPQGXtGlg9WLj1Evwz1MBs13S+npl3lc08G2ipBnxH5EJVB
-         9DGgTDaj+VnJZPA9kZeaF7rkXzQVWI8ptKXkW7W6XptdXCLRXJLleOFHTWiB6qgGn1xO
-         FaYw49pX4aVIBpwt8nB8Nk66je/oJnhlpljsOg+XXQo7bLMx1awHU8ChyBGn8sSC2mpg
-         0TTRHb9cBz2sI+gr1skE7IKU/IU+G07Rwhn6kuKB6edtwhXYPkwIYkEbSYFF6+Dwyl2c
-         QLjtVIGwB5Z6Gg9BpzqkTwEIvUg890DC4LE6J90zHZzgII8rjMeAnivdLt77k6cPRYs9
-         EQiQ==
-X-Gm-Message-State: AOAM5307jNKWJh5PGZ/kOuOJYTOg1jgpj2DBQdHrYjCFASdrnkS62kgM
-        CAnFEYvD9IrEs/4mze/wAGs=
-X-Google-Smtp-Source: ABdhPJxCsui9XwpDxJW4IYUX9m1QTPkEGom9uMzfEqjjpfE8pSptXn91LdbbhAqmuFXKXyC7G7Wq+Q==
-X-Received: by 2002:a62:cecb:: with SMTP id y194mr1420782pfg.106.1599818032695;
-        Fri, 11 Sep 2020 02:53:52 -0700 (PDT)
-Received: from localhost.localdomain (ec2-13-52-163-24.us-west-1.compute.amazonaws.com. [13.52.163.24])
-        by smtp.gmail.com with ESMTPSA id x4sm1790158pff.57.2020.09.11.02.53.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 02:53:52 -0700 (PDT)
-From:   Xiaoliang Pang <dawning.pang@gmail.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        matthias.bgg@gmail.com, swboyd@chromium.org, yuehaibing@huawei.com,
-        tianjia.zhang@linux.alibaba.com, ryder.lee@mediatek.com
-Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dawning.pang@gmail.com
-Subject: [PATCH v5] cypto: mediatek - fix leaks in mtk_desc_ring_alloc
-Date:   Fri, 11 Sep 2020 17:53:39 +0800
-Message-Id: <20200911095339.9970-1-dawning.pang@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 05:54:46 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08B9rq9H118702;
+        Fri, 11 Sep 2020 04:53:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599818032;
+        bh=dxP/WY/4dZH72YPcSv12tcPV/XFUasdrBjjt461p+Vw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yvbVhQNO427I3UMxxoaBckIDnOBYAZtnuKrvKA7Ps8tHAgg9811RsZRoZzEjIuxOa
+         Yyxaml8IUgo1SjEXiZlaAi+FmWvQ1rslc9UkPlebDIdcaPyIfRXFTL+Uq+RnmCWgRU
+         Ombas83IuTru1XXR6Zyhs879UIo5EJaKahah5VME=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08B9rqGn086091
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Sep 2020 04:53:52 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 11
+ Sep 2020 04:53:52 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 11 Sep 2020 04:53:52 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08B9riYZ038437;
+        Fri, 11 Sep 2020 04:53:44 -0500
+Subject: Re: [PATCH v2 01/15] dt-bindings: gpio: convert bindings for NXP
+ PCA953x family to dtschema
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Joel Stanley <joel@jms.id.au>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>
+References: <20200910175733.11046-1-krzk@kernel.org>
+ <20200910175733.11046-2-krzk@kernel.org>
+ <CACPK8XdocAX5mOXf3VP29cNXH+6unYunB9NiT3qFVKyzR6WXPg@mail.gmail.com>
+ <CAJKOXPe6Tf0B5W27XaD5zLk77OBzGCHpirhTdZjFH0oh8GvWgg@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <c162b6ad-57f1-a75a-11e3-9c80c60bd845@ti.com>
+Date:   Fri, 11 Sep 2020 12:53:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAJKOXPe6Tf0B5W27XaD5zLk77OBzGCHpirhTdZjFH0oh8GvWgg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the init loop, if an error occurs in function 'dma_alloc_coherent',
-then goto the err_cleanup section,
-in the cleanup loop, after run i--,
-the struct mtk_ring rising[i] will not be released,
-causing a memory leak
 
-Signed-off-by: Xiaoliang Pang <dawning.pang@gmail.com>
----
- drivers/crypto/mediatek/mtk-platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/mediatek/mtk-platform.c b/drivers/crypto/mediatek/mtk-platform.c
-index 7e3ad085b5bd..f83cead30d8f 100644
---- a/drivers/crypto/mediatek/mtk-platform.c
-+++ b/drivers/crypto/mediatek/mtk-platform.c
-@@ -469,13 +469,13 @@ static int mtk_desc_ring_alloc(struct mtk_cryp *cryp)
- 	return 0;
- 
- err_cleanup:
--	for (; i--; ) {
-+	do {
- 		dma_free_coherent(cryp->dev, MTK_DESC_RING_SZ,
- 				  ring[i]->res_base, ring[i]->res_dma);
- 		dma_free_coherent(cryp->dev, MTK_DESC_RING_SZ,
- 				  ring[i]->cmd_base, ring[i]->cmd_dma);
- 		kfree(ring[i]);
--	}
-+	} while (i--);
- 	return err;
- }
- 
+On 11/09/2020 09:52, Krzysztof Kozlowski wrote:
+> On Fri, 11 Sep 2020 at 08:24, Joel Stanley <joel@jms.id.au> wrote:
+>>
+>> On Thu, 10 Sep 2020 at 17:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>
+>>> Convert the NXP PCA953x family of GPIO expanders bindings to device tree
+>>> schema.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>
+>>> +patternProperties:
+>>> +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+>>> +    type: object
+>>> +    properties:
+>>> +      gpio-hog: true
+>>> +      gpios: true
+>>> +      input: true
+>>> +      output-high: true
+>>> +      output-low: true
+>>> +      line-name: true
+>>> +
+>>> +    required:
+>>> +      - gpio-hog
+>>> +      - gpios
+>>> +
+>>
+>>> +            usb3-sata-sel-hog {
+>>> +                gpio-hog;
+>>> +                gpios = <4 GPIO_ACTIVE_HIGH>;
+>>> +                output-low;
+>>> +                line-name = "usb3_sata_sel";
+>>
+>> I would prefer we didn't require the addition of hte -hog prefix. It's
+>> mostly just a matter of taste, but I can think of a few more concrete
+>> reasons:
+>>
+>> We don't require -high or -low prefixes, so the node name doesn't need
+>> to describe the properties that will be found below.
+> 
+> Thanks for the comments.
+> 
+> It is not about properties (high or low) but the role of a device
+> node. The node names should represent a generic class of device (ePAPR
+> and device tree spec) and "hog" is such class.
+> 
+> The Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml already
+> uses such naming so the best would be to unify.
+
+In my opinion, It's not right to define this on per gpio-controller and introduce such
+per gpio-controller restrictions.
+
+More over, there is already generic schema for gpio hogs: gpio-hog.yaml
+Originally, gpio bindings were defined without restricting gpio hog node names and,
+generic schema follows this.
+
+I think, the generic "gpio-hogs" sub-node may be introduced to place gpio hogs child nodes,
+if gpio hogs node names restriction need to be introduces (*which i'm not sure is reasonable*).
+
+gpio@20 {
+	gpio-hogs {
+		yyy-hog {
+                         gpio-hog;
+                         gpios
+		}
+	}
+
+But this require as gpio code as generic gpio schema update (with backward compatibility in mind).
+
+
+> 
+>>
+>> Changing around node names for existing boards carries with it the
+>> chance of userspace breakage (as sysfs paths change). I would prefer
+>> we avoid that if possible.
+> 
+> The impact on userspace is indeed important, but are you sure that
+> hogs are visible to user-space via sysfs and configurable? I guess you
+> think of deprecated CONFIG_GPIO_SYSFS?
+> 
+> Rob,
+> Any hints from you about hog-naming?
+> 
+> Best regards,
+> Krzysztof
+> 
+
 -- 
-2.17.1
-
+Best regards,
+grygorii
