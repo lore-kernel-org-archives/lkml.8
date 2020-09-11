@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74386C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A30C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D04C22272
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C573F207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599831167;
-	bh=GZalELLdj00pJWebLs/+xLJXt9Zukgi9cgkU6nGhhT8=;
+	s=default; t=1599831354;
+	bh=9uwE+ITSYJUhaz4LYB9tyUx6FK+SJeFumGR2VZPPQSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9EHYVSMs09HlLDG2RoleIhKje1BGFO4eeqiT3UQHNxuTbcfiHCYFP5V87xLaS3mQ
-	 Csn/8kDdCOxUXyBh2LhH7Hl4pjiOHc8O+9rB/hysDaqeJRakU/eOnkYNKMb5Bv5Ti+
-	 tzlCyw/6Ni+Pa9/u9yyGPQ5P7bY4NEeJpzK0YdJY=
+	b=JgcDLSE9GnhBkGwyKyOlQrSRQeeQpf0zOaFG1N1wVuKuOTdvYMDrDSXl+Fa92RoN4
+	 wNYElLZnaIk5xE/Rt7FLWhzwsBiU33mwMBzYM3OnW+symBWivCt8rSWNBCAZfTyXQq
+	 WI9nTkfVhc9puF4W3BvTffTUPZUCW6z4bu2LzSJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgIKNca (ORCPT
+        id S1725837AbgIKNeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52820 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726206AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ECE1223B0;
-        Fri, 11 Sep 2020 12:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFB0221E3;
+        Fri, 11 Sep 2020 12:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829070;
-        bh=GZalELLdj00pJWebLs/+xLJXt9Zukgi9cgkU6nGhhT8=;
+        s=default; t=1599829082;
+        bh=9uwE+ITSYJUhaz4LYB9tyUx6FK+SJeFumGR2VZPPQSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z//DYQdNDuurHdgfxTuud3UryOyz6/8ovJ69dPzeJsc1ufI6igwWXTVFctP+/Tiri
-         QxOv2HUkKVZggYXRK3QksLgVWRGwV0Wxy+ICuFXizpMtRivHhLO0IrK/ROhbHHT7kF
-         fokdlEsZ9RMbN1SVMiwyM2my7lJz8jNN3lzeWJjU=
+        b=eKqb5AemMh1gTh+r5FfZEXIvSDR5D+KWXOo3yUrCyTvQpXDjcpObP4qC9NqQZwzZX
+         m9qqIFiKmrW+lgdqb1wVr79jtfbT7GNlFMxCrdSMS/x6lh2JDYC8tsxEuQN/inw0pN
+         4ZeJN0tkP5AY72Wnuma2CK0xdhbFNidNxhR5f/wI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.9 54/71] KVM: arm64: Survive synchronous exceptions caused by AT instructions
-Date:   Fri, 11 Sep 2020 14:46:38 +0200
-Message-Id: <20200911122507.607246851@linuxfoundation.org>
+        stable@vger.kernel.org, Mrinal Pandey <mrinalmni@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 59/71] checkpatch: fix the usage of capture group ( ... )
+Date:   Fri, 11 Sep 2020 14:46:43 +0200
+Message-Id: <20200911122507.856174623@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -61,138 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Mrinal Pandey <mrinalmni@gmail.com>
 
-commit 88a84ccccb3966bcc3f309cdb76092a9892c0260 upstream.
+commit 13e45417cedbfc44b1926124b1846f5ee8c6ba4a upstream.
 
-KVM doesn't expect any synchronous exceptions when executing, any such
-exception leads to a panic(). AT instructions access the guest page
-tables, and can cause a synchronous external abort to be taken.
+The usage of "capture group (...)" in the immediate condition after `&&`
+results in `$1` being uninitialized.  This issues a warning "Use of
+uninitialized value $1 in regexp compilation at ./scripts/checkpatch.pl
+line 2638".
 
-The arm-arm is unclear on what should happen if the guest has configured
-the hardware update of the access-flag, and a memory type in TCR_EL1 that
-does not support atomic operations. B2.2.6 "Possible implementation
-restrictions on using atomic instructions" from DDI0487F.a lists
-synchronous external abort as a possible behaviour of atomic instructions
-that target memory that isn't writeback cacheable, but the page table
-walker may behave differently.
+I noticed this bug while running checkpatch on the set of commits from
+v5.7 to v5.8-rc1 of the kernel on the commits with a diff content in
+their commit message.
 
-Make KVM robust to synchronous exceptions caused by AT instructions.
-Add a get_user() style helper for AT instructions that returns -EFAULT
-if an exception was generated.
+This bug was introduced in the script by commit e518e9a59ec3
+("checkpatch: emit an error when there's a diff in a changelog").  It
+has been in the script since then.
 
-While KVM's version of the exception table mixes synchronous and
-asynchronous exceptions, only one of these can occur at each location.
+The author intended to store the match made by capture group in variable
+`$1`.  This should have contained the name of the file as `[\w/]+`
+matched.  However, this couldn't be accomplished due to usage of capture
+group and `$1` in the same regular expression.
 
-Re-enter the guest when the AT instructions take an exception on the
-assumption the guest will take the same exception. This isn't guaranteed
-to make forward progress, as the AT instructions may always walk the page
-tables, but guest execution may use the translation cached in the TLB.
+Fix this by placing the capture group in the condition before `&&`.
+Thus, `$1` can be initialized to the text that capture group matches
+thereby setting it to the desired and required value.
 
-This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64: Defer guest
-entry when an asynchronous exception is pending"), KVM will return to the
-host to process IRQs allowing the rest of the system to keep running.
-
-Cc: stable@vger.kernel.org # v4.9
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Fixes: e518e9a59ec3 ("checkpatch: emit an error when there's a diff in a changelog")
+Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Joe Perches <joe@perches.com>
+Link: https://lkml.kernel.org/r/20200714032352.f476hanaj2dlmiot@mrinalpandey
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_asm.h |   28 ++++++++++++++++++++++++++++
- arch/arm64/kvm/hyp/hyp-entry.S   |   12 ++++++++++--
- arch/arm64/kvm/hyp/switch.c      |    8 ++++----
- 3 files changed, 42 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -82,6 +82,34 @@ extern u32 __init_stage2_translation(voi
- 		*__hyp_this_cpu_ptr(sym);				\
- 	 })
+---
+ scripts/checkpatch.pl |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2375,8 +2375,8 @@ sub process {
  
-+#define __KVM_EXTABLE(from, to)						\
-+	"	.pushsection	__kvm_ex_table, \"a\"\n"		\
-+	"	.align		3\n"					\
-+	"	.long		(" #from " - .), (" #to " - .)\n"	\
-+	"	.popsection\n"
-+
-+
-+#define __kvm_at(at_op, addr)						\
-+( { 									\
-+	int __kvm_at_err = 0;						\
-+	u64 spsr, elr;							\
-+	asm volatile(							\
-+	"	mrs	%1, spsr_el2\n"					\
-+	"	mrs	%2, elr_el2\n"					\
-+	"1:	at	"at_op", %3\n"					\
-+	"	isb\n"							\
-+	"	b	9f\n"						\
-+	"2:	msr	spsr_el2, %1\n"					\
-+	"	msr	elr_el2, %2\n"					\
-+	"	mov	%w0, %4\n"					\
-+	"9:\n"								\
-+	__KVM_EXTABLE(1b, 2b)						\
-+	: "+r" (__kvm_at_err), "=&r" (spsr), "=&r" (elr)		\
-+	: "r" (addr), "i" (-EFAULT));					\
-+	__kvm_at_err;							\
-+} )
-+
-+
- #else /* __ASSEMBLY__ */
- 
- .macro hyp_adr_this_cpu reg, sym, tmp
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -201,6 +201,15 @@ el1_error:
- 	mov	x0, #ARM_EXCEPTION_EL1_SERROR
- 	b	__guest_exit
- 
-+el2_sync:
-+	save_caller_saved_regs_vect
-+	stp     x29, x30, [sp, #-16]!
-+	bl	kvm_unexpected_el2_exception
-+	ldp     x29, x30, [sp], #16
-+	restore_caller_saved_regs_vect
-+
-+	eret
-+
- el2_error:
- 	save_caller_saved_regs_vect
- 	stp     x29, x30, [sp, #-16]!
-@@ -238,7 +247,6 @@ ENDPROC(\label)
- 	invalid_vector	el2t_irq_invalid
- 	invalid_vector	el2t_fiq_invalid
- 	invalid_vector	el2t_error_invalid
--	invalid_vector	el2h_sync_invalid
- 	invalid_vector	el2h_irq_invalid
- 	invalid_vector	el2h_fiq_invalid
- 	invalid_vector	el1_sync_invalid
-@@ -255,7 +263,7 @@ ENTRY(__kvm_hyp_vector)
- 	ventry	el2t_fiq_invalid		// FIQ EL2t
- 	ventry	el2t_error_invalid		// Error EL2t
- 
--	ventry	el2h_sync_invalid		// Synchronous EL2h
-+	ventry	el2_sync			// Synchronous EL2h
- 	ventry	el2h_irq_invalid		// IRQ EL2h
- 	ventry	el2h_fiq_invalid		// FIQ EL2h
- 	ventry	el2_error			// Error EL2h
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -206,10 +206,10 @@ static bool __hyp_text __translate_far_t
- 	 * saved the guest context yet, and we may return early...
- 	 */
- 	par = read_sysreg(par_el1);
--	asm volatile("at s1e1r, %0" : : "r" (far));
--	isb();
--
--	tmp = read_sysreg(par_el1);
-+	if (!__kvm_at("s1e1r", far))
-+		tmp = read_sysreg(par_el1);
-+	else
-+		tmp = 1; /* back to the guest */
- 	write_sysreg(par, par_el1);
- 
- 	if (unlikely(tmp & 1))
+ # Check if the commit log has what seems like a diff which can confuse patch
+ 		if ($in_commit_log && !$commit_log_has_diff &&
+-		    (($line =~ m@^\s+diff\b.*a/[\w/]+@ &&
+-		      $line =~ m@^\s+diff\b.*a/([\w/]+)\s+b/$1\b@) ||
++		    (($line =~ m@^\s+diff\b.*a/([\w/]+)@ &&
++		      $line =~ m@^\s+diff\b.*a/[\w/]+\s+b/$1\b@) ||
+ 		     $line =~ m@^\s*(?:\-\-\-\s+a/|\+\+\+\s+b/)@ ||
+ 		     $line =~ m/^\s*\@\@ \-\d+,\d+ \+\d+,\d+ \@\@/)) {
+ 			ERROR("DIFF_IN_COMMIT_MSG",
 
 
