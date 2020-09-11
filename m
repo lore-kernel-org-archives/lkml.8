@@ -2,112 +2,222 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0790C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E690C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A8D21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025E3221F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599808023;
+	bh=sjqV0GB5LWy9Y+Y+VZXjDFlCM8T7Rs5jW8drzQU4DmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XoIF4eGLwMWn5VJ5YKuGcWcqhflk5gp4ILsMR04/A1vLNf0AIu2pY5XKqk3q27vAF
+	 Lna9+Xq9AgjbQYnZhDHI80knA0Rb7DirgdQVFwl2N2BfcI5f2e5dBYWvBa1C7RhIe3
+	 VxLhNIGQGnA3/ScmRGJfcmnzz3JTLM2ajV9PQsDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgIKHGX (ORCPT
+        id S1725821AbgIKHHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:06:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:54522 "EHLO foss.arm.com"
+        Fri, 11 Sep 2020 03:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbgIKHGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:06:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67647113E;
-        Fri, 11 Sep 2020 00:06:21 -0700 (PDT)
-Received: from [192.168.0.130] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A6763F73C;
-        Fri, 11 Sep 2020 00:06:19 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v2 3/3] arm64/mm: Unitify CONT_PMD_SHIFT
-To:     Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, shan.gavin@gmail.com
-References: <20200910095936.20307-1-gshan@redhat.com>
- <20200910095936.20307-3-gshan@redhat.com>
-Message-ID: <1af39001-8d8f-b573-8159-666999d25543@arm.com>
-Date:   Fri, 11 Sep 2020 12:35:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725535AbgIKHG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:06:59 -0400
+Received: from localhost (unknown [122.171.196.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B4F221EF;
+        Fri, 11 Sep 2020 07:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599808018;
+        bh=sjqV0GB5LWy9Y+Y+VZXjDFlCM8T7Rs5jW8drzQU4DmE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w0mRUTXpcRgBGxgmQR40EBkDq6X5G6BNJ6JAUjYORtBcNEKFbPLJVVbb3b0GjslYz
+         NNvRg1o9VqZcV/ovioJuXhnY+YxRWPLoMBgDtLc3bB6/LLbmoMMMKxfrVE4e7yO1Fa
+         9xnzi0qvaqGrRpofjgvVosesM32iMd4q/9IkbETk=
+Date:   Fri, 11 Sep 2020 12:36:49 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        gregkh@linuxfoundation.org,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] soundwire: SDCA: add helper macro to access
+ controls
+Message-ID: <20200911070649.GU77521@vkoul-mobl>
+References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
+ <20200901162225.33343-3-pierre-louis.bossart@linux.intel.com>
+ <20200904050244.GT2639@vkoul-mobl>
+ <f35a0ae7-2779-0c69-9ef3-0d0e298888ac@linux.intel.com>
+ <20200909075555.GK77521@vkoul-mobl>
+ <184867c2-9f0c-bffe-2eb7-e9c5735614b0@linux.intel.com>
+ <20200910062223.GQ77521@vkoul-mobl>
+ <adf51127-2813-cdf0-e5a6-f5ec3b0d33fa@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910095936.20307-3-gshan@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adf51127-2813-cdf0-e5a6-f5ec3b0d33fa@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/10/2020 03:29 PM, Gavin Shan wrote:
-> Similar to how CONT_PTE_SHIFT is determined, this introduces a new
-> kernel option (CONFIG_CONT_PMD_SHIFT) to determine CONT_PMD_SHIFT.
+On 10-09-20, 08:53, Pierre-Louis Bossart wrote:
 > 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->  arch/arm64/Kconfig                     |  6 ++++++
->  arch/arm64/include/asm/pgtable-hwdef.h | 10 ++--------
->  2 files changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 7ec30dd56300..d58e17fe9473 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -217,6 +217,12 @@ config ARM64_CONT_PTE_SHIFT
->  	default 7 if ARM64_16K_PAGES
->  	default 4
->  
-> +config ARM64_CONT_PMD_SHIFT
-> +	int
-> +	default 5 if ARM64_64K_PAGES
-> +	default 5 if ARM64_16K_PAGES
-> +	default 4
-> +
->  config ARCH_MMAP_RND_BITS_MIN
->         default 14 if ARM64_64K_PAGES
->         default 16 if ARM64_16K_PAGES
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index 6c9c67f62551..94b3f2ac2e9d 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -82,17 +82,11 @@
->   * Contiguous page definitions.
->   */
->  #define CONT_PTE_SHIFT		(CONFIG_ARM64_CONT_PTE_SHIFT + PAGE_SHIFT)
-> -#ifdef CONFIG_ARM64_64K_PAGES
-> -#define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
-> -#elif defined(CONFIG_ARM64_16K_PAGES)
-> -#define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
-> -#else
-> -#define CONT_PMD_SHIFT		(4 + PMD_SHIFT)
-> -#endif
-> -
->  #define CONT_PTES		(1 << (CONT_PTE_SHIFT - PAGE_SHIFT))
->  #define CONT_PTE_SIZE		(CONT_PTES * PAGE_SIZE)
->  #define CONT_PTE_MASK		(~(CONT_PTE_SIZE - 1))
-> +
-> +#define CONT_PMD_SHIFT		(CONFIG_ARM64_CONT_PMD_SHIFT + PMD_SHIFT)
->  #define CONT_PMDS		(1 << (CONT_PMD_SHIFT - PMD_SHIFT))
->  #define CONT_PMD_SIZE		(CONT_PMDS * PMD_SIZE)
->  #define CONT_PMD_MASK		(~(CONT_PMD_SIZE - 1))
+> On 9/10/20 1:22 AM, Vinod Koul wrote:
+> > On 09-09-20, 08:48, Pierre-Louis Bossart wrote:
+> > > 
+> > > > > > > + *	25		0 (Reserved)
+> > > > > > > + *	24:22		Function Number [2:0]
+> > > > > > > + *	21		Entity[6]
+> > > > > > > + *	20:19		Control Selector[5:4]
+> > > > > > > + *	18		0 (Reserved)
+> > > > > > > + *	17:15		Control Number[5:3]
+> > > > > > > + *	14		Next
+> > > > > > > + *	13		MBQ
+> > > > > > > + *	12:7		Entity[5:0]
+> > > > > > > + *	6:3		Control Selector[3:0]
+> > > > > > > + *	2:0		Control Number[2:0]
+> > > > > > > + */
+> > > > > > > +
+> > > > > > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)						\
+> > > > > > > +	(BIT(30)							|	\
+> > > > > > 
+> > > > > > Programmatically this is fine, but then since we are defining for the
+> > > > > > description above, IMO it would actually make sense for this to be defined
+> > > > > > as FIELD_PREP:
+> > > > > > 
+> > > > > >            FIELD_PREP(GENMASK(30, 26), 1)
+> > > > > > 
+> > > > > > or better
+> > > > > > 
+> > > > > >            u32_encode_bits(GENMASK(30, 26), 1)
+> > > > > > 
+> > > > > > > +	FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))	|	\
+> > > > > > 
+> > > > > > Why not use u32_encode_bits(GENMASK(24, 22), (fun)) instead for this and
+> > > > > > below?
+> > > > > 
+> > > > > Because your comment for the v1 review was to use FIELD_PREP/FIELD_GET, and
+> > > > > your other patches for bitfield access only use FIELD_PREP/FIELD_GET.
+> > > > 
+> > > > yes and looking at this, I feel u32_encode_bits(GENMASK(24, 22), (fun))
+> > > > would look better than FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))
+> > > > 
+> > > > Do you agree?
+> > > 
+> > > The Function (fun) case is the easy one: the value is not split in two.
+> > > 
+> > > But look at the entity case, it's split in two:
+> > > 
+> > > FIELD_PREP(BIT(21), FIELD_GET(BIT(6), (ent)))			FIELD_PREP(GENMASK(12, 7),
+> > > FIELD_GET(GENMASK(5, 0), (ent)))
+> > > 
+> > > same for control
+> > > 
+> > > FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
+> > > FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
+> > > 
+> > > and same for channel number
+> > > 
+> > > FIELD_PREP(GENMASK(17, 15), FIELD_GET(GENMASK(5, 3), (ch)))	|	
+> > > FIELD_PREP(GENMASK(2, 0), FIELD_GET(GENMASK(2, 0), (ch))))
+> > > 
+> > > I don't see how we can avoid using the FIELD_GET to extract the relevant
+> > > bits from entity, control, channel number values.
+> > 
+> > No, you dont need FIELD_GET, that would be pointless for this helper if
+> > that was the case
 > 
+> I don't get how one would specify which parts of the original value are
+> extracted?
+> 
+> > 
+> > > 
+> > > Or I am missing your point completely.
+> > 
+> > Correct
+> > 
+> > It should be:
+> > 
+> >          foo |= u32_encode_bits(val, FOO_MASK_A);
+> > 
+> > which would write val into bits represented by FOO_MASK_A by
+> > appropriately shifting val and masking it with FOO_MASK_A
+> > 
+> > So net result is bits in FOO_MASK_A are modified with val, rest of the
+> > bits are not touched
+> 
+> Vinod, please see the explanation below [1], we need to split the original
+> value in two and insert the bits in two separate locations.
+> 
+> You only considered the simple case for the functions, your proposal will
+> not work for entities, controls and channel numbers.
+> 
+> > > 
+> > > 
+> > > > > > And while at it, consider defining masks for various fields rather than
+> > > > > > using numbers in GENMASK() above, that would look better, be more
+> > > > > > readable and people can reuse it.
+> > > > > 
+> > > > > Actually on this one I disagree. These fields are not intended to be used by
+> > > > > anyone, the goal is precisely to hide them behind regmap, and the use of raw
+> > > > > numbers makes it easier to cross-check the documentation and the code.
+> > > > > Adding a separate set of definitions would not increase readability.
+> > > > 
+> > > > Which one would you prefer:
+> > > > 
+> > > >           #define SDCA_FUN_MASK           GENMASK(24, 22)
+> > > > 
+> > > >           foo |= u32_encode_bits(SDCA_FUN_MASK, fun)
+> > > > 
+> > > > Or the one proposed...?
+> > > 
+> > > Same as above, let's see what this does with the control case where we'd
+> > > need to have four definitions:
+> 
+> [1]
+> 
+> > > 
+> > > #define SDCA_CONTROL_DEST_MASK1 GENMASK(20, 19)
+> > > #define SDCA_CONTROL_ORIG_MASK1 GENMASK(5, 4)
+> > > #define SDCA_CONTROL_DEST_MASK2 GENMASK(6, 3)
+> > > #define SDCA_CONTROL_ORIG_MASK2 GENMASK(3, 0)
 
-This is cleaner and more uniform. Did not see any problem while
-running some quick hugetlb tests across multiple page size configs
-after applying all patches in this series.
+I think I missed ORIG and DEST stuff, what does this mean here?
 
-Adding this new configuration ARM64_CONT_PMD_SHIFT makes sense, as
-it eliminates existing constant values that are used in an ad hoc
-manner, while computing contiguous page table entry properties.
+Relooking at the bit definition, for example 'Control Number' is defined
+in both 17:15 as well as 2:0, why is that. Is it split?
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+How does one program a control number into this?
+
+> > > 
+> > > And the code would look like
+> > > 
+> > > foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK1,
+> > > FIELD_GET(SDCA_CONTROL_ORIG_MASK1, fun));
+> > > foo |= u32_encode_bits(SDCA_CONTROL_DEST_MASK2,
+> > > FIELD_GET(SDCA_CONTROL_ORIG_MASK2, fun));
+> > > 
+> > > The original suggestion was:
+> > > 
+> > > FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	
+> > > FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	
+> > > 
+> > > I prefer the original... Adding these defines doesn't really add value
+> > > because
+> > > a) the values will not be reused anywhere else.
+> > > b) we need 12 of those defines
+> > > b) we need a prefix for those defines which makes the code heavier
+> > 
+
+-- 
+~Vinod
