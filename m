@@ -2,304 +2,173 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B04C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B93C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976FF22204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C5A221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="WzEV/Ka/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPyGKwnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgIKQgF (ORCPT
+        id S1726448AbgIKQg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        Fri, 11 Sep 2020 12:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgIKQew (ORCPT
+        with ESMTP id S1726484AbgIKQeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:34:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3545BC061756
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:34:51 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z4so12116968wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:34:51 -0700 (PDT)
+        Fri, 11 Sep 2020 12:34:04 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEC3C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:34:04 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id m7so8579519oie.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=87BSDT4o2TBJ4SAmc4FdXIxz6qmHqBiC1eYjZkG8DBg=;
-        b=WzEV/Ka/Y6e7ypl+6S4LeJs5tUTFof4dIHFSPboPgrInR/hLGyR4SazHUBJwV7jLYO
-         78KCkB9xiNEYcSmLxdnMc1QFrwO+B+2fqA7k5AOsZVYZW96D0jrZRhGDgjuzPNwnPMZ8
-         75Y6NOQMEIL1gsFND3IbnPAmgxrDkQvIBLQ0vO4dIPma3CBsYjcg1qYSLkVVaSsWqguF
-         PIpHh41Jp/xX639tbtUu5Rv9eMiyiWYFPIS/erm/FJpA2BfH84vYyLZmjIAqwODbrPz8
-         bibawJyR90urD0N0rwx3MkUGMg+oJsyOUIhxFUWG9ndhvEdOrtPmN7dkVqiPcejO/BSy
-         okAw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LXuI1+2niHV1f/itEDtLBlt+egT8GEGRmfKrWMZ85Ng=;
+        b=gPyGKwnGM1G4h49Vz2S2gxB+Iub1XTLvkXVUxUDWA9zqi3G6XLGlEH+NbXH92MinNL
+         bPp+fmjiAji2QO8/gVFHtFwnXp4Q3BFZnDYqgI/m4dGxmyY68jLER1kQu9rST+AFag/n
+         RHpNL2CDn1B8ZlJBMMrHj7PUnc4xIWd4L6iMoYbfjWv71mVlAjxn7Tkg63j79tBeqkhr
+         vTgN6cNA5c/XhSanFsKnUKeWF3Gt2JEByZzJ/qxTGfe4SwmqY/JHUoiLaGklx83GFHuT
+         7N//ZByW/IvZjob5vVqze7DrtCfZiSDfQK/5UwatBjtWOV99ErfEL6NSWqD9nwo0H5jh
+         sy1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=87BSDT4o2TBJ4SAmc4FdXIxz6qmHqBiC1eYjZkG8DBg=;
-        b=MCrdQjM9H5A2oC6opfpsJLCU1R6lXERPD+I4Xr9Aj+E7Hqxj3I6j645QtIz9VuGJXD
-         rRbWCuChTtXcZl5Ii6nbl7OUaniPdO0/6rEpnExTTmMdxg1xdfErR7yp41CRhcUzl0vf
-         FLDg0+ZpoKPcqlhLH2fARFDW9KN+5W7alXOFkD3U3NHOnwfX6/tYsCRzw1jU/cTcpkdc
-         TCVOBB+GQP94rIc3E1jfE7oAbMhdqrzChx9SO2QYaoV/7pLejslS+Gc8sHZzsGYm4O1G
-         624bFIXwTZZ8V6v0ozawP3Ulpre0tD3Z+FLZHMtGskFhijNpfJkaBnzmxkdoGoJYJEkF
-         PPYQ==
-X-Gm-Message-State: AOAM533UfpbMhyoDHy5nkLtnOOrp/FP08+Yu1KOxbzihdZFlCQYRbis9
-        ssYkOo8H1Lx00NU5pXE0I4gRoA==
-X-Google-Smtp-Source: ABdhPJxANvqiAAxOQ2tU0O9ocJwtJh2Mj6Gc7a1/NczXlNmplSR/QKX2sOpio1Tprf/Zhj7UDF2PTw==
-X-Received: by 2002:adf:b306:: with SMTP id j6mr2733664wrd.279.1599842089745;
-        Fri, 11 Sep 2020 09:34:49 -0700 (PDT)
-Received: from balsini.lon.corp.google.com ([2a00:79e0:d:210:7220:84ff:fe09:7d5c])
-        by smtp.gmail.com with ESMTPSA id s2sm5739912wrw.96.2020.09.11.09.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 09:34:49 -0700 (PDT)
-From:   Alessio Balsini <balsini@android.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Akilesh Kailash <akailash@google.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        David Anderson <dvander@google.com>,
-        Eric Yan <eric.yan@oneplus.com>, Jann Horn <jannh@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Martijn Coenen <maco@android.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Lawrence <paullawrence@google.com>,
-        Stefano Duo <stefanoduo@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>,
-        fuse-devel@lists.sourceforge.net, kernel-team@android.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V8 0/3] fuse: Add support for passthrough read/write
-Date:   Fri, 11 Sep 2020 17:34:00 +0100
-Message-Id: <20200911163403.79505-1-balsini@android.com>
-X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LXuI1+2niHV1f/itEDtLBlt+egT8GEGRmfKrWMZ85Ng=;
+        b=raUiCcsW7FK6BObzayUMWE1WyUX8D8dG5YSY9A66ku/fiWY3hT5gXUK6Y89ZKFwWt6
+         2LPOYwEj637EPW+tpjgZx12j+j5+bAIJ+m/NvNHefm21qtUWLfTtq4Qt567ttjMJQFBT
+         vruJCyIn+2ZSIVUMZbtgQ9nePYwpHqIYhrc7qwstNV/100Z8tA3NzbauduvxmcYNI3gG
+         ABpshlBFWtJicrZ83zClqSxRjfZ5n61c//px8Gl7uBO8pSBM+ryN/CqLBoY1cQYDrtTY
+         YZLdLL+fLcA94t6/1mbIqZErChwzbgbS8oAPURCUAcBQtbjsYit/2ETrH4mNGk0JvMR+
+         cPVQ==
+X-Gm-Message-State: AOAM530WYE9u/G2HhIebgXXj+FBn0Bzrtfe1B4HJ769de5mqfb6yxurV
+        LCC5YElbqdJur8G6jbi4zg01eLEeysWKiq2M1/2CBw==
+X-Google-Smtp-Source: ABdhPJwGiZMFMPYdc2jzGyDoUKrANSuGf5WBAyb+m1FAjK+gLOrz9ts2OJiDc13pK0JCuZAVplb5SoIninhtNvLBI3s=
+X-Received: by 2002:aca:54d1:: with SMTP id i200mr1720432oib.172.1599842043737;
+ Fri, 11 Sep 2020 09:34:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200907134055.2878499-1-elver@google.com> <e399d8d5-03c2-3c13-2a43-3bb8e842c55a@intel.com>
+ <20200908153102.GB61807@elver.google.com> <feb73053-17a6-8b43-5b2b-51a813e81622@suse.cz>
+ <20200908155631.GC61807@elver.google.com> <CACT4Y+YZqj0CJTumpHr-g9HcRgs+JHwWP5eg1nYHP0E-Zw25DQ@mail.gmail.com>
+ <CANpmjNO7XwhefA+NKszVkNqj8a60QY45n-=EUtGns+ysNYV9mQ@mail.gmail.com>
+ <CACT4Y+YSQDjEh6+XMXiHvMaKAT8bA=JkC8xY3AXfcSk+f9yR+g@mail.gmail.com> <CANpmjNNWOVi317bF_E=QdcSSd5x6Dfk=+nECA9VnZSLGMKigYQ@mail.gmail.com>
+In-Reply-To: <CANpmjNNWOVi317bF_E=QdcSSd5x6Dfk=+nECA9VnZSLGMKigYQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 11 Sep 2020 18:33:52 +0200
+Message-ID: <CANpmjNN_OPCvWPnb62nu+B94t7P54utAH6BGaRYuYuuCfygzig@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] KFENCE: A low-overhead sampling-based memory
+ safety error detector
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for file system passthrough read/write of files when enabled in
-userspace through the option FUSE_PASSTHROUGH.
+On Fri, 11 Sep 2020 at 15:33, Marco Elver <elver@google.com> wrote:
+> On Fri, 11 Sep 2020 at 15:10, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > On Fri, Sep 11, 2020 at 2:03 PM Marco Elver <elver@google.com> wrote:
+> > > On Fri, 11 Sep 2020 at 09:36, Dmitry Vyukov <dvyukov@google.com> wrote:
+> [...]
+> > > > By "reasonable" I mean if the pool will last long enough to still
+> > > > sample something after hours/days? Have you tried any experiments with
+> > > > some workload (both short-lived processes and long-lived
+> > > > processes/namespaces) capturing state of the pool? It can make sense
+> > > > to do to better understand dynamics. I suspect that the rate may need
+> > > > to be orders of magnitude lower.
+> > >
+> > > Yes, the current default sample interval is a lower bound, and is also
+> > > a reasonable default for testing. I expect real deployments to use
+> > > much higher sample intervals (lower rate).
+> > >
+> > > So here's some data (with CONFIG_KFENCE_NUM_OBJECTS=1000, so that
+> > > allocated KFENCE objects isn't artificially capped):
+> > >
+> > > -- With a mostly vanilla config + KFENCE (sample interval 100 ms),
+> > > after ~40 min uptime (only boot, then idle) I see ~60 KFENCE objects
+> > > (total allocations >600). Those aren't always the same objects, with
+> > > roughly ~2 allocations/frees per second.
+> > >
+> > > -- Then running sysbench I/O benchmark, KFENCE objects allocated peak
+> > > at 82. During the benchmark, allocations/frees per second are closer
+> > > to 10-15. After the benchmark, the KFENCE objects allocated remain at
+> > > 82, and allocations/frees per second fall back to ~2.
+> > >
+> > > -- For the same system, changing the sample interval to 1 ms (echo 1 >
+> > > /sys/module/kfence/parameters/sample_interval), and re-running the
+> > > benchmark gives me: KFENCE objects allocated peak at exactly 500, with
+> > > ~500 allocations/frees per second. After that, allocated KFENCE
+> > > objects dropped a little to 496, and allocations/frees per second fell
+> > > back to ~2.
+> > >
+> > > -- The long-lived objects are due to caches, and just running 'echo 1
+> > > > /proc/sys/vm/drop_caches' reduced allocated KFENCE objects back to
+> > > 45.
+> >
+> > Interesting. What type of caches is this? If there is some type of
+> > cache that caches particularly lots of sampled objects, we could
+> > potentially change the cache to release sampled objects eagerly.
+>
+> The 2 major users of KFENCE objects for that workload are
+> 'buffer_head' and 'bio-0'.
+>
+> If we want to deal with those, I guess there are 2 options:
+>
+> 1. More complex, but more precise: make the users of them check
+> is_kfence_address() and release their buffers earlier.
+>
+> 2. Simpler, generic solution: make KFENCE stop return allocations for
+> non-kmalloc_caches memcaches after more than ~90% of the pool is
+> exhausted. This assumes that creators of long-lived objects usually
+> set up their own memcaches.
+>
+> I'm currently inclined to go for (2).
 
-There are file systems based on FUSE that are intended to enforce special
-policies or trigger complicated decision makings at the file operations
-level. Android, for example, uses FUSE to enforce fine-grained access
-policies that also depend on the file contents.
-Sometimes it happens that at open or create time a file is identified as
-not requiring additional checks for consequent reads/writes, thus FUSE
-would simply act as a passive bridge between the process accessing the FUSE
-file system and the lower file system. Splicing and caching help reduce the
-FUSE overhead, but there are still read/write operations forwarded to the
-userspace FUSE daemon that could be avoided.
+Ok, after some offline chat, we determined that (2) would be premature
+and we can't really say if kmalloc should have precedence if we reach
+some usage threshold. So for now, let's just leave as-is and start
+with the recommendation to monitor and adjust based on usage, fleet
+size, etc.
 
-This series has been inspired by the original patches from Nikhilesh Reddy,
-the idea and code of which has been elaborated and improved thanks to the
-community support.
-
-When the FUSE_PASSTHROUGH capability is enabled, the FUSE daemon may decide
-while handling the open/create operations, if the given file can be
-accessed in passthrough mode. This means that all the further read and
-write operations would be forwarded by the kernel directly to the lower
-file system rather than to the FUSE daemon. All requests that are not reads
-or writes are still handled by the userspace code.
-This allows for improved performance on reads and writes, especially in the
-case of reads at random offsets, for which no (readahead) caching mechanism
-would help.
-Benchmarks show improved performance that is close to native file system
-access when doing massive manipulations on a single opened file, especially
-in the case of random reads, for which the bandwidth increased by almost 2X
-or sequential writes for which the improvement is close to 3X.
-
-The creation of this direct connection (passthrough) between FUSE file
-objects and file objects in the lower file system happens in a way that
-reminds of passing file descriptors via sockets:
-- a process requests the opening of a file handled by FUSE, so the kernel
-  forwards the request to the FUSE daemon;
-- the FUSE daemon opens the target file in the lower file system, getting
-  its file descriptor;
-- the FUSE daemon also decides according to its internal policies if
-  passthrough can be enabled for that file, and, if so, can perform a
-  FUSE_DEV_IOC_PASSTHROUGH_OPEN ioctl() on /dev/fuse, passing the file
-  descriptor obtained at the previous step and the fuse_req unique
-  identifier;
-- the kernel translates the file descriptor to the file pointer navigating
-  through the opened files of the "current" process and temporarily stores
-  it in the associated open/create fuse_req's passthrough_filp;
-- when the FUSE daemon has done with the request and it's time for the
-  kernel to close it, it checks if the passthrough_filp is available and in
-  case updates the additional field in the fuse_file owned by the process
-  accessing the FUSE file system.
-From now on, all the read/write operations performed by that process will
-be redirected to the file pointer pointing at the lower file system's file.
-Asynchronous IO is supported as well, handled by creating separate AIO
-requests for the lower file system that will be internally tracked by FUSE,
-that intercepts and propagates their completion through an internal
-ki_completed callback similar to the current implementation of overlayfs.
-Being the userspace FUSE daemon unaware of the read/write operations
-happening in passthrough mode, the stats of the FUSE file must be
-continuously updated with the lower file system's file to avoid
-inconsistencies when stats caching is enabled.
-The ioctl() has been designed taking as a reference and trying to converge
-to the fuse2 implementation. For example, the fuse_passthrough_out data
-structure has extra fields that will allow for further extensions of the
-feature.
-
-
-    Performance
-
-What follows has been performed with this change [V6] rebased on top of
-vanilla v5.8 Linux kernel, using a custom passthrough_hp FUSE daemon that
-enables pass-through for each file that is opened during both "open" and
-"create". Tests were run on an Intel Xeon E5-2678V3, 32GiB of RAM, with an
-ext4-formatted SSD as the lower file system, with no special tuning, e.g.,
-all the involved processes are SCHED_OTHER, ondemand is the frequency
-governor with no frequency restrictions, and turbo-boost, as well as
-p-state, are active. This is because I noticed that, for such high-level
-benchmarks, results consistency was minimally affected by these features.
-The source code of the updated libfuse library and passthrough_hp is shared
-at the following repository:
-
-    https://github.com/balsini/libfuse/tree/fuse-passthrough-stable-v.3.9.4
-
-Two different kinds of benchmarks were done for this change, the first set
-of tests evaluates the bandwidth improvements when manipulating a huge
-single file, the second set of tests verify that no performance regressions
-were introduced when handling many small files.
-
-The first benchmarks were done by running FIO (fio-3.21) with:
-- bs=4Ki;
-- file size: 50Gi;
-- ioengine: sync;
-- fsync_on_close: true.
-The target file has been chosen large enough to avoid it to be entirely
-loaded into the page cache.
-Results are presented in the following table:
-
-+-----------+--------+-------------+--------+
-| Bandwidth |  FUSE  |     FUSE    |  Bind  |
-|  (KiB/s)  |        | passthrough |  mount |
-+-----------+--------+-------------+--------+
-| read      | 468897 |      502085 | 516830 |
-+-----------+--------+-------------+--------+
-| randread  |  15773 |       26632 |  21386 |
-+-----------+--------+-------------+--------+
-| write     |  58185 |      141272 | 141671 |
-+-----------+--------+-------------+--------+
-| randwrite |  59892 |       75236 |  76486 |
-+-----------+--------+-------------+--------+
-
-As long as this patch has the primary objective of improving bandwidth,
-another set of tests has been performed to see how this behaves on a
-totally different scenario that involves accessing many small files. For
-this purpose, measuring the build time of the Linux kernel has been chosen
-as a well-known workload. The kernel has been built with as many processes
-as the number of logical CPUs (-j $(nproc)), that besides being a
-reasonable number, is also enough to saturate the processor’s utilization
-thanks to the additional FUSE daemon’s threads, making it even harder to
-get closer to the native file system performance.
-The following table shows the total build times in the different
-configurations:
-
-+------------------+--------------+-----------+
-|                  | AVG duration |  Standard |
-|                  |     (sec)    | deviation |
-+------------------+--------------+-----------+
-| FUSE             |      144.566 |     0.697 |
-+------------------+--------------+-----------+
-| FUSE passthrough |      133.820 |     0.341 |
-+------------------+--------------+-----------+
-| Raw              |      109.423 |     0.724 |
-+------------------+--------------+-----------+
-
-Similar performance measurements were performed in the current version of
-the patch, and results compatible with what is shown above.
-Further testing and performance evaluations are welcome.
-
-
-    Description of the series
-
-The first patch introduces the data structures and definitions required
-both for the communication with userspace and for the internal kernel use.
-It also adds the basic functionalities to establish the bridge between the
-FUSE file and the lower file system file through a ioctl().
-
-The second patch enables the synchronous read and write operations for
-those FUSE files for which the passthrough functionality is enabled. Those
-operations are directly sent to the lower file system.
-
-The third and last patch extends the read and write operations to also
-support asynchronous IO.
-
-Changes in v8:
-* aio requests now use kmalloc/kfree, instead of kmem_cache
-* Switched to call_{read,write}_iter in AIO
-* Revisited attributes copy
-* Passthrough can only be enabled via ioctl(), fixing the security issue
-  spotted by Jann
-  [Proposed by Jann Horn]
-* Use an extensible fuse_passthrough_out data structure
-
-Changes in v7:
-* Full handling of aio requests as done in overlayfs (update commit
-  message).
-* s/fget_raw/fget.
-* Open fails in case of passthrough errors, emitting warning messages.
-  [Proposed by Jann Horn]
-* Create new local kiocb, getting rid of the previously proposed ki_filp
-  swapping.
-  [Proposed by Jann Horn and Jens Axboe]
-* Code polishing.
-
-Changes in v6:
-* Port to kernel v5.8:
-  * fuse_file_{read,write}_iter() changed since the v5 of this patch was
-    proposed.
-* Simplify fuse_simple_request().
-* Merge fuse_passthrough.h into fuse_i.h
-* Refactor of passthrough.c:
-  * Remove BUG_ON()s.
-  * Simplified error checking and request arguments indexing.
-  * Use call_{read,write}_iter() utility functions.
-  * Remove get_file() and fputs() during read/write: handle the extra FUSE
-    references to the lower file object when the fuse_file is
-    created/deleted.
-  [Proposed by Jann Horn]
-
-Changes in v5:
-* Fix the check when setting the passthrough file.
-  [Found when testing by Mike Shal]
-
-Changes in v3 and v4:
-* Use the fs_stack_depth to prevent further stacking and a minor fix.
-  [Proposed by Jann Horn]
-
-Changes in v2:
-* Changed the feature name to passthrough from stacked_io.
-  [Proposed by Linus Torvalds]
-
-Alessio Balsini (3):
-  fuse: Definitions and ioctl() for passthrough
-  fuse: Introduce synchronous read and write for passthrough
-  fuse: Handle AIO read and write in passthrough
-
- fs/fuse/Makefile          |   1 +
- fs/fuse/dev.c             |  57 ++++++++++-
- fs/fuse/dir.c             |   2 +
- fs/fuse/file.c            |  25 +++--
- fs/fuse/fuse_i.h          |  16 ++++
- fs/fuse/inode.c           |   9 +-
- fs/fuse/passthrough.c     | 196 ++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/fuse.h |  12 ++-
- 8 files changed, 305 insertions(+), 13 deletions(-)
- create mode 100644 fs/fuse/passthrough.c
-
--- 
-2.28.0.618.gf4bc123cb7-goog
-
+Thanks,
+-- Marco
