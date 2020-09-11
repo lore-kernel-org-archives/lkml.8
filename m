@@ -2,64 +2,84 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1972C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F34208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF441208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbgIKB6L (ORCPT
+        id S1725777AbgIKCCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 21:58:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11807 "EHLO huawei.com"
+        Thu, 10 Sep 2020 22:02:15 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11808 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725298AbgIKB6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 21:58:09 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id F2BD08D9AA58D4C9B10A;
-        Fri, 11 Sep 2020 09:42:25 +0800 (CST)
-Received: from [10.174.179.81] (10.174.179.81) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 11 Sep 2020 09:42:24 +0800
-Subject: Re: [PATCH net-next 0/3] Fix some kernel-doc warnings for
- e1000/e1000e
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
-        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200910150429.31912-1-wanghai38@huawei.com>
- <20200910123800.74865996@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200910123819.3ce47422@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-Message-ID: <53e857ff-f5c7-a2c9-b0ec-67c2d4ad29c3@huawei.com>
-Date:   Fri, 11 Sep 2020 09:42:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725300AbgIKCCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 22:02:13 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5651284925446A64A6DB;
+        Fri, 11 Sep 2020 10:02:08 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 10:02:00 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <geoff@infradead.org>, <mpe@ellerman.id.au>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] powerpc/ps3: make two symbols static
+Date:   Fri, 11 Sep 2020 10:01:21 +0800
+Message-ID: <20200911020121.1464585-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200910123819.3ce47422@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.81]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This addresses the following sparse warning:
 
-ÔÚ 2020/9/11 3:38, Jakub Kicinski Ð´µÀ:
-> On Thu, 10 Sep 2020 12:38:00 -0700 Jakub Kicinski wrote:
->> On Thu, 10 Sep 2020 23:04:26 +0800 Wang Hai wrote:
->>> Wang Hai (3):
->>>    e1000e: Fix some kernel-doc warnings in ich8lan.c
->>>    e1000e: Fix some kernel-doc warnings in netdev.c
->>>    e1000: Fix a bunch of kerneldoc parameter issues in e1000_hw.c
->> You should put some text here but I can confirm this set removes 17
->> warnings.
-> Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-> .
-Thans for your review, I'll add some description next time
+arch/powerpc/platforms/ps3/spu.c:451:33: warning: symbol
+'spu_management_ps3_ops' was not declared. Should it be static?
+arch/powerpc/platforms/ps3/spu.c:592:28: warning: symbol
+'spu_priv1_ps3_ops' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ arch/powerpc/platforms/ps3/spu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/platforms/ps3/spu.c b/arch/powerpc/platforms/ps3/spu.c
+index 1193c294b8d0..0c252478e556 100644
+--- a/arch/powerpc/platforms/ps3/spu.c
++++ b/arch/powerpc/platforms/ps3/spu.c
+@@ -448,7 +448,7 @@ static void ps3_disable_spu(struct spu_context *ctx)
+ 	ctx->ops->runcntl_stop(ctx);
+ }
+ 
+-const struct spu_management_ops spu_management_ps3_ops = {
++static const struct spu_management_ops spu_management_ps3_ops = {
+ 	.enumerate_spus = ps3_enumerate_spus,
+ 	.create_spu = ps3_create_spu,
+ 	.destroy_spu = ps3_destroy_spu,
+@@ -589,7 +589,7 @@ static u64 resource_allocation_enable_get(struct spu *spu)
+ 	return 0; /* No support. */
+ }
+ 
+-const struct spu_priv1_ops spu_priv1_ps3_ops = {
++static const struct spu_priv1_ops spu_priv1_ps3_ops = {
+ 	.int_mask_and = int_mask_and,
+ 	.int_mask_or = int_mask_or,
+ 	.int_mask_set = int_mask_set,
+-- 
+2.25.4
+
