@@ -2,227 +2,141 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E24EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33855C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E28D20855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AC920855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvR4HVjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbgIKJeF (ORCPT
+        id S1725839AbgIKJfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:34:05 -0400
-Received: from mx.socionext.com ([202.248.49.38]:30101 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKJdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:33:52 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 11 Sep 2020 18:33:50 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id BA5C71800EE;
-        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 18:33:50 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 5E7AD1A0507;
-        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v7 3/3] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-Date:   Fri, 11 Sep 2020 18:33:34 +0900
-Message-Id: <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Fri, 11 Sep 2020 05:35:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgIKJe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:34:59 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E02C061573;
+        Fri, 11 Sep 2020 02:34:57 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g4so10805150wrs.5;
+        Fri, 11 Sep 2020 02:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o0lvsvmhHomaFeuUSC9V+WuHMpnFn37vWqOj83pYmxM=;
+        b=OvR4HVjnY7YWq/ZH6LYRjweBtkuU8RILDosaNj9LycHEbgECZHblqpqtRMHZNGOdw6
+         GbyZj59NmF3gxX2Fm9SxM02WHzpqBG2rbX71Xfwh6pbGdWxMq65Hde7FDuq/B4vdZH6F
+         lNSlhZyNQ2azLRpUbwv/ApRNWpT09tgDmOMAWbwhhwyLm+Dm8BzGBUBl5s/rGNrMyE7d
+         F7ckQDDh4wNtM/d2OyjmASjP3sqAv+J1b8MR3TNWiGbztUIkLgp3hzzgG7qvZSRFQGJs
+         gSmJwBNUE3r/5hWdKsBI+Gf8X+cghMjN2PgntQznz1tH68q+HBnj/39rK/7KEFpqR9KZ
+         5CCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o0lvsvmhHomaFeuUSC9V+WuHMpnFn37vWqOj83pYmxM=;
+        b=DnJ5cuj3RcvPJirPodFnrDNiZihw9YANKmbmNddk1f8uN8RYHXOF11NYF0JaiM4PIX
+         O8Dh+9licBtM814CUa/P+zMAjWUL5ZMBqRuw5BuqV0n5aD5iu4Lyvv4z+tHiYh73U7B/
+         awkcjnY9P9lrmN/GQUu0OsDG0uE/y2DwAhTpQsNq2NZQYXNMRdJ9wkEpwP4Lgk4pXlIG
+         5mZ1RAD+fT7SRyrdLDflMQmmBHKf9P7DeaJVA68aas3UCevOWwzcd5lr3mA//WZ6+/Tt
+         xXEpFXMLIvrUgLZWWTkpVXfQp2FyvWmca/qmPHKvtDu74enqRpfasvXHHOqohNmn5HPb
+         6C2w==
+X-Gm-Message-State: AOAM531wU7VrjcTFC975bI5ma3wh6oikVnegFFe1WQ0WmDFqRmaYjwb6
+        OcIdjhNbzZZgQQLm+Cgt1LwfBL/TJB0=
+X-Google-Smtp-Source: ABdhPJzdaKDMiO3skd7BhvU3OUbSVcz+XsaE7AtKTs7IFqa7U4/L5wgxxWbXrOzuYd1nug3sNpl1Zg==
+X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr1101212wrw.405.1599816895718;
+        Fri, 11 Sep 2020 02:34:55 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id y5sm3157208wmg.21.2020.09.11.02.34.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:34:55 -0700 (PDT)
+Subject: [PATCH v3 11/24] stat.2: wsfix
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-12-colomar.6.4.3@gmail.com>
+ <9e397d55-34bd-3df7-57cc-e5726198bb97@gmail.com>
+ <11344e3e-1c0b-b61a-4794-807714b1c09d@gmail.com>
+ <f4b14c0d-248d-669f-b748-3890de7bb73a@gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <81da8e01-d0bf-958a-3533-aad25f75bbe4@gmail.com>
+Date:   Fri, 11 Sep 2020 11:34:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <f4b14c0d-248d-669f-b748-3890de7bb73a@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds misc interrupt handler to detect and invoke PME/AER event.
 
-In UniPhier PCIe controller, PME/AER signals are assigned to the same
-signal as MSI by the internal logic. These signals should be detected by
-the internal register, however, DWC MSI handler can't handle these signals.
+Hi Michael,
 
-DWC MSI handler calls .msi_host_isr() callback function, that detects
-PME/AER signals with the internal register and invokes the interrupt
-with PME/AER vIRQ numbers.
+On 2020-09-11 11:19, Michael Kerrisk (man-pages) wrote:
+> On 9/11/20 11:16 AM, Alejandro Colomar wrote:
+>> Hi Michael,
+>>
+>> On 2020-09-11 09:25, Michael Kerrisk (man-pages) wrote:
+>>> See my reply to patch 10/24.
+>>
+>> As with 10/24, here's the new version.
+> 
+> Thanks, Alex. Applied.
+> 
+> Cheers,
+> 
+> Michael
 
-These vIRQ numbers is obtained from portdrv in uniphier_add_pcie_port()
-function.
+I accidentally used a tab instead of spaces in my last commit.
+This fixes that by using only spaces.
 
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Please apply this patch on top of (already applied) v2 11/24.
+
+Thanks,
+
+Alex
+----------------------------------------------------------------------
+ From daad53ccc36a75a0a9928e0807de38925b9b1433 Mon Sep 17 00:00:00 2001
+From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Date: Fri, 11 Sep 2020 11:29:40 +0200
+Subject: [PATCH v3 11/24] stat.2: wsfix
+
+I accidentally used a tab instead of spaces in my last commit.
+This fixes that by using only spaces.
+
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-uniphier.c | 77 +++++++++++++++++++++++++-----
- 1 file changed, 66 insertions(+), 11 deletions(-)
+  man2/stat.2 | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 4817626..237537a 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -21,6 +21,7 @@
- #include <linux/reset.h>
- 
- #include "pcie-designware.h"
-+#include "../../pcie/portdrv.h"
- 
- #define PCL_PINCTRL0			0x002c
- #define PCL_PERST_PLDN_REGEN		BIT(12)
-@@ -44,7 +45,9 @@
- #define PCL_SYS_AUX_PWR_DET		BIT(8)
- 
- #define PCL_RCV_INT			0x8108
-+#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
- #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-+#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
- #define PCL_CFG_BW_MGT_STATUS		BIT(4)
- #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
- #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-@@ -68,6 +71,8 @@ struct uniphier_pcie_priv {
- 	struct reset_control *rst;
- 	struct phy *phy;
- 	struct irq_domain *legacy_irq_domain;
-+	int aer_irq;
-+	int pme_irq;
- };
- 
- #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-@@ -167,7 +172,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
- 
- static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
- {
--	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-+	u32 val;
-+
-+	val = PCL_RCV_INT_ALL_ENABLE;
-+	if (pci_msi_enabled())
-+		val |= PCL_RCV_INT_ALL_INT_MASK;
-+	else
-+		val |= PCL_RCV_INT_ALL_MSI_MASK;
-+
-+	writel(val, priv->base + PCL_RCV_INT);
- 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
- }
- 
-@@ -231,28 +244,52 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
- 	.map = uniphier_pcie_intx_map,
- };
- 
--static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
- {
--	struct pcie_port *pp = irq_desc_get_handler_data(desc);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
--	unsigned long reg;
--	u32 val, bit, virq;
-+	u32 val;
- 
--	/* INT for debug */
- 	val = readl(priv->base + PCL_RCV_INT);
- 
- 	if (val & PCL_CFG_BW_MGT_STATUS)
- 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-+
- 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
- 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
--	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
--		dev_dbg(pci->dev, "Root Error\n");
--	if (val & PCL_CFG_PME_MSI_STATUS)
--		dev_dbg(pci->dev, "PME Interrupt\n");
-+
-+	if (is_msi) {
-+		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
-+			dev_dbg(pci->dev, "Root Error Status\n");
-+			if (priv->aer_irq)
-+				generic_handle_irq(priv->aer_irq);
-+		}
-+
-+		if (val & PCL_CFG_PME_MSI_STATUS) {
-+			dev_dbg(pci->dev, "PME Interrupt\n");
-+			if (priv->pme_irq)
-+				generic_handle_irq(priv->pme_irq);
-+		}
-+	}
- 
- 	writel(val, priv->base + PCL_RCV_INT);
-+}
-+
-+static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
-+{
-+	uniphier_pcie_misc_isr(pp, true);
-+}
-+
-+static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+{
-+	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long reg;
-+	u32 val, bit, virq;
-+
-+	uniphier_pcie_misc_isr(pp, false);
- 
- 	/* INTx */
- 	chained_irq_enter(chip, desc);
-@@ -329,6 +366,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
- 
- static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
- 	.host_init = uniphier_pcie_host_init,
-+	.msi_host_isr = uniphier_pcie_msi_host_isr,
- };
- 
- static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
-@@ -337,6 +375,7 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
- 	struct dw_pcie *pci = &priv->pci;
- 	struct pcie_port *pp = &pci->pp;
- 	struct device *dev = &pdev->dev;
-+	struct pci_dev *pcidev;
- 	int ret;
- 
- 	pp->ops = &uniphier_pcie_host_ops;
-@@ -353,6 +392,22 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
- 		return ret;
- 	}
- 
-+	/* irq for PME */
-+	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
-+		priv->pme_irq =
-+			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_PME);
-+		if (priv->pme_irq)
-+			break;
-+	}
-+
-+	/* irq for AER */
-+	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
-+		priv->aer_irq =
-+			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_AER);
-+		if (priv->aer_irq)
-+			break;
-+	}
-+
- 	return 0;
- }
- 
+diff --git a/man2/stat.2 b/man2/stat.2
+index 08af24c56..7e5417480 100644
+--- a/man2/stat.2
++++ b/man2/stat.2
+@@ -665,7 +665,7 @@ main(int argc, char *argv[])
+      }
+
+      printf("ID of containing device:  [%lx,%lx]\en",
+-	    (unsigned long) major(sb.st_dev),
++            (unsigned long) major(sb.st_dev),
+              (unsigned long) minor(sb.st_dev));
+
+      printf("File type:                ");
 -- 
-2.7.4
+2.28.0
 
