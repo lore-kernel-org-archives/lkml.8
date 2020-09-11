@@ -2,163 +2,153 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFECDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1732075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGVNHZ+x"
+	by mail.kernel.org (Postfix) with ESMTP id 933A121D47
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgIKPuE (ORCPT
+        id S1726526AbgIKPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgIKPs0 (ORCPT
+        Fri, 11 Sep 2020 11:50:35 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:39003 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbgIKPtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:48:26 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26833C061786;
-        Fri, 11 Sep 2020 08:48:13 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id gr14so14468050ejb.1;
-        Fri, 11 Sep 2020 08:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Yfq8mhLzBQ1KFwMRJwpAyIxVLnM24Bwo6yRLbuTpTrg=;
-        b=eGVNHZ+xZIxSU88fSYKg0SMen0jp9gNJxpoTd3XJqL3iM6MCx/mXDnrCtEeASAlQry
-         xg50hVEzbbZH4OAvRvC8cGhMjzAh6dSoft/ckUQQhe7O5IsD9tpRWALIGjSXy0HEJu+e
-         z0n7HRbl6DFJt+ICoVF3/USrvQ2tgEfrRDNz/CZ2ewIj7BmejnyYO9Y95PjnTv0MdeBw
-         3X/UgpLJSCvz+qm01G9JHBSCSCD+xgkN9OEpevc2t5TKm7fFdce0TKpr+0HkhwTDuFh0
-         HMA/lwX70s43ZXLuBYMPCq1Y3OAWw5gJxA8gKjKBNtBKC4HAVSX3iP4TNtb3KPM0+Rqi
-         B3SA==
+        Fri, 11 Sep 2020 11:49:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id y16so7129864ioy.6
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:49:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yfq8mhLzBQ1KFwMRJwpAyIxVLnM24Bwo6yRLbuTpTrg=;
-        b=EGhEkJEf+lRGl90XsBsp+CE7DgKjpS2mebpbiGAsTsCoBl4dWCQlvMXUstSnnfN//6
-         aJUKR0hzkIR7XB9gdBtVn3O50uM4PAN+oqXg57k9Uylsb63ajoucPEy7N7wkuUc1l3wj
-         Dn7tI4/S7ivntx7DgI42zEeJQvt6Hhhe4C88SHRVr1KJTiGn8MCTmsFz1op/26e1v+WO
-         c3p5GAzz1epXFiWeY2Qrp8nqLPkUCunzpHbt1dIjNJ6I6QP37Nt04KhXg9nu9X3QtT0Q
-         UPRXDlC4KWibJY7rSz9JfAI2UzuwfhdG5RRreJSuJUG4qy8FCuGxXJFUJWLCe2oGOQ5M
-         O/cw==
-X-Gm-Message-State: AOAM532pQ18Ayqg0rbEmoYELTHFzL1ISm+Zd/DHhEdj5PasaaWxxH6oS
-        ZNqFEoneHqkhIBJDIJm1tO4=
-X-Google-Smtp-Source: ABdhPJxhZJs5pB8DvTPdxmDxp9Oe1cHmS5A8p5N3ibhqe1zeGh7gcP9CjNMYo6J6v6LNjAUktkVszA==
-X-Received: by 2002:a17:906:bc52:: with SMTP id s18mr2505209ejv.398.1599839291789;
-        Fri, 11 Sep 2020 08:48:11 -0700 (PDT)
-Received: from skbuf ([188.25.217.212])
-        by smtp.gmail.com with ESMTPSA id a15sm1801209ejy.118.2020.09.11.08.48.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 08:48:11 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 18:48:09 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: dsa: b53: Configure VLANs while not
- filtering
-Message-ID: <20200911154809.jc72jesrctvmiqtr@skbuf>
-References: <20200911041905.58191-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=UyAw9auyKQ12heKGY0NjVfj47svD8TkOKeEailtA6+E=;
+        b=lpFspHJ+xZ+nPDKb6Uo7VYt1mNeF2flVbE5AP3uQBu9tw2m53uQWix2iui2roDzdpL
+         TLZpkZTXRfYteoDa0ZQjnh14RHmql93rEYIvNzC82/kawneAJ5mFWpeTFxEvwbrlMk71
+         vD7biUZqa5rCcHk4hHxHYBO9urAGQSHSosABU3zqXQyszGehuAFEUxVo9XmLn8l+jcKW
+         kOXRWqzR6VpllgUyao1+qbdMIvcsLQpqAvJsoyk7LrWZqFXqdZpwA6E6E+RSMG5rJDRi
+         +RAs2coPv9vFryXL4s1c51xHEuH8p0L0+Q7FemDyuLV3vzVmq36MmfaH7YeJl5vy8w6l
+         arvg==
+X-Gm-Message-State: AOAM533invsSdyiJLV1Rhj5f5Dgk9pW85h/4cnVNQTCW/jV2kxx9Wi/z
+        PEKpwbhkKXfi9ErTsald+z9CD82QULqyCfi5JWf/gCxa23/v
+X-Google-Smtp-Source: ABdhPJy+wrpMhNm4Pa2qxe83TrNBwES/gNGCnbDyikyXgkJjUvF/3r8mta49o3F8rIZ1vSCsiqfwzrtrb6/XL6ag/p8YCaOjPmyC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911041905.58191-1-f.fainelli@gmail.com>
+X-Received: by 2002:a6b:7a41:: with SMTP id k1mr2247429iop.187.1599839344326;
+ Fri, 11 Sep 2020 08:49:04 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 08:49:04 -0700
+In-Reply-To: <20200911120222.GT87483@ziepe.ca>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d1020c05af0b9fdc@google.com>
+Subject: Re: KASAN: use-after-free Read in ucma_close (2)
+From:   syzbot <syzbot+cc6fc752b3819e082d0c@syzkaller.appspotmail.com>
+To:     dledford@redhat.com, jgg@ziepe.ca, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 09:19:05PM -0700, Florian Fainelli wrote:
-> Update the B53 driver to support VLANs while not filtering. This
-> requires us to enable VLAN globally within the switch upon driver
-> initial configuration (dev->vlan_enabled).
->
-> We also need to remove the code that dealt with PVID re-configuration in
-> b53_vlan_filtering() since that function worked under the assumption
-> that it would only be called to make a bridge VLAN filtering, or not
-> filtering, and we would attempt to move the port's PVID accordingly.
->
-> Now that VLANs are programmed all the time, even in the case of a
-> non-VLAN filtering bridge, we would be programming a default_pvid for
-> the bridged switch ports.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+Hello,
 
-Not sure it's worth a lot, but:
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KASAN: use-after-free Read in __destroy_id
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+==================================================================
+BUG: KASAN: use-after-free in __destroy_id+0x9f5/0xc60 drivers/infiniband/core/ucma.c:620
+Read of size 4 at addr ffff88808e210128 by task syz-executor.2/11716
 
->  drivers/net/dsa/b53/b53_common.c | 23 ++++-------------------
->  1 file changed, 4 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-> index 6a5796c32721..46ac8875f870 100644
-> --- a/drivers/net/dsa/b53/b53_common.c
-> +++ b/drivers/net/dsa/b53/b53_common.c
-> @@ -1377,23 +1377,6 @@ EXPORT_SYMBOL(b53_phylink_mac_link_up);
->  int b53_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
->  {
->  	struct b53_device *dev = ds->priv;
-> -	u16 pvid, new_pvid;
-> -
-> -	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &pvid);
-> -	if (!vlan_filtering) {
-> -		/* Filtering is currently enabled, use the default PVID since
-> -		 * the bridge does not expect tagging anymore
-> -		 */
-> -		dev->ports[port].pvid = pvid;
-> -		new_pvid = b53_default_pvid(dev);
-> -	} else {
-> -		/* Filtering is currently disabled, restore the previous PVID */
-> -		new_pvid = dev->ports[port].pvid;
-> -	}
-> -
-> -	if (pvid != new_pvid)
-> -		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port),
-> -			    new_pvid);
->
->  	b53_enable_vlan(dev, dev->vlan_enabled, vlan_filtering);
->
-> @@ -1444,7 +1427,7 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
->  			untagged = true;
->
->  		vl->members |= BIT(port);
-> -		if (untagged && !dsa_is_cpu_port(ds, port))
-> +		if (untagged)
->  			vl->untag |= BIT(port);
->  		else
->  			vl->untag &= ~BIT(port);
-> @@ -1482,7 +1465,7 @@ int b53_vlan_del(struct dsa_switch *ds, int port,
->  		if (pvid == vid)
->  			pvid = b53_default_pvid(dev);
->
-> -		if (untagged && !dsa_is_cpu_port(ds, port))
-> +		if (untagged)
->  			vl->untag &= ~(BIT(port));
->
->  		b53_set_vlan_entry(dev, vid, vl);
-> @@ -2619,6 +2602,8 @@ struct b53_device *b53_switch_alloc(struct device *base,
->  	dev->priv = priv;
->  	dev->ops = ops;
->  	ds->ops = &b53_switch_ops;
-> +	ds->configure_vlan_while_not_filtering = true;
-> +	dev->vlan_enabled = ds->configure_vlan_while_not_filtering;
->  	mutex_init(&dev->reg_mutex);
->  	mutex_init(&dev->stats_mutex);
->
-> --
-> 2.25.1
->
+CPU: 1 PID: 11716 Comm: syz-executor.2 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __destroy_id+0x9f5/0xc60 drivers/infiniband/core/ucma.c:620
+ ucma_destroy_id+0x172/0x240 drivers/infiniband/core/ucma.c:654
+ ucma_write+0x288/0x350 drivers/infiniband/core/ucma.c:1784
+ vfs_write+0x2b0/0x730 fs/read_write.c:576
+ ksys_write+0x1ee/0x250 fs/read_write.c:631
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff28d19dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000038340 RCX: 000000000045d5b9
+RDX: 0000000000000018 RSI: 00000000200000c0 RDI: 0000000000000005
+RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
+R13: 00007ffcebc2643f R14: 00007ff28d19e9c0 R15: 000000000118cf4c
+
+Allocated by task 11716:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ ucma_alloc_ctx+0x41/0x330 drivers/infiniband/core/ucma.c:211
+ ucma_create_id+0x10f/0x410 drivers/infiniband/core/ucma.c:497
+ ucma_write+0x288/0x350 drivers/infiniband/core/ucma.c:1784
+ vfs_write+0x2b0/0x730 fs/read_write.c:576
+ ksys_write+0x1ee/0x250 fs/read_write.c:631
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 11715:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ ucma_free_ctx drivers/infiniband/core/ucma.c:599 [inline]
+ __destroy_id+0x8a2/0xc60 drivers/infiniband/core/ucma.c:628
+ ucma_close+0xe1/0x190 drivers/infiniband/core/ucma.c:1849
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88808e210000
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 296 bytes inside of
+ 512-byte region [ffff88808e210000, ffff88808e210200)
+The buggy address belongs to the page:
+page:000000007a3e4a58 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88808e210c00 pfn:0x8e210
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002404fc8 ffffea00028aa008 ffff8880aa040600
+raw: ffff88808e210c00 ffff88808e210000 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88808e210000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88808e210080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88808e210100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff88808e210180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88808e210200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+Tested on:
+
+commit:         308571de RDMA/ucma: Do not use file->mut to lock destroying
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=112f7cdd900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc6fc752b3819e082d0c
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
