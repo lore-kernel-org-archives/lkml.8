@@ -2,94 +2,91 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93123C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F1FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56EBD2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F58C2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbgIKKbK (ORCPT
+        id S1725867AbgIKKcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:31:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:26516 "EHLO pegase1.c-s.fr"
+        Fri, 11 Sep 2020 06:32:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33266 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKKbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:31:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BnsVK1rsmz9tylB;
-        Fri, 11 Sep 2020 12:31:05 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id j5nddWbOqQY9; Fri, 11 Sep 2020 12:31:05 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BnsVJ732fz9tyl8;
-        Fri, 11 Sep 2020 12:31:04 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 45B148B83F;
-        Fri, 11 Sep 2020 12:31:06 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Rv6156DPUzkX; Fri, 11 Sep 2020 12:31:06 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B56038B837;
-        Fri, 11 Sep 2020 12:31:03 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/powermac: Fix low_sleep_handler with KUAP and
- KUEP
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <74472ea2a7e8698273643cde7d382bd9f31cd1dd.1598945727.git.christophe.leroy@csgroup.eu>
- <871rj9rxt1.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <d56e42c0-0117-81bb-b583-4944e7bf0383@csgroup.eu>
-Date:   Fri, 11 Sep 2020 12:30:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1725710AbgIKKcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 06:32:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1E77BAD2F;
+        Fri, 11 Sep 2020 10:32:34 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 12:32:17 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Changki Kim <changki.kim@samsung.com>,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
+        gregkh@linuxfoundation.org, krzk@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [POC] printk: Convert dict ring into array
+Message-ID: <20200911103217.GJ3864@alley>
+References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
+ <20200904082438.20707-1-changki.kim@samsung.com>
+ <874kod6fgh.fsf@jogness.linutronix.de>
+ <20200904124530.GB20558@alley>
+ <20200911095035.GI3864@alley>
 MIME-Version: 1.0
-In-Reply-To: <871rj9rxt1.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911095035.GI3864@alley>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 11/09/2020 à 01:56, Michael Ellerman a écrit :
-> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->> low_sleep_handler() has an hardcoded restore of segment registers
->> that doesn't take KUAP and KUEP into account.
->>
->> Use head_32's load_segment_registers() routine instead.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->> Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
->> Fixes: 31ed2b13c48d ("powerpc/32s: Implement Kernel Userspace Execution Prevention.")
->> Cc: stable@vger.kernel.org
->> ---
->>   arch/powerpc/platforms/powermac/sleep.S | 9 +--------
->>   1 file changed, 1 insertion(+), 8 deletions(-)
+On Fri 2020-09-11 11:50:35, Petr Mladek wrote:
+> This is POC how the printk() code would look when dict ring
+> gets converted into an array of extended info structures.
 > 
-> Doesn't build? pmac32_defconfig, gcc 9.3.0:
+> It applies on top of the patchset ("[PATCH printk v4 0/6]
+> printk: reimplement LOG_CONT handling"), see
+> https://lore.kernel.org/r/20200908202859.2736-1-john.ogness@linutronix.de
 > 
-> ld: arch/powerpc/platforms/powermac/sleep.o: in function `core99_wake_up':
-> (.text+0x25c): undefined reference to `load_segment_registers'
-> 
-> Missing _GLOBAL() presumably?
+> It compiles and even seems to work. But it would need quite
+> some love and discussion to get ready for merging.
 
-Oops .. :(
+[...]
 
-v2 sent out.
+> Well, there is only small step to bundle these values into the existing
+> struct printk_info.
 
-Thanks
-Christophe
+My opinion:
+
+I would like to go this way in the long term because it looks like the most
+easy and reliable solution. But I do _not_ want to block pushing printk
+rework [0][1] into mainline because of this.
+
+Handling more information for each stored message is tangential to the
+printk rework. It would make it easier for crashdump related tools
+when the log buffer format is not modified many times. But it
+might block the rework indefinitely.
+
+The lockless ringbuffer is almost ready for merging into mainline.
+It will be a huge change on its own. The printk rework is very
+important effort. It is cleaning up the printk design and
+helps with many historical problems, like deadlocks or soft-lockups.
+
+I do not want to complicate it much more with adding more meta
+information and yet another format change that would deserve
+more investigation and discussion.
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/log/?h=printk-rework
+[1] https://lore.kernel.org/r/20200908202859.2736-1-john.ogness@linutronix.de
+
+Best Regards,
+Petr
