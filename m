@@ -2,174 +2,121 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D604FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8239C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E872206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:40:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qiTVKyW8"
+	by mail.kernel.org (Postfix) with ESMTP id 71B5721D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725535AbgIKDk4 (ORCPT
+        id S1725554AbgIKDol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgIKDky (ORCPT
+        Thu, 10 Sep 2020 23:44:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52194 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgIKDoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:40:54 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5F91C061573;
-        Thu, 10 Sep 2020 20:40:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f18so6196499pfa.10;
-        Thu, 10 Sep 2020 20:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6YommAFs/DzwZq5AZZ2OWdEKY/cFA6itjVdaLg6Vkbg=;
-        b=qiTVKyW8w5c/loI0VnWOGr8I6QdWFRX2uaXqDZ94IBRS0nhD4A1i2UN+sx+FCkd3EU
-         KZg2ivPPz716pKsgLBQ9iFKyZpjM1sT0mvotlcixZ78Kv4Gx4r6Vr4PQ+20dywVGXFj3
-         2fI+lBqQgVRR087tjSLJe8v7UsD2dXwXkQHfDmyaRfQOAdg8vFoBHcXafaKmyKG6jUSx
-         hwhiGrHRhABX/dL4/kxb4UkVU3zVDQVbMl9N/GJbKStpCguRmTWLl21g6lSmFvQetP5Z
-         X1oW/a079CwHEZsud7hvls/QYHKHeaqC+MmMvs+lF3tZpURYux53BkiCuDoctIlfq5qB
-         +iVg==
+        Thu, 10 Sep 2020 23:44:38 -0400
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <koba.ko@canonical.com>)
+        id 1kGZzG-0008DT-Uj
+        for linux-kernel@vger.kernel.org; Fri, 11 Sep 2020 03:44:35 +0000
+Received: by mail-pj1-f72.google.com with SMTP id x21so1267419pjp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:44:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=6YommAFs/DzwZq5AZZ2OWdEKY/cFA6itjVdaLg6Vkbg=;
-        b=Cwy08Kcbcaq7UFs7SG50A9VRlgZtwsAO6IBdVSrSXlD80miLWY8fJLt3KkbnMIFpVw
-         BqS5gdEcZKHvdi90reoFnZwXsGRp8mr/+X6XrPk6dbGnk9NsScisIz0r8JeKKMGMFShx
-         k2fYktj5uV6A5JiOZMwzW4la4FzSGza7Jic341aqGLXRjNx1h/xY5VmJETqQ2rPgtut3
-         6EijF1UWFHTm8m+8Yo0M28W8IoASKssgiDqKdLSYwp5gbkG98QVTan186abEVKvl0rqA
-         iG8bjON/QLjo1RJ4guQxlYGK5I6pmBA46vigZBWNNlkHYgkBp+PzkGcaD8NE02eo27Nx
-         2xkA==
-X-Gm-Message-State: AOAM533GvH2Tq/JhSt6y0gWy/5cJNLAVqvcr0xOrupCXT/kxzLfKAaQM
-        skNZB6JtD5pwLQ5kbM5m29u97+eko4NAC+Rj
-X-Google-Smtp-Source: ABdhPJz8Ys1gBF8bphhDCNo4LT5i8GDB5UT/QzOn9Zaz8zAGjGMh37HeWEJckSRvr9/hXloE4oQOyw==
-X-Received: by 2002:a17:902:8a98:: with SMTP id p24mr73541plo.58.1599795653185;
-        Thu, 10 Sep 2020 20:40:53 -0700 (PDT)
-Received: from debian (sau-ff5be-or.servercontrol.com.au. [43.250.207.3])
-        by smtp.gmail.com with ESMTPSA id g32sm404085pgl.89.2020.09.10.20.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 20:40:52 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 09:10:41 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     masahiroy@kernel.org, jeremie.francois@gmail.com,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH V2] scripts : config : Added example use when run without
- argument,extend help
-Message-ID: <20200911034037.GA4063@debian>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>, masahiroy@kernel.org,
-        jeremie.francois@gmail.com, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-References: <20200911015421.22193-1-unixbhaskar@gmail.com>
- <508f3917-8b3f-fe38-f6bf-43f5026fc4e2@infradead.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
-Content-Disposition: inline
-In-Reply-To: <508f3917-8b3f-fe38-f6bf-43f5026fc4e2@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oBCdh9AHVKn2pvKDjPYbf2p/ubia6a1LMjcyX5qUih0=;
+        b=blGfPs16Mg0pvPx31ca9ugXIbxC7OxTHR45hpfmRJYbUSdLbftiq/xlJJHXeglDg7P
+         uccdQy7WLRNRCYMdrZ2kCWy5INcBudibY8YQOKHfCRg/4btSMsV8vM78fFA+AdJFu0LZ
+         qfPHSZzMNm9yCERmUsDdX+zYvW8MRSnU7o/ldf6mj822Xi34FcY6vKO7m+cg+3qsU6NX
+         VrUXRN1W8/Cs1WQ12aZj6o0cmRFBJNpNVNNx8SPMfpPZUb+NKL3Q/+jbWCx08YUOyP0f
+         77pJTcvASSbpkFECRhdwbntU1vA8AQCF3G0WdMqtf+GoH/ZORtYZ6EW0PYjGbTe8iVJ/
+         nPBA==
+X-Gm-Message-State: AOAM530mi8RjswzkpxCGSmwWN9u4MnY7CDQmIMlyVnQIbCYQv0dT3dp/
+        Nb5vnr5IExjC2enSDoeojb3NVPa+B8rRgfvJElt5HkGrGUCO1N9nFmpKKxPB/gVIarXEByF8rmZ
+        OcWtz4PZKcJb/q0rHIxXzTl0V9zJl+UD41K3nYH+f2Q==
+X-Received: by 2002:a17:902:c253:: with SMTP id 19mr52937plg.65.1599795873446;
+        Thu, 10 Sep 2020 20:44:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyY4uaVpMyLnMtK0DRHCZhKP7Ii+rxYMe3wFJYMXiN3+HVrxw7f0xI1ZOkDROwv497nOMpnJg==
+X-Received: by 2002:a17:902:c253:: with SMTP id 19mr52922plg.65.1599795873124;
+        Thu, 10 Sep 2020 20:44:33 -0700 (PDT)
+Received: from canonical.com (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id q7sm415031pgg.10.2020.09.10.20.44.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 10 Sep 2020 20:44:32 -0700 (PDT)
+From:   Koba Ko <koba.ko@canonical.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Lyude Paul <lyude@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     anthony.wong@canonical.com
+Subject: [PATCH v3] drm/dp_mst: Retrieve extended DPCD caps for topology manager
+Date:   Fri, 11 Sep 2020 11:44:31 +0800
+Message-Id: <20200911034431.29059-1-koba.ko@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As per DP-1.3, First check DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT.
+If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 1, read the DP_DP13_DPCD_REV to
+get the faster capability.
+If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 0, read DP_DPCD_REV.
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+---
+Changelog:
+1. Adjust the commit message.
+2. use drm_dbg_kms instead and print the return code.
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-On 20:08 Thu 10 Sep 2020, Randy Dunlap wrote:
->On 9/10/20 6:54 PM, Bhaskar Chowdhury wrote:
->> This patch extends the help section by adding an explicit example of use.
->>=20
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->
->Difference between versions goes here.
->
->>  scripts/config | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>=20
->> diff --git a/scripts/config b/scripts/config
->> index eee5b7f3a092..d905dccabb94 100755
->> --- a/scripts/config
->> +++ b/scripts/config
->> @@ -45,6 +45,23 @@ make time.
->>  By default, $myname will upper-case the given symbol. Use --keep-case t=
-o keep
->>  the case of all following symbols unchanged.
->> =20
->> +The concrete example, say, you want to change any particular config,like
->
->                                                                config, li=
-ke
->
->> +GCOV for profiling, you can simply use this command
->
->                                               command.
->
->> +
->> +To enable:
->> +
->> +#scripts/config --enable GCOV_KERNEL  && grep GCOV .config
->> +
->> + and the output will be like this:
->> +
->> +  CONFIG_GCOV_KERNEL=3Dy
->> +
->> +To disable:
->> +
->> +#scripts/config --disable GCOV_KERNEL  && grep GCOV .config
->> +
->> +# CONFIG_GCOV_KERNEL is not set
->> +
->>  $myname uses 'CONFIG_' as the default symbol prefix. Set the environment
->>  variable CONFIG_ to the prefix to use. Eg.: CONFIG_=3D"FOO_" $myname ...
->>  EOL
->>=20
->
->I don't know why we need this extra help text.
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 7753c718ddf9..63f8809b9aa4 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3671,8 +3671,6 @@ EXPORT_SYMBOL(drm_dp_read_mst_cap);
+ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
+ {
+ 	int ret = 0;
+-	u8 dpcd_ext = 0;
+-	unsigned int dpcd_offset = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
+ 
+ 	mutex_lock(&mgr->payload_lock);
+@@ -3686,17 +3684,11 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		struct drm_dp_payload reset_pay;
+ 
+ 		WARN_ON(mgr->mst_primary);
+-		drm_dp_dpcd_read(mgr->aux,
+-				 DP_TRAINING_AUX_RD_INTERVAL,
+-				 &dpcd_ext, sizeof(dpcd_ext));
+-
+-		dpcd_offset =
+-			((dpcd_ext & DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT) ?  DP_DP13_DPCD_REV : DP_DPCD_REV);
+ 
+ 		/* get dpcd info */
+-		ret = drm_dp_dpcd_read(mgr->aux, dpcd_offset, mgr->dpcd, DP_RECEIVER_CAP_SIZE);
+-		if (ret != DP_RECEIVER_CAP_SIZE) {
+-			DRM_DEBUG_KMS("failed to read DPCD\n");
++		ret = drm_dp_read_dpcd_caps(mgr->aux, mgr->dpcd);
++		if (ret < 0) {
++			drm_dbg_kms(mgr->dev, "failed to read DPCD, ret %d\n", ret);
+ 			goto out_unlock;
+ 		}
+ 
+-- 
+2.25.1
 
-I am not sure I get you ...should have mentioned in the first place, so it
-save some of my time ....moreover, I was doing it because I felt it necessa=
-ry
-to let the user of this script to know what/how easily things can be
-done.Period.
-
-Look like decision making is badly bugged.=20
-
-~Bhaskar=20
->--=20
->~Randy
->
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl9a8bIACgkQsjqdtxFL
-KRX4LAf/SAS+VQ9m3u7u+dCla1Ey+5tRVkXNDI+8rko4iJUMJF6WJnQ2bHQSgeo3
-x6wtaroyZZ8OfOblF0dgqwK5WG2EcDlWzTdB3DR5KPosvXATukE0llY/USv31TcH
-fvcJHDV2/5hOxSmDg+3QWfBknMy4n5hc1zrSEvCRvo4CUe2B4doDe5AxFtGWLvG9
-eQFlx9HGO/YEgHJFwv7fkU+ttqbFnV3yM4gXq0XApAVN7lS9mVmVVPZzFwrW8L6x
-OIvWUgrQKtPjMDSEZvpgaLuW15AIXOJByZ0Z2PGCa38bqR5NTecd0asnV9BJW2nP
-mr+wz+dm1FyhbtCRmhw9jZ3u7HEdiw==
-=GWJq
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
