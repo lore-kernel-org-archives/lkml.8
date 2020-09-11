@@ -2,127 +2,95 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFDFC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A68C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D0221D92
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A6F21D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ebqbjyKT"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BdvJXjlS";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="lKFfB2NE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725841AbgIKIQK (ORCPT
+        id S1725789AbgIKIRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:16:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35504 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725554AbgIKIQG (ORCPT
+        Fri, 11 Sep 2020 04:17:08 -0400
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:54962
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725550AbgIKIQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:16:06 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08B87lQR003143;
-        Fri, 11 Sep 2020 10:15:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=tIOlnbAKWQu2aJOslivWEU73AEic3d7q5RRGup+Q4RA=;
- b=ebqbjyKTK35dpUhKhRfw0A4aX24JhezA4xX5kLmgnbb9yjSTiIIbRh3tMV5lA3ouWqJA
- ftqQKc7gJ0rXVsu/Yr42sBlp+yxWsXNPJmABNeynOaDv1JGi/HUrrlTxgslPEaJmRAm4
- v98tTM2OR66tlbAb++E+Q2/sm3a74CNZcZBPnLLQv0OXeRjg5xCfF+zSxuHlOcdCzQ31
- chPAnA+7RnfdniITyrdiAcse5LNypec/Ykxsoiv7tsU+N62zyorNrU32DskQH/wbcZFA
- FppEieofoPPzpMhQPjwYL3V3PZcI0oT+zNbVhXtXItrF0mj3xQoVxop1C0yVTsxKNyH7 MQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 33c1jfg8ue-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 10:15:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7B1DA10002A;
-        Fri, 11 Sep 2020 10:15:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (gpxdag6node5.st.com [10.75.127.81])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F58A21E254;
-        Fri, 11 Sep 2020 10:15:10 +0200 (CEST)
-Received: from localhost (10.75.127.46) by GPXDAG6NODE5.st.com (10.75.127.81)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Sep 2020 10:15:09
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <alexandre.torgue@st.com>,
-        <olivier.moysan@st.com>, <arnaud.pouliquen@st.com>
-CC:     <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: stm32: sai: add pm_runtime support
-Date:   Fri, 11 Sep 2020 10:15:07 +0200
-Message-ID: <20200911081507.7276-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 04:16:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812218;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=sWqVcwjm5FNynpqVYJsxE5W+DApHV2ECDPYWHgy9rMM=;
+        b=BdvJXjlSaJ3nTahiwB5N6PxEZQA1vwRE+5jObc7q5RlJOGQoqkKriLylGsYNQouQ
+        NrZlZGBOIanDQyivmEvEI36gfRamwQjHuMgo9F/7O5oJKsyzmm/+TM/XOstOi8oCye5
+        DqNlqwx2h761kA4z/RVxyscQBtyJK7enrXacRJ3k=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812218;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=sWqVcwjm5FNynpqVYJsxE5W+DApHV2ECDPYWHgy9rMM=;
+        b=lKFfB2NExmklmKUM+XfaxgJqkwap7VwTc0u+l7NI+W424kdglxFuepyXUtxhgw1c
+        qQwssx5LvdXx6kGHOqD759KVCd0s6ihhcuThhL6tBD8R2RsspsXijK+ey5bqxNTRwaX
+        S8G01s/cquV6Oq+zF/cil7kKEfLPOUayCUJPtc2A=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To GPXDAG6NODE5.st.com
- (10.75.127.81)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-11_02:2020-09-10,2020-09-11 signatures=0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Sep 2020 08:16:58 +0000
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] iommu/arm-smmu: Support maintaining bootloader
+ mappings
+In-Reply-To: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+Message-ID: <010101747c3d2e2e-d8ff7403-32c3-4155-88a5-a05e7985c7f7-000000@us-west-2.amazonses.com>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.11-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable support of pm_runtime on STM32 SAI driver to allow
-SAI power state monitoring.
-pm_runtime_put_autosuspend() is called from ASoC framework
-on pcm device close.
-The pmdown_time delay is available in runtime context, and may be set
-in SAI driver to take into account shutdown delay on playback.
-However, this shutdown delay is already handled in the DAPMs
-of the audio codec linked to SAI CPU DAI.
-So, the choice is made, not to support this delay on CPU DAI side.
+Hi Bjorn,
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_sai_sub.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+On 2020-09-04 21:25, Bjorn Andersson wrote:
+> Based on previous attempts and discussions this is the latest attempt 
+> at
+> inheriting stream mappings set up by the bootloader, for e.g. boot 
+> splash or
+> efifb.
+> 
+> Per Will's request this builds on the work by Jordan and Rob for the 
+> Adreno
+> SMMU support. It applies cleanly ontop of v16 of their series, which 
+> can be
+> found at
+> https://lore.kernel.org/linux-arm-msm/20200901164707.2645413-1-robdclark@gmail.com/
+> 
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 3fb9513cedb2..3aa1cf262402 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- 
- #include <sound/asoundef.h>
-@@ -1559,10 +1560,14 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
- 					 &sai->cpu_dai_drv, 1);
--	if (ret)
-+	if (ret) {
- 		snd_dmaengine_pcm_unregister(&pdev->dev);
-+		return ret;
-+	}
- 
--	return ret;
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
- }
- 
- static int stm32_sai_sub_remove(struct platform_device *pdev)
-@@ -1572,6 +1577,7 @@ static int stm32_sai_sub_remove(struct platform_device *pdev)
- 	clk_unprepare(sai->pdata->pclk);
- 	snd_dmaengine_pcm_unregister(&pdev->dev);
- 	snd_soc_unregister_component(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return 0;
- }
+Thanks for working on this, I have tested this on qcom platforms
+where firmware does these shenanigans(most android) and this series
+works well and where firmware doesn't do all this (chrome) and no
+regressions there. Review and test tags given on individual patches.
+
+Thanks,
+Sai
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
