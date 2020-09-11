@@ -2,84 +2,81 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6711EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1E522078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C1A221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DPO+AUZF";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="gEY7Sfwk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbgIKJ55 (ORCPT
+        id S1725847AbgIKJ6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:57:57 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:60624 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725554AbgIKJ54 (ORCPT
+        Fri, 11 Sep 2020 05:58:49 -0400
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:56022
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725798AbgIKJ6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:57:56 -0400
-X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
-   d="scan'208";a="57029955"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Sep 2020 18:57:54 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4D4FB423A659;
-        Fri, 11 Sep 2020 18:57:52 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v2] dmaengine: Kconfig: Update description for RCAR_DMAC config
-Date:   Fri, 11 Sep 2020 10:57:34 +0100
-Message-Id: <20200911095734.19348-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 05:58:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599818326;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
+        bh=soMKq6DE1LqLA+c4mCcL7lf4QSRLtWRGs63cDp+71WQ=;
+        b=DPO+AUZFr3Wzl/Cvue7wjt1LXr7bzR5jOvV5tLxCR+vQINfadifCclbIhaZjcmvP
+        CnGkdFPlXJV2HYLDwnE7FI3zAqd6O84T2deUya8Ylm8kpDrGuGuZ0B1yET+PTOkhj5L
+        2AXnUlmQUuWVyX224FmJnW+N7QDrYqQu70Tyl7xA=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599818326;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
+        bh=soMKq6DE1LqLA+c4mCcL7lf4QSRLtWRGs63cDp+71WQ=;
+        b=gEY7SfwkPe+aYg/XLLXfN8U68f1VnkFhpj/NsfAw73ipulQKzPj8AKe2s8cfaH+y
+        RRCnHY2We9A2R5ykK0YPF1PB7Nt4XC45frFtF8GD8SyrtWSIE3PSyR1ekgNhsSRMki0
+        spYcwE46FftGqbj4mSit+Riz2R/W4pRxzjQqDPY8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 42629C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath11k: Remove unused inline function
+ htt_htt_stats_debug_dump()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200909134533.19604-1-yuehaibing@huawei.com>
+References: <20200909134533.19604-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <kuba@kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-ID: <010101747c9a5fd4-d977d1ca-5416-433e-b897-bc3d423e6ce5-000000@us-west-2.amazonses.com>
+Date:   Fri, 11 Sep 2020 09:58:46 +0000
+X-SES-Outgoing: 2020.09.11-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcar-dmac driver is used on Renesas R-Car Gen{2,3} and Renesas
-RZ/G{1,2} SoC's, update the same to reflect the description
-for RCAR_DMAC config.
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-v1->v2
-* Included RZ/Gx
-* Restored RB tag from Geert
+> There is no caller in tree, so can remove it.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-v1 - https://patchwork.kernel.org/patch/11763239/
----
- drivers/dma/sh/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Patch applied to ath-next branch of ath.git, thanks.
 
-diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
-index 54d5d0369d3c..13437323a85b 100644
---- a/drivers/dma/sh/Kconfig
-+++ b/drivers/dma/sh/Kconfig
-@@ -32,12 +32,12 @@ config SH_DMAE
- 	  Enable support for the Renesas SuperH DMA controllers.
- 
- config RCAR_DMAC
--	tristate "Renesas R-Car Gen2 DMA Controller"
-+	tristate "Renesas R-Car Gen{2,3} and RZ/G{1,2} DMA Controller"
- 	depends on ARCH_RENESAS || COMPILE_TEST
- 	select RENESAS_DMA
- 	help
- 	  This driver supports the general purpose DMA controller found in the
--	  Renesas R-Car second generation SoCs.
-+	  Renesas R-Car Gen{2,3} and RZ/G{1,2} SoCs.
- 
- config RENESAS_USB_DMAC
- 	tristate "Renesas USB-DMA Controller"
+9bc260653a1d ath11k: Remove unused inline function htt_htt_stats_debug_dump()
+
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11765693/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
