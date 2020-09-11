@@ -2,98 +2,120 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C71C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7371C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15502076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599810471;
-	bh=I4uLoN15SZgdT8c9PzvgWvYDrFak69CCGmHCBzzkfp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TV/dts7yuILd6+haUYHy0oLpsiDHUQOPfac1cDjLfP7NawN5GeaFNQwCGbcUgo70v
-	 ygSRHakNt2WS/wtG+GWXgooz+Hxp0TL+ZCRT836onQOkRXOhHaWhbWo0pmJIRrD5Ys
-	 glzyqKPpc1MiKoDUpRRjr75OsQF7iI9PYXiJnvWo=
+	by mail.kernel.org (Postfix) with ESMTP id A205C20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMC2P8M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725842AbgIKHru (ORCPT
+        id S1725779AbgIKHtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgIKHrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:47:47 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E1D62076C;
-        Fri, 11 Sep 2020 07:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599810466;
-        bh=I4uLoN15SZgdT8c9PzvgWvYDrFak69CCGmHCBzzkfp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bv7hWyU8RZyuN6jfDc5+ORLIBpvhh5aMtRwI2Nh3NJphbVWjwIZrxhoYb+DHeDr8v
-         8qk4qCKaaZ1kRmiPZpBF/Bc5F55Q4LGfaQ6tNdLgu8nG9ZmlvdGXOU0dWfT0N+iUsa
-         vws3sKPZthzoylmn3VIK9R5h3RGV74Mj8e6O9IJw=
-Date:   Fri, 11 Sep 2020 09:47:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jhugo@codeaurora.org,
-        bbhatt@codeaurora.org
-Subject: Re: [PATCH v5 4/4] bus: mhi: clients: Add userspace client interface
- driver
-Message-ID: <20200911074752.GB3324216@kroah.com>
-References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
- <1596696063-17802-5-git-send-email-hemantk@codeaurora.org>
- <20200907093725.GC1393659@kroah.com>
- <010101747bd97269-a941d364-78ea-488c-baae-5a1c924d9e43-000000@us-west-2.amazonses.com>
+        Fri, 11 Sep 2020 03:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgIKHtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:49:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A713C061573;
+        Fri, 11 Sep 2020 00:49:01 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so10507178wrm.2;
+        Fri, 11 Sep 2020 00:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BOY6mIGly2PeCZYbpRsY8qOVyIj0XWjJjEwg7QCJuXU=;
+        b=nMC2P8M6Xepb79pxSEDaRTi5shuXscdiXiFNXLFw12yTPqVoBb1KV30ticxQ4EgE5r
+         H2yLazjgFACjt8p65A/lpo7hWQUMOFt2WPtqtQgxNVFurGCEvVXRHmOBwH3DG1UeKxKW
+         De7MInQRuB8KAmCKSZDII+YxfAViSQ2rxVE2dr+0FAF/wuD6Aw+++Fpz4d7hY5dRPghZ
+         iDsOgTvKWrNvG5p/wElgxD5lXp9dHUZn62aO2XtKe/e+dWrs5tiIk+x2ElhjwRtjCv83
+         tmjRT+qF0HpltUbp4YMmUDG/UL4eawz+tCbrx/AWWGMZv0IEq/oeRbFdZ1WzTp0jBlcs
+         1BrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BOY6mIGly2PeCZYbpRsY8qOVyIj0XWjJjEwg7QCJuXU=;
+        b=Iw2jrX0AHi0sMMaSQKR9D5a9NNLSmIrPN8j4Bn1v7ajCiJ2kBWQApUG9mxJxZB29zo
+         DdL6lK17zBzM0IpIJhte0wgoIoZwhUgXRR/rCDMqM5Da1LJ4lx44jDGqxnPYCwrAhoAo
+         91N/nae+dAjjJydzat5LbBQdMYygDaToSZwTfWJfiE5Ng1dQnKKhVfuSzov8lGItRFJp
+         o8yDyRW4Zr1TbxLWEhXXD8J9uNwlaP/xUHGN5vcFjQQhljlYdLnRn3y5XheXdqvGCw2N
+         T9NjYLBeggkKxXsj17WFZGHeFaZCCPvUYhDN8bUzTw/yLpPYL4lOL6mxJY9zfqgvGZXF
+         vIAA==
+X-Gm-Message-State: AOAM5323YQjk8n71HZeeZvFXI79CftcQVbmKZ3UUNkvCT98iAFyzeZSD
+        rLYhYV3eVu1s+fGKEy6kjx+Vmou5uHE=
+X-Google-Smtp-Source: ABdhPJwZ1yUgX7V+52J0H2ug4QkfVuU6PadHgeU8cxIsLXT4fICKUkEJCFNUgUhvf8QfOlxGgDi94Q==
+X-Received: by 2002:a5d:69cd:: with SMTP id s13mr664917wrw.379.1599810539363;
+        Fri, 11 Sep 2020 00:48:59 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id g131sm2523901wmf.25.2020.09.11.00.48.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 00:48:58 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/24] clock_getcpuclockid.3: Remove unneeded cast
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-10-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <c2ac877a-3491-2044-aa87-b9cfcec25e44@gmail.com>
+Date:   Fri, 11 Sep 2020 09:48:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010101747bd97269-a941d364-78ea-488c-baae-5a1c924d9e43-000000@us-west-2.amazonses.com>
+In-Reply-To: <20200910211344.3562-10-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 06:28:02AM +0000, Hemant Kumar wrote:
-> > > +struct uci_dev {
-> > > +	unsigned int minor;
-> > > +	struct mhi_device *mhi_dev;
-> > > +	const char *chan;
-> > > +
-> > > +	/* protects uci_dev struct members */
-> > > +	struct mutex lock;
-> > > +
-> > > +	struct uci_chan ul_chan;
-> > > +	struct uci_chan dl_chan;
-> > > +	size_t mtu;
-> > > +	size_t actual_mtu;
-> > > +	struct kref ref_count;
-> > > +	struct kref open_count;
-> > 
-> > I'm stopping right here.  A structure can only have ONE reference count
-> > to control its lifespan.  You have 2 here, which guarantees that either
-> > you are using a kref incorrectly, or your code is totally confused and
-> > will break easily.
-> > 
-> > Please fix this as this is not how to do this.
-> > 
-> > Also, why does anyone need to care about the number of times that open()
-> > is called?  The vfs layer should handle all of that for you, right?
-> Reason for using open_count was to allow start MHI channel only when first
-> open() was called and stop the MHI channel when last release() is called.
-> Since uci driver just need to handle one open() from user space
-> other calls to open can simply return -EBUSY. i will get rid of open_count
-> and does not let multiple threads to open same file node.
+Hi Alex,
 
-You will fail in trying to attempt only one open on your device node,
-sorry.  You can properly trigger off of the first/last things, but
-having two different reference counts is NOT how to do this, those are
-to control the lifetime of a structure/object.
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Member 'tv_nsec' of 'struct timespec' is of type 'long' (see time.h.0p),
+> and therefore, the cast is completely redundant.
 
-greg k-h
+Good catch! Patch applied.
+
+Cheers,
+
+Michael
+
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+> ---
+>  man3/clock_getcpuclockid.3 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/man3/clock_getcpuclockid.3 b/man3/clock_getcpuclockid.3
+> index 283f92557..050d7ad13 100644
+> --- a/man3/clock_getcpuclockid.3
+> +++ b/man3/clock_getcpuclockid.3
+> @@ -154,7 +154,7 @@ main(int argc, char *argv[])
+>      }
+>  
+>      printf("CPU-time clock for PID %s is %ld.%09ld seconds\en",
+> -            argv[1], (long) ts.tv_sec, (long) ts.tv_nsec);
+> +            argv[1], (long) ts.tv_sec, ts.tv_nsec);
+>      exit(EXIT_SUCCESS);
+>  }
+>  .EE
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
