@@ -2,161 +2,193 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D80CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BB0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BFF221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5560221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="qySYWhW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcIv65g3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgIKQoC (ORCPT
+        id S1725770AbgIKQo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58270 "EHLO
+        Fri, 11 Sep 2020 12:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgIKPIX (ORCPT
+        with ESMTP id S1726301AbgIKPIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:08:23 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40AFC06135F
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 07:31:06 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id e23so14106649eja.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 07:31:06 -0700 (PDT)
+        Fri, 11 Sep 2020 11:08:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217D4C0612F3;
+        Fri, 11 Sep 2020 07:50:31 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id c2so12634400ljj.12;
+        Fri, 11 Sep 2020 07:50:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8voqPtdkbS5RYnHXaRVOj2SC1jKq1kvwIX4dEXxo6Mc=;
-        b=qySYWhW0yC42rPW/IoqWQolhYfXTLM21q7M2YytnHh2yQU4RoGj86gmZePTxz8sAjT
-         GFnqtUFKRVnNvFFSoku5JBmqgqWLDyp3MH8ip3utZK5/D9/Q5oyLP69h10p78VRSCZL4
-         CjxstQ5GyKsCPPsHl+CbtPcFPb7vjpkHd29RXhjIRjBEWV+X8wVZQMmDOV0ELwoDcLmz
-         HrVgononjhPjTIsOluxMQICFWXylrDWQkjYNSlCBsEJOszmzHOOjtdqU3VA0Jdd7dB1w
-         X8H0violb+3GZwx8SNphe81iv+N5lCd4hWhgNDxulNEkayJY2qBM/9ftAQY8iAf/gPHo
-         GyDg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=keOmaMSC1f/6krcZUSHtu67VeNUhv2XTpQaabLC7Uxs=;
+        b=HcIv65g3o85yTMO5d3Qd2bJTGTIMibPKbLp5vphXPbT4Z7r0lWk1X0Uz+UoXX84Ojc
+         b/XSw2GCGUC49nK5TjR5jvIX/Ow0ZISBu/xcF51fJva9kl3M9raYXOVw4bQnqwI9wG1n
+         2JCZ5smTAliiSx49/jqQb/JAWawe4McWQTTCE5JW+zM0gdCIQnwwg/hn561LyS7fVCpB
+         NzsrvmP3f+uJZF7tqYGzFPI6VrC6T32EreOMJDA9jDLmapUACXuhIz5VMS4nFfoOUVWD
+         IHD1RZqyBn30jzBhpKkj2ijgp3UWakWvJDuMLSmw+a1B/ORRwIcO/mjmvhZii5zKrhAY
+         vVqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8voqPtdkbS5RYnHXaRVOj2SC1jKq1kvwIX4dEXxo6Mc=;
-        b=Dg4hIfwdwvt4OggesQRes8luv/r7Yz3P6yrs+j04Gs4SQgA9gzcrkNMjtzzRR0fDG6
-         3oFoudJDtBpqLeq97tEkEVgrFN7iaZ68K/QxqvA1ID9TEQ4+NtgDli6/ai8wzDJRVyc8
-         vaxn6ApCru+Fv9oF36K8Q+jkf+5IAowGMTEuv+Au4qi44cz5VHWS1QHqI/WYnSVfer3C
-         00vognvIpG6p8M7rR+eSqs2lQqMQHgOsEz22A+5jz3BHmRTP9yLat9p3ZpSM2ADWizV9
-         MXpIYb3aIlUxnVBMoEyFOVIkO7aRQPqu/wk5NSBevff2D3RWfbwFeLCdf20Q3cNXEKwQ
-         XdVw==
-X-Gm-Message-State: AOAM5333ntgwTxVLfgPmZNFvmi36FDEhPZQCBok2xgtBUfrDPMEpTyaR
-        Wxt2kdSmSEy1ZmU9siM0B4l0pQ==
-X-Google-Smtp-Source: ABdhPJx9aD+LYlhca0oVerMVXjMsebdQaEZZyd5ADDx85BMSztyKMmeinroRPPOAzwBmwtoOQ65huA==
-X-Received: by 2002:a17:906:5206:: with SMTP id g6mr2404464ejm.292.1599834665328;
-        Fri, 11 Sep 2020 07:31:05 -0700 (PDT)
-Received: from localhost.localdomain ([87.66.33.240])
-        by smtp.gmail.com with ESMTPSA id y21sm1716261eju.46.2020.09.11.07.31.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 07:31:04 -0700 (PDT)
-From:   Nicolas Rybowski <nicolas.rybowski@tessares.net>
-To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     Nicolas Rybowski <nicolas.rybowski@tessares.net>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH bpf-next v2 2/5] mptcp: attach subflow socket to parent cgroup
-Date:   Fri, 11 Sep 2020 16:30:17 +0200
-Message-Id: <20200911143022.414783-2-nicolas.rybowski@tessares.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911143022.414783-1-nicolas.rybowski@tessares.net>
-References: <20200911143022.414783-1-nicolas.rybowski@tessares.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=keOmaMSC1f/6krcZUSHtu67VeNUhv2XTpQaabLC7Uxs=;
+        b=L2+H0KUH23US/mbmo7NIkqaIKe6h5rUqzXSXVSQy8A7yqnqSQAqPANIHvBcBFUCcT9
+         CgFrRMWLRy5YRlIllA8O5J282My9OPcsk8EAXPqYmGsgCFzeO5DBCIluQOUvbAC8lEVT
+         TSJo5PZP+4fp6Huu/R/Lz7dAvL7a6wiFh/sz7siR/FOIiHD333LH+tXuscxT9ROuC/bY
+         tNkJqQe1DVsv4xfz7dkay+CScwWTn+/1xw6ltaOrPjV9nNETe0Hbi2cQ5+rZ+gWjKkpx
+         fhF+obsBR2o++xa67Ozt4J/Kg1rbrLFxcFDA+cZOftLQk3Lv/ofAWEn+OnTxmedHpvHz
+         Dt9Q==
+X-Gm-Message-State: AOAM531lvRC8I5uLDoY76s26aX7OuHqq3ZSWvd2wsIKC4o+APp1e/Iqv
+        k8ExT2rlTcxPF/jRL7I3mso=
+X-Google-Smtp-Source: ABdhPJz96jWQ7avP9u0tV5ffhgxC3hXOAhFpEQMWJnI4tOBpx9/gReMaiGE6y+nOqEHgQUuQctGwoQ==
+X-Received: by 2002:a2e:98c8:: with SMTP id s8mr974424ljj.268.1599835829537;
+        Fri, 11 Sep 2020 07:50:29 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id 18sm465533lfg.29.2020.09.11.07.50.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 07:50:28 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] Input: atmel_mxt_ts - implement I2C retries
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew_Gabbasov@mentor.com, erosca@de.adit-jv.com
+References: <20200908151617.12199-1-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6041c677-592b-388e-2eb6-3287a3d92e4b@gmail.com>
+Date:   Fri, 11 Sep 2020 17:50:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200908151617.12199-1-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It has been observed that the kernel sockets created for the subflows
-(except the first one) are not in the same cgroup as their parents.
-That's because the additional subflows are created by kernel workers.
+08.09.2020 18:16, Jiada Wang пишет:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
+> 
+> Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
+> when they are in a sleep state. It must be retried after a delay for the
+> chip to wake up.
+> 
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+> Acked-by: Yufeng Shen <miletus@chromium.org>
 
-This is a problem with eBPF programs attached to the parent's
-cgroup won't be executed for the children. But also with any other features
-of CGroup linked to a sk.
+> (cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
 
-This patch fixes this behaviour.
+Hello, Jiada!
 
-As the subflow sockets are created by the kernel, we can't use
-'mem_cgroup_sk_alloc' because of the current context being the one of the
-kworker. This is why we have to do low level memcg manipulation, if
-required.
+In the comment to v2 Andy Shevchenko suggested that it should be better
+to remove the "cherry picked from ..." info from the commit message
+because that commit can't be found in the kernel.org git repo, and thus,
+it's not a very useful information.
 
-Suggested-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
-Signed-off-by: Nicolas Rybowski <nicolas.rybowski@tessares.net>
----
- net/mptcp/subflow.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Also, please note that the original ACK from Yufeng Shen probably isn't
+valid anymore since you modified the patch. Hence it should be better to
+remove it.
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e8cac2655c82..535a3f9f8cfc 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1130,6 +1130,30 @@ int __mptcp_subflow_connect(struct sock *sk, int ifindex,
- 	return err;
- }
- 
-+static void mptcp_attach_cgroup(struct sock *parent, struct sock *child)
-+{
-+#ifdef CONFIG_SOCK_CGROUP_DATA
-+	struct sock_cgroup_data *parent_skcd = &parent->sk_cgrp_data,
-+				*child_skcd = &child->sk_cgrp_data;
-+
-+	/* only the additional subflows created by kworkers have to be modified */
-+	if (cgroup_id(sock_cgroup_ptr(parent_skcd)) !=
-+	    cgroup_id(sock_cgroup_ptr(child_skcd))) {
-+#ifdef CONFIG_MEMCG
-+		struct mem_cgroup *memcg = parent->sk_memcg;
-+
-+		mem_cgroup_sk_free(child);
-+		if (memcg && css_tryget(&memcg->css))
-+			child->sk_memcg = memcg;
-+#endif /* CONFIG_MEMCG */
-+
-+		cgroup_sk_free(child_skcd);
-+		*child_skcd = *parent_skcd;
-+		cgroup_sk_clone(child_skcd);
-+	}
-+#endif /* CONFIG_SOCK_CGROUP_DATA */
-+}
-+
- int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -1150,6 +1174,9 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
- 
- 	lock_sock(sf->sk);
- 
-+	/* the newly created socket has to be in the same cgroup as its parent */
-+	mptcp_attach_cgroup(sk, sf->sk);
-+
- 	/* kernel sockets do not by default acquire net ref, but TCP timer
- 	 * needs it.
- 	 */
--- 
-2.28.0
 
+You may also add my r-b and t-b tags to the commit message that I gave
+to the v2.
+
+> [gdavis: Forward port and fix conflicts.]
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> [jiada: return exact errno when i2c_transfer & i2c_master_send fails,
+> 	add "_MS" suffix MXT_WAKEUP_TIME]
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
+>  1 file changed, 30 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index a2189739e30f..145780f78122 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -196,6 +196,7 @@ enum t100_type {
+>  #define MXT_CRC_TIMEOUT		1000	/* msec */
+>  #define MXT_FW_RESET_TIME	3000	/* msec */
+>  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
+
+> +#define MXT_WAKEUP_TIME_MS	25	/* msec */
+
+I think Andy Shevchenko meant here that the "/* msec */" comment won't
+be needed and should be removed if _MS postfix is added to the name.
+
+But I think you should keep this hunk as it was in v2 and then there
+could be a new separate patch which renames all those timeouts at once.
+This will keep code consistent in regards to the chosen naming convention.
+
+>  /* Command to unlock bootloader */
+>  #define MXT_UNLOCK_CMD_MSB	0xaa
+> @@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
+>  	struct i2c_msg xfer[2];
+>  	u8 buf[2];
+>  	int ret;
+> +	bool retry = false;
+>  
+>  	buf[0] = reg & 0xff;
+>  	buf[1] = (reg >> 8) & 0xff;
+> @@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
+>  	xfer[1].len = len;
+>  	xfer[1].buf = val;
+>  
+> -	ret = i2c_transfer(client->adapter, xfer, 2);
+> -	if (ret == 2) {
+> -		ret = 0;
+> -	} else {
+> -		if (ret >= 0)
+> -			ret = -EIO;
+> -		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
+> -			__func__, ret);
+> +retry_read:
+> +	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
+> +	if (ret != ARRAY_SIZE(xfer)) {
+> +		if (!retry) {
+> +			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
+> +			msleep(MXT_WAKEUP_TIME_MS);
+> +			retry = true;
+> +			goto retry_read;
+> +		} else {
+> +			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
+> +				__func__, ret);
+> +			return ret < 0 ? ret : -EIO;
+> +		}
+
+Andy also suggested that it could be a cleaner to write such code like this:
+
+if (ret != ARRAY_SIZE(xfer)) {
+	if (!retry) {
+		...
+		goto retry_read;
+	}
+
+	dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
+		__func__, ret);
+
+	return ret < 0 ? ret : -EIO;
+}
+
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+...
