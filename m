@@ -2,75 +2,130 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB801C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F25CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B811221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCE7221EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="Qr3jX/bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbgIKHCD convert rfc822-to-8bit (ORCPT
+        id S1725796AbgIKHCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:02:03 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42917 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgIKHCB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:02:01 -0400
-Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 530AECED19;
-        Fri, 11 Sep 2020 09:08:55 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] Bluetooth: Fix memory leak in
- read_adv_mon_features()
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200909072551.1101031-1-yepeilin.cs@gmail.com>
-Date:   Fri, 11 Sep 2020 09:01:59 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <15999FE1-5227-4D55-8E3C-39142725FDA5@holtmann.org>
-References: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
- <20200909072551.1101031-1-yepeilin.cs@gmail.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
+        Fri, 11 Sep 2020 03:02:41 -0400
+Received: from mail-eopbgr70111.outbound.protection.outlook.com ([40.107.7.111]:48353
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725468AbgIKHC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:02:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e37rFNxcEzti2AjCGonkprh8y9LzeKWStVTdRYI/j1mJP09s9McqdkoQFXMPPLbaSClUrh1kv40Nkv3/JRWuVFpC1JXy7SzH1I0mEHs6EMad+GyDAQBftSdLeW9V6gEUy0KrRouyLwCj07pCRIeanRTGeFMWoATG2rCEibvLbdIIhPzXDEA1IWm8XMvz7klrL2iz4KlqK58bIqLoanRZ0CYh07NOCjVM6oM0NbtTGSRMmbNyhVNS22/5pH6fZq7/ElJ+MCrNQr81YJQHOB98rpEj+bUr+OjnTaeaj43FPD8PwMwTVb5Y48HPk8ZhMWG3cDaBS5Hyowk+hgONGa/MfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mq2C81eBEKbjZS+T7g13tDoEsxYzI3bRRVpu2sGCteg=;
+ b=iDSdyX03Oyon9Rb1W6wRCIo29n33W1s5RITvqbI+pfkh/bdpfq/qWkAqqvE44xQyAxVzvBi4YoWu3rQYv6kR+3taM3Ov6dJSdZt+6oiNFIG0mhc1Tqvq31xh+aETqwFcnVDkocjyV/7u4t7EsyPl8XlVlAP6+3s92ai2RG2vz9pbGbxlwONTu0iY2vUeMwY6zM1RqBICgszuak5gWXCeFVO7Le9VjtxdV6s0NMU2Aq8d+rs894fPNJDdZo5IXe7TybzxXVOPME1HssoBKBjbhc5LHbLICQ423X2O2NaM7zZ5zUUMqxIxJoin70KeyDQJZ48la3UTmikG7L1MyyDXEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mq2C81eBEKbjZS+T7g13tDoEsxYzI3bRRVpu2sGCteg=;
+ b=Qr3jX/bkaGNcLl50Jxxdqb0IJy53LKPf5cyGv7McZbEOBoGytIR/QpQqwMhLzJa3ctrQyqVNGtGGzprtkz9V8p5N++sOcQfZ4ZaBJMwmIBWCM75rs6f7UYJdUrTVelnOi9t5WTDaUWysfDExUn7zDfpcdWVdMFxita+H9Ez9Nbk=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0300.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5c::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3370.16; Fri, 11 Sep 2020 07:02:21 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe%6]) with mapi id 15.20.3370.017; Fri, 11 Sep 2020
+ 07:02:20 +0000
+Date:   Fri, 11 Sep 2020 10:02:12 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v8 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+Message-ID: <20200911070212.GA17183@plvision.eu>
+References: <20200910150055.15598-1-vadym.kochan@plvision.eu>
+ <20200910150055.15598-2-vadym.kochan@plvision.eu>
+ <20200910183047.39e4cd7c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910183047.39e4cd7c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BE0P281CA0004.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:a::14) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by BE0P281CA0004.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:a::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.5 via Frontend Transport; Fri, 11 Sep 2020 07:02:19 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c2ced28c-2b4c-4683-071b-08d85620a093
+X-MS-TrafficTypeDiagnostic: HE1P190MB0300:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0300FCCB248403383D96B18F95240@HE1P190MB0300.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W0Pqtzpw358xn1Dp7kEjynUW6h7eWUumjIALRuefAefJka8hbWWi6hG6MmY+72Q3W1X8zOIGRX0zpstvdd7g7AsYjCDr1yEPFAbWbZwWa1UZ6adX93RBLXTj82wOUJGKxCAjoY2t7CuKKTukSpyZ8DYPkhmoIa3yhhbPa/ylio2bC28qg/YPt5SpJGRO9PnFI4e3ToHDcYn2RuM+vso8MIMMXlr660ldbU4UuLrt73o8sU8FQX3EdkugpiKmXeXyCLZrEc5bj5UQUndy/OEkjjSSF+8Lywni0yfv3+St+xC25rLs9r/Zv4Mwm/bAdYB+KLoc3jvocFBoPZnq6rtwNA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(346002)(39830400003)(366004)(396003)(6916009)(5660300002)(8936002)(4744005)(36756003)(478600001)(2906002)(4326008)(316002)(1076003)(2616005)(33656002)(83380400001)(55016002)(8886007)(26005)(86362001)(16526019)(66556008)(66476007)(66946007)(44832011)(186003)(956004)(8676002)(54906003)(6666004)(7696005)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: c77I2/wB/pXqBEVHeHC2tl0g8T1smQO1DwI3v1UYnTXLNyujf4OtkrLrk7CKbyc7XdrF5DwwrBg61R+ZqdQrg3WUMcFQgInwwH6OA6RLpTwk8ePMLUzoT29S+rtJ1jzOTmz+A7H5xSAHfe2sJH56AeoZj+VgbNVo8deCjPWv4/9hfMPTGZszZO4jeqUm1o0bru8ibCHUrc+lXPxXysYnD8YaznbhcqhIclhaKmMlN5kNDv1fHSzHEnpetgYvDzayytKSgXgiqe0E+lvSV3ceE7JjpRvI3/vB0nFbrBX+DthubIJj2Cva1J9VUQs4vquTjLl7nUoumIDDvNVxyE2XLp+kjt2MYeCKVcYQvyE965zZGKq6R+afMHcKyCft0FJv8eqG5rEyyZwip/sn1m9iGSwgR3oMRICJhCa0ZRCfc+NZmJVegxLKV11ZxOMR8RWpT5w/21IGR/HwJ5tkQZYUc9PkiPGBbih89pnjzu2u+xmYTxOYoJXa8bVRUEDPRmxdXMsvbdoOYZRiv8l4IMbC10ZBJB8t/sJychfTbQ8IOa0IGvJKUY+sV3RZdEtQxWzMsLpw/rcdJcML9dBpPpurykhWrdwBb3WzIF4Buo+2Y/tLWcYPFm7iwlK4MKWDch173Gxbh9/0zSNDmT0ZM2VveQ==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2ced28c-2b4c-4683-071b-08d85620a093
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 07:02:20.8595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k9bI6zIUy8xlDoB5mqykwQZuy1dDzcQUR6JshcyKGmtJpW0d9e2Jpzsf21kKwCGiHaep5l+dcK0raEo3jOo5mpLxDIzAktjgJbXqaUcgT+c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peilin,
-
-> read_adv_mon_features() is leaking memory. Free `rp` before returning.
+On Thu, Sep 10, 2020 at 06:30:47PM -0700, Jakub Kicinski wrote:
+> On Thu, 10 Sep 2020 18:00:50 +0300 Vadym Kochan wrote:
+> > +static int prestera_sdma_tx_wait(struct prestera_sdma *sdma,
+> > +				 struct prestera_tx_ring *tx_ring)
+> > +{
+> > +	int tx_wait_num = PRESTERA_SDMA_WAIT_MUL * tx_ring->max_burst;
+> > +	bool is_ready;
+> > +
+> > +	return read_poll_timeout_atomic(prestera_sdma_is_ready, is_ready, true,
+> > +					1, tx_wait_num, false, sdma);
+> > +}
 > 
-> Fixes: e5e1e7fd470c ("Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES")
-> Reported-and-tested-by: syzbot+f7f6e564f4202d8601c6@syzkaller.appspotmail.com
-> Link: https://syzkaller.appspot.com/bug?extid=f7f6e564f4202d8601c6
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> I forgot the "Link:" tag yesterday. Sorry about that.
+> This is strange and generates a warning:
 > 
-> Change in v2:
->    - add a proper "Link:" tag.
-> 
-> net/bluetooth/mgmt.c | 12 ++++++++----
-> 1 file changed, 8 insertions(+), 4 deletions(-)
+> drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: In function ‘prestera_sdma_tx_wait’:
+> drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:695:7: warning: variable ‘is_ready’ set but not used [-Wunused-but-set-variable]
+>   695 |  bool is_ready;
+>       |       ^~~~~~~~
 
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
-
+Sorry about this mistake, will re-submit new version.
