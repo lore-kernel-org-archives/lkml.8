@@ -2,115 +2,158 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8220DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A125C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BEF20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BAE20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="iS1elgHb";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TvMKmdw9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iJSfcSRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbgIKHpz (ORCPT
+        id S1725828AbgIKHqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:45:55 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:42671 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbgIKHpd (ORCPT
+        Fri, 11 Sep 2020 03:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgIKHp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:45:33 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id C29E1C38;
-        Fri, 11 Sep 2020 03:45:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 11 Sep 2020 03:45:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=wCrir7Nj5a6Sf
-        jiU7ykDZoyQRg2FmImk7NG1eiROHdc=; b=iS1elgHbtQSPnOb33kz9zoK+IaPsq
-        UCE2uaZnMVrKLnayOH4az+rcut4AO7S4jCewIwt0f1Ng4mZTlVNJRXIdxPKQ9PYQ
-        pQ9GeVjDld2ergKtlGSgpYs52JXObYv0kHMe3bvCZjivugoEX5ATZxEK0SCs8WuD
-        blUeQ1UZZPA0ZsLG/HxYQj1i0p4OXWTyeuRe0F3HOX2EFOzc2O7zXXMeyHsWYqju
-        mniSv6d6Ycp01dS2FqYW3YdC1l5ZKcU1cUnFgrAoipm5m/Omh0HKo7t0tCfGy3wt
-        PpkEGhBklJeBXm4dQmRxzFBIx9US53HlX9zcNBh4XLjKrSf8LveFWUVHw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=wCrir7Nj5a6SfjiU7ykDZoyQRg2FmImk7NG1eiROHdc=; b=TvMKmdw9
-        DVeVOIGMluHTvnEZSqDjcmgxs1wlp3p5okgKRnA47slWJddjIzDLCO87JxT07zNl
-        DdNgZHi+zPJsXVDUoPBsCwCA9XIDd6qNkqgmQvF/hJDtcSDLAiRd7MckCQt86nVC
-        48R96nUF+6KBMdjXdyQGTmTeaog/5GTtAoOVIhwf/ri5dPvm7WVtIsEPsuOquIdR
-        IlfQaPT77Q1M1rwngI2589HsAKMNbFWS8QTIvut4drtSw0aPpCC+PU1eftUPNJWN
-        ZuOoPGdZUiZmPY4e4fUQSIG9Wq5MX8GGI/tftMSQh5Xj2eeSmJ1uIOyu5/4w+6v0
-        Kgt1czQxRnc6eg==
-X-ME-Sender: <xms:HCtbX1XNQJvO-ODfsNth057vjEoDIymWKZJ5nkWtYGyyUL69BzV-SA>
-    <xme:HCtbX1nnY5shKT2eegAWAt7c6Ns4LUBj0p1XutlufqDnpLm3q5fHKqa4opH-tUHVt
-    Opj2nykNN9GwHSG6Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfies
-    rghjrdhiugdrrghuqeenucggtffrrghtthgvrhhnpeejgfdvveehteekveeggeellefgle
-    etteejffelffdvudduveeiffegteelvefhteenucfkphepudegrddvrddutdelrdekheen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurh
-    gvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:HCtbXxbPz1aWdHxXNN9GA3OtP2pbVqrdKSBg0jHcpQamTOIK-radfA>
-    <xmx:HCtbX4VctOuaEhBnAoHGqfPm3AVkgGcAzi8DtHpx5EgR2QczZSl9iw>
-    <xmx:HCtbX_mmykPnTIB5XApdjSTY1uB4rbfpLQgjaPBlT65UtyiOyyeqmQ>
-    <xmx:HCtbX4Dy2mrbSEgiadwJ9QeLLynofN80aAQ-z7Wp7AIaRa_61U68DA>
-Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7725B3064685;
-        Fri, 11 Sep 2020 03:45:29 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-mmc@vger.kernel.org
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt: bindings: mmc: Add phase control properties for the Aspeed SDHCI
-Date:   Fri, 11 Sep 2020 17:14:50 +0930
-Message-Id: <20200911074452.3148259-2-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200911074452.3148259-1-andrew@aj.id.au>
-References: <20200911074452.3148259-1-andrew@aj.id.au>
+        Fri, 11 Sep 2020 03:45:58 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E73C0613ED
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:45:56 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w1so9020790edr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H10t/PoYzFp2YJmus+JauG6BT44xTI8He+24ZzfKGuc=;
+        b=iJSfcSRDOI0uj91Wf8MfSv/rALU7QF9mAKdWgTtdYgxxMFt80M8rsPWnXsXYMzUpZK
+         xHebxWWZTzyE/epGDO1WpaKpE8SOrd0QpZqajO8z3MCuct47/WoledDN2wrpFrTVsELB
+         C/Dyw6kPcsR4JDILPM/nBFjJEI3h0YHOinecmu1KOgC5RsTbTTEEaZwZDv4YHbWn9RIm
+         ZviGWZDSck3+GZAMoo2bfIS1Lxd32PEiG9+OLmj4P9a/W52MoUUrfQmqYprssftujuh9
+         DmCIv8Yi1GSnT8yjI/bThPIVd20V7UVAMCV+ydLH3qveG2n2iguoJxEkaBA2PVarhCv6
+         2M+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H10t/PoYzFp2YJmus+JauG6BT44xTI8He+24ZzfKGuc=;
+        b=KmYBNB9NtDT7lt32KoPBMlp8Ck23SZ3QVrWrzdd7S+YoMVGqWwMKPBlUnUEXxwLY3t
+         x+RDYyll9w1SJS4bnWxdeiwpdzLvXkpQk5qamm+fAJheHPB9cyc5t7tLc0YJLbAkfa6o
+         4jwzn4cyb15BDdUfQ+xKAhEbPZrSxyN0eMfzsTFn9en5699S0lAooL53UkmNlZZ6JjWi
+         d12t1BWxROnhEcZiaX5z2JpCeeEI40wExHHf4432jdxwbNKYWwMtLgvWuE0q2HMR3Nbk
+         aqlYicLsqXDBsEM6qdY6E/mOzdC/N2LdZ3ZNmEy/NLuZmceXOtlh2g55QUZJbAHvEw5J
+         KIfw==
+X-Gm-Message-State: AOAM533NBkZXQJ7GFqf/lE1Mu9YH2iucMj/eD2uboWr4ZzX74yjs31JR
+        mTScc3/YplzIZKJrWYfdOkYTOnXfOvr1AJyb2HSIaA==
+X-Google-Smtp-Source: ABdhPJzoAxY70MZcPNGWxyG6zQ6qr5FKoQPOg9NgPLDiF+Ir58RNLJLUI7l1ei3YibuFb2rBegUpdWQ+ccblZaesBJc=
+X-Received: by 2002:a50:e79c:: with SMTP id b28mr712767edn.371.1599810354627;
+ Fri, 11 Sep 2020 00:45:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200910134239.192030-1-jonathanh@nvidia.com> <20200910134239.192030-2-jonathanh@nvidia.com>
+ <CAMpxmJXbhrmJJn4f3zk4=Y2tCwLzpFc+c6NbxcqVe8eaLSRvtw@mail.gmail.com>
+ <88021f57-b8cf-d3d6-0e9c-19ed0bccb729@nvidia.com> <5afe9537-dc50-16ff-028e-b4539c6f924a@nvidia.com>
+In-Reply-To: <5afe9537-dc50-16ff-028e-b4539c6f924a@nvidia.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 11 Sep 2020 09:45:43 +0200
+Message-ID: <CAMpxmJUAhJmGA_3nKs51hF=08vY19U5Rpfz30DLgOOiTMuxjzA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] misc: eeprom: at24: Initialise AT24 NVMEM ID field
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add properties to control the phase delay for input and output data.
+On Thu, Sep 10, 2020 at 8:19 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+>
+>
+> On 10/09/2020 19:15, Jon Hunter wrote:
+> >
+> > On 10/09/2020 16:35, Bartosz Golaszewski wrote:
+> >> On Thu, Sep 10, 2020 at 3:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> >>>
+> >>> The AT24 EEPROM driver does not initialise the 'id' field of the
+> >>> nvmem_config structure and because the entire structure is not
+> >>> initialised, it ends up with a random value. This causes the NVMEM
+> >>> driver to append the device 'devid' value to name of the NVMEM
+> >>> device. Although this is not a problem per-se, for I2C devices such as
+> >>> the AT24, that already have a device unique name, there does not seem
+> >>> much value in appending an additional 0 to the I2C name. For example,
+> >>> appending a 0 to an I2C device name such as 1-0050 does not seem
+> >>> necessary and maybe even a bit confusing. Therefore, fix this by
+> >>> setting the NVMEM config.id to NVMEM_DEVID_NONE for AT24 EEPROMs.
+> >>>
+> >>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> >>> ---
+> >>>  drivers/misc/eeprom/at24.c | 1 +
+> >>>  1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> >>> index e9df1ca251df..3f7a3bb6a36c 100644
+> >>> --- a/drivers/misc/eeprom/at24.c
+> >>> +++ b/drivers/misc/eeprom/at24.c
+> >>> @@ -715,6 +715,7 @@ static int at24_probe(struct i2c_client *client)
+> >>>
+> >>>         nvmem_config.name = dev_name(dev);
+> >>>         nvmem_config.dev = dev;
+> >>> +       nvmem_config.id = NVMEM_DEVID_NONE;
+> >>>         nvmem_config.read_only = !writable;
+> >>>         nvmem_config.root_only = !(flags & AT24_FLAG_IRUGO);
+> >>>         nvmem_config.owner = THIS_MODULE;
+> >>> --
+> >>> 2.25.1
+> >>>
+> >>
+> >> This patch is correct and thanks for catching it. I vaguely recall
+> >> wondering at some point why the appended 0 in the nvmem name for at24.
+> >> Unfortunately this change would affect how the device is visible in
+> >> user-space in /sys/bus/nvmem/devices/ and this could break existing
+> >> users. Also: there are many in-kernel users that would need to be
+> >> updated. I'm afraid we'll need some sort of backward compatibility.
+> >
+> >
+> > Thanks, yes that is a problem. I guess for now we could explicitly init
+> > to NVMEM_DEVID_AUTO or maybe just 0 so that it defaults to the same path
+> > in the NVMEM driver. However, I am not sure how we can make allow some
+> > devices to use NVMEM_DEVID_NONE and others use something else. This is
+> > not really something that we can describe in DT because it has nothing
+> > to do with h/w.
+>
+>
+> Unless we make the configuration of the 'id' dependent on the 'label'
+> property so something like ...
+>
+>         if (device_property_present(dev, "label")) {
+>                 nvmem_config.id = NVMEM_DEVID_NONE;
+>                 err = device_property_read_string(dev, "label",
+>                                                   &nvmem_config.name);
+>                 if (err)
+>                         return err;
+>         } else {
+>                 nvmem_config.id = NVMEM_DEVID_AUTO;
+>                 nvmem_config.name = dev_name(dev);
+>         }
+>
+> Cheers
+> Jon
+>
+> --
+> nvpublic
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Yes, this looks like the best compromise we can get for now. Please
+make sure to document why we do this in the code.
 
-diff --git a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-index 987b287f3bff..d7b605968c8a 100644
---- a/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-@@ -61,6 +61,14 @@ patternProperties:
-       sdhci,auto-cmd12:
-         type: boolean
-         description: Specifies that controller should use auto CMD12
-+      "aspeed,input-phase":
-+        $ref: '/schemas/types.yaml#/definitions/uint32'
-+        description:
-+          The input phase delay value.
-+      "aspeed,output-phase":
-+        $ref: '/schemas/types.yaml#/definitions/uint32'
-+        description:
-+          The output phase delay value.
-     required:
-       - compatible
-       - reg
--- 
-2.25.1
-
+Bartosz
