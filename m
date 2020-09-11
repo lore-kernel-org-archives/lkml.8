@@ -2,94 +2,107 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEB4C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F48C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0937F20855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0203D20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZQQgMBfS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEmj39s/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725831AbgIKJcc (ORCPT
+        id S1725838AbgIKJcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
+        Fri, 11 Sep 2020 05:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKJc3 (ORCPT
+        with ESMTP id S1725710AbgIKJcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:32:29 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B2DC061573;
-        Fri, 11 Sep 2020 02:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=byQIC6UgJWmseFC9nmbs7RXzJK3qdkILERsCoHCugWs=; b=ZQQgMBfS9f9fKGY16bSRLKCWq1
-        di1lXzV9qLQwRVhx8rKhL5OEqPI40hatWWKJuXZQQ5T3BNIVVheCCUg3aV2SQPk6kRDQsMzhE0I8N
-        3SjYXRORXxuErboIWUpQAq6vztkTGTcbHVENERQl6Thbgotic4jL/3dldPKzMixUYr/U7j3nGzx7R
-        g5BzVFC1Bk7IelEby7CMrUBxgygWVvshaWuR8O6aL2aZhEhSc7RYy2dsuvGddS9pIJ+QRUmjMm++x
-        vsqiYNJPEjwajyMaC+jG54on15/cFnP2rzHLO0VME7+N10ITOsT/Us4xi2tcBfSiLfNfvnADx5xd/
-        MmeLgxcg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGfPr-0002xq-6V; Fri, 11 Sep 2020 09:32:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59F22303DA0;
-        Fri, 11 Sep 2020 11:32:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4C4F62B06AFFE; Fri, 11 Sep 2020 11:32:21 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 11:32:21 +0200
-From:   peterz@infradead.org
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v6 1/9] kernel: Support TIF_SYSCALL_INTERCEPT flag
-Message-ID: <20200911093221.GD1362448@hirez.programming.kicks-ass.net>
-References: <20200904203147.2908430-1-krisman@collabora.com>
- <20200904203147.2908430-2-krisman@collabora.com>
+        Fri, 11 Sep 2020 05:32:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F81C061573;
+        Fri, 11 Sep 2020 02:32:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x14so10753480wrl.12;
+        Fri, 11 Sep 2020 02:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CsrRmGu+6XiPIdVXhYKE5lyNfi28y3xlKzmjKHfQkRA=;
+        b=PEmj39s/ZsZAeyZX0B/S5/n/Bq+2Y5/RAdT06JSEQ2vbNJ5DxWaPI5QhxoEHiLLggX
+         stq/TmDh9XL7dXNwEm+huhGy2TXLQV3LxbPqQu1fZoHtGFoowxZH6OrYNRyeQ4s3tRqf
+         UywJHMyd0y1Y2/4qAdcX1zagUUYJh6yMrVZdk9Vu/vo+UprdxRqQigFuAvk0oq6W/WfF
+         0LgYNg5fwiDXbUtlKnLMQSdJ0BFagNmBB788PimeBZOlHitWy5M6f765Y9vECcNV+AoB
+         LOjL9dX6HReUCsAqtwTcDRg5XGfx6/fxq1wEEPFqKTb0d0PRbH/kBoQDOQ79YRCP82/3
+         MGjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CsrRmGu+6XiPIdVXhYKE5lyNfi28y3xlKzmjKHfQkRA=;
+        b=QrMqwl8rXdaJxcKaoX/5z8ZpHoHvHF2dMamICt/jWvfYXOD73Ta3CeRiapiEQDA6KB
+         MoNvDgEHrPoqJTsQv0iE6f+nCiv3h8lb3ZARAifXOCu6xY/hl2cto/zMTM/YXjcp/Sjd
+         zuwF+8VBXLLqqSCHemVVmWXn+qKNAbUg+lXrRPWGbeAmQkgKztVjdGUo0jzF7mnVLt07
+         24aWWFvDchfLLQFWLMONdyO+XJPvbdMDo2u/IpiuK5Av0M63Rne6G+DlYBmsK9oxOkdt
+         KHzKxgIz190PnRhb0bVSINtmpOuiG0rW3xdWtF24g+oUvLaq5lXxIIcIZkmsacOkwsOr
+         c32w==
+X-Gm-Message-State: AOAM532TMfjt9m9WAVYBjJVmuQ5P3tpTtUB5J3Yv4al9L5KCo0QncQG1
+        5wC2dVybsTTkSMXKkfDRGYOuTYl68Xo=
+X-Google-Smtp-Source: ABdhPJx94cOqiey+TN1jN2RMwjAGzGD8jswZAd70U4OC4xyl3LwXfgnAkv/hkwv/QieAcb3cbEFQFw==
+X-Received: by 2002:a5d:43cf:: with SMTP id v15mr1232470wrr.149.1599816763712;
+        Fri, 11 Sep 2020 02:32:43 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id b8sm3101918wmh.48.2020.09.11.02.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:32:43 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/24] Many patches
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <ab12151d-6951-2a36-2fc6-ea7eed538c45@gmail.com>
+Date:   Fri, 11 Sep 2020 11:32:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904203147.2908430-2-krisman@collabora.com>
+In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:31:39PM -0400, Gabriel Krisman Bertazi wrote:
-> +static inline void __set_tsk_syscall_intercept(struct task_struct *tsk,
-> +					   unsigned int type)
-> +{
-> +	tsk->syscall_intercept |= type;
-> +
-> +	if (tsk->syscall_intercept)
-> +		set_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT);
-> +}
+Hi Alex,
 
-Did the above want to be:
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Hi Michael,
+> 
+> I have a lot of patches here.
+> Some of them are trivial, and some of them are not.
+> I have them sorted by their contents more or less, 
 
-	unsigned int old = tsk->syscall_intercept;
-	tsk->syscall_intercept |= type;
-	if (!old)
-		set_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT)
+Yes, thanks for the sorting!
 
-?
+> but if you
+> prefer completely unrelated email threads for completely unrelated
+> patches, please tell me.
 
-> +static inline void __clear_tsk_syscall_intercept(struct task_struct *tsk,
-> +					     unsigned int type)
-> +{
-> +	tsk->syscall_intercept &= ~type;
-> +
-> +	if (tsk->syscall_intercept == 0)
-> +		clear_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT);
-> +}
+The sorting was sufficient for me. Thanks for all of the patches!
+
+Cheers,
+
+Michael
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
