@@ -2,135 +2,188 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B64C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE15E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2E521D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPkzFbHn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lvBhg035"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725776AbgIKMFr (ORCPT
+        id S1725868AbgIKMGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:05:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58734 "EHLO
+        Fri, 11 Sep 2020 08:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbgIKMEo (ORCPT
+        with ESMTP id S1725861AbgIKMFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:04:44 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCA1C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:04:43 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k18so4534727wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WLNDPPEnv/63zSa4lOCllaWXboquu+chiB81j8h0QmQ=;
-        b=wPkzFbHnj5oK8khkVlZrovmxVc3N0jKG8UJiHvJEArwxYiaYxNjIfoeq5/IHLf5qaP
-         OhICu2AqBmKOfS1SUnRVGx46RHk+IeWXAFmZvX++9kNKF2uoc4kgD4LrEVbU6FLo5TC6
-         DWqmnzOjNiecfE0ip/Uw4mll8WVWQZtl2dOPCdyNQzt48QvHYepxYPTFe80/EFDleGi4
-         zBf8jcACvM5RQcWDX3+2pVffhJbx9OJJBq2XyhpAnR5RadwcHS8u3W5SfqrocxdrYYke
-         wR+/5/IuVvrve2v+oSMwdYC9OiAOa704Ab7OwL8dSuuoQ8JR0ope08y5UfF0K+bRiX0R
-         jQlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WLNDPPEnv/63zSa4lOCllaWXboquu+chiB81j8h0QmQ=;
-        b=OMW0BlwZz9EBzShs0BiofvRCIYAVKOvUEbuTt7tubInPW9C+mKnCLwNoJVJhAt8gzx
-         JvIwb/3jHuYJz0ZLatjm4YB2QNxhE2+K3Xv/3PqJOK/WA9yM2qD2MZvFV0psuaD8DDgf
-         ajzgTBsKHYwz9P4+HVgdTr7HZyVnf0utU9b+LNwb3rncowCDh7wrygSf/jbwDfwxRWuv
-         CU2WkYA9GCv+dp/8iKQqSPvPVx7rxpQt2riik+VhWeof40VVC3WeVZSCNtDMKtfHwCIM
-         qeGW/Kv9e9Sc/attSlfs3PSko6dL/wPNVJ6GVlPA65kCHLV1Xp6ICw2UQhWgdYgRc6Oi
-         g55g==
-X-Gm-Message-State: AOAM531lP4FRKPggyun3dUuzikN+y9tjt1R54zOYzu8Ai5leDgH0FXXO
-        VmkWYRni4mbkxlku4g5s5VX/JA==
-X-Google-Smtp-Source: ABdhPJyPpYjxV2wUTl6HJw2UQBsdoRmSWYJN9cVSkopJDuPUTJ0ZmeC0qXBuP+stDN58Dye7RArQKw==
-X-Received: by 2002:a1c:bb88:: with SMTP id l130mr1925793wmf.143.1599825882052;
-        Fri, 11 Sep 2020 05:04:42 -0700 (PDT)
-Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.googlemail.com with ESMTPSA id o4sm4073407wru.55.2020.09.11.05.04.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Sep 2020 05:04:41 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: switch to simpler IDA interface
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200908132755.11944-1-brgl@bgdev.pl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <e6dc9989-8fff-afdb-654b-c23e9cf12bc5@linaro.org>
-Date:   Fri, 11 Sep 2020 13:04:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 11 Sep 2020 08:05:45 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0F6C061573;
+        Fri, 11 Sep 2020 05:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gBGMeo7Z3bILVQBNCXRTkaqZ/cUvm3/3WjMP2Kmt4aI=; b=lvBhg035LfgK50qipLzWAXiaX0
+        viGTEQnKY+3TIxHChDreQqCvYFz7cDDmFm085DouN0NX6FSHjr+NIss4N8Ny2KsIdApPgRptpDY75
+        CLIaFRCeDZfa9ttMBsGM13eOrxYYjrJ7BXhgP0U7vPC5QB9+Vh2g+2a0+2DhLI2EbrDL9kRPmiqyZ
+        mmp2d2Z8VjPke1++KM7nPqPAb20/+qT9X/uLvSemyMlpr82jRxLxC1CJVhn+9FCm/oUEjYWR/Jb9U
+        wBvszZFxMl5cWaBETRk1CuaGUmLCeGm785Y9qpD6N9vRmtr0gvDGLf9RNwhpk70ZwsoGyovwwICwZ
+        gPbB7X8Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGho1-0004T6-OM; Fri, 11 Sep 2020 12:05:29 +0000
+Date:   Fri, 11 Sep 2020 13:05:29 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V4] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200911120529.GZ6583@casper.infradead.org>
+References: <20200821123306.1658495-1-yukuai3@huawei.com>
+ <20200821124424.GQ17456@casper.infradead.org>
+ <7fb4bb5a-adc7-5914-3aae-179dd8f3adb1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908132755.11944-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7fb4bb5a-adc7-5914-3aae-179dd8f3adb1@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 11, 2020 at 04:27:08PM +0800, yukuai (C) wrote:
+> Since your THP iomap patches were reviewed, I made some modifications
+> based on these patches.
 
+Thanks!  This looks good to me!
 
-On 08/09/2020 14:27, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We don't need to specify any ranges when allocating IDs so we can switch
-> to ida_alloc() and ida_free() instead of the ida_simple_ counterparts.
-> 
-> ida_simple_get(ida, 0, 0, gfp) is equivalent to
-> ida_alloc_range(ida, 0, UINT_MAX, gfp) which is equivalent to
-> ida_alloc(ida, gfp). Note: IDR will never actually allocate an ID
-> larger than INT_MAX.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->   drivers/nvmem/core.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+> +static void
+> +iomap_set_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	struct inode *inode = page->mapping->host;
+> +	unsigned int blocks_per_page = i_blocks_per_page(inode, page);
 
-thanks Applied!
+I might call this nr_blocks.
 
---srini
+> +	unsigned int first = (off >> inode->i_blkbits) + blocks_per_page;
+> +	unsigned int last = ((off + len - 1) >> inode->i_blkbits) +
+> blocks_per_page;
+> +	unsigned long flags;
+> +	struct iomap_page *iop;
+> +
+> +	if (PageError(page))
+> +		return;
+
+I think this is wrong.  If PageError is set then we've seen an I/O error
+on this page (today either a read or a write, although I intend to make
+that for writes only soon).  But I don't see a reason for declining to
+make a page dirty if we've seen an eror -- indeed, that seems likely to
+lead to further data loss as we then won't even try to write parts of
+the page back to storage.
+
+> +	if (len)
+> +		iomap_set_page_dirty(page);
+> +
+> +	if (!page_has_private(page))
+> +		return;
+> +
+> +	iop = to_iomap_page(page);
+
+We usually do the last three lines as:
+
+	iop = to_iomap_page(page);
+	if (!iop)
+		return;
+
+(actually, we usually call to_iomap_page() at the start of the function
+and then check it here)
+
+> +static void
+> +iomap_clear_range_dirty(struct page *page, unsigned int off,
+> +		unsigned int len)
+> +{
+> +	struct inode *inode = page->mapping->host;
+> +	unsigned int blocks_per_page = i_blocks_per_page(inode, page);
+> +	unsigned int first = (off >> inode->i_blkbits) + blocks_per_page;
+> +	unsigned int last = ((off + len - 1) >> inode->i_blkbits) +
+> blocks_per_page;
+> +	unsigned long flags;
+> +	struct iomap_page *iop;
+> +
+> +	if (PageError(page))
+> +		return;
+
+It does make sense to avoid clearing the dirty state of the page here;
+if the write failed, then the page is still dirty, and it'd be nice to
+retry writes until they succeed.  So if you take out the PageError in
+set_range_dirty, don't take it out here!
+
+> +	if (!page_has_private(page))
+> +		return;
+> +
+> +	iop = to_iomap_page(page);
+> +	spin_lock_irqsave(&iop->state_lock, flags);
+> +	bitmap_clear(iop->state, first, last - first + 1);
+> +	spin_unlock_irqrestore(&iop->state_lock, flags);
+> +}
+> +
+>  static void
+>  iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+>  {
+> @@ -148,11 +201,11 @@ iomap_iop_set_range_uptodate(struct page *page,
+> unsigned off, unsigned len)
+>  	unsigned last = (off + len - 1) >> inode->i_blkbits;
+>  	unsigned long flags;
 > 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 6cd3edb2eaf6..cd332d711dd1 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -321,7 +321,7 @@ static void nvmem_release(struct device *dev)
->   {
->   	struct nvmem_device *nvmem = to_nvmem_device(dev);
->   
-> -	ida_simple_remove(&nvmem_ida, nvmem->id);
-> +	ida_free(&nvmem_ida, nvmem->id);
->   	gpiod_put(nvmem->wp_gpio);
->   	kfree(nvmem);
->   }
-> @@ -596,7 +596,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	if (!nvmem)
->   		return ERR_PTR(-ENOMEM);
->   
-> -	rval  = ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
-> +	rval  = ida_alloc(&nvmem_ida, GFP_KERNEL);
->   	if (rval < 0) {
->   		kfree(nvmem);
->   		return ERR_PTR(rval);
-> @@ -608,7 +608,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
->   						    GPIOD_OUT_HIGH);
->   	if (IS_ERR(nvmem->wp_gpio)) {
-> -		ida_simple_remove(&nvmem_ida, nvmem->id);
-> +		ida_free(&nvmem_ida, nvmem->id);
->   		rval = PTR_ERR(nvmem->wp_gpio);
->   		kfree(nvmem);
->   		return ERR_PTR(rval);
+> -	spin_lock_irqsave(&iop->uptodate_lock, flags);
+> -	bitmap_set(iop->uptodate, first, last - first + 1);
+> -	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
+> +	spin_lock_irqsave(&iop->state_lock, flags);
+> +	bitmap_set(iop->state, first, last - first + 1);
+> +	if (bitmap_full(iop->state, i_blocks_per_page(inode, page)))
+>  		SetPageUptodate(page);
+> -	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+> +	spin_unlock_irqrestore(&iop->state_lock, flags);
+>  }
 > 
+>  static void
+> @@ -445,7 +498,7 @@ iomap_is_partially_uptodate(struct page *page, unsigned
+> long from,
+> 
+>  	if (iop) {
+>  		for (i = first; i <= last; i++)
+> -			if (!test_bit(i, iop->uptodate))
+> +			if (!test_bit(i, iop->state))
+>  				return 0;
+>  		return 1;
+>  	}
+> @@ -683,7 +736,7 @@ static size_t __iomap_write_end(struct inode *inode,
+> loff_t pos, size_t len,
+>  	if (unlikely(copied < len && !PageUptodate(page)))
+>  		return 0;
+>  	iomap_set_range_uptodate(page, offset_in_page(pos), len);
+> -	iomap_set_page_dirty(page);
+> +	iomap_set_range_dirty(page, offset_in_page(pos), len);
+
+I _think_ the call to set_range_uptodate here is now unnecessary.  The
+blocks should already have been set uptodate in write_begin.  But please
+check!
+
+> @@ -1007,7 +1059,7 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault *vmf,
+> const struct iomap_ops *ops)
+>  {
+>  	struct page *page = vmf->page;
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+> -	unsigned long length;
+> +	unsigned int length, dirty_bits;
+
+This is dirty_bytes, surely?
+
