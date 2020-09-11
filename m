@@ -2,229 +2,251 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28203C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6551DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC09C20829
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223B9207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:52:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ROv4FYNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgIKCwF (ORCPT
+        id S1725843AbgIKCwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 22:52:05 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:51311 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725613AbgIKCwC (ORCPT
+        Thu, 10 Sep 2020 22:52:18 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:44166 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgIKCwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 22:52:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0U8YF63K_1599792714;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U8YF63K_1599792714)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 11 Sep 2020 10:51:55 +0800
-Subject: Re: [PATCH v18 00/32] per memcg lru_lock: reviews
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
-        shy828301@gmail.com, vbabka@suse.cz, minchan@kernel.org, cai@lca.pw
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
- <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
- <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
- <alpine.LSU.2.11.2009081640070.7256@eggly.anvils>
- <61a42a87-eec9-e300-f710-992756f70de6@linux.alibaba.com>
- <alpine.LSU.2.11.2009091524260.10087@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <855ad6ee-dba4-9729-78bd-23e392905cf6@linux.alibaba.com>
-Date:   Fri, 11 Sep 2020 10:50:56 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 10 Sep 2020 22:52:17 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08B2q61C091599;
+        Thu, 10 Sep 2020 21:52:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599792726;
+        bh=Esp+eXvFOmAKyDr7g0v32QFXLOHZWUXkVmwhXwV7LWY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ROv4FYNZkayiDv6/IpXMgFfgdH51CoLRkdJ6JYdFjR1mERNztL4dOC7jM4NaZmbgq
+         QNB5toYd7epaVE13PHsl9Nglat5l/iPcX1mRUnbAQMcQsVVnVU9yLgdT2yGAdGMlaW
+         wYF9chZE3IlKgu302sreRD/HaDuz4WkCRcrl70eo=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08B2q6mw026129
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 21:52:06 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 21:52:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 21:52:06 -0500
+Received: from [10.250.66.47] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08B2q47k122740;
+        Thu, 10 Sep 2020 21:52:04 -0500
+Subject: Re: [v4,3/4] reset-controller: ti: introduce a new reset handler
+To:     Crystal Guo <crystal.guo@mediatek.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+CC:     srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
+        <seiya.wang@mediatek.com>,
+        =?UTF-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= 
+        <stanley.chu@mediatek.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <Yingjoe.Chen@mediatek.com>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?WW9uZyBMaWFuZyAo5qKB5YuHKQ==?= <Yong.Liang@mediatek.com>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-4-crystal.guo@mediatek.com>
+ <3a5decee-5f31-e27d-a120-1f835241a87c@ti.com>
+ <1599620279.14806.18.camel@mhfsdcap03>
+ <096362e9-dee8-4e7a-2518-47328068c2fd@ti.com>
+ <1599792140.14806.22.camel@mhfsdcap03>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <9d72aaef-49fe-ebb6-215d-05ad3ab27af4@ti.com>
+Date:   Thu, 10 Sep 2020 21:52:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2009091524260.10087@eggly.anvils>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1599792140.14806.22.camel@mhfsdcap03>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/9/10 上午7:16, Hugh Dickins 写道:
-> On Wed, 9 Sep 2020, Alex Shi wrote:
->> 在 2020/9/9 上午7:41, Hugh Dickins 写道:
+On 9/10/20 9:42 PM, Crystal Guo wrote:
+> On Wed, 2020-09-09 at 23:39 +0800, Suman Anna wrote:
+>> On 9/8/20 9:57 PM, Crystal Guo wrote:
+>>> On Thu, 2020-09-03 at 07:40 +0800, Suman Anna wrote:
+>>>> Hi Crystal,
+>>>>
+>>>> On 8/16/20 10:03 PM, Crystal Guo wrote:
+>>>>> Introduce ti_syscon_reset() to integrate assert and deassert together.
+>>>>> If some modules need do serialized assert and deassert operations
+>>>>> to reset itself, reset_control_reset can be called for convenience.
+>>>>
+>>>> There are multiple changes in this same patch. I think you should split this
+>>>> functionality away from the change for the regmap_update_bits() to
+>>>> regmap_write_bits(), similar to what you have done in your v2 Patch 4.
+>>>>
 >>>
->>> [PATCH v18 05/32] mm/thp: remove code path which never got into
->>> This is a good simplification, but I see no sign that you understand
->>> why it's valid: it relies on lru_add_page_tail() being called while
->>> head refcount is frozen to 0: we would not get this far if someone
->>> else holds a reference to the THP - which they must hold if they have
->>> isolated the page from its lru (and that's true before or after your
->>> per-memcg changes - but even truer after those changes, since PageLRU
->>> can then be flipped without lru_lock at any instant): please explain
->>> something of this in the commit message.
+>>> Thanks for your suggestion.
+>>> I will split this patch in the next version.
+>>>
+>>>>>
+>>>>> Such as reset-qcom-aoss.c, it integrates assert and deassert together
+>>>>> by 'reset' method. MTK Socs also need this method to perform reset.
+>>>>>
+>>>>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+>>>>> ---
+>>>>>  drivers/reset/reset-ti-syscon.c | 26 ++++++++++++++++++++++++--
+>>>>>  1 file changed, 24 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/reset/reset-ti-syscon.c b/drivers/reset/reset-ti-syscon.c
+>>>>> index a2635c21db7f..08289342f9af 100644
+>>>>> --- a/drivers/reset/reset-ti-syscon.c
+>>>>> +++ b/drivers/reset/reset-ti-syscon.c
+>>>>> @@ -15,6 +15,7 @@
+>>>>>   * GNU General Public License for more details.
+>>>>>   */
+>>>>>  
+>>>>> +#include <linux/delay.h>
+>>>>>  #include <linux/mfd/syscon.h>
+>>>>>  #include <linux/module.h>
+>>>>>  #include <linux/of.h>
+>>>>> @@ -56,6 +57,7 @@ struct ti_syscon_reset_data {
+>>>>>  	struct regmap *regmap;
+>>>>>  	struct ti_syscon_reset_control *controls;
+>>>>>  	unsigned int nr_controls;
+>>>>> +	unsigned int reset_duration_us;
+>>>>>  };
+>>>>>  
+>>>>>  #define to_ti_syscon_reset_data(rcdev)	\
+>>>>> @@ -89,7 +91,7 @@ static int ti_syscon_reset_assert(struct reset_controller_dev *rcdev,
+>>>>>  	mask = BIT(control->assert_bit);
+>>>>>  	value = (control->flags & ASSERT_SET) ? mask : 0x0;
+>>>>>  
+>>>>> -	return regmap_update_bits(data->regmap, control->assert_offset, mask, value);
+>>>>> +	return regmap_write_bits(data->regmap, control->assert_offset, mask, value);
+>>>>>  }
+>>>>>  
+>>>>>  /**
+>>>>> @@ -120,7 +122,7 @@ static int ti_syscon_reset_deassert(struct reset_controller_dev *rcdev,
+>>>>>  	mask = BIT(control->deassert_bit);
+>>>>>  	value = (control->flags & DEASSERT_SET) ? mask : 0x0;
+>>>>>  
+>>>>> -	return regmap_update_bits(data->regmap, control->deassert_offset, mask, value);
+>>>>> +	return regmap_write_bits(data->regmap, control->deassert_offset, mask, value);
+>>>>>  }
+>>>>>  
+>>>>>  /**
+>>>>> @@ -158,9 +160,26 @@ static int ti_syscon_reset_status(struct reset_controller_dev *rcdev,
+>>>>>  		!(control->flags & STATUS_SET);
+>>>>>  }
+>>>>>  
+>>>>> +static int ti_syscon_reset(struct reset_controller_dev *rcdev,
+>>>>> +				  unsigned long id)
+>>>>> +{
+>>>>> +	struct ti_syscon_reset_data *data = to_ti_syscon_reset_data(rcdev);
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	ret = ti_syscon_reset_assert(rcdev, id);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	if (data->reset_duration_us)
+>>>>> +		usleep_range(data->reset_duration_us, data->reset_duration_us * 2);
+>>>>> +
+>>>>> +	return ti_syscon_reset_deassert(rcdev, id);
+>>>>
+>>>> I echo Philipp's comments [1] from your original v1 series about this. We don't
+>>>> need a property to distinguish this, but you could add a flag using match data
+>>>> and Mediatek compatible, and use that within this function, or optionally set
+>>>> this ops based on compatible (whatever is preferred by Philipp).
+>>>>
+>>>> regards
+>>>> Suman
+>>>>
+>>>> [1] https://patchwork.kernel.org/comment/23519193/
+>>>>
+>>> Hi Suman, Philipp
+>>>
+>>> Which method would you recommend more?
+>>> 1. like v2 patch, but assign the flag "data->assert_deassert_together"
+>>> directly (maybe rename "assert_deassert_together" to
+>>> "reset_op_available")
+>>>
+>>> 2. use Mediatek compatible to decide the reset handler available or not.
 >>
->> Is the following commit log better?
+>> I would go with this option. Anyway, I think you might have to add the reset SoC
+>> data as well, based on Rob's comment on the binding.
 >>
->>     split_huge_page() will never call on a page which isn't on lru list, so
->>     this code never got a chance to run, and should not be run, to add tail
->>     pages on a lru list which head page isn't there.
+>> regards
+>> Suman
+> 
+> 
+> Thanks for your suggestions
+> I will add the following changes in the next version, 
+> please correct me if there is any misunderstanding.
+> 1). revert ti-syscon-reset.txt add a new mediatek reset binding doc.
+> 2). split the patch [v4,3/4] with the change for the
+> regmap_update_bits() to regmap_write_bits() and the change to integrate
+> assert and deassert together.
+> 3). add the reset SoC data, which contains the flag "reset_op_available"
+> to decide the reset handler available or not.
+
+You would also need to add your SoC-specific data equivalent of the current
+ti,reset-bits in your infra node. Please see Rob's comments on patch 2. Also,
+your new Mediatek binding should be in YAML format.
+
+regards
+Suman
+
+> 4). separate the dts patch from this patch sets
+> 
+>>>
+>>> Thanks
+>>> Crystal
+>>>
+>>>>> +}
+>>>>> +
+>>>>>  static const struct reset_control_ops ti_syscon_reset_ops = {
+>>>>>  	.assert		= ti_syscon_reset_assert,
+>>>>>  	.deassert	= ti_syscon_reset_deassert,
+>>>>> +	.reset		= ti_syscon_reset,
+>>>>>  	.status		= ti_syscon_reset_status,
+>>>>>  };
+>>>>>  
+>>>>> @@ -204,6 +223,9 @@ static int ti_syscon_reset_probe(struct platform_device *pdev)
+>>>>>  		controls[i].flags = be32_to_cpup(list++);
+>>>>>  	}
+>>>>>  
+>>>>> +	of_property_read_u32(pdev->dev.of_node,	"reset-duration-us",
+>>>>> +				&data->reset_duration_us);
+>>>>> +
+>>>>>  	data->rcdev.ops = &ti_syscon_reset_ops;
+>>>>>  	data->rcdev.owner = THIS_MODULE;
+>>>>>  	data->rcdev.of_node = np;
+>>>>>
+>>>>
+>>>
 >>
->>     Hugh Dickins' mentioned:
->>     The path should never be called since lru_add_page_tail() being called
->>     while head refcount is frozen to 0: we would not get this far if someone
->>     else holds a reference to the THP - which they must hold if they have
->>     isolated the page from its lru.
->>
->>     Although the bug was never triggered, it'better be removed for code
->>     correctness, and add a warn for unexpected calling.
-> 
-> Not much better, no.  split_huge_page() can easily be called for a page
-> which is not on the lru list at the time, 
-
-Hi Hugh,
-
-Thanks for comments!
-
-There are some discussion on this point a couple of weeks ago,
-https://lkml.org/lkml/2020/7/9/760
-
-Matthew Wilcox and Kirill have the following comments,
-> I don't understand how we get to split_huge_page() with a page that's
-> not on an LRU list.  Both anonymous and page cache pages should be on
-> an LRU list.  What am I missing?
-
-Right, and it's never got removed from LRU during the split. The tail
-pages have to be added to LRU because they now separate from the tail
-page.
-
--- 
- Kirill A. Shutemov
-
-> and I don't know what was the
-> bug which was never triggered.  
-
-So the only path to the removed part should be a bug, like  sth here,
-https://lkml.org/lkml/2020/7/10/118
-or
-https://lkml.org/lkml/2020/7/10/972
-
-> Stick with whatever text you end up with
-> for the combination of 05/32 and 18/32, and I'll rewrite it after.
-
-I am not object to merge them into one, I just don't know how to say
-clear about 2 patches in commit log. As patch 18, TestClearPageLRU
-add the incorrect posibility of remove lru bit during split, that's
-the reason of code path rewrite and a WARN there.
-
-Thanks
-Alex
-> 
->>> [PATCH v18 06/32] mm/thp: narrow lru locking
->>> Why? What part does this play in the series? "narrow lru locking" can
->>> also be described as "widen page cache locking": 
->>
->> Uh, the page cache locking isn't widen, it's still on the old place.
-> 
-> I'm not sure if you're joking there. Perhaps just a misunderstanding.
-> 
-> Yes, patch 06/32 does not touch the xa_lock(&mapping->i_pages) and
-> xa_lock(&swap_cache->i_pages) lines (odd how we've arrived at two of
-> those, but please do not get into cleaning it up now); but it removes
-> the spin_lock_irqsave(&pgdata->lru_lock, flags) which used to come
-> before them, and inserts a spin_lock(&pgdat->lru_lock) after them.
-> 
-> You call that narrowing the lru locking, okay, but I see it as also
-> pushing the page cache locking outwards: before this patch, page cache
-> lock was taken inside lru_lock; after this patch, page cache lock is
-> taken outside lru_lock.  If you cannot see that, then I think you
-> should not have touched this code at all; but it's what we have
-> been testing, and I think we should go forward with it.
-> 
->>> But I wish you could give some reason for it in the commit message!
->>
->> It's a head scratch task. Would you like to tell me what's detailed info 
->> should be there? Thanks!
-> 
-> So, you don't know why you did it either: then it will be hard to
-> justify.  I guess I'll have to write something for it later.  I'm
-> strongly tempted just to drop the patch, but expect it will become
-> useful later, for using lock_page_memcg() before getting lru_lock.
 > 
 
-I thought the xa_lock and lru_lock relationship was described clear
-in the commit log, and still no idea of the move_lock in the chain.
-Please refill them for what I overlooked.
-Thanks!
-
->>> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->>> Is that correct? Or Wei Yang suggested some part of it perhaps?
->>
->> Yes, we talked a lot to confirm the locking change is safe.
-> 
-> Okay, but the patch was written by you, and sent by you to Andrew:
-> that is not a case for "Signed-off-by: Someone Else".
-> 
-
-Ok. let's remove his signed-off.
-
->>> [PATCH v18 27/32] mm/swap.c: optimizing __pagevec_lru_add lru_lock
->>> Could we please drop this one for the moment? And come back to it later
->>> when the basic series is safely in.  It's a good idea to try sorting
->>> together those pages which come under the same lock (though my guess is
->>> that they naturally gather themselves together quite well already); but
->>> I'm not happy adding 360 bytes to the kernel stack here (and that in
->>> addition to 192 bytes of horrid pseudo-vma in the shmem swapin case),
->>> though that could be avoided by making it per-cpu. But I hope there's
->>> a simpler way of doing it, as efficient, but also useful for the other
->>> pagevec operations here: perhaps scanning the pagevec for same page->
->>> mem_cgroup (and flags node bits), NULLing entries as they are done.
->>> Another, easily fixed, minor defect in this patch: if I'm reading it
->>> right, it reverses the order in which the pages are put on the lru?
->>
->> this patch could give about 10+% performance gain on my multiple memcg
->> readtwice testing. fairness locking cost the performance much.
-> 
-> Good to know, should have been mentioned.  s/fairness/Repeated/
-> 
-> But what was the gain or loss on your multiple memcg readtwice
-> testing without this patch, compared against node-only lru_lock?
-> The 80% gain mentioned before, I presume.  So this further
-> optimization can wait until the rest is solid.
-
-the gain based on the patch 26.
-
-> 
->>
->> I also tried per cpu solution but that cause much trouble of per cpu func
->> things, and looks no benefit except a bit struct size of stack, so if 
->> stack size still fine. May we could use the solution and improve it better.
->> like, functionlize, fix the reverse issue etc.
-> 
-> I don't know how important the stack depth consideration is nowadays:
-> I still care, maybe others don't, since VMAP_STACK became an option.
-> 
-> Yes, please fix the reversal (if I was right on that); and I expect
-> you could use a singly linked list instead of the double.
-
-single linked list is more saving, but do we have to reverse walking to seek
-the head or tail for correct sequence?
-
-> 
-> But I'll look for an alternative - later, once the urgent stuff
-> is completed - and leave the acks on this patch to others.
-
-Ok, looking forward for your new solution!
-
-Thanks
-Alex
