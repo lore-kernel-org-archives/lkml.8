@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C609C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97561C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE7F22272
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536A920731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599831832;
-	bh=WrKfuh3yAbeARMYEHR1js9UP1lzjuhWNQKJKsRGMwbg=;
+	s=default; t=1599831942;
+	bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZeemT0X7zy2hgJo/cDdn8hXDdIjJYQdPt2pjDExHGVEwzqUFyc9oe/crY4cwvQVE+
-	 mOkuQbgM3mjj6rWK9cXKOdepDQzPi9s91H8bot5XPZaDI9RUWkdUbZ9cqHbpl7JnKH
-	 CPulCq4FkXpWRNkS/8Z3p9Y8UqPL3lhb5m0f6exI=
+	b=YNTdhEF7G4VgjawFIFKseZyOEf//4H116rUtV/YdHJU/L0SHG+88lkPIL5TSMzoAN
+	 CJKCklPlJ2NHbvysxz4wiZ/Y04g5N8506CU4s5qHVoJuz4zoKjfmz8PZKbxfbrwQgO
+	 2SeYzuZOismrIYBwRHPgC9/K50FlL/YScTmTSwec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725778AbgIKNnd (ORCPT
+        id S1725770AbgIKNpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:05:44 -0400
+        id S1726126AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:12:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 094EE22244;
-        Fri, 11 Sep 2020 12:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2549522464;
+        Fri, 11 Sep 2020 13:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829067;
-        bh=WrKfuh3yAbeARMYEHR1js9UP1lzjuhWNQKJKsRGMwbg=;
+        s=default; t=1599829243;
+        bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pirSo71w2yZIoqOUcuLqses2fxB0OqL2CPPn3InnLvm4kIUyeXsMfep0qDYEUpr/v
-         CoffsopHQvCyqLtOzq5L6PqjCmX2tv8jzLHGqQLr+i/q8ScJ8JmoqqO7qAvTxzQLiR
-         6NRHosyI5FMsoaD3FgqaDjH9K2RsOVQmK/NUooQM=
+        b=XQ0qEljWv281rC3SnjeFbFnQZWC5pKxjQlBfjfXxP88dJrUxMog/vVdADrEqu9CRM
+         Fe6v81F7VNBEh6v89msSdZGoEXR+oESnl4AMFzHmmAC9r8EZIpRLN6t8+AYV5e1MRz
+         XtlimNAX3O8wuLIck3AGYlerAI052xhYRCBEglu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.9 53/71] KVM: arm64: Defer guest entry when an asynchronous exception is pending
-Date:   Fri, 11 Sep 2020 14:46:37 +0200
-Message-Id: <20200911122507.555558810@linuxfoundation.org>
+        stable@vger.kernel.org, Kamil Lorenc <kamil@re-ws.pl>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 4/8] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+Date:   Fri, 11 Sep 2020 14:54:51 +0200
+Message-Id: <20200911125421.912696140@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
-References: <20200911122504.928931589@linuxfoundation.org>
+In-Reply-To: <20200911125421.695645838@linuxfoundation.org>
+References: <20200911125421.695645838@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,71 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Kamil Lorenc <kamil@re-ws.pl>
 
-commit 5dcd0fdbb492d49dac6bf21c436dfcb5ded0a895 upstream.
+[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
 
-SError that occur during world-switch's entry to the guest will be
-accounted to the guest, as the exception is masked until we enter the
-guest... but we want to attribute the SError as precisely as possible.
+Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
 
-Reading DISR_EL1 before guest entry requires free registers, and using
-ESB+DISR_EL1 to consume and read back the ESR would leave KVM holding
-a host SError... We would rather leave the SError pending and let the
-host take it once we exit world-switch. To do this, we need to defer
-guest-entry if an SError is pending.
-
-Read the ISR to see if SError (or an IRQ) is pending. If so fake an
-exit. Place this check between __guest_enter()'s save of the host
-registers, and restore of the guest's. SError that occur between
-here and the eret into the guest must have affected the guest's
-registers, which we can naturally attribute to the guest.
-
-The dsb is needed to ensure any previous writes have been done before
-we read ISR_EL1. On systems without the v8.2 RAS extensions this
-doesn't give us anything as we can't contain errors, and the ESR bits
-to describe the severity are all implementation-defined. Replace
-this with a nop for these systems.
-
-v4.9-backport: as this kernel version doesn't have the RAS support at
-all, remove the RAS alternative.
-
-Cc: stable@vger.kernel.org # v4.9
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-[ James: Removed v8.2 RAS related barriers ]
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kvm/hyp/entry.S |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/usb/dm9601.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -17,6 +17,7 @@
+--- a/drivers/net/usb/dm9601.c
++++ b/drivers/net/usb/dm9601.c
+@@ -625,6 +625,10 @@ static const struct usb_device_id produc
+ 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
+ 	 .driver_info = (unsigned long)&dm9601_info,
+ 	},
++	{
++	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
++	 .driver_info = (unsigned long)&dm9601_info,
++	},
+ 	{},			// END
+ };
  
- #include <linux/linkage.h>
- 
-+#include <asm/alternative.h>
- #include <asm/asm-offsets.h>
- #include <asm/assembler.h>
- #include <asm/fpsimdmacros.h>
-@@ -62,6 +63,15 @@ ENTRY(__guest_enter)
- 	// Store the host regs
- 	save_callee_saved_regs x1
- 
-+	// Now the host state is stored if we have a pending RAS SError it must
-+	// affect the host. If any asynchronous exception is pending we defer
-+	// the guest entry.
-+	mrs	x1, isr_el1
-+	cbz	x1,  1f
-+	mov	x0, #ARM_EXCEPTION_IRQ
-+	ret
-+
-+1:
- 	add	x18, x0, #VCPU_CONTEXT
- 
- 	// Restore guest regs x0-x17
 
 
