@@ -2,142 +2,182 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D98C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD91C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D9B2222D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="UIOFBFd2"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE2222240
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599829093;
+	bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WizEboSmaYvjNHcItWvSCE4b6rQVrndw/6FD9KqmV6RW/LA3CtMUfCVO5XCl7MKTZ
+	 cfydXpP0e97a6cPro6vsc69GkB/+6SAlcMGtAo0wnxvE8QuEpPJHRv0epXNTytPH4A
+	 CDy4qoPEqie92u8oNc/sOB5CJKJukHxw2UzNzY0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgIKM4e (ORCPT
+        id S1726092AbgIKM53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:56:34 -0400
-Received: from mx01-sz.bfs.de ([194.94.69.67]:40956 "EHLO mx01-sz.bfs.de"
+        Fri, 11 Sep 2020 08:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgIKMvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:51:20 -0400
-Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
-        by mx01-sz.bfs.de (Postfix) with ESMTPS id E6ECB2073B;
-        Fri, 11 Sep 2020 14:50:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1599828647;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=82BtCr1BIfXgeDl5GXv1rw/fP+DslEOiz8/6ePx0tO8=;
-        b=UIOFBFd2nSIIZr+VOEBljBZTefEvhs6PwXX/6SIywkqd/bhD/7EQBYIv0cpz8R/oRm8vGX
-        q0OvHXUtMM0wO6vyPBXyurUwVwykVNIlYydM/jOpiRkXsED374eHWsO5QcPBiYrQmfvK3v
-        wwbP/Emr0Oi3j5qDbu5Fx3bYV2FTtvqNd+/1vi8FfbvuNUOmGz2ciAA84qktoP/aZhT8S7
-        21ZMja7QhVX4TioSvXw7ihiJYgvhp2wzIQu7tZMdn6AJcnJlsS4Sb9/2UAATHaOdgfdxPS
-        jA9hoG3kMuKV5V5Si5NtO6OdbFdppSVnqEX8XpEhwuEBhCdiCYwUMijSqDNpiA==
-Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
- (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 11 Sep
- 2020 14:50:47 +0200
-Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
- SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
- 15.01.2044.004; Fri, 11 Sep 2020 14:50:47 +0200
-From:   Walter Harms <wharms@bfs.de>
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>,
-        "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>
-CC:     "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: AW: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size
- (instead of hardcoding macro name)
-Thread-Topic: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size
- (instead of hardcoding macro name)
-Thread-Index: AQHWh7eCoX2qxL9OEkaYnOmAJnp5MKljZJ9j
-Date:   Fri, 11 Sep 2020 12:50:47 +0000
-Message-ID: <00ae0174f35241efa962286b9247c590@bfs.de>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>,<20200910211344.3562-13-colomar.6.4.3@gmail.com>
-In-Reply-To: <20200910211344.3562-13-colomar.6.4.3@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.137.16.40]
-x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25658.007
-x-tm-as-result: No-10--0.239100-5.000000
-x-tmase-matchedrid: WWTMasqpueEI9V8p1Mx66XbspjK6JP6qDZxgL2y+vXeRmBpkPchPVWhk
-        SwpykoqVxTsa1zsKwGCfw/TEAf8XTEfX0Ayg3UN3lNomdZyIWKIBDya2JbH/+rqmXM36L3kB6f0
-        gaty5G7GXoanwS/0YwxfSrzWwageNLGmmJTL2jhwD2WXLXdz+ATCeYh/W8m8dmyiLZetSf8mZMP
-        CnTMzfOiq2rl3dzGQ1K7ZhaGn+KBbGTvO0edBGBrShWvgR6aJXJcNhWMWLHUv6M/DbU1xGLVGaw
-        EjxIvbJERzzV5VclxnkTB6XPPm2NbZ4ys4g32NHW96NbUtxv39wKbJm8PBDLa3lqFG8MgYtra3V
-        Vcd6EV7L9ApLJriTv0MMprcbiest
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--0.239100-5.000000
-x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25658.007
-x-tm-snts-smtp: B294097DC822586E46F0A54352DFCF7B02EB2CD9229A448E42B646A1F205ABC52000:9
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726048AbgIKMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:54:34 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5A5022225;
+        Fri, 11 Sep 2020 12:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599828834;
+        bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zTyf7e3XSzfSf/OknASKWycUoEtX0M5E95kxXpCgWVWr3MKI2hERscvbWcjvYgHUn
+         f+Lz3PvSibjaXk+fhBaBbTv1vRV0LsRVzOVh6BCtvFT2J6rcIr397dv1KYkJeFuown
+         JXWGk39DfFF+Xlv8KmAHev/61we8Q4Dod7bkZDDo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 05/62] hwmon: (applesmc) check status earlier.
+Date:   Fri, 11 Sep 2020 14:45:48 +0200
+Message-Id: <20200911122502.669077595@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122502.395450276@linuxfoundation.org>
+References: <20200911122502.395450276@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Authentication-Results: mx01-sz.bfs.de;
-        none
-X-Spamd-Result: default: False [0.02 / 7.00];
-         ARC_NA(0.00)[];
-         TO_DN_EQ_ADDR_SOME(0.00)[];
-         HAS_XOIP(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         RCPT_COUNT_THREE(0.00)[4];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BAYES_SPAM(0.02)[51.18%];
-         TO_DN_SOME(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.848];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUFLEN should  be remove completely or stay
+From: Tom Rix <trix@redhat.com>
 
-jm2c
- wh
-________________________________________
-Von: linux-man-owner@vger.kernel.org [linux-man-owner@vger.kernel.org] im A=
-uftrag von Alejandro Colomar [colomar.6.4.3@gmail.com]
-Gesendet: Donnerstag, 10. September 2020 23:13
-An: mtk.manpages@gmail.com
-Cc: linux-man@vger.kernel.org; linux-kernel@vger.kernel.org; Alejandro Colo=
-mar
-Betreff: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size (inste=
-ad of hardcoding macro name)
+[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
 
-Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+clang static analysis reports this representative problem
+
+applesmc.c:758:10: warning: 1st function call argument is an
+  uninitialized value
+        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+buffer is filled by the earlier call
+
+	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
+
+This problem is reported because a goto skips the status check.
+Other similar problems use data from applesmc_read_key before checking
+the status.  So move the checks to before the use.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
+Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- man3/getgrent_r.3 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/man3/getgrent_r.3 b/man3/getgrent_r.3
-index 81d81a851..76deec370 100644
---- a/man3/getgrent_r.3
-+++ b/man3/getgrent_r.3
-@@ -186,7 +186,7 @@ main(void)
+diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+index 0af7fd311979d..587fc5c686b3c 100644
+--- a/drivers/hwmon/applesmc.c
++++ b/drivers/hwmon/applesmc.c
+@@ -758,15 +758,18 @@ static ssize_t applesmc_light_show(struct device *dev,
+ 	}
+ 
+ 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
++	if (ret)
++		goto out;
+ 	/* newer macbooks report a single 10-bit bigendian value */
+ 	if (data_length == 10) {
+ 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+ 		goto out;
+ 	}
+ 	left = buffer[2];
++
++	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	if (ret)
+ 		goto out;
+-	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	right = buffer[2];
+ 
+ out:
+@@ -814,12 +817,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
+ 	sprintf(newkey, fan_speed_fmt[to_option(attr)], to_index(attr));
+ 
+ 	ret = applesmc_read_key(newkey, buffer, 2);
+-	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
++
++	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
++	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+ static ssize_t applesmc_store_fan_speed(struct device *dev,
+@@ -854,12 +856,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
+ 	u8 buffer[2];
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
++
++	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
+ }
+ 
+ static ssize_t applesmc_store_fan_manual(struct device *dev,
+@@ -875,10 +876,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	val = (buffer[0] << 8 | buffer[1]);
+ 	if (ret)
+ 		goto out;
+ 
++	val = (buffer[0] << 8 | buffer[1]);
++
+ 	if (input)
+ 		val = val | (0x01 << to_index(attr));
+ 	else
+@@ -954,13 +956,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
+ 	u32 count;
+ 
+ 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
+-	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
+-						((u32)buffer[2]<<8) + buffer[3];
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
++
++	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
++						((u32)buffer[2]<<8) + buffer[3];
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
+ }
+ 
+ static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+-- 
+2.25.1
 
-     setgrent();
-     while (1) {
--        i =3D getgrent_r(&grp, buf, BUFLEN, &grpp);
-+        i =3D getgrent_r(&grp, buf, sizeof(buf), &grpp);
-         if (i)
-             break;
-         printf("%s (%d):", grpp\->gr_name, grpp\->gr_gid);
---
-2.28.0
+
 
