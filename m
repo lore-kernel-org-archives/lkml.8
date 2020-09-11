@@ -2,113 +2,154 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B0AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8061C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C979C221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V9dV4KVP"
+	by mail.kernel.org (Postfix) with ESMTP id 8D9EA2075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725795AbgIKErM (ORCPT
+        id S1725766AbgIKExP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 00:47:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53321 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgIKErL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 00:47:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BnjsQ2dfnz9sTS;
-        Fri, 11 Sep 2020 14:47:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599799629;
-        bh=Dm+WuyJZSvm1uY1TrDmeskpiMkVr401nDAZRRY0remI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=V9dV4KVP7UOLbKDNoVlGkvw5U4qH8PgOIsa779Fj4uQrVXZulcc1AjsFdXk6wCPKI
-         S0smdbM8DoCmcfey+se0qdFePFa0mG+tIStGKqfNVuZ9BZZeQcGKJ+Vx7HJlZBLOxF
-         O4NkURlG56aH+Yhm3cP8C4sz93ddyJBbFc3nMd0bxoBvxMrE7CXuL/bw9cMt9OXgGb
-         qKfTnD5GiXNcvKtvpV1z1JLwnEgMnN2YI8hrP1siZx1mY2H8B6NBJC25a9vmRL4S0H
-         Kc7QnMbNXWHCkcDzOkQbvjDvOUv01xN83SSrz2e3t/HDrxdwxdsFeRN1bGvsfxz83v
-         EPxUzr6MzHkJw==
-Date:   Fri, 11 Sep 2020 14:47:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the scsi-mkp tree with Linus' tree
-Message-ID: <20200911144702.3d508d31@canb.auug.org.au>
-In-Reply-To: <20200902151235.49794c8a@canb.auug.org.au>
-References: <20200902151235.49794c8a@canb.auug.org.au>
+        Fri, 11 Sep 2020 00:53:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58878 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgIKExO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 00:53:14 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5A091C46C49DB6911600;
+        Fri, 11 Sep 2020 12:53:11 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 12:53:09 +0800
+Subject: Re: [PATCH -next] media: marvell-ccic: Fix -Wunused-function warnings
+To:     Lubomir Rintel <lkundrak@v3.sk>
+References: <20200910080933.40684-1-yuehaibing@huawei.com>
+ <20200910082221.GA1115782@demiurge.local>
+ <b7206784-15ea-9790-0c70-eea99bbab34a@huawei.com>
+ <20200910145702.GA1118779@demiurge.local>
+CC:     <corbet@lwn.net>, <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <9925ae09-cc5f-8399-fe2f-a4e728a483d6@huawei.com>
+Date:   Fri, 11 Sep 2020 12:53:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Bh34DMm2EpMELx7voOI=bPq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200910145702.GA1118779@demiurge.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Bh34DMm2EpMELx7voOI=bPq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020/9/10 22:57, Lubomir Rintel wrote:
+> On Thu, Sep 10, 2020 at 05:18:15PM +0800, Yuehaibing wrote:
+>> On 2020/9/10 16:22, Lubomir Rintel wrote:
+>>> On Thu, Sep 10, 2020 at 04:09:33PM +0800, YueHaibing wrote:
+>>>> If CONFIG_PM is n, gcc warns:
+>>>>
+>>>> drivers/media/platform/marvell-ccic/mmp-driver.c:347:12: warning: ‘mmpcam_resume’ defined but not used [-Wunused-function]
+>>>>  static int mmpcam_resume(struct device *dev)
+>>>>             ^~~~~~~~~~~~~
+>>>> drivers/media/platform/marvell-ccic/mmp-driver.c:338:12: warning: ‘mmpcam_suspend’ defined but not used [-Wunused-function]
+>>>>  static int mmpcam_suspend(struct device *dev)
+>>>>             ^~~~~~~~~~~~~~
+>>>> drivers/media/platform/marvell-ccic/mmp-driver.c:324:12: warning: ‘mmpcam_runtime_suspend’ defined but not used [-Wunused-function]
+>>>>  static int mmpcam_runtime_suspend(struct device *dev)
+>>>>             ^~~~~~~~~~~~~~~~~~~~~~
+>>>> drivers/media/platform/marvell-ccic/mmp-driver.c:310:12: warning: ‘mmpcam_runtime_resume’ defined but not used [-Wunused-function]
+>>>>  static int mmpcam_runtime_resume(struct device *dev)
+>>>>             ^~~~~~~~~~~~~~~~~~~~~
+>>>>
+>>>> Mark them as __maybe_unused to fix this.
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>
+>>> Your colleague seems to sent out an equivalent patch:
+>>> https://lore.kernel.org/lkml/20200910080933.40684-1-yuehaibing@huawei.com/
+>>
+>> This is my patch, paste an wrong link?
+> 
+> Indeed, sorry for the confusion.
+> 
+> The original mail only went to linux-media, not lkml, which is why I
+> picked the wrong one from the archive. Here's the patch:
+> 
+> https://lore.kernel.org/linux-media/20200909112921.5116-1-weiyongjun1@huawei.com/
 
-Hi all,
+mmpcam_runtime_suspend/mmpcam_runtime_resume also should be cared, I'll adjust my patch based on it.
 
-On Wed, 2 Sep 2020 15:12:35 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Today's linux-next merge of the scsi-mkp tree got a conflict in:
->=20
->   drivers/scsi/aacraid/aachba.c
->=20
-> between commit:
->=20
->   df561f6688fe ("treewide: Use fallthrough pseudo-keyword")
->=20
-> from Linus' tree and commit:
->=20
->   cfd3d2225aa5 ("scsi: aacraid: Remove erroneous fallthrough annotation")
->=20
-> from the scsi-mkp tree.
->=20
-> I fixed it up (I removed the line removed by the latter - it was rewritten
-> by the former to "fallthrough;") and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+> 
+> Take care
+> Lubo
+> 
+>>
+>>>
+>>> Cheers
+>>> Lubo
+>>>
+>>>> ---
+>>>>  drivers/media/platform/marvell-ccic/mmp-driver.c | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
+>>>> index c4b28a00a3a2..032fdddbbecc 100644
+>>>> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
+>>>> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+>>>> @@ -307,7 +307,7 @@ static int mmpcam_platform_remove(struct platform_device *pdev)
+>>>>   * Suspend/resume support.
+>>>>   */
+>>>>  
+>>>> -static int mmpcam_runtime_resume(struct device *dev)
+>>>> +static int __maybe_unused mmpcam_runtime_resume(struct device *dev)
+>>>>  {
+>>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
+>>>>  	struct mcam_camera *mcam = &cam->mcam;
+>>>> @@ -321,7 +321,7 @@ static int mmpcam_runtime_resume(struct device *dev)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> -static int mmpcam_runtime_suspend(struct device *dev)
+>>>> +static int __maybe_unused mmpcam_runtime_suspend(struct device *dev)
+>>>>  {
+>>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
+>>>>  	struct mcam_camera *mcam = &cam->mcam;
+>>>> @@ -335,7 +335,7 @@ static int mmpcam_runtime_suspend(struct device *dev)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> -static int mmpcam_suspend(struct device *dev)
+>>>> +static int __maybe_unused mmpcam_suspend(struct device *dev)
+>>>>  {
+>>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
+>>>>  
+>>>> @@ -344,7 +344,7 @@ static int mmpcam_suspend(struct device *dev)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> -static int mmpcam_resume(struct device *dev)
+>>>> +static int __maybe_unused mmpcam_resume(struct device *dev)
+>>>>  {
+>>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
+>>>>  
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>>>
+>>>
+>>> .
+>>>
+>>
+> 
+> .
+> 
 
-This is now a conflict between the scsi tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Bh34DMm2EpMELx7voOI=bPq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9bAUcACgkQAVBC80lX
-0GxfLQf/UKoDyvOmX3aWkKy51Lfv3RMb1RBceQVD+IIiYeSiWix4j5Du4pZIIBhw
-W3bQitICoY0oSlRjS/hn9saW2PQ4/uzrmwu39NSYf0rZ7PaFFkYbN04TymMOhfFs
-EenAUKa1sBHxsXXwRG+CwiwLU+tiz+zrg8Iw7K10Hfcx7TRFHw1ntbNjzA3UEsQs
-bp1jI0263Ur8xWrzijwI8B8Xg5LeUmc/dx8ksDzbti64xyllosScz8wPjVNuT4/s
-sMj5zm5Mlj+qBqpXrLcOP7JcSgvMB8185EWGxE+xx17IQKYTi+oP4LuZaQUz2+9N
-u+V44NdYH83GAaEk9zkS2nGaSeg9bQ==
-=YnE7
------END PGP SIGNATURE-----
-
---Sig_/Bh34DMm2EpMELx7voOI=bPq--
