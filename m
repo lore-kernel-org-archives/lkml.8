@@ -2,136 +2,152 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D4FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0842AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E113E221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599810896;
-	bh=eOOJoBImDE1TPm96YQNh+LjDOxBzOMInIn5eSZSA4wI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v6Kf5aqITEMmmgfkbD26HupsJBozsfWUGo981awKXJZBmVXBbrG14tNlXoDq1liBK
-	 AsLUvCDtSV8VAWlGjlSHQbG2RChowJBnPFe2bWgTCOJlMHLpZXPIF+f3gz+TXVNvJ3
-	 EYhvlBWz5JgTDfLTtlU9/hILbGSeZOnSSuDXsr/Y=
+	by mail.kernel.org (Postfix) with ESMTP id A3D56221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsgmUcQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725794AbgIKHyy (ORCPT
+        id S1725789AbgIKHy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:54:54 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35958 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKHyo (ORCPT
+        Fri, 11 Sep 2020 03:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgIKHyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:54:44 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w1so9042503edr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:54:42 -0700 (PDT)
+        Fri, 11 Sep 2020 03:54:49 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1CAC061573;
+        Fri, 11 Sep 2020 00:54:48 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id m6so10531825wrn.0;
+        Fri, 11 Sep 2020 00:54:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yefDfyzMV3D0zYfLubpfnreXDIUekY8KZxUMEU76Oe4=;
+        b=nsgmUcQTca2wsBY+8niyqzwafdlFRwS90MFzZ2EgeLZCHdr6dglWpoC23+BzH90cNl
+         sypAd81PKLiT52nRhEe2HNu9EdlTl/3qxxFDJ8j4ZnNk51U/6zREhRy4DYeW251H7JIw
+         +a3DygUFtUT09n+sTwiGuoTdIvLg4wE/vHW2NyfMdM4Zjl+95DbgTXz5+s3cNbqSfSM4
+         SVRCHYvzKHZ7UNmxMHgMIjesMdsSa1d6GDKm2ZNe2wcvRdoD4+NV4VmiHjRNS3A6PMxO
+         Hdb1HvcaL4lclzgZkl1ntkSHVTp1d9UU2+k9f82gR7S197gHYWifoqfKbeA/3RO9H2fk
+         KzoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0I/ZdGkuIr3JoP7rRmJ+zxyQ7oEKoTVS9yur/NkoIf0=;
-        b=XCpd6c6wvB21N4iEWrPlinEy2i0ydrccsWkCDTc/Gv90ApogN+Dy9EgPWOS/JklTmJ
-         2UxGkUkklpHMy2lR498rQfSOvLg4ndLFQi/F4d3EOPPJcVXgzZ+1j4MZgHuhB0FUk1nM
-         blzo5hYACFXGuzGOU3UZO1SvAZ12tclSw+WaqhcSN7T7VtEn6/Pe0Cs5zq3Th2Vu8rC4
-         YoM744U6xL1Z4ZUei6F6rjcoj+xsSfQcOF7nSDNuCFqVQQhUGri6dfn7s920c3o4NHVp
-         GHsPrgLOo8FQYaHsxqCRyn8E5+ywJ5op9zsHAUnSOf5wKH/nU/ZX/B1L8R9HSwdPX5E3
-         G9jg==
-X-Gm-Message-State: AOAM532uGktptvZqvJ/nFG0ebZAtM7qOpnXfAfd7eOsJqvmbAhHxNqoz
-        PLhzWwsDJBsQUiskKgFBlys=
-X-Google-Smtp-Source: ABdhPJzRtQ0X94H2fDvUJZrcp+Dm9AfI6lguQAi5pLjGbvPo4Kyp8wvCKu96XByy4lPTumbGN5/T0Q==
-X-Received: by 2002:a50:d4ce:: with SMTP id e14mr776330edj.126.1599810881793;
-        Fri, 11 Sep 2020 00:54:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id i7sm1031530ejo.22.2020.09.11.00.54.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 11 Sep 2020 00:54:40 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 09:54:39 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yefDfyzMV3D0zYfLubpfnreXDIUekY8KZxUMEU76Oe4=;
+        b=IWy1NnKZuyD6+nmuZllH/OcnCpWAoaKIYBTVW+LnVXp+jKqHZRlqhmWx/aKod+sLWE
+         0k5rYO+K8Rhn2nhU/BNfESydZoc3NkbdqnKhsjoO2efJsnQIgoI/z/TNjewBVzrFgd1W
+         QhTLDBOHopRQfJ1PcNBh4bAmSn38TMek/hT9TqSbWDXIDQTw6QpSHGPFXQZxNz3M+gHH
+         s+8DcjWXV+6sDL7xo2qqzYYoGEuHxbMaDQ0pq3jVyqq+reX6LEkNSzx3MixWmtS020Tv
+         qytrI2Pe7FNq/XU06bMDf/WqeHi+9s4cQ+Uqxo2v9SofHODgDlHw8ZiLo/ColElALmw3
+         fu9g==
+X-Gm-Message-State: AOAM530GSEvfrLLo8eKd7Anf1uqAJvuVzjilseI7rJmFwyw6Gz/FQG7R
+        o/6xIwydGIsajjsjEHwQCO4Ab+P6sVk=
+X-Google-Smtp-Source: ABdhPJy/o+3kHMIOS4EPxqJOfnqVnKAzpt6HZXJYMRTO2NN1q8WKr0TccZgEUDjLl5XAO7/zwuB4Gw==
+X-Received: by 2002:adf:cf01:: with SMTP id o1mr719399wrj.421.1599810886868;
+        Fri, 11 Sep 2020 00:54:46 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id q4sm3024523wru.65.2020.09.11.00.54.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 00:54:46 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] extcon: ptn5150: Use defines for registers
-Message-ID: <20200911075439.GA11145@kozik-lap>
-References: <CGME20200909172007epcas1p2fe01380c62ca112a19283f2dc63e75f9@epcas1p2.samsung.com>
- <20200909150129.12476-1-krzk@kernel.org>
- <7571e535-f0ff-2371-1669-734c3996aacf@samsung.com>
- <20200911053805.GA2954@kozik-lap>
- <6e621023-530a-727c-fff7-e8435ca4a4d2@samsung.com>
+Subject: Re: [PATCH 23/24] select_tut.2: Use MAX(a, b) from <sys/param.h>
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-24-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <ede06e4b-7217-1315-6035-9116df9b02c0@gmail.com>
+Date:   Fri, 11 Sep 2020 09:54:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200910211344.3562-24-colomar.6.4.3@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6e621023-530a-727c-fff7-e8435ca4a4d2@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 05:03:02PM +0900, Chanwoo Choi wrote:
-> On 9/11/20 2:38 PM, Krzysztof Kozlowski wrote:
-> > On Fri, Sep 11, 2020 at 12:14:19PM +0900, Chanwoo Choi wrote:
-> >> On 9/10/20 12:01 AM, Krzysztof Kozlowski wrote:
-> >>> The register addresses are not continuous, so use simple defines for
-> >>> them.  This also makes it easier to find the address for register.
-> >>>
-> >>> No functional change.
-> >>>
-> >>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >>> ---
-> >>>  drivers/extcon/extcon-ptn5150.c | 22 ++++++++++------------
-> >>>  1 file changed, 10 insertions(+), 12 deletions(-)
-> >>>
-> >>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-> >>> index dda5b3a3a908..1b68f56d8372 100644
-> >>> --- a/drivers/extcon/extcon-ptn5150.c
-> >>> +++ b/drivers/extcon/extcon-ptn5150.c
-> >>> @@ -19,18 +19,16 @@
-> >>>  #include <linux/gpio/consumer.h>
-> >>>  
-> >>>  /* PTN5150 registers */
-> >>> -enum ptn5150_reg {
-> >>> -	PTN5150_REG_DEVICE_ID = 0x01,
-> >>> -	PTN5150_REG_CONTROL,
-> >>> -	PTN5150_REG_INT_STATUS,
-> >>> -	PTN5150_REG_CC_STATUS,
-> >>> -	PTN5150_REG_CON_DET = 0x09,
-> >>> -	PTN5150_REG_VCONN_STATUS,
-> >>> -	PTN5150_REG_RESET,
-> >>> -	PTN5150_REG_INT_MASK = 0x18,
-> >>> -	PTN5150_REG_INT_REG_STATUS,
-> >>> -	PTN5150_REG_END,
-> >>> -};
-> >>> +#define PTN5150_REG_DEVICE_ID			0x01
-> >>> +#define PTN5150_REG_CONTROL			0x02
-> >>> +#define PTN5150_REG_INT_STATUS			0x03
-> >>> +#define PTN5150_REG_CC_STATUS			0x04
-> >>> +#define PTN5150_REG_CON_DET			0x09
-> >>> +#define PTN5150_REG_VCONN_STATUS		0x0a
-> >>> +#define PTN5150_REG_RESET			0x0b
-> >>> +#define PTN5150_REG_INT_MASK			0x18
-> >>> +#define PTN5150_REG_INT_REG_STATUS		0x19
-> >>> +#define PTN5150_REG_END				PTN5150_REG_INT_REG_STATUS
-> >>
-> >> PTN5150_REG_END should be (PTN5150_REG_INT_REG_STATUS + 1)
-> >> for regmap operation of PTN5150_REG_INT_REG_STATUS.
-> > 
-> > Why? This goes to regmap's max_register which is the last register
-> > allowed to read:
-> > 
-> >   drivers/base/regmap/regmap-debugfs.c:   for (i = 0; i <= map->max_register; i += map->reg_stride) {
-> >   drivers/base/regmap/regmap.c:   if (map->max_register && reg > map->max_register)
+Hi Alex,
+
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+
+I'm reluctant to apply this, because MAX() is not a standard
+macro. I suppose it may not be present on some other UNIX
+systems. You thoughts?
+
+Cheers,
+
+Michael
+
+> ---
+>  man2/select_tut.2 | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
-> It is my mismake. You're right.
-> Applied them. Thanks.
+> diff --git a/man2/select_tut.2 b/man2/select_tut.2
+> index f683dd49d..d23683d75 100644
+> --- a/man2/select_tut.2
+> +++ b/man2/select_tut.2
+> @@ -354,6 +354,7 @@ from one TCP port to another.
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <unistd.h>
+> +#include <sys/param.h>      /* Definition of MAX(a, b) */
+>  #include <sys/select.h>
+>  #include <string.h>
+>  #include <signal.h>
+> @@ -364,9 +365,6 @@ from one TCP port to another.
+>  
+>  static int forward_port;
+>  
+> -#undef max
+> -#define max(x,y) ((x) > (y) ? (x) : (y))
+> -
+>  static int
+>  listen_socket(int listen_port)
+>  {
+> @@ -483,7 +481,7 @@ main(int argc, char *argv[])
+>          FD_ZERO(&writefds);
+>          FD_ZERO(&exceptfds);
+>          FD_SET(h, &readfds);
+> -        nfds = max(nfds, h);
+> +        nfds = MAX(nfds, h);
+>  
+>          if (fd1 > 0 && buf1_avail < BUF_SIZE)
+>              FD_SET(fd1, &readfds);
+> @@ -499,11 +497,11 @@ main(int argc, char *argv[])
+>  
+>          if (fd1 > 0) {
+>              FD_SET(fd1, &exceptfds);
+> -            nfds = max(nfds, fd1);
+> +            nfds = MAX(nfds, fd1);
+>          }
+>          if (fd2 > 0) {
+>              FD_SET(fd2, &exceptfds);
+> -            nfds = max(nfds, fd2);
+> +            nfds = MAX(nfds, fd2);
+>          }
+>  
+>          ready = select(nfds + 1, &readfds, &writefds, &exceptfds, NULL);
+> 
 
-Great, thank you!
 
-Best regards,
-Krzysztof
-
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
