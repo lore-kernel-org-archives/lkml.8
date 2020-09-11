@@ -2,181 +2,106 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF28C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0E621D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5921321D47
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C5D5Y5nQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sutpl+MP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgIKQB2 (ORCPT
+        id S1726603AbgIKQB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:01:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58336 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726308AbgIKQBF (ORCPT
+        Fri, 11 Sep 2020 12:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgIKQBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 12:01:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599840063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OT2QPFFKcLToAECZ3O+2lLWiSx0fYvw4RHtgCq0Giu0=;
-        b=C5D5Y5nQSiV0oTdC8gvUQNlZsXHHqAQtfymqzppftyEZg26pW+PUsQBzd5d1MasvVfFdL9
-        TTD45IlrL1/HCQ+/tLxrsgP8YQxc4peRcKIbvkzzWGLAevfvOjkLShn0sbb1g1yRkmih3I
-        LM2qIUVnScIfcdgYmRMPHZtazWKIo0Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-445-ZmSp7LduMm-z3RNV-dFK4g-1; Fri, 11 Sep 2020 12:00:57 -0400
-X-MC-Unique: ZmSp7LduMm-z3RNV-dFK4g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B9AC57086;
-        Fri, 11 Sep 2020 16:00:56 +0000 (UTC)
-Received: from treble (ovpn-115-26.rdu2.redhat.com [10.10.115.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9301C1002D57;
-        Fri, 11 Sep 2020 16:00:55 +0000 (UTC)
-Date:   Fri, 11 Sep 2020 11:00:53 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: WARNING: Kernel stack regs has bad 'bp' value
-Message-ID: <20200911160053.w66xit3imcqsn33g@treble>
-References: <c0ba7077-7977-0155-d7be-d4133ebaee5c@deltatee.com>
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53D3C061756;
+        Fri, 11 Sep 2020 09:01:04 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 16so10340170qkf.4;
+        Fri, 11 Sep 2020 09:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m+iVerlUNqAW5DSLfymFd18Aa+jNaCXhphLLXfU0VIA=;
+        b=Sutpl+MPw6nB+6Wp5lUzwnRnbow90HU9aTTdtIg3LjT1unaleGubj6DLgjH29qJZ0T
+         jMBnugheaGK51H8DSv0rwGMarn7OlqHDc7tXNfLqpKrm7lua3eEOKqIQ4qUWKse+CpMJ
+         wIVx40eC9zpg9bBQBVNJ0Xre4Jvs8cNrkMzgh/6D6HQR4JEj5+tPIRQgbLtbuB5qF4Oi
+         e5atLQkthHa/nAfnDCorJKsNkqIsrmVzGOEXDo5ij+9ZE1QIlj8gAPSKjjuvR7M9JUku
+         t6gAApCIN4TgMEZc1j00NRxC2pTiI06jJF1ATbeDQGPWRlyi03xKmAujKHqcrYIMHpMs
+         7++Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m+iVerlUNqAW5DSLfymFd18Aa+jNaCXhphLLXfU0VIA=;
+        b=DAI0o9EUArYnzD3SPxreVjHcnvJcMa9S6iqtqRPr5ZjMbpSzfhiyJB4ag9FYj732lw
+         J7nteuzh0l4nkZTQ+bPVx/niyfsj6TjRgPhSp34AzxtQmGO1WKUSAWlgTMPb9aeCRYJD
+         TsE9EdQuggExFFJNOcrx8khZQYtky5+iWXWgaW7tiyUKF1JdNtCqv5tze1bcx/bSZ9Ts
+         FSJyiYqUWXmHcvhsLmpkEyoi5A33mvqpcKfgaqZL8jDZAxWweKiah56+F25WHef9Bwu0
+         fLiv12YOZPyX1H0Yuy233rEvPPyzb+ITECIutgLFLfKqB0HrFZObQqfOQVFEzaVx+OUu
+         qU9w==
+X-Gm-Message-State: AOAM530ltPRXTW2w5eQAKoDyBjtrrxjKDJ8R7l2jk1eb8x7oRVHr0+/D
+        fbqtE1GDB2isIPajECERyzw=
+X-Google-Smtp-Source: ABdhPJxtro49hRqMYSXF+EANvHfvT1mDgX5lpY6eqewCbYGFFFco8K3fg4p7mB9jEDuEtQw+QyQlOQ==
+X-Received: by 2002:ae9:f503:: with SMTP id o3mr1925852qkg.447.1599840063843;
+        Fri, 11 Sep 2020 09:01:03 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id g25sm3061622qto.47.2020.09.11.09.01.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 09:01:03 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 09:01:01 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        David Miller <davem@davemloft.net>, andrew@lunn.ch,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH net-next] net: mvpp2: Initialize link in
+ mvpp2_isr_handle_{xlg,gmac_internal}
+Message-ID: <20200911160101.GA4061896@ubuntu-n2-xlarge-x86>
+References: <20200910174826.511423-1-natechancellor@gmail.com>
+ <20200910.152811.210183159970625640.davem@davemloft.net>
+ <20200911003142.GA2469103@ubuntu-n2-xlarge-x86>
+ <20200911111158.GF1551@shell.armlinux.org.uk>
+ <20200911082236.7dfb7937@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c0ba7077-7977-0155-d7be-d4133ebaee5c@deltatee.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200911082236.7dfb7937@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 01:42:21PM -0600, Logan Gunthorpe wrote:
-> Hi,
+On Fri, Sep 11, 2020 at 08:22:36AM -0700, Jakub Kicinski wrote:
+> On Fri, 11 Sep 2020 12:11:58 +0100 Russell King - ARM Linux admin wrote:
+> > On Thu, Sep 10, 2020 at 05:31:42PM -0700, Nathan Chancellor wrote:
+> > > Ah great, that is indeed cleaner, thank you for letting me know!  
+> > 
+> > Hmm, I'm not sure why gcc didn't find that. Strangely, the 0-day bot
+> > seems to have only picked up on it with clang, not gcc.
 > 
-> A couple of times now, I've hit a very rare kernel warning (see below)
-> while doing IO to an NVMe drive. I do not have a reliable way to
-> reproduce this bug but it seems to have started very roughly around v5.8.
+> May be similar to: https://lkml.org/lkml/2019/2/25/1092
 > 
-> I've found someone else (Naresh Kamboju) has reported a very similar
-> issue here[1] though there were no responses and I can't find the email
-> anywhere else but through that link. Naresh mentions a method to
-> reproduce the bug which I have not tried.
-> 
-> After some research on similar occurrences of this warning[2], it seems
-> to be caused by assembly code making use of the %rbp register and an
-> interrupt calling unwind_stack_frame() at just the wrong time (this
-> happens more frequently with KASAN enabled, which is the case on my
-> setup). When this happens, the offending function is seen in the stack dump.
-> 
-> One such function, which is common in all the stack dumps, is
-> asm_call_on_stack(). This was introduced in v5.8 and pushes and replaces
-> %rbp.
-> 
-> 931b94145981 ("x86/entry: Provide helpers for executing on the irqstack")
-> 
-> I'm not sure if this is the cause of the bug but it seems worth looking
-> at. A comment in the code suggests that %rbp is saved for the ORC
-> unwinder, but perhaps this doesn't play nicely with the Frame Pointer
-> unwinder which is printing this warning.
+> Recent GCC is so bad at catching uninitialized vars I was considering
+> build testing with GCC8 :/
 
-Hi Logan,
+It is even simpler than that, the warning was straight up disabled in
+commit 78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized").
 
-Thanks for the bug report.  (Sorry I missed the first one, Naresh.)
+clang's -Wuninitialized and -Wsometimes-uninitialized are generally more
+accurate but can have some false positives because the semantic analysis
+phase happens before inlining and dead code elimination.
 
-The problem is that ret_from_fork() is no longer in .entry.text, so the
-following check in the FP unwinder doesn't work when ret_from_fork()
-gets interrupted.
-
-	/*
-	 * Don't warn if the unwinder got lost due to an interrupt in entry
-	 * code or in the C handler before the first frame pointer got set up:
-	 */
-	if (state->got_irq && in_entry_code(state->ip))
-		goto the_end;
-
-If you have the ability to recreate, can you try the following patch?
-
-A combination of a lot of forks and a lot of interrupts should trigger
-it.  I'll try to recreate as well.
-
-diff --git a/arch/x86/include/asm/frame.h b/arch/x86/include/asm/frame.h
-index 296b346184b2..fb42659f6e98 100644
---- a/arch/x86/include/asm/frame.h
-+++ b/arch/x86/include/asm/frame.h
-@@ -60,12 +60,26 @@
- #define FRAME_END "pop %" _ASM_BP "\n"
- 
- #ifdef CONFIG_X86_64
-+
- #define ENCODE_FRAME_POINTER			\
- 	"lea 1(%rsp), %rbp\n\t"
-+
-+static inline unsigned long encode_frame_pointer(struct pt_regs *regs)
-+{
-+	return (unsigned long)regs + 1;
-+}
-+
- #else /* !CONFIG_X86_64 */
-+
- #define ENCODE_FRAME_POINTER			\
- 	"movl %esp, %ebp\n\t"			\
- 	"andl $0x7fffffff, %ebp\n\t"
-+
-+static inline unsigned long encode_frame_pointer(struct pt_regs *regs)
-+{
-+	return (unsigned long)regs & 0x7fffffff;
-+}
-+
- #endif /* CONFIG_X86_64 */
- 
- #endif /* __ASSEMBLY__ */
-@@ -83,6 +97,11 @@
- 
- #define ENCODE_FRAME_POINTER
- 
-+static inline unsigned long encode_frame_pointer(struct pt_regs *regs)
-+{
-+	return 0;
-+}
-+
- #endif
- 
- #define FRAME_BEGIN
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 13ce616cc7af..ba4593a913fa 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -42,6 +42,7 @@
- #include <asm/spec-ctrl.h>
- #include <asm/io_bitmap.h>
- #include <asm/proto.h>
-+#include <asm/frame.h>
- 
- #include "process.h"
- 
-@@ -133,7 +134,7 @@ int copy_thread(unsigned long clone_flags, unsigned long sp, unsigned long arg,
- 	fork_frame = container_of(childregs, struct fork_frame, regs);
- 	frame = &fork_frame->frame;
- 
--	frame->bp = 0;
-+	frame->bp = encode_frame_pointer(childregs);
- 	frame->ret_addr = (unsigned long) ret_from_fork;
- 	p->thread.sp = (unsigned long) fork_frame;
- 	p->thread.io_bitmap = NULL;
-
+Cheers,
+Nathan
