@@ -2,106 +2,120 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D723C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A888C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC5821D92
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D01621D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfefxcN2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kYYtjn4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbgIKJjv (ORCPT
+        id S1725788AbgIKJnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36414 "EHLO
+        Fri, 11 Sep 2020 05:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKJjq (ORCPT
+        with ESMTP id S1725774AbgIKJnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:39:46 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1531C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 02:39:46 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jw11so1441939pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 02:39:46 -0700 (PDT)
+        Fri, 11 Sep 2020 05:43:37 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736DFC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 02:43:35 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id b6so10329734iof.6
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 02:43:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KlLBYhev4Wfr30ELlYvsH52U84dkhIKc99s8OuU9b24=;
-        b=KfefxcN2qmiKm7hShLw/DbW+tGavlLL9yPgswsVnIa1mZF/9xadoxJtaLstqBG2QQI
-         2iFp2DEEFEOgr8UqwKZiS5kZav4nfauaqhjHUupxkrZEWPSo9XbX0QeAuvFGhY9v6k2O
-         1c5fG89iT8bZxJpCepC3R2wbgtrXNTUGFSGhU=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rNzl7xSh7GeYDHs6F5Ee65tcB8SqNtnecrQQkoWodP0=;
+        b=kYYtjn4J6Wg5q1cke3GsLsCSOoUQNBxGd/bYFJ65ZjZzFRei0UT3FxD5Z1/2fTN5c2
+         sup6bN9bMyISt6qdA8xiEak/Iaor27vcznZQ2oe5rwYHes77LXMtCrDfSqJKY1Kmq2wV
+         tK2wDoOsfpJfNH19YLo6Kua3O9Mxzid9qqAG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KlLBYhev4Wfr30ELlYvsH52U84dkhIKc99s8OuU9b24=;
-        b=bSuA11RpBc1+3g5Dz0LlxxSU1kaaALc+6zuTQIA1jvxe4CUhC+cW3I3PFzDnxXCscE
-         XV6K2EOZuSbAXvXDw/7jrR2ZUPv/15NiHePjp23CCZVHaeldAFwC6sh89bvJGKeskWCO
-         yofEF5Y4T+Q2cuBB+A+eW+C0LL+P5Q9nKbm9p+7P1EATII2M1GMxrfB5W1RT+cASG143
-         hERrdCsSGcjEauabFYt3jNJH/qH73BoiiidXRal/ljEsEMHYD8LBM3bdCiA9YXznVD+s
-         eCog7qyRhxbpEdr0o6FWsVUpYDwtW3ppikpeZ8GNo7HL87bdRLkUYN3tl0NHS7g/mbVu
-         4M3A==
-X-Gm-Message-State: AOAM532eRasAm/eQnQv5J6usl1I+mddfInHDcsbi+8xPfnAAopNoqd4M
-        7tyA4rUNJ2Js/qpz012gRDXN3w==
-X-Google-Smtp-Source: ABdhPJwI8ziC5/OM7tf5UKEvZbcS15PybCTYMTPLwIM6mRVaAnhqXfsGqJWqnsxQyXN/ZYuTJY7BoA==
-X-Received: by 2002:a17:90a:184:: with SMTP id 4mr1482988pjc.148.1599817186148;
-        Fri, 11 Sep 2020 02:39:46 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:1a60:24ff:fe89:3e93])
-        by smtp.gmail.com with ESMTPSA id v1sm1433465pjh.16.2020.09.11.02.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 02:39:45 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-serial@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Changqi Hu <changqi.hu@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 2/2] tty: serial: 8250_mtk: set regshift for mmio32
-Date:   Fri, 11 Sep 2020 17:39:28 +0800
-Message-Id: <20200911093927.608024-2-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
-In-Reply-To: <20200911093927.608024-1-hsinyi@chromium.org>
-References: <20200911093927.608024-1-hsinyi@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rNzl7xSh7GeYDHs6F5Ee65tcB8SqNtnecrQQkoWodP0=;
+        b=IrWeURE9U/ZssCNHn6FyP1DVlCrKjkA+fPezLJ2iJGBM8D2nxE6HO89ykXCyWjgbPO
+         gX9OV5dbKHaQIjMQhCzBnh6kNOdVUoSpKNDL6O5b88zMCcxULAYmPEcx1mIYaFipMcmQ
+         ZTlj/0j3UdtuFvAxjo1qh1RKd4RFbGgV0adJpQTm36VB2omi5bkPStTMvRDAyGP/yMRX
+         fXh0muUZRWDzBg1uW6e9qS5szxxtLnbmDU14/iaXuCr2XmFwvVtidKlgu6wxR+I2bm3h
+         LA6uSBPdIAEOJSFV9FJGv8K1f/1RjjUN4+veiqhPwnNkyBjWzxSqhJq4Y77OB1jwhkyL
+         0twQ==
+X-Gm-Message-State: AOAM532TmLxBeo/j01MR4YCzXIndycS86Nv3PB0KLt3DimFbyZwfYDHj
+        JhEpBKQJeW9z9H6BWiGigJ6hr41V9Q+Nl0nZJ2z1Hw==
+X-Google-Smtp-Source: ABdhPJzoiPOjS7GczBk4qpUIiLCY5BgKwWxC1Z2daUO/hLybds7C4dJoOq5cRA1EXajuX3+ksvlemLAahJbJaPldn9Y=
+X-Received: by 2002:a05:6638:1643:: with SMTP id a3mr1105122jat.4.1599817412402;
+ Fri, 11 Sep 2020 02:43:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200910084304.3429494-1-hsinyi@chromium.org> <9ca1b7c0-9fec-27b7-ae08-c00613c3004c@gmail.com>
+ <CAJMQK-g+pPR6ZrSJHPPcR9Tqw_4QjuMyUqML-RoPOjfnYZ=YGA@mail.gmail.com>
+In-Reply-To: <CAJMQK-g+pPR6ZrSJHPPcR9Tqw_4QjuMyUqML-RoPOjfnYZ=YGA@mail.gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 11 Sep 2020 17:43:06 +0800
+Message-ID: <CAJMQK-gOqTJGgbY3XjOM112vyDQVKKOD3k2XEnJwji2b1TJhRg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: mt8173: Set uart to mmio32 iotype
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Eddie Huang <eddie.huang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To use mmio32, we also need to set regshift.
+On Thu, Sep 10, 2020 at 9:40 PM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> On Thu, Sep 10, 2020 at 6:25 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >
+> > Hi,
+> >
+> > On 10/09/2020 10:43, Hsin-Yi Wang wrote:
+> > > Set uart iotype to mmio32 to make earlycon work with stdout-path.
+> > >
+> > > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > > ---
+> > >   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 8 ++++++++
+> > >   1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > > index 5e046f9d48ce9..ca6ea71f5f435 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > > @@ -613,6 +613,8 @@ uart0: serial@11002000 {
+> > >                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
+> > >                       clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
+> > >                       clock-names = "baud", "bus";
+> > > +                     reg-io-width = <4>;
+> >
+> > Why do we need that, we have
+> > device->port.iotype = UPIO_MEM32;
+> > in early_mtk8250_setup(). That should do the job already.
+> >
+> >
+>
+> But if we don't change in dts, we would see
+> [    0.000000] earlycon: mtk8250 at MMIO 0x0000000011002000 (options '115200n8')
+> instead of
+> [    0.000000] earlycon: mtk8250 at MMIO32 0x0000000011002000 (options
+> '115200n8')
+>
+> Perhaps we should move the pr_info part in earlycon_init() after
+> match->setup(). Since setup may change iotype. What do you think?
+>
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/tty/serial/8250/8250_mtk.c | 1 +
- 1 file changed, 1 insertion(+)
+The series is sent here: https://lore.kernel.org/patchwork/patch/1304227/
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index 7b0dec14c8b80..41f4120abdf29 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -669,6 +669,7 @@ static int __init early_mtk8250_setup(struct earlycon_device *device,
- 		return -ENODEV;
- 
- 	device->port.iotype = UPIO_MEM32;
-+	device->port.regshift = 2;
- 
- 	return early_serial8250_setup(device, NULL);
- }
--- 
-2.28.0.618.gf4bc123cb7-goog
-
+Thanks.
