@@ -2,173 +2,98 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09605C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0088C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB5C7221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:57:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="EYe2RMO0"
+	by mail.kernel.org (Postfix) with ESMTP id 788E822204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599825501;
+	bh=OGz8xp4DfNbeDLLobWhgOPaKtHeGjBzxJ1PU9o8tCI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BHaFIO7ALeSKxENqirWQuRV7KqojUVvPJigNIu6mm/ERk9osGHAwB1Akm0zGnOAtS
+	 QFemEvMTuDnbFSObkNzVI6Z4FF8RqLle9vXA4gucAoHmzRTF7FmwBvNQZAAClGNPQR
+	 BKlL1b06QQcVZVJ0KcrvWCoZ3IHOUkOmJWbVdALM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725786AbgIKLzv (ORCPT
+        id S1725821AbgIKL6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:55:51 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58995 "EHLO ozlabs.org"
+        Fri, 11 Sep 2020 07:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgIKLze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:55:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725730AbgIKL5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:57:48 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BnvMd0W3hz9sSs;
-        Fri, 11 Sep 2020 21:55:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1599825325;
-        bh=ZovDPV7tljM0Sl5eeVf17HQSMDxWJixy/BwrnjgoaHw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=EYe2RMO00+pMuHjK2w+wLLVK3M+sA2kfueEyIt/vsHqceRMieEY5fIabY564uHjbe
-         2WjfcL622EXsNqkLtNj6S0GThxJei/SG1EpUQlIEx8rYxUsXStntInBh9co4ZnGyoY
-         i5m+2Vr7W8+LLf6AvtMELhj9t9rk8v2Xxe+d80RTnzOxZws0sekk8CP4S3XrKZmE5i
-         D0yklAEF6l6WRoi6yqWo2Ja2VUeBD91yJa0YPdF8ir8UjV2hFyr8DkyApR1zph9I9y
-         L7R27eM3onDNAyYQTGW9S4VNwhvP2UozIjzKFTrA51LHUYQMSTi05RoVBcdqL0vuNJ
-         yFUp3rECj8uHg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH v5 05/10] powerpc/smp: Dont assume l2-cache to be superset of sibling
-In-Reply-To: <20200810071834.92514-6-srikar@linux.vnet.ibm.com>
-References: <20200810071834.92514-1-srikar@linux.vnet.ibm.com> <20200810071834.92514-6-srikar@linux.vnet.ibm.com>
-Date:   Fri, 11 Sep 2020 21:55:23 +1000
-Message-ID: <87y2lgr0ic.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C0EE6221E7;
+        Fri, 11 Sep 2020 11:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599825466;
+        bh=OGz8xp4DfNbeDLLobWhgOPaKtHeGjBzxJ1PU9o8tCI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HmkktZevp+Gs6mdLYJRyYRMZq9zekb9HXwVQ+kbJ2ZqfxN5gL02wCFOKbZHCVLuf1
+         TdoaPTQtk4bYdFitgdzZTfz6RVOiJRoJtqokUWCNOTwRLGP69kDsyemX+KBPLX89wc
+         Cl41jfFTQSeI0hKl/37dzwzPHmzDoKhW4F6Efe9I=
+Date:   Fri, 11 Sep 2020 13:57:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saeed Mahameed <saeed@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, netdev@vger.kernel.org,
+        Roi Dayan <roid@mellanox.com>
+Subject: Re: [PATCH 4.19] net/mlx5e: Don't support phys switch id if not in
+ switchdev mode
+Message-ID: <20200911115752.GA3717176@kroah.com>
+References: <20200807020542.636290-1-saeedm@mellanox.com>
+ <20200807131323.GA664450@kroah.com>
+ <fc4effe1bbe6e9c68f4bdd863e3d38cbab52a285.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc4effe1bbe6e9c68f4bdd863e3d38cbab52a285.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Srikar Dronamraju <srikar@linux.vnet.ibm.com> writes:
-> Current code assumes that cpumask of cpus sharing a l2-cache mask will
-> always be a superset of cpu_sibling_mask.
->
-> Lets stop that assumption. cpu_l2_cache_mask is a superset of
-> cpu_sibling_mask if and only if shared_caches is set.
+On Thu, Sep 10, 2020 at 11:46:36AM -0700, Saeed Mahameed wrote:
+> On Fri, 2020-08-07 at 15:13 +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 06, 2020 at 07:05:42PM -0700, Saeed Mahameed wrote:
+> > > From: Roi Dayan <roid@mellanox.com>
+> > > 
+> > > Support for phys switch id ndo added for representors and if
+> > > we do not have representors there is no need to support it.
+> > > Since each port return different switch id supporting this
+> > > block support for creating bond over PFs and attaching to bridge
+> > > in legacy mode.
+> > > 
+> > > This bug doesn't exist upstream as the code got refactored and the
+> > > netdev api is totally different.
+> > > 
+> > > Fixes: cb67b832921c ("net/mlx5e: Introduce SRIOV VF representors")
+> > > Signed-off-by: Roi Dayan <roid@mellanox.com>
+> > > Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> > > ---
+> > > Hi Greg,
+> > > 
+> > > Sorry for submitting a non upstream patch, but this bug is
+> > > bothering some users on 4.19-stable kernels and it doesn't exist
+> > > upstream, so i hope you are ok with backporting this one liner
+> > > patch.
+> > 
+> > Also queued up to 4.9.y and 4.14.y.
+> > 
+> 
+> Hi Greg, the request was originally made for 4.19.y kernel,
+> I see the patch in 4.9 and 4.14 but not in 4.19 can we push it to 4.19
+> as well ? 
 
-I'm seeing oopses with this:
+Very odd, don't know what happened.
 
-[    0.117392][    T1] smp: Bringing up secondary CPUs ...
-[    0.156515][    T1] smp: Brought up 2 nodes, 2 CPUs
-[    0.158265][    T1] numa: Node 0 CPUs: 0
-[    0.158520][    T1] numa: Node 1 CPUs: 1
-[    0.167453][    T1] BUG: Unable to handle kernel data access on read at 0x8000000041228298
-[    0.167992][    T1] Faulting instruction address: 0xc00000000018c128
-[    0.168817][    T1] Oops: Kernel access of bad area, sig: 11 [#1]
-[    0.168964][    T1] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-[    0.169417][    T1] Modules linked in:
-[    0.170047][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc2-00095-g7430ad5aa700 #209
-[    0.170305][    T1] NIP:  c00000000018c128 LR: c00000000018c0cc CTR: c00000000004dce0
-[    0.170498][    T1] REGS: c00000007e343880 TRAP: 0380   Not tainted  (5.9.0-rc2-00095-g7430ad5aa700)
-[    0.170602][    T1] MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 44002222  XER: 00000000
-[    0.170985][    T1] CFAR: c00000000018c288 IRQMASK: 0
-[    0.170985][    T1] GPR00: 0000000000000000 c00000007e343b10 c00000000173e400 0000000000004000
-[    0.170985][    T1] GPR04: 0000000000000000 0000000000000800 0000000000000800 0000000000000000
-[    0.170985][    T1] GPR08: 0000000000000000 c00000000122c298 c00000003fffc000 c00000007fd05ce8
-[    0.170985][    T1] GPR12: c00000007e0119f8 c000000001930000 00000000ffff8ade 0000000000000000
-[    0.170985][    T1] GPR16: c00000007e3c0640 0000000000000917 c00000007e3c0658 0000000000000008
-[    0.170985][    T1] GPR20: c0000000015d0bb8 00000000ffff8ade c000000000f57400 c000000001817c28
-[    0.170985][    T1] GPR24: c00000000176dc80 c00000007e3c0890 c00000007e3cfe00 0000000000000000
-[    0.170985][    T1] GPR28: c000000001772310 c00000007e011900 c00000007e3c0800 0000000000000001
-[    0.172750][    T1] NIP [c00000000018c128] build_sched_domains+0x808/0x14b0
-[    0.172900][    T1] LR [c00000000018c0cc] build_sched_domains+0x7ac/0x14b0
-[    0.173186][    T1] Call Trace:
-[    0.173484][    T1] [c00000007e343b10] [c00000000018bfe8] build_sched_domains+0x6c8/0x14b0 (unreliable)
-[    0.173821][    T1] [c00000007e343c50] [c00000000018dcdc] sched_init_domains+0xec/0x130
-[    0.174037][    T1] [c00000007e343ca0] [c0000000010d59d8] sched_init_smp+0x50/0xc4
-[    0.174207][    T1] [c00000007e343cd0] [c0000000010b45c4] kernel_init_freeable+0x1b4/0x378
-[    0.174378][    T1] [c00000007e343db0] [c0000000000129fc] kernel_init+0x24/0x158
-[    0.174740][    T1] [c00000007e343e20] [c00000000000d9d0] ret_from_kernel_thread+0x5c/0x6c
-[    0.175050][    T1] Instruction dump:
-[    0.175626][    T1] 554905ee 71480040 7d2907b4 4182016c 2c290000 3920006e 913e002c 41820034
-[    0.175841][    T1] 7c6307b4 e9300020 78631f24 7d58182a <7d2a482a> f93e0080 7d404828 314a0001
-[    0.178340][    T1] ---[ end trace 6876b88dd1d4b3bb ]---
-[    0.178512][    T1]
-[    1.180458][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+Now fixed up, thanks.
 
-That's qemu:
-
-qemu-system-ppc64 -nographic -vga none -M pseries -cpu POWER8 \
-  -kernel build~/vmlinux \
-  -m 2G,slots=2,maxmem=4G \
-  -object memory-backend-ram,size=1G,id=m0 \
-  -object memory-backend-ram,size=1G,id=m1 \
-  -numa node,nodeid=0,memdev=m0 \
-  -numa node,nodeid=1,memdev=m1 \
-  -smp 2,sockets=2,maxcpus=2  \
-
-
-On mambo I get:
-
-[    0.005069][    T1] smp: Bringing up secondary CPUs ...
-[    0.011656][    T1] smp: Brought up 2 nodes, 8 CPUs
-[    0.011682][    T1] numa: Node 0 CPUs: 0-3
-[    0.011709][    T1] numa: Node 1 CPUs: 4-7
-[    0.012015][    T1] BUG: arch topology borken
-[    0.012040][    T1]      the SMT domain not a subset of the CACHE domain
-[    0.012107][    T1] BUG: Unable to handle kernel data access on read at 0x80000001012e7398
-[    0.012142][    T1] Faulting instruction address: 0xc0000000001aa4f0
-[    0.012174][    T1] Oops: Kernel access of bad area, sig: 11 [#1]
-[    0.012206][    T1] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA PowerNV
-[    0.012236][    T1] Modules linked in:
-[    0.012264][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc2-00095-g7430ad5aa700 #1
-[    0.012304][    T1] NIP:  c0000000001aa4f0 LR: c0000000001aa498 CTR: 0000000000000000
-[    0.012341][    T1] REGS: c0000000ef583880 TRAP: 0380   Not tainted  (5.9.0-rc2-00095-g7430ad5aa700)
-[    0.012379][    T1] MSR:  9000000002009033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 44002222  XER: 00040000
-[    0.012439][    T1] CFAR: c0000000000101b0 IRQMASK: 0
-[    0.012439][    T1] GPR00: 0000000000000000 c0000000ef583b10 c0000000017fd000 0000000000004000
-[    0.012439][    T1] GPR04: 0000000000000000 0000000000000800 0000000000000000 0000000000000000
-[    0.012439][    T1] GPR08: 0000000000000000 c0000000012eb398 c0000000ffffc000 0000000000000000
-[    0.012439][    T1] GPR12: 0000000000000020 c0000000019f0000 00000000ffff8ad1 0000000000000000
-[    0.012439][    T1] GPR16: c0000000ef068658 c0000000018d7ba8 0000000000000008 c000000001690bb8
-[    0.012439][    T1] GPR20: c00000000182dc80 c0000000ef06be90 00000000ffff8ad1 c000000001014aa8
-[    0.012439][    T1] GPR24: 0000000000000917 c0000000ef068e00 0000000000000000 c0000000ef06be00
-[    0.012439][    T1] GPR28: 0000000000000001 c0000000ef068640 c0000000ef4a1800 c000000001832310
-[    0.012774][    T1] NIP [c0000000001aa4f0] build_sched_domains+0x5c0/0x14f0
-[    0.012812][    T1] LR [c0000000001aa498] build_sched_domains+0x568/0x14f0
-[    0.012842][    T1] Call Trace:
-[    0.012872][    T1] [c0000000ef583b10] [c0000000001aa3b4] build_sched_domains+0x484/0x14f0 (unreliable)
-[    0.012922][    T1] [c0000000ef583c50] [c0000000001ac3d8] sched_init_domains+0xd8/0x120
-[    0.012966][    T1] [c0000000ef583ca0] [c0000000011962d0] sched_init_smp+0x50/0xc4
-[    0.013008][    T1] [c0000000ef583cd0] [c00000000117451c] kernel_init_freeable+0x1b4/0x378
-[    0.013051][    T1] [c0000000ef583db0] [c000000000012994] kernel_init+0x2c/0x158
-[    0.013092][    T1] [c0000000ef583e20] [c00000000000d9d0] ret_from_kernel_thread+0x5c/0x6c
-[    0.013128][    T1] Instruction dump:
-[    0.013151][    T1] e93b003a 712a0040 552a05ee 418203c4 2c2a0000 3920006e 913b002c 41820034
-[    0.013206][    T1] 7c6307b4 e93d0020 78631f24 7d54182a <7d2a482a> f93b0080 7d404828 314a0001
-[    0.013267][    T1] ---[ end trace 1bf5f6f38a9fd096 ]---
-
-
-Did I miss a lead-up patch?
-
-See here for what I have applied:
-  https://github.com/linuxppc/linux/commits/next-test
-
-cheers
+greg k-h
