@@ -2,199 +2,133 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8417AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E676DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A66208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF9E221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841897;
-	bh=H9KAolUqWQVgCsYPLTdOsrxGNRQBT4lkkfDwBjylwu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5uTbJHDx9RACVTb1gcYUHW2RAunWv9ANPHgUPOCVrzc/WucAWsTjOb0p4nDScwP8
-	 wrSjRlaaRlqfPXRT4daLc+fpO1pzXJOCqjyeW5c7huUKdlGadwL7gmrOIILUhnrKn8
-	 KWeMnSCIPY8lP0nXxhEWEKwzd0R/eXZOBx0Gsn1s=
+	s=default; t=1599841910;
+	bh=SDm3NSxw1fCta6ix1bjkUr5fmBKjkUAslKLWmBPvl0k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xJvznnB8iG0TObNWubllasqxlZrEyhbA/Xrn6uJ3vxUoQm96U2FUBTlgSFTslGcTd
+	 WF+j5jHpvQh5JnK7XmzIcjlYO2RGgck8q8lp757IaMweVAYaLl+6x2+MW5beYNc2Rf
+	 kFSuGobyp9iQG/954xehz6QENFjBj2x3W4lX76I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgIKQbf (ORCPT
+        id S1726333AbgIKQbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbgIKPTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726410AbgIKPTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:19:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE3B72076C;
-        Fri, 11 Sep 2020 13:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1F21D79;
+        Fri, 11 Sep 2020 13:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829207;
-        bh=H9KAolUqWQVgCsYPLTdOsrxGNRQBT4lkkfDwBjylwu8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cl0JW8XQArezzj6Q3oTZoYXxTQenJI2FiX5sf51GIbO67NNBjZOYPUc31D4A93ae
-         7JFUhtObHw8aAFBvcFTwQXJ2DIL86konTk8cbha74PQGxENB3PXBfWeV8SoTfbaZYH
-         flOTeunkO+00hr0KsAW6RJPzC3bw+NSxbuKeRzZM=
+        s=default; t=1599829212;
+        bh=SDm3NSxw1fCta6ix1bjkUr5fmBKjkUAslKLWmBPvl0k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gOI+gwk0gWpHfx/PSGAnYVIMy/WX3CQ5LpERZYDRSQKnawQJCDWV9WwhGPcu0LDpz
+         Xk+4s/OJnkHs+8Ts8UR3sHCJKiHjn4jP7/LHDRLd9hsm8GX1f+WqQde2WOxNp3MZPt
+         cfvvU8KEig08bbBTUu9MQyfi55Xxawlyrw9FN/Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 09/16] netlabel: fix problems with mapping removal
-Date:   Fri, 11 Sep 2020 14:47:26 +0200
-Message-Id: <20200911122500.036474277@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 0/8] 5.4.65-rc1 review
+Date:   Fri, 11 Sep 2020 14:54:38 +0200
+Message-Id: <20200911125420.580564179@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
-References: <20200911122459.585735377@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.65-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.65-rc1
+X-KernelTest-Deadline: 2020-09-13T12:54+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+This is the start of the stable review cycle for the 5.4.65 release.
+There are 8 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit d3b990b7f327e2afa98006e7666fb8ada8ed8683 ]
+Responses should be made by Sun, 13 Sep 2020 12:54:10 +0000.
+Anything received after that time might be too late.
 
-This patch fixes two main problems seen when removing NetLabel
-mappings: memory leaks and potentially extra audit noise.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.65-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+and the diffstat can be found below.
 
-The memory leaks are caused by not properly free'ing the mapping's
-address selector struct when free'ing the entire entry as well as
-not properly cleaning up a temporary mapping entry when adding new
-address selectors to an existing entry.  This patch fixes both these
-problems such that kmemleak reports no NetLabel associated leaks
-after running the SELinux test suite.
+thanks,
 
-The potentially extra audit noise was caused by the auditing code in
-netlbl_domhsh_remove_entry() being called regardless of the entry's
-validity.  If another thread had already marked the entry as invalid,
-but not removed/free'd it from the list of mappings, then it was
-possible that an additional mapping removal audit record would be
-generated.  This patch fixes this by returning early from the removal
-function when the entry was previously marked invalid.  This change
-also had the side benefit of improving the code by decreasing the
-indentation level of large chunk of code by one (accounting for most
-of the diffstat).
+greg k-h
 
-Fixes: 63c416887437 ("netlabel: Add network address selectors to the NetLabel/LSM domain mapping")
-Reported-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/netlabel/netlabel_domainhash.c |   59 ++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 29 deletions(-)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/net/netlabel/netlabel_domainhash.c
-+++ b/net/netlabel/netlabel_domainhash.c
-@@ -85,6 +85,7 @@ static void netlbl_domhsh_free_entry(str
- 			kfree(netlbl_domhsh_addr6_entry(iter6));
- 		}
- #endif /* IPv6 */
-+		kfree(ptr->def.addrsel);
- 	}
- 	kfree(ptr->domain);
- 	kfree(ptr);
-@@ -537,6 +538,8 @@ int netlbl_domhsh_add(struct netlbl_dom_
- 				goto add_return;
- 		}
- #endif /* IPv6 */
-+		/* cleanup the new entry since we've moved everything over */
-+		netlbl_domhsh_free_entry(&entry->rcu);
- 	} else
- 		ret_val = -EINVAL;
- 
-@@ -580,6 +583,12 @@ int netlbl_domhsh_remove_entry(struct ne
- {
- 	int ret_val = 0;
- 	struct audit_buffer *audit_buf;
-+	struct netlbl_af4list *iter4;
-+	struct netlbl_domaddr4_map *map4;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	struct netlbl_af6list *iter6;
-+	struct netlbl_domaddr6_map *map6;
-+#endif /* IPv6 */
- 
- 	if (entry == NULL)
- 		return -ENOENT;
-@@ -597,6 +606,9 @@ int netlbl_domhsh_remove_entry(struct ne
- 		ret_val = -ENOENT;
- 	spin_unlock(&netlbl_domhsh_lock);
- 
-+	if (ret_val)
-+		return ret_val;
-+
- 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
- 	if (audit_buf != NULL) {
- 		audit_log_format(audit_buf,
-@@ -606,40 +618,29 @@ int netlbl_domhsh_remove_entry(struct ne
- 		audit_log_end(audit_buf);
- 	}
- 
--	if (ret_val == 0) {
--		struct netlbl_af4list *iter4;
--		struct netlbl_domaddr4_map *map4;
--#if IS_ENABLED(CONFIG_IPV6)
--		struct netlbl_af6list *iter6;
--		struct netlbl_domaddr6_map *map6;
--#endif /* IPv6 */
--
--		switch (entry->def.type) {
--		case NETLBL_NLTYPE_ADDRSELECT:
--			netlbl_af4list_foreach_rcu(iter4,
--					     &entry->def.addrsel->list4) {
--				map4 = netlbl_domhsh_addr4_entry(iter4);
--				cipso_v4_doi_putdef(map4->def.cipso);
--			}
-+	switch (entry->def.type) {
-+	case NETLBL_NLTYPE_ADDRSELECT:
-+		netlbl_af4list_foreach_rcu(iter4, &entry->def.addrsel->list4) {
-+			map4 = netlbl_domhsh_addr4_entry(iter4);
-+			cipso_v4_doi_putdef(map4->def.cipso);
-+		}
- #if IS_ENABLED(CONFIG_IPV6)
--			netlbl_af6list_foreach_rcu(iter6,
--					     &entry->def.addrsel->list6) {
--				map6 = netlbl_domhsh_addr6_entry(iter6);
--				calipso_doi_putdef(map6->def.calipso);
--			}
-+		netlbl_af6list_foreach_rcu(iter6, &entry->def.addrsel->list6) {
-+			map6 = netlbl_domhsh_addr6_entry(iter6);
-+			calipso_doi_putdef(map6->def.calipso);
-+		}
- #endif /* IPv6 */
--			break;
--		case NETLBL_NLTYPE_CIPSOV4:
--			cipso_v4_doi_putdef(entry->def.cipso);
--			break;
-+		break;
-+	case NETLBL_NLTYPE_CIPSOV4:
-+		cipso_v4_doi_putdef(entry->def.cipso);
-+		break;
- #if IS_ENABLED(CONFIG_IPV6)
--		case NETLBL_NLTYPE_CALIPSO:
--			calipso_doi_putdef(entry->def.calipso);
--			break;
-+	case NETLBL_NLTYPE_CALIPSO:
-+		calipso_doi_putdef(entry->def.calipso);
-+		break;
- #endif /* IPv6 */
--		}
--		call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
- 	}
-+	call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
- 
- 	return ret_val;
- }
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.4.65-rc1
+
+Jakub Kicinski <kuba@kernel.org>
+    net: disable netpoll on fresh napis
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    tipc: fix shutdown() of connectionless socket
+
+Vinicius Costa Gomes <vinicius.gomes@intel.com>
+    taprio: Fix using wrong queues in gate mask
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: not disable bh in the whole sctp_get_port_local()
+
+Kamil Lorenc <kamil@re-ws.pl>
+    net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+
+Paul Moore <paul@paul-moore.com>
+    netlabel: fix problems with mapping removal
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv6: Fix sysctl max for fib_multipath_hash_policy
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv4: Silence suspicious RCU usage warning
+
+
+-------------
+
+Diffstat:
+
+ Makefile                           |  4 +--
+ drivers/net/usb/dm9601.c           |  4 +++
+ net/core/dev.c                     |  3 +-
+ net/core/netpoll.c                 |  2 +-
+ net/ipv4/fib_trie.c                |  3 +-
+ net/ipv6/sysctl_net_ipv6.c         |  3 +-
+ net/netlabel/netlabel_domainhash.c | 59 +++++++++++++++++++-------------------
+ net/sched/sch_taprio.c             | 30 +++++++++++++++----
+ net/sctp/socket.c                  | 16 ++++-------
+ net/tipc/socket.c                  |  9 ++++--
+ 10 files changed, 79 insertions(+), 54 deletions(-)
 
 
