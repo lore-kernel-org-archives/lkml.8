@@ -2,52 +2,51 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA29C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C219C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8AA7208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1687A208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841954;
-	bh=eVcYg1cJOefDsu6kms7fDMPDr5i2bdkGkA+Hpm7nYuo=;
+	s=default; t=1599841966;
+	bh=ts5oWeF545x8yVXPV1jgSxK8OLtD4OAu6ZSBpIqSpDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c58UAWhkSy5J0TP0cuPtD5tm8ZF5ic0YIZthQkYdjXhsY/P3oEs577YkG9btUTBq1
-	 W06Nc1/9k/EsWenVuqJekffvpQ8q0+VsT1n/R5jBrEPtHU/tEDAI+3CJqejeq0pZ9H
-	 xcXw5+I7RW99RNNgVs5cmc/qI1UCTSqZM4pU1Qrk=
+	b=ouJtVw35UMuhkPbamgsavCPyObOFDyDVwHnksAvY8987WBfwH9zOOlyLVhmRdAjFs
+	 Us3LEr4pypf4jJPr7SxJRICWd1MzakTglOxSvLoQrcfzqtPRcAjQvkbaRMcehJ7Xvp
+	 T3rONkfEd9G7K208CQMYtn0OqPUKPRE5CfbdqJBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgIKQcc (ORCPT
+        id S1726652AbgIKQcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgIKPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:19:09 -0400
+        id S1726466AbgIKPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:19:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE62422210;
-        Fri, 11 Sep 2020 12:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86BCA2245C;
+        Fri, 11 Sep 2020 12:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829196;
-        bh=eVcYg1cJOefDsu6kms7fDMPDr5i2bdkGkA+Hpm7nYuo=;
+        s=default; t=1599829186;
+        bh=ts5oWeF545x8yVXPV1jgSxK8OLtD4OAu6ZSBpIqSpDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M7v+1825Fz4yuLgDuq4UUEfq3IcawKemnxKy4/mFBbFcn/NYMMBp1WHtz9S+2TtOH
-         pqZYXC3rYitnzWDY6lt3h02Oghx2H7Ohd5vxijo+cMLrmcgJabp2fK2A3N5kjwbCYd
-         pLrDhHciXVbLieCND2X5c6Uq9E+oUhvUGq6rTJuc=
+        b=0hqBdXfa+hp1FV2RfxAXDI2fM9nu6Jwurpu5pla8WdBpnaW5Dj17cAJBeQBMGUb67
+         BBWAnpUIFXwTHVEwGkfm5CcVUM41mHXRcfbRcwhDG0LJULZWsOSdzxHOGGFft0PKgi
+         0fjQ+x4PkVAbcQ4hx4hlpRpBy1q6VXDQrTiIgDiQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 05/16] RDMA/cma: Remove unneeded locking for req paths
-Date:   Fri, 11 Sep 2020 14:47:22 +0200
-Message-Id: <20200911122459.843026940@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 16/16] mptcp: free acked data before waiting for more memory
+Date:   Fri, 11 Sep 2020 14:47:33 +0200
+Message-Id: <20200911122500.382563283@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
 References: <20200911122459.585735377@linuxfoundation.org>
@@ -60,123 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit cc9c037343898eb7a775e6b81d092ee21eeff218 ]
+[ Upstream commit 1cec170d458b1d18f6f1654ca84c0804a701c5ef ]
 
-The REQ flows are concerned that once the handler is called on the new
-cm_id the ULP can choose to trigger a rdma_destroy_id() concurrently at
-any time.
+After subflow lock is dropped, more wmem might have been made available.
 
-However, this is not true, while the ULP can call rdma_destroy_id(), it
-immediately blocks on the handler_mutex which prevents anything harmful
-from running concurrently.
+This fixes a deadlock in mptcp_connect.sh 'mmap' mode: wmem is exhausted.
+But as the mptcp socket holds on to already-acked data (for retransmit)
+no wakeup will occur.
 
-Remove the confusing extra locking and refcounts and make the
-handler_mutex protecting state during destroy more clear.
+Using 'goto restart' calls mptcp_clean_una(sk) which will free pages
+that have been acked completely in the mean time.
 
-Link: https://lore.kernel.org/r/20200723070707.1771101-4-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: fb529e62d3f3 ("mptcp: break and restart in case mptcp sndbuf is full")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/cma.c | 31 ++++++-------------------------
- 1 file changed, 6 insertions(+), 25 deletions(-)
+ net/mptcp/protocol.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 04151c301e851..11f43204fee77 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1831,21 +1831,21 @@ static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -772,7 +772,6 @@ fallback:
+ restart:
+ 	mptcp_clean_una(sk);
  
- void rdma_destroy_id(struct rdma_cm_id *id)
- {
--	struct rdma_id_private *id_priv;
-+	struct rdma_id_private *id_priv =
-+		container_of(id, struct rdma_id_private, id);
- 	enum rdma_cm_state state;
- 
--	id_priv = container_of(id, struct rdma_id_private, id);
--	trace_cm_id_destroy(id_priv);
--	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
--	cma_cancel_operation(id_priv, state);
--
- 	/*
- 	 * Wait for any active callback to finish.  New callbacks will find
- 	 * the id_priv state set to destroying and abort.
- 	 */
- 	mutex_lock(&id_priv->handler_mutex);
-+	trace_cm_id_destroy(id_priv);
-+	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
- 	mutex_unlock(&id_priv->handler_mutex);
- 
-+	cma_cancel_operation(id_priv, state);
-+
- 	rdma_restrack_del(&id_priv->res);
- 	if (id_priv->cma_dev) {
- 		if (rdma_cap_ib_cm(id_priv->id.device, 1)) {
-@@ -2205,19 +2205,9 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
- 	cm_id->context = conn_id;
- 	cm_id->cm_handler = cma_ib_handler;
- 
--	/*
--	 * Protect against the user destroying conn_id from another thread
--	 * until we're done accessing it.
--	 */
--	cma_id_get(conn_id);
- 	ret = cma_cm_event_handler(conn_id, &event);
- 	if (ret)
- 		goto err3;
--	/*
--	 * Acquire mutex to prevent user executing rdma_destroy_id()
--	 * while we're accessing the cm_id.
--	 */
--	mutex_lock(&lock);
- 	if (cma_comp(conn_id, RDMA_CM_CONNECT) &&
- 	    (conn_id->id.qp_type != IB_QPT_UD)) {
- 		trace_cm_send_mra(cm_id->context);
-@@ -2226,13 +2216,11 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
- 	mutex_unlock(&lock);
- 	mutex_unlock(&conn_id->handler_mutex);
- 	mutex_unlock(&listen_id->handler_mutex);
--	cma_id_put(conn_id);
- 	if (net_dev)
- 		dev_put(net_dev);
- 	return 0;
- 
- err3:
--	cma_id_put(conn_id);
- 	/* Destroy the CM ID by returning a non-zero value. */
- 	conn_id->cm_id.ib = NULL;
- err2:
-@@ -2409,11 +2397,6 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 	memcpy(cma_src_addr(conn_id), laddr, rdma_addr_size(laddr));
- 	memcpy(cma_dst_addr(conn_id), raddr, rdma_addr_size(raddr));
- 
--	/*
--	 * Protect against the user destroying conn_id from another thread
--	 * until we're done accessing it.
--	 */
--	cma_id_get(conn_id);
- 	ret = cma_cm_event_handler(conn_id, &event);
- 	if (ret) {
- 		/* User wants to destroy the CM ID */
-@@ -2421,13 +2404,11 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
- 		cma_exch(conn_id, RDMA_CM_DESTROYING);
- 		mutex_unlock(&conn_id->handler_mutex);
- 		mutex_unlock(&listen_id->handler_mutex);
--		cma_id_put(conn_id);
- 		rdma_destroy_id(&conn_id->id);
- 		return ret;
+-wait_for_sndbuf:
+ 	__mptcp_flush_join_list(msk);
+ 	ssk = mptcp_subflow_get_send(msk);
+ 	while (!sk_stream_memory_free(sk) ||
+@@ -873,7 +872,7 @@ wait_for_sndbuf:
+ 				 */
+ 				mptcp_set_timeout(sk, ssk);
+ 				release_sock(ssk);
+-				goto wait_for_sndbuf;
++				goto restart;
+ 			}
+ 		}
  	}
- 
- 	mutex_unlock(&conn_id->handler_mutex);
--	cma_id_put(conn_id);
- 
- out:
- 	mutex_unlock(&listen_id->handler_mutex);
--- 
-2.25.1
-
 
 
