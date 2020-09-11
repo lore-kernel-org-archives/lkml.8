@@ -2,108 +2,121 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B80C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB7A21D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60BB21D79
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdBz9q2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbgIKLdl (ORCPT
+        id S1725805AbgIKLfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgIKL3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:29:48 -0400
-Received: from gaia (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E44C221EB;
-        Fri, 11 Sep 2020 11:29:15 +0000 (UTC)
-Date:   Fri, 11 Sep 2020 12:29:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Oli Swede <oli.swede@arm.com>, Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/14] arm64: Optimise and update memcpy, user copy
- and string routines
-Message-ID: <20200911112911.GA12835@gaia>
-References: <20200630194822.1082-1-oli.swede@arm.com>
- <f52401d9-787c-667b-c1ec-8b91106d6d14@arm.com>
- <20200907101003.GA11970@willie-the-truck>
+        Fri, 11 Sep 2020 07:35:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgIKLdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:33:55 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A92C061795;
+        Fri, 11 Sep 2020 04:33:31 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z19so5496415lfr.4;
+        Fri, 11 Sep 2020 04:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/QE4i4/aazEggX3dg7wr3FT355FkQudm+5WO62dn5fc=;
+        b=ZdBz9q2UwkyiJEi8yLgyEcycOqWOQh+/+A9aVi86GSiibZAQFCBlj/zusrsnNfd1/M
+         kXIxwa7mj0oqdG94vSLwToFrvwADr/MCjfq9iIzPsmIiAvkWAGVhdoacywEQadRQXiOb
+         opqgQNTOTQ1fzKRNhcsOih1rksULZy3Uyk2df/nXamhviLMFUNEHWM4ZHCTGJHc2pyri
+         rRUyZSAHxqEJ0AJ0clqXWmOs6jeY7E7UmV3idy1nrlJ2MMuWcB8USaz+fD97zJoxETSx
+         AJMj1tbywhivTv9xRrUCUjKGz8kPfhZZfxqH+YuholrFYr+m73g1ta1H90NoOL/JKQPV
+         t+RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/QE4i4/aazEggX3dg7wr3FT355FkQudm+5WO62dn5fc=;
+        b=a8mR+vpB5P7+qY5fVVWURKNQUyYhmwv7d5wYexMhpoMsaxkV4XLZw2JXXK7NyKoExs
+         W3v/2PZxlFUdn+6xxgDSlWYhv/fGBqZiJgVVDhcTvpDe7TxOqKyTqH1EL1V3Tav5zqs4
+         eIGjPbRWUnVWO5M9QDiT1zploG2wzZiqVq6O5DZ1BxS+vWVHOnmMJS8N9EgrpV3AJp2i
+         fQK/hwkABMwYe6LK7H3K59j0enkZENaeupCLv2usA8SyRQQhqrNDWLHf53VcyJDE1fj8
+         Z9a0BPNG9JSDRLyL046scw/gpUZEtRVzZ4S1BIs8y+rQKis7BSI7mGiCXHZx6rI6ZAfL
+         mHJw==
+X-Gm-Message-State: AOAM5325qUwxMhmRaIgy1FLilZMAmDOsf2OQf6332YPtTudDud2MGO5v
+        zY4D5Si3SFynq4+p+klD6V0=
+X-Google-Smtp-Source: ABdhPJymzuhfD89a6kmG9I634PfKHVSojkHULfjgBdUyziy+UxX2lJToqR/e6LdP8duHsigYt6lD9w==
+X-Received: by 2002:a05:6512:32b1:: with SMTP id q17mr178582lfe.329.1599824009497;
+        Fri, 11 Sep 2020 04:33:29 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:4890:6188:b7d9:478f:6876:19ba])
+        by smtp.gmail.com with ESMTPSA id 189sm483756ljj.54.2020.09.11.04.33.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 04:33:29 -0700 (PDT)
+Subject: Re: [PATCH] media: Kconfig: Update help description VIDEO_RENESAS_FCP
+ config
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+References: <20200911101046.20200-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <85d326e2-a73b-fa51-a507-eced71346786@gmail.com>
+Date:   Fri, 11 Sep 2020 14:33:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907101003.GA11970@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200911101046.20200-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:10:03AM +0100, Will Deacon wrote:
-> On Wed, Jul 01, 2020 at 09:12:49AM +0100, Oli Swede wrote:
-> > > Version 3 addressed this but I later found some issues with the fixup
-> > > correctness after further testing, and have partially re-written them
-> > > here, and addressed some other behaviours of the copy algorithm.
+Hello!
+
+On 9/11/20 1:10 PM, Lad Prabhakar wrote:
+
+> rcar-fcp driver is also used on Renesas RZ/G2 SoC's, update the same
+
+    What same, the driver?
+
+> to reflect help description for VIDEO_RENESAS_FCP config.
 > 
-> [...]
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  drivers/media/platform/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> > I am waiting on access to the relevant machine before posting the benchmark
-> > results for this optimized memcpy, but Sam reported the following with the
-> > similar (but now slightly older) cortex-strings version:
-> >   * copy_from_user: 13.17%
-> >   * copy_to_user: 4.8%
-> >   * memcpy: 27.88%
-> >   * copy_in_user: Didn't appear in the test results.
-> > This machine will also be used to check the fixups are accurate on a system
-> > with UAO - they appear to be exact on a non-UAO system with PAN that I've
-> > been working on locally.
-> 
-> I'm inclined to say that cortex-strings is probably not a good basis for
-> our uaccess routines. The code needs to be adapted in a non-straightforward
-> way so that we lose pretty much all of the benefits we'd usually get from
-> adopted an existing implementation; we can't pull in fixes or improvements
-> without a lot of manual effort, we can't reuse existing testing infrastructure
-> (see below) and we end up being a "second-class" user of the routines
-> because of the discrepancies in implementation.
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index bbf32086b607..a5716e9f463a 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -426,8 +426,8 @@ config VIDEO_RENESAS_FCP
+>  	help
+>  	  This is a driver for the Renesas Frame Compression Processor (FCP).
+>  	  The FCP is a companion module of video processing modules in the
+> -	  Renesas R-Car Gen3 SoCs. It handles memory access for the codec,
+> -	  VSP and FDP modules.
+> +	  Renesas R-Car Gen3 and RZ/G2 SoCs. It handles memory access for
+> +	  the codec, VSP and FDP modules.
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called rcar-fcp.
 
-I was a bit more optimistic about this series until I saw the
-copy_user_fixup.S changes (patches 12 to 14). I have a suspicion it's
-only Oli (and maybe Robin) who understands it, so from a maintainer's
-perspective it doesn't really scale. It's also very fragile with any
-minor tweak in the actual copy routine potentially breaking the fixup
-code.
-
-> So why don't we use cortex-strings as a basis for the in-kernel routines
-> only, preferably in a form where the code can be used directly and updated
-> with a script (e.g. similar to how we pull in arch/arm64/crypto routines
-> from OpenSSL). We can then roll our own uaccess routines, using a slightly
-> more straight-forward implementation which is more amenable to handling
-> user faults and doesn't do things like over copying.
-
-I think that's probably the best option. I wouldn't mind replacing the
-in-kernel memcpy/strcpy etc. with these patches since the work was done
-already but definitely not for the uaccess and fixup routines (we still
-have the original implementation in the git log).
-
-A script would work even better. Do we have any issue with licensing
-though? Cortex Strings is BSD (3-clause IIRC) and copyright owned by
-Linaro. I got them to officially agree with relicensing (dual license)
-the latest copy under GPLv2 so that we can contribute it to the kernel.
-But since the project license is still BSD, any future updates in there
-are BSD-only.
-
-Maybe someone who understands this stuff can confirm that it's ok to
-regularly grab the Cortex Strings files into a GPLv2 codebase without
-asking for Linaro's permission.
-
-BTW, you could pick the kprobes patch in here, that explicit fixup call
-is not necessary.
-
--- 
-Catalin
+MBR, Sergei
