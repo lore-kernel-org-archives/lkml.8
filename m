@@ -2,154 +2,155 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8061C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EA1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9EA2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A874C21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="aKGHxqSK";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZlyozmQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbgIKExP (ORCPT
+        id S1725770AbgIKE4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 00:53:15 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58878 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725446AbgIKExO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 00:53:14 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5A091C46C49DB6911600;
-        Fri, 11 Sep 2020 12:53:11 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 12:53:09 +0800
-Subject: Re: [PATCH -next] media: marvell-ccic: Fix -Wunused-function warnings
-To:     Lubomir Rintel <lkundrak@v3.sk>
-References: <20200910080933.40684-1-yuehaibing@huawei.com>
- <20200910082221.GA1115782@demiurge.local>
- <b7206784-15ea-9790-0c70-eea99bbab34a@huawei.com>
- <20200910145702.GA1118779@demiurge.local>
-CC:     <corbet@lwn.net>, <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <9925ae09-cc5f-8399-fe2f-a4e728a483d6@huawei.com>
-Date:   Fri, 11 Sep 2020 12:53:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200910145702.GA1118779@demiurge.local>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+        Fri, 11 Sep 2020 00:56:35 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:39969 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725468AbgIKE4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 00:56:30 -0400
+X-Greylist: delayed 592 seconds by postgrey-1.27 at vger.kernel.org; Fri, 11 Sep 2020 00:56:29 EDT
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C8127580176;
+        Fri, 11 Sep 2020 00:46:36 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Fri, 11 Sep 2020 00:46:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=JE4d8w98uqoH0zAX9kIMQF/kNdFrrfp
+        5s+XGghxpu2Q=; b=aKGHxqSK44sAvbOa3O+hjcbg+0zGqEmMR955lFtPHVamz0v
+        Vu0s0/ZTrpn6hOPp3gGp1dDwwabK0KDlrnfkXZ3ivtVIO62mZG6yadeKWwFJqJRD
+        XjjW0SY434RBBzc9JYx/dLY6bPcU1utZu9KX5uEmV/3WxsiW0TFBXlPT3s4s5kym
+        jk4zvIHdO8GdrfJmx9M8iGTNwaulSaMG1dkSUnCMQtaI3NuPDwdm8mqIg27yL+ZE
+        l8GFApZEb2TiS9LHPntdP+1KeeuZf9npyx4sYGxoJe3ZdkED+bHxWs26Dv922yUG
+        JKtCud21GlHAWlq63QkfYcEA+bQ6SGJ5Snejp+g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=JE4d8w
+        98uqoH0zAX9kIMQF/kNdFrrfp5s+XGghxpu2Q=; b=ZlyozmQpKiuycVOB0JnTyV
+        XZKViu2n590EBUbtsKRm+MjMgC6wPf0kl6HR8O9IwtLgfbY+DSo5Z3haYr1Wamoo
+        n2IXzveW19opuXfbEeTzKs5xqiJDY1h+1Hd45xK6V0vhMTbI+Q0VyP2/S5I38Ogo
+        JK7+3ZJD/9FOuCwamp48gOhfB3aypKI4VL5TXUNQBELZ9XV4URThwl6YjxN70U1Q
+        uy2zEoukGSE19Dy0ze3wGmMhsN6ugaGYsFLFAiN6baOqmRCnWaLWQbfkzhmsmdrF
+        PElIzLpDQoGlMGTZ9qzjFH54s0lYQ1TLEpbf2D5cQlS5zKBlbgxS7fDoHXZScoTA
+        ==
+X-ME-Sender: <xms:KgFbX4j6kPJyDp1yobpWlKLzpagPqplPT1QA6S15NP92E-JxTs9sdA>
+    <xme:KgFbXxD4JrYV2lP8OARUCfqv2j2K6zzElA8Od9RP7CjIFdPl3qQy0zpXXogvAgopA
+    awqDxclJ6JX3JsxIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedgkeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepudfftddvveekfffgteffffeuveegjeelgefhffejtdehtdfhlefgkeef
+    hfefkeeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:KgFbXwFXlhd6LjWtR0lM_tDwvA-LJ-v1Z8vPww85vUzVbEYDhoRvVQ>
+    <xmx:KgFbX5Rd_XS4aDwadS0KL9pTkfT1agrqBcFxOBDoQRaE0zGybk6H1g>
+    <xmx:KgFbX1yUp0pNYnyt6zHTy-uaEP3dNinHbSU4W0hFHakR3IniauA47A>
+    <xmx:LAFbX6r1y43zyjRpJIBQtxzKBS-0jzKr_qWWEyRXxsCQ7W4azcQxmg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id B6B26E00A6; Fri, 11 Sep 2020 00:46:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
+Mime-Version: 1.0
+Message-Id: <551926fc-7bd4-4a0e-8fcf-4675dcdba22b@www.fastmail.com>
+In-Reply-To: <CACPK8XcYvUj3W-CPzXKugp3wx7rcLEJ_8f2-Bi6V7QHZpopBbA@mail.gmail.com>
+References: <20200911034631.8473-1-chiawei_wang@aspeedtech.com>
+ <CACPK8XcYvUj3W-CPzXKugp3wx7rcLEJ_8f2-Bi6V7QHZpopBbA@mail.gmail.com>
+Date:   Fri, 11 Sep 2020 14:15:56 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>,
+        "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
+Cc:     "Rob Herring" <robh+dt@kernel.org>,
+        "Corey Minyard" <minyard@acm.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
+        "Cyril Bur" <cyrilbur@gmail.com>,
+        "Robert Lippert" <rlippert@google.com>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "Ryan Chen" <ryan_chen@aspeedtech.com>
+Subject: Re: [PATCH 0/4] Remove LPC register partitioning
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/10 22:57, Lubomir Rintel wrote:
-> On Thu, Sep 10, 2020 at 05:18:15PM +0800, Yuehaibing wrote:
->> On 2020/9/10 16:22, Lubomir Rintel wrote:
->>> On Thu, Sep 10, 2020 at 04:09:33PM +0800, YueHaibing wrote:
->>>> If CONFIG_PM is n, gcc warns:
->>>>
->>>> drivers/media/platform/marvell-ccic/mmp-driver.c:347:12: warning: ‘mmpcam_resume’ defined but not used [-Wunused-function]
->>>>  static int mmpcam_resume(struct device *dev)
->>>>             ^~~~~~~~~~~~~
->>>> drivers/media/platform/marvell-ccic/mmp-driver.c:338:12: warning: ‘mmpcam_suspend’ defined but not used [-Wunused-function]
->>>>  static int mmpcam_suspend(struct device *dev)
->>>>             ^~~~~~~~~~~~~~
->>>> drivers/media/platform/marvell-ccic/mmp-driver.c:324:12: warning: ‘mmpcam_runtime_suspend’ defined but not used [-Wunused-function]
->>>>  static int mmpcam_runtime_suspend(struct device *dev)
->>>>             ^~~~~~~~~~~~~~~~~~~~~~
->>>> drivers/media/platform/marvell-ccic/mmp-driver.c:310:12: warning: ‘mmpcam_runtime_resume’ defined but not used [-Wunused-function]
->>>>  static int mmpcam_runtime_resume(struct device *dev)
->>>>             ^~~~~~~~~~~~~~~~~~~~~
->>>>
->>>> Mark them as __maybe_unused to fix this.
->>>>
->>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>
->>> Your colleague seems to sent out an equivalent patch:
->>> https://lore.kernel.org/lkml/20200910080933.40684-1-yuehaibing@huawei.com/
->>
->> This is my patch, paste an wrong link?
-> 
-> Indeed, sorry for the confusion.
-> 
-> The original mail only went to linux-media, not lkml, which is why I
-> picked the wrong one from the archive. Here's the patch:
-> 
-> https://lore.kernel.org/linux-media/20200909112921.5116-1-weiyongjun1@huawei.com/
 
-mmpcam_runtime_suspend/mmpcam_runtime_resume also should be cared, I'll adjust my patch based on it.
+On Fri, 11 Sep 2020, at 13:33, Joel Stanley wrote:
+> Hello,
+> 
+> On Fri, 11 Sep 2020 at 03:46, Chia-Wei, Wang
+> <chiawei_wang@aspeedtech.com> wrote:
+> >
+> > The LPC controller has no concept of the BMC and the Host partitions.
+> > The incorrect partitioning can impose unnecessary range restrictions
+> > on register access through the syscon regmap interface.
+> >
+> > For instance, HICRB contains the I/O port address configuration
+> > of KCS channel 1/2. However, the KCS#1/#2 drivers cannot access
+> > HICRB as it is located at the other LPC partition.
 
-> 
-> Take care
-> Lubo
-> 
->>
->>>
->>> Cheers
->>> Lubo
->>>
->>>> ---
->>>>  drivers/media/platform/marvell-ccic/mmp-driver.c | 8 ++++----
->>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
->>>> index c4b28a00a3a2..032fdddbbecc 100644
->>>> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
->>>> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
->>>> @@ -307,7 +307,7 @@ static int mmpcam_platform_remove(struct platform_device *pdev)
->>>>   * Suspend/resume support.
->>>>   */
->>>>  
->>>> -static int mmpcam_runtime_resume(struct device *dev)
->>>> +static int __maybe_unused mmpcam_runtime_resume(struct device *dev)
->>>>  {
->>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
->>>>  	struct mcam_camera *mcam = &cam->mcam;
->>>> @@ -321,7 +321,7 @@ static int mmpcam_runtime_resume(struct device *dev)
->>>>  	return 0;
->>>>  }
->>>>  
->>>> -static int mmpcam_runtime_suspend(struct device *dev)
->>>> +static int __maybe_unused mmpcam_runtime_suspend(struct device *dev)
->>>>  {
->>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
->>>>  	struct mcam_camera *mcam = &cam->mcam;
->>>> @@ -335,7 +335,7 @@ static int mmpcam_runtime_suspend(struct device *dev)
->>>>  	return 0;
->>>>  }
->>>>  
->>>> -static int mmpcam_suspend(struct device *dev)
->>>> +static int __maybe_unused mmpcam_suspend(struct device *dev)
->>>>  {
->>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
->>>>  
->>>> @@ -344,7 +344,7 @@ static int mmpcam_suspend(struct device *dev)
->>>>  	return 0;
->>>>  }
->>>>  
->>>> -static int mmpcam_resume(struct device *dev)
->>>> +static int __maybe_unused mmpcam_resume(struct device *dev)
->>>>  {
->>>>  	struct mmp_camera *cam = dev_get_drvdata(dev);
->>>>  
->>>> -- 
->>>> 2.17.1
->>>>
->>>>
->>>
->>> .
->>>
->>
-> 
-> .
-> 
+Thanks for addressing this, I've regretted that choice for a while now.
 
+The split was rooted in trying to support pinmux while not being
+across every detail of the LPC controller, and so I made some poor
+decisions.
+
+> >
+> > In addition, to be backward compatible, the newly added HW control
+> > bits could be added at any reserved bits over the LPC addressing space.
+> >
+> > Thereby, this patch series aims to remove the LPC partitioning for
+> > better driver development and maintenance.
+> 
+> I support this cleanup. The only consideration is to be careful with
+> breaking the driver/device-tree relationship. We either need to ensure
+> the drivers remain compatible with  both device trees.
+> 
+> Another solution is to get agreement from all parties that for the LPC
+> device the device tree is always the one shipped with the kernel, so
+> it is okay to make incompatible changes.
+> 
+> While we are doing a cleanup, Andrew suggested we remove the detailed
+> description of LPC out of the device tree. We would have the one LPC
+> node, and create a LPC driver that creates all of the sub devices
+> (snoop, FW cycles, kcs, bt, vuart). Andrew, can  you elaborate on this
+> plan?
+
+I dug up the conversation I had with Rob over a year ago about being
+unhappy with what I'd cooked up.
+
+https://lore.kernel.org/linux-arm-kernel/CAL_JsqJ+sFDG8eKbV3gvmqVHx+otWbki4dY213apzXgfhbXXEw@mail.gmail.com/
+
+But I think you covered most of the idea there: We have the LPC driver
+create the subdevices and that moves the details out of the devicetree.
+However, I haven't thought about it more than that, and I think there are
+still problems with that idea. For instance, how we manage configuration
+of those devices, and how to enable only the devices a given platform
+actually cares about (i.e. the problems that devicetree solves for us).
+
+It may be that the only way to do that is with platform code, and that's
+not really a direction we should be going either.
+
+Andrew
