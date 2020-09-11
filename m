@@ -2,282 +2,94 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74254C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18987221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MAkWIzxn";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bPQ+DqR7"
+	by mail.kernel.org (Postfix) with ESMTP id 06CFF221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgIKG2H (ORCPT
+        id S1725781AbgIKG2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:28:07 -0400
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:49936
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgIKG2D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599805682;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=pAeAgsozou67WOAJChdNX/t/bzVhVhOA2kc1P+Z3QgA=;
-        b=MAkWIzxn7bQdDab0KD/fq+B62/zhFAf9pZLBI1PmwoxW+mq8o722Igkq20VVHoOU
-        Ejs/wPnMWamiSDOmeGdpqBLm/OjoRTUbfeDK8vlXXlEnhC8Tp3TfbSSrB4MWeCvYJan
-        mNGcl3NACGTm0ZFkeuMm+iBwRbHwYeK1VdhM3iRY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599805682;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=pAeAgsozou67WOAJChdNX/t/bzVhVhOA2kc1P+Z3QgA=;
-        b=bPQ+DqR7xSLQYjLFf4sSlxXnfxUyr2WC3EgIDLaYgucvB9w1TH9EMsE4XUZtnNvZ
-        9njIrZxr0nOMUDy+Phu3mLax5O98x2+Eq/jJ1jmuKu1L5hFg3q0U0AMyBD0kEY1uYX4
-        OnAWT2A70cptRTmG9PZoaMwHkMRLBOvx3a0z9jdI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52044C433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=hemantk@codeaurora.org
-Subject: Re: [PATCH v5 4/4] bus: mhi: clients: Add userspace client interface
- driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jhugo@codeaurora.org,
-        bbhatt@codeaurora.org
-References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
- <1596696063-17802-5-git-send-email-hemantk@codeaurora.org>
- <20200907093725.GC1393659@kroah.com>
-From:   Hemant Kumar <hemantk@codeaurora.org>
-Message-ID: <010101747bd97299-764fe97e-b047-4729-bd3d-5324002af106-000000@us-west-2.amazonses.com>
-Date:   Fri, 11 Sep 2020 06:28:02 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 11 Sep 2020 02:28:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:53810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgIKG2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:28:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F40F106F;
+        Thu, 10 Sep 2020 23:28:48 -0700 (PDT)
+Received: from [10.57.50.170] (unknown [10.57.50.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24F8B3F68F;
+        Thu, 10 Sep 2020 23:28:47 -0700 (PDT)
+Subject: Re: [PATCH v5] perf: arm_dsu: Support DSU ACPI devices
+To:     tuanphan@amperemail.onmicrosoft.com
+Cc:     will@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1599694141-16056-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <202009102143.A4pW4A7I%lkp@intel.com>
+ <C7729DCE-57C3-4ADD-AFD4-3992798F1FF9@amperemail.onmicrosoft.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <6b04416d-497b-4687-2c79-08d029cf758d@arm.com>
+Date:   Fri, 11 Sep 2020 07:33:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200907093725.GC1393659@kroah.com>
+In-Reply-To: <C7729DCE-57C3-4ADD-AFD4-3992798F1FF9@amperemail.onmicrosoft.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2020.09.11-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On 9/7/20 2:37 AM, Greg KH wrote:
-> On Wed, Aug 05, 2020 at 11:41:03PM -0700, Hemant Kumar wrote:
->> This MHI client driver allows userspace clients to transfer
->> raw data between MHI device and host using standard file operations.
->> Device file node is created with format
+On 09/10/2020 08:07 PM, Tuan Phan wrote:
+> Hi Will,
+> 
+>> On Sep 10, 2020, at 6:40 AM, kernel test robot <lkp@intel.com> wrote:
 >>
->> /dev/mhi_<controller_name>_<mhi_device_name>
+>> Hi Tuan,
 >>
->> Currently it supports LOOPBACK channel.
+>> Thank you for the patch! Perhaps something to improve:
 >>
->> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
->> ---
->>   drivers/bus/mhi/Kconfig          |   6 +
->>   drivers/bus/mhi/Makefile         |   1 +
->>   drivers/bus/mhi/clients/Kconfig  |  15 +
-> 
-> Why a whole new subdirectory for just one file?
-> 
-> Please keep it in the same directory until you get too many different
-> files.
-Currently MHI core driver files are under bus/mhi/core. Since MHI 
-clients sit on top of core layer of MHI driver, i can move uci.c 
-directly under /bus/mhi/.
-
-> 
->>   drivers/bus/mhi/clients/Makefile |   3 +
->>   drivers/bus/mhi/clients/uci.c    | 662 +++++++++++++++++++++++++++++++++++++++
->>   5 files changed, 687 insertions(+)
->>   create mode 100644 drivers/bus/mhi/clients/Kconfig
->>   create mode 100644 drivers/bus/mhi/clients/Makefile
->>   create mode 100644 drivers/bus/mhi/clients/uci.c
+>> [auto build test WARNING on linus/master]
+>> [also build test WARNING on v5.9-rc4 next-20200910]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch]
 >>
->> diff --git a/drivers/bus/mhi/Kconfig b/drivers/bus/mhi/Kconfig
->> index 6a217ff..927c392 100644
->> --- a/drivers/bus/mhi/Kconfig
->> +++ b/drivers/bus/mhi/Kconfig
->> @@ -20,3 +20,9 @@ config MHI_BUS_DEBUG
->>   	 Enable debugfs support for use with the MHI transport. Allows
->>   	 reading and/or modifying some values within the MHI controller
->>   	 for debug and test purposes.
->> +
->> +if MHI_BUS
->> +
->> +source "drivers/bus/mhi/clients/Kconfig"
->> +
->> +endif
->> diff --git a/drivers/bus/mhi/Makefile b/drivers/bus/mhi/Makefile
->> index 19e6443..48f6028 100644
->> --- a/drivers/bus/mhi/Makefile
->> +++ b/drivers/bus/mhi/Makefile
->> @@ -1,2 +1,3 @@
->>   # core layer
->>   obj-y += core/
->> +obj-y += clients/
->> diff --git a/drivers/bus/mhi/clients/Kconfig b/drivers/bus/mhi/clients/Kconfig
->> new file mode 100644
->> index 0000000..37aaf51
->> --- /dev/null
->> +++ b/drivers/bus/mhi/clients/Kconfig
->> @@ -0,0 +1,15 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +
->> +menu "MHI clients support"
->> +
->> +config MHI_UCI
->> +       tristate "MHI UCI"
->> +       depends on MHI_BUS
->> +       help
->> +	 MHI based userspace client interface driver is used for transferring
->> +	 raw data between host and device using standard file operations from
->> +	 userspace. Open, read, write, and close operations are supported
->> +	 by this driver. Please check mhi_uci_match_table for all supported
->> +	 channels that are exposed to userspace.
->> +
+>> url:    https://github.com/0day-ci/linux/commits/Tuan-Phan/perf-arm_dsu-Support-DSU-ACPI-devices/20200910-105630
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git ab29a807a7ddaa7c84d2f4cb8d29e74e33759072
+>> config: arm64-randconfig-r012-20200909 (attached as .config)
+>> compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project 0a5dc7effb191eff740e0e7ae7bd8e1f6bdb3ad9)
+>> reproduce (this is a W=1 build):
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # install arm64 cross compiling tool for clang build
+>>         # apt-get install binutils-aarch64-linux-gnu
+>>         # save the attached .config to linux build tree
+>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm64
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>>> drivers/perf/arm_dsu_pmu.c:799:36: warning: unused variable 'dsu_pmu_acpi_match' [-Wunused-const-variable]
+>>    static const struct acpi_device_id dsu_pmu_acpi_match[] = {
+>>                                       ^
+>>    1 warning generated.
+>>
 > 
-> Module name information?
-Thanks for pointing it out, will add in next patch set.
-> 
-> 
->> +endmenu
->> diff --git a/drivers/bus/mhi/clients/Makefile b/drivers/bus/mhi/clients/Makefile
->> new file mode 100644
->> index 0000000..cd34282
->> --- /dev/null
->> +++ b/drivers/bus/mhi/clients/Makefile
->> @@ -0,0 +1,3 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
->> +
->> +obj-$(CONFIG_MHI_UCI) += uci.o
-> 
-> Why not mhi_ as a prefix?  This is a very generic module name, right?
-how about adding
-mhi_uci-y		:= uci.o
-obj-$(CONFIG_MHI_UCI)	+= mhi_uci.o
+> Do you need me to fix this warning when CONFIG_ACPI not defined?
 
-> 
->> diff --git a/drivers/bus/mhi/clients/uci.c b/drivers/bus/mhi/clients/uci.c
->> new file mode 100644
->> index 0000000..a25d5d0
->> --- /dev/null
->> +++ b/drivers/bus/mhi/clients/uci.c
->> @@ -0,0 +1,662 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/* Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.*/
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/mhi.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/module.h>
->> +#include <linux/poll.h>
->> +
->> +#define DEVICE_NAME "mhi"
->> +#define MHI_UCI_DRIVER_NAME "mhi_uci"
->> +#define MAX_UCI_MINORS (128)
->> +
->> +static DEFINE_IDR(uci_idr);
->> +static DEFINE_MUTEX(uci_idr_mutex);
->> +static struct class *uci_dev_class;
->> +static int uci_dev_major = -1;
-> 
-> Why init this to -1?
-Idea was to initialize with invalid value, i can leave it zero initialized.
-> 
->> +
->> +/**
->> + * struct uci_chan - MHI channel for a uci device
->> + * @wq: wait queue for reader/writer
->> + * @lock: spin lock
->> + * @pending: list of rx buffers userspace is waiting to read
->> + * @cur_buf: current buffer userspace is reading
->> + * @rx_size: size of the current rx buffer userspace is reading
->> + */
->> +struct uci_chan {
->> +	wait_queue_head_t wq;
->> +
->> +	/* protects pending and cur_buf members */
->> +	spinlock_t lock;
->> +
->> +	struct list_head pending;
->> +	struct uci_buf *cur_buf;
->> +	size_t rx_size;
->> +};
->> +
->> +/**
->> + * struct uci_buf - uci buffer
->> + * @data: data buffer
->> + * @len: length of data buffer
->> + * @node: list node of the uci buffer
->> + */
->> +struct uci_buf {
->> +	void *data;
->> +	size_t len;
->> +	struct list_head node;
->> +};
->> +
->> +/**
->> + * struct uci_dev - MHI uci device
->> + * @minor: uci device node minor number
->> + * @mhi_dev: associated mhi device object
->> + * @chan: MHI channel name
->> + * @lock: mutex lock
->> + * @ul_chan: uplink uci channel object
->> + * @dl_chan: downlink uci channel object
->> + * @mtu: max tx buffer length
->> + * @actual_mtu: maximum size of incoming buffer
->> + * @ref_count: uci_dev reference count
->> + * @open_count: device node open count
->> + * @enabled: uci device probed
->> + */
->> +struct uci_dev {
->> +	unsigned int minor;
->> +	struct mhi_device *mhi_dev;
->> +	const char *chan;
->> +
->> +	/* protects uci_dev struct members */
->> +	struct mutex lock;
->> +
->> +	struct uci_chan ul_chan;
->> +	struct uci_chan dl_chan;
->> +	size_t mtu;
->> +	size_t actual_mtu;
->> +	struct kref ref_count;
->> +	struct kref open_count;
-> 
-> I'm stopping right here.  A structure can only have ONE reference count
-> to control its lifespan.  You have 2 here, which guarantees that either
-> you are using a kref incorrectly, or your code is totally confused and
-> will break easily.
-> 
-> Please fix this as this is not how to do this.
-> 
-> Also, why does anyone need to care about the number of times that open()
-> is called?  The vfs layer should handle all of that for you, right?
-Reason for using open_count was to allow start MHI channel only when 
-first open() was called and stop the MHI channel when last release() is 
-called. Since uci driver just need to handle one open() from user space
-other calls to open can simply return -EBUSY. i will get rid of 
-open_count and does not let multiple threads to open same file node.
-> 
-> No other misc driver has to deal with this multi-layered reference
-> counting, so perhaps you are making this a lot more complex than it
-> really has to be?
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Yes, please. The kernel should compile fine in any config. Any compiler
+warning is not good (unless the compiler is wrong).
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers
+Suzuki
