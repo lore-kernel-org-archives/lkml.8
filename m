@@ -2,1088 +2,626 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B6EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC8CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1859221ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A12B20731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="mOEWOmCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgIKQNA (ORCPT
+        id S1726638AbgIKQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:13:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:38304 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgIKQMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:12:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EA53106F;
-        Fri, 11 Sep 2020 09:12:44 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D82713F73C;
-        Fri, 11 Sep 2020 09:12:39 -0700 (PDT)
-Subject: Re: [PATCH 3/3] dma-mapping: introduce DMA range map, supplanting
- dma_pfn_offset
-To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Russell King <linux@armlinux.org.uk>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-sh@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200910054038.324517-1-hch@lst.de>
- <20200910054038.324517-4-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <011dea58-3714-3343-c055-57228be2a450@arm.com>
-Date:   Fri, 11 Sep 2020 17:12:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 11 Sep 2020 12:13:12 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:5888 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbgIKQMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:12:41 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BDUTUQ013762;
+        Fri, 11 Sep 2020 09:32:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-00128a01.pphosted.com with ESMTP id 33c7a7k4ab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 09:32:42 -0400
+Received: from m0167090.ppops.net (m0167090.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BDVYQO015307;
+        Fri, 11 Sep 2020 09:32:41 -0400
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2052.outbound.protection.outlook.com [104.47.38.52])
+        by mx0b-00128a01.pphosted.com with ESMTP id 33c7a7k4a9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 09:32:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aNZ1MWJccQxeSPUBt/b4/T39C8nm+Up2bznlTJB8PGch1eJN5mtsP9GIPxJbf5WLyOeL0yQDaiaGB+78djGS4AjK83ic8/uJkINCeFDT+dX3VSBYErFcMYlJuSflxcdrXLSsoHuGbwSNMNEvw3G1YbtznVZYkv/7+3S3Z1tY891qgiZOQQb8WMg/muAfyUhHNyCSy7RIDtKn4SBFa5kg0Ydj97YaiORiIHBIwyJtVBqHVt9WSEXRPqa8gMUK0izK9g1owryQgs1jyEYatHmpS9uHuR2gWRyQe7cR1wNSCkoBQI1rSkm0aimLpBtl6cYjFb2LfHIwFZrCeG1mIxQJuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7p4qnss+dTi0WA6rv/3b9c/koSmBMSW7Wd9NPG0rhBQ=;
+ b=nZM3RXGfb9C+38b3Kz97oJWq5OSp1OdhSEb57ScXCnBNIUEjkKNrCP65BXibTlf43RtjhS/XgsfgRnOL6xuBgG2G6dbzIvX0PNpZQN6TPI+8cGqvM1tQYdyXiDVVAvZMAlmhniLUcxnMaO0UyzFrE0+UX56dGkw1Cxgy/O5a9oNbHIP6aGQwS3NCgXgXWgDF1hRAnZL+gvh3D9UlAJRbhQj19VppCQCFUdnNBymVK5+7RtwDJp8n7U0lniTq5+QZvuWy/v8NGZh6wedRdN/6vtVHKM14TI2G5TuuPmEUcasK26HXyJZb7/+sY21e3L71cfDdytljjdQ0ZN3LJW/AhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7p4qnss+dTi0WA6rv/3b9c/koSmBMSW7Wd9NPG0rhBQ=;
+ b=mOEWOmCA2RHqaOFkIITyczseczgaRcalpJ/X0usmgECnO13oIKT+a7X1aIMVB4SrOZCrahPWFFN9yrji81dtiCWfFBl32/Q9Ta0oGRcIdWx+gIRh+ohvzyros35X/SSQs46DUQZDK5gRObnBxd13ubId5TrWiBq04qZ7S6n96s4=
+Received: from DM6PR03MB5274.namprd03.prod.outlook.com (2603:10b6:5:24b::14)
+ by DM5PR03MB3322.namprd03.prod.outlook.com (2603:10b6:4:42::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Fri, 11 Sep
+ 2020 13:32:40 +0000
+Received: from DM6PR03MB5274.namprd03.prod.outlook.com
+ ([fe80::9a:3146:a6e0:e323]) by DM6PR03MB5274.namprd03.prod.outlook.com
+ ([fe80::9a:3146:a6e0:e323%3]) with mapi id 15.20.3370.017; Fri, 11 Sep 2020
+ 13:32:39 +0000
+From:   "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Shawn Tu <shawnx.tu@intel.com>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Cozma, Andrei" <Andrei.Cozma@analog.com>
+Subject: RE: [PATCH 1/2] media: i2c: Add driver for the Analog Devices
+ ADDI9036 ToF front-end
+Thread-Topic: [PATCH 1/2] media: i2c: Add driver for the Analog Devices
+ ADDI9036 ToF front-end
+Thread-Index: AQHWh3XvzR+FuqmqSEu3z8jI/XRrEqlibP0AgAD3UQA=
+Date:   Fri, 11 Sep 2020 13:32:39 +0000
+Message-ID: <DM6PR03MB5274FF37BB02D98691BB43289B240@DM6PR03MB5274.namprd03.prod.outlook.com>
+References: <20200910162426.55306-1-bogdan.togorean@analog.com>
+ <20200910220138.GJ3940@pendragon.ideasonboard.com>
+In-Reply-To: <20200910220138.GJ3940@pendragon.ideasonboard.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWW5SdloyOXlaV0ZjWVhCd1pHRjBZVnh5YjJGdGFXNW5YREE1WkRnME9X?=
+ =?utf-8?B?STJMVE15WkRNdE5HRTBNQzA0TldWbExUWmlPRFJpWVRJNVpUTTFZbHh0YzJk?=
+ =?utf-8?B?elhHMXpaeTAwTUdVeE9UUTBNQzFtTkRNekxURXhaV0V0T0RaaE1pMHhPREZr?=
+ =?utf-8?B?WldFMU5EWmxaREpjWVcxbExYUmxjM1JjTkRCbE1UazBOREV0WmpRek15MHhN?=
+ =?utf-8?B?V1ZoTFRnMllUSXRNVGd4WkdWaE5UUTJaV1F5WW05a2VTNTBlSFFpSUhONlBT?=
+ =?utf-8?B?SXlOakE0T1NJZ2REMGlNVE15TkRRek1EUTNOVFk1TlRZM05EY3lJaUJvUFNK?=
+ =?utf-8?B?MloyaEVkbmRaV0VONWNubDNOR014YkVvd1VEVjNWSFk1VkZFOUlpQnBaRDBp?=
+ =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
+ =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVSM2NteHZSRkZKYWxkQlZYaHdNVnBwV1ZZelN6?=
+ =?utf-8?B?VlVSMjVXYlVwb1dHTnlhMFJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFWa3ZSM0ZLZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VW8wUVVGQlFtaEJSMUZCWVZGQ1prRklUVUZhVVVKcVFVaFZRV05uUW14QlJq?=
+ =?utf-8?B?aEJZMEZDZVVGSE9FRmhaMEpzUVVkTlFXUkJRbnBCUmpoQldtZENhRUZIZDBG?=
+ =?utf-8?B?amQwSnNRVVk0UVZwblFuWkJTRTFCWVZGQ01FRkhhMEZrWjBKc1FVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRGUVZwQlFuQkJSamhCWTNkQ2JFRkhUVUZr?=
+ =?utf-8?B?VVVKNVFVZFZRVmgzUW5kQlNFbEJZbmRDY1VGSFZVRlpkMEl3UVVoTlFWaDNR?=
+ =?utf-8?B?akJCUjJ0QldsRkNlVUZFUlVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGWlVVSnJRVWRyUVZoM1Fu?=
+ =?utf-8?B?cEJSMVZCV1hkQ01VRklTVUZhVVVKbVFVaEJRV05uUW5aQlIyOUJXbEZDYWtG?=
+ =?utf-8?B?SVVVRmpkMEptUVVoUlFXRlJRbXhCU0VsQlRXZEJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
+ =?utf-8?B?WlhSaFBnPT0=?=
+x-dg-rorf: true
+authentication-results: ideasonboard.com; dkim=none (message not signed)
+ header.d=none;ideasonboard.com; dmarc=none action=none
+ header.from=analog.com;
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a79b75b0-633a-403e-da16-08d85657278f
+x-ms-traffictypediagnostic: DM5PR03MB3322:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR03MB3322E5C01DD67DA7F330FB5A9B240@DM5PR03MB3322.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DzVWGSWR4gZxBAhKZAEWarDSso6bXpuzM6QJmbuNv5mxj/BLW4iaUsG+erdL6EIecUKm/1nUv57S4yDZWQ35L8irTgaD/WQ5lqpeE+G/1C4F5vnQb9hrSJNTKDO6LY6yGeP1Z6R/Y4NsTPswNvrTvgKgvzbUS6kyIi3Zf0SQOyjaG2bgg869hSkegdgwNud+7lsW4ABt6yr2epeMLWKax4W+cNmyrH3iFLLEpksLRzfwcRHqDiLORXMCq1+eDjvJTscjTrJIGGDii4SXB0+SgrG60CworrQsQvAQme6mkG+6z6qt7A0QjsACObDq3mLIh9rchZ6kBzK9AVBlK1IKrZQa37VG7se+8flnF6XEzNpxJ1FF53z+o/FwB6YCDK/M26TZowAeliUJZOv74cagNg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB5274.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(376002)(366004)(136003)(396003)(55016002)(8676002)(316002)(26005)(7416002)(30864003)(76116006)(7696005)(66446008)(66556008)(478600001)(66946007)(64756008)(5660300002)(6916009)(86362001)(66476007)(6506007)(71200400001)(2906002)(33656002)(8936002)(83380400001)(4326008)(54906003)(52536014)(9686003)(107886003)(186003)(559001)(579004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: dfG9oWrA80uLd81f0TWsP+k1sDL5L1FNSIWpyu5meaYND0aDxQac0fNerGgYBIVbbuq9UuNDUqw3yGGyUT/bE9aXsLp/e8x2T25z7uyJSo3CIb7WOk82KT0WFRZW7CyqTfalGm6B6vmmyYKOr3QQ5qpZofUSOLRYygOtukA95RJ78imw8897H0KXTLuBDGQGrOr9CRFc+8rNQWDi9ruqPCOHBGn9k5FdPUnAyjmF342yr0r/ueAky3RpwhXdkGTvtbcSSydDSGf2yNtMABO366+s64BrzYTqbu+4Cq96U2WwP0IahS+hwmX4teFdQqnQDiyp34jK90hMOKuJEh2eHWjWKqu/eJaqtm++4544krYjFcwWHOYnjnetdUfaN+RQBgcQJT4hqvq3N36F73dOZjLVi+IPCE3SQWR7XT/UuMGN9FdGuWEFyKdQjNleSX6VOs1g9XFiNiWUcp11HBN8AHJpqQ7IaBoR1H45vplTQAYca/i9zoZUnvPGI3/62ljcaNoABTVRiR67MdVqpQCkLH9ls6ss8aP4EgR3nUl/lThEomcvfD9fsw6kuI2jf8O0zW3j4Jlz/e/+CYi0ndZp1ZVlbFHBbIvlJLYPNpJij8pYRNEzdZCMAHnjCWpSSVVNAiOsAwl5asJJF0hvWvhjMw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200910054038.324517-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB5274.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a79b75b0-633a-403e-da16-08d85657278f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2020 13:32:39.7035
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VoMILqpeNOUPF1MqthH4ue0J2B2CyrlvUrNhVY4OOpm+jU8z22Nh9JxLYOrGGk7N0bna/+nOnKKGmLNxl2AgoCvWDneiiPWnBgrNCQc7QBU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3322
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_04:2020-09-10,2020-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(apologies to Jim - I did look through one of the previous versions 
-since I last commented and thought it looked OK, but never actually 
-replied as such)
-
-On 2020-09-10 06:40, Christoph Hellwig wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
-> 
-> The new field 'dma_range_map' in struct device is used to facilitate the
-> use of single or multiple offsets between mapping regions of cpu addrs and
-> dma addrs.  It subsumes the role of "dev->dma_pfn_offset" which was only
-> capable of holding a single uniform offset and had no region bounds
-> checking.
-> 
-> The function of_dma_get_range() has been modified so that it takes a single
-> argument -- the device node -- and returns a map, NULL, or an error code.
-> The map is an array that holds the information regarding the DMA regions.
-> Each range entry contains the address offset, the cpu_start address, the
-> dma_start address, and the size of the region.
-> 
-> of_dma_configure() is the typical manner to set range offsets but there are
-> a number of ad hoc assignments to "dev->dma_pfn_offset" in the kernel
-> driver code.  These cases now invoke the function
-> dma_attach_offset_range(dev, cpu_addr, dma_addr, size).
-
-This is now called dma_direct_set_offset(), right?
-
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> [hch: various interface cleanups]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->   arch/arm/include/asm/dma-direct.h             |  9 +--
->   arch/arm/mach-keystone/keystone.c             | 17 ++--
->   arch/sh/drivers/pci/pcie-sh7786.c             |  9 ++-
->   arch/x86/pci/sta2x11-fixup.c                  |  6 +-
->   drivers/acpi/arm64/iort.c                     |  6 +-
->   drivers/base/core.c                           |  2 +
->   drivers/gpu/drm/sun4i/sun4i_backend.c         |  8 +-
->   drivers/iommu/io-pgtable-arm.c                |  2 +-
->   .../platform/sunxi/sun4i-csi/sun4i_csi.c      |  9 ++-
->   .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 11 ++-
->   drivers/of/address.c                          | 73 ++++++++---------
->   drivers/of/device.c                           | 44 ++++++----
->   drivers/of/of_private.h                       | 11 +--
->   drivers/of/unittest.c                         | 34 +++++---
->   drivers/remoteproc/remoteproc_core.c          |  4 +-
->   .../staging/media/sunxi/cedrus/cedrus_hw.c    | 10 ++-
->   drivers/usb/core/message.c                    |  5 +-
->   drivers/usb/core/usb.c                        |  3 +-
->   include/linux/device.h                        |  4 +-
->   include/linux/dma-direct.h                    | 52 ++++++++++--
->   include/linux/dma-mapping.h                   | 19 ++++-
->   kernel/dma/coherent.c                         |  7 +-
->   kernel/dma/direct.c                           | 81 ++++++++++++++++++-
->   23 files changed, 303 insertions(+), 123 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
-> index de0f4ff9279615..a443d5257a21ed 100644
-> --- a/arch/arm/include/asm/dma-direct.h
-> +++ b/arch/arm/include/asm/dma-direct.h
-> @@ -16,8 +16,8 @@
->   #ifndef __arch_pfn_to_dma
->   static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
->   {
-> -	if (dev)
-> -		pfn -= dev->dma_pfn_offset;
-> +	if (dev && dev->dma_range_map)
-> +		pfn = PFN_DOWN(translate_phys_to_dma(dev, PFN_PHYS(pfn)));
->   	return (dma_addr_t)__pfn_to_bus(pfn);
->   }
->   
-> @@ -25,9 +25,8 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
->   {
->   	unsigned long pfn = __bus_to_pfn(addr);
->   
-> -	if (dev)
-> -		pfn += dev->dma_pfn_offset;
-> -
-> +	if (dev && dev->dma_range_map)
-> +		pfn = PFN_DOWN(translate_dma_to_phys(dev, PFN_PHYS(pfn)));
->   	return pfn;
->   }
->   
-> diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
-> index dcd031ba84c2e0..09a65c2dfd7327 100644
-> --- a/arch/arm/mach-keystone/keystone.c
-> +++ b/arch/arm/mach-keystone/keystone.c
-> @@ -8,6 +8,7 @@
->    */
->   #include <linux/io.h>
->   #include <linux/of.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/init.h>
->   #include <linux/of_platform.h>
->   #include <linux/of_address.h>
-> @@ -25,8 +26,6 @@
->   #include "keystone.h"
->   
->   #ifdef CONFIG_ARM_LPAE
-> -static unsigned long keystone_dma_pfn_offset __read_mostly;
-> -
->   static int keystone_platform_notifier(struct notifier_block *nb,
->   				      unsigned long event, void *data)
->   {
-> @@ -39,9 +38,12 @@ static int keystone_platform_notifier(struct notifier_block *nb,
->   		return NOTIFY_BAD;
->   
->   	if (!dev->of_node) {
-> -		dev->dma_pfn_offset = keystone_dma_pfn_offset;
-> -		dev_err(dev, "set dma_pfn_offset%08lx\n",
-> -			dev->dma_pfn_offset);
-> +		int ret = dma_direct_set_offset(dev, KEYSTONE_HIGH_PHYS_START,
-> +						KEYSTONE_LOW_PHYS_START,
-> +						KEYSTONE_HIGH_PHYS_SIZE);
-> +		dev_err(dev, "set dma_offset%08llx%s\n",
-> +			KEYSTONE_HIGH_PHYS_START - KEYSTONE_LOW_PHYS_START,
-> +			ret ? " failed" : "");
-
-FWIW I've already been thinking of some optimisations which would have 
-the happy side-effect of removing many of these allocation failure 
-scenarios, but at this point I reckon it's more practical to just get 
-the current implementation landed and working.
-
->   	}
->   	return NOTIFY_OK;
->   }
-> @@ -54,11 +56,8 @@ static struct notifier_block platform_nb = {
->   static void __init keystone_init(void)
->   {
->   #ifdef CONFIG_ARM_LPAE
-> -	if (PHYS_OFFSET >= KEYSTONE_HIGH_PHYS_START) {
-> -		keystone_dma_pfn_offset = PFN_DOWN(KEYSTONE_HIGH_PHYS_START -
-> -						   KEYSTONE_LOW_PHYS_START);
-> +	if (PHYS_OFFSET >= KEYSTONE_HIGH_PHYS_START)
->   		bus_register_notifier(&platform_bus_type, &platform_nb);
-> -	}
->   #endif
->   	keystone_pm_runtime_init();
->   }
-> diff --git a/arch/sh/drivers/pci/pcie-sh7786.c b/arch/sh/drivers/pci/pcie-sh7786.c
-> index e0b568aaa7014c..4468289ab2cac7 100644
-> --- a/arch/sh/drivers/pci/pcie-sh7786.c
-> +++ b/arch/sh/drivers/pci/pcie-sh7786.c
-> @@ -12,6 +12,7 @@
->   #include <linux/io.h>
->   #include <linux/async.h>
->   #include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/slab.h>
->   #include <linux/clk.h>
->   #include <linux/sh_clk.h>
-> @@ -31,6 +32,8 @@ struct sh7786_pcie_port {
->   static struct sh7786_pcie_port *sh7786_pcie_ports;
->   static unsigned int nr_ports;
->   static unsigned long dma_pfn_offset;
-> +size_t memsize;
-> +u64 memstart;
->   
->   static struct sh7786_pcie_hwops {
->   	int (*core_init)(void);
-> @@ -301,7 +304,6 @@ static int __init pcie_init(struct sh7786_pcie_port *port)
->   	struct pci_channel *chan = port->hose;
->   	unsigned int data;
->   	phys_addr_t memstart, memend;
-> -	size_t memsize;
->   	int ret, i, win;
->   
->   	/* Begin initialization */
-> @@ -368,8 +370,6 @@ static int __init pcie_init(struct sh7786_pcie_port *port)
->   	memstart = ALIGN_DOWN(memstart, memsize);
->   	memsize = roundup_pow_of_two(memend - memstart);
->   
-> -	dma_pfn_offset = memstart >> PAGE_SHIFT;
-> -
->   	/*
->   	 * If there's more than 512MB of memory, we need to roll over to
->   	 * LAR1/LAMR1.
-> @@ -487,7 +487,8 @@ int pcibios_map_platform_irq(const struct pci_dev *pdev, u8 slot, u8 pin)
->   
->   void pcibios_bus_add_device(struct pci_dev *pdev)
->   {
-> -	pdev->dev.dma_pfn_offset = dma_pfn_offset;
-> +	dma_direct_set_offset(&pdev->dev, __pa(memory_start),
-> +			      __pa(memory_start) - memstart, memsize);
->   }
->   
->   static int __init sh7786_pcie_core_init(void)
-> diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
-> index c313d784efabb9..324a207f99956b 100644
-> --- a/arch/x86/pci/sta2x11-fixup.c
-> +++ b/arch/x86/pci/sta2x11-fixup.c
-> @@ -133,7 +133,7 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
->   	struct sta2x11_instance *instance = sta2x11_pdev_to_instance(pdev);
->   	struct device *dev = &pdev->dev;
->   	u32 amba_base, max_amba_addr;
-> -	int i;
-> +	int i, ret;
->   
->   	if (!instance)
->   		return;
-> @@ -141,7 +141,9 @@ static void sta2x11_map_ep(struct pci_dev *pdev)
->   	pci_read_config_dword(pdev, AHB_BASE(0), &amba_base);
->   	max_amba_addr = amba_base + STA2X11_AMBA_SIZE - 1;
->   
-> -	dev->dma_pfn_offset = PFN_DOWN(-amba_base);
-> +	ret = dma_direct_set_offset(dev, 0, amba_base, STA2X11_AMBA_SIZE);
-> +	if (ret)
-> +		dev_err(dev, "sta2x11: could not set DMA offset\n");
->   
->   	dev->bus_dma_limit = max_amba_addr;
->   	pci_set_consistent_dma_mask(pdev, max_amba_addr);
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index ec782e4a0fe419..de18c07ca02cc4 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -18,6 +18,7 @@
->   #include <linux/pci.h>
->   #include <linux/platform_device.h>
->   #include <linux/slab.h>
-> +#include <linux/dma-mapping.h>
->   
->   #define IORT_TYPE_MASK(type)	(1 << (type))
->   #define IORT_MSI_TYPE		(1 << ACPI_IORT_NODE_ITS_GROUP)
-> @@ -1184,8 +1185,9 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *dma_size)
->   	*dma_addr = dmaaddr;
->   	*dma_size = size;
->   
-> -	dev->dma_pfn_offset = PFN_DOWN(offset);
-> -	dev_dbg(dev, "dma_pfn_offset(%#08llx)\n", offset);
-> +	ret = dma_direct_set_offset(dev, dmaaddr + offset, dmaaddr, size);
-> +
-> +	dev_dbg(dev, "dma_offset(%#08llx)%s\n", offset, ret ? " failed!" : "");
->   }
->   
->   static void __init acpi_iort_register_irq(int hwirq, const char *name,
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index f6f620aa94086d..b893056e39459c 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1792,6 +1792,8 @@ static void device_release(struct kobject *kobj)
->   	 */
->   	devres_release_all(dev);
->   
-> +	kfree(dev->dma_range_map);
-> +
->   	if (dev->release)
->   		dev->release(dev);
->   	else if (dev->type && dev->type->release)
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
-> index 072ea113e6be55..05e9f0d28196d9 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_backend.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
-> @@ -11,6 +11,7 @@
->   #include <linux/module.h>
->   #include <linux/of_device.h>
->   #include <linux/of_graph.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/platform_device.h>
->   #include <linux/reset.h>
->   
-> @@ -811,8 +812,13 @@ static int sun4i_backend_bind(struct device *dev, struct device *master,
->   		 * because of an old DT, we need to set the DMA offset by hand
->   		 * on our device since the RAM mapping is at 0 for the DMA bus,
->   		 * unlike the CPU.
-> +		 *
-> +		 * XXX(hch): this has no business in a driver and needs to move
-> +		 * to the device tree.
-
-As the context implies, this has actually grown a proper DT description 
-of the funky interconnect layout (see 564d6fd611f9 and the linked patch 
-series), and this is just an ugly fallback path to prevent regressions 
-with old DTBs that are already out there. So unless you can fire up the 
-time machine to fix those, this extra comment is really just beating a 
-dead horse :(
-
->   		 */
-> -		drm->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-> +		ret = dma_direct_set_offset(drm->dev, PHYS_OFFSET, 0, SZ_4G);
-> +		if (ret)
-> +			return ret;
->   	}
->   
->   	backend->engine.node = dev->of_node;
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index dc7bcf858b6d2d..d77e881516a4ab 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -751,7 +751,7 @@ arm_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg)
->   	if (cfg->oas > ARM_LPAE_MAX_ADDR_BITS)
->   		return NULL;
->   
-> -	if (!selftest_running && cfg->iommu_dev->dma_pfn_offset) {
-> +	if (!selftest_running && cfg->iommu_dev->dma_range_map) {
->   		dev_err(cfg->iommu_dev, "Cannot accommodate DMA offset for IOMMU page tables\n");
->   		return NULL;
->   	}
-> diff --git a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> index 5319eb1ab30927..307997ee7f96a2 100644
-> --- a/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun4i-csi/sun4i_csi.c
-> @@ -7,6 +7,7 @@
->    */
->   
->   #include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/interrupt.h>
->   #include <linux/module.h>
->   #include <linux/mutex.h>
-> @@ -182,8 +183,14 @@ static int sun4i_csi_probe(struct platform_device *pdev)
->   		if (ret)
->   			return ret;
->   	} else {
-> +		/*
-> +		 * XXX(hch): this has no business in a driver and needs to move
-> +		 * to the device tree.
-> +		 */
-
-Again, the top half of that "else" does already handle the proper DT 
-case and document this as a fallback :(
-
->   #ifdef PHYS_PFN_OFFSET
-
-Strictly that probably deserves updating too, but PHYS_PFN_OFFSET 
-implies PHYS_OFFSET so there should be no functional issue, just  semantics.
-
-> -		csi->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-> +		ret = dma_direct_set_offset(csi->dev, PHYS_OFFSET, 0, SZ_4G);
-> +		if (ret)
-> +			return ret;
->   #endif
->   	}
->   
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> index 28e89340fed981..e69e14379fc6e4 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> @@ -899,8 +899,15 @@ static int sun6i_csi_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   
->   	sdev->dev = &pdev->dev;
-> -	/* The DMA bus has the memory mapped at 0 */
-> -	sdev->dev->dma_pfn_offset = PHYS_OFFSET >> PAGE_SHIFT;
-> +	/*
-> +	 * The DMA bus has the memory mapped at 0.
-> +	 *
-> +	 * XXX(hch): this has no business in a driver and needs to move
-> +	 * to the device tree.
-> +	 */
-
-Apparently this one *does* want updating to use the MBUS interconnect 
-bindings - as does the cedrus instance below - so no complaint there :)
-
-Other than those few trivial nitpicks, I think I've stared at this patch 
-enough times now that even if there are any bugs left I'm not going to 
-see them... let's try to get it thrown at linux-next and everyone's CI 
-systems :)
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-Cheers,
-Robin.
-
-> +	ret = dma_direct_set_offset(sdev->dev, PHYS_OFFSET, 0, SZ_4G);
-> +	if (ret)
-> +		return ret;
->   
->   	ret = sun6i_csi_resource_request(sdev, pdev);
->   	if (ret)
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index da4f7341323f22..a49ef87aaaf21c 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -13,6 +13,7 @@
->   #include <linux/sizes.h>
->   #include <linux/slab.h>
->   #include <linux/string.h>
-> +#include <linux/dma-direct.h> /* for bus_dma_region */
->   
->   #include "of_private.h"
->   
-> @@ -937,33 +938,33 @@ void __iomem *of_io_request_and_map(struct device_node *np, int index,
->   }
->   EXPORT_SYMBOL(of_io_request_and_map);
->   
-> +#ifdef CONFIG_HAS_DMA
->   /**
-> - * of_dma_get_range - Get DMA range info
-> + * of_dma_get_range - Get DMA range info and put it into a map array
->    * @np:		device node to get DMA range info
-> - * @dma_addr:	pointer to store initial DMA address of DMA range
-> - * @paddr:	pointer to store initial CPU address of DMA range
-> - * @size:	pointer to store size of DMA range
-> + * @map:	dma range structure to return
->    *
->    * Look in bottom up direction for the first "dma-ranges" property
-> - * and parse it.
-> - *  dma-ranges format:
-> + * and parse it.  Put the information into a DMA offset map array.
-> + *
-> + * dma-ranges format:
->    *	DMA addr (dma_addr)	: naddr cells
->    *	CPU addr (phys_addr_t)	: pna cells
->    *	size			: nsize cells
->    *
-> - * It returns -ENODEV if "dma-ranges" property was not found
-> - * for this device in DT.
-> + * It returns -ENODEV if "dma-ranges" property was not found for this
-> + * device in the DT.
->    */
-> -int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
-> +int of_dma_get_range(struct device_node *np, const struct bus_dma_region **map)
->   {
->   	struct device_node *node = of_node_get(np);
->   	const __be32 *ranges = NULL;
-> -	int len;
-> -	int ret = 0;
->   	bool found_dma_ranges = false;
->   	struct of_range_parser parser;
->   	struct of_range range;
-> -	u64 dma_start = U64_MAX, dma_end = 0, dma_offset = 0;
-> +	struct bus_dma_region *r;
-> +	int len, num_ranges = 0;
-> +	int ret = 0;
->   
->   	while (node) {
->   		ranges = of_get_property(node, "dma-ranges", &len);
-> @@ -989,49 +990,39 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->   	}
->   
->   	of_dma_range_parser_init(&parser, node);
-> +	for_each_of_range(&parser, &range)
-> +		num_ranges++;
-> +
-> +	r = kcalloc(num_ranges + 1, sizeof(*r), GFP_KERNEL);
-> +	if (!r) {
-> +		ret = -ENOMEM;
-> + 		goto out;
-> +	}
->   
-> +	/*
-> +	 * Record all info in the generic DMA ranges array for struct device.
-> +	 */
-> +	*map = r;
-> + 	of_dma_range_parser_init(&parser, node);
->   	for_each_of_range(&parser, &range) {
->   		pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
->   			 range.bus_addr, range.cpu_addr, range.size);
-> -
-> -		if (dma_offset && range.cpu_addr - range.bus_addr != dma_offset) {
-> -			pr_warn("Can't handle multiple dma-ranges with different offsets on node(%pOF)\n", node);
-> -			/* Don't error out as we'd break some existing DTs */
-> -			continue;
-> -		}
->   		if (range.cpu_addr == OF_BAD_ADDR) {
->   			pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
->   			       range.bus_addr, node);
->   			continue;
->   		}
-> -		dma_offset = range.cpu_addr - range.bus_addr;
-> -
-> -		/* Take lower and upper limits */
-> -		if (range.bus_addr < dma_start)
-> -			dma_start = range.bus_addr;
-> -		if (range.bus_addr + range.size > dma_end)
-> -			dma_end = range.bus_addr + range.size;
-> -	}
-> -
-> -	if (dma_start >= dma_end) {
-> -		ret = -EINVAL;
-> -		pr_debug("Invalid DMA ranges configuration on node(%pOF)\n",
-> -			 node);
-> -		goto out;
-> +		r->cpu_start = range.cpu_addr;
-> +		r->dma_start = range.bus_addr;
-> +		r->size = range.size;
-> +		r->offset = range.cpu_addr - range.bus_addr;
-> +		r++;
->   	}
-> -
-> -	*dma_addr = dma_start;
-> -	*size = dma_end - dma_start;
-> -	*paddr = dma_start + dma_offset;
-> -
-> -	pr_debug("final: dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-> -		 *dma_addr, *paddr, *size);
-> -
->   out:
->   	of_node_put(node);
-> -
->   	return ret;
->   }
-> +#endif /* CONFIG_HAS_DMA */
->   
->   /**
->    * of_dma_is_coherent - Check if device is coherent
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index b439c1e054349b..6e3ae7ebc33eeb 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -5,7 +5,7 @@
->   #include <linux/of_device.h>
->   #include <linux/of_address.h>
->   #include <linux/of_iommu.h>
-> -#include <linux/dma-mapping.h>
-> +#include <linux/dma-direct.h> /* for bus_dma_region */
->   #include <linux/init.h>
->   #include <linux/module.h>
->   #include <linux/mod_devicetable.h>
-> @@ -90,14 +90,14 @@ int of_device_add(struct platform_device *ofdev)
->   int of_dma_configure_id(struct device *dev, struct device_node *np,
->   			bool force_dma, const u32 *id)
->   {
-> -	u64 dma_addr, paddr, size = 0;
-> -	int ret;
-> -	bool coherent;
-> -	unsigned long offset;
->   	const struct iommu_ops *iommu;
-> -	u64 mask, end;
-> +	const struct bus_dma_region *map = NULL;
-> +	dma_addr_t dma_start = 0;
-> +	u64 mask, end, size = 0;
-> +	bool coherent;
-> +	int ret;
->   
-> -	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> +	ret = of_dma_get_range(np, &map);
->   	if (ret < 0) {
->   		/*
->   		 * For legacy reasons, we have to assume some devices need
-> @@ -106,26 +106,35 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
->   		 */
->   		if (!force_dma)
->   			return ret == -ENODEV ? 0 : ret;
-> -
-> -		dma_addr = offset = 0;
->   	} else {
-> -		offset = PFN_DOWN(paddr - dma_addr);
-> +		const struct bus_dma_region *r = map;
-> +		dma_addr_t dma_end = 0;
-> +
-> +		/* Determine the overall bounds of all DMA regions */
-> +		for (dma_start = ~(dma_addr_t)0; r->size; r++) {
-> +			/* Take lower and upper limits */
-> +			if (r->dma_start < dma_start)
-> +				dma_start = r->dma_start;
-> +			if (r->dma_start + r->size > dma_end)
-> +				dma_end = r->dma_start + r->size;
-> +		}
-> +		size = dma_end - dma_start;
->   
->   		/*
->   		 * Add a work around to treat the size as mask + 1 in case
->   		 * it is defined in DT as a mask.
->   		 */
->   		if (size & 1) {
-> -			dev_warn(dev, "Invalid size 0x%llx for dma-range\n",
-> +			dev_warn(dev, "Invalid size 0x%llx for dma-range(s)\n",
->   				 size);
->   			size = size + 1;
->   		}
->   
->   		if (!size) {
->   			dev_err(dev, "Adjusted size 0x%llx invalid\n", size);
-> +			kfree(map);
->   			return -EINVAL;
->   		}
-> -		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
->   	}
->   
->   	/*
-> @@ -144,13 +153,11 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
->   	else if (!size)
->   		size = 1ULL << 32;
->   
-> -	dev->dma_pfn_offset = offset;
-> -
->   	/*
->   	 * Limit coherent and dma mask based on size and default mask
->   	 * set by the driver.
->   	 */
-> -	end = dma_addr + size - 1;
-> +	end = dma_start + size - 1;
->   	mask = DMA_BIT_MASK(ilog2(end) + 1);
->   	dev->coherent_dma_mask &= mask;
->   	*dev->dma_mask &= mask;
-> @@ -163,14 +170,17 @@ int of_dma_configure_id(struct device *dev, struct device_node *np,
->   		coherent ? " " : " not ");
->   
->   	iommu = of_iommu_configure(dev, np, id);
-> -	if (PTR_ERR(iommu) == -EPROBE_DEFER)
-> +	if (PTR_ERR(iommu) == -EPROBE_DEFER) {
-> +		kfree(map);
->   		return -EPROBE_DEFER;
-> +	}
->   
->   	dev_dbg(dev, "device is%sbehind an iommu\n",
->   		iommu ? " " : " not ");
->   
-> -	arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
-> +	arch_setup_dma_ops(dev, dma_start, size, iommu, coherent);
->   
-> +	dev->dma_range_map = map;
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(of_dma_configure_id);
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index edc682249c0015..d9e6a324de0a77 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -157,12 +157,13 @@ extern void __of_sysfs_remove_bin_file(struct device_node *np,
->   extern int of_bus_n_addr_cells(struct device_node *np);
->   extern int of_bus_n_size_cells(struct device_node *np);
->   
-> -#ifdef CONFIG_OF_ADDRESS
-> -extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
-> -			    u64 *paddr, u64 *size);
-> +struct bus_dma_region;
-> +#if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_HAS_DMA)
-> +int of_dma_get_range(struct device_node *np,
-> +		const struct bus_dma_region **map);
->   #else
-> -static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
-> -				   u64 *paddr, u64 *size)
-> +static inline int of_dma_get_range(struct device_node *np,
-> +		const struct bus_dma_region **map)
->   {
->   	return -ENODEV;
->   }
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 9b7e84bdc7d446..06cc988faf78b3 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -7,6 +7,7 @@
->   
->   #include <linux/memblock.h>
->   #include <linux/clk.h>
-> +#include <linux/dma-direct.h> /* to test phys_to_dma/dma_to_phys */
->   #include <linux/err.h>
->   #include <linux/errno.h>
->   #include <linux/hashtable.h>
-> @@ -869,10 +870,11 @@ static void __init of_unittest_changeset(void)
->   }
->   
->   static void __init of_unittest_dma_ranges_one(const char *path,
-> -		u64 expect_dma_addr, u64 expect_paddr, u64 expect_size)
-> +		u64 expect_dma_addr, u64 expect_paddr)
->   {
-> +#ifdef CONFIG_HAS_DMA
->   	struct device_node *np;
-> -	u64 dma_addr, paddr, size;
-> +	const struct bus_dma_region *map = NULL;
->   	int rc;
->   
->   	np = of_find_node_by_path(path);
-> @@ -881,28 +883,40 @@ static void __init of_unittest_dma_ranges_one(const char *path,
->   		return;
->   	}
->   
-> -	rc = of_dma_get_range(np, &dma_addr, &paddr, &size);
-> +	rc = of_dma_get_range(np, &map);
->   
->   	unittest(!rc, "of_dma_get_range failed on node %pOF rc=%i\n", np, rc);
-> +
->   	if (!rc) {
-> -		unittest(size == expect_size,
-> -			 "of_dma_get_range wrong size on node %pOF size=%llx\n", np, size);
-> +		phys_addr_t	paddr;
-> +		dma_addr_t	dma_addr;
-> +		struct device	dev_bogus;
-> +
-> +		dev_bogus.dma_range_map = map;
-> +		paddr = dma_to_phys(&dev_bogus, expect_dma_addr);
-> +		dma_addr = phys_to_dma(&dev_bogus, expect_paddr);
-> +
->   		unittest(paddr == expect_paddr,
-> -			 "of_dma_get_range wrong phys addr (%llx) on node %pOF", paddr, np);
-> +			 "of_dma_get_range: wrong phys addr %pap (expecting %llx) on node %pOF\n",
-> +			 &paddr, expect_paddr, np);
->   		unittest(dma_addr == expect_dma_addr,
-> -			 "of_dma_get_range wrong DMA addr (%llx) on node %pOF", dma_addr, np);
-> +			 "of_dma_get_range: wrong DMA addr %pad (expecting %llx) on node %pOF\n",
-> +			 &dma_addr, expect_dma_addr, np);
-> +
-> +		kfree(map);
->   	}
->   	of_node_put(np);
-> +#endif
->   }
->   
->   static void __init of_unittest_parse_dma_ranges(void)
->   {
->   	of_unittest_dma_ranges_one("/testcase-data/address-tests/device@70000000",
-> -		0x0, 0x20000000, 0x40000000);
-> +		0x0, 0x20000000);
->   	of_unittest_dma_ranges_one("/testcase-data/address-tests/bus@80000000/device@1000",
-> -		0x100000000, 0x20000000, 0x2000000000);
-> +		0x100000000, 0x20000000);
->   	of_unittest_dma_ranges_one("/testcase-data/address-tests/pci@90000000",
-> -		0x80000000, 0x20000000, 0x10000000);
-> +		0x80000000, 0x20000000);
->   }
->   
->   static void __init of_unittest_pci_dma_ranges(void)
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 7f90eeea67e279..bc412fb164a3fe 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -529,7 +529,9 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->   	/* Initialise vdev subdevice */
->   	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
->   	rvdev->dev.parent = &rproc->dev;
-> -	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
-> +	ret = dma_direct_copy_range_map(&rvdev->dev, rproc->dev.parent);
-> +	if (ret)
-> +		return ret;
->   	rvdev->dev.release = rproc_rvdev_release;
->   	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
->   	dev_set_drvdata(&rvdev->dev, rvdev);
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> index 1744e6fcc99980..bcf050a04ffc45 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -227,11 +227,17 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
->   	 * the RAM offset to the physcal addresses.
->   	 *
->   	 * This information will eventually be obtained from device-tree.
-> +	 *
-> +	 * XXX(hch): this has no business in a driver and needs to move
-> +	 * to the device tree.
->   	 */
->   
->   #ifdef PHYS_PFN_OFFSET
-> -	if (!(variant->quirks & CEDRUS_QUIRK_NO_DMA_OFFSET))
-> -		dev->dev->dma_pfn_offset = PHYS_PFN_OFFSET;
-> +	if (!(variant->quirks & CEDRUS_QUIRK_NO_DMA_OFFSET)) {
-> +		ret = dma_direct_set_offset(dev->dev, PHYS_OFFSET, 0, SZ_4G);
-> +		if (ret)
-> +			return ret;
-> +	}
->   #endif
->   
->   	ret = of_reserved_mem_device_init(dev->dev);
-> diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-> index 6197938dcc2d8f..935ee98e049f65 100644
-> --- a/drivers/usb/core/message.c
-> +++ b/drivers/usb/core/message.c
-> @@ -1956,10 +1956,11 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
->   		intf->dev.groups = usb_interface_groups;
->   		/*
->   		 * Please refer to usb_alloc_dev() to see why we set
-> -		 * dma_mask and dma_pfn_offset.
-> +		 * dma_mask and dma_range_map.
->   		 */
->   		intf->dev.dma_mask = dev->dev.dma_mask;
-> -		intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
-> +		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
-> +			dev_err(&dev->dev, "failed to copy DMA map\n");
->   		INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
->   		intf->minor = -1;
->   		device_initialize(&intf->dev);
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index bafc113f2b3ef3..23d451f6894d70 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -610,7 +610,8 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
->   	 * mask for the entire HCD, so don't do that.
->   	 */
->   	dev->dev.dma_mask = bus->sysdev->dma_mask;
-> -	dev->dev.dma_pfn_offset = bus->sysdev->dma_pfn_offset;
-> +	if (dma_direct_copy_range_map(&dev->dev, bus->sysdev))
-> +		dev_err(&dev->dev, "failed to copy DMA map\n");
->   	set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
->   	dev->state = USB_STATE_ATTACHED;
->   	dev->lpm_disable_count = 1;
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index ca18da4768e3e8..1c78621fc3c01f 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -466,7 +466,7 @@ struct dev_links_info {
->    * 		such descriptors.
->    * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
->    *		DMA limit than the device itself supports.
-> - * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> + * @dma_range_map: map for DMA memory ranges relative to that of RAM
->    * @dma_parms:	A low level driver may set these to teach IOMMU code about
->    * 		segment limitations.
->    * @dma_pools:	Dma pools (if dma'ble device).
-> @@ -561,7 +561,7 @@ struct device {
->   					     64 bit addresses for consistent
->   					     allocations such descriptors. */
->   	u64		bus_dma_limit;	/* upstream dma constraint */
-> -	unsigned long	dma_pfn_offset;
-> +	const struct bus_dma_region *dma_range_map;
->   
->   	struct device_dma_parameters *dma_parms;
->   
-> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-> index 6e87225600ae35..715dcb7d64d5a4 100644
-> --- a/include/linux/dma-direct.h
-> +++ b/include/linux/dma-direct.h
-> @@ -14,21 +14,56 @@
->   
->   extern unsigned int zone_dma_bits;
->   
-> +/*
-> + * Record the mapping of CPU physical to DMA addresses for a given region.
-> + */
-> +struct bus_dma_region {
-> +	phys_addr_t	cpu_start;
-> +	dma_addr_t	dma_start;
-> +	u64		size;
-> +	u64		offset;
-> +};
-> +
-> +static inline dma_addr_t translate_phys_to_dma(struct device *dev,
-> +		phys_addr_t paddr)
-> +{
-> +	const struct bus_dma_region *m;
-> +
-> +	for (m = dev->dma_range_map; m->size; m++)
-> +		if (paddr >= m->cpu_start && paddr - m->cpu_start < m->size)
-> +			return (dma_addr_t)paddr - m->offset;
-> +
-> +	/* make sure dma_capable fails when no translation is available */
-> +	return DMA_MAPPING_ERROR;
-> +}
-> +
-> +static inline phys_addr_t translate_dma_to_phys(struct device *dev,
-> +		dma_addr_t dma_addr)
-> +{
-> +	const struct bus_dma_region *m;
-> +
-> +	for (m = dev->dma_range_map; m->size; m++)
-> +		if (dma_addr >= m->dma_start && dma_addr - m->dma_start < m->size)
-> +			return (phys_addr_t)dma_addr + m->offset;
-> +
-> +	return 0;
-> +}
-> +
->   #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
->   #include <asm/dma-direct.h>
->   #else
->   static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
->   {
-> -	dma_addr_t dev_addr = (dma_addr_t)paddr;
-> -
-> -	return dev_addr - ((dma_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
-> +	if (dev->dma_range_map)
-> +		return translate_phys_to_dma(dev, paddr);
-> +	return paddr;
->   }
->   
-> -static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
-> +static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dma_addr)
->   {
-> -	phys_addr_t paddr = (phys_addr_t)dev_addr;
-> -
-> -	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
-> +	if (dev->dma_range_map)
-> +		return translate_dma_to_phys(dev, dma_addr);
-> +	return dma_addr;
->   }
->   #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
->   
-> @@ -64,7 +99,8 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
->   
->   	if (!dev->dma_mask)
->   		return false;
-> -
-> +	if (addr == DMA_MAPPING_ERROR)
-> +		return false;
->   	if (is_ram && !IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
->   	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
->   		return false;
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index df0bff2ea750e0..e8fcb19c9112f8 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -730,4 +730,21 @@ static inline int dma_mmap_wc(struct device *dev,
->   #define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
->   #endif
->   
-> -#endif
-> +/*
-> + * These interfaces deal with the offset ranges for the direct mapping.
-> + * Drivers really should not use them, but we have a few legacy cases
-> + * that need them left.
-> + */
-> +int dma_direct_set_offset(struct device *dev, phys_addr_t cpu_start,
-> +		dma_addr_t dma_start, u64 size);
-> +#ifdef CONFIG_HAS_DMA
-> +int dma_direct_copy_range_map(struct device *to, struct device *from);
-> +#else
-> +static inline int dma_direct_copy_range_map(struct device *to,
-> +		struct device *from)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_HAS_DMA */
-> +
-> +#endif /* _LINUX_DMA_MAPPING_H */
-> diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-> index 2a0c4985f38e41..029fdc3eb670ae 100644
-> --- a/kernel/dma/coherent.c
-> +++ b/kernel/dma/coherent.c
-> @@ -7,7 +7,7 @@
->   #include <linux/slab.h>
->   #include <linux/kernel.h>
->   #include <linux/module.h>
-> -#include <linux/dma-mapping.h>
-> +#include <linux/dma-direct.h>
->   
->   struct dma_coherent_mem {
->   	void		*virt_base;
-> @@ -32,9 +32,8 @@ static inline dma_addr_t dma_get_device_base(struct device *dev,
->   					     struct dma_coherent_mem * mem)
->   {
->   	if (mem->use_dev_dma_pfn_offset)
-> -		return (mem->pfn_base - dev->dma_pfn_offset) << PAGE_SHIFT;
-> -	else
-> -		return mem->device_base;
-> +		return phys_to_dma(dev, PFN_PHYS(mem->pfn_base));
-> +	return mem->device_base;
->   }
->   
->   static int dma_init_coherent_memory(phys_addr_t phys_addr,
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index db6ef07aec3b37..fc815f7375e282 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -13,6 +13,7 @@
->   #include <linux/pfn.h>
->   #include <linux/vmalloc.h>
->   #include <linux/set_memory.h>
-> +#include <linux/slab.h>
->   
->   /*
->    * Most architectures use ZONE_DMA for the first 16 Megabytes, but some use it
-> @@ -70,8 +71,12 @@ static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
->   
->   static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
->   {
-> -	return phys_to_dma_direct(dev, phys) + size - 1 <=
-> -			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
-> +	dma_addr_t dma_addr = phys_to_dma_direct(dev, phys);
-> +
-> +	if (dma_addr == DMA_MAPPING_ERROR)
-> +		return false;
-> +	return dma_addr + size - 1 <=
-> +		min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
->   }
->   
->   /*
-> @@ -476,3 +481,75 @@ bool dma_direct_need_sync(struct device *dev, dma_addr_t dma_addr)
->   	return !dev_is_dma_coherent(dev) ||
->   		is_swiotlb_buffer(dma_to_phys(dev, dma_addr));
->   }
-> +
-> +/**
-> + * dma_direct_set_offset - Assign scalar offset for a single DMA range.
-> + * @dev:	device pointer; needed to "own" the alloced memory.
-> + * @cpu_start:  beginning of memory region covered by this offset.
-> + * @dma_start:  beginning of DMA/PCI region covered by this offset.
-> + * @size:	size of the region.
-> + *
-> + * This is for the simple case of a uniform offset which cannot
-> + * be discovered by "dma-ranges".
-> + *
-> + * It returns -ENOMEM if out of memory, -EINVAL if a map
-> + * already exists, 0 otherwise.
-> + *
-> + * Note: any call to this from a driver is a bug.  The mapping needs
-> + * to be described by the device tree or other firmware interfaces.
-> + */
-> +int dma_direct_set_offset(struct device *dev, phys_addr_t cpu_start,
-> +			 dma_addr_t dma_start, u64 size)
-> +{
-> +	struct bus_dma_region *map;
-> +	u64 offset = (u64)cpu_start - (u64)dma_start;
-> +
-> +	if (dev->dma_range_map) {
-> +		dev_err(dev, "attempt to add DMA range to existing map\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!offset)
-> +		return 0;
-> +
-> +	map = kcalloc(2, sizeof(*map), GFP_KERNEL);
-> +	if (!map)
-> +		return -ENOMEM;
-> +	map[0].cpu_start = cpu_start;
-> +	map[0].dma_start = dma_start;
-> +	map[0].offset = offset;
-> +	map[0].size = size;
-> +	dev->dma_range_map = map;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dma_direct_set_offset);
-> +
-> +/**
-> + * dma_direct_copy_range_map - Copy the dma_range from one device to another
-> + * @to:		device to copy to
-> + * @from:	device to copy from
-> + *
-> + * Note: this should not be used in any new code.  Drivers should never try
-> + * to inherit DMA parameters from other devices but just use those other
-> + * devices in the DMA mapping functions.
-> + */
-> +int dma_direct_copy_range_map(struct device *to, struct device *from)
-> +{
-> +	const struct bus_dma_region *map = from->dma_range_map, *new_map, *r;
-> +	int num_ranges = 0;
-> +
-> +	if (!map)
-> +		return 0;
-> +
-> +	for (r = map; r->size; r++)
-> +		num_ranges++;
-> +
-> +	new_map = kmemdup(map, array_size(num_ranges + 1, sizeof(*map)),
-> +			  GFP_KERNEL);
-> +	if (!new_map)
-> +		return -ENOMEM;
-> +	to->dma_range_map = new_map;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dma_direct_copy_range_map);
-> 
+SGkgTGF1cmVudCwNCg0KPiBIaSBCb2dkYW4sDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRj
+aC4NCg0KVGhhbmsgeW91IGZvciByZXZpZXchDQoNCj4gDQo+IE9uIFRodSwgU2VwIDEwLCAyMDIw
+IGF0IDA3OjI0OjA2UE0gKzAzMDAsIEJvZ2RhbiBUb2dvcmVhbiB3cm90ZToNCj4gPiBUaGUgQURE
+STkwMzYgaXMgYSBjb21wbGV0ZSwgNDUgTUh6LCBmcm9udC1lbmQgc29sdXRpb24gZm9yIGNoYXJn
+ZQ0KPiA+IGNvdXBsZWQgZGV2aWNlIChDQ0QpIHRpbWUgb2YgZmxpZ2h0IChUT0YpIGltYWdpbmcg
+YXBwbGljYXRpb25zLg0KPiA+DQo+ID4gSXQgaGFzIDItbGFuZSBNSVBJIENTSS0yIFJBVzEyIGRh
+dGEgb3V0cHV0IGFuZCBpMmMgY29udHJvbCBpbnRlcmZhY2UuDQo+ID4NCj4gPiBUaGUgcHJvZ3Jh
+bW1pbmcgb2YgY2FsaWJyYXRpb24gYW5kIGZpcm13YXJlIGlzIHBlcmZvcm1lZCBieSB1c2Vyc3Bh
+Y2UNCj4gPiBTREsgdGhyb3VnaCBDSURfVVNFUiBjbGFzcyBJT0NUTHMuDQo+IA0KPiBJJ20gYWZy
+YWlkIHRoYXQncyBub3QgYWNjZXB0YWJsZS4gVGhlIGZpcm13YXJlIHNob3VsZCBiZSBsb2FkZWQg
+dXNpbmcNCj4gdGhlIExpbnV4IGtlcm5lbCBmaXJtd2FyZSBBUEkuIEFzIGZvciBjYWxpYnJhdGlv
+biwgaXMgaXQgc3RhdGljIGRhdGEgPw0KPiBIb3cgaXMgaXQgZ2VuZXJhdGVkID8NCg0KQ2FsaWJy
+YXRpb24gZGF0YSBpcyBzdGF0aWMgZGF0YSwgZ2VuZXJhdGVkIGF0IHByb2R1Y3Rpb24gYW5kIHN0
+b3JlZCBvbiBhbmQgRUVQUk9NDQptZW1vcnkgb24gY2FtZXJhIGJvYXJkLiBUaGUgY2FtZXJhIGJv
+YXJkIGNvbnNpc3RzIG1haW5seSBvZiBBRERJOTAzNiBwcm9jZXNzb3INCisgQ0NEIGltYWdlIHNl
+bnNvciArIEVFUFJPTS4NCg0KVGhlIGZpcm13YXJlIGlzIGEgc2V0IG9mIChhZGRyZXNzLCBkYXRh
+KSB0dXBsZXMgdGhhdCBhcmUgd3JpdHRlbiB2aWEgSTJDLg0KV2Ugd2FudCB0aGlzIGRyaXZlciB0
+byBiZSBhIGdlbmVyaWMgb25lIGFuZCBzdXBwb3J0IGFsbCBpbXBsZW1lbnRhdGlvbnMNCm9mIEFE
+REk5MDM2IFRvRiBwcm9jZXNzb3IuIE5vdyB0aGUgcHJvYmxlbSBpcyB0aGF0IHNvbWUgaW1wbGVt
+ZW50YXRpb25zIA0Kc3RvcmUgZmlybXdhcmUgKyBjYWxpYnJhdGlvbiBvbiBleHRlcm5hbCBFRVBS
+T00gYW5kIHNvbWUgc3RvcmUganVzdCBjYWxpYnJhdGlvbiANCmRhdGEgb24gRUVQUk9NIGFuZCBm
+aXJtd2FyZSBpcyBsb2FkZWQgZnJvbSBhIGZpbGUgc3RvcmVkIGluIFNESy4gV2l0aCB0aGUgaGVs
+cCANCm9mIHRoZSAyIGN1c3RvbSBjb250cm9scyB3ZSBtb3ZlIHRoZSBjYW1lcmEgbW9kZWwgZGV0
+ZWN0aW9uLCBmaXJtd2FyZQ0KYW5kIGNhbGlicmF0aW9uIGZldGNoaW5nIGZyb20gZHJpdmVyIHRv
+IHVzZXIgc3BhY2UgU0RLLg0KDQpBbHNvIGFuIGltcG9ydGFudCBwb2ludCBpcyB0aGF0IHRoZSBU
+b0YgcHJvY2Vzc29yIGhhcyAzIG9wZXJhdGluZyBtb2RlcyANCihuZWFyLCBtZWRpdW0gYW5kIGZh
+cikuIEF0IGVhY2ggbW9kZSBjaGFuZ2UgYSBuZXcgc2V0IG9mIGZpcm13YXJlICsgDQpjYWxpYnJh
+dGlvbiBkYXRhIGlzIGxvYWRlZCBpbnRvIEFEREk5MDM2IGNoaXAuIElmIHdlIG1vdmUgdGhlIGZp
+cm13YXJlIGxvYWRpbmcNCmluIGRyaXZlciB3ZSB3b3VsZCBzdGlsbCBuZWVkIGEgY3VzdG9tIGVu
+dW1lcmF0aW9uIGNvbnRyb2wgdG8gc2VsZWN0IHRoZSB3b3JraW5nIG1vZGUuDQoNCj4gDQo+ID4g
+U2lnbmVkLW9mZi1ieTogQm9nZGFuIFRvZ29yZWFuIDxib2dkYW4udG9nb3JlYW5AYW5hbG9nLmNv
+bT4NCj4gPiAtLS0NCj4gPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MCArDQo+ID4gIGRyaXZlcnMvbWVkaWEvaTJjL0tjb25maWcgICAgICAgICAgfCAgMTQgKw0KPiA+
+ICBkcml2ZXJzL21lZGlhL2kyYy9NYWtlZmlsZSAgICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVy
+cy9tZWRpYS9pMmMvYWRkaTkwMzYuYyAgICAgICB8IDY3MyArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKw0KPiA+ICBpbmNsdWRlL3VhcGkvbGludXgvdjRsMi1jb250cm9scy5oIHwgICA2ICsN
+Cj4gPiAgNSBmaWxlcyBjaGFuZ2VkLCA3MDQgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9pMmMvYWRkaTkwMzYuYw0KPiA+DQo+ID4gZGlmZiAtLWdp
+dCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gPiBpbmRleCBiNWNmYWIwMTViZDYuLmZi
+MDNhZDljYTkyMCAxMDA2NDQNCj4gPiAtLS0gYS9NQUlOVEFJTkVSUw0KPiA+ICsrKyBiL01BSU5U
+QUlORVJTDQo+ID4gQEAgLTQ3Nyw2ICs0NzcsMTYgQEAgVzoJaHR0cDovL3dpa2kuYW5hbG9nLmNv
+bS9BRDc4NzkNCj4gPiAgVzoJaHR0cDovL2V6LmFuYWxvZy5jb20vY29tbXVuaXR5L2xpbnV4LWRl
+dmljZS1kcml2ZXJzDQo+ID4gIEY6CWRyaXZlcnMvaW5wdXQvdG91Y2hzY3JlZW4vYWQ3ODc5LmMN
+Cj4gPg0KPiA+ICtBRERJOTAzNiBUT0YgRlJPTlRFTkQgRFJJVkVSDQo+ID4gK006CUJvZ2RhbiBU
+b2dvcmVhbiA8Ym9nZGFuLnRvZ29yZWFuQGFuYWxvZy5jb20+DQo+ID4gK0w6CWxpbnV4LW1lZGlh
+QHZnZXIua2VybmVsLm9yZw0KPiA+ICtTOglTdXBwb3J0ZWQNCj4gPiArVzoJaHR0cHM6Ly93d3cu
+YW5hbG9nLmNvbS9lbi9wcm9kdWN0cy9hZGRpOTAzNi5odG1sDQo+ID4gK1c6CWh0dHA6Ly9lei5h
+bmFsb2cuY29tL2NvbW11bml0eS9saW51eC1kZXZpY2UtZHJpdmVycw0KPiA+ICtUOglnaXQgZ2l0
+Oi8vbGludXh0di5vcmcvbWVkaWFfdHJlZS5naXQNCj4gPiArRjoJRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9hZGksYWRkaTkwMzYueWFtbA0KPiA+ICtGOglkcml2
+ZXJzL21lZGlhL2kyYy9hZGRpOTAzNi5jDQo+ID4gKw0KPiA+ICBBRERSRVNTIFNQQUNFIExBWU9V
+VCBSQU5ET01JWkFUSU9OIChBU0xSKQ0KPiA+ICBNOglKaXJpIEtvc2luYSA8amlrb3NAa2VybmVs
+Lm9yZz4NCj4gPiAgUzoJTWFpbnRhaW5lZA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
+L2kyYy9LY29uZmlnIGIvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZw0KPiA+IGluZGV4IGM3YmE3
+NmZlZTU5OS4uMDg3ZGQzMDc1MDVkIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWVkaWEvaTJj
+L0tjb25maWcNCj4gPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnDQo+ID4gQEAgLTcy
+NSw2ICs3MjUsMjAgQEAgY29uZmlnIFZJREVPX0FQVElOQV9QTEwNCj4gPiAgY29uZmlnIFZJREVP
+X1NNSUFQUF9QTEwNCj4gPiAgCXRyaXN0YXRlDQo+ID4NCj4gPiArY29uZmlnIFZJREVPX0FEREk5
+MDM2DQo+ID4gKwl0cmlzdGF0ZSAiQW5hbG9nIERldmljZXMgQURESTkwMzYgVG9GIGZyb250LWVu
+ZCBzdXBwb3J0Ig0KPiA+ICsJZGVwZW5kcyBvbiBJMkMgJiYgVklERU9fVjRMMg0KPiA+ICsJc2Vs
+ZWN0IE1FRElBX0NPTlRST0xMRVINCj4gPiArCXNlbGVjdCBWSURFT19WNEwyX1NVQkRFVl9BUEkN
+Cj4gPiArCXNlbGVjdCBWNEwyX0ZXTk9ERQ0KPiA+ICsJc2VsZWN0IFJFR01BUF9JMkMNCj4gPiAr
+CWhlbHANCj4gPiArCSAgVGhpcyBpcyBhIFZpZGVvNExpbnV4MiBkcml2ZXIgZm9yIEFuYWxvZyBE
+ZXZpY2VzIEFEREk5MDM2DQo+ID4gKwkgIFRpbWUgb2YgRmxpZ2h0IGZyb250LWVuZC4NCj4gPiAr
+DQo+ID4gKwkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhl
+cmU6IHRoZQ0KPiA+ICsJICBtb2R1bGUgd2lsbCBiZSBjYWxsZWQgYWRkaTkwMzYuDQo+ID4gKw0K
+PiA+ICBjb25maWcgVklERU9fSEk1NTYNCj4gPiAgCXRyaXN0YXRlICJIeW5peCBIaS01NTYgc2Vu
+c29yIHN1cHBvcnQiDQo+ID4gIAlkZXBlbmRzIG9uIEkyQyAmJiBWSURFT19WNEwyDQo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvaTJjL01ha2VmaWxlIGIvZHJpdmVycy9tZWRpYS9pMmMv
+TWFrZWZpbGUNCj4gPiBpbmRleCBmMGE3NzQ3Mzk3OWQuLjYzMWE3Yzc2MTJjYSAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL21lZGlhL2kyYy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMvbWVk
+aWEvaTJjL01ha2VmaWxlDQo+ID4gQEAgLTI2LDYgKzI2LDcgQEAgb2JqLSQoQ09ORklHX1ZJREVP
+X0FLNzM3NSkgICs9IGFrNzM3NS5vDQo+ID4gIG9iai0kKENPTkZJR19WSURFT19EVzk3MTQpICAr
+PSBkdzk3MTQubw0KPiA+ICBvYmotJChDT05GSUdfVklERU9fRFc5NzY4KSAgKz0gZHc5NzY4Lm8N
+Cj4gPiAgb2JqLSQoQ09ORklHX1ZJREVPX0RXOTgwN19WQ00pICArPSBkdzk4MDctdmNtLm8NCj4g
+PiArb2JqLSQoQ09ORklHX1ZJREVPX0FEREk5MDM2KSArPSBhZGRpOTAzNi5vDQo+ID4gIG9iai0k
+KENPTkZJR19WSURFT19BRFY3MTcwKSArPSBhZHY3MTcwLm8NCj4gPiAgb2JqLSQoQ09ORklHX1ZJ
+REVPX0FEVjcxNzUpICs9IGFkdjcxNzUubw0KPiA+ICBvYmotJChDT05GSUdfVklERU9fQURWNzE4
+MCkgKz0gYWR2NzE4MC5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvaTJjL2FkZGk5
+MDM2LmMgYi9kcml2ZXJzL21lZGlhL2kyYy9hZGRpOTAzNi5jDQo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjc2YzM0NDQwNThkYw0KPiA+IC0tLSAvZGV2
+L251bGwNCj4gPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9hZGRpOTAzNi5jDQo+ID4gQEAgLTAs
+MCArMSw2NzMgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4g
+PiArLyoNCj4gPiArICogRHJpdmVyIGZvciB0aGUgQW5hbG9nIERldmljZXMgQURESTkwMzYgVG9G
+IGZyb250LWVuZC4NCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE5LTIwMjAgQW5h
+bG9nIERldmljZXMsIEFsbCBSaWdodHMgUmVzZXJ2ZWQuDQo+ID4gKyAqDQo+ID4gKyAqLw0KPiA+
+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgv
+Z3Bpby9jb25zdW1lci5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaTJjLmg+DQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9pbml0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+
+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ21h
+cC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgv
+dHlwZXMuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3ZlcnNpb24uaD4NCj4gPiArI2luY2x1ZGUg
+PG1lZGlhL3Y0bDItY3RybHMuaD4NCj4gPiArI2luY2x1ZGUgPG1lZGlhL3Y0bDItZndub2RlLmg+
+DQo+ID4gKyNpbmNsdWRlIDxtZWRpYS92NGwyLXN1YmRldi5oPg0KPiA+ICsNCj4gPiArc3RydWN0
+IGFkZGk5MDM2X21vZGVfaW5mbyB7DQo+ID4gKwl1MzIgd2lkdGg7DQo+ID4gKwl1MzIgaGVpZ2h0
+Ow0KPiA+ICsJdTMyIHBpeGVsX3JhdGU7DQo+ID4gKwl1MzIgbGlua19mcmVxX2lkeDsNCj4gPiAr
+fTsNCj4gPiArDQo+ID4gK3N0cnVjdCBhZGRpOTAzNiB7DQo+ID4gKwlzdHJ1Y3QgcmVnbWFwICpy
+ZWdtYXA7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9zdWJk
+ZXYgc2Q7DQo+ID4gKwlzdHJ1Y3QgbWVkaWFfcGFkIHBhZDsNCj4gPiArCXN0cnVjdCB2NGwyX2Z3
+bm9kZV9lbmRwb2ludCBlcDsNCj4gPiArCXN0cnVjdCB2NGwyX21idXNfZnJhbWVmbXQgZm10Ow0K
+PiA+ICsJc3RydWN0IHY0bDJfcmVjdCBjcm9wOw0KPiA+ICsNCj4gPiArCWNvbnN0IHN0cnVjdCBh
+ZGRpOTAzNl9tb2RlX2luZm8gKmN1cnJlbnRfbW9kZTsNCj4gPiArDQo+ID4gKwlzdHJ1Y3QgdjRs
+Ml9jdHJsX2hhbmRsZXIgY3RybHM7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9jdHJsICpwaXhlbF9yYXRl
+Ow0KPiA+ICsJc3RydWN0IHY0bDJfY3RybCAqbGlua19mcmVxOw0KPiA+ICsNCj4gPiArCS8qIGxv
+Y2sgdG8gcHJvdGVjdCBwb3dlciBzdGF0ZSAqLw0KPiA+ICsJc3RydWN0IG11dGV4IHBvd2VyX2xv
+Y2s7DQo+ID4gKwlpbnQgcG93ZXJfY291bnQ7DQo+ID4gKw0KPiA+ICsJc3RydWN0IGdwaW9fZGVz
+YyAqcnN0X2dwaW87DQo+ID4gKw0KPiA+ICsJLyogY29udHJvbHMgKi8NCj4gPiArCXN0cnVjdCB2
+NGwyX2N0cmwgKnNldF9jaGlwX2NvbmZpZzsNCj4gPiArCXN0cnVjdCB2NGwyX2N0cmwgKnJlZ19y
+ZWFkOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSBzdHJ1Y3QgYWRkaTkwMzYg
+KnRvX2FkZGk5MDM2KHN0cnVjdCB2NGwyX3N1YmRldiAqc2QpDQo+ID4gK3sNCj4gPiArCXJldHVy
+biBjb250YWluZXJfb2Yoc2QsIHN0cnVjdCBhZGRpOTAzNiwgc2QpOw0KPiA+ICt9DQo+ID4gKw0K
+PiA+ICsjZGVmaW5lIFY0TDJfQ0lEX0FEX0RFVl9TRVRfQ0hJUF9DT05GSUdfUVVFUlkNCj4gKFY0
+TDJfQ0lEX1VTRVJfQURESTkwMzZfQkFTRSArIDApDQo+ID4gKyNkZWZpbmUgVjRMMl9DSURfQURf
+REVWX1JFR19SRUFEX1FVRVJZDQo+IChWNEwyX0NJRF9VU0VSX0FEREk5MDM2X0JBU0UgKyAxKQ0K
+PiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCByZWdfc2VxdWVuY2UgYWRkaTkwMzZfcG93
+ZXJ1cF9zZXR0aW5nW10gPSB7DQo+ID4gKwl7IDB4YzRjMCwgMHgwMDFjIH0sDQo+ID4gKwl7IDB4
+YzRjMywgMHgwMDFjIH0sDQo+ID4gKwl7IDB4YzRkNywgMHgwMDAwIH0sDQo+ID4gKwl7IDB4YzRk
+NSwgMHgwMDAyIH0sDQo+ID4gKwl7IDB4YzRkYSwgMHgwMDAxIH0sDQo+ID4gKwl7IDB4YzRmMCwg
+MHgwMDAwIH0sDQo+ID4gKwl7IDB4YzQyNywgMHgwMDAzIH0sDQo+ID4gKwl7IDB4YzQyNywgMHgw
+MDAxIH0sDQo+ID4gKwl7IDB4YzQyNywgMHgwMDAwIH0sDQo+ID4gKwl7IDB4YzQyNiwgMHgwMDMw
+IH0sDQo+ID4gKwl7IDB4YzQyNiwgMHgwMDEwIH0sDQo+ID4gKwl7IDB4YzQyNiwgMHgwMDAwIH0s
+DQo+ID4gKwl7IDB4YzQyMywgMHgwMDgwIH0sDQo+ID4gKwl7IDB4YzQzMSwgMHgwMDgwIH0sDQo+
+ID4gKwl7IDB4NDAwMSwgMHgwMDA3IH0sDQo+ID4gKwl7IDB4N2MyMiwgMHgwMDA0IH0NCj4gPiAr
+fTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmVnX3NlcXVlbmNlIGFkZGk5MDM2
+X3Bvd2VyZG93bl9zZXR0aW5nW10gPSB7DQo+ID4gKwl7IDB4YzAyMiwgMHgwMDAxIH0sDQo+ID4g
+Kwl7IDB4NDAwMSwgMHgwMDA2IH0sDQo+ID4gKwl7IDB4N2MyMiwgMHgwMDA0IH0sDQo+ID4gKwl7
+IDB4YzQzMSwgMHgwMDgyIH0sDQo+ID4gKwl7IDB4YzQyMywgMHgwMDAwIH0sDQo+ID4gKwl7IDB4
+YzQyNiwgMHgwMDIwIH0sDQo+ID4gKwl7IDB4YzQyNywgMHgwMDAyIH0sDQo+ID4gKwl7IDB4YzRj
+MCwgMHgwMDNjIH0sDQo+ID4gKwl7IDB4YzRjMywgMHgwMDNjIH0sDQo+ID4gKwl7IDB4YzRkNSwg
+MHgwMDAzIH0sDQo+ID4gKwl7IDB4YzRkYSwgMHgwMDAwIH0sDQo+ID4gKwl7IDB4YzRkNywgMHgw
+MDAxIH0sDQo+ID4gKwl7IDB4YzRmMCwgMHgwMDAxIH0NCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0
+YXRpYyBjb25zdCBzNjQgbGlua19mcmVxX3RibFtdID0gew0KPiA+ICsJMTEwNTI5MDAwLA0KPiA+
+ICsJMjIxMTg0MDAwLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArLyogRWxlbWVudHMgb2YgdGhlIHN0
+cnVjdHVyZSBtdXN0IGJlIG9yZGVyZWQgYXNjZW5kaW5nIGJ5IHdpZHRoICYgaGVpZ2h0ICovDQo+
+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYWRkaTkwMzZfbW9kZV9pbmZvIGFkZGk5MDM2X21vZGVf
+aW5mb19kYXRhW10gPSB7DQo+ID4gKwl7DQo+ID4gKwkJLndpZHRoID0gNjQwLA0KPiA+ICsJCS5o
+ZWlnaHQgPSA0ODAsDQo+ID4gKwkJLnBpeGVsX3JhdGUgPSAzNjg2NDAwMCwNCj4gPiArCQkubGlu
+a19mcmVxX2lkeCA9IDAgLyogYW4gaW5kZXggaW4gbGlua19mcmVxX3RibFtdICovDQo+ID4gKwl9
+LA0KPiA+ICsJew0KPiA+ICsJCS53aWR0aCA9IDY0MCwNCj4gPiArCQkuaGVpZ2h0ID0gOTYwLA0K
+PiA+ICsJCS5waXhlbF9yYXRlID0gNzM3MjgwMDAsDQo+ID4gKwkJLmxpbmtfZnJlcV9pZHggPSAx
+IC8qIGFuIGluZGV4IGluIGxpbmtfZnJlcV90YmxbXSAqLw0KPiA+ICsJfSwNCj4gPiArfTsNCj4g
+PiArDQo+ID4gK3N0YXRpYyBib29sIGFkZGk5MzA2X3JlYWRhYmxlX3JlZ2lzdGVyKHN0cnVjdCBk
+ZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZykNCj4gPiArew0KPiA+ICsJaWYgKCgocmVnID49
+IDB4NDAwMCkgJiYgKHJlZyA8PSAweDZGRkYpKSB8fA0KPiA+ICsJICAgICgocmVnID49IDB4N0Mw
+MCkgJiYgKHJlZyA8PSAweDdGRkYpKSB8fA0KPiA+ICsJICAgICgocmVnID49IDB4QzAwMCkgJiYg
+KHJlZyA8PSAweEMyMDApKSB8fA0KPiA+ICsJICAgICgocmVnID49IDB4QzMwMCkgJiYgKHJlZyA8
+PSAweEM2QkYpKSkNCj4gPiArCQlyZXR1cm4gdHJ1ZTsNCj4gPiArCWVsc2UNCj4gPiArCQlyZXR1
+cm4gZmFsc2U7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBib29sIGFkZGk5MzA2X3dyaXRl
+YWJsZV9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCByZWcpDQo+ID4g
+K3sNCj4gPiArCWlmICgoKHJlZyA+PSAweDQwMDApICYmIChyZWcgPD0gMHg2RkZGKSkgfHwNCj4g
+PiArCSAgICAoKHJlZyA+PSAweDdDMDApICYmIChyZWcgPD0gMHg3RkZGKSkgfHwNCj4gPiArCSAg
+ICAoKHJlZyA+PSAweEMwMDApICYmIChyZWcgPD0gMHhDMTEzKSkgfHwNCj4gPiArCSAgICAoKHJl
+ZyA+PSAweEMzMDApICYmIChyZWcgPD0gMHhDN0ZGKSkpDQo+ID4gKwkJcmV0dXJuIHRydWU7DQo+
+ID4gKwllbHNlDQo+ID4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
+aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9jb25maWcgYWRkaTkwMzZfaTJjX3JlZ21hcF9jb25maWcg
+PSB7DQo+ID4gKwkucmVnX2JpdHMgPSAxNiwNCj4gPiArCS52YWxfYml0cyA9IDE2LA0KPiA+ICsN
+Cj4gPiArCS5tYXhfcmVnaXN0ZXIgPSAweEM3RkYsDQo+ID4gKwkud3JpdGVhYmxlX3JlZyA9IGFk
+ZGk5MzA2X3dyaXRlYWJsZV9yZWdpc3RlciwNCj4gPiArCS5yZWFkYWJsZV9yZWcgPSBhZGRpOTMw
+Nl9yZWFkYWJsZV9yZWdpc3RlciwNCj4gPiArCS5jYWNoZV90eXBlID0gUkVHQ0FDSEVfTk9ORSwN
+Cj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYWRkaTkwMzZfc2V0X3Bvd2VyX29uKHN0
+cnVjdCBhZGRpOTAzNiAqYWRkaTkwMzYpDQo+ID4gK3sNCj4gPiArCWludCByZXQ7DQo+ID4gKw0K
+PiA+ICsJaWYgKGFkZGk5MDM2LT5yc3RfZ3BpbykNCj4gPiArCQlncGlvZF9zZXRfdmFsdWVfY2Fu
+c2xlZXAoYWRkaTkwMzYtPnJzdF9ncGlvLCAwKTsNCj4gPiArDQo+ID4gKwlyZXQgPSByZWdtYXBf
+cmVnaXN0ZXJfcGF0Y2goYWRkaTkwMzYtPnJlZ21hcCwNCj4gYWRkaTkwMzZfcG93ZXJ1cF9zZXR0
+aW5nLA0KPiA+ICsJCQkJICAgIEFSUkFZX1NJWkUoYWRkaTkwMzZfcG93ZXJ1cF9zZXR0aW5nKSk7
+DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCWRldl9lcnIoYWRkaTkwMzYtPmRldiwgIkNvdWxkIG5v
+dCBzZXQgcG93ZXIgdXAgcmVnaXN0ZXJzXG4iKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcmV0Ow0K
+PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFkZGk5MDM2X3NldF9wb3dlcl9vZmYoc3Ry
+dWN0IGFkZGk5MDM2ICphZGRpOTAzNikNCj4gPiArew0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+
+ID4gKwlyZXQgPSByZWdtYXBfcmVnaXN0ZXJfcGF0Y2goYWRkaTkwMzYtPnJlZ21hcCwNCj4gPiAr
+CQkJCSAgICBhZGRpOTAzNl9wb3dlcmRvd25fc2V0dGluZywNCj4gPiArCQkJCSAgICBBUlJBWV9T
+SVpFKGFkZGk5MDM2X3Bvd2VyZG93bl9zZXR0aW5nKSk7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJ
+CWRldl9lcnIoYWRkaTkwMzYtPmRldiwgImNvdWxkIG5vdCBzZXQgcG93ZXIgZG93bg0KPiByZWdp
+c3RlcnNcbiIpOw0KPiA+ICsNCj4gPiArCWlmIChhZGRpOTAzNi0+cnN0X2dwaW8pDQo+ID4gKwkJ
+Z3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKGFkZGk5MDM2LT5yc3RfZ3BpbywgMSk7DQo+ID4gKw0K
+PiA+ICsJcmV0dXJuIHJldDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhZGRpOTAz
+Nl9zX3Bvd2VyKHN0cnVjdCB2NGwyX3N1YmRldiAqc2QsIGludCBvbikNCj4gPiArew0KPiA+ICsJ
+c3RydWN0IGFkZGk5MDM2ICphZGRpOTAzNiA9IHRvX2FkZGk5MDM2KHNkKTsNCj4gPiArCWludCBy
+ZXQgPSAwOw0KPiA+ICsNCj4gPiArCW11dGV4X2xvY2soJmFkZGk5MDM2LT5wb3dlcl9sb2NrKTsN
+Cj4gPiArDQo+ID4gKwlkZXZfZGJnKGFkZGk5MDM2LT5kZXYsICJzX3Bvd2VyOiAlZFxuIiwgb24p
+Ow0KPiA+ICsNCj4gPiArCS8qIElmIHRoZSBwb3dlciBjb3VudCBpcyBtb2RpZmllZCBmcm9tIDAg
+dG8gIT0gMCBvciBmcm9tICE9IDAgdG8gMCwNCj4gPiArCSAqIHVwZGF0ZSB0aGUgcG93ZXIgc3Rh
+dGUuDQo+ID4gKwkgKi8NCj4gPiArCWlmIChhZGRpOTAzNi0+cG93ZXJfY291bnQgPT0gIW9uKSB7
+DQo+ID4gKwkJaWYgKG9uKQ0KPiA+ICsJCQlyZXQgPSBhZGRpOTAzNl9zZXRfcG93ZXJfb24oYWRk
+aTkwMzYpOw0KPiA+ICsJCWVsc2UNCj4gPiArCQkJcmV0ID0gYWRkaTkwMzZfc2V0X3Bvd2VyX29m
+ZihhZGRpOTAzNik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKCFyZXQpIHsNCj4gPiArCQkv
+KiBVcGRhdGUgdGhlIHBvd2VyIGNvdW50LiAqLw0KPiA+ICsJCWFkZGk5MDM2LT5wb3dlcl9jb3Vu
+dCArPSBvbiA/IDEgOiAtMTsNCj4gPiArCQlXQVJOKGFkZGk5MDM2LT5wb3dlcl9jb3VudCA8IDAs
+ICJVbmJhbGFuY2VkIHBvd2VyDQo+IGNvdW50XG4iKTsNCj4gPiArCQlXQVJOKGFkZGk5MDM2LT5w
+b3dlcl9jb3VudCA+IDEsICJEdXBsaWNhdGVkIHNfcG93ZXINCj4gY2FsbFxuIik7DQo+ID4gKwl9
+DQo+ID4gKw0KPiA+ICsJbXV0ZXhfdW5sb2NrKCZhZGRpOTAzNi0+cG93ZXJfbG9jayk7DQo+ID4g
+Kw0KPiA+ICsJcmV0dXJuIHJldDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhZGRp
+OTAzNl9zZXRfY2hpcF9jb25maWcoc3RydWN0IGFkZGk5MDM2ICphZGRpOTAzNiwNCj4gPiArCQkJ
+CSAgICBzdHJ1Y3QgdjRsMl9jdHJsICpjdHJsKQ0KPiA+ICt7DQo+ID4gKwlpbnQgaW5kZXg7DQo+
+ID4gKwl1bnNpZ25lZCBzaG9ydCAqcmVnLCAqdmFsOw0KPiA+ICsNCj4gPiArCXJlZyA9ICh1bnNp
+Z25lZCBzaG9ydCAqKShjdHJsLT5wX25ldy5wX3UxNik7DQo+ID4gKwl2YWwgPSAodW5zaWduZWQg
+c2hvcnQgKikoY3RybC0+cF9uZXcucF91MTYgKyAxKTsNCj4gPiArDQo+ID4gKwlmb3IgKGluZGV4
+ID0gMDsgaW5kZXggPCBjdHJsLT5lbGVtczsgaW5kZXggKz0gMikgew0KPiA+ICsJCXJlZ21hcF93
+cml0ZShhZGRpOTAzNi0+cmVnbWFwLCAqcmVnLCAqdmFsKTsNCj4gPiArCQlyZWcgKz0gMjsNCj4g
+PiArCQl2YWwgKz0gMjsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0K
+PiA+ICsNCj4gPiArc3RhdGljIGludCBhZGRpOTAzNl9zX2N0cmwoc3RydWN0IHY0bDJfY3RybCAq
+Y3RybCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGFkZGk5MDM2ICphZGRpOTAzNiA9IGNvbnRhaW5l
+cl9vZihjdHJsLT5oYW5kbGVyLA0KPiA+ICsJCQkJCQkgc3RydWN0IGFkZGk5MDM2LCBjdHJscyk7
+DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArCXVuc2lnbmVkIGludCB2YWw7DQo+ID4gKw0KPiA+
+ICsJc3dpdGNoIChjdHJsLT5pZCkgew0KPiA+ICsJY2FzZSBWNEwyX0NJRF9BRF9ERVZfU0VUX0NI
+SVBfQ09ORklHX1FVRVJZOg0KPiA+ICsJCXJldCA9IGFkZGk5MDM2X3NldF9jaGlwX2NvbmZpZyhh
+ZGRpOTAzNiwgY3RybCk7DQo+ID4gKwkJYnJlYWs7DQo+ID4gKwljYXNlIFY0TDJfQ0lEX0FEX0RF
+Vl9SRUdfUkVBRF9RVUVSWToNCj4gPiArCQlyZXQgPSByZWdtYXBfcmVhZChhZGRpOTAzNi0+cmVn
+bWFwLCAqKHUxNiAqKShjdHJsLQ0KPiA+cF9uZXcucF91MTYpLA0KPiA+ICsJCQkJICAmdmFsKTsN
+Cj4gPiArCQlpZiAocmV0KQ0KPiA+ICsJCQlkZXZfd2FybihhZGRpOTAzNi0+ZGV2LA0KPiA+ICsJ
+CQkJICJjb3VsZCBub3QgcmVhZCBmcm9tIHJlZ2lzdGVyXG4iKTsNCj4gPiArCQllbHNlDQo+ID4g
+KwkJCSoodTE2ICopKGN0cmwtPnBfbmV3LnBfdTE2KSA9IHZhbDsNCj4gPiArCQlicmVhazsNCj4g
+PiArCWNhc2UgVjRMMl9DSURfUElYRUxfUkFURToNCj4gPiArCWNhc2UgVjRMMl9DSURfTElOS19G
+UkVROg0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQlkZXZfZXJyKGFkZGk5
+MDM2LT5kZXYsICIlcyA+IFVuaGFuZGxlZDogJXggIHBhcmFtPSV4XG4iLA0KPiA+ICsJCQlfX2Z1
+bmNfXywgY3RybC0+aWQsIGN0cmwtPnZhbCk7DQo+ID4gKwkJcmV0ID0gLUVJTlZBTDsNCj4gPiAr
+CQlicmVhazsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4g
+Kw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHY0bDJfY3RybF9vcHMgYWRkaTkwMzZfY3RybF9v
+cHMgPSB7DQo+ID4gKwkuc19jdHJsID0gYWRkaTkwMzZfc19jdHJsLA0KPiA+ICt9Ow0KPiA+ICsN
+Cj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCB2NGwyX2N0cmxfY29uZmlnIGFkZGk5MDM2X2N0cmxf
+Y2hpcF9jb25maWcgPSB7DQo+ID4gKwkub3BzCQk9ICZhZGRpOTAzNl9jdHJsX29wcywNCj4gPiAr
+CS5pZAkJPSBWNEwyX0NJRF9BRF9ERVZfU0VUX0NISVBfQ09ORklHX1FVRVJZLA0KPiA+ICsJLm5h
+bWUJCT0gImNoaXBfY29uZmlnIiwNCj4gPiArCS50eXBlCQk9IFY0TDJfQ1RSTF9UWVBFX1UxNiwN
+Cj4gPiArCS5kZWYJCT0gMHhGRiwNCj4gPiArCS5taW4JCT0gMHgwMCwNCj4gPiArCS5tYXgJCT0g
+MHhGRkZGLA0KPiA+ICsJLnN0ZXAJCT0gMSwNCj4gPiArCS5kaW1zCQk9IHsgMjA0OCB9LA0KPiA+
+ICsJLmVsZW1fc2l6ZQk9IDINCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgdjRsMl9jdHJsX2NvbmZpZyBhZGRpOTAzNl9jdHJsX3JlZ19yZWFkID0gew0KPiA+ICsJLm9w
+cwk9ICZhZGRpOTAzNl9jdHJsX29wcywNCj4gPiArCS5pZAk9IFY0TDJfQ0lEX0FEX0RFVl9SRUdf
+UkVBRF9RVUVSWSwNCj4gPiArCS5uYW1lCT0gInJlZ19yZWFkIiwNCj4gPiArCS50eXBlCT0gVjRM
+Ml9DVFJMX1RZUEVfVTE2LA0KPiA+ICsJLmRlZgk9IDAsDQo+ID4gKwkubWluCT0gMHgwMCwNCj4g
+PiArCS5tYXgJPSAweEZGRkYsDQo+ID4gKwkuc3RlcAk9IDENCj4gPiArfTsNCj4gPiArDQo+ID4g
+K3N0YXRpYyBpbnQgYWRkaTkwMzZfZW51bV9tYnVzX2NvZGUoc3RydWN0IHY0bDJfc3ViZGV2ICpz
+ZCwNCj4gPiArCQkJCSAgIHN0cnVjdCB2NGwyX3N1YmRldl9wYWRfY29uZmlnICpjZmcsDQo+ID4g
+KwkJCQkgICBzdHJ1Y3QgdjRsMl9zdWJkZXZfbWJ1c19jb2RlX2VudW0gKmNvZGUpDQo+ID4gK3sN
+Cj4gPiArCWlmIChjb2RlLT5pbmRleCA+IDApDQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4g
+Kw0KPiA+ICsJY29kZS0+Y29kZSA9IE1FRElBX0JVU19GTVRfU0JHR1IxMl8xWDEyOw0KPiA+ICsN
+Cj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFkZGk5MDM2
+X2VudW1fZnJhbWVfc2l6ZShzdHJ1Y3QgdjRsMl9zdWJkZXYgKnN1YmRldiwNCj4gPiArCQkJCSAg
+ICBzdHJ1Y3QgdjRsMl9zdWJkZXZfcGFkX2NvbmZpZyAqY2ZnLA0KPiA+ICsJCQkJICAgIHN0cnVj
+dCB2NGwyX3N1YmRldl9mcmFtZV9zaXplX2VudW0gKmZzZSkNCj4gPiArew0KPiA+ICsJaWYgKGZz
+ZS0+Y29kZSAhPSBNRURJQV9CVVNfRk1UX1NCR0dSMTJfMVgxMikNCj4gPiArCQlyZXR1cm4gLUVJ
+TlZBTDsNCj4gPiArDQo+ID4gKwlpZiAoZnNlLT5pbmRleCA+PSBBUlJBWV9TSVpFKGFkZGk5MDM2
+X21vZGVfaW5mb19kYXRhKSkNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+ID4gKwlm
+c2UtPm1pbl93aWR0aCA9IGFkZGk5MDM2X21vZGVfaW5mb19kYXRhW2ZzZS0+aW5kZXhdLndpZHRo
+Ow0KPiA+ICsJZnNlLT5tYXhfd2lkdGggPSBhZGRpOTAzNl9tb2RlX2luZm9fZGF0YVtmc2UtPmlu
+ZGV4XS53aWR0aDsNCj4gPiArCWZzZS0+bWluX2hlaWdodCA9IGFkZGk5MDM2X21vZGVfaW5mb19k
+YXRhW2ZzZS0+aW5kZXhdLmhlaWdodDsNCj4gPiArCWZzZS0+bWF4X2hlaWdodCA9IGFkZGk5MDM2
+X21vZGVfaW5mb19kYXRhW2ZzZS0+aW5kZXhdLmhlaWdodDsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
+MDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCB2NGwyX21idXNfZnJhbWVmbXQg
+Kg0KPiA+ICthZGRpOTAzNl9nZXRfcGFkX2Zvcm1hdChzdHJ1Y3QgYWRkaTkwMzYgKmFkZGk5MDM2
+LA0KPiA+ICsJCQlzdHJ1Y3QgdjRsMl9zdWJkZXZfcGFkX2NvbmZpZyAqY2ZnLA0KPiA+ICsJCQl1
+bnNpZ25lZCBpbnQgcGFkLA0KPiA+ICsJCQllbnVtIHY0bDJfc3ViZGV2X2Zvcm1hdF93aGVuY2Ug
+d2hpY2gpDQo+ID4gK3sNCj4gPiArCXN3aXRjaCAod2hpY2gpIHsNCj4gPiArCWNhc2UgVjRMMl9T
+VUJERVZfRk9STUFUX1RSWToNCj4gPiArCQlyZXR1cm4gdjRsMl9zdWJkZXZfZ2V0X3RyeV9mb3Jt
+YXQoJmFkZGk5MDM2LT5zZCwgY2ZnLCBwYWQpOw0KPiA+ICsJY2FzZSBWNEwyX1NVQkRFVl9GT1JN
+QVRfQUNUSVZFOg0KPiA+ICsJCXJldHVybiAmYWRkaTkwMzYtPmZtdDsNCj4gPiArCWRlZmF1bHQ6
+DQo+ID4gKwkJcmV0dXJuIE5VTEw7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRp
+YyBpbnQgYWRkaTkwMzZfZ2V0X2Zvcm1hdChzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkLA0KPiA+ICsJ
+CQkgICAgICAgc3RydWN0IHY0bDJfc3ViZGV2X3BhZF9jb25maWcgKmNmZywNCj4gPiArCQkJICAg
+ICAgIHN0cnVjdCB2NGwyX3N1YmRldl9mb3JtYXQgKmZvcm1hdCkNCj4gPiArew0KPiA+ICsJc3Ry
+dWN0IGFkZGk5MDM2ICphZGRpOTAzNiA9IHRvX2FkZGk5MDM2KHNkKTsNCj4gPiArCXN0cnVjdCB2
+NGwyX21idXNfZnJhbWVmbXQgKnBhZF9mb3JtYXQ7DQo+ID4gKw0KPiA+ICsJcGFkX2Zvcm1hdCA9
+IGFkZGk5MDM2X2dldF9wYWRfZm9ybWF0KGFkZGk5MDM2LCBjZmcsIGZvcm1hdC0+cGFkLA0KPiA+
+ICsJCQkJCSAgICAgZm9ybWF0LT53aGljaCk7DQo+ID4gKw0KPiA+ICsJaWYgKCFwYWRfZm9ybWF0
+KQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiArCWZvcm1hdC0+Zm9ybWF0ID0g
+KnBhZF9mb3JtYXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4g
+K3N0YXRpYyBzdHJ1Y3QgdjRsMl9yZWN0ICoNCj4gPiArYWRkaTkwMzZfZ2V0X3BhZF9jcm9wKHN0
+cnVjdCBhZGRpOTAzNiAqYWRkaTkwMzYsDQo+ID4gKwkJICAgICAgc3RydWN0IHY0bDJfc3ViZGV2
+X3BhZF9jb25maWcgKmNmZywNCj4gPiArCQkgICAgICB1bnNpZ25lZCBpbnQgcGFkLCBlbnVtIHY0
+bDJfc3ViZGV2X2Zvcm1hdF93aGVuY2Ugd2hpY2gpDQo+ID4gK3sNCj4gPiArCXN3aXRjaCAod2hp
+Y2gpIHsNCj4gPiArCWNhc2UgVjRMMl9TVUJERVZfRk9STUFUX1RSWToNCj4gPiArCQlyZXR1cm4g
+djRsMl9zdWJkZXZfZ2V0X3RyeV9jcm9wKCZhZGRpOTAzNi0+c2QsIGNmZywgcGFkKTsNCj4gPiAr
+CWNhc2UgVjRMMl9TVUJERVZfRk9STUFUX0FDVElWRToNCj4gPiArCQlyZXR1cm4gJmFkZGk5MDM2
+LT5jcm9wOw0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQlyZXR1cm4gTlVMTDsNCj4gPiArCX0NCj4g
+PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBhZGRpOTAzNl9tb2RlX2luZm8g
+Kg0KPiA+ICthZGRpOTAzNl9maW5kX25lYXJlc3RfbW9kZSh1bnNpZ25lZCBpbnQgd2lkdGgsIHVu
+c2lnbmVkIGludCBoZWlnaHQpDQo+ID4gK3sNCj4gPiArCXVuc2lnbmVkIGludCBpOw0KPiA+ICsN
+Cj4gPiArCWZvciAoaSA9IEFSUkFZX1NJWkUoYWRkaTkwMzZfbW9kZV9pbmZvX2RhdGEpIC0gMTsg
+aSA+IDA7IGktLSkgew0KPiA+ICsJCWlmIChhZGRpOTAzNl9tb2RlX2luZm9fZGF0YVtpXS53aWR0
+aCA8PSB3aWR0aCAmJg0KPiA+ICsJCSAgICBhZGRpOTAzNl9tb2RlX2luZm9fZGF0YVtpXS5oZWln
+aHQgPD0gaGVpZ2h0KQ0KPiA+ICsJCQlicmVhazsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1
+cm4gJmFkZGk5MDM2X21vZGVfaW5mb19kYXRhW2ldOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
+aWMgaW50IGFkZGk5MDM2X3NldF9mb3JtYXQoc3RydWN0IHY0bDJfc3ViZGV2ICpzZCwNCj4gPiAr
+CQkJICAgICAgIHN0cnVjdCB2NGwyX3N1YmRldl9wYWRfY29uZmlnICpjZmcsDQo+ID4gKwkJCSAg
+ICAgICBzdHJ1Y3QgdjRsMl9zdWJkZXZfZm9ybWF0ICpmb3JtYXQpDQo+ID4gK3sNCj4gPiArCXN0
+cnVjdCBhZGRpOTAzNiAqYWRkaTkwMzYgPSB0b19hZGRpOTAzNihzZCk7DQo+ID4gKwlzdHJ1Y3Qg
+djRsMl9tYnVzX2ZyYW1lZm10ICpmcmFtZWZtdDsNCj4gPiArCXN0cnVjdCB2NGwyX3JlY3QgKmNy
+b3A7DQo+ID4gKwljb25zdCBzdHJ1Y3QgYWRkaTkwMzZfbW9kZV9pbmZvICpuZXdfbW9kZTsNCj4g
+PiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJZGV2X2RiZyhhZGRpOTAzNi0+ZGV2LCAic2V0X2Zt
+dDogJXggJWR4JWRcbiIsDQo+ID4gKwkJZm9ybWF0LT5mb3JtYXQuY29kZSwgZm9ybWF0LT5mb3Jt
+YXQud2lkdGgsDQo+ID4gKwkJZm9ybWF0LT5mb3JtYXQuaGVpZ2h0KTsNCj4gPiArDQo+ID4gKwlj
+cm9wID0gYWRkaTkwMzZfZ2V0X3BhZF9jcm9wKGFkZGk5MDM2LCBjZmcsIGZvcm1hdC0+cGFkLA0K
+PiA+ICsJCQkJICAgICBmb3JtYXQtPndoaWNoKTsNCj4gPiArDQo+ID4gKwlpZiAoIWNyb3ApDQo+
+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsJbmV3X21vZGUgPSBhZGRpOTAzNl9m
+aW5kX25lYXJlc3RfbW9kZShmb3JtYXQtPmZvcm1hdC53aWR0aCwNCj4gPiArCQkJCQkgICAgICBm
+b3JtYXQtPmZvcm1hdC5oZWlnaHQpOw0KPiA+ICsJY3JvcC0+d2lkdGggPSBuZXdfbW9kZS0+d2lk
+dGg7DQo+ID4gKwljcm9wLT5oZWlnaHQgPSBuZXdfbW9kZS0+aGVpZ2h0Ow0KPiA+ICsNCj4gPiAr
+CWlmIChmb3JtYXQtPndoaWNoID09IFY0TDJfU1VCREVWX0ZPUk1BVF9BQ1RJVkUpIHsNCj4gPiAr
+CQlyZXQgPSB2NGwyX2N0cmxfc19jdHJsX2ludDY0KGFkZGk5MDM2LT5waXhlbF9yYXRlLA0KPiA+
+ICsJCQkJCSAgICAgbmV3X21vZGUtPnBpeGVsX3JhdGUpOw0KPiA+ICsJCWlmIChyZXQgPCAwKQ0K
+PiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQlyZXQgPSB2NGwyX2N0cmxfc19jdHJs
+KGFkZGk5MDM2LT5saW5rX2ZyZXEsDQo+ID4gKwkJCQkgICAgICAgbmV3X21vZGUtPmxpbmtfZnJl
+cV9pZHgpOw0KPiA+ICsJCWlmIChyZXQgPCAwKQ0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsN
+Cj4gPiArCQlhZGRpOTAzNi0+Y3VycmVudF9tb2RlID0gbmV3X21vZGU7DQo+ID4gKwl9DQo+ID4g
+Kw0KPiA+ICsJZnJhbWVmbXQgPSBhZGRpOTAzNl9nZXRfcGFkX2Zvcm1hdChhZGRpOTAzNiwgY2Zn
+LCBmb3JtYXQtPnBhZCwNCj4gPiArCQkJCQkgICBmb3JtYXQtPndoaWNoKTsNCj4gPiArDQo+ID4g
+KwlpZiAoIWZyYW1lZm10KQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4gPiArCWZy
+YW1lZm10LT53aWR0aCA9IGNyb3AtPndpZHRoOw0KPiA+ICsJZnJhbWVmbXQtPmhlaWdodCA9IGNy
+b3AtPmhlaWdodDsNCj4gPiArCWZyYW1lZm10LT5jb2RlID0gTUVESUFfQlVTX0ZNVF9TQkdHUjEy
+XzFYMTI7DQo+ID4gKwlmcmFtZWZtdC0+ZmllbGQgPSBWNEwyX0ZJRUxEX05PTkU7DQo+ID4gKwlm
+cmFtZWZtdC0+Y29sb3JzcGFjZSA9IFY0TDJfQ09MT1JTUEFDRV9TUkdCOw0KPiA+ICsNCj4gPiAr
+CWZvcm1hdC0+Zm9ybWF0ID0gKmZyYW1lZm10Ow0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+
+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFkZGk5MDM2X2VudGl0eV9pbml0X2NmZyhzdHJ1
+Y3QgdjRsMl9zdWJkZXYgKnN1YmRldiwNCj4gPiArCQkJCSAgICBzdHJ1Y3QgdjRsMl9zdWJkZXZf
+cGFkX2NvbmZpZyAqY2ZnKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9zdWJkZXZfZm9ybWF0
+IGZtdCA9IHsgMCB9Ow0KPiA+ICsNCj4gPiArCWlmIChjZmcpDQo+ID4gKwkJZm10LndoaWNoID0g
+VjRMMl9TVUJERVZfRk9STUFUX1RSWTsNCj4gPiArCWVsc2UNCj4gPiArCQlmbXQud2hpY2ggPSBW
+NEwyX1NVQkRFVl9GT1JNQVRfQUNUSVZFOw0KPiA+ICsNCj4gPiArCWZtdC5mb3JtYXQud2lkdGgg
+PSA2NDA7DQo+ID4gKwlmbXQuZm9ybWF0LmhlaWdodCA9IDk2MDsNCj4gPiArDQo+ID4gKwlhZGRp
+OTAzNl9zZXRfZm9ybWF0KHN1YmRldiwgY2ZnLCAmZm10KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4g
+MDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhZGRpOTAzNl9nZXRfc2VsZWN0aW9u
+KHN0cnVjdCB2NGwyX3N1YmRldiAqc2QsDQo+ID4gKwkJCQkgIHN0cnVjdCB2NGwyX3N1YmRldl9w
+YWRfY29uZmlnICpjZmcsDQo+ID4gKwkJCQkgIHN0cnVjdCB2NGwyX3N1YmRldl9zZWxlY3Rpb24g
+KnNlbCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGFkZGk5MDM2ICphZGRpOTAzNiA9IHRvX2FkZGk5
+MDM2KHNkKTsNCj4gPiArDQo+ID4gKwlpZiAoc2VsLT50YXJnZXQgIT0gVjRMMl9TRUxfVEdUX0NS
+T1ApDQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKw0KPiA+ICsJc2VsLT5yID0gKmFkZGk5
+MDM2X2dldF9wYWRfY3JvcChhZGRpOTAzNiwgY2ZnLCBzZWwtPnBhZCwgc2VsLT53aGljaCk7DQo+
+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgYWRk
+aTkwMzZfc19zdHJlYW0oc3RydWN0IHY0bDJfc3ViZGV2ICpzdWJkZXYsIGludCBlbmFibGUpDQo+
+ID4gK3sNCj4gPiArCXN0cnVjdCBhZGRpOTAzNiAqYWRkaTkwMzYgPSB0b19hZGRpOTAzNihzdWJk
+ZXYpOw0KPiA+ICsNCj4gPiArCWRldl9kYmcoYWRkaTkwMzYtPmRldiwgInN0cmVhbSAlZFxuIiwg
+ZW5hYmxlKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
+dGljIGNvbnN0IHN0cnVjdCB2NGwyX3N1YmRldl9jb3JlX29wcyBhZGRpOTAzNl9jb3JlX29wcyA9
+IHsNCj4gPiArCS5zX3Bvd2VyCT0gYWRkaTkwMzZfc19wb3dlciwNCj4gPiArfTsNCj4gPiArDQo+
+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgdjRsMl9zdWJkZXZfdmlkZW9fb3BzIGFkZGk5MDM2X3Zp
+ZGVvX29wcyA9IHsNCj4gPiArCS5zX3N0cmVhbQk9IGFkZGk5MDM2X3Nfc3RyZWFtLA0KPiA+ICt9
+Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCB2NGwyX3N1YmRldl9wYWRfb3BzIGFk
+ZGk5MDM2X3N1YmRldl9wYWRfb3BzID0gew0KPiA+ICsJLmluaXRfY2ZnCQk9IGFkZGk5MDM2X2Vu
+dGl0eV9pbml0X2NmZywNCj4gPiArCS5lbnVtX21idXNfY29kZQkJPSBhZGRpOTAzNl9lbnVtX21i
+dXNfY29kZSwNCj4gPiArCS5lbnVtX2ZyYW1lX3NpemUJPSBhZGRpOTAzNl9lbnVtX2ZyYW1lX3Np
+emUsDQo+ID4gKwkuZ2V0X2ZtdAkJPSBhZGRpOTAzNl9nZXRfZm9ybWF0LA0KPiA+ICsJLnNldF9m
+bXQJCT0gYWRkaTkwMzZfc2V0X2Zvcm1hdCwNCj4gPiArCS5nZXRfc2VsZWN0aW9uCQk9IGFkZGk5
+MDM2X2dldF9zZWxlY3Rpb24sDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHY0bDJfc3ViZGV2X29wcyBhZGRpOTAzNl9zdWJkZXZfb3BzID0gew0KPiA+ICsJLmNvcmUJ
+PSAmYWRkaTkwMzZfY29yZV9vcHMsDQo+ID4gKwkudmlkZW8JPSAmYWRkaTkwMzZfdmlkZW9fb3Bz
+LA0KPiA+ICsJLnBhZAk9ICZhZGRpOTAzNl9zdWJkZXZfcGFkX29wcywNCj4gPiArfTsNCj4gPiAr
+DQo+ID4gK3N0YXRpYyBpbnQgYWRkaTkwMzZfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVu
+dCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJmNsaWVudC0+ZGV2Ow0KPiA+
+ICsJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmVuZHBvaW50Ow0KPiA+ICsJc3RydWN0IGFkZGk5MDM2
+ICphZGRpOTAzNjsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJZGV2X2RiZyhkZXYsICIl
+czogaTJjIGFkZHIgPSAweCV4XG4iLCBfX2Z1bmNfXywgY2xpZW50LT5hZGRyKTsNCj4gPiArDQo+
+ID4gKwlhZGRpOTAzNiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZihzdHJ1Y3QgYWRkaTkwMzYp
+LCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghYWRkaTkwMzYpDQo+ID4gKwkJcmV0dXJuIC1FTk9N
+RU07DQo+ID4gKw0KPiA+ICsJYWRkaTkwMzYtPmRldiA9IGRldjsNCj4gPiArDQo+ID4gKwlhZGRp
+OTAzNi0+cmVnbWFwID0gZGV2bV9yZWdtYXBfaW5pdF9pMmMoY2xpZW50LA0KPiA+ICsJCQkJCQkm
+YWRkaTkwMzZfaTJjX3JlZ21hcF9jb25maWcpOw0KPiA+ICsJaWYgKElTX0VSUihhZGRpOTAzNi0+
+cmVnbWFwKSkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiRXJyb3IgaW5pdGlhbGl6aW5nIGkyYyBy
+ZWdtYXBcbiIpOw0KPiA+ICsJCXJldHVybiBQVFJfRVJSKGFkZGk5MDM2LT5yZWdtYXApOw0KPiA+
+ICsJfQ0KPiA+ICsNCj4gPiArCW11dGV4X2luaXQoJmFkZGk5MDM2LT5wb3dlcl9sb2NrKTsNCj4g
+PiArDQo+ID4gKwllbmRwb2ludCA9IGZ3bm9kZV9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChkZXZf
+Zndub2RlKGRldiksDQo+IE5VTEwpOw0KPiA+ICsJaWYgKCFlbmRwb2ludCkgew0KPiA+ICsJCWRl
+dl9lcnIoZGV2LCAiZW5kcG9pbnQgbm9kZSBub3QgZm91bmRcbiIpOw0KPiA+ICsJCXJldHVybiAt
+RUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldCA9IHY0bDJfZndub2RlX2VuZHBvaW50
+X3BhcnNlKGVuZHBvaW50LCAmYWRkaTkwMzYtPmVwKTsNCj4gPiArCWlmIChyZXQgPCAwKSB7DQo+
+ID4gKwkJZGV2X2VycihkZXYsICJwYXJzaW5nIGVuZHBvaW50IG5vZGUgZmFpbGVkXG4iKTsNCj4g
+PiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsJfQ0KPiA+ICsJZndub2RlX2hhbmRsZV9wdXQoZW5kcG9p
+bnQpOw0KPiA+ICsNCj4gPiArCWlmIChhZGRpOTAzNi0+ZXAuYnVzX3R5cGUgIT0gVjRMMl9NQlVT
+X0NTSTJfRFBIWSkgew0KPiA+ICsJCWRldl9lcnIoZGV2LCAiaW52YWxpZCBidXMgdHlwZSwgbXVz
+dCBiZSBNSVBJIENTSTJcbiIpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+
+ICsNCj4gPiArCWFkZGk5MDM2LT5yc3RfZ3BpbyA9IGdwaW9kX2dldF9vcHRpb25hbChkZXYsICJy
+ZXNldCIsDQo+IEdQSU9EX09VVF9ISUdIKTsNCj4gPiArCWlmIChJU19FUlIoYWRkaTkwMzYtPnJz
+dF9ncGlvKSkgew0KPiA+ICsJCWRldl9pbmZvKGRldiwgIlVuYWJsZSB0byBnZXQgXCJyZXNldFwi
+IGdwaW9cbiIpOw0KPiA+ICsJCXJldHVybiBQVFJfRVJSKGFkZGk5MDM2LT5yc3RfZ3Bpbyk7DQo+
+ID4gKwl9DQo+ID4gKw0KPiA+ICsJdjRsMl9jdHJsX2hhbmRsZXJfaW5pdCgmYWRkaTkwMzYtPmN0
+cmxzLCA0KTsNCj4gPiArDQo+ID4gKwlhZGRpOTAzNi0+cGl4ZWxfcmF0ZSA9IHY0bDJfY3RybF9u
+ZXdfc3RkKCZhZGRpOTAzNi0+Y3RybHMsDQo+ID4gKwkJCQkJCSAgJmFkZGk5MDM2X2N0cmxfb3Bz
+LA0KPiA+ICsJCQkJCQkgIFY0TDJfQ0lEX1BJWEVMX1JBVEUsDQo+ID4gKwkJCQkJCSAgMSwgSU5U
+X01BWCwgMSwgMSk7DQo+ID4gKwlhZGRpOTAzNi0+bGlua19mcmVxID0gdjRsMl9jdHJsX25ld19p
+bnRfbWVudSgmYWRkaTkwMzYtPmN0cmxzLA0KPiA+ICsJCQkJCQkgICAgICZhZGRpOTAzNl9jdHJs
+X29wcywNCj4gPiArCQkJCQkJICAgICBWNEwyX0NJRF9MSU5LX0ZSRVEsDQo+ID4gKwkJCQkJCSAg
+ICAgQVJSQVlfU0laRSgNCj4gPiArCQkJCQkJCSAgICAgbGlua19mcmVxX3RibCkgLSAxLA0KPiA+
+ICsJCQkJCQkgICAgIDAsIGxpbmtfZnJlcV90YmwpOw0KPiA+ICsJaWYgKGFkZGk5MDM2LT5saW5r
+X2ZyZXEpDQo+ID4gKwkJYWRkaTkwMzYtPmxpbmtfZnJlcS0+ZmxhZ3MgfD0gVjRMMl9DVFJMX0ZM
+QUdfUkVBRF9PTkxZOw0KPiA+ICsNCj4gPiArCWFkZGk5MDM2LT5zZXRfY2hpcF9jb25maWcgPSB2
+NGwyX2N0cmxfbmV3X2N1c3RvbSgmYWRkaTkwMzYtPmN0cmxzLA0KPiA+ICsJCQkJCQkmYWRkaTkw
+MzZfY3RybF9jaGlwX2NvbmZpZywNCj4gPiArCQkJCQkJTlVMTCk7DQo+ID4gKw0KPiA+ICsJYWRk
+aTkwMzYtPnJlZ19yZWFkID0gdjRsMl9jdHJsX25ld19jdXN0b20oJmFkZGk5MDM2LT5jdHJscywN
+Cj4gPiArCQkJCQkJICAmYWRkaTkwMzZfY3RybF9yZWdfcmVhZCwNCj4gPiArCQkJCQkJICBOVUxM
+KTsNCj4gPiArDQo+ID4gKwlhZGRpOTAzNi0+c2QuY3RybF9oYW5kbGVyID0gJmFkZGk5MDM2LT5j
+dHJsczsNCj4gPiArDQo+ID4gKwlpZiAoYWRkaTkwMzYtPmN0cmxzLmVycm9yKSB7DQo+ID4gKwkJ
+ZGV2X2VycihkZXYsICIlczogY29udHJvbCBpbml0aWFsaXphdGlvbiBlcnJvciAlZFxuIiwNCj4g
+PiArCQkJX19mdW5jX18sIGFkZGk5MDM2LT5jdHJscy5lcnJvcik7DQo+ID4gKwkJcmV0ID0gYWRk
+aTkwMzYtPmN0cmxzLmVycm9yOw0KPiA+ICsJCWdvdG8gZnJlZV9jdHJsOw0KPiA+ICsJfQ0KPiA+
+ICsNCj4gPiArCXY0bDJfaTJjX3N1YmRldl9pbml0KCZhZGRpOTAzNi0+c2QsIGNsaWVudCwgJmFk
+ZGk5MDM2X3N1YmRldl9vcHMpOw0KPiA+ICsJYWRkaTkwMzYtPnNkLmZsYWdzIHw9IFY0TDJfU1VC
+REVWX0ZMX0hBU19ERVZOT0RFOw0KPiA+ICsJYWRkaTkwMzYtPnBhZC5mbGFncyA9IE1FRElBX1BB
+RF9GTF9TT1VSQ0U7DQo+ID4gKwlhZGRpOTAzNi0+c2QuZGV2ID0gJmNsaWVudC0+ZGV2Ow0KPiA+
+ICsJYWRkaTkwMzYtPnNkLmVudGl0eS5mdW5jdGlvbiA9IE1FRElBX0VOVF9GX0NBTV9TRU5TT1I7
+DQo+ID4gKw0KPiA+ICsJcmV0ID0gbWVkaWFfZW50aXR5X3BhZHNfaW5pdCgmYWRkaTkwMzYtPnNk
+LmVudGl0eSwgMSwgJmFkZGk5MDM2LT5wYWQpOw0KPiA+ICsNCj4gPiArCWlmIChyZXQgPCAwKSB7
+DQo+ID4gKwkJZGV2X2VycihkZXYsICJjb3VsZCBub3QgcmVnaXN0ZXIgbWVkaWEgZW50aXR5XG4i
+KTsNCj4gPiArCQlnb3RvIGZyZWVfY3RybDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXQgPSBh
+ZGRpOTAzNl9zX3Bvd2VyKCZhZGRpOTAzNi0+c2QsIHRydWUpOw0KPiA+ICsJaWYgKHJldCA8IDAp
+IHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImNvdWxkIG5vdCBwb3dlciB1cCBhZGRpOTAzNlxuIik7
+DQo+ID4gKwkJZ290byBmcmVlX2VudGl0eTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlkZXZfaW5m
+byhkZXYsICJhZGRpOTAzNiBkZXRlY3RlZCBhdCBhZGRyZXNzIDB4JTAyeFxuIiwgY2xpZW50LT5h
+ZGRyKTsNCj4gPiArDQo+ID4gKwlyZXQgPSBhZGRpOTAzNl9zX3Bvd2VyKCZhZGRpOTAzNi0+c2Qs
+IGZhbHNlKTsNCj4gPiArCWlmIChyZXQgPCAwKSB7DQo+ID4gKwkJZGV2X2VycihkZXYsICJjb3Vs
+ZCBub3QgcG93ZXIgZG93biBhZGRpOTAzNlxuIik7DQo+ID4gKwkJZ290byBmcmVlX2VudGl0eTsN
+Cj4gPiArCX0NCj4gPiArDQo+ID4gKwlhZGRpOTAzNl9lbnRpdHlfaW5pdF9jZmcoJmFkZGk5MDM2
+LT5zZCwgTlVMTCk7DQo+ID4gKw0KPiA+ICsJcmV0ID0gdjRsMl9hc3luY19yZWdpc3Rlcl9zdWJk
+ZXYoJmFkZGk5MDM2LT5zZCk7DQo+ID4gKwlpZiAocmV0IDwgMCkNCj4gPiArCQlkZXZfZXJyKGRl
+diwgImNvdWxkIG5vdCByZWdpc3RlciB2NGwyIGRldmljZVxuIik7DQo+ID4gKw0KPiA+ICsJcmV0
+dXJuIDA7DQo+ID4gKw0KPiA+ICtmcmVlX2VudGl0eToNCj4gPiArCW1lZGlhX2VudGl0eV9jbGVh
+bnVwKCZhZGRpOTAzNi0+c2QuZW50aXR5KTsNCj4gPiArZnJlZV9jdHJsOg0KPiA+ICsJdjRsMl9j
+dHJsX2hhbmRsZXJfZnJlZSgmYWRkaTkwMzYtPmN0cmxzKTsNCj4gPiArCW11dGV4X2Rlc3Ryb3ko
+JmFkZGk5MDM2LT5wb3dlcl9sb2NrKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcmV0Ow0KPiA+ICt9
+DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGFkZGk5MDM2X3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVu
+dCAqY2xpZW50KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNkID0gaTJjX2dl
+dF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ID4gKwlzdHJ1Y3QgYWRkaTkwMzYgKmFkZGk5MDM2ID0g
+dG9fYWRkaTkwMzYoc2QpOw0KPiA+ICsNCj4gPiArCXY0bDJfYXN5bmNfdW5yZWdpc3Rlcl9zdWJk
+ZXYoJmFkZGk5MDM2LT5zZCk7DQo+ID4gKwltZWRpYV9lbnRpdHlfY2xlYW51cCgmYWRkaTkwMzYt
+PnNkLmVudGl0eSk7DQo+ID4gKwlpZiAoYWRkaTkwMzYtPnJzdF9ncGlvKQ0KPiA+ICsJCWdwaW9k
+X3B1dChhZGRpOTAzNi0+cnN0X2dwaW8pOw0KPiA+ICsJdjRsMl9jdHJsX2hhbmRsZXJfZnJlZSgm
+YWRkaTkwMzYtPmN0cmxzKTsNCj4gPiArCW11dGV4X2Rlc3Ryb3koJmFkZGk5MDM2LT5wb3dlcl9s
+b2NrKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGlj
+IGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkIGFkZGk5MDM2X2lkW10gPSB7DQo+ID4gKwl7ICJh
+ZGRpOTAzNiIsIDAgfSwNCj4gPiArCXt9DQo+ID4gK307DQo+ID4gK01PRFVMRV9ERVZJQ0VfVEFC
+TEUoaTJjLCBhZGRpOTAzNl9pZCk7DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9m
+X2RldmljZV9pZCBhZGRpOTAzNl9vZl9tYXRjaFtdID0gew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9
+ICJhZGksYWRkaTkwMzYiIH0sDQo+ID4gKwl7IC8qIHNlbnRpbmVsICovIH0NCj4gPiArfTsNCj4g
+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWRkaTkwMzZfb2ZfbWF0Y2gpOw0KPiA+ICsNCj4g
+PiArc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIGFkZGk5MDM2X2kyY19kcml2ZXIgPSB7DQo+ID4g
+KwkuZHJpdmVyCQkJPSB7DQo+ID4gKwkJLm9mX21hdGNoX3RhYmxlID0gYWRkaTkwMzZfb2ZfbWF0
+Y2gsDQo+ID4gKwkJLm5hbWUJCT0gImFkZGk5MDM2IiwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmVf
+bmV3CQk9IGFkZGk5MDM2X3Byb2JlLA0KPiA+ICsJLnJlbW92ZQkJCT0gYWRkaTkwMzZfcmVtb3Zl
+LA0KPiA+ICsJLmlkX3RhYmxlCQk9IGFkZGk5MDM2X2lkLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAr
+bW9kdWxlX2kyY19kcml2ZXIoYWRkaTkwMzZfaTJjX2RyaXZlcik7DQo+ID4gKw0KPiA+ICtNT0RV
+TEVfREVTQ1JJUFRJT04oIkFuYWxvZyBEZXZpY2VzIEFEREk5MDM2IENhbWVyYSBEcml2ZXIiKTsN
+Cj4gPiArTU9EVUxFX0FVVEhPUigiQm9nZGFuIFRvZ29yZWFuIik7DQo+ID4gK01PRFVMRV9MSUNF
+TlNFKCJHUEwgdjIiKTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBpL2xpbnV4L3Y0bDIt
+Y29udHJvbHMuaCBiL2luY2x1ZGUvdWFwaS9saW51eC92NGwyLQ0KPiBjb250cm9scy5oDQo+ID4g
+aW5kZXggNjIyNzE0MThjMWJlLi5mODhiNTY0NzliYzEgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVk
+ZS91YXBpL2xpbnV4L3Y0bDItY29udHJvbHMuaA0KPiA+ICsrKyBiL2luY2x1ZGUvdWFwaS9saW51
+eC92NGwyLWNvbnRyb2xzLmgNCj4gPiBAQCAtMTk4LDYgKzE5OCwxMiBAQCBlbnVtIHY0bDJfY29s
+b3JmeCB7DQo+ID4gICAqLw0KPiA+ICAjZGVmaW5lIFY0TDJfQ0lEX1VTRVJfQVRNRUxfSVNDX0JB
+U0UJCShWNEwyX0NJRF9VU0VSX0JBU0UgKw0KPiAweDEwYzApDQo+ID4NCj4gPiArLyoNCj4gPiAr
+ICogVGhlIGJhc2UgZm9yIHRoZSBhZGRpOTAzNiBkcml2ZXIgY29udHJvbHMuDQo+ID4gKyAqIFdl
+IHJlc2VydmUgMTYgY29udHJvbHMgZm9yIHRoaXMgZHJpdmVyLg0KPiA+ICsgKi8NCj4gPiArI2Rl
+ZmluZSBWNEwyX0NJRF9VU0VSX0FEREk5MDM2X0JBU0UJCShWNEwyX0NJRF9VU0VSX0JBU0UgKw0K
+PiAweDEwZTApDQo+ID4gKw0KPiA+ICAvKiBNUEVHLWNsYXNzIGNvbnRyb2wgSURzICovDQo+ID4g
+IC8qIFRoZSBNUEVHIGNvbnRyb2xzIGFyZSBhcHBsaWNhYmxlIHRvIGFsbCBjb2RlYyBjb250cm9s
+cw0KPiA+ICAgKiBhbmQgdGhlICdNUEVHJyBwYXJ0IG9mIHRoZSBkZWZpbmUgaXMgaGlzdG9yaWNh
+bCAqLw0KPiA+IC0tDQo+ID4gMi4yOC4wDQo+ID4NCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IA0K
+PiBMYXVyZW50IFBpbmNoYXJ0DQpSZWdhcmRzLA0KDQpCb2dkYW4NCg==
