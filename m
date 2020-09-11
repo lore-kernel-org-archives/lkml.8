@@ -2,213 +2,170 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F10C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79278C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57EBD21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F3821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:34:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="f7hAImC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725562AbgIKDdn (ORCPT
+        id S1725765AbgIKDeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:33:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50619 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgIKDdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:33:42 -0400
-IronPort-SDR: N2w5IFeZQPDfWGP+ds8jIBbgBEW5SmJ7i/dxvuPQhEUuyuGAcvtqFYZOx4DydU2n3tshrNJlQM
- TNgm8CTVtcqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="220237316"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="220237316"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 20:33:41 -0700
-IronPort-SDR: 5LBz038KVq/fcH1CPqtWeteO59E1iB4ix4J26vABP2/9MbAybqjQbKsPsHcTCsuhrGdYQ0Z4qA
- jV3ZBR82gjDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="337367363"
-Received: from lkp-server01.sh.intel.com (HELO a75722977aa5) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Sep 2020 20:33:40 -0700
-Received: from kbuild by a75722977aa5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kGZoh-00000V-J6; Fri, 11 Sep 2020 03:33:39 +0000
-Date:   Fri, 11 Sep 2020 11:33:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 6bbdfd0731d82a4fc01877079d93ccb32fb0b593
-Message-ID: <5f5af00b.BiTWpzD4HRX5f9uf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 10 Sep 2020 23:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbgIKDeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 23:34:11 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBBCC061573;
+        Thu, 10 Sep 2020 20:34:10 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w1so8532361edr.3;
+        Thu, 10 Sep 2020 20:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rdWC82PKEhEwsaXh3LAxl47RN5F/LTuAnkpnqIreE2Q=;
+        b=f7hAImC+A8EN07tWzuoorjAACjNBmgZj9nxMqSY+DSMKQiuC5kczlXpOVkgrBoMLSt
+         EFCR7nxnwQhkOKl8k72xV56bOooIo3JMF0iY4Ddg4LHP1XqouEAEAF+KMEWCU/7k4LsE
+         ERbh2VMLY3LELI+NF8FJ8mJZhyE4tJiJL4hT8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rdWC82PKEhEwsaXh3LAxl47RN5F/LTuAnkpnqIreE2Q=;
+        b=iUFE9/v8Coje5M9MEvR17/uSMdjYB5WKBZfdxp25Q7P4zeNUaLV0oa9r+tH/OPlxPB
+         /f4ZRZl1TbuTsp6U0k3rOHEtA/KYb6TNw0YViwLs9N/xu/1YKlHQthF7pMp/KnbdRnj7
+         dlieoly8MV4FEIBH0Eoeo4NtFqLVEg8D3doFBCO/VigGgil133wv8uER6gUkYWBLxxRJ
+         hbJDj0fAXk4qnQSDWkQYFvxS6stvYVNoOZ4ePxzL+S7SbpJt4dlV/rcJ1JTMiHT3Dtpf
+         RL8d9c9t69TOO6rPmoC+qjANUTxVUMO+Jtav9VlQ3wzfpdotIaKsIUtFmIp6HP9wf/WK
+         lMCg==
+X-Gm-Message-State: AOAM533C4NEVkyTpESzpb0WTOBsb0lmbrVNbAuh1jqFw67ZTC4CX4jv5
+        sLzXGjvYloc1e2+H90phpnNbS4FOqp5yOzxbDIA=
+X-Google-Smtp-Source: ABdhPJzirNmav2/bABf0JzFPct9kmYu46AR/LeQQE+jKnkBIwfXqohIwEIaiJFyCSYJ6pnUxr1+sNEUyJ5DTAAnD4rk=
+X-Received: by 2002:aa7:d959:: with SMTP id l25mr12310657eds.383.1599795249576;
+ Thu, 10 Sep 2020 20:34:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200910105440.3087723-1-andrew@aj.id.au> <20200910105440.3087723-3-andrew@aj.id.au>
+ <CACPK8Xf-jys=F0Uqg-hYH-eDThmd5yOSNeC7+vLhra3GdOK1Zw@mail.gmail.com> <57d48d7a-7cea-4be7-92bd-8f3b93f84a06@www.fastmail.com>
+In-Reply-To: <57d48d7a-7cea-4be7-92bd-8f3b93f84a06@www.fastmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 11 Sep 2020 03:33:56 +0000
+Message-ID: <CACPK8XemZ2YG+nFBwy7sDoo8==YvnVYxt+1mx8QfBCxotG7K6g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mmc: sdhci-of-aspeed: Expose data sample phase delay tuning
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 6bbdfd0731d82a4fc01877079d93ccb32fb0b593  Merge branch 'linus'
+On Fri, 11 Sep 2020 at 02:49, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Fri, 11 Sep 2020, at 11:32, Joel Stanley wrote:
+> > On Thu, 10 Sep 2020 at 10:55, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > Allow sample phase adjustment to deal with layout or tolerance issues.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  drivers/mmc/host/sdhci-of-aspeed.c | 137 +++++++++++++++++++++++++++--
+> > >  1 file changed, 132 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > index 4f008ba3280e..641accbfcde4 100644
+> > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
 
-elapsed time: 721m
+> > > +static void
+> > > +aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
+> > > +                          const struct aspeed_sdhci_phase_desc *phase,
+> > > +                          uint8_t value, bool enable)
+> > > +{
+> > > +       u32 reg;
+> > > +
+> > > +       spin_lock(&sdc->lock);
+> >
+> > What is the lock protecting against?
+> >
+> > We call this in the ->probe, so there should be no concurrent access going on.
+>
+> Because the register is in the "global" part of the SD/MMC controller address
+> space (it's not part of the SDHCI), and there are multiple slots that may have
+> a driver probed concurrently.
 
-configs tested: 139
-configs skipped: 5
+That points to having the property be part of the "global" device tree
+node. This would simplify the code; you wouldn't need the locking
+either.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>
+> >
+> >
+> > > +       reg = readl(sdc->regs + ASPEED_SDC_PHASE);
+> > > +       reg &= ~phase->enable_mask;
+> > > +       if (enable) {
+> > > +               reg &= ~phase->value_mask;
+> > > +               reg |= value << __ffs(phase->value_mask);
+> > > +               reg |= phase->enable_value << __ffs(phase->enable_mask);
+> > > +       }
+> > > +       writel(reg, sdc->regs + ASPEED_SDC_PHASE);
+> > > +       spin_unlock(&sdc->lock);
+> > > +}
+> > > +
+> > >  static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> > >  {
+> > >         struct sdhci_pltfm_host *pltfm_host;
+> > > @@ -155,8 +195,58 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> > >         return (delta / 0x100) - 1;
+> > >  }
+> > >
+> > > +static int aspeed_sdhci_configure_of(struct platform_device *pdev,
+> > > +                                    struct aspeed_sdhci *sdhci)
+> > > +{
+> > > +       u32 iphase, ophase;
+> > > +       struct device_node *np;
+> > > +       struct device *dev;
+> > > +       int ret;
+> > > +
+> > > +       if (!sdhci->phase)
+> > > +               return 0;
+> > > +
+> > > +       dev = &pdev->dev;
+> > > +       np = dev->of_node;
+> > > +
+> > > +       ret = of_property_read_u32(np, "aspeed,input-phase", &iphase);
+> > > +       if (ret < 0) {
+> > > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->in, 0,
+> > > +                                          false);
+> >
+> > Will this clear any value that eg. u-boot writes?
+>
+> No, see the 'enable' test in aspeed_sdc_configure_phase()
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         cm_x300_defconfig
-powerpc                       maple_defconfig
-openrisc                         alldefconfig
-sh                            titan_defconfig
-ia64                        generic_defconfig
-arm                     davinci_all_defconfig
-sh                         apsh4a3a_defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                       cns3420vb_defconfig
-sparc64                             defconfig
-arm                         lpc18xx_defconfig
-mips                           ip27_defconfig
-arm                              zx_defconfig
-sh                          sdk7786_defconfig
-powerpc                     rainier_defconfig
-sh                           sh2007_defconfig
-arm                           stm32_defconfig
-powerpc                      bamboo_defconfig
-sh                            shmin_defconfig
-arm                         ebsa110_defconfig
-c6x                        evmc6457_defconfig
-m68k                            q40_defconfig
-arm                           u8500_defconfig
-powerpc                 mpc8272_ads_defconfig
-powerpc                mpc7448_hpc2_defconfig
-arm                            u300_defconfig
-arm                           efm32_defconfig
-arm                           omap1_defconfig
-c6x                        evmc6472_defconfig
-arm                          lpd270_defconfig
-arm                           corgi_defconfig
-powerpc                        fsp2_defconfig
-arm                          badge4_defconfig
-mips                            gpr_defconfig
-microblaze                      mmu_defconfig
-arm                        shmobile_defconfig
-xtensa                       common_defconfig
-powerpc                      pmac32_defconfig
-sh                        sh7785lcr_defconfig
-riscv                          rv32_defconfig
-mips                         rt305x_defconfig
-sh                          kfr2r09_defconfig
-mips                            e55_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200909
-x86_64               randconfig-a006-20200909
-x86_64               randconfig-a003-20200909
-x86_64               randconfig-a001-20200909
-x86_64               randconfig-a005-20200909
-x86_64               randconfig-a002-20200909
-i386                 randconfig-a004-20200911
-i386                 randconfig-a006-20200911
-i386                 randconfig-a001-20200911
-i386                 randconfig-a003-20200911
-i386                 randconfig-a002-20200911
-i386                 randconfig-a005-20200911
-i386                 randconfig-a004-20200910
-i386                 randconfig-a006-20200910
-i386                 randconfig-a001-20200910
-i386                 randconfig-a003-20200910
-i386                 randconfig-a002-20200910
-i386                 randconfig-a005-20200910
-i386                 randconfig-a004-20200909
-i386                 randconfig-a005-20200909
-i386                 randconfig-a006-20200909
-i386                 randconfig-a002-20200909
-i386                 randconfig-a001-20200909
-i386                 randconfig-a003-20200909
-x86_64               randconfig-a014-20200911
-x86_64               randconfig-a011-20200911
-x86_64               randconfig-a012-20200911
-x86_64               randconfig-a016-20200911
-x86_64               randconfig-a015-20200911
-x86_64               randconfig-a013-20200911
-i386                 randconfig-a016-20200909
-i386                 randconfig-a015-20200909
-i386                 randconfig-a011-20200909
-i386                 randconfig-a013-20200909
-i386                 randconfig-a014-20200909
-i386                 randconfig-a012-20200909
-i386                 randconfig-a015-20200911
-i386                 randconfig-a014-20200911
-i386                 randconfig-a011-20200911
-i386                 randconfig-a013-20200911
-i386                 randconfig-a016-20200911
-i386                 randconfig-a012-20200911
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+OK, so this branch will never cause any change in the register? Best
+to drop it then.
 
-clang tested configs:
-x86_64               randconfig-a004-20200911
-x86_64               randconfig-a006-20200911
-x86_64               randconfig-a003-20200911
-x86_64               randconfig-a002-20200911
-x86_64               randconfig-a005-20200911
-x86_64               randconfig-a001-20200911
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> >
+> > The register should be left alone if the kernel doesn't have a
+> > configuration of it's own, otherwise we may end up breaking an
+> > otherwise working system.
+>
+> Right, I can rework that.
