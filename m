@@ -2,78 +2,47 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A96C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C995B221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DA10221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgIKKHx (ORCPT
+        id S1725831AbgIKKJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:07:53 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:58032 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725554AbgIKKHt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:07:49 -0400
-X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
-   d="scan'208";a="56813791"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Sep 2020 19:07:48 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4762C4240D3B;
-        Fri, 11 Sep 2020 19:07:46 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] drm: Kconfig: Update description for DRM_RCAR_DW_HDMI config
-Date:   Fri, 11 Sep 2020 11:07:41 +0100
-Message-Id: <20200911100741.20013-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 06:09:23 -0400
+Received: from verein.lst.de ([213.95.11.211]:36343 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgIKKJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 06:09:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DB5CF68B02; Fri, 11 Sep 2020 12:09:19 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 12:09:19 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT flag
+Message-ID: <20200911100919.GA1945@lst.de>
+References: <20200911030758.73745-1-sergey.senozhatsky@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911030758.73745-1-sergey.senozhatsky@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcar_dw_hdmi driver is also used on Renesas RZ/G2 SoC's, update the
-same to reflect the description for DRM_RCAR_DW_HDMI config.
+Btw, the subject should probably read something like:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
- drivers/gpu/drm/rcar-du/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+media/v4l2: remove the V4L2_FLAG_MEMORY_NON_CONSISTENT flag
 
-diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
-index f65d1489dc50..bd8b43fb9753 100644
---- a/drivers/gpu/drm/rcar-du/Kconfig
-+++ b/drivers/gpu/drm/rcar-du/Kconfig
-@@ -22,11 +22,11 @@ config DRM_RCAR_CMM
- 	  Enable support for R-Car Color Management Module (CMM).
- 
- config DRM_RCAR_DW_HDMI
--	tristate "R-Car DU Gen3 HDMI Encoder Support"
-+	tristate "R-Car Gen3 and RZ/G2 DU HDMI Encoder Support"
- 	depends on DRM && OF
- 	select DRM_DW_HDMI
- 	help
--	  Enable support for R-Car Gen3 internal HDMI encoder.
-+	  Enable support for R-Car Gen3 or RZ/G2 internal HDMI encoder.
- 
- config DRM_RCAR_LVDS
- 	tristate "R-Car DU LVDS Encoder Support"
--- 
-2.17.1
-
+I messed up the spelling because I copied it from the documentation.
