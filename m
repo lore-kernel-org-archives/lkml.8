@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BE9C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B245AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48A2221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700BB221EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lnBSJV9b";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="McWhkeW8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DvceqLzl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MQTCl1C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725817AbgIKHDS (ORCPT
+        id S1725808AbgIKHDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:03:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45112 "EHLO
+        Fri, 11 Sep 2020 03:03:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45076 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgIKHCd (ORCPT
+        with ESMTP id S1725648AbgIKHCb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:02:33 -0400
-Date:   Fri, 11 Sep 2020 07:02:28 -0000
+        Fri, 11 Sep 2020 03:02:31 -0400
+Date:   Fri, 11 Sep 2020 07:02:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599807749;
+        s=2020; t=1599807748;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nK+Y+pGcwGyQYhqw3U+d78NVAhziKaGB5comF2R4ZiA=;
-        b=lnBSJV9bIdkFa8DN3Lvz1CA+G3rVL4l21bP2jfAMs+ZdaDyK1jsBHKNXGotvd9EfBcyy/a
-        axVjq6KYlMPwbuwcdc/Y4dYsAtglaQ1WbovpuIh0Y4Vsrvm4Dxy2HByVIUIhfINLrbfc5I
-        0IU203uWaLSSQaIjT+QqeRQiYhahDubrjOy9P1qVsXnpW0Az+ism2Qb+ZFwW+SkIXe7pz/
-        aamGOkOniX6aDAo2FHgnPaFVI/8yl2+/MAX++j1vX+c4WDR86UmelLADNs+YJYH/euD41V
-        iNfiRTppl8ZpIRU9PNROcy0dlmqJLe2JITHOhLhFlhIQflvUz1cfGqDFknlPjw==
+        bh=wEHOxkdlqmxFYEdk7iUjGYv/0FBMO8f9KO0LYJkQ/Bk=;
+        b=DvceqLzlrWlvwvLvvmzu/Df4O/9MOBN0EK3h9rV8v3d+ygt0sqSQjVrq8k35XF1YfRZRqY
+        U+nDwYj/C1x9+Ab3lu3ogLYQibuKtDrufO2gZZ+C55TjvuawCfpUYW7cwY6O2nsKger1OB
+        UiHt2KnTIZVwIj4rw97Kbblw7XZRfWHPShSMTKtZ59cvrbO6TixVusyHfyeYarpeOBxsyb
+        dchwQRacMqsp3uw5148+SO62MZ4UiVMnxZ+Q27Y1pAsYVdnTsHXLWPctpK1ExojzmP/kpW
+        BDNn7SkVgwLqGpjp0xEFHdgXt4Ft7q0foFLFA91KutjK2Ot/EP5O9BBeui31mw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599807749;
+        s=2020e; t=1599807748;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nK+Y+pGcwGyQYhqw3U+d78NVAhziKaGB5comF2R4ZiA=;
-        b=McWhkeW8OMH0xUppniI1KSnVOTBV6QAD5eiaCGz+ICy/zhpAoWGHQv1jLJzFAwcFxzvPZm
-        KgQQdlKEUdrXpkCA==
+        bh=wEHOxkdlqmxFYEdk7iUjGYv/0FBMO8f9KO0LYJkQ/Bk=;
+        b=MQTCl1C0BjxHibw4CuECTJUwkj8m/n5f0NBz746VlLCzcT5Yv96INTm/UmneKmdKPiMlGW
+        2pUwjXXPL4O8xgCw==
 From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/amd/uncore: Set all slices and threads to
- restore perf stat -a behaviour
-Cc:     Kim Phillips <kim.phillips@amd.com>,
+Subject: [tip: perf/core] perf/x86/amd/ibs: Fix raw sample data accumulation
+Cc:     Stephane Eranian <stephane.eranian@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         stable@vger.kernel.org, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200908214740.18097-2-kim.phillips@amd.com>
-References: <20200908214740.18097-2-kim.phillips@amd.com>
+In-Reply-To: <20200908214740.18097-6-kim.phillips@amd.com>
+References: <20200908214740.18097-6-kim.phillips@amd.com>
 MIME-Version: 1.0
-Message-ID: <159980774865.20229.4594347442051094162.tip-bot2@tip-bot2>
+Message-ID: <159980774733.20229.8857189007953193576.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,104 +72,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     c8fe99d0701fec9fb849ec880a86bc5592530496
-Gitweb:        https://git.kernel.org/tip/c8fe99d0701fec9fb849ec880a86bc5592530496
+Commit-ID:     36e1be8ada994d509538b3b1d0af8b63c351e729
+Gitweb:        https://git.kernel.org/tip/36e1be8ada994d509538b3b1d0af8b63c351e729
 Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Tue, 08 Sep 2020 16:47:34 -05:00
+AuthorDate:    Tue, 08 Sep 2020 16:47:38 -05:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 10 Sep 2020 11:19:34 +02:00
+CommitterDate: Thu, 10 Sep 2020 11:19:35 +02:00
 
-perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+perf/x86/amd/ibs: Fix raw sample data accumulation
 
-Commit 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for
-F17h L3 PMCs") inadvertently changed the uncore driver's behaviour
-wrt perf tool invocations with or without a CPU list, specified with
--C / --cpu=.
+Neither IbsBrTarget nor OPDATA4 are populated in IBS Fetch mode.
+Don't accumulate them into raw sample user data in that case.
 
-Change the behaviour of the driver to assume the former all-cpu (-a)
-case, which is the more commonly desired default.  This fixes
-'-a -A' invocations without explicit cpu lists (-C) to not count
-L3 events only on behalf of the first thread of the first core
-in the L3 domain.
+Also, in Fetch mode, add saving the IBS Fetch Control Extended MSR.
 
-BEFORE:
+Technically, there is an ABI change here with respect to the IBS raw
+sample data format, but I don't see any perf driver version information
+being included in perf.data file headers, but, existing users can detect
+whether the size of the sample record has reduced by 8 bytes to
+determine whether the IBS driver has this fix.
 
-Activity performed by the first thread of the last core (CPU#43) in
-CPU#40's L3 domain is not reported by CPU#40:
-
-sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
-...
-CPU36                 21,835      l3_request_g1.caching_l3_cache_accesses
-CPU40                 87,066      l3_request_g1.caching_l3_cache_accesses
-CPU44                 17,360      l3_request_g1.caching_l3_cache_accesses
-...
-
-AFTER:
-
-The L3 domain activity is now reported by CPU#40:
-
-sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
-...
-CPU36                354,891      l3_request_g1.caching_l3_cache_accesses
-CPU40              1,780,870      l3_request_g1.caching_l3_cache_accesses
-CPU44                315,062      l3_request_g1.caching_l3_cache_accesses
-...
-
-Fixes: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs")
+Fixes: 904cb3677f3a ("perf/x86/amd/ibs: Update IBS MSRs and feature definitions")
+Reported-by: Stephane Eranian <stephane.eranian@google.com>
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200908214740.18097-2-kim.phillips@amd.com
+Link: https://lkml.kernel.org/r/20200908214740.18097-6-kim.phillips@amd.com
 ---
- arch/x86/events/amd/uncore.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ arch/x86/events/amd/ibs.c        | 26 ++++++++++++++++----------
+ arch/x86/include/asm/msr-index.h |  1 +
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 76400c0..e7e61c8 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -181,28 +181,16 @@ static void amd_uncore_del(struct perf_event *event, int flags)
- }
- 
- /*
-- * Convert logical CPU number to L3 PMC Config ThreadMask format
-+ * Return a full thread and slice mask until per-CPU is
-+ * properly supported.
-  */
--static u64 l3_thread_slice_mask(int cpu)
-+static u64 l3_thread_slice_mask(void)
- {
--	u64 thread_mask, core = topology_core_id(cpu);
--	unsigned int shift, thread = 0;
-+	if (boot_cpu_data.x86 <= 0x18)
-+		return AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK;
- 
--	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
--		thread = 1;
--
--	if (boot_cpu_data.x86 <= 0x18) {
--		shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
--		thread_mask = BIT_ULL(shift);
--
--		return AMD64_L3_SLICE_MASK | thread_mask;
--	}
--
--	core = (core << AMD64_L3_COREID_SHIFT) & AMD64_L3_COREID_MASK;
--	shift = AMD64_L3_THREAD_SHIFT + thread;
--	thread_mask = BIT_ULL(shift);
--
--	return AMD64_L3_EN_ALL_SLICES | core | thread_mask;
-+	return AMD64_L3_EN_ALL_SLICES | AMD64_L3_EN_ALL_CORES |
-+	       AMD64_L3_F19H_THREAD_MASK;
- }
- 
- static int amd_uncore_event_init(struct perf_event *event)
-@@ -232,7 +220,7 @@ static int amd_uncore_event_init(struct perf_event *event)
- 	 * For other events, the two fields do not affect the count.
- 	 */
- 	if (l3_mask && is_llc_event(event))
--		hwc->config |= l3_thread_slice_mask(event->cpu);
-+		hwc->config |= l3_thread_slice_mask();
- 
- 	uncore = event_to_amd_uncore(event);
- 	if (!uncore)
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 863174a..cfbd020 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -630,18 +630,24 @@ fail:
+ 				       perf_ibs->offset_max,
+ 				       offset + 1);
+ 	} while (offset < offset_max);
++	/*
++	 * Read IbsBrTarget, IbsOpData4, and IbsExtdCtl separately
++	 * depending on their availability.
++	 * Can't add to offset_max as they are staggered
++	 */
+ 	if (event->attr.sample_type & PERF_SAMPLE_RAW) {
+-		/*
+-		 * Read IbsBrTarget and IbsOpData4 separately
+-		 * depending on their availability.
+-		 * Can't add to offset_max as they are staggered
+-		 */
+-		if (ibs_caps & IBS_CAPS_BRNTRGT) {
+-			rdmsrl(MSR_AMD64_IBSBRTARGET, *buf++);
+-			size++;
++		if (perf_ibs == &perf_ibs_op) {
++			if (ibs_caps & IBS_CAPS_BRNTRGT) {
++				rdmsrl(MSR_AMD64_IBSBRTARGET, *buf++);
++				size++;
++			}
++			if (ibs_caps & IBS_CAPS_OPDATA4) {
++				rdmsrl(MSR_AMD64_IBSOPDATA4, *buf++);
++				size++;
++			}
+ 		}
+-		if (ibs_caps & IBS_CAPS_OPDATA4) {
+-			rdmsrl(MSR_AMD64_IBSOPDATA4, *buf++);
++		if (perf_ibs == &perf_ibs_fetch && (ibs_caps & IBS_CAPS_FETCHCTLEXTD)) {
++			rdmsrl(MSR_AMD64_ICIBSEXTDCTL, *buf++);
+ 			size++;
+ 		}
+ 	}
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index dc131b8..2d39c31 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -464,6 +464,7 @@
+ #define MSR_AMD64_IBSOP_REG_MASK	((1UL<<MSR_AMD64_IBSOP_REG_COUNT)-1)
+ #define MSR_AMD64_IBSCTL		0xc001103a
+ #define MSR_AMD64_IBSBRTARGET		0xc001103b
++#define MSR_AMD64_ICIBSEXTDCTL		0xc001103c
+ #define MSR_AMD64_IBSOPDATA4		0xc001103d
+ #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
+ #define MSR_AMD64_SEV			0xc0010131
