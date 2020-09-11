@@ -5,54 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5734C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B59C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760E2206CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF15C221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgIKQI5 (ORCPT
+        id S1726572AbgIKQJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:08:57 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45562 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgIKQFW (ORCPT
+        Fri, 11 Sep 2020 12:09:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38160 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgIKQIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:05:22 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z17so6348094lfi.12;
-        Fri, 11 Sep 2020 09:05:19 -0700 (PDT)
+        Fri, 11 Sep 2020 12:08:42 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w3so12884284ljo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:08:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:reply-to:from:autocrypt
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=PHtNbi2pIZBDNdSuWFaCN2VJR0IT2sOp254gfd+fMPs=;
-        b=HCtUdRynMZGqCuuzpOp69WQGkHfwwt6UpyxFxaociQtSXG5AFj8OF+38NSx/LarZDc
-         5l8SKw7eGqmRVl831U8zPu3zD0TyOkvBlnSYWcZVFwLVPzNJNNzvMXqTRB0gObb1/9C1
-         ZvcbPt2NI0YTxbyHL/D0CeTqCUme/6RG5W6biPeA0Hg6J0ur4QAXten1FvEmHkIdMs37
-         eP+RwtK2tDT+Gb+9d5uK4ceY20vX4wU4eqR2OmVwEbvCt2fSDjOnR7qN2lCQLdtVS1fK
-         e+eVvP1Ys9Vq9vzebsSH0rlC0GlPlLQbL0TJ6rw/Y5U0yQstxveKlnNI4nrcMrNAkJlE
-         Mldw==
-X-Gm-Message-State: AOAM530eo0FQWmp1c8gC+gplbi3xOQs+KAXhWMyP7wLGpqzljLNe12Wk
-        Dh9AWKM60WE+UZaL0Nied4lK4EugUHE=
-X-Google-Smtp-Source: ABdhPJwmaU62krb9om0DdodSBGz4tiHCRU/llixf7hE3Q4t4SPd0rpsgl4juLOWR++Y/Cu/n3QrAfg==
-X-Received: by 2002:a19:8087:: with SMTP id b129mr539764lfd.471.1599840317946;
-        Fri, 11 Sep 2020 09:05:17 -0700 (PDT)
+        bh=AYPCMVE5+4lz80oAd0FTlLTpG9wKp/CHym7+dOireu0=;
+        b=n2opaqsRb0z7l0lbcyGwr/ZXVQUkeciY0oYiC/HJBhZEKx/Fly/4mvf/AglSCk/vRW
+         npjKHaWRcQFZdJzNIsTH2rOKl/TxMMzqKV7kKeKDZZj1mhWshqUk+w/wIF0X67uQpDfc
+         8iymVN/l47pRXREfMEQdnxeydvkNsrj/j5thpAsZ5N/Blk6kika8xopGM45+VQMamFaM
+         cCpRbC9kCQFLRmOKCiWvps1Sil9coOLuFr17gv1rZ64V28pR2gO72XcRJHVckO6QnyYC
+         gzXxoNbvWbP5aoosVbBLKDh79OCQ81LMVverX90X03AfRW5IIhMLpZDc/sQAY2sAJuEx
+         kbmA==
+X-Gm-Message-State: AOAM5303TOsHoksUhoXXOXKGQLGxjs9UlLHWYCCSulEeqpsr4bFQIBk0
+        +xTwgjcFhnSDyfpISWV1hWPGew77D0s=
+X-Google-Smtp-Source: ABdhPJy9TUKQieQHb3KpOZIiSnfsSORdGPxXVixEzQALJjV9d59ZvAUS/Xt/e2U8gXNjtXFoQdT/8Q==
+X-Received: by 2002:a2e:9d8a:: with SMTP id c10mr1154536ljj.83.1599840518400;
+        Fri, 11 Sep 2020 09:08:38 -0700 (PDT)
 Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id w4sm572357ljm.50.2020.09.11.09.05.16
+        by smtp.gmail.com with ESMTPSA id t1sm576862ljt.21.2020.09.11.09.08.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 09:05:17 -0700 (PDT)
-Subject: Re: [PATCH] security: keys: Use kvfree_sensitive in a few places
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200911114400.82207-1-alex.dewar90@gmail.com>
+        Fri, 11 Sep 2020 09:08:37 -0700 (PDT)
 Reply-To: efremov@linux.com
+Subject: Re: [PATCH] scripts: kzfree.cocci: Deprecate use of kzfree
+To:     Alex Dewar <alex.dewar90@gmail.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Corbet <corbet@lwn.net>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+References: <20200911134956.60910-1-alex.dewar90@gmail.com>
 From:   Denis Efremov <efremov@linux.com>
 Autocrypt: addr=efremov@linux.com; keydata=
  mQINBFsJUXwBEADDnzbOGE/X5ZdHqpK/kNmR7AY39b/rR+2Wm/VbQHV+jpGk8ZL07iOWnVe1
@@ -97,12 +100,12 @@ Autocrypt: addr=efremov@linux.com; keydata=
  EahrGMfRngbdp/mKs9aBR56ECMfFFUPyI3VJsNbgpcIJjV/0N+JdJKQpJ/4uQ2zNm0wH/RU8
  CRJvEwtKemX6fp/zLI36Gvz8zJIjSBIEqCb7vdgvWarksrhmi6/Jay5zRZ03+k6YwiqgX8t7
  ANwvYa1h1dQ36OiTqm1cIxRCGl4wrypOVGx3OjCar7sBLD+NkwO4RaqFvdv0xuuy4x01VnOF
-Message-ID: <f97076d2-de8a-4600-ee81-4cf4fcdc3ec1@linux.com>
-Date:   Fri, 11 Sep 2020 19:05:16 +0300
+Message-ID: <1486f777-23d9-19c4-d26d-bba1d8704660@linux.com>
+Date:   Fri, 11 Sep 2020 19:08:37 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200911114400.82207-1-alex.dewar90@gmail.com>
+In-Reply-To: <20200911134956.60910-1-alex.dewar90@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -114,55 +117,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Hi,
 
 same patch
+https://lkml.org/lkml/2020/8/11/130
+
+Julia, I've send all the patches to fix existing kfree_sensitive/kvfree_sensitive reports.
 
 https://lkml.org/lkml/2020/8/27/168
+https://lkml.org/lkml/2020/8/27/93
 
 Thanks,
 Denis
 
-On 9/11/20 2:44 PM, Alex Dewar wrote:
-> In big_key.c, there are a few places where memzero_explicit + kvfree is
-> used. It is better to use kvfree_sensitive instead, which is more
-> readable and also prevents the compiler from eliding the call to
-> memzero_explicit. Fix this.
+On 9/11/20 4:49 PM, Alex Dewar wrote:
+> kzfree() is effectively deprecated as of commit 453431a54934 ("mm,
+> treewide: rename kzfree() to kfree_sensitive()"). It is currently just a
+> legacy alias for kfree_sensitive(), which achieves the same thing.
+> 
+> Update kzfree.cocci accordingly:
+> 1) Replace instances of kzfree with kfree_sensitive
+> 2) Merge different rules for memset/memset_explicit as kzfree and
+>    kfree_sensitive are now equivalent
+> 3) Rename script to kfree_sensitive.cocci
+> 
+> In addition:
+> 4) Move the script to the free/ subfolder, where it would seem to fit
+>    better
 > 
 > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 > ---
->  security/keys/big_key.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  .../kfree_sensitive.cocci}                    | 38 +++++--------------
+>  1 file changed, 10 insertions(+), 28 deletions(-)
+>  rename scripts/coccinelle/{api/kzfree.cocci => free/kfree_sensitive.cocci} (59%)
 > 
-> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
-> index 691347dea3c1..d17e5f09eeb8 100644
-> --- a/security/keys/big_key.c
-> +++ b/security/keys/big_key.c
-> @@ -121,8 +121,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
->  		*path = file->f_path;
->  		path_get(path);
->  		fput(file);
-> -		memzero_explicit(buf, enclen);
-> -		kvfree(buf);
-> +		kvfree_sensitive(buf, enclen);
->  	} else {
->  		/* Just store the data in a buffer */
->  		void *data = kmalloc(datalen, GFP_KERNEL);
-> @@ -140,8 +139,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
->  err_enckey:
->  	kfree_sensitive(enckey);
->  error:
-> -	memzero_explicit(buf, enclen);
-> -	kvfree(buf);
-> +	kvfree_sensitive(buf, enclen);
->  	return ret;
->  }
+> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/free/kfree_sensitive.cocci
+> similarity index 59%
+> rename from scripts/coccinelle/api/kzfree.cocci
+> rename to scripts/coccinelle/free/kfree_sensitive.cocci
+> index 33625bd7cec9..a87f93f2ed5c 100644
+> --- a/scripts/coccinelle/api/kzfree.cocci
+> +++ b/scripts/coccinelle/free/kfree_sensitive.cocci
+> @@ -1,13 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  ///
+> -/// Use kzfree, kvfree_sensitive rather than memset or
+> -/// memzero_explicit followed by kfree
+> +/// Use k{,v}free_sensitive rather than memset or memzero_explicit followed by
+> +/// k{,v}free
+>  ///
+>  // Confidence: High
+>  // Copyright: (C) 2020 Denis Efremov ISPRAS
+>  // Options: --no-includes --include-headers
+>  //
+> -// Keywords: kzfree, kvfree_sensitive
+> +// Keywords: kfree_sensitive, kvfree_sensitive
+>  //
 >  
-> @@ -273,8 +271,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
->  err_fput:
->  		fput(file);
->  error:
-> -		memzero_explicit(buf, enclen);
-> -		kvfree(buf);
-> +		kvfree_sensitive(buf, enclen);
->  	} else {
->  		ret = datalen;
->  		memcpy(buffer, key->payload.data[big_key_data], datalen);
+>  virtual context
+> @@ -18,7 +18,7 @@ virtual report
+>  @initialize:python@
+>  @@
+>  # kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
+> -filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
+> +filter = frozenset(['kmalloc_oob_in_memset', 'kfree_sensitive', 'kvfree_sensitive'])
+>  
+>  def relevant(p):
+>      return not (filter & {el.current_element for el in p})
+> @@ -53,34 +53,16 @@ position m != cond.ok;
+>  type T;
+>  @@
+>  
+> +(
+>  - memzero_explicit@m((T)E, size);
+> -  ... when != E
+> -      when strict
+> -// TODO: uncomment when kfree_sensitive will be merged.
+> -// Only this case is commented out because developers
+> -// may not like patches like this since kzfree uses memset
+> -// internally (not memzero_explicit).
+> -//(
+> -//- kfree(E)@p;
+> -//+ kfree_sensitive(E);
+> -//|
+> -- \(vfree\|kvfree\)(E)@p;
+> -+ kvfree_sensitive(E, size);
+> -//)
+> -
+> -@rp_memset depends on patch@
+> -expression E, size;
+> -position p : script:python() { relevant(p) };
+> -position m != cond.ok;
+> -type T;
+> -@@
+> -
+> +|
+>  - memset@m((T)E, 0, size);
+> +)
+>    ... when != E
+>        when strict
+>  (
+>  - kfree(E)@p;
+> -+ kzfree(E);
+> ++ kfree_sensitive(E);
+>  |
+>  - \(vfree\|kvfree\)(E)@p;
+>  + kvfree_sensitive(E, size);
+> @@ -91,11 +73,11 @@ p << r.p;
+>  @@
+>  
+>  coccilib.report.print_report(p[0],
+> -  "WARNING: opportunity for kzfree/kvfree_sensitive")
+> +  "WARNING: opportunity for k{,v}free_sensitive")
+>  
+>  @script:python depends on org@
+>  p << r.p;
+>  @@
+>  
+>  coccilib.org.print_todo(p[0],
+> -  "WARNING: opportunity for kzfree/kvfree_sensitive")
+> +  "WARNING: opportunity for k{,v}free_sensitive")
 > 
