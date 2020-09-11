@@ -2,139 +2,108 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BD9C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4055BC2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4063E221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="iwxNNRSq"
+	by mail.kernel.org (Postfix) with ESMTP id 0BFD5221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725776AbgIKGYq (ORCPT
+        id S1725796AbgIKGZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbgIKGYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:24:42 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE855C061573;
-        Thu, 10 Sep 2020 23:24:39 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id lo4so12215856ejb.8;
-        Thu, 10 Sep 2020 23:24:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F8q8VZI/KqEdOVJ9DW+ecexrsQ8uO8xdnTiT3lh40GY=;
-        b=iwxNNRSqHQPPw7NRN3+AJDPYeet1cIe/BlZC9CmOPEmivDcmkXwVg6nAsHooODEeC8
-         9EO7FQ5VufnzEfm3/j4+SKpqHNDE2sPor9HObeojQJ7mkcSDKAYX3+dgbzEnwAmX/zt5
-         EgDmsRXXN/ycose+Vtdl1SotJHnNGv/5q06uU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F8q8VZI/KqEdOVJ9DW+ecexrsQ8uO8xdnTiT3lh40GY=;
-        b=ReHO9jenfyt7qwSfmGBAa/jLJ526u0LwxWcSTShYipDrGDGZD69Noqi02tX4UvNX16
-         gGUCZwLjRG0KhWkJWjC1Zn9abhvcoSBWY/uCEwZw1oUud11Rf8mrDOQKHmnwDHnHbBss
-         3731djuCioFApyUEmLkzGkSlQpwoKPZrmCo67XnuJNFT2njalLelr7zKLK8AaoDxK6hO
-         E9CUtGbinRFJukEAsNo0TrHFSW8/Bi+Yg1F4CRCRd/EAuVs2S9Bmd53YAv0G9qSI9DI8
-         8IUetcsami60d3p5tg4kAAwUVbM6Icm1MoUaD00fc2wrwQoY6tRoIs2SKEcfTlOEPz21
-         ZtJg==
-X-Gm-Message-State: AOAM531gQsapjao0URnJ4zcwePJNfV7J2JLQ6Gs29q/cDcJjMUp1pKaL
-        ctor9DRS9gQDsV19oAWagxX6FLuwIqML39CnhxQ=
-X-Google-Smtp-Source: ABdhPJwGsIFct6xD49icnIdRIUypp1dR0gXkCjgcK8V0N6s7a11zNG7uif/vfB4uystoNpvqg7tfhllyjz2DhzvlA5Y=
-X-Received: by 2002:a17:906:4c58:: with SMTP id d24mr630416ejw.108.1599805477428;
- Thu, 10 Sep 2020 23:24:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200910175733.11046-1-krzk@kernel.org> <20200910175733.11046-2-krzk@kernel.org>
-In-Reply-To: <20200910175733.11046-2-krzk@kernel.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 11 Sep 2020 06:24:25 +0000
-Message-ID: <CACPK8XdocAX5mOXf3VP29cNXH+6unYunB9NiT3qFVKyzR6WXPg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/15] dt-bindings: gpio: convert bindings for NXP
- PCA953x family to dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Fri, 11 Sep 2020 02:25:17 -0400
+Received: from verein.lst.de ([213.95.11.211]:35640 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgIKGZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:25:16 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9D35867373; Fri, 11 Sep 2020 08:25:12 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 08:25:12 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
         Russell King <linux@armlinux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-mediatek@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-sh@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] ARM/dma-mapping: move various helpers from
+ dma-mapping.h to dma-direct.h
+Message-ID: <20200911062512.GC21597@lst.de>
+References: <20200910054038.324517-1-hch@lst.de> <20200910054038.324517-2-hch@lst.de> <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42497691-ec93-1e93-d3e5-e841eaf8247a@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 at 17:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Sep 10, 2020 at 07:02:23PM +0100, Robin Murphy wrote:
+> On 2020-09-10 06:40, Christoph Hellwig wrote:
+>> Move the helpers to translate to and from direct mapping DMA addresses
+>> to dma-direct.h.  This not only is the most logical place, but the new
+>> placement also avoids dependency loops with pending commits.
 >
-> Convert the NXP PCA953x family of GPIO expanders bindings to device tree
-> schema.
+> For the straightforward move as it should be,
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> However I do wonder how much of this could be cleaned up further...
+>> +
+>> +#ifdef __arch_page_to_dma
+>> +#error Please update to __arch_pfn_to_dma
+>> +#endif
+>
+> This must be long, long dead by now.
 
-> +patternProperties:
-> +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-> +    type: object
-> +    properties:
-> +      gpio-hog: true
-> +      gpios: true
-> +      input: true
-> +      output-high: true
-> +      output-low: true
-> +      line-name: true
-> +
-> +    required:
-> +      - gpio-hog
-> +      - gpios
-> +
+Yeah.  I had a patch to remove this which lead me into the rabbit
+hole your described later.  A few patches in I decided to give up
+and just do the trivial move.  But it probably makes sense to pick
+up at least the two trivial dead code removal patches..
 
-> +            usb3-sata-sel-hog {
-> +                gpio-hog;
-> +                gpios = <4 GPIO_ACTIVE_HIGH>;
-> +                output-low;
-> +                line-name = "usb3_sata_sel";
+>> +static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+>> +{
+>> +	unsigned long pfn = __bus_to_pfn(addr);
+>> +
+>> +	if (dev)
+>> +		pfn += dev->dma_pfn_offset;
+>> +
+>> +	return pfn;
+>> +}
+>
+> These are only overridden for OMAP1510, and it looks like it wouldn't take 
+> much for the platform code or ohci-omap driver to set up a generic DMA 
+> offset for the relevant device.
 
-I would prefer we didn't require the addition of hte -hog prefix. It's
-mostly just a matter of taste, but I can think of a few more concrete
-reasons:
+I sent a ping to the omap maintainers earlier this week to ask for that :)
 
-We don't require -high or -low prefixes, so the node name doesn't need
-to describe the properties that will be found below.
+>> +static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+>> +{
+>> +	if (dev)
+>> +		return pfn_to_dma(dev, virt_to_pfn(addr));
+>> +
+>> +	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+>> +}
+>
+> And this is only used for some debug prints in dmabounce.
+>
+> Similarly the __bus_to_*()/__*_to_bus() calls themselves only appear 
+> significant to mach-footbridge any more, and could probably also be evolved 
+> into regular DMA offsets now that all API calls must have a non-NULL 
+> device. I think I might come back and take a closer look at all this at 
+> some point in future... :)
 
-Changing around node names for existing boards carries with it the
-chance of userspace breakage (as sysfs paths change). I would prefer
-we avoid that if possible.
-
-Cheers,
-
-Joel
+Yes,  pretty much all of this should eventually go away.  I just don't
+want to bock the ranges work on all kinds of random arm cleanups..
