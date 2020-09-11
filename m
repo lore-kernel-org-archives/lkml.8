@@ -2,147 +2,114 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D6921D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36BFB208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcDcVXay"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mwd4YDDO";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="E7At5zbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgIKPyD (ORCPT
+        id S1726196AbgIKPyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgIKPxB (ORCPT
+        Fri, 11 Sep 2020 11:54:43 -0400
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:57942
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726571AbgIKPwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:53:01 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF39C061757;
-        Fri, 11 Sep 2020 08:52:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=yNNKD3aSjbTN0xK7a0jESH4osJEkyi0r7WDad6R8Z4M=; b=VcDcVXayb9NLhgWUiavKsddA66
-        wkKREXL7VNw0LFva8kUzh47lmse2StS7H4y3bO9nh4GX5EvGdK2pNAQTHVXfyxE6lxGumhCd7PNJc
-        l/G8NzyUVTnNAvdWVGhtEa5v6n5dXLLlAkmrDI9FBUoKwa1LG1kg9wCROYJa11pT54EcSCQIuoEAb
-        CNju4Z6fhkTwqptCr4JQPn2LSmXN80dtUFCYiXD6Xlo5DjgmbCfruH8jtUCNC09/NvaOZfzWAouEo
-        vDkb0r2um69/xCxAPyja6a4qm0RKuwDNf3sq8J7z1iFcclj5tkl/BrX7bDorWn22Stggs6ifKNGMu
-        R3uis3Nw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGlM1-0001Bq-ST; Fri, 11 Sep 2020 15:52:50 +0000
-Subject: Re: linux-next: Tree for Sep 10 (drivers/media/pci/ttpci/dvb-ttpci)
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>
-References: <20200910174252.0698c743@canb.auug.org.au>
- <97f03d35-acd3-1c65-0c93-4ca4cabf6613@infradead.org>
- <20200911093156.15282b69@coco.lan>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1bf30e26-cd8d-a2dd-aaf3-97c2dbc1875a@infradead.org>
-Date:   Fri, 11 Sep 2020 08:52:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 11 Sep 2020 11:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gbvhytky6xpx7itkhb67ktsxbiwpnxix; d=codeaurora.org; t=1599834495;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+        bh=orZJUtk8zuXCuyD9M2bu/OIyXLSAJfTBuYp/toele7o=;
+        b=Mwd4YDDO0nVQnAFD1j9E9Z0o9mh2itzhVoX3F5mvCgek00ae/hdmWebKI+eQFWUy
+        9H6Z47sC5NBSKP5YnQSuWAyFE+9qI0qsYIUNRMYvqna+AtTHvppf+SmJkgCTZiNvX0z
+        eXwoRgrLyfw5E1VseoGQiDZoXCShmTU0+zS3JRCc=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599834495;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=orZJUtk8zuXCuyD9M2bu/OIyXLSAJfTBuYp/toele7o=;
+        b=E7At5zbEIjtVMf/kXsG1p2FI1kRVZKjdGQkri83MOn4zi08B7IJTiV60TWaJVUMq
+        vVhhdiQN/nSlg95dLE0bpcMiEsmWcAfpZWFHcPN42pO8ukgVic61qpakWTP3ewb/9Ok
+        jk2ZkMU0OqVP7c6mLXbIvI12g1B2+HGQUgV23dF0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AEE2AC433A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        dri-devel@lists.freedesktop.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv4 5/6] iommu: arm-smmu-impl: Use table to list QCOM implementations
+Date:   Fri, 11 Sep 2020 14:28:14 +0000
+Message-ID: <010101747d9117dd-eb187e14-ec3b-49e2-a81e-843093301055-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1599832685.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1599832685.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200911093156.15282b69@coco.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2020.09.11-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/20 12:31 AM, Mauro Carvalho Chehab wrote:
-> Hi Randy,
-> 
-> Em Thu, 10 Sep 2020 09:02:35 -0700
-> Randy Dunlap <rdunlap@infradead.org> escreveu:
-> 
->> On 9/10/20 12:42 AM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200909:
->>>   
->>
->>
->> on i386:
->>
->> ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
->> ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
->>
->>
->> Full randconfig file is attached.
-> 
-> I was unable to reproduce it here with the .config file you sent.
-> 
-> I suspect that the only difference is the compiler version. Here, I'm
-> using:
-> 
-> 	gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008
-> 
-> While you're using:
-> 
-> 	gcc (SUSE Linux) 7.5.0
-> 
-> Yet, the only patch that could possibly have affected it is
-> this changeset 13c129066845 ("media: av7110_v4l: avoid a typecast").
-> 
-> It sounds to me that gcc 7.5.0 only does the right math at compile
-> time if there is a typecast. Could you please check if the enclosed
-> patch fixes it?
+Use table and of_match_node() to match qcom implementation
+instead of multiple of_device_compatible() calls for each
+QCOM SMMU implementation.
 
-Hi Mauro,
-Yes, this fixes the build for me.  Thanks.
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-> Thanks,
-> Mauro
-> 
-> [PATCH] media: av7110: don't do float point math
-> 
-> It sounds that earlier versions of GCC have troubles when
-> doing const math at compile time, if no typecast is used:
-> 
-> on i386:
-> 	ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> 	ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> 
-> The warning was generated on gcc (SUSE Linux) 7.5.0.
-> Gcc 9.2 compiles it fine.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> 
-> diff --git a/drivers/media/pci/ttpci/av7110_v4l.c b/drivers/media/pci/ttpci/av7110_v4l.c
-> index 6d9c908be713..c89f536f699c 100644
-> --- a/drivers/media/pci/ttpci/av7110_v4l.c
-> +++ b/drivers/media/pci/ttpci/av7110_v4l.c
-> @@ -160,9 +160,9 @@ static int ves1820_set_tv_freq(struct saa7146_dev *dev, u32 freq)
->  	buf[1] = div & 0xff;
->  	buf[2] = 0x8e;
->  
-> -	if (freq < 16U * 168.25)
-> +	if (freq < 16U * 16825 / 100)
->  		config = 0xa0;
-> -	else if (freq < 16U * 447.25)
-> +	else if (freq < 16U * 44725 / 100)
->  		config = 0x90;
->  	else
->  		config = 0x30;
-> 
-
-
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+index d199b4bff15d..ce78295cfa78 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+@@ -9,6 +9,13 @@
+ 
+ #include "arm-smmu.h"
+ 
++static const struct of_device_id __maybe_unused qcom_smmu_impl_of_match[] = {
++	{ .compatible = "qcom,sc7180-smmu-500" },
++	{ .compatible = "qcom,sdm845-smmu-500" },
++	{ .compatible = "qcom,sm8150-smmu-500" },
++	{ .compatible = "qcom,sm8250-smmu-500" },
++	{ }
++};
+ 
+ static int arm_smmu_gr0_ns(int offset)
+ {
+@@ -217,10 +224,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+ 	if (of_device_is_compatible(np, "nvidia,tegra194-smmu"))
+ 		return nvidia_smmu_impl_init(smmu);
+ 
+-	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
+-	    of_device_is_compatible(np, "qcom,sc7180-smmu-500") ||
+-	    of_device_is_compatible(np, "qcom,sm8150-smmu-500") ||
+-	    of_device_is_compatible(np, "qcom,sm8250-smmu-500"))
++	if (of_match_node(qcom_smmu_impl_of_match, np))
+ 		return qcom_smmu_impl_init(smmu);
+ 
+ 	if (of_device_is_compatible(smmu->dev->of_node, "qcom,adreno-smmu"))
 -- 
-~Randy
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
