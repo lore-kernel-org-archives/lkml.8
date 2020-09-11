@@ -2,117 +2,136 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C87C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D4FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E8221D92
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:51:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNcRtjVY"
+	by mail.kernel.org (Postfix) with ESMTP id E113E221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599810896;
+	bh=eOOJoBImDE1TPm96YQNh+LjDOxBzOMInIn5eSZSA4wI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v6Kf5aqITEMmmgfkbD26HupsJBozsfWUGo981awKXJZBmVXBbrG14tNlXoDq1liBK
+	 AsLUvCDtSV8VAWlGjlSHQbG2RChowJBnPFe2bWgTCOJlMHLpZXPIF+f3gz+TXVNvJ3
+	 EYhvlBWz5JgTDfLTtlU9/hILbGSeZOnSSuDXsr/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725813AbgIKHv1 (ORCPT
+        id S1725794AbgIKHyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKHvY (ORCPT
+        Fri, 11 Sep 2020 03:54:54 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35958 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgIKHyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:51:24 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02FBC061573;
-        Fri, 11 Sep 2020 00:51:23 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id e17so3524542wme.0;
-        Fri, 11 Sep 2020 00:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9Xsaahdyj78pae+aUR721z0jxzTGJVufGOyZk2fZBts=;
-        b=MNcRtjVY6JRb3xEGii8aCwALs5/t6bKbiboBsuQ4DCiA92mMelhm8X6v4HirWJgqM+
-         UgfG2QhRdJh6Fzt35fwOGa8Pg6txOdwF0wIgG2voIR+Oo2Clu319mDyHSULpBN5xoaOj
-         Dlfew4oAYKESTEzfNfdbScR0iQT6Rv8QyEY81tLhUd0KnADRBDdMkxTBm3PiC1AOXIp5
-         S1grdRz4XLeG3U1R77WToz5xjBQXjQrbTfnXTIvmTZPevufkf7uDYM7Dmbh1je/bTFM3
-         ZkB/ZF2XfsMnuzdQbeP6J2SbG+TzLi+Z0ICPja3PXbIh+3OfeuFeydJyf77ERl26OxO0
-         928g==
+        Fri, 11 Sep 2020 03:54:44 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w1so9042503edr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:54:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9Xsaahdyj78pae+aUR721z0jxzTGJVufGOyZk2fZBts=;
-        b=bVDqzWYGXpp9rrPSCtwmXMgJPJDZtA/IT/Bdho77c3XO05nZV8+nGFLOWREgUFjh+V
-         /kKyjAiYQzNV4+QgrkOadT0OPxT/nFTzALAH8qjHXkXR28eOcZ5CKpPDibteO8M1Lgdy
-         91hrAwwcBhzf+8LCtXuzmCuwsOQALHLfiTOd+ZKJWikyVLn0S/dwsGJaRmbIiZCkHxDI
-         MAlbO4/3fa2oaKhPa1txDploulxrkact1o7xi3ezgjTXSWuxCkvxhtiiah1ET3n4BsId
-         dMxOGCxNbtfI2mUUIyS1zbKEWOkIpooKx0LTn8gr2qc11fb+Y4Alb9oix9oCINaSSdqg
-         Cggw==
-X-Gm-Message-State: AOAM533iEgZkEgei6cIlOG5KQk9HLb38y78wlHyOFVIkokwPa12hCRsv
-        M+hA2Hf9wRODTta4kAvq6WPe6jx6AIM=
-X-Google-Smtp-Source: ABdhPJwdwbjdXquczA4W7miJxWh9qTjwiKJYVcEuuuHMW3H21k191C+S2J1KgWsv7BvoTxTW5L7ZJg==
-X-Received: by 2002:a1c:2742:: with SMTP id n63mr884338wmn.24.1599810682335;
-        Fri, 11 Sep 2020 00:51:22 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id g8sm2577044wmd.12.2020.09.11.00.51.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 00:51:21 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0I/ZdGkuIr3JoP7rRmJ+zxyQ7oEKoTVS9yur/NkoIf0=;
+        b=XCpd6c6wvB21N4iEWrPlinEy2i0ydrccsWkCDTc/Gv90ApogN+Dy9EgPWOS/JklTmJ
+         2UxGkUkklpHMy2lR498rQfSOvLg4ndLFQi/F4d3EOPPJcVXgzZ+1j4MZgHuhB0FUk1nM
+         blzo5hYACFXGuzGOU3UZO1SvAZ12tclSw+WaqhcSN7T7VtEn6/Pe0Cs5zq3Th2Vu8rC4
+         YoM744U6xL1Z4ZUei6F6rjcoj+xsSfQcOF7nSDNuCFqVQQhUGri6dfn7s920c3o4NHVp
+         GHsPrgLOo8FQYaHsxqCRyn8E5+ywJ5op9zsHAUnSOf5wKH/nU/ZX/B1L8R9HSwdPX5E3
+         G9jg==
+X-Gm-Message-State: AOAM532uGktptvZqvJ/nFG0ebZAtM7qOpnXfAfd7eOsJqvmbAhHxNqoz
+        PLhzWwsDJBsQUiskKgFBlys=
+X-Google-Smtp-Source: ABdhPJzRtQ0X94H2fDvUJZrcp+Dm9AfI6lguQAi5pLjGbvPo4Kyp8wvCKu96XByy4lPTumbGN5/T0Q==
+X-Received: by 2002:a50:d4ce:: with SMTP id e14mr776330edj.126.1599810881793;
+        Fri, 11 Sep 2020 00:54:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id i7sm1031530ejo.22.2020.09.11.00.54.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 11 Sep 2020 00:54:40 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 09:54:39 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/24] request_key.2: Cast to 'unsigned long' rather than
- 'long' when printing with "%lx"
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-8-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <2c625b02-fa92-110b-d064-bebc012baae4@gmail.com>
-Date:   Fri, 11 Sep 2020 09:51:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: Re: [PATCH 1/2] extcon: ptn5150: Use defines for registers
+Message-ID: <20200911075439.GA11145@kozik-lap>
+References: <CGME20200909172007epcas1p2fe01380c62ca112a19283f2dc63e75f9@epcas1p2.samsung.com>
+ <20200909150129.12476-1-krzk@kernel.org>
+ <7571e535-f0ff-2371-1669-734c3996aacf@samsung.com>
+ <20200911053805.GA2954@kozik-lap>
+ <6e621023-530a-727c-fff7-e8435ca4a4d2@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-8-colomar.6.4.3@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <6e621023-530a-727c-fff7-e8435ca4a4d2@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-
-Thanks, Alex. Patch Applied.
-
-Cheers,
-
-Michael
-
-> ---
->  man2/request_key.2 | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Sep 11, 2020 at 05:03:02PM +0900, Chanwoo Choi wrote:
+> On 9/11/20 2:38 PM, Krzysztof Kozlowski wrote:
+> > On Fri, Sep 11, 2020 at 12:14:19PM +0900, Chanwoo Choi wrote:
+> >> On 9/10/20 12:01 AM, Krzysztof Kozlowski wrote:
+> >>> The register addresses are not continuous, so use simple defines for
+> >>> them.  This also makes it easier to find the address for register.
+> >>>
+> >>> No functional change.
+> >>>
+> >>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >>> ---
+> >>>  drivers/extcon/extcon-ptn5150.c | 22 ++++++++++------------
+> >>>  1 file changed, 10 insertions(+), 12 deletions(-)
+> >>>
+> >>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+> >>> index dda5b3a3a908..1b68f56d8372 100644
+> >>> --- a/drivers/extcon/extcon-ptn5150.c
+> >>> +++ b/drivers/extcon/extcon-ptn5150.c
+> >>> @@ -19,18 +19,16 @@
+> >>>  #include <linux/gpio/consumer.h>
+> >>>  
+> >>>  /* PTN5150 registers */
+> >>> -enum ptn5150_reg {
+> >>> -	PTN5150_REG_DEVICE_ID = 0x01,
+> >>> -	PTN5150_REG_CONTROL,
+> >>> -	PTN5150_REG_INT_STATUS,
+> >>> -	PTN5150_REG_CC_STATUS,
+> >>> -	PTN5150_REG_CON_DET = 0x09,
+> >>> -	PTN5150_REG_VCONN_STATUS,
+> >>> -	PTN5150_REG_RESET,
+> >>> -	PTN5150_REG_INT_MASK = 0x18,
+> >>> -	PTN5150_REG_INT_REG_STATUS,
+> >>> -	PTN5150_REG_END,
+> >>> -};
+> >>> +#define PTN5150_REG_DEVICE_ID			0x01
+> >>> +#define PTN5150_REG_CONTROL			0x02
+> >>> +#define PTN5150_REG_INT_STATUS			0x03
+> >>> +#define PTN5150_REG_CC_STATUS			0x04
+> >>> +#define PTN5150_REG_CON_DET			0x09
+> >>> +#define PTN5150_REG_VCONN_STATUS		0x0a
+> >>> +#define PTN5150_REG_RESET			0x0b
+> >>> +#define PTN5150_REG_INT_MASK			0x18
+> >>> +#define PTN5150_REG_INT_REG_STATUS		0x19
+> >>> +#define PTN5150_REG_END				PTN5150_REG_INT_REG_STATUS
+> >>
+> >> PTN5150_REG_END should be (PTN5150_REG_INT_REG_STATUS + 1)
+> >> for regmap operation of PTN5150_REG_INT_REG_STATUS.
+> > 
+> > Why? This goes to regmap's max_register which is the last register
+> > allowed to read:
+> > 
+> >   drivers/base/regmap/regmap-debugfs.c:   for (i = 0; i <= map->max_register; i += map->reg_stride) {
+> >   drivers/base/regmap/regmap.c:   if (map->max_register && reg > map->max_register)
 > 
-> diff --git a/man2/request_key.2 b/man2/request_key.2
-> index e28c11ded..c14bcb000 100644
-> --- a/man2/request_key.2
-> +++ b/man2/request_key.2
-> @@ -537,7 +537,7 @@ main(int argc, char *argv[])
->          exit(EXIT_FAILURE);
->      }
->  
-> -    printf("Key ID is %lx\en", (long) key);
-> +    printf("Key ID is %lx\en", (unsigned long) key);
->  
->      exit(EXIT_SUCCESS);
->  }
-> 
+> It is my mismake. You're right.
+> Applied them. Thanks.
 
+Great, thank you!
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Best regards,
+Krzysztof
+
