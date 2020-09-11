@@ -2,240 +2,93 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFA5C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D8BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651BA221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1CE221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SF6ZfqEZ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bb3ckIdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgIKI0J (ORCPT
+        id S1725852AbgIKI0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKIZm (ORCPT
+        Fri, 11 Sep 2020 04:26:33 -0400
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:38488
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725764AbgIKI03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:25:42 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E03C061795
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:25:38 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kGeNB-0002LH-Fx; Fri, 11 Sep 2020 10:25:33 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kGeN7-00074b-OJ; Fri, 11 Sep 2020 10:25:29 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] net: ag71xx: add ethtool support
-Date:   Fri, 11 Sep 2020 10:25:27 +0200
-Message-Id: <20200911082528.27121-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911082528.27121-1-o.rempel@pengutronix.de>
-References: <20200911082528.27121-1-o.rempel@pengutronix.de>
+        Fri, 11 Sep 2020 04:26:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812789;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=Suw0PG/fZ1BCpafDijGnb5vPJXoo0m2bMenuQ7bZnxg=;
+        b=SF6ZfqEZQxVCSMc0BR7jTVDWwqizlwPEzTc7Vsm+5PBPKNUghmOPF57AGCoivCjP
+        4JF5izGRZJjAWIk53Owmc6paUD+9WBBGHf71C9CEozNe7O2loJIgW++oUBhGWZgNZOp
+        nGuRFZgZptHL4wdHoGojUwldTC+FMyah7n4uE47o=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812789;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=Suw0PG/fZ1BCpafDijGnb5vPJXoo0m2bMenuQ7bZnxg=;
+        b=bb3ckIdPbfyp0jKPtjLlM731ZJX88kSwLv13Imp1KPjBPNQubTO+8PVY0eKJXfgN
+        +aNb2yeHJCChPHQgIIFCu6At/5PTuPJF4ocHEqxZvJA1uZnX+YoeAlfEXzvjchqf9fQ
+        5DDhsxjDcdZgJlBJpXxpsv3ST9xcFTC0WoDepa/I=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Sep 2020 08:26:29 +0000
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 5/8] iommu/arm-smmu-qcom: Consistently initialize
+ stream mappings
+In-Reply-To: <20200904155513.282067-6-bjorn.andersson@linaro.org>
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+ <20200904155513.282067-6-bjorn.andersson@linaro.org>
+Message-ID: <010101747c45e395-e7b8299e-f3bf-4dbb-828f-c3608b2121d3-000000@us-west-2.amazonses.com>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.11-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic ethtool support. The functionality was tested on AR9331 SoC.
+On 2020-09-04 21:25, Bjorn Andersson wrote:
+> Firmware that traps writes to S2CR to translate BYPASS into FAULT also
+> ignores writes of type FAULT. As such booting with "disable_bypass" set
+> will result in all S2CR registers left as configured by the bootloader.
+> 
+> This has been seen to result in indeterministic results, as these
+> mappings might linger and reference context banks that Linux is
+> reconfiguring.
+> 
+> Use the fact that BYPASS writes result in FAULT type to force all 
+> stream
+> mappings to FAULT.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/ethernet/atheros/ag71xx.c | 147 ++++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-index 38cce66ef212..8c80a87aee58 100644
---- a/drivers/net/ethernet/atheros/ag71xx.c
-+++ b/drivers/net/ethernet/atheros/ag71xx.c
-@@ -235,6 +235,59 @@
- 	| NETIF_MSG_RX_ERR		\
- 	| NETIF_MSG_TX_ERR)
- 
-+struct ag71xx_statistic {
-+	unsigned short offset;
-+	u32 mask;
-+	const char name[ETH_GSTRING_LEN];
-+};
-+
-+static const struct ag71xx_statistic ag71xx_statistics[] = {
-+	{ 0x0080, GENMASK(17, 0), "Tx/Rx 64 Byte", },
-+	{ 0x0084, GENMASK(17, 0), "Tx/Rx 65-127 Byte", },
-+	{ 0x0088, GENMASK(17, 0), "Tx/Rx 128-255 Byte", },
-+	{ 0x008C, GENMASK(17, 0), "Tx/Rx 256-511 Byte", },
-+	{ 0x0090, GENMASK(17, 0), "Tx/Rx 512-1023 Byte", },
-+	{ 0x0094, GENMASK(17, 0), "Tx/Rx 1024-1518 Byte", },
-+	{ 0x0098, GENMASK(17, 0), "Tx/Rx 1519-1522 Byte VLAN", },
-+	{ 0x009C, GENMASK(23, 0), "Rx Byte", },
-+	{ 0x00A0, GENMASK(17, 0), "Rx Packet", },
-+	{ 0x00A4, GENMASK(11, 0), "Rx FCS Error", },
-+	{ 0x00A8, GENMASK(17, 0), "Rx Multicast Packet", },
-+	{ 0x00AC, GENMASK(21, 0), "Rx Broadcast Packet", },
-+	{ 0x00B0, GENMASK(17, 0), "Rx Control Frame Packet", },
-+	{ 0x00B4, GENMASK(11, 0), "Rx Pause Frame Packet", },
-+	{ 0x00B8, GENMASK(11, 0), "Rx Unknown OPCode Packet", },
-+	{ 0x00BC, GENMASK(11, 0), "Rx Alignment Error", },
-+	{ 0x00C0, GENMASK(15, 0), "Rx Frame Length Error", },
-+	{ 0x00C4, GENMASK(11, 0), "Rx Code Error", },
-+	{ 0x00C8, GENMASK(11, 0), "Rx Carrier Sense Error", },
-+	{ 0x00CC, GENMASK(11, 0), "Rx Undersize Packet", },
-+	{ 0x00D0, GENMASK(11, 0), "Rx Oversize Packet", },
-+	{ 0x00D4, GENMASK(11, 0), "Rx Fragments", },
-+	{ 0x00D8, GENMASK(11, 0), "Rx Jabber", },
-+	{ 0x00DC, GENMASK(11, 0), "Rx Dropped Packet", },
-+	{ 0x00E0, GENMASK(23, 0), "Tx Byte", },
-+	{ 0x00E4, GENMASK(17, 0), "Tx Packet", },
-+	{ 0x00E8, GENMASK(17, 0), "Tx Multicast Packet", },
-+	{ 0x00EC, GENMASK(17, 0), "Tx Broadcast Packet", },
-+	{ 0x00F0, GENMASK(11, 0), "Tx Pause Control Frame", },
-+	{ 0x00F4, GENMASK(11, 0), "Tx Deferral Packet", },
-+	{ 0x00F8, GENMASK(11, 0), "Tx Excessive Deferral Packet", },
-+	{ 0x00FC, GENMASK(11, 0), "Tx Single Collision Packet", },
-+	{ 0x0100, GENMASK(11, 0), "Tx Multiple Collision", },
-+	{ 0x0104, GENMASK(11, 0), "Tx Late Collision Packet", },
-+	{ 0x0108, GENMASK(11, 0), "Tx Excessive Collision Packet", },
-+	{ 0x010C, GENMASK(12, 0), "Tx Total Collision", },
-+	{ 0x0110, GENMASK(11, 0), "Tx Pause Frames Honored", },
-+	{ 0x0114, GENMASK(11, 0), "Tx Drop Frame", },
-+	{ 0x0118, GENMASK(11, 0), "Tx Jabber Frame", },
-+	{ 0x011C, GENMASK(11, 0), "Tx FCS Error", },
-+	{ 0x0120, GENMASK(11, 0), "Tx Control Frame", },
-+	{ 0x0124, GENMASK(11, 0), "Tx Oversize Frame", },
-+	{ 0x0128, GENMASK(11, 0), "Tx Undersize Frame", },
-+	{ 0x012C, GENMASK(11, 0), "Tx Fragment", },
-+};
-+
- #define DESC_EMPTY		BIT(31)
- #define DESC_MORE		BIT(24)
- #define DESC_PKTLEN_M		0xfff
-@@ -394,6 +447,99 @@ static void ag71xx_int_disable(struct ag71xx *ag, u32 ints)
- 	ag71xx_cb(ag, AG71XX_REG_INT_ENABLE, ints);
- }
- 
-+static void ag71xx_get_drvinfo(struct net_device *ndev,
-+			       struct ethtool_drvinfo *info)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	strlcpy(info->driver, "ag71xx", sizeof(info->driver));
-+	strlcpy(info->bus_info, of_node_full_name(ag->pdev->dev.of_node),
-+		sizeof(info->bus_info));
-+}
-+
-+static int ag71xx_get_link_ksettings(struct net_device *ndev,
-+				   struct ethtool_link_ksettings *kset)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	return phylink_ethtool_ksettings_get(ag->phylink, kset);
-+}
-+
-+static int ag71xx_set_link_ksettings(struct net_device *ndev,
-+				   const struct ethtool_link_ksettings *kset)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	return phylink_ethtool_ksettings_set(ag->phylink, kset);
-+}
-+
-+static int ag71xx_ethtool_nway_reset(struct net_device *ndev)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	return phylink_ethtool_nway_reset(ag->phylink);
-+}
-+
-+static void ag71xx_ethtool_get_pauseparam(struct net_device *ndev,
-+					  struct ethtool_pauseparam *pause)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	phylink_ethtool_get_pauseparam(ag->phylink, pause);
-+}
-+
-+static int ag71xx_ethtool_set_pauseparam(struct net_device *ndev,
-+					 struct ethtool_pauseparam *pause)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+
-+	return phylink_ethtool_set_pauseparam(ag->phylink, pause);
-+}
-+
-+static void ag71xx_ethtool_get_strings(struct net_device *netdev, u32 sset,
-+				       u8 *data)
-+{
-+	if (sset == ETH_SS_STATS) {
-+		int i;
-+
-+		for (i = 0; i < ARRAY_SIZE(ag71xx_statistics); i++)
-+			memcpy(data + i * ETH_GSTRING_LEN,
-+			       ag71xx_statistics[i].name, ETH_GSTRING_LEN);
-+	}
-+}
-+
-+static void ag71xx_ethtool_get_stats(struct net_device *ndev,
-+				     struct ethtool_stats *stats, u64 *data)
-+{
-+	struct ag71xx *ag = netdev_priv(ndev);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(ag71xx_statistics); i++)
-+		*data++ = ag71xx_rr(ag, ag71xx_statistics[i].offset)
-+				& ag71xx_statistics[i].mask;
-+}
-+
-+static int ag71xx_ethtool_get_sset_count(struct net_device *ndev, int sset)
-+{
-+	if (sset == ETH_SS_STATS)
-+		return ARRAY_SIZE(ag71xx_statistics);
-+	return -EOPNOTSUPP;
-+}
-+
-+static const struct ethtool_ops ag71xx_ethtool_ops = {
-+	.get_drvinfo			= ag71xx_get_drvinfo,
-+	.get_link			= ethtool_op_get_link,
-+	.get_ts_info			= ethtool_op_get_ts_info,
-+	.get_link_ksettings		= ag71xx_get_link_ksettings,
-+	.set_link_ksettings		= ag71xx_set_link_ksettings,
-+	.nway_reset			= ag71xx_ethtool_nway_reset,
-+	.get_pauseparam			= ag71xx_ethtool_get_pauseparam,
-+	.set_pauseparam			= ag71xx_ethtool_set_pauseparam,
-+	.get_strings			= ag71xx_ethtool_get_strings,
-+	.get_ethtool_stats		= ag71xx_ethtool_get_stats,
-+	.get_sset_count			= ag71xx_ethtool_get_sset_count,
-+};
-+
- static int ag71xx_mdio_wait_busy(struct ag71xx *ag)
- {
- 	struct net_device *ndev = ag->ndev;
-@@ -1769,6 +1915,7 @@ static int ag71xx_probe(struct platform_device *pdev)
- 	}
- 
- 	ndev->netdev_ops = &ag71xx_netdev_ops;
-+	ndev->ethtool_ops = &ag71xx_ethtool_ops;
- 
- 	INIT_DELAYED_WORK(&ag->restart_work, ag71xx_restart_work_func);
- 	timer_setup(&ag->oom_timer, ag71xx_oom_timer_handler, 0);
+
 -- 
-2.28.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
