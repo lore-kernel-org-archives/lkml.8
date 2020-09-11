@@ -2,106 +2,189 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869F0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4517321D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C2B221EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:05:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l6I1g9C1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725782AbgIKHFo (ORCPT
+        id S1725880AbgIKHFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:05:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:41208 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgIKHFJ (ORCPT
+        Fri, 11 Sep 2020 03:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgIKHFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:05:09 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D936F1C0B76; Fri, 11 Sep 2020 09:05:03 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 09:05:03 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Gene Chen <gene.chen.richtek@gmail.com>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, dmurphy@ti.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
-Message-ID: <20200911070503.GA9818@amd>
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
- <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
- <559a568e-3a2e-33c6-43aa-547a18f8e26b@gmail.com>
+        Fri, 11 Sep 2020 03:05:08 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DCEC061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:05:06 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id b13so4715293qvl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8qYTA7a/mDb0x7v76SumPW6fQ7bLMrnrWY5ltUv9JNU=;
+        b=l6I1g9C1SvoJBjGEU0JNeOK0OUWWHuh+ALTBHG8Q61JGEqU4KeeE5IlLbk4bq+biRP
+         GLthBBCFLV74aP/hQaHI2M0uCtoZz+JpOo4lFoxKTjE1iW7bCuJswGKKAlv+zaA9qnkp
+         TlS1NPVdFNmHAqjPSNR659dB1WOgl7sIIp5R9vb7NnibPcG7TDweMFV/AUK/qXe6Nlww
+         O3k9zPK1DfyWXuhengm0F807rZ57VgNbELKS6QRJ5VAQEYFRAIBEj+paw0bj8u/keVzB
+         +KusOeic/b8Aqz8saD0zP8EvoIS5TolTvFwZtAgF/VFApLsHX/JUnGw3O8psBt3RKhyr
+         ibtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8qYTA7a/mDb0x7v76SumPW6fQ7bLMrnrWY5ltUv9JNU=;
+        b=BBLq4hNaTSJCwbEPefYNA/7kFs1hKjX6prex0TGkClfufn3e1ZSyVxAmHOMIVtaqvI
+         13PBBW6UEBpGc0Am0WWsHpdGSx2fCqsNge+UfNomqfdDvR9V7+tk7pbc0im0Cu800cVF
+         cC/8DrNpNnLk69gAjbFqi8CHFl6iht5xqS/nIUVDT3KnaIyw286KYpNcbJ8QrDNMUXkl
+         oVe2a1gRwoSZ6H8osNWNzzSgHBN+qOZiXe7l3NBalu2Y+wW5fLPhGgK9CWMEmH60mPsV
+         zMRnEPyhGd6HiRsHq5mx6INe9Ni+YbMhUaXXt3cVZmguo2I2na/RJsb7qgjrs/Y+oK9M
+         Yc7g==
+X-Gm-Message-State: AOAM5321qX9cJjRyIuoiCB7xMXg1rySOYENBO6xieoAX1NWvvZ0cN5iQ
+        yo/ESiwLGrqe0u2RHrGNZqP+g/dgxRumxq5e/Cueow==
+X-Google-Smtp-Source: ABdhPJwPLAUEsAzaSMCLt+v28C4/YXeXs4UpRMTYz0l4idhp0Mt0npwu+vanlcme90OTrVPya2wrVj/k/dc78p5FmYU=
+X-Received: by 2002:a0c:c24a:: with SMTP id w10mr609462qvh.99.1599807905731;
+ Fri, 11 Sep 2020 00:05:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Content-Disposition: inline
-In-Reply-To: <559a568e-3a2e-33c6-43aa-547a18f8e26b@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-7-elver@google.com>
+In-Reply-To: <20200907134055.2878499-7-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 11 Sep 2020 09:04:54 +0200
+Message-ID: <CACT4Y+b=Ph-fD_K5F_TNMp_dTNjD7GXGT=OXogrKc_HwH+HHwQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 06/10] kfence, kasan: make KFENCE compatible with KASAN
+To:     Marco Elver <elver@google.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 7, 2020 at 3:41 PM Marco Elver <elver@google.com> wrote:
+>
+> From: Alexander Potapenko <glider@google.com>
+>
+> We make KFENCE compatible with KASAN for testing KFENCE itself. In
+> particular, KASAN helps to catch any potential corruptions to KFENCE
+> state, or other corruptions that may be a result of freepointer
+> corruptions in the main allocators.
+>
+> To indicate that the combination of the two is generally discouraged,
+> CONFIG_EXPERT=y should be set. It also gives us the nice property that
+> KFENCE will be build-tested by allyesconfig builds.
+>
+> Co-developed-by: Marco Elver <elver@google.com>
+> Signed-off-by: Marco Elver <elver@google.com>
+> Signed-off-by: Alexander Potapenko <glider@google.com>
+> ---
+>  lib/Kconfig.kfence | 2 +-
+>  mm/kasan/common.c  | 7 +++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/lib/Kconfig.kfence b/lib/Kconfig.kfence
+> index 7ac91162edb0..b080e49e15d4 100644
+> --- a/lib/Kconfig.kfence
+> +++ b/lib/Kconfig.kfence
+> @@ -10,7 +10,7 @@ config HAVE_ARCH_KFENCE_STATIC_POOL
+>
+>  menuconfig KFENCE
+>         bool "KFENCE: low-overhead sampling-based memory safety error detector"
+> -       depends on HAVE_ARCH_KFENCE && !KASAN && (SLAB || SLUB)
+> +       depends on HAVE_ARCH_KFENCE && (!KASAN || EXPERT) && (SLAB || SLUB)
+>         depends on JUMP_LABEL # To ensure performance, require jump labels
+>         select STACKTRACE
+>         help
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 950fd372a07e..f5c49f0fdeff 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/init.h>
+>  #include <linux/kasan.h>
+>  #include <linux/kernel.h>
+> +#include <linux/kfence.h>
+>  #include <linux/kmemleak.h>
+>  #include <linux/linkage.h>
+>  #include <linux/memblock.h>
+> @@ -396,6 +397,9 @@ static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+>         tagged_object = object;
+>         object = reset_tag(object);
+>
+> +       if (is_kfence_address(object))
+> +               return false;
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is this needed?
+At least in the slab patch I see that we do :
 
-Hi!
+if (kfence_free(objp)) {
+  kmemleak_free_recursive(objp, cachep->flags);
+  return;
+}
 
-> >+{
-> >+	struct mt6360_led *led =3D container_of(lcdev, struct mt6360_led, flas=
-h.led_cdev);
-> >+	struct mt6360_priv *priv =3D led->priv;
-> >+	u32 enable_mask =3D MT6360_TORCHEN_MASK | MT6360_FLCSEN_MASK(led->led_=
-no);
-> >+	u32 val =3D (level) ? MT6360_FLCSEN_MASK(led->led_no) : 0;
-> >+	u32 prev =3D priv->fled_torch_used, curr;
-> >+	int ret;
-> >+
-> >+	dev_dbg(lcdev->dev, "[%d] brightness %d\n", led->led_no, level);
-> >+	if (priv->fled_strobe_used) {
-> >+		dev_warn(lcdev->dev, "Please disable strobe first [%d]\n", priv->fled=
-_strobe_used);
->=20
-> Doesn't hardware handle that? IOW, what happens when you have enabled
-> both torch and flash? If flash just overrides torch mode, than you
-> should not prevent enabling torch in this case.
+before:
 
-Yep, this is strange/confusing... and was reason why I asked for not
-supporting strobe from sysfs.
+/* Put the object into the quarantine, don't touch it for now. */ /*
+Put the object into the quarantine, don't touch it for now. */
+if (kasan_slab_free(cachep, objp, _RET_IP_)) if
+(kasan_slab_free(cachep, objp, _RET_IP_))
+  return; return;
 
-Could I get you to remove code you are not commenting at when
-reviewing?
 
-> >+MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
-> >+MODULE_DESCRIPTION("MT6360 Led Driver");
+If it's not supposed to be triggered, it can make sense to replace
+with BUG/WARN.
 
-Led -> LED.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9bIZ8ACgkQMOfwapXb+vIelgCePgj6nGNi1tecOoGv2il2xaai
-cg8An3XTOtdxJXBTbkGrDdoc9j8KA4Wx
-=c1KM
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+>         if (unlikely(nearest_obj(cache, virt_to_head_page(object), object) !=
+>             object)) {
+>                 kasan_report_invalid_free(tagged_object, ip);
+> @@ -444,6 +448,9 @@ static void *__kasan_kmalloc(struct kmem_cache *cache, const void *object,
+>         if (unlikely(object == NULL))
+>                 return NULL;
+>
+> +       if (is_kfence_address(object))
+> +               return (void *)object;
+> +
+>         redzone_start = round_up((unsigned long)(object + size),
+>                                 KASAN_SHADOW_SCALE_SIZE);
+>         redzone_end = round_up((unsigned long)object + cache->object_size,
+> --
+> 2.28.0.526.ge36021eeef-goog
+>
