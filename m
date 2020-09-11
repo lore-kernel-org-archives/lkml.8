@@ -2,71 +2,164 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF8AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42174C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EA121D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFD9207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599837857;
+	bh=pg8QoShE6RW4IjYx3j1/NruMNLMONbUk0DC6zHwCcpE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uETk+Admoc38faqD4YMoskc9q8OjviiltGRHxRqwqHtzVeqGlX40hybuW7i7QNk9g
+	 nmuy5Vbg0zUj7jCNjwzBGpbaPmP6lX+UoRNygdzcsheQhaaDLbbQ2HbDdPurKbsERC
+	 XqADGIvb8zjOZwtsG40fIkBzbNCxmAdNh8V/m65I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgIKPXY (ORCPT
+        id S1725901AbgIKPYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:23:24 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:41073 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726457AbgIKPRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:17:38 -0400
-Received: (qmail 884626 invoked by uid 1000); 11 Sep 2020 11:17:34 -0400
-Date:   Fri, 11 Sep 2020 11:17:34 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] usb: ohci: Make distrust_firmware param default
- to false
-Message-ID: <20200911151734.GB884518@rowland.harvard.edu>
-References: <20200910212512.16670-1-hamish.martin@alliedtelesis.co.nz>
- <20200910212512.16670-2-hamish.martin@alliedtelesis.co.nz>
+        Fri, 11 Sep 2020 11:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbgIKPRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:17:39 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DA5E223D6;
+        Fri, 11 Sep 2020 12:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599829127;
+        bh=pg8QoShE6RW4IjYx3j1/NruMNLMONbUk0DC6zHwCcpE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lfc2RBeFSHZoiTtMMl9kZAB/zPuS1EjRXdJN1Kn0DBDJaxQ45QYtIWM32cRUIOVtk
+         vbOWdsCqwxeggkgOdluEU4U9QANef6PmwMZHynXaaPCsJV5HNuTfFLd3tz+HpnfE5W
+         L/dnEInbFkYTErd4k7WE3VSFYHGp9Gh8KrdLhrbU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 70/71] sctp: not disable bh in the whole sctp_get_port_local()
+Date:   Fri, 11 Sep 2020 14:46:54 +0200
+Message-Id: <20200911122508.433447547@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
+References: <20200911122504.928931589@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910212512.16670-2-hamish.martin@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 09:25:12AM +1200, Hamish Martin wrote:
-> The 'distrust_firmware' module parameter dates from 2004 and the USB
-> subsystem is a lot more mature and reliable now than it was then.
-> Alter the default to false now.
-> 
-> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-> ---
->  drivers/usb/host/ohci-hcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-> index 2845ea328a06..73e13e7c2b46 100644
-> --- a/drivers/usb/host/ohci-hcd.c
-> +++ b/drivers/usb/host/ohci-hcd.c
-> @@ -102,7 +102,7 @@ static void io_watchdog_func(struct timer_list *t);
->  
->  
->  /* Some boards misreport power switching/overcurrent */
-> -static bool distrust_firmware = true;
-> +static bool distrust_firmware;
->  module_param (distrust_firmware, bool, 0);
->  MODULE_PARM_DESC (distrust_firmware,
->  	"true to distrust firmware power/overcurrent setup");
-> -- 
-> 2.28.0
+From: Xin Long <lucien.xin@gmail.com>
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+[ Upstream commit 3106ecb43a05dc3e009779764b9da245a5d082de ]
+
+With disabling bh in the whole sctp_get_port_local(), when
+snum == 0 and too many ports have been used, the do-while
+loop will take the cpu for a long time and cause cpu stuck:
+
+  [ ] watchdog: BUG: soft lockup - CPU#11 stuck for 22s!
+  [ ] RIP: 0010:native_queued_spin_lock_slowpath+0x4de/0x940
+  [ ] Call Trace:
+  [ ]  _raw_spin_lock+0xc1/0xd0
+  [ ]  sctp_get_port_local+0x527/0x650 [sctp]
+  [ ]  sctp_do_bind+0x208/0x5e0 [sctp]
+  [ ]  sctp_autobind+0x165/0x1e0 [sctp]
+  [ ]  sctp_connect_new_asoc+0x355/0x480 [sctp]
+  [ ]  __sctp_connect+0x360/0xb10 [sctp]
+
+There's no need to disable bh in the whole function of
+sctp_get_port_local. So fix this cpu stuck by removing
+local_bh_disable() called at the beginning, and using
+spin_lock_bh() instead.
+
+The same thing was actually done for inet_csk_get_port() in
+Commit ea8add2b1903 ("tcp/dccp: better use of ephemeral
+ports in bind()").
+
+Thanks to Marcelo for pointing the buggy code out.
+
+v1->v2:
+  - use cond_resched() to yield cpu to other tasks if needed,
+    as Eric noticed.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Ying Xu <yinxu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sctp/socket.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -6687,8 +6687,6 @@ static long sctp_get_port_local(struct s
+ 
+ 	pr_debug("%s: begins, snum:%d\n", __func__, snum);
+ 
+-	local_bh_disable();
+-
+ 	if (snum == 0) {
+ 		/* Search for an available port. */
+ 		int low, high, remaining, index;
+@@ -6707,20 +6705,21 @@ static long sctp_get_port_local(struct s
+ 				continue;
+ 			index = sctp_phashfn(sock_net(sk), rover);
+ 			head = &sctp_port_hashtable[index];
+-			spin_lock(&head->lock);
++			spin_lock_bh(&head->lock);
+ 			sctp_for_each_hentry(pp, &head->chain)
+ 				if ((pp->port == rover) &&
+ 				    net_eq(sock_net(sk), pp->net))
+ 					goto next;
+ 			break;
+ 		next:
+-			spin_unlock(&head->lock);
++			spin_unlock_bh(&head->lock);
++			cond_resched();
+ 		} while (--remaining > 0);
+ 
+ 		/* Exhausted local port range during search? */
+ 		ret = 1;
+ 		if (remaining <= 0)
+-			goto fail;
++			return ret;
+ 
+ 		/* OK, here is the one we will use.  HEAD (the port
+ 		 * hash table list entry) is non-NULL and we hold it's
+@@ -6735,7 +6734,7 @@ static long sctp_get_port_local(struct s
+ 		 * port iterator, pp being NULL.
+ 		 */
+ 		head = &sctp_port_hashtable[sctp_phashfn(sock_net(sk), snum)];
+-		spin_lock(&head->lock);
++		spin_lock_bh(&head->lock);
+ 		sctp_for_each_hentry(pp, &head->chain) {
+ 			if ((pp->port == snum) && net_eq(pp->net, sock_net(sk)))
+ 				goto pp_found;
+@@ -6819,10 +6818,7 @@ success:
+ 	ret = 0;
+ 
+ fail_unlock:
+-	spin_unlock(&head->lock);
+-
+-fail:
+-	local_bh_enable();
++	spin_unlock_bh(&head->lock);
+ 	return ret;
+ }
+ 
+
+
