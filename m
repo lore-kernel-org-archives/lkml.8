@@ -2,157 +2,104 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C876C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2592A221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FsBXu82E"
+	by mail.kernel.org (Postfix) with ESMTP id 19E9922204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599841284;
+	bh=FVUBrBUew4OrNTC+wXrBugVz5+Ee1tqB5139mrISZUs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uCJrwHDdK82pPxbFre7kXTOu7mQrAzfkMWqHWbfDEnFUkTkLadGKQukQHeeXHWeUM
+	 j/KWi4CS/pppPAdiptkpd46q2XWZuoK82Vd9g3Du8+mVJG0VxwrSL/HU4xBH+BfANK
+	 uI8Pw0FCIkxccdUH+FtfDBbc4qmgwHQUMvzud5wI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgIKQUx (ORCPT
+        id S1726592AbgIKQVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:20:53 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58712 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbgIKQTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:19:08 -0400
-Received: from [192.168.86.21] (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BADE820716FA;
-        Fri, 11 Sep 2020 09:19:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BADE820716FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1599841143;
-        bh=IGrl9wd59ouiSwrHZJue38Gb4uezQLGVnD6HcWU/o80=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FsBXu82EbG6MT9yrcRvWBKCe/fCu0gn4AeEUk/dfZHITC7I1H5MCCf54UkUgHic+Q
-         Q6RJ62GCP+uXr5rTl3rBDSNCjuooLp9aVofY2HZwXFj/+dwATBdWZ4oRCjIs0kWFaH
-         hJ/BhkB7cn3gds8zgReSqdEySHPgV159fhuezYAs=
-Subject: Re: [PATCH v3 1/6] IMA: generalize keyring specific measurement
- constructs
-To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
-        gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
- <20200828015704.6629-2-tusharsu@linux.microsoft.com>
- <4802c73c2ed22c64ea4f315d3115ead919c3205e.camel@linux.ibm.com>
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Message-ID: <1a456a10-bb49-206b-9fb9-cc996eea6e29@linux.microsoft.com>
-Date:   Fri, 11 Sep 2020 09:19:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 12:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgIKPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:30:30 -0400
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6E321D7E;
+        Fri, 11 Sep 2020 14:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599833002;
+        bh=FVUBrBUew4OrNTC+wXrBugVz5+Ee1tqB5139mrISZUs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZP4GPYsL0ABFoO/JQ1fpmbTARh9KmtMzHIuPGGVVrz7JTuRAdD95eeTqVsQ1OqEoA
+         wr70uCma1J+ZPVrGIxnMulGcN82OdAB+Gck3toLSpKZIoZFTJgJRbtVLsHRjCzGlVk
+         1bGvfXw76IYgyJzOsEqq656cqaM9N+d0eT1Xfko4=
+Received: by mail-oo1-f41.google.com with SMTP id g26so2298414ooa.9;
+        Fri, 11 Sep 2020 07:03:22 -0700 (PDT)
+X-Gm-Message-State: AOAM5327qMydCgKVIL1kap2fymFutjb1K49lJrZodsK76SjkFDe0fKMT
+        Knd4h7/jjVerV/rqWL6zEGRxFsGxWG4QutTAmA==
+X-Google-Smtp-Source: ABdhPJxTuUQpAZ7VBRAgyuwv+5Jv+wLNqLOBvyESpzDLE3KgVTieiFkjstfCsDTOYHpY06twVE/mYAqaxnPss6ZklvY=
+X-Received: by 2002:a4a:9d48:: with SMTP id f8mr1722615ook.50.1599833001875;
+ Fri, 11 Sep 2020 07:03:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4802c73c2ed22c64ea4f315d3115ead919c3205e.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200827091441.12972-1-qiang.zhao@nxp.com> <20200909202456.GA3019412@bogus>
+ <VE1PR04MB676899EEA79D59061FE91BF691270@VE1PR04MB6768.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB676899EEA79D59061FE91BF691270@VE1PR04MB6768.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 11 Sep 2020 08:03:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJx=7npNYNe4MybNvdNRxBj_XjvEOJsSm+gNGEkvbh2VA@mail.gmail.com>
+Message-ID: <CAL_JsqJx=7npNYNe4MybNvdNRxBj_XjvEOJsSm+gNGEkvbh2VA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: rtc-2127: Add bindings for nxp,rtc-2127.txt
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 9, 2020 at 9:16 PM Qiang Zhao <qiang.zhao@nxp.com> wrote:
+>
+> On Thu, Sep 10, 2020 at 04:25AM, Rob Herring <robh@kernel.org> wrote:
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: 2020=E5=B9=B49=E6=9C=8810=E6=97=A5 4:25
+> > To: Qiang Zhao <qiang.zhao@nxp.com>
+> > Cc: a.zummo@towertech.it; alexandre.belloni@bootlin.com;
+> > linux-rtc@vger.kernel.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 1/3] dt-bindings: rtc-2127: Add bindings for
+> > nxp,rtc-2127.txt
+> >
+> > On Thu, Aug 27, 2020 at 05:14:39PM +0800, Qiang Zhao wrote:
+> > > From: Zhao Qiang <qiang.zhao@nxp.com>
+> > >
+> > > Add bindings for nxp,rtc-2127
+> > >
+> > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt | 18
+> > ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt
+> >
+> > Bindings should be in DT schema format now.
+>
+> Is there any doc description for DT schema format or example
+> So that I can take as a reference. Thank you!
 
+Documentation/devicetree/writing-schema.rst and about 1000 examples in
+the kernel tree.
 
-On 2020-08-31 4:55 a.m., Mimi Zohar wrote:
-> On Thu, 2020-08-27 at 18:56 -0700, Tushar Sugandhi wrote:
->> IMA functions such as ima_match_keyring(), process_buffer_measurement(),
->> ima_match_policy() etc. handle data specific to keyrings. Currently,
->> these constructs are not generic to handle any func specific data.
->> This makes it harder to extend without code duplication.
->>
->> Refactor the keyring specific measurement constructs to be generic and
->> reusable in other measurement scenarios.
-> 
-> Mostly this patch changes the variable name from keyring to func_data,
-> which is good.  Other changes should be minimized.
-> 
-The only other change in this patch is introduction of
-bool allow_empty_opt_list, which is needed as per my comment below.
-
-Maybe I can move "allow_empty_opt_list" to a new patch after this one in
-this series.
-
->>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> ---
-> 
-> <snip>
-> 
->> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
->> index fe1df373c113..8866e84d0062 100644
->> --- a/security/integrity/ima/ima_policy.c
->> +++ b/security/integrity/ima/ima_policy.c
->> @@ -451,15 +451,21 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
->>   }
->>   
->>   /**
->> - * ima_match_keyring - determine whether the keyring matches the measure rule
->> - * @rule: a pointer to a rule
->> - * @keyring: name of the keyring to match against the measure rule
->> + * ima_match_rule_data - determine whether the given func_data matches
->> + *			 the measure rule data
->> + * @rule: IMA policy rule
->> + * @opt_list: rule data to match func_data against
->> + * @func_data: data to match against the measure rule data
->> + * @allow_empty_opt_list: If true matches all func_data
->>    * @cred: a pointer to a credentials structure for user validation
->>    *
->> - * Returns true if keyring matches one in the rule, false otherwise.
->> + * Returns true if func_data matches one in the rule, false otherwise.
->>    */
->> -static bool ima_match_keyring(struct ima_rule_entry *rule,
->> -			      const char *keyring, const struct cred *cred)
->> +static bool ima_match_rule_data(struct ima_rule_entry *rule,
->> +				const struct ima_rule_opt_list *opt_list,
-> 
-> Ok
-> 
->> +				const char *func_data,
->> +				bool allow_empty_opt_list,
-> 
-> As the policy is loaded, shouldn't the rules should be checked, not
-> here on usage?
-> 
-> Mimi
-
-Since "keyrings=" is optional, I cannot check the rule at load time for
-keyrings. func=KEY_CHECK may or may not have "keyrings=", and both are
-valid scenarios.
-
-However "critical_kernel_data_sources=" is mandatory for 
-func=CRITICAL_DATA.
-
-So I am already making that check at policy load time.
-
-See patch 5/6 – function ima_match_rules(), where I check for
-IMA_DATA_SOURCES.
-
-+       case CRITICAL_DATA:
-<snip>
-+               if (!(entry->flags & IMA_DATA_SOURCES) ||
-<snip>
-+                       return false;
-+
-
-Since ima_match_rule_data (this function) handles both func=KEY_CHECK 
-and func=CRITICAL_DATA, we have to use the bool "allow_empty_opt_list"
-to differentiate between the two scenarios – whether the rule is
-optional or not for a given func.
-
-> 
->> +				const struct cred *cred)
->>   {
->>   	bool matched = false;
->>   	size_t i;
->>
+Rob
