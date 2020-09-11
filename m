@@ -2,83 +2,187 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F29C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E70C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 444EB221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599842042;
-	bh=XAOq0210n7nJdY2TnJbtZnt0KCDi3Hx+aItFjItbew0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vuMrw2oHu7+YaIVeaDpWRBhWqS1cviSedgUrAkWY4n0tsUTEqeg8BWMYv2F43gOo
-	 2lo4iOQF8Mq9tDlZD1hKH51x/TF4mjNr91wblU0SCpYZL7w4A0uB2p141v3HCIjNBI
-	 Ur5VwI3Yd3qvxmjPeVu9WjVZLnlQMQaFk6qK+Ly4=
+	by mail.kernel.org (Postfix) with ESMTP id D7458208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1S1/frMi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgIKQeA (ORCPT
+        id S1726580AbgIKQeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgIKQdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:33:51 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A894E208FE;
-        Fri, 11 Sep 2020 16:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599842031;
-        bh=XAOq0210n7nJdY2TnJbtZnt0KCDi3Hx+aItFjItbew0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTw9AvVhCOCo84qkBPV3m1+IKr8viHTdca3w2ulh5RL3cQn7ads724s66BCozMODY
-         h0Icxi97Wq08T1AMG8tqa45si6frpUnN3jtlFHADWb+xNQuy2e9J49wijPJ53MFyJb
-         BkukTNtOJUiG2pIzlqo51xcIXCeyaX0BP8n4cHZc=
-From:   Will Deacon <will@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, Gavin Shan <gshan@redhat.com>
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        anshuman.khandual@arm.com, shan.gavin@gmail.com
-Subject: Re: [PATCH v2 1/3] arm64/mm: Remove CONT_RANGE_OFFSET
-Date:   Fri, 11 Sep 2020 17:33:44 +0100
-Message-Id: <159983844259.1467384.16465875642356581877.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200910095936.20307-1-gshan@redhat.com>
-References: <20200910095936.20307-1-gshan@redhat.com>
-MIME-Version: 1.0
+        Fri, 11 Sep 2020 12:34:11 -0400
+Received: from mail-dm6nam12on2072.outbound.protection.outlook.com ([40.107.243.72]:5506
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726087AbgIKPQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:16:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K5AkThR47vQDMsP7+lHlTfRDiFQGgsQ2AoC5G6y/VUN/AJsFWlKqH489UNvECk3zGLaR2hfwisFrP5xx93ByARR6rPx5FrXOUaeKI4Emy26gkGDMaTiIkR5cy1xTx66Wv1lTuOIjKCcFsCHW2PiRrxxYgXXkQoi1ZKFMw1pv9w+y9U6pq0z7UTS+YIZBIisPSE0+U6Bl0GHIMItAutRJZY1SdyDIDTwUiNWlV+4y9PSAC30fO+hwLmw51j1QVtMZkf5jqhQpDPDynLU7q5PG0pUfleU8Fxgpekc2ic4hHxTOBMGI4uqRMHcacFToIFHuO+f7o/p7I+Qihz9/9qxGcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LsGkSND//QMcm6QNMK9AopcnDe5fv9Dj0RZojN/pOUQ=;
+ b=hCxzhNsCfjH9SvuXKQ958yIWBsLZB+1XbmPQ1k6norNICqD+kGkkimkWkxRQYhLM1yOS590ODJzkgxrmmZv9nJgBym1Nf/zW0pETAYtsj3sIbs61c+wjL4ekAdzDcjG3RTymjBE0x/b0rH+U0fhFbRIPJCX0MhqHb8HfK+YHOzNhFCCm6WQpL55sriywxFYznoP1JutmlbrzGwWIZ8YNuwxf4ZsgehSj8buLGICFWjiFNexiKX4agfr0K+JE/zPVjW70BMfU6u5CUXlIqGK+QCxfU1rhWCVX2Xs8psh8cydKaJw+xXRJeQPh7vGOwqyzui5B+hK+04LaHtBUTuK0jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LsGkSND//QMcm6QNMK9AopcnDe5fv9Dj0RZojN/pOUQ=;
+ b=1S1/frMi7cewx0TBssehdFMlinqIyBCP6MPpRUuDe13Zo6s+US5YC5TWjFw52+G1y1a4RgX3ZLf92FuAPK3WqhOpBhvtjcKQtsts+dGlELUkuGhCPnyO/rmjKLsfNaO5Ss0IdHhImq7ZAUFNOdup8muLObxjWCi4FfjP9h1H0uI=
+Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20)
+ by DM6PR12MB3082.namprd12.prod.outlook.com (2603:10b6:5:11b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Fri, 11 Sep
+ 2020 14:59:59 +0000
+Received: from DM6PR12MB4124.namprd12.prod.outlook.com
+ ([fe80::25a1:ace4:4ca8:167e]) by DM6PR12MB4124.namprd12.prod.outlook.com
+ ([fe80::25a1:ace4:4ca8:167e%8]) with mapi id 15.20.3370.017; Fri, 11 Sep 2020
+ 14:59:59 +0000
+From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        hersenxs.wu@amd.com
+Subject: [PATCH v2 1/4] drm/amd/display: Rework registers tracepoint
+Date:   Fri, 11 Sep 2020 10:59:24 -0400
+Message-Id: <20200911145927.401322-2-Rodrigo.Siqueira@amd.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911145927.401322-1-Rodrigo.Siqueira@amd.com>
+References: <20200911145927.401322-1-Rodrigo.Siqueira@amd.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: YTOPR0101CA0060.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::37) To DM6PR12MB4124.namprd12.prod.outlook.com
+ (2603:10b6:5:221::20)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from atma2.hitronhub.home (2607:fea8:56e0:6d60::e9a1) by YTOPR0101CA0060.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Fri, 11 Sep 2020 14:59:58 +0000
+X-Mailer: git-send-email 2.28.0
+X-Originating-IP: [2607:fea8:56e0:6d60::e9a1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2a1aa29e-35b5-4dc2-78f2-08d856635a28
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3082:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3082A7D6BA6C142D73E334DB98240@DM6PR12MB3082.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AnTW7oXkB+ewr0F4S6WDs2uiYtT45Y0iDOsN9ty627i908u3GWBrH9v8cRjPauiqf89aBBm37YJ8C4UQr7YLNwMTSrHdcu0a+45NHAms2FaYNZckhtBWKoFU5N7CI6BqMYjcXovp9c4wEGRWZuKqMqSsmHuhffbrut85oFauPB2LWnq2/DfYEn2SoTjturglFlDCR3UjrcsYhEqQ+sy51V5bBhlTOTjo0PlMR0kkbYVTtFLucf3CJpoHrRkdHrLG8o9lJpVJNF0UTLqk/IMf2UWkVChYZR2aojz8TxCh5HhX1pRnzphA6UjWLPqkI0daIiVuhSUYFGLdddVe8wuJ6Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4124.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(136003)(366004)(376002)(396003)(66476007)(86362001)(1076003)(52116002)(83380400001)(2906002)(6506007)(8676002)(316002)(66556008)(5660300002)(186003)(6666004)(478600001)(8936002)(4326008)(6486002)(36756003)(66946007)(6512007)(16526019)(54906003)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: NH3rJmQwu5YUJsNPKEvwcd6O03OxiGZRSSmkaFvrlCg1j9plpsCoQE/KeuxsK2icGu4lZAJpGB6nxUQE/dM3Z6+A4+wW/MTcMtj/kYYPkgUyzhaZ8loPufiSSZExncMnOzDUCdc5CyEMxTNvu01L8LcKRWz7aJwqgubg5qTI0/T65Wv47YaoaHU06CT0d5nFD0ftHdwX+wXEohm6YVdIle3OTM38rFT9rTx+gI2uH1Xl/qLe/XXbt0clptjhVEi6iF5e6qJKwpqc9OlsiCcpGp5xu4blLA+u55PZWVBzuZf6VLWr+fbv/SEBdOL2HGCs6id9mCwV/8OurD6ScJgx3fN5sIN6ykA8dKHwphKUPuwDNVx+DzZ2OWSgBk4rBFy69J0PqvC0RHAdA2jUc9HzmRquN/i8KLWNCvAArqIpqOV6NdDJYBRZf48a2R08Xo7Z6tHl7W5BpOFXmm2sR++BwObBv6AQAzbXQO2mGm/dFQOn0T1NrDIZPhlAL9yVFiZxmnZ+NaLHsPGlvpzMjuG93+kfVbTv4lIxCt9frgGXeBqD+oAyf9pW+43f/ESIZz8QIk3XFpeFvvgb7QN/SvQMjjxedqVnGzn6+SCKOxLuP9R4bp8GPmD6wnfu0sD6SJCOXJkr9bRQxpm44AT+O4GKtmmx9rdt4Dmi3mferYHt38XeLxB900Knt2ZIkr9qwY+F
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a1aa29e-35b5-4dc2-78f2-08d856635a28
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4124.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 14:59:58.8871
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s4MsoXuaDfPY55iXvYXWKBeUnUUYnFlubEt/m39snECW6yyCt92jc5uU2q+A4eAQFEcIDx0oizMNlJRypmvIJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 19:59:34 +1000, Gavin Shan wrote:
-> The macro was introduced by commit <ecf35a237a85> ("arm64: PTE/PMD
-> contiguous bit definition") at the beginning. It's only used by
-> commit <348a65cdcbbf> ("arm64: Mark kernel page ranges contiguous"),
-> which was reverted later by commit <667c27597ca8>. This makes the
-> macro unused.
-> 
-> This removes the unused macro (CONT_RANGE_OFFSET).
+amdgpu_dc_rreg and amdgpu_dc_wreg are very similar, for this reason,
+this commits abstract these two events by using DECLARE_EVENT_CLASS and
+create an instance of it for each one of these events.
 
-Applied to arm64 (for-next/mm), thanks!
+Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+---
+ .../amd/display/amdgpu_dm/amdgpu_dm_trace.h   | 55 ++++++++-----------
+ 1 file changed, 24 insertions(+), 31 deletions(-)
 
-[1/3] arm64/mm: Remove CONT_RANGE_OFFSET
-      https://git.kernel.org/arm64/c/11e339d53a73
-[2/3] arm64/mm: Unify CONT_PTE_SHIFT
-      https://git.kernel.org/arm64/c/c0d6de327f18
-[3/3] arm64/mm: Unify CONT_PMD_SHIFT
-      https://git.kernel.org/arm64/c/e676594115f0
-
-Cheers,
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
+index d898981684d5..dd34e11b1079 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
+@@ -31,40 +31,33 @@
+ 
+ #include <linux/tracepoint.h>
+ 
+-TRACE_EVENT(amdgpu_dc_rreg,
+-	TP_PROTO(unsigned long *read_count, uint32_t reg, uint32_t value),
+-	TP_ARGS(read_count, reg, value),
+-	TP_STRUCT__entry(
+-			__field(uint32_t, reg)
+-			__field(uint32_t, value)
+-		),
+-	TP_fast_assign(
+-			__entry->reg = reg;
+-			__entry->value = value;
+-			*read_count = *read_count + 1;
+-		),
+-	TP_printk("reg=0x%08lx, value=0x%08lx",
+-			(unsigned long)__entry->reg,
+-			(unsigned long)__entry->value)
+-);
++DECLARE_EVENT_CLASS(amdgpu_dc_reg_template,
++		    TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
++		    TP_ARGS(count, reg, value),
+ 
+-TRACE_EVENT(amdgpu_dc_wreg,
+-	TP_PROTO(unsigned long *write_count, uint32_t reg, uint32_t value),
+-	TP_ARGS(write_count, reg, value),
+-	TP_STRUCT__entry(
+-			__field(uint32_t, reg)
+-			__field(uint32_t, value)
+-		),
+-	TP_fast_assign(
+-			__entry->reg = reg;
+-			__entry->value = value;
+-			*write_count = *write_count + 1;
+-		),
+-	TP_printk("reg=0x%08lx, value=0x%08lx",
+-			(unsigned long)__entry->reg,
+-			(unsigned long)__entry->value)
++		    TP_STRUCT__entry(
++				     __field(uint32_t, reg)
++				     __field(uint32_t, value)
++		    ),
++
++		    TP_fast_assign(
++				   __entry->reg = reg;
++				   __entry->value = value;
++				   *count = *count + 1;
++		    ),
++
++		    TP_printk("reg=0x%08lx, value=0x%08lx",
++			      (unsigned long)__entry->reg,
++			      (unsigned long)__entry->value)
+ );
+ 
++DEFINE_EVENT(amdgpu_dc_reg_template, amdgpu_dc_rreg,
++	     TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
++	     TP_ARGS(count, reg, value));
++
++DEFINE_EVENT(amdgpu_dc_reg_template, amdgpu_dc_wreg,
++	     TP_PROTO(unsigned long *count, uint32_t reg, uint32_t value),
++	     TP_ARGS(count, reg, value));
+ 
+ TRACE_EVENT(amdgpu_dc_performance,
+ 	TP_PROTO(unsigned long read_count, unsigned long write_count,
 -- 
-Will
+2.28.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
