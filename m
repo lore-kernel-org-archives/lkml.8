@@ -2,125 +2,129 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74666C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDED20855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5078A20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJQJvD5I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbgIKJbD (ORCPT
+        id S1725817AbgIKJbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:31:03 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38657 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725710AbgIKJbC (ORCPT
+        Fri, 11 Sep 2020 05:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgIKJbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:31:02 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 37F135C010D;
-        Fri, 11 Sep 2020 05:31:01 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 11 Sep 2020 05:31:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ZwdqKhGGpnOv01iu/ZFbhMuvlS1
-        d50CA8GNjVwdf/1M=; b=AhubxJJTr7lxYqvjNd+hGbwoHjzixaHje+qG/uDYaP5
-        8qFFOzYUEuUHmavON4etWbQXxgknzgCiIb+gMEem1rFduefNGAQE+DY+lEdUrA6e
-        OFKf5rAg6xQgAgxCVA3WtvCgeLnOpc1AvqziJKAiOETnJtt4lgpnc1hmqNqU+PMa
-        XFzKox39XU9jWgoBkgO/qJWFAct+og9Odk/JhSnnDCLbwP7UT76oK/QU3ENuBs9K
-        FPQJE0SPrYpW05OPal6+jrDxbQSDjqOsX6vvtvOzJl+TDsgoc7ag86Ge/qISVGTh
-        dvbymeRR3ufMeQtn0SuvJVDK6y9YBfKXVwbAKC0vgQQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ZwdqKh
-        GGpnOv01iu/ZFbhMuvlS1d50CA8GNjVwdf/1M=; b=OM3FsQOXjQ4W/cq0S9C1Hq
-        ItQEqojBKmqFvRBr/eL8X4+6KyKls2q6TUh0HPogNzp+FIaWSEVMaoGiLJlRnLrX
-        c8Zemd8Af/VpoAwhjDioc+D2Icw0keNsvD8tLDK08CZ3Qs8Z6h9gs0rk2uZTAy0m
-        f5nPyAxAreVCEsIFzdDs9Gu66TkG7tvCtA+b7+Ew0ujtfcn23vGImBrsvRx64Nyg
-        DxgbwvmqUA3cz0ylrY4VFY8EWXr7S4R5uZFr2cQmgPFCFqNfgwxHxx5p5pIQQDs9
-        DbLBIYfONNYlTvIQ+K/mYJvOgYHBuoMJ+wiUDP+a/Ns/DmlPt58Rc43blQ3ULUKg
-        ==
-X-ME-Sender: <xms:1ENbX2QFNIJTqT3Hn-cL4HEVs0d5RxEISiHHzWzL2zgdAxfnmOQyQw>
-    <xme:1ENbX7w_JCUd-oW8BJy0-hCgib14b9B090jqZp8lfFbjKY2y8V4v3VM00d5XEThja
-    Oym6Yqw_v0lGKKaVbo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehledgudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepveegudetkeethfetgffgtdekkefghefhffefgeduleehgeehieeuveefgedv
-    ieegnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepledtrdekledrieekrd
-    ejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
-    rgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:1UNbXz1jYiJJWUhQ6Ownjb1CV_JvcGaWJvpOhwRSWBo11yTyNRTprw>
-    <xmx:1UNbXyB7LLBWEUNfkc-WQaWT2XI01tkuqguyD0giHHKJC70DGgCjrw>
-    <xmx:1UNbX_jwUndZBPhpMljWvgpxpuIWtIDQzYQmXwxMDMCQ20tEmMGymg>
-    <xmx:1UNbXysl_n15gmh8uFTiDi6_jut6NsTXQXc48BbJI743IVIiHgWMvw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A6BFD3064685;
-        Fri, 11 Sep 2020 05:31:00 -0400 (EDT)
-Date:   Fri, 11 Sep 2020 11:30:59 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] drm/vc4: Update type of reg parameter in
- vc4_hdmi_{read,write}
-Message-ID: <20200911093059.seyflq66mbvyhsb4@gilmour.lan>
-References: <20200910170401.3857250-1-natechancellor@gmail.com>
+        Fri, 11 Sep 2020 05:31:18 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95708C061573;
+        Fri, 11 Sep 2020 02:31:17 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k15so10761159wrn.10;
+        Fri, 11 Sep 2020 02:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=m0zCJ2N1DEmZgbso7kf45dEOHU0CDP0xnWcON3F46QI=;
+        b=MJQJvD5Iz0SVJV57kXowzWjx42l92jQDOKm4ZFaVNyMxLQ6crMDGsvR4x8BR6C4Jk3
+         MWQwBYrUYK+0fE0JF7J59WiFw539V63G9m5sLVTNeaiPMAQwCcUUO2X/82n1V1l0oi0b
+         mRWiKYcHGRXgfOsrNfstgDKTPUMmRGyQWIyb0E3VEXeLxgCBkrZQmW5D6b/4PvBB9W5B
+         AKeAi3tYchOxuknB+6MQKhlMao6Zplt3Fmy3KXWEIitlms7Hh7be31lfD4JI0sAtBuZZ
+         Z2qxCuy2usvXg4q5ycjfBA4npZgZo6Y5GwtPFT99AuFyNsjZJ5VEktSpel+TVXfqWJoH
+         W1zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m0zCJ2N1DEmZgbso7kf45dEOHU0CDP0xnWcON3F46QI=;
+        b=RsywSZBkcmh1glYsptGsu6OzyNs/uwcJVkkqDBXT550lStwiqfr3swsvAw6sCBdVFq
+         rBpL982t+ZtK0lUbL5QbgEoqnhhH5Q+zIMlylaqoJXxqanVlc4cV5BgJDHWcV2E6YNnp
+         4PW9tpSQ6fdaYqNb3CR1iyzbJd9wW8fxXDErxCHAPBc5dv2JSCHCH6udL6cziMjiZqVL
+         C++zSzmNlf0vDk3Fyy+1y7rUd2QPo4TTVTA/8ZZNoDxyId1BH1AfaWc6hauV9Hy9A/m+
+         vB38B1fQ2Eefzpej6bhnb8qFdnj6RPhDOw9g8xWlkPp4XRxYeuG8HszsGFk22fAPbbLM
+         R7nw==
+X-Gm-Message-State: AOAM533sUwt/ScILhl/j5Up9JySrWbA8fhS975+EIz0ZYF85uBnhNCse
+        Ulul/FsWB4vCyT1B6dpFiaoSn6wUCN4=
+X-Google-Smtp-Source: ABdhPJyguEWBifaW2jhYa6LcYiRy5mmAwIUy1Zu8cNpNRjMOe0ZNlD122vq2EG8MYu1lRnbFHMhMMw==
+X-Received: by 2002:a5d:5089:: with SMTP id a9mr1221685wrt.118.1599816675841;
+        Fri, 11 Sep 2020 02:31:15 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id o124sm3167680wmb.2.2020.09.11.02.31.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:31:15 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/24] inet_net_pton.3: Use 'PRIx32' rather than "%x" when
+ printing 'uint32_t' values
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-2-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <928d25b7-7f97-f9b9-80ce-0550c18131c2@gmail.com>
+Date:   Fri, 11 Sep 2020 11:31:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nivno6pymk5epqhf"
-Content-Disposition: inline
-In-Reply-To: <20200910170401.3857250-1-natechancellor@gmail.com>
+In-Reply-To: <20200910211344.3562-2-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
 
---nivno6pymk5epqhf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+> ---
+>  man3/inet_net_pton.3 | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/man3/inet_net_pton.3 b/man3/inet_net_pton.3
+> index 00f94b9d4..d74a33d74 100644
+> --- a/man3/inet_net_pton.3
+> +++ b/man3/inet_net_pton.3
+> @@ -332,6 +332,7 @@ Raw address:              c1a80180
+>  /* Link with "\-lresolv" */
+>  
+>  #include <arpa/inet.h>
+> +#include <inttypes.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  
+> @@ -381,7 +382,7 @@ main(int argc, char *argv[])
+>         may not have been touched by inet_net_ntop(), and so will still
+>         have any initial value that was specified in argv[2]. */
+>  
+> -    printf("Raw address:              %x\en", htonl(addr.s_addr));
+> +    printf("Raw address:              %"PRIx32"\en", htonl(addr.s_addr));
+>  
+>      exit(EXIT_SUCCESS);
+>  }
 
-On Thu, Sep 10, 2020 at 10:04:02AM -0700, Nathan Chancellor wrote:
-> Clang warns 100+ times in the vc4 driver along the lines of:
->=20
-> drivers/gpu/drm/vc4/vc4_hdmi_phy.c:518:13: warning: implicit conversion
-> from enumeration type 'enum vc4_hdmi_field' to different enumeration
-> type 'enum vc4_hdmi_regs' [-Wenum-conversion]
->         HDMI_WRITE(HDMI_TX_PHY_POWERDOWN_CTL,
->         ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> The HDMI_READ and HDMI_WRITE macros pass in enumerators of type
-> vc4_hdmi_field but vc4_hdmi_write and vc4_hdmi_read expect a enumerator
-> of type vc4_hdmi_regs, causing a warning for every instance of this.
-> Update the parameter type so there is no more mismatch.
->=20
-> Fixes: 311e305fdb4e ("drm/vc4: hdmi: Implement a register layout abstract=
-ion")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1149
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+So, I'm in a little bit of doubt about patches 01 and 02. Does 
+this really win us anything? On the one hand, %"PRIx32" is more
+difficult to read than %x. On the other, does it win us anything
+in terms of portability? At first glance, the answers seems to me 
+to be "no". Your thoughts?
 
-Applied, thanks!
-Maxime
+Thanks,
 
---nivno6pymk5epqhf
-Content-Type: application/pgp-signature; name="signature.asc"
+Michael
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1tD0wAKCRDj7w1vZxhR
-xSMEAQCO33V9mqU3u9rBqhRNWajN4iqpvngIcDpnvW4MIldO7gEAqQSnWKYHs8I9
-BUH19iF7iojqi5m2AoKIPCbJIyzAvgg=
-=YcrL
------END PGP SIGNATURE-----
-
---nivno6pymk5epqhf--
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
