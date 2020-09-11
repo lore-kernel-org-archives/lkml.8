@@ -2,53 +2,55 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD91C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ABC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE2222240
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58A4223EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599829093;
-	bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+	s=default; t=1599829139;
+	bh=oGr46qlLv8X6ikVTrbl44cD9Uet5OSlJxQACmUVeejw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WizEboSmaYvjNHcItWvSCE4b6rQVrndw/6FD9KqmV6RW/LA3CtMUfCVO5XCl7MKTZ
-	 cfydXpP0e97a6cPro6vsc69GkB/+6SAlcMGtAo0wnxvE8QuEpPJHRv0epXNTytPH4A
-	 CDy4qoPEqie92u8oNc/sOB5CJKJukHxw2UzNzY0M=
+	b=DMrqsLeRlIKneki2pFkxLUUkQGnKklhoF6wrt7DOq7jupGewkir7mT7nmS5TDOzmp
+	 cK6AjZRiLlY5EHpgoR9ie1OcrJ5Qf7Gde0pbqkiLQUYypskJwB4vWw9z2m3fMGHDQ2
+	 tZ2xPZgNZORYK4dz2G7nLmsveup0W7VIF1dsP+24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgIKM53 (ORCPT
+        id S1726119AbgIKM6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 08:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbgIKMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726047AbgIKMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 08:54:34 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A5022225;
-        Fri, 11 Sep 2020 12:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1141E2075E;
+        Fri, 11 Sep 2020 12:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599828834;
-        bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+        s=default; t=1599828831;
+        bh=oGr46qlLv8X6ikVTrbl44cD9Uet5OSlJxQACmUVeejw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTyf7e3XSzfSf/OknASKWycUoEtX0M5E95kxXpCgWVWr3MKI2hERscvbWcjvYgHUn
-         f+Lz3PvSibjaXk+fhBaBbTv1vRV0LsRVzOVh6BCtvFT2J6rcIr397dv1KYkJeFuown
-         JXWGk39DfFF+Xlv8KmAHev/61we8Q4Dod7bkZDDo=
+        b=F9i4AChHmpor9FFYhbdtZsrYXOTIRQM7rKzrdZbohrEN/NRdO+uXHXff0FPRMvHb0
+         YZo033JTkMj7jZ6IyCCSqGUeDL0xBzEdkPOVq8MRYz4wy6r3C3pvsIvWw6JonWcpnr
+         FBENyfqAdg8fcKGtGIASBvmur4Y9y3Sc5cvQwEzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 05/62] hwmon: (applesmc) check status earlier.
-Date:   Fri, 11 Sep 2020 14:45:48 +0200
-Message-Id: <20200911122502.669077595@linuxfoundation.org>
+        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH 4.4 04/62] mm, page_alloc: remove unnecessary variable from free_pcppages_bulk
+Date:   Fri, 11 Sep 2020 14:45:47 +0200
+Message-Id: <20200911122502.615839890@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122502.395450276@linuxfoundation.org>
 References: <20200911122502.395450276@linuxfoundation.org>
@@ -61,123 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Mel Gorman <mgorman@techsingularity.net>
 
-[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
+commit e5b31ac2ca2cd0cf6bf2fcbb708ed01466c89aaa upstream.
 
-clang static analysis reports this representative problem
+The original count is never reused so it can be removed.
 
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[dwagner: update context]
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-buffer is filled by the earlier call
-
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
-
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
-Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ mm/page_alloc.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 0af7fd311979d..587fc5c686b3c 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -758,15 +758,18 @@ static ssize_t applesmc_light_show(struct device *dev,
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -835,7 +835,6 @@ static void free_pcppages_bulk(struct zo
+ {
+ 	int migratetype = 0;
+ 	int batch_free = 0;
+-	int to_free = count;
+ 	unsigned long nr_scanned;
+ 
+ 	spin_lock(&zone->lock);
+@@ -848,7 +847,7 @@ static void free_pcppages_bulk(struct zo
+ 	 * below while (list_empty(list)) loop.
+ 	 */
+ 	count = min(pcp->count, count);
+-	while (to_free) {
++	while (count) {
+ 		struct page *page;
+ 		struct list_head *list;
+ 
+@@ -868,7 +867,7 @@ static void free_pcppages_bulk(struct zo
+ 
+ 		/* This is the only non-empty list. Free them all. */
+ 		if (batch_free == MIGRATE_PCPTYPES)
+-			batch_free = to_free;
++			batch_free = count;
+ 
+ 		do {
+ 			int mt;	/* migratetype of the to-be-freed page */
+@@ -886,7 +885,7 @@ static void free_pcppages_bulk(struct zo
+ 
+ 			__free_one_page(page, page_to_pfn(page), zone, 0, mt);
+ 			trace_mm_page_pcpu_drain(page, 0, mt);
+-		} while (--to_free && --batch_free && !list_empty(list));
++		} while (--count && --batch_free && !list_empty(list));
  	}
- 
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
-+
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
- 
- out:
-@@ -814,12 +817,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 	sprintf(newkey, fan_speed_fmt[to_option(attr)], to_index(attr));
- 
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
-+
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+ 	spin_unlock(&zone->lock);
  }
- 
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -854,12 +856,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
-+
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -875,10 +876,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
-+
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -954,13 +956,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
--- 
-2.25.1
-
 
 
