@@ -2,178 +2,185 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B6C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2FCC2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AFB222B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B0122286
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EarytBvw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avWKSyQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgIKOVA (ORCPT
+        id S1725851AbgIKOWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
+        Fri, 11 Sep 2020 10:22:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgIKNSP (ORCPT
+        with ESMTP id S1726237AbgIKNPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:18:15 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABE7C061795
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:07:15 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l17so9834988edq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:07:15 -0700 (PDT)
+        Fri, 11 Sep 2020 09:15:30 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02AFBC06179F;
+        Fri, 11 Sep 2020 06:14:13 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id y15so4779884wmi.0;
+        Fri, 11 Sep 2020 06:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
-        b=EarytBvwoQep7qd57VxmLST9JhvldbG08X3Nhqjheaj8MGEJpUXQbQdXO9VsM17+03
-         b1qLL2NsHvu9J9xBXIZvZarcrQoDu0q+HllUQxkpUyTsxMId3oXHB1Tn07+fRJ1jFTf8
-         +5jh35x6TyiSpnx7oUljGT0afOX2lXuVBSl4XpEijxq/NGNs1cimpkYYG6C3EEeqHK2G
-         y6OQEZE4nTNaqwyc45DYEJUC/gCELLHgmGL9F+MQmMIvSuaK/TtZRT6Z5yGjJyxMUBTu
-         2w+2PLGV+qbr3yjE73O+TjHkWTlvHPSQrDWJ0TiBY9Z+RJc/v+2HUd2d/hD2asyZCEaS
-         6mpA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/efAOxEKJ1gyh5Ctf4uoo0Fx5OP5sMJt3oXFDgabHlE=;
+        b=avWKSyQOZCAvSDawpwBR7yLERjv59XVDoNB9eAiquv1P8esR4wWhvOXA76HT2Y/6yl
+         DLtkOoroDkKjMOXiU06TnkM7lM1fsbjDDlHLHmgyMIpWarcUdXMKWG6oh2OnOpj9xG3H
+         O1k7WIqQ5TzNHeccCINdPRq2WGAChjBK716FjlnBSPhEv+t5N1aG5Hslmd+ARwxBaZbL
+         ii9RiG+vvUn0GPx4ZtnG1jXYToGgu3QMFg/NcTCNqyBkepsgCFzqgRp1GZk0rzsU0ufh
+         tS73Gq7S/4t7zx1/xy7Br+FKWfddFpjbq5+hKoWkOXjVrWd/vr7eQ7NxXYPk+PYeWOz3
+         iJBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
-        b=Uo6LnrQp48uw2RuWr2VXWzEfbv1mWhP6NtF+PQC9M/DYCov3f5ilXA1vOO/bK+cRr5
-         ACuxdSUvgmSqxz+YQBh4wThL8NG1oZDQa75I4msCX9j4DuIVXvXc3Uwx3VPiWMtrONzk
-         zK7ayY7iA7d0xuzZelC9s4V/xLooBbBLiaIrBTg/Syl9NaYsWc1biU2+JBc/sRSdz+OJ
-         bpQpJOIV3mZvN9dSlBtwpOqJlzAOt/17N8TCcKM2i8Qjh5YZQdp1e8rKBVGAFfHisK26
-         htZvJLH6C7uI+fSEzDIz/5SAcOXa6M3GPCnqNgfsOpjQZgKnkV7ziZfeUM7lMMN0EirG
-         1+UQ==
-X-Gm-Message-State: AOAM533Uy/L4mPnFOxb/DtLvLhABdYIaJWSiNsFJQVM9hez7MZ/9g+06
-        xJokyMT9kI42aNPxrnXNcozKJUBmExub76kLtdKVlw==
-X-Google-Smtp-Source: ABdhPJy+rDUfCaOK6p6Va0hZoFOBHdUKP5x0jZI7yOtovb7mUCA9QlmaUYaRaxfvgu4qMN52cQ6UDcW0sSJC9puhE3Q=
-X-Received: by 2002:a50:f687:: with SMTP id d7mr1944285edn.353.1599829633051;
- Fri, 11 Sep 2020 06:07:13 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=/efAOxEKJ1gyh5Ctf4uoo0Fx5OP5sMJt3oXFDgabHlE=;
+        b=BNf0T4/vJ+Bmx2Wlktuw3v2cMs9nQPLGejGmkHMCbPYW1vgQMWviKdha31MSifxrBF
+         oHQLoveWIIjqKTEvmPA9yi0RDYUsSrydnllI/yNdzHBq93WTaydZd6tNttHHaI4Hv653
+         9Oi7Sf1/2ZCJtwTtRqQw2sjQQfBIS+ChgbM6DkJrIiUdq9TIDCoNS/Q3G4QecZJpF1aj
+         7efPXdUG2SMloXsksQeCaEKiNvvKoYTIuag9v/dB9bz+SUTe479TxS5SFTNXFJVMc3QA
+         T4lK9NfEmpDQ0X9BjcANlhAE9AO+gjR9PVxzQYkQ/cM1PLSO6uBpf5Zk704pBmw3e5mm
+         EaIA==
+X-Gm-Message-State: AOAM532bNohpQ4A8RkyrG1fI9BrtJywY1B2cOPJYHZ8RJ4qhNHs9Q46D
+        7NkHTvjGNfTiyvR0caPhxG0=
+X-Google-Smtp-Source: ABdhPJwS69+FdwpeSP58WAGR07FcTh6IGlFlNydBjaMRoYEJ+oqSvi/UBIHLqCaod13r7CARFfUG1Q==
+X-Received: by 2002:a05:600c:c5:: with SMTP id u5mr2154668wmm.14.1599830051694;
+        Fri, 11 Sep 2020 06:14:11 -0700 (PDT)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id b11sm4641568wrt.38.2020.09.11.06.14.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 06:14:10 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 15:14:08 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Bob Peterson <rpeterso@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Craig <Daniel.Craig@csiro.au>,
+        Nicolas Courtel <courtel@cena.fr>
+Subject: Re: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail
+ lists
+Message-ID: <20200911131408.GA242456@eldamar.local>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195323.968867013@linuxfoundation.org>
+ <20200910194319.GA131386@eldamar.local>
+ <20200911115816.GB3717176@kroah.com>
+ <942693093.16771250.1599826115915.JavaMail.zimbra@redhat.com>
+ <20200911122024.GA3758477@kroah.com>
+ <1542145456.16781948.1599828554609.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907122238.GA1849893@kroah.com> <CAMRc=MexhEbnxCN3aN57k4V-mO-vQL=+8z9QFEzOCPkmn16-XQ@mail.gmail.com>
- <20200911125625.GF3758477@kroah.com>
-In-Reply-To: <20200911125625.GF3758477@kroah.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 11 Sep 2020 15:07:02 +0200
-Message-ID: <CAMpxmJUd-ALoBi4aC1nsJ7JmEsANe_gZfBegCiZtP6BwPpC52g@mail.gmail.com>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1542145456.16781948.1599828554609.JavaMail.zimbra@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 3:01 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Sep 08, 2020 at 07:03:30PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-> > > > > > >
-> > > > > > > ...
-> > > > > > >
-> > > > > > > > > +GPIO Testing Driver
-> > > > > > > > > +===================
-> > > > > > > > > +
-> > > > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > > > > +structure.
-> > > > > > > >
-> > > > > > > > Could configfs be used for this instead of debugfs?
-> > > > > > > > debugfs is ad hoc.
-> > > > > > >
-> > > > > > > Actually sounds like a good idea.
-> > > > > > >
-> > > > > >
-> > > > > > Well, then we can go on and write an entirely new mockup driver
-> > > > > > (ditching module params and dropping any backwards compatibility)
-> > > > > > because we're already using debugfs for line values.
-> > > > > >
-> > > > > > How would we pass the device properties to configfs created GPIO chips
-> > > > > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > > > > something?
-> > > > >
-> > > > > Same way how USB composite works, no?
-> > > > >
-> > > >
-> > > > OK, so create a new chip directory in configfs, configure it using
-> > > > some defined configfs attributes and then finally instantiate it from
-> > > > sysfs?
-> > > >
-> > > > Makes sense and is probably the right way to go. Now the question is:
-> > > > is it fine to just entirely remove the previous gpio-mockup? Should we
-> > > > keep some backwards compatibility? Should we introduce an entirely new
-> > > > module and have a transition period before removing previous
-> > > > gpio-mockup?
-> > > >
-> > > > Also: this is a testing module so to me debugfs is just fine. Is
-> > > > configfs considered stable ABI like sysfs?
-> > >
-> > > Yes it is.  Or at least until you fix all existing users so that if you
-> > > do change it, no one notices it happening :)
-> > >
-> >
-> > Got it. One more question: the current debugfs interface we're using
-> > in gpio-mockup exists to allow to read current values of GPIO lines in
-> > output mode (check how the user drives dummy lines) and to set their
-> > simulated pull-up/pull-down resistors (what values the user reads in
-> > input mode).
-> >
-> > This works like this: in /sys/kernel/debug/gpio-mockup every dummy
-> > chip creates its own directory (e.g.
-> > /sys/kernel/debug/gpio-mockup/gpiochip0) and inside this directory
-> > there's an attribute per line named after the line's offset (e.g.
-> > /sys/kernel/debug/gpio-mockup/gpiochip0/4). Writing 0 or 1 to this
-> > attribute sets the pull resistor. Reading from it yields the current
-> > value (0 or 1 as well).
-> >
-> > This is pretty non-standard so I proposed to put it in debugfs. If we
-> > were to use configfs - is this where something like this should go? Or
-> > rather sysfs? Is it even suitable/acceptable for sysfs?
->
-> That sounds like it would work in sysfs just fine as-is, why don't you
-> all want to use that?  configfs is good for "set a bunch of attributes
-> to different values and then do a 'create/go/work'" type action.
->
+Hi Bob,
 
-I've started looking into it. I need to first implement committable
-items for configfs because mockup GPIO chips need to be configured
-before they're instantiated. It'll be configfs to configure and
-instantiate each chip and a set of sysfs attributes to manipulate
-existing chips.
+On Fri, Sep 11, 2020 at 08:49:14AM -0400, Bob Peterson wrote:
+> ----- Original Message -----
+> > On Fri, Sep 11, 2020 at 08:08:35AM -0400, Bob Peterson wrote:
+> > > ----- Original Message -----
+> > > > On Thu, Sep 10, 2020 at 09:43:19PM +0200, Salvatore Bonaccorso wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On Tue, Jun 23, 2020 at 09:57:50PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > From: Bob Peterson <rpeterso@redhat.com>
+> > > > > > 
+> > > > > > [ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+> > > > > > 
+> > > > > > Before this patch, transactions could be merged into the system
+> > > > > > transaction by function gfs2_merge_trans(), but the transaction ail
+> > > > > > lists were never merged. Because the ail flushing mechanism can run
+> > > > > > separately, bd elements can be attached to the transaction's buffer
+> > > > > > list during the transaction (trans_add_meta, etc) but quickly moved
+> > > > > > to its ail lists. Later, in function gfs2_trans_end, the transaction
+> > > > > > can be freed (by gfs2_trans_end) while it still has bd elements
+> > > > > > queued to its ail lists, which can cause it to either lose track of
+> > > > > > the bd elements altogether (memory leak) or worse, reference the bd
+> > > > > > elements after the parent transaction has been freed.
+> > > > > > 
+> > > > > > Although I've not seen any serious consequences, the problem becomes
+> > > > > > apparent with the previous patch's addition of:
+> > > > > > 
+> > > > > > 	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+> > > > > > 
+> > > > > > to function gfs2_trans_free().
+> > > > > > 
+> > > > > > This patch adds logic into gfs2_merge_trans() to move the merged
+> > > > > > transaction's ail lists to the sdp transaction. This prevents the
+> > > > > > use-after-free. To do this properly, we need to hold the ail lock,
+> > > > > > so we pass sdp into the function instead of the transaction itself.
+> > > > > > 
+> > > > > > Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+> > > > > > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> > > > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > (snip)
+> > > > > 
+> > > > > In Debian two user confirmed issues on writing on a GFS2 partition
+> > > > > with this commit applied. The initial Debian report is at
+> > > > > https://bugs.debian.org/968567 and Daniel Craig reported it into
+> > > > > Bugzilla at https://bugzilla.kernel.org/show_bug.cgi?id=209217 .
+> > > > > 
+> > > > > Writing to a gfs2 filesystem fails and results in a soft lookup of the
+> > > > > machine for kernels with that commit applied. I cannot reporduce the
+> > > > > issue myself due not having a respective setup available, but Daniel
+> > > > > described a minimal serieos of steps to reproduce the issue.
+> > > > > 
+> > > > > This might affect as well other stable series where this commit was
+> > > > > applied, as there was a similar report for someone running 5.4.58 in
+> > > > > https://www.redhat.com/archives/linux-cluster/2020-August/msg00000.html
+> > > > 
+> > > > Can you report this to the gfs2 developers?
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > 
+> > > Hi Greg,
+> > > 
+> > > No need. The patch came from the gfs2 developers. I think he just wants
+> > > it added to a stable release.
+> > 
+> > What commit needs to be added to a stable release?
+> > 
+> > confused,
+> > 
+> > greg k-h
+> 
+> Sorry Greg,
+> 
+> It's pretty early here and the caffeine hadn't quite hit my system.
+> The problem is most likely that 4.19.132 is missing this upstream patch:
+> 
+> cbcc89b630447ec7836aa2b9242d9bb1725f5a61
+> 
+> I'm not sure how or why 83d060ca8d90fa1e3feac227f995c013100862d3 got
+> put into stable without a stable CC but cbcc89b6304 is definitely
+> required.
+> 
+> I'd like to suggest Salvatore try cherry-picking this patch to see if
+> it fixes the problem, and if so, perhaps Greg can add it to stable.
 
-Bartosz
+Thanks I will ask the affected users if they can test this (because as
+said I cannot myself in this case).
+
+If it is true that we need to cherry-pick as well
+cbcc89b630447ec7836aa2b9242d9bb1725f5a61, then all of v4.14.y,
+v4.19.y, v5.4.y would need to have it included as well
+(83d060ca8d90fa1e3feac227f995c013100862d3 was applied down to
+v4.14.186, v4.19.130, v5.4.49, v5.7.6 (EOL)).
+
+Regards,
+Salvatore
