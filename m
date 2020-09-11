@@ -2,137 +2,161 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308EC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494F8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E10221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C00D221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ZWVmLkT7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tjYRWMJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgIKQQT (ORCPT
+        id S1726588AbgIKQQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:16:19 -0400
-Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:64199
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726254AbgIKPbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:31:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HUuwFrAFt0BXxZpZ5sAB1JfS/BbWb7Qd4xwpGyXIeBi1nmUmb/2RP+2M1oVyCXhuA/A3dr3yc1MxqXdXs12to92mXMMRJWFG0O7ie0zok3qX4d5r4lACrYNphVSzftouoCxTJNE8dH0VPgEASlHZyamDu0a7EOfbc8clm2vNWxyHYV+xlsQ+k7dm+9dUp3XLmSrwaNC1pTwRrtZuN/d0uNh3XNbsDMYK2O3EOPsjJhzWc4mxmoctYhJqQtxDQYJV91L4ZVp9csuhBpiFSgrY2tmpEWLItoCSjcpVp/tXr+Tle0jZAm7jiJf+AFHa2Vdwqrw0j1CO+mC6KI3HAbR3wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NXQbotspShQWj9Yr1Q+K1incV2jns7FI486mHk60Ncs=;
- b=lGnyukz7IbcmbUSxOcsZLyxkeqSQ3Pqb6riGunMDcJaOklaIWv8jf1qAhW1ZHknGIoWHlEYGzp1lo5dumDYWuR/I189YWowzIdHktBmC+lrZMkIb0gQ2LgTxf5TZFgWJrHeTSgiGbq76A/2dmzHpTFcG4ypZQjPD/rR98r1vkLdiE9tk/izyMZO7XTkuFeo4UlDX3XnGa+5bFwRDR2pIVmbkXUhV6myxUuFURSpav28zSm9Gw9N1pwxG8TCsu7Yjk3kdefFzjxXAlHIuM/zJgR+ndduT/i6Dk5ypEQ8WbIOq9n0bALc3GKIHeNOwRc5SE1JX/Az9JNfpN1KXnPwJoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NXQbotspShQWj9Yr1Q+K1incV2jns7FI486mHk60Ncs=;
- b=ZWVmLkT7gsA1TzFELP1r4XFb8yeLqWFhvqyD+uzog3IYJESdbNvmCYr2DN7y9O2gaW+AuYHZErv8rnWHhjkR/KHlUd88w7nczRy6ZcwYwFg3kkv1f1Ko3ruqe9i/OLdY8jZwtDTcsJwU9QBBbV7AWS3PZ7NmTYHf+XAL66m6QCg=
-Authentication-Results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR04MB4271.eurprd04.prod.outlook.com
- (2603:10a6:803:3f::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.17; Fri, 11 Sep
- 2020 13:49:13 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5d66:84a7:26de:67c3]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5d66:84a7:26de:67c3%6]) with mapi id 15.20.3370.016; Fri, 11 Sep 2020
- 13:49:13 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     laurentiu.palcu@oss.nxp.com, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/imx/dcss: fix 64-bit divisions
-Date:   Fri, 11 Sep 2020 16:48:27 +0300
-Message-Id: <20200911134827.32142-1-laurentiu.palcu@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain; charset="us-ascii"
-X-ClientProxiedBy: AM0PR05CA0076.eurprd05.prod.outlook.com
- (2603:10a6:208:136::16) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Fri, 11 Sep 2020 12:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgIKQPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:15:45 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EBBC061573;
+        Fri, 11 Sep 2020 09:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=no4R54jk2kWX56pztkCJXU7Nb87KrmM26tVrWGBSpzs=; b=tjYRWMJxLl3JQZEaoSU4CTVmd9
+        vYvCIKl738oRwt6L/IRE0i2HCxcpGjqjeieimoju3oZUcoJ4+wwUD1j7p5ntAJ7NtfZD2xEIhNavs
+        2OAkmQaGvOJxdUygKlBX4AEzX0h/EYkRXLaDcpYwrZ7SW2OO8FlxPWooHDPhIXA3EUpgTgs3K4t6n
+        B8vjfXrvsYPZpq/JqvNptnjWRtosnpQGyzjy432F6Bok9t1ZtttfIbqWkXhNeViccT8gEv++nPgXF
+        1bsKhQIJAGDftyYZFwhr9xD5l7ZQGmBDTHEN87BsxT70DBFn8MrhUSqRtC3pmBVg6wE4kSiY/7g1z
+        9aPNpKkg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGli9-0005GB-Ui; Fri, 11 Sep 2020 16:15:42 +0000
+Subject: Re: linux-next: Tree for Sep 10 (drivers/media/pci/ttpci/dvb-ttpci)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20200910174252.0698c743@canb.auug.org.au>
+ <97f03d35-acd3-1c65-0c93-4ca4cabf6613@infradead.org>
+ <20200911093156.15282b69@coco.lan>
+ <1bf30e26-cd8d-a2dd-aaf3-97c2dbc1875a@infradead.org>
+Message-ID: <c94227cc-5f0f-07da-865a-40a75a70ebd8@infradead.org>
+Date:   Fri, 11 Sep 2020 09:15:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR05CA0076.eurprd05.prod.outlook.com (2603:10a6:208:136::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 11 Sep 2020 13:49:12 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2c3318c1-bb20-48fe-da3e-08d85659777d
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4271:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4271483E5056AAFEC36C77B3BE240@VI1PR04MB4271.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +LjYTHCCte8KDtYR7OZV3i8CI+xK2fbe67knwtaAaqTlAe3VYiSdk9ApYxrGwp7eXZulHVz3Poq6CQ5lHarGVz3U/vE2FrOMJufbs85kmbSLnRNNzfVteSIy5Se+hFzq7VYKuqBBNNm1cVOHKjZm+Lahc8P/1DWDjmXLE1hCmYtYdMB7SarsIcoIUZwsTbYflMSDUjPXRMp0zSyF2mQsJlnaxB00kS7ldQJkZXgjCo4GRE4RMHIblbICDCq5DoBa4n6RPtG27LbNIKu4MuEV4TShbpknrzd2u4ANdzXTppgXlCKLR+fq0R/wu9zOPO2hC981SzOWiF+/7rfbpdiJh61Ec3VLL4MJAc6SkHtW2iY9wEkxCxBWaABvAHZGzTv4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(6512007)(186003)(16526019)(26005)(6666004)(2616005)(44832011)(956004)(316002)(6486002)(86362001)(4326008)(8676002)(6506007)(2906002)(478600001)(7416002)(4744005)(8936002)(110136005)(66556008)(1076003)(66946007)(66476007)(5660300002)(83380400001)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: AkNuUeJHTr+pPN1eJUfsII9So7qGNZKL2V/9kCv7/BiMPgaRxNY9f1vpC5A0Ff+nQsPxndtlYG2NrJ1tobpvpGwDf0gJht/aONcL9+fL55QSGenjts8vUt7FD5JuDmO+6NtYgQYKyxcKQNxjM8ZcDdUcN1d4MfbGyxDLzsf/r2G85GszJ98ykhCNGS0D4Q9DO/NxNCpRW8TqnRQpi4V9ETydJJvkAOjiD5U+bzM7uQYsE5IGlwNAW5TpxQkIKY1XMHI31cZSTdH00sIwGY0y4ewplkYBZXr+e6uH2DPJQbpSIC5apQFaUz8uItgF2hHDhhL2R6MgdYeNeepx6UDTI1Opq2ReC++BCEWBoscCfucFRGBObAx4uLcoSNYkLSrllA68tZposqGFZxUqAMQgN/u03z5dAkFDAPls7IERW3Qa/c2ZA+KXfQCUbVgVhbh3jZBNGrt4DEwl3/fRSIJesPT189VIgUgTyjMfNeF0ViZZYv+DF8Q7Bla9o7RcS2XZ4uLJsM/sCQeoR3bp/vgsw3jx7lTP1GXLqSNZtxcg/CttqHVyhqlPeLz32RRaJ9puIez/Esv/o10AeminQ9RdHyv5ibL3R4PAMZDVdeBe3MTD4AKGu/++1eTRD03n8ye2JFN3EEMUzqHpRVua1RAlIg==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c3318c1-bb20-48fe-da3e-08d85659777d
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 13:49:13.2698
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zLf+AfJ0l3zRzoWm+sy3MjZmY8m5SLh6VG7ubsCXlwrQmE/2H8uB5eRwzKidGyHva6I0CD9lggdj1X6JLGZp6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4271
+In-Reply-To: <1bf30e26-cd8d-a2dd-aaf3-97c2dbc1875a@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use div_s64() for the 64-bit divisions. This would allow the driver to compile
-on 32-bit architectures, if needed.
+On 9/11/20 8:52 AM, Randy Dunlap wrote:
+> On 9/11/20 12:31 AM, Mauro Carvalho Chehab wrote:
+>> Hi Randy,
+>>
+>> Em Thu, 10 Sep 2020 09:02:35 -0700
+>> Randy Dunlap <rdunlap@infradead.org> escreveu:
+>>
+>>> On 9/10/20 12:42 AM, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>>
+>>>> Changes since 20200909:
+>>>>   
+>>>
+>>>
+>>> on i386:
+>>>
+>>> ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>>> ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>>>
+>>>
+>>> Full randconfig file is attached.
+>>
+>> I was unable to reproduce it here with the .config file you sent.
+>>
+>> I suspect that the only difference is the compiler version. Here, I'm
+>> using:
+>>
+>> 	gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008
+>>
+>> While you're using:
+>>
+>> 	gcc (SUSE Linux) 7.5.0
+>>
+>> Yet, the only patch that could possibly have affected it is
+>> this changeset 13c129066845 ("media: av7110_v4l: avoid a typecast").
+>>
+>> It sounds to me that gcc 7.5.0 only does the right math at compile
+>> time if there is a typecast. Could you please check if the enclosed
+>> patch fixes it?
+> 
+> Hi Mauro,
+> Yes, this fixes the build for me.  Thanks.
+> 
+> Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
----
- drivers/gpu/drm/imx/dcss/dcss-scaler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-scaler.c b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-index cd21905de580..7c1e0e461244 100644
---- a/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-+++ b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-@@ -134,7 +134,7 @@ static int div_q(int A, int B)
- 	else
- 		temp -= B / 2;
- 
--	result = (int)(temp / B);
-+	result = (int)(div_s64(temp, B));
- 	return result;
- }
- 
-@@ -237,7 +237,7 @@ static void dcss_scaler_gaussian_filter(int fc_q, bool use_5_taps,
- 			ll_temp = coef[phase][i];
- 			ll_temp <<= PSC_COEFF_PRECISION;
- 			ll_temp += sum >> 1;
--			ll_temp /= sum;
-+			ll_temp = div_s64(ll_temp, sum);
- 			coef[phase][i] = (int)ll_temp;
- 		}
- 	}
+Aha, added bonus:
+
+This patch also eliminates this objtool warning:
+
+../drivers/media/pci/ttpci/av7110_v4l.c:163:11: error: SSE register return with SSE disabled
+
+
+>> Thanks,
+>> Mauro
+>>
+>> [PATCH] media: av7110: don't do float point math
+>>
+>> It sounds that earlier versions of GCC have troubles when
+>> doing const math at compile time, if no typecast is used:
+>>
+>> on i386:
+>> 	ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>> 	ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>>
+>> The warning was generated on gcc (SUSE Linux) 7.5.0.
+>> Gcc 9.2 compiles it fine.
+>>
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+>> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>>
+>> diff --git a/drivers/media/pci/ttpci/av7110_v4l.c b/drivers/media/pci/ttpci/av7110_v4l.c
+>> index 6d9c908be713..c89f536f699c 100644
+>> --- a/drivers/media/pci/ttpci/av7110_v4l.c
+>> +++ b/drivers/media/pci/ttpci/av7110_v4l.c
+>> @@ -160,9 +160,9 @@ static int ves1820_set_tv_freq(struct saa7146_dev *dev, u32 freq)
+>>  	buf[1] = div & 0xff;
+>>  	buf[2] = 0x8e;
+>>  
+>> -	if (freq < 16U * 168.25)
+>> +	if (freq < 16U * 16825 / 100)
+>>  		config = 0xa0;
+>> -	else if (freq < 16U * 447.25)
+>> +	else if (freq < 16U * 44725 / 100)
+>>  		config = 0x90;
+>>  	else
+>>  		config = 0x30;
+>>
+> 
+> 
+
+
 -- 
-2.17.1
+~Randy
 
