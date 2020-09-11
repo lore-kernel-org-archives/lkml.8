@@ -2,167 +2,124 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEC8C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7611E208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:50:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="NtGcTdUU"
+	by mail.kernel.org (Postfix) with ESMTP id 706E3221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725767AbgIKGu4 (ORCPT
+        id S1725783AbgIKGvG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
+        Fri, 11 Sep 2020 02:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgIKGuw (ORCPT
+        with ESMTP id S1725769AbgIKGu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:50:52 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB2DC061573;
-        Thu, 10 Sep 2020 23:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hDqq1JG175ppowfS+5K7leNlHt/omHY888LR3V06tR4=; b=NtGcTdUU4w/N2X72+BK9qqwB3w
-        eIGqZeu5gBNG0wuBvXicLERsQ5yAlTJ+2zVMP2biOwDnt4dhR/Zswk2JNlYVhboOKhMggMo6aHV4A
-        sW9VY1j70XdcXO97NFV3TQZZew8XUr01hkQlAyzFD9S7GYUOKAwfrvR8d8c2lzRmAQMw=;
-Received: from p200300ccff0ce9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:e900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGctL-0005Do-2W; Fri, 11 Sep 2020 08:50:39 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGctK-0006qj-JJ; Fri, 11 Sep 2020 08:50:38 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     khilman@kernel.org, tony@atomide.com, linux@armlinux.org.uk,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] omap3: enable off mode automatically
-Date:   Fri, 11 Sep 2020 08:49:24 +0200
-Message-Id: <20200911064924.26281-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        Fri, 11 Sep 2020 02:50:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6466FC061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 23:50:58 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kGctS-0007Mq-QE; Fri, 11 Sep 2020 08:50:46 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kGctN-0005XU-8x; Fri, 11 Sep 2020 08:50:41 +0200
+Date:   Fri, 11 Sep 2020 08:50:41 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>
+Cc:     robin@protonic.nl, linux@rempel-privat.de, kernel@pengutronix.de,
+        socketcan@hartkopp.net, mkl@pengutronix.de, davem@davemloft.net,
+        kuba@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] can: j1939: j1939_sk_bind(): return failure if
+ netdev is down
+Message-ID: <20200911065041.v4cetsbokqhdmbd4@pengutronix.de>
+References: <1599460308-18770-1-git-send-email-zhangchangzhong@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1599460308-18770-1-git-send-email-zhangchangzhong@huawei.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:47:40 up 300 days, 22:06, 291 users,  load average: 0.00, 0.04,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling off mode was only reachable deeply hidden
-in the debugfs. As powersaving is an important feature,
-move the option out of its shady place.
-The debugfs file can still be used to override the default.
+On Mon, Sep 07, 2020 at 02:31:48PM +0800, Zhang Changzhong wrote:
+> When a netdev down event occurs after a successful call to
+> j1939_sk_bind(), j1939_netdev_notify() can handle it correctly.
+> 
+> But if the netdev already in down state before calling j1939_sk_bind(),
+> j1939_sk_release() will stay in wait_event_interruptible() blocked
+> forever. Because in this case, j1939_netdev_notify() won't be called and
+> j1939_tp_txtimer() won't call j1939_session_cancel() or other function
+> to clear session for ENETDOWN error, this lead to mismatch of
+> j1939_session_get/put() and jsk->skb_pending will never decrease to
+> zero.
+> 
+> To reproduce it use following commands:
+> 1. ip link add dev vcan0 type vcan
+> 2. j1939acd -r 100,80-120 1122334455667788 vcan0
+> 3. presses ctrl-c and thread will be blocked forever
+> 
+> This patch adds check for ndev->flags in j1939_sk_bind() to avoid this
+> kind of situation and return with -ENETDOWN.
+> 
+> Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-Use the presence of a device compatible to ti,twl4030-idle or
-ti,twl4030-idle-osc-off as an indicator that the board is wired correctly
-for off mode.
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-An earlier version of this patch was here:
-https://patchwork.kernel.org/patch/10794121/
+Thank you!
 
-A config option was used instead of the suggested devicetree check.
+> ---
+>  net/can/j1939/socket.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+> index 1be4c89..f239665 100644
+> --- a/net/can/j1939/socket.c
+> +++ b/net/can/j1939/socket.c
+> @@ -475,6 +475,12 @@ static int j1939_sk_bind(struct socket *sock, struct sockaddr *uaddr, int len)
+>  			goto out_release_sock;
+>  		}
+>  
+> +		if (!(ndev->flags & IFF_UP)) {
+> +			dev_put(ndev);
+> +			ret = -ENETDOWN;
+> +			goto out_release_sock;
+> +		}
+> +
+>  		priv = j1939_netdev_start(ndev);
+>  		dev_put(ndev);
+>  		if (IS_ERR(priv)) {
+> -- 
+> 2.9.5
+> 
+> 
 
- arch/arm/mach-omap2/pm.h     |  4 ----
- arch/arm/mach-omap2/pm34xx.c | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 28 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/pm.h b/arch/arm/mach-omap2/pm.h
-index 2a883a0c1fcd..80e84ae66aee 100644
---- a/arch/arm/mach-omap2/pm.h
-+++ b/arch/arm/mach-omap2/pm.h
-@@ -49,11 +49,7 @@ static inline int omap4_opp_init(void)
- extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
- extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
- 
--#ifdef CONFIG_PM_DEBUG
- extern u32 enable_off_mode;
--#else
--#define enable_off_mode 0
--#endif
- 
- #if defined(CONFIG_PM_DEBUG) && defined(CONFIG_DEBUG_FS)
- extern void pm_dbg_update_time(struct powerdomain *pwrdm, int prev);
-diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
-index f5dfddf492e2..d069d581c372 100644
---- a/arch/arm/mach-omap2/pm34xx.c
-+++ b/arch/arm/mach-omap2/pm34xx.c
-@@ -25,6 +25,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/omap-gpmc.h>
- 
- #include <trace/events/power.h>
-@@ -51,6 +52,10 @@
- /* pm34xx errata defined in pm.h */
- u16 pm34xx_errata;
- 
-+#ifndef CONFIG_PM_DEBUG
-+u32 enable_off_mode;
-+#endif
-+
- struct power_state {
- 	struct powerdomain *pwrdm;
- 	u32 next_state;
-@@ -410,7 +415,12 @@ static int __init pwrdms_setup(struct powerdomain *pwrdm, void *unused)
- 	if (!pwrst)
- 		return -ENOMEM;
- 	pwrst->pwrdm = pwrdm;
--	pwrst->next_state = PWRDM_POWER_RET;
-+
-+	if (enable_off_mode)
-+		pwrst->next_state = PWRDM_POWER_OFF;
-+	else
-+		pwrst->next_state = PWRDM_POWER_RET;
-+
- 	list_add(&pwrst->node, &pwrst_list);
- 
- 	if (pwrdm_has_hdwr_sar(pwrdm))
-@@ -444,6 +454,21 @@ static void __init pm_errata_configure(void)
- 	}
- }
- 
-+static void __init omap3_pm_check_pmic(void)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_compatible_node(NULL, NULL, "ti,twl4030-power-idle");
-+	if (!np)
-+		np = of_find_compatible_node(NULL, NULL, "ti,twl4030-power-idle-osc-off");
-+
-+	if (np) {
-+		of_node_put(np);
-+		enable_off_mode = 1;
-+	} else
-+		enable_off_mode = 0;
-+}
-+
- int __init omap3_pm_init(void)
- {
- 	struct power_state *pwrst, *tmp;
-@@ -477,6 +502,8 @@ int __init omap3_pm_init(void)
- 		goto err2;
- 	}
- 
-+	omap3_pm_check_pmic();
-+
- 	ret = pwrdm_for_each(pwrdms_setup, NULL);
- 	if (ret) {
- 		pr_err("Failed to setup powerdomains\n");
 -- 
-2.20.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
