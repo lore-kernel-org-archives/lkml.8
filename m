@@ -3,252 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A782C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AE622204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4736922204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JxXO2bpi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oMLE8rM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgIKQWd (ORCPT
+        id S1726655AbgIKQWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:22:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2622 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726488AbgIKP2G (ORCPT
+        Fri, 11 Sep 2020 12:22:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgIKP2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:28:06 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BDXg9X191729;
-        Fri, 11 Sep 2020 09:48:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=VCevs/yaQHazFXInnTan+oDgN62pOgD9NgM/TFWnlsU=;
- b=JxXO2bpi+aaQKD5mQomg9rDjIcfJBbMQBPCXsjTyIW6ZM4/T7OUN9gMD62k386Zx/RHH
- CLPhsmGVqzj6wuG0LfSDCMMmAJlE8naYcX0iiAKxbqS9MIXxpIRY5KMyYlFVUbYNfIZd
- xvKzqP+JEVvviyhwX2PAozUwLMhHk5on/Xz81m9Z+VxEaawNkDYOjbvY9+MKV3pxVLWm
- c1iehqsSwN6bhCPhUowgT+Bz7TX51mydzAoX4m5CgWoDec+1t1EPeXonz3vlVU7UP3Uf
- 0hkoYjXKEPD99t36chveHh9MDHbtUBBjmtHkZ5yw/rZgKPZQwMxT0LsNPJwu3bluVAWJ Cw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33g9fy22ey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 09:48:40 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BDXh72191783;
-        Fri, 11 Sep 2020 09:48:39 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33g9fy22dr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 09:48:39 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BDiGpg005376;
-        Fri, 11 Sep 2020 13:48:37 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 33f91w90bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 13:48:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BDmYPO31588724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 13:48:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2351CAE045;
-        Fri, 11 Sep 2020 13:48:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6DA0AE053;
-        Fri, 11 Sep 2020 13:48:33 +0000 (GMT)
-Received: from pomme.tlslab.ibm.com (unknown [9.145.47.39])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Sep 2020 13:48:33 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, mhocko@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-mm@kvack.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] mm: replace memmap_context by memplug_context
-Date:   Fri, 11 Sep 2020 15:48:29 +0200
-Message-Id: <20200911134831.53258-2-ldufour@linux.ibm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911134831.53258-1-ldufour@linux.ibm.com>
-References: <20200911134831.53258-1-ldufour@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-11_04:2020-09-10,2020-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- clxscore=1015 suspectscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=994 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009110104
+        Fri, 11 Sep 2020 11:28:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08962C061798
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:35 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id c196so7490796pfc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=J8XXWl4v9PBTaJqTU0LTHaO4yR2LTPizMFNymaqYIWU=;
+        b=oMLE8rM8iM22jHrw1tJVriGCJdRA1UU9284YM4yPrEVz8JGMXc468KKUHFkOv8kZaM
+         IQntWXGwecrKYhSd3zKZekV9erPYLtHP2zh2m+vEJKSME1gs9vAzG2PduN7/i5AI59yy
+         0txAVl3MJnpldlYdvFKDUWTEpnosfq1O51eVJtT97YcTYT28Ln+iIQbpO741qfgW0rtf
+         xcOwz5P8xsckuDs+y/C97e/Np1ciQuyhzZmKh2cDDh88U5kG0pjFoYklwm7SACpSOI11
+         4N+M6aUC/v72MEEGG7Zj4jGDZUl1daCgdXxJt4OgYItqqWGNOLZCLTJvL6d0OktecC/G
+         svXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=J8XXWl4v9PBTaJqTU0LTHaO4yR2LTPizMFNymaqYIWU=;
+        b=OdcP+XFK9lt/sefB0FD+KHsQqKmu6/ZV3EFnK7N7TblGh17diQ6MrR8VAE9Ln56XrW
+         ewYC7xVXt5sZy+0RCgGZJVG12atpXKImfrUvPBS7RR3mSlt80PGew6jkTDqn3mMHTKZi
+         OcuYQvtlM7y81VdIiSjrBeEqpsaDYZmpSXb8PIWosNxK/YLdTDlMklNPVYLKkx3rTZCG
+         sukvLgf5lZ5qILTFHyC+hpeTNlJ65M72W8K9WbNJ96he8xtR8SKJA26vzx672eV72bpK
+         W1HJDuXuUIG/WsddrD2c2fg5iV+dWXCsSHy/FZhtJqFlUrlYE4g4JO2VAH9CT9WzoboH
+         BajA==
+X-Gm-Message-State: AOAM530uM+ueOqnHlGW/gRATn+akHJLJhbpu/owsT6FkRIzJfYmLXGOK
+        Uqpg65E8Vw9MEz6ajB5dNIJz6w==
+X-Google-Smtp-Source: ABdhPJw8LOM8mjmqzKYH9VAZAt/tSr5GGEC3yJjnUtjTsmmZ+TNtaich1KH/B6flKrFEBX4t5n1h7g==
+X-Received: by 2002:a62:cfc5:0:b029:13e:d13d:a083 with SMTP id b188-20020a62cfc50000b029013ed13da083mr2213644pfg.26.1599830975328;
+        Fri, 11 Sep 2020 06:29:35 -0700 (PDT)
+Received: from localhost.localdomain ([117.210.209.48])
+        by smtp.gmail.com with ESMTPSA id e10sm557988pgb.45.2020.09.11.06.29.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Sep 2020 06:29:34 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     maz@kernel.org, catalin.marinas@arm.com, will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
+        jason@lakedaemon.net, mark.rutland@arm.com,
+        julien.thierry.kdev@gmail.com, dianders@chromium.org,
+        daniel.thompson@linaro.org, jason.wessel@windriver.com,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v4 4/5] arm64: kgdb: Round up cpus using IPI as NMI
+Date:   Fri, 11 Sep 2020 18:58:43 +0530
+Message-Id: <1599830924-13990-5-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
+References: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memmap_context is used to detect whether a memory operation is due to a
-hot-add operation or happening at boot time.
+arm64 platforms with GICv3 or later supports pseudo NMIs which can be
+leveraged to round up CPUs which are stuck in hard lockup state with
+interrupts disabled that wouldn't be possible with a normal IPI.
 
-Makes it general to the hotplug operation, renaming it at memplug_context
-and move its define in the corresponding header.
+So instead switch to round up CPUs using IPI turned as NMI. And in
+case a particular arm64 platform doesn't supports pseudo NMIs,
+this IPI will act as a normal IPI which maintains existing kgdb
+functionality.
 
-There is no functional change introduced by this patch
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- arch/ia64/mm/init.c            |  6 +++---
- include/linux/memory_hotplug.h |  9 +++++++++
- include/linux/mm.h             |  2 +-
- include/linux/mmzone.h         |  4 ----
- mm/memory_hotplug.c            |  2 +-
- mm/page_alloc.c                | 10 +++++-----
- 6 files changed, 19 insertions(+), 14 deletions(-)
+ arch/arm64/include/asm/kgdb.h |  8 ++++++++
+ arch/arm64/kernel/ipi_nmi.c   |  5 ++++-
+ arch/arm64/kernel/kgdb.c      | 21 +++++++++++++++++++++
+ 3 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 0b3fb4c7af29..b5054b5e77c8 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -538,7 +538,7 @@ virtual_memmap_init(u64 start, u64 end, void *arg)
- 	if (map_start < map_end)
- 		memmap_init_zone((unsigned long)(map_end - map_start),
- 				 args->nid, args->zone, page_to_pfn(map_start),
--				 MEMMAP_EARLY, NULL);
-+				 MEMPLUG_EARLY, NULL);
- 	return 0;
- }
+diff --git a/arch/arm64/include/asm/kgdb.h b/arch/arm64/include/asm/kgdb.h
+index 21fc85e..6f3d3af 100644
+--- a/arch/arm64/include/asm/kgdb.h
++++ b/arch/arm64/include/asm/kgdb.h
+@@ -24,6 +24,14 @@ static inline void arch_kgdb_breakpoint(void)
+ extern void kgdb_handle_bus_error(void);
+ extern int kgdb_fault_expected;
  
-@@ -547,8 +547,8 @@ memmap_init (unsigned long size, int nid, unsigned long zone,
- 	     unsigned long start_pfn)
- {
- 	if (!vmem_map) {
--		memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY,
--				NULL);
-+		memmap_init_zone(size, nid, zone, start_pfn,
-+				 MEMPLUG_EARLY, NULL);
- 	} else {
- 		struct page *start;
- 		struct memmap_init_callback_data args;
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 375515803cd8..cd2bd21d3a4d 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -15,6 +15,15 @@ struct memory_block;
- struct resource;
- struct vmem_altmap;
- 
-+/*
-+ * Memory plugin context, use to differentiate memory added at boot time and
-+ * hot-plugged memory.
-+ */
-+enum memplug_context {
-+	MEMPLUG_EARLY,
-+	MEMPLUG_HOTPLUG,
-+};
++#ifdef CONFIG_KGDB
++extern void ipi_kgdb_nmicallback(int cpu, void *regs);
++#else
++static inline void ipi_kgdb_nmicallback(int cpu, void *regs)
++{
++}
++#endif
 +
- #ifdef CONFIG_MEMORY_HOTPLUG
+ #endif /* !__ASSEMBLY__ */
+ 
  /*
-  * Return page for the valid pfn only if the page is online. All pfn
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1983e08f5906..4157cc1bd17f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2409,7 +2409,7 @@ extern int __meminit __early_pfn_to_nid(unsigned long pfn,
+diff --git a/arch/arm64/kernel/ipi_nmi.c b/arch/arm64/kernel/ipi_nmi.c
+index 355ef92..627bc11 100644
+--- a/arch/arm64/kernel/ipi_nmi.c
++++ b/arch/arm64/kernel/ipi_nmi.c
+@@ -8,6 +8,7 @@
  
- extern void set_dma_reserve(unsigned long new_dma_reserve);
- extern void memmap_init_zone(unsigned long, int, unsigned long, unsigned long,
--		enum memmap_context, struct vmem_altmap *);
-+		enum memplug_context, struct vmem_altmap *);
- extern void setup_per_zone_wmarks(void);
- extern int __meminit init_per_zone_wmark_min(void);
- extern void mem_init(void);
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 8379432f4f2f..ec254ab793b5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -824,10 +824,6 @@ bool zone_watermark_ok(struct zone *z, unsigned int order,
- 		unsigned int alloc_flags);
- bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
- 		unsigned long mark, int highest_zoneidx);
--enum memmap_context {
--	MEMMAP_EARLY,
--	MEMMAP_HOTPLUG,
--};
- extern void init_currently_empty_zone(struct zone *zone, unsigned long start_pfn,
- 				     unsigned long size);
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
++#include <linux/kgdb.h>
+ #include <linux/smp.h>
  
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e9d5ab5d3ca0..fc21625e42de 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -729,7 +729,7 @@ void __ref move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
- 	 * are reserved so nobody should be touching them so we should be safe
- 	 */
- 	memmap_init_zone(nr_pages, nid, zone_idx(zone), start_pfn,
--			MEMMAP_HOTPLUG, altmap);
-+			 MEMPLUG_HOTPLUG, altmap);
+ #include <asm/nmi.h>
+@@ -26,7 +27,9 @@ void arch_send_call_nmi_func_ipi_mask(cpumask_t *mask)
  
- 	set_zone_contiguous(zone);
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index fab5e97dc9ca..7f49fcf38b8c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5975,7 +5975,7 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
-  * done. Non-atomic initialization, single-pass.
-  */
- void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
--		unsigned long start_pfn, enum memmap_context context,
-+		unsigned long start_pfn, enum memplug_context context,
- 		struct vmem_altmap *altmap)
+ static irqreturn_t ipi_nmi_handler(int irq, void *data)
  {
- 	unsigned long pfn, end_pfn = start_pfn + size;
-@@ -6007,7 +6007,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 		 * There can be holes in boot-time mem_map[]s handed to this
- 		 * function.  They do not exist on hotplugged memory.
- 		 */
--		if (context == MEMMAP_EARLY) {
-+		if (context == MEMPLUG_EARLY) {
- 			if (overlap_memmap_init(zone, &pfn))
- 				continue;
- 			if (defer_init(nid, pfn, end_pfn))
-@@ -6016,7 +6016,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+-	/* nop, NMI handlers for special features can be added here. */
++	unsigned int cpu = smp_processor_id();
++
++	ipi_kgdb_nmicallback(cpu, get_irq_regs());
  
- 		page = pfn_to_page(pfn);
- 		__init_single_page(page, pfn, zone, nid);
--		if (context == MEMMAP_HOTPLUG)
-+		if (context == MEMPLUG_HOTPLUG)
- 			__SetPageReserved(page);
- 
- 		/*
-@@ -6099,7 +6099,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 		 * check here not to call set_pageblock_migratetype() against
- 		 * pfn out of zone.
- 		 *
--		 * Please note that MEMMAP_HOTPLUG path doesn't clear memmap
-+		 * Please note that MEMPLUG_HOTPLUG path doesn't clear memmap
- 		 * because this is done early in section_activate()
- 		 */
- 		if (!(pfn & (pageblock_nr_pages - 1))) {
-@@ -6137,7 +6137,7 @@ void __meminit __weak memmap_init(unsigned long size, int nid,
- 		if (end_pfn > start_pfn) {
- 			size = end_pfn - start_pfn;
- 			memmap_init_zone(size, nid, zone, start_pfn,
--					 MEMMAP_EARLY, NULL);
-+					 MEMPLUG_EARLY, NULL);
- 		}
- 	}
+ 	return IRQ_HANDLED;
  }
+diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+index 1a157ca3..0991275 100644
+--- a/arch/arm64/kernel/kgdb.c
++++ b/arch/arm64/kernel/kgdb.c
+@@ -17,6 +17,7 @@
+ 
+ #include <asm/debug-monitors.h>
+ #include <asm/insn.h>
++#include <asm/nmi.h>
+ #include <asm/traps.h>
+ 
+ struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] = {
+@@ -353,3 +354,23 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ 	return aarch64_insn_write((void *)bpt->bpt_addr,
+ 			*(u32 *)bpt->saved_instr);
+ }
++
++void ipi_kgdb_nmicallback(int cpu, void *regs)
++{
++	if (atomic_read(&kgdb_active) != -1)
++		kgdb_nmicallback(cpu, regs);
++}
++
++#ifdef CONFIG_SMP
++void kgdb_roundup_cpus(void)
++{
++	struct cpumask mask;
++
++	cpumask_copy(&mask, cpu_online_mask);
++	cpumask_clear_cpu(raw_smp_processor_id(), &mask);
++	if (cpumask_empty(&mask))
++		return;
++
++	arch_send_call_nmi_func_ipi_mask(&mask);
++}
++#endif
 -- 
-2.28.0
+2.7.4
 
