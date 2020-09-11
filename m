@@ -2,100 +2,127 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A44C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2E6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15685206B8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D9F20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S5AaYjku"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1+Ed3W2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725929AbgIKKZv (ORCPT
+        id S1725937AbgIKK0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
+        Fri, 11 Sep 2020 06:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgIKKZu (ORCPT
+        with ESMTP id S1725832AbgIKK0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:25:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21B8C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:25:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gf14so1480197pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:25:49 -0700 (PDT)
+        Fri, 11 Sep 2020 06:26:00 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F12AC061573;
+        Fri, 11 Sep 2020 03:26:00 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a17so10951611wrn.6;
+        Fri, 11 Sep 2020 03:26:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=e46DHbzTBFXI2qUO06Xr5hYaBwt3naS56LAsBV+A8t0=;
-        b=S5AaYjkuSLMxqDh1NKhipUCvP8LgUI4CrWq0Gy+35B9PP8LBCI/Pf2buHxS6pb8Wbt
-         yYzgLIwcAA1qjq+oAhM6N2dy39Q70v5y0XGOPpwGVSn9Ihb0wWEQ1LccJDresNLt1Y1l
-         MRykiJAhxTBrXPmgcaVL+jKTiqA9B+uniRY8Q=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=21EoBCl87XC1NO2i6drkzML1/dr52jA/hARHSp1Fc2E=;
+        b=P1+Ed3W2Klb359zDaQ3VdPbuJ+HCEc0FZvDORcWLr8ImmEG3lfXuoxQbgAJUAWnI7g
+         UkxkLq68QJEaTV1JHgCG3r04AT2d9JETgs+EC5tRWU6M3h/FonWEjln6nKzFykhyd6KD
+         gSDGPyD69gbeiiEC3W+nthUWqXN4/w1OVqDubGIzyl/a+dn2ONXG64eGETL5V+EHoIEf
+         vvIi+FGAlvOunpbfGvt5qgRJm+lrOQktTHW98lemYBz0k2LB7EqdhkcWngdfapeuGE2x
+         lWQv5fp5AvFMrN80wRU6QljgrEQaYlofLC+w7lzEmoi8Tgd1jN7SBMqL+hIpYCrQDELz
+         KT7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e46DHbzTBFXI2qUO06Xr5hYaBwt3naS56LAsBV+A8t0=;
-        b=S40GNVwBmjpItk/MIEPcvAGlLvGrMfiEl6Rcf73gmOdnHJFDHJkPuKxJyKnGakjQQe
-         AWAEUtOCc3b/bF2T+WS9QW8mnlL6limf0pYuzbMftKulIiRBGHB4oFbko8o18Uq98PpV
-         D5RgY3LuhAYTJNDcfYfoVDrR9MRct5/cE4x6i37tTZLBgKI/3ML80+xyhG9bEiJtnrRY
-         0oL3JT8ZpXZR48O98BwQGac37LdH+t1axDlO6cEEbOdf8nbeczvaC103+sQNBlfvBv41
-         xRQy3eiRowegsWZqf+FaxtCnb+p2Up1GfukZHp3y243tfbSLsvLTdXsjuE2IOy3CBeww
-         mwZg==
-X-Gm-Message-State: AOAM531DAsCj7/GKCIej2Q4XZeSSG5B4uUOkKN0h5+XxT0RqEwIB41WO
-        wcs/Q8EFFMgzyig5iqesgVtOfw==
-X-Google-Smtp-Source: ABdhPJxPDMHj7bY9B1+rquyIhx1L1LA2oRdhPi5GLC9/YQnGbN3wlM27C1EJ7k/EZkniTjjK6iCpNA==
-X-Received: by 2002:a17:90a:ad8b:: with SMTP id s11mr1642230pjq.40.1599819948441;
-        Fri, 11 Sep 2020 03:25:48 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id i17sm1929584pfa.2.2020.09.11.03.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 03:25:47 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, poza@codeaurora.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v2] iommu/dma: Fix IOVA reserve dma ranges
-Date:   Fri, 11 Sep 2020 15:55:34 +0530
-Message-Id: <20200911102534.25218-1-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=21EoBCl87XC1NO2i6drkzML1/dr52jA/hARHSp1Fc2E=;
+        b=JtavHGQ4VnZMd7SUuAI9kD3vzEh+xPtVsT8u2cmHhnFbhRuRaj+ZhdtKw9QDMFxO6A
+         xqKbsl0tYjeBzsfSSGDpdCk+Yn8m6qpTe77/3dsP0v0yqnZW6L5caDIxtn5PJ49tYqwR
+         oTUVkSQmTD48XJDEKb60K5ILgi8KYxr5ZN3ALV890wmOeIdPX4yHrHsY7536hwzLIfx3
+         fEG9DEOlovJrbPrgnp5AVq3EbYLnks56fsuQ8aohpganvjVe+rAJ0dSoE5xwatf9Xt3N
+         RtUUAqTFJlQljmkc/rqM7taBsxqYd1xbAk/XpUfKxRs5lUM1Wpn823YfRdYAPWYxor44
+         jV3A==
+X-Gm-Message-State: AOAM533mzUAodNFl7rt1VD/Z1LbbZfqxZohSKWivrjE0aDG5jDm9GyiW
+        uw4fHUVKGqKerW7hQz0jp8MhdqBvcvE=
+X-Google-Smtp-Source: ABdhPJzhL7o/Txn57DLioRk8IXjuDJfV6byacktM2XhZ2JuWJTijmw8N4f7c4ioaGyJW8X9ub3j9hQ==
+X-Received: by 2002:a5d:4842:: with SMTP id n2mr1389314wrs.260.1599819958504;
+        Fri, 11 Sep 2020 03:25:58 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id i3sm3675810wrs.4.2020.09.11.03.25.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 03:25:57 -0700 (PDT)
+Subject: Re: [PATCH 09/24] clock_getcpuclockid.3: Remove unneeded cast
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-10-colomar.6.4.3@gmail.com>
+ <c2ac877a-3491-2044-aa87-b9cfcec25e44@gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <dd15974e-50ea-e456-2675-ec6002839aad@gmail.com>
+Date:   Fri, 11 Sep 2020 12:25:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <c2ac877a-3491-2044-aa87-b9cfcec25e44@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix IOVA reserve failure in the case when address of first memory region
-listed in dma-ranges is equal to 0x0.
+Hi Michael,
 
-Fixes: aadad097cd46f ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
----
-Changes from v1:
-   Removed unnecessary changes based on Robin's review comments.
+On 2020-09-11 09:48, Michael Kerrisk (man-pages) wrote:
+> Hi Alex,
+> 
+> On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+>> Member 'tv_nsec' of 'struct timespec' is of type 'long' (see time.h.0p),
+>> and therefore, the cast is completely redundant.
+> 
+> Good catch! Patch applied.
+> 
+> Cheers,
+> 
+> Michael
 
- drivers/iommu/dma-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ping :)
+Did you really apply it? hehe
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 5141d49a046b..682068a9aae7 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -217,7 +217,7 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
- 			lo = iova_pfn(iovad, start);
- 			hi = iova_pfn(iovad, end);
- 			reserve_iova(iovad, lo, hi);
--		} else {
-+		} else if (end < start) {
- 			/* dma_ranges list should be sorted */
- 			dev_err(&dev->dev, "Failed to reserve IOVA\n");
- 			return -EINVAL;
--- 
-2.17.1
+Cheers,
 
+Alex
+
+> 
+>> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+>> ---
+>>   man3/clock_getcpuclockid.3 | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/man3/clock_getcpuclockid.3 b/man3/clock_getcpuclockid.3
+>> index 283f92557..050d7ad13 100644
+>> --- a/man3/clock_getcpuclockid.3
+>> +++ b/man3/clock_getcpuclockid.3
+>> @@ -154,7 +154,7 @@ main(int argc, char *argv[])
+>>       }
+>>   
+>>       printf("CPU-time clock for PID %s is %ld.%09ld seconds\en",
+>> -            argv[1], (long) ts.tv_sec, (long) ts.tv_nsec);
+>> +            argv[1], (long) ts.tv_sec, ts.tv_nsec);
+>>       exit(EXIT_SUCCESS);
+>>   }
+>>   .EE
+>>
+> 
+> 
