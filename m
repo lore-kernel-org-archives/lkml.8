@@ -2,159 +2,132 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AD0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94D7C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6AD7221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE0822204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:02:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d8x8waj0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcuOWDRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgIKKCm (ORCPT
+        id S1725852AbgIKKCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:02:42 -0400
-Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:30087
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbgIKKCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:02:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AmpsSXbpuyBR/Q8Ljc+DTCsX2GxGVQKhZLGjLgFbDehgz9YBdoT3WHbBDo/fCsd5LtpRWumNHvXyJ7e6FV1sgCseakiCB7VU6pEg24ykWmTe36sVy0ocK01hDuMNQHP2+RQ/RGnhAq6+2aMw3fM+LqO+5R8Jo9lo1N7hN7O22TjbC16+1VG6TLIrKRHmLF+Hx9E3LQR3j6pM2c8C62e1T0HE1hRvRVmLO4tE2qJNfY6af/hicH3AhExpKV9BvVj6WiAGqRlFT5VH0cl+EHQ4Af+rRgy1zHTMsRBw5ouvjPfiBe45Gdux6/0OpJ43dpLLuBf6eHrcllM4WJtN+kVLdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=053rAeRHgvgGekkV5G7YqZrWAoFWV2KxWsiSYovR4K4=;
- b=UTk2TYO+qvcB+B5siT4w1+8Atx0g76CxLykZVffocXau6DOTGcijFubB/2/gKSENpqOUm+EsusAGnsDxPm3LARlu7BwFvBlsre4si7xJ+Cdh5kZ/ZKKW2YQsoFVab/0mgWmEmDpX5Uesi/z1kf2Ae3pISBh9NirO+37vLEh9tzD22JI91keo3u04bb5qVz+KaevEcUH8rKB1lDet1b7SCprOFiu53qb3sztgbGuu7xlyxlXtSE+uDW2vI3xpESR/9U8/UOd3oTylpxunICAV0oNOHGpCeb0LN+6OYkfurNNiEn11lq8GOqmPrTIEP89UYxnm7yBKDVD1AlZLJDgLcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=053rAeRHgvgGekkV5G7YqZrWAoFWV2KxWsiSYovR4K4=;
- b=d8x8waj05rVGa9tt4chU/WR/5xLb0PY9VBFsHVD51FpUe/rIa39X94mijyI5PDAlYmIDSDxyhb2JZ0SOPZUh/SyarxVUgfsvJ+bSWyk0eWOKo00X/DMrXeBQXqYRN21rvmpNYEa0s1PgmEfwicKsH0u2w3girZ8a9IjOy99Wywk=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB6069.eurprd04.prod.outlook.com (2603:10a6:20b:72::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Fri, 11 Sep
- 2020 10:02:27 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3370.016; Fri, 11 Sep 2020
- 10:02:27 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Topic: [PATCH 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Index: AQHWh+zi0lUqzLc3V0GYGgj5TwZkHqljAcZggAANXwCAACPckA==
-Date:   Fri, 11 Sep 2020 10:02:27 +0000
-Message-ID: <AM6PR04MB4966F55C01E44A581A186AAE80240@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1599795053-5091-1-git-send-email-peng.fan@nxp.com>
- <1599795053-5091-2-git-send-email-peng.fan@nxp.com>
- <AM6PR04MB49661958310D649508AB698B80240@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB6PR0402MB276056780BC661041A5D604C88240@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-In-Reply-To: <DB6PR0402MB276056780BC661041A5D604C88240@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a10d0865-2acc-4829-3dc3-08d85639ca1f
-x-ms-traffictypediagnostic: AM6PR04MB6069:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB60697DB7D00D4F76531649D980240@AM6PR04MB6069.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IFYrRXHIdllgacdCS24l1q9uF/1uvRIyGqtLtNZSecCN+VdYbMwbs9NTa4OZ+h5ssB055jVYLz7TKYR9hNTBBEma8FhdleQSgRG+AmH2EXx8Zws6SDYVL3lhBzsPXqeadZi/QyU28anQWmI48L+jAuxfVNJ+2qpyiNm7LAsLZtVmZOTCw58b7BE3kwpXCM47T65jDdYHqLMyllYr8SkJw8dKz5UbPHgLPBzi+uskz73QK5HkXDuwumuMdhlum0Cn1i1IwH6y4RaIeDB5iPSNFnSyXiUSH9SMKsjLwr+G4SSAOs5+6HTVVApzROuS8oQIJLVgYxpVs0S1FhNAUoQH1rvDlafwwa6gwcJAIgH0MlKgd8ndHYET6ShaMBIbyOoGEDo93xfbr5P0b36eOdE5dg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(396003)(346002)(136003)(376002)(86362001)(64756008)(66446008)(66476007)(66556008)(8676002)(9686003)(478600001)(55016002)(186003)(26005)(7696005)(71200400001)(6506007)(53546011)(4326008)(66946007)(966005)(8936002)(52536014)(5660300002)(2906002)(44832011)(33656002)(110136005)(76116006)(54906003)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: KkRNuPWf3v8maajkRHoh88/iMk7EmvFH0F98qBRV0m/Fz2DiMOAP0WdipQ9LFyPdo8ODREG5Lven06s0gD+4YPqR0U8YvnfV3vbaI1zD6XXwbiIhRBsYWe05gB0Nk7R+eBCcyntBkYJ6LyLIdu5UgWuR4/fTXR1UBG44zLtLaDp9CUvJVwjY028zR0i7By+Qa28Pt6XxRIwcfV6QiryYg8h8ccDaPM7y/yyjB+FY/H7P7B5MeKbGCTzxVH9j7a2nBBksjgTi+xnQk5irA+DHRpaQRRV4VjGhDP4Z8173GOMgApH2hst+yyAsY/wJ4+yVPkIP59orL+R3uwlntBcUmYy8kKLEW+ebaQ0oKzefKELAk71HU7y35gXZu4wtz3HIeON1rcMovl2afRc8Y3Mx6WgdQege7G4snWnTOTdmMrsVchz/n4KbpAfXUFUgZkMKA2ZMb6oIw3Eo3jYmqS9SNJ1VHzAAQRaEQ+axNGwedIEN8BDWnKKtk7bssTvksf5hRFVizXFEQh/xmba/6KbirP8GrEg1VcLfd7039DM89D/m1clcRP2bTMkQ4/zzyt3i/XK+XtrP6WGFh/7Yn/4CYrxGHDRS08zUxJdmeo5GrEtrIXzMwwI5bEKkrwVZGpRwYYUJ6iTeZdaaQ7BsR8D5xw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 11 Sep 2020 06:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgIKKCi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 06:02:38 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D0DC061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:02:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a15so11963763ljk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Eh1nUbbqqxmB+MKme978FO9UEGUoY3WguilYpMQusuk=;
+        b=xcuOWDRbIDvw+1MEKspQA2iMxMTo9XEAUGy07DDQvqxP/VvpaWDP/aefC8l686YZqu
+         iZYULv+YIEO++E7KXA5HYTCJy0h2+XPdQ3tHzqTPT1AQcSw3/htJZmGPWAL93Xm1NfJV
+         zZWieoYB9vLaPGbgColBzNf8YhWm+gSYR+ImLeTcifhxsi82dO9f1AGHt5X4dLamlGjC
+         AzEj923i+cOiO373HfWlaS1JC/IOi1rpp+pPnhVrSkRpLj02unZsKz9A87DKtO7Nfy+D
+         Ymmc48R6E2DJLVSc/p+Aq0jOP9Hcvbr44laVgD8PZkv7B8D7q3noB0F9nADHR8/qJc/D
+         CNIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Eh1nUbbqqxmB+MKme978FO9UEGUoY3WguilYpMQusuk=;
+        b=diz5skIxPcvp0m0/rvYN+v8coTJNiHLKqlqkQizVNM0GpdL+nM4nrIM8wRV+sjPBcF
+         Gu99ukdvnOaG3iUdUr27J2mKlJSy1mqr/Tz6tNE5TBKSDtzxZ7XwHuWCRTuNDbiLnuOK
+         MoWjtYQrq+UKndLpdueGtuJDNVEbP4zgxM+cnKr9OVbIlH1IwUNcxa7hGyb4yj0NtFSY
+         /yatf+oIB8ViEXRMEn3uFKra72cpmgQEGg/G51YJX3IGitvWJ/tgVDwd30qjQw4/tmng
+         zdQLIrPP9K6jq/eHnUngn137nEA1UQ8MbNHraTOXRnvuQ3m+2M47JJFbZCwDKrGKYVDE
+         v4yg==
+X-Gm-Message-State: AOAM530+JV8zQL7OsYxkhX7MmaYuNaA4UzCLOtrR/kuP9uJkkFrn/ooq
+        e9Q/PrBlnnVM1FpteERqOMga6K8AnvDAdEFd
+X-Google-Smtp-Source: ABdhPJxiBLPmP1E/qIaYCcGGeDDFnt0WmCiOBtVezSksq/cPIltEuXfNjvc2sEwBZkUelUcQKMgd3Q==
+X-Received: by 2002:a05:651c:10d:: with SMTP id a13mr522824ljb.217.1599818556165;
+        Fri, 11 Sep 2020 03:02:36 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-252.NA.cust.bahnhof.se. [98.128.181.252])
+        by smtp.gmail.com with ESMTPSA id j7sm369179lfb.41.2020.09.11.03.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 03:02:35 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.9-rc5
+Date:   Fri, 11 Sep 2020 12:02:34 +0200
+Message-Id: <20200911100234.754555-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a10d0865-2acc-4829-3dc3-08d85639ca1f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2020 10:02:27.4786
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AAHzp3eE25LnZp5HPiW6jSMEUMoxJeB1BWpk3k9sgsLdx8hGWuJCiDyy1dwQsvCt1o+iFQPVvYID0k198qHq4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6069
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCj4gU2VudDogRnJpZGF5LCBTZXB0
-ZW1iZXIgMTEsIDIwMjAgMzo0NSBQTQ0KPiANCj4gPiBTdWJqZWN0OiBSRTogW1BBVENIIDEvNF0g
-ZHQtYmluZGluZ3M6IGZzbDogYWRkIGkuTVg3VUxQIFBNQyBiaW5kaW5nDQo+ID4gZG9jDQo+ID4N
-Cj4gPiA+IEZyb206IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+ID4gU2VudDogRnJp
-ZGF5LCBTZXB0ZW1iZXIgMTEsIDIwMjAgMTE6MzEgQU0NCj4gPiA+DQo+ID4gPiBBZGQgaS5NWDdV
-TFAgUG93ZXIgTWFuYWdlbWVudCBDb250cm9sbGVyIGJpbmRpbmcgZG9jDQo+ID4gPg0KPiA+ID4g
-U2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4gPiAtLS0NCj4g
-PiA+ICAuLi4vYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9pbXg3dWxwLXBtYy55YW1sICAgfCAzMw0K
-PiA+ICsrKysrKysrKysrKysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0
-aW9ucygrKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+ID4gRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvaW14N3VscC1wbWMueWFtbA0KPiA+DQo+
-ID4gSSB3b25kZXIgaWYgd2UgY2FuIG1lcmdlIGl0IGludG8gdGhlIGV4aXN0IGlteDd1bHAgcG0g
-YmluZGluZyBkb2MuDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9m
-cmVlc2NhbGUvZnNsLGlteDd1bHAtcG0ueWFtbA0KPiANCj4gTm90IHN1cmUgYWJvdXQgdGhpcy4N
-Cj4gDQoNCklmIG5vdCBtZXJnZSwgd2UgcHJvYmFibHkgbmVlZCBjaGFuZ2UgdGhlIG5hbWUgb2Yg
-ZXhpc3RpbmcgcG0gYmluZGluZyBkb2MgdG8gYXZvaWQgY29uZnVzaW5nLg0KZS5nLg0KZnNsLGlt
-eDd1bHAtcG0ueWFtbCAtPiBmc2wsaW14N3VscC1zbWMueWFtbC4NCg0KPiA+DQo+ID4gPg0KPiA+
-ID4gZGlmZiAtLWdpdA0KPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-YXJtL2ZyZWVzY2FsZS9pbXg3dWxwLXBtYy55YW1sDQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2lteDd1bHAtcG1jLnlhbWwNCj4gPiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjMzYTMxZDg3ZGQ2
-Mg0KPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gKysrDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9pbXg3dWxwLXBtYy55YW1sDQo+ID4gPiBA
-QCAtMCwwICsxLDMzIEBADQo+ID4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MA0KPiA+ID4gKyVZQU1MIDEuMg0KPiA+ID4gKy0tLQ0KPiA+ID4gKyRpZDogaHR0cDovL2Rldmlj
-ZXRyZWUub3JnL3NjaGVtYXMvYXJtL2ZyZWVzY2FsZS9pbXg3dWxwLXBtYy55YW1sIw0KPiA+ID4g
-KyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0K
-PiA+ID4gKw0KPiA+ID4gK3RpdGxlOiBpLk1YN1VMUCBQb3dlciBNYW5hZ2VtZW50IENvbnRyb2xs
-ZXIoUE1DKSBEZXZpY2UgVHJlZQ0KPiA+ID4gK0JpbmRpbmdzDQo+ID4gPiArDQo+ID4gPiArbWFp
-bnRhaW5lcnM6DQo+ID4gPiArICAtIFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+ID4g
-Kw0KPiA+ID4gK3Byb3BlcnRpZXM6DQo+ID4gPiArICBjb21wYXRpYmxlOg0KPiA+ID4gKyAgICBp
-dGVtczoNCj4gPiA+ICsgICAgICAtIGVudW06DQo+ID4gPiArICAgICAgICAgIC0gZnNsLGlteDd1
-bHAtcG1jLW00DQo+ID4gPiArICAgICAgICAgIC0gZnNsLGlteDd1bHAtcG1jLWE3DQo+ID4NCj4g
-PiBDYW4gd2UgY2hhbmdlIHRvIHRoZSBleGlzdCBuYW1pbmcgcGF0dGVybiB3aGljaCBhbHNvIGFs
-aWduIHdpdGggSFcNCj4gPiByZWZlcmVuY2UgbWFudWFsPw0KPiA+IGUuZy4NCj4gPiBmc2wsaW14
-N3VscC1wbWMwDQo+ID4gZnNsLGlteDd1bHAtcG1jMQ0KPiANCj4gVGhpcyB3YXMgcmVqZWN0ZWQg
-YnkgU2hhd24gYmVmb3JlLg0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
-MzkwNTkxLw0KDQpJIGRpZG4ndCBzZWUgTkFDSyBmcm9tIFNoYXduIGZyb20gYWJvdmUgVVJMLg0K
-U2hhd24gc2VlbWVkIHRvIGp1c3QgYXNrIGZvciBzb21lIGNsYXJpZmljYXRpb25zIHdoeSBuZWVk
-IG51bWJlciBzdWZmaXguDQpBbSBJIG1pc3NlZCBzb21ldGhpbmc/DQoNClJlZ2FyZHMNCkFpc2hl
-bmcNCg0KPiANCj4gVGhhbmtzLA0KPiBQZW5nLg0KPiANCj4gPg0KPiA+IEFsaWduZWQgd2l0aDoN
-Cj4gPiBmc2wsaW14N3VscC1zbWMxDQo+ID4gZnNsLGlteDd1bHAtcGNjMg0KPiA+IGZzbCxpbXg3
-dWxwLXNjZzENCj4gPg0KPiA+IFJlZ2FyZHMNCj4gPiBBaXNoZW5nDQo+ID4NCj4gPiA+ICsNCj4g
-PiA+ICsgIHJlZzoNCj4gPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiA+ICsNCj4gPiA+ICtyZXF1
-aXJlZDoNCj4gPiA+ICsgIC0gY29tcGF0aWJsZQ0KPiA+ID4gKyAgLSByZWcNCj4gPiA+ICsNCj4g
-PiA+ICthZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiA+ICsNCj4gPiA+ICtleGFtcGxl
-czoNCj4gPiA+ICsgIC0gfA0KPiA+ID4gKyAgICBwbWMwOiBwbWMtbTRANDEwYTEwMDAgew0KPiA+
-ID4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsaW14N3VscC1wbWMtbTQiOw0KPiA+ID4gKyAg
-ICAgICAgcmVnID0gPDB4NDEwYTEwMDAgMHgxMDAwPjsNCj4gPiA+ICsgICAgfTsNCj4gPiA+IC0t
-DQo+ID4gPiAyLjI4LjANCg0K
+Hi Linus,
+
+Here's a PR with a couple of MMC fixes intended for v5.9-rc5. Details about the
+highlights are as usual found in the signed tag.
+
+Please pull this in!
+
+Kind regards
+Ulf Hansson
+
+
+The following changes since commit f4d51dffc6c01a9e94650d95ce0104964f8ae822:
+
+  Linux 5.9-rc4 (2020-09-06 17:11:40 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.9-rc4
+
+for you to fetch changes up to f0c393e2104e48c8a881719a8bd37996f71b0aee:
+
+  mmc: sdio: Use mmc_pre_req() / mmc_post_req() (2020-09-07 08:57:44 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - sdio: Restore ~20% performance drop for SDHCI drivers, by using
+mmc_pre_req() and mmc_post_req() for SDIO requests.
+
+MMC host:
+ - sdhci-of-esdhc: Fix support for erratum eSDHC7
+ - mmc_spi: Allow the driver to be built when CONFIG_HAS_DMA is unset
+ - sdhci-msm: Use retries to fix tuning
+ - sdhci-acpi: Fix resume for eMMC HS400 mode
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdio: Use mmc_pre_req() / mmc_post_req()
+
+Chris Packham (1):
+      mmc: sdhci-of-esdhc: Don't walk device-tree on every interrupt
+
+Douglas Anderson (1):
+      mmc: sdhci-msm: Add retries when all tuning phases are found valid
+
+Raul E Rangel (1):
+      mmc: sdhci-acpi: Clear amd_sdhci_host on reset
+
+Ulf Hansson (1):
+      mmc: mmc_spi: Allow the driver to be built when CONFIG_HAS_DMA is unset
+
+ drivers/mmc/core/sdio_ops.c       | 39 ++++++++++--------
+ drivers/mmc/host/Kconfig          |  2 +-
+ drivers/mmc/host/mmc_spi.c        | 86 +++++++++++++++++++++++----------------
+ drivers/mmc/host/sdhci-acpi.c     | 31 ++++++++++----
+ drivers/mmc/host/sdhci-msm.c      | 18 +++++++-
+ drivers/mmc/host/sdhci-of-esdhc.c | 10 +++--
+ 6 files changed, 123 insertions(+), 63 deletions(-)
