@@ -2,94 +2,68 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423AAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FF321D91
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mCkPoBCG"
+	by mail.kernel.org (Postfix) with ESMTP id A57E2221EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgIKLQO (ORCPT
+        id S1725802AbgIKLQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKLQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:16:03 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F14C061573;
-        Fri, 11 Sep 2020 04:16:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=36ZkAoKN0iM1NJFnvg/F9ZJ4FujUHf3nFyIgYS8P20E=; b=mCkPoBCG7tgxr2kE/Qp1HVqZL
-        h81Rtwehr+ARfsh7bmrzSubSwZ6TrCNOpp4KKPoPmEJWZjFv+2/sFHEGgvvsP3NuwFJonTkPZXghH
-        6npI0zHhfXgkZ7oV4DOdcPY8RVKLb51mdOONSN9MuAvFR1TUnY/vLnoEzjW+Zx/UO0D8gAosOohhi
-        9mjZR+SSIO18EltTo6oerFym0wiGncjRKliSmXjXiHTg4LC4kqTIBnz8gOo7A3piVYJcjryjVQadS
-        JIOopqxmg0two8HXps05Mob6s6ZDn8ZLxDm88ujhBsL1KmRGK2aZQQa2BASe6ElJ5fbcT8GtpFDo7
-        TBU2NvCsQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33012)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1kGh21-0007Ia-To; Fri, 11 Sep 2020 12:15:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1kGh1z-0008Az-Jq; Fri, 11 Sep 2020 12:15:51 +0100
-Date:   Fri, 11 Sep 2020 12:15:51 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/3] ARM/keystone: move the DMA offset handling under
- ifdef CONFIG_ARM_LPAE
-Message-ID: <20200911111551.GG1551@shell.armlinux.org.uk>
-References: <20200910054038.324517-1-hch@lst.de>
- <20200910054038.324517-3-hch@lst.de>
+        Fri, 11 Sep 2020 07:16:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:60196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgIKLQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:16:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 710BC113E;
+        Fri, 11 Sep 2020 04:16:08 -0700 (PDT)
+Received: from [192.168.1.205] (unknown [10.37.8.109])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D3E73F68F;
+        Fri, 11 Sep 2020 04:16:04 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+To:     Mark Brown <broonie@kernel.org>,
+        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Arokia Samy <arokia.samy@nxp.com>,
+        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
+        Paul Yang <Paul.Yang@arm.com>
+References: <20200911082806.115-1-kuldip.dwivedi@puresoftware.com>
+ <20200911110018.GD4895@sirena.org.uk>
+From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
+Message-ID: <9a6ce5d0-2f39-eb55-c3a9-cae2a8093fbc@arm.com>
+Date:   Fri, 11 Sep 2020 14:16:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910054038.324517-3-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200911110018.GD4895@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:40:37AM +0200, Christoph Hellwig wrote:
-> The DMA offset notifier can only be used if PHYS_OFFSET is at least
-> KEYSTONE_HIGH_PHYS_START, which can't be represented by a 32-bit
-> phys_addr_t.  Currently the code compiles fine despite that, a pending
-> change to the DMA offset handling would create a compiler warning for
-> this case.  Add an ifdef to not compile the code except for LPAE
-> configs.
+On 9/11/20 1:00 PM, Mark Brown wrote:
+> On Fri, Sep 11, 2020 at 01:58:06PM +0530, kuldip dwivedi wrote:
+> 
+>>   	/* find the resources - configuration register address space */
+>>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "fspi_base");
+>> +#ifdef CONFIG_ACPI
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +#endif
+> 
+> This is buggy, it is equivalent to just removing the name based lookup
+> since we'll do the name based lookup then unconditionally overwrite the
+> results with an index based lookup.
+> 
 
-However, to have use of the high physical offset, LPAE needs to be
-enabled, which ensures that phys_addr_t is 64-bit.
-
-I believe that DMA is non-coherent on this platform unless the high
-physical address is used. Or something like that.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Also, note that CONFIG_ACPI kernels may still boot in DT mode.
