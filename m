@@ -2,93 +2,137 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA54C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6308EC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE4B4221ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599840977;
-	bh=HMBcymtk77RYwGv4d9Wm4/VkWxcFFMRQguW6QFOqV+A=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=NXid56rfJaKO91oGkFOb+8rdBeFvdZQhcVJ436M0lAdEn9tjgflDj00JMEcAErmsD
-	 ZBU78RHHUH832v2e1MOipvQa5Q4W8ilkKVaigGxVXXaT1JO+d5Qt0bR7LT9nyQRzBb
-	 oduLXSzfNPv38qxNwkXE/MIuaQj9dz1cqKzj2z1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 17E10221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ZWVmLkT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgIKQPq (ORCPT
+        id S1726221AbgIKQQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:15:46 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:44838 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgIKPb7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:31:59 -0400
-Received: by mail-ej1-f67.google.com with SMTP id r7so14320810ejs.11;
-        Fri, 11 Sep 2020 08:31:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7GFfCvow/YG2PC4PNBavqBdXR1kQF0CV+iI3Qu1eqX0=;
-        b=I89XRvtihi1LZe6mAXmx21WHa2vE2/ZO8otgupGS2QXH8DTyKUcw+Q0kgwpwIueA4W
-         pcWOiA80F+BpYg6Op52gn+b5EzFmret5z06CGKVQkZ+czlXSgMfId698fpaX/DyqB5kK
-         w/Jk/Dlte5Nz/Q5rURzkkYHvcCxxoGfHC8L0HwgFXwRD8iKmucehEwWXFhXu7/+4XCcG
-         wqe9A3FMJtKbGjVptyltt46FFgxIl9IV5lymh077QVuMMklXwRF4BwqndvylH4lIcBzY
-         X2axWpnpYhweehyHT/5s104A/MHm2wKQE81jX1hrM16xWhxaXrF3hgwYLMre8k0cgmpk
-         hKAw==
-X-Gm-Message-State: AOAM531GX/W+DQYVRSyVwN6rbfiRluVgFVdBnqBh55Dd3qjAlknF73v3
-        TxsVOmr0qC/VRSdHL+iPeB4=
-X-Google-Smtp-Source: ABdhPJzDn5Wly6uwRoIOHH+dj9CVJvOVyEn3ZbrNf8ZH0nahm2X7W9H9Osv6jT+VeStW/xhQuu62Gg==
-X-Received: by 2002:a17:906:1787:: with SMTP id t7mr2699547eje.173.1599838317355;
-        Fri, 11 Sep 2020 08:31:57 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id y9sm1890741edo.37.2020.09.11.08.31.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 11 Sep 2020 08:31:56 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 17:31:53 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] Input: ep93xx_keypad - Fix handling of
- platform_get_irq() error
-Message-ID: <20200911153153.GA18022@kozik-lap>
-References: <20200828145744.3636-1-krzk@kernel.org>
+        Fri, 11 Sep 2020 12:16:19 -0400
+Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:64199
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726254AbgIKPbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:31:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HUuwFrAFt0BXxZpZ5sAB1JfS/BbWb7Qd4xwpGyXIeBi1nmUmb/2RP+2M1oVyCXhuA/A3dr3yc1MxqXdXs12to92mXMMRJWFG0O7ie0zok3qX4d5r4lACrYNphVSzftouoCxTJNE8dH0VPgEASlHZyamDu0a7EOfbc8clm2vNWxyHYV+xlsQ+k7dm+9dUp3XLmSrwaNC1pTwRrtZuN/d0uNh3XNbsDMYK2O3EOPsjJhzWc4mxmoctYhJqQtxDQYJV91L4ZVp9csuhBpiFSgrY2tmpEWLItoCSjcpVp/tXr+Tle0jZAm7jiJf+AFHa2Vdwqrw0j1CO+mC6KI3HAbR3wQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NXQbotspShQWj9Yr1Q+K1incV2jns7FI486mHk60Ncs=;
+ b=lGnyukz7IbcmbUSxOcsZLyxkeqSQ3Pqb6riGunMDcJaOklaIWv8jf1qAhW1ZHknGIoWHlEYGzp1lo5dumDYWuR/I189YWowzIdHktBmC+lrZMkIb0gQ2LgTxf5TZFgWJrHeTSgiGbq76A/2dmzHpTFcG4ypZQjPD/rR98r1vkLdiE9tk/izyMZO7XTkuFeo4UlDX3XnGa+5bFwRDR2pIVmbkXUhV6myxUuFURSpav28zSm9Gw9N1pwxG8TCsu7Yjk3kdefFzjxXAlHIuM/zJgR+ndduT/i6Dk5ypEQ8WbIOq9n0bALc3GKIHeNOwRc5SE1JX/Az9JNfpN1KXnPwJoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NXQbotspShQWj9Yr1Q+K1incV2jns7FI486mHk60Ncs=;
+ b=ZWVmLkT7gsA1TzFELP1r4XFb8yeLqWFhvqyD+uzog3IYJESdbNvmCYr2DN7y9O2gaW+AuYHZErv8rnWHhjkR/KHlUd88w7nczRy6ZcwYwFg3kkv1f1Ko3ruqe9i/OLdY8jZwtDTcsJwU9QBBbV7AWS3PZ7NmTYHf+XAL66m6QCg=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR04MB4271.eurprd04.prod.outlook.com
+ (2603:10a6:803:3f::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.17; Fri, 11 Sep
+ 2020 13:49:13 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3%6]) with mapi id 15.20.3370.016; Fri, 11 Sep 2020
+ 13:49:13 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     laurentiu.palcu@oss.nxp.com, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/imx/dcss: fix 64-bit divisions
+Date:   Fri, 11 Sep 2020 16:48:27 +0300
+Message-Id: <20200911134827.32142-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+X-ClientProxiedBy: AM0PR05CA0076.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::16) To VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200828145744.3636-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR05CA0076.eurprd05.prod.outlook.com (2603:10a6:208:136::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 11 Sep 2020 13:49:12 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2c3318c1-bb20-48fe-da3e-08d85659777d
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4271:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4271483E5056AAFEC36C77B3BE240@VI1PR04MB4271.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +LjYTHCCte8KDtYR7OZV3i8CI+xK2fbe67knwtaAaqTlAe3VYiSdk9ApYxrGwp7eXZulHVz3Poq6CQ5lHarGVz3U/vE2FrOMJufbs85kmbSLnRNNzfVteSIy5Se+hFzq7VYKuqBBNNm1cVOHKjZm+Lahc8P/1DWDjmXLE1hCmYtYdMB7SarsIcoIUZwsTbYflMSDUjPXRMp0zSyF2mQsJlnaxB00kS7ldQJkZXgjCo4GRE4RMHIblbICDCq5DoBa4n6RPtG27LbNIKu4MuEV4TShbpknrzd2u4ANdzXTppgXlCKLR+fq0R/wu9zOPO2hC981SzOWiF+/7rfbpdiJh61Ec3VLL4MJAc6SkHtW2iY9wEkxCxBWaABvAHZGzTv4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(6512007)(186003)(16526019)(26005)(6666004)(2616005)(44832011)(956004)(316002)(6486002)(86362001)(4326008)(8676002)(6506007)(2906002)(478600001)(7416002)(4744005)(8936002)(110136005)(66556008)(1076003)(66946007)(66476007)(5660300002)(83380400001)(52116002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: AkNuUeJHTr+pPN1eJUfsII9So7qGNZKL2V/9kCv7/BiMPgaRxNY9f1vpC5A0Ff+nQsPxndtlYG2NrJ1tobpvpGwDf0gJht/aONcL9+fL55QSGenjts8vUt7FD5JuDmO+6NtYgQYKyxcKQNxjM8ZcDdUcN1d4MfbGyxDLzsf/r2G85GszJ98ykhCNGS0D4Q9DO/NxNCpRW8TqnRQpi4V9ETydJJvkAOjiD5U+bzM7uQYsE5IGlwNAW5TpxQkIKY1XMHI31cZSTdH00sIwGY0y4ewplkYBZXr+e6uH2DPJQbpSIC5apQFaUz8uItgF2hHDhhL2R6MgdYeNeepx6UDTI1Opq2ReC++BCEWBoscCfucFRGBObAx4uLcoSNYkLSrllA68tZposqGFZxUqAMQgN/u03z5dAkFDAPls7IERW3Qa/c2ZA+KXfQCUbVgVhbh3jZBNGrt4DEwl3/fRSIJesPT189VIgUgTyjMfNeF0ViZZYv+DF8Q7Bla9o7RcS2XZ4uLJsM/sCQeoR3bp/vgsw3jx7lTP1GXLqSNZtxcg/CttqHVyhqlPeLz32RRaJ9puIez/Esv/o10AeminQ9RdHyv5ibL3R4PAMZDVdeBe3MTD4AKGu/++1eTRD03n8ye2JFN3EEMUzqHpRVua1RAlIg==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c3318c1-bb20-48fe-da3e-08d85659777d
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 13:49:13.2698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zLf+AfJ0l3zRzoWm+sy3MjZmY8m5SLh6VG7ubsCXlwrQmE/2H8uB5eRwzKidGyHva6I0CD9lggdj1X6JLGZp6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4271
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 04:57:41PM +0200, Krzysztof Kozlowski wrote:
-> platform_get_irq() returns -ERRNO on error.  In such case comparison
-> to 0 would pass the check.
-> 
-> Fixes: 60214f058f44 ("Input: ep93xx_keypad - update driver to new core support")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. None
-> ---
->  drivers/input/keyboard/ep93xx_keypad.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Use div_s64() for the 64-bit divisions. This would allow the driver to compile
+on 32-bit architectures, if needed.
 
-Hi Dmitry,
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+---
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Any comments on the series?
-
-Best regards,
-Krzysztof
+diff --git a/drivers/gpu/drm/imx/dcss/dcss-scaler.c b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
+index cd21905de580..7c1e0e461244 100644
+--- a/drivers/gpu/drm/imx/dcss/dcss-scaler.c
++++ b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
+@@ -134,7 +134,7 @@ static int div_q(int A, int B)
+ 	else
+ 		temp -= B / 2;
+ 
+-	result = (int)(temp / B);
++	result = (int)(div_s64(temp, B));
+ 	return result;
+ }
+ 
+@@ -237,7 +237,7 @@ static void dcss_scaler_gaussian_filter(int fc_q, bool use_5_taps,
+ 			ll_temp = coef[phase][i];
+ 			ll_temp <<= PSC_COEFF_PRECISION;
+ 			ll_temp += sum >> 1;
+-			ll_temp /= sum;
++			ll_temp = div_s64(ll_temp, sum);
+ 			coef[phase][i] = (int)ll_temp;
+ 		}
+ 	}
+-- 
+2.17.1
 
