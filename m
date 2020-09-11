@@ -2,89 +2,146 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409B0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA989206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841781;
-	bh=y1LJBbMFa89dqzjbeHMhQ4rAd65Fc+zMq+ReRBh/ovM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMrd8igQ6w3VjzBF4dSaAN1k3QvK9K+UMUqU1L/TcQ13l0LioHHr9tlAGvCE0aE5P
-	 M8ItH/p39f92p/YlSC+4pUnU6olYjfSPugJQXL5mws6UsJriVIDzVU+uqWR9fdCMgi
-	 VnAiAp+1dqQESV3KwzQsz8xZXrQy88TzVQFnNzhw=
+	by mail.kernel.org (Postfix) with ESMTP id 05A0E22225
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgIKQ3j (ORCPT
+        id S1726638AbgIKQ3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60860 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:29:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:31677 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgIKQ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:28:04 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5DFC2220D;
-        Fri, 11 Sep 2020 16:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599841664;
-        bh=y1LJBbMFa89dqzjbeHMhQ4rAd65Fc+zMq+ReRBh/ovM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmyVGJIAPADskTsILeikOFLbmcSyzw7En3FjZH2oKTx0CCKg/mM0eAUJjse+7NxoL
-         pAMR08AXz3O9TtOM2/9R8ZjEF2CtxL+wS4DHPoCB5dNZB/NZpuu1TfijL1GWSRk2BV
-         Ebgqmln4MsOo3b5sUFkUAdlso6AnuV9wc+/RVgwo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/7] power: supply: charger-manager: drop unused charger assignment
-Date:   Fri, 11 Sep 2020 18:27:28 +0200
-Message-Id: <20200911162729.3022-6-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911162729.3022-1-krzk@kernel.org>
-References: <20200911162729.3022-1-krzk@kernel.org>
+        id S1726306AbgIKQ23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:28:29 -0400
+IronPort-SDR: YREpwWfwOeD0UPOyTTCQF8x61gsF0Jof46jsue7D293q+jsfaPM/ozeCF8rlkTRMWFrxFPUCxl
+ VYJtuD78buLA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9741"; a="159738486"
+X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
+   d="scan'208";a="159738486"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:28:22 -0700
+IronPort-SDR: MRaDYQOI+Y37b7XzL5ehbRYu0W1Y6xATNgCXz6/+joIgRZb3IlK35VMeSAxF2m26DAwL9nQmAe
+ UHXSMxDELuzQ==
+X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
+   d="scan'208";a="481379882"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:28:22 -0700
+Date:   Fri, 11 Sep 2020 09:28:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH][next] KVM: SVM: nested: fix free of uninitialized
+ pointers save and ctl
+Message-ID: <20200911162814.GC4344@sjchrist-ice>
+References: <20200911110730.24238-1-colin.king@canonical.com>
+ <87o8mclei1.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8mclei1.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'charger' variable in error path is assigned but never used:
++Joerg
 
-  drivers/power/supply/charger-manager.c: In function 'charger_manager_probe':
-  drivers/power/supply/charger-manager.c:1626:29: warning: variable 'charger' set but not used [-Wunused-but-set-variable]
+On Fri, Sep 11, 2020 at 01:49:42PM +0200, Vitaly Kuznetsov wrote:
+> Colin King <colin.king@canonical.com> writes:
+> 
+> > From: Colin Ian King <colin.king@canonical.com>
+> >
+> > Currently the error exit path to outt_set_gif will kfree on
+> > uninitialized
+> 
+> typo: out_set_gif
+> 
+> > pointers save and ctl.  Fix this by ensuring these pointers are
+> > inintialized to NULL to avoid garbage pointer freeing.
+> >
+> > Addresses-Coverity: ("Uninitialized pointer read")
+> > Fixes: 6ccbd29ade0d ("KVM: SVM: nested: Don't allocate VMCB structures
+> > on stack")
+> 
+> Where is this commit id from? I don't see it in Paolo's kvm tree, if
+> it's not yet merged, maybe we should fix it and avoid introducing the
+> issue in the first place?
 
-Fixes: c1f73028f75d ("power: supply: charger-manager: Update extcon functions")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/power/supply/charger-manager.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Ya, AFAIK the series as not been applied.
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index 07992821e252..b2ca79173f95 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -1622,13 +1622,8 @@ static int charger_manager_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_reg_extcon:
--	for (i = 0; i < desc->num_charger_regulators; i++) {
--		struct charger_regulator *charger;
--
--		charger = &desc->charger_regulators[i];
--
-+	for (i = 0; i < desc->num_charger_regulators; i++)
- 		regulator_put(desc->charger_regulators[i].consumer);
--	}
- 
- 	power_supply_unregister(cm->charger_psy);
- 
--- 
-2.17.1
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > ---
+> >  arch/x86/kvm/svm/nested.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> > index 28036629abf8..2b15f49f9e5a 100644
+> > --- a/arch/x86/kvm/svm/nested.c
+> > +++ b/arch/x86/kvm/svm/nested.c
+> > @@ -1060,8 +1060,8 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+> >  	struct vmcb *hsave = svm->nested.hsave;
+> >  	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+> >  		&user_kvm_nested_state->data.svm[0];
+> > -	struct vmcb_control_area *ctl;
+> > -	struct vmcb_save_area *save;
+> > +	struct vmcb_control_area *ctl = NULL;
+> > +	struct vmcb_save_area *save = NULL;
+> >  	int ret;
+> >  	u32 cr0;
+> 
+> I think it would be better if we eliminate 'out_set_gif; completely as
+> the 'error path' we have looks a bit weird anyway. Something like
+> (untested):
 
+Ya, I agree that duplicating the single line for this one-off case is
+preferable to creating a convoluted set of labels.
+
+Joerg, can you fold this change into a prep patch for v4 of your "KVM: SVM:
+SEV-ES groundwork" series?
+
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 28036629abf8..d1ae94f40907 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -1092,7 +1092,8 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>  
+>         if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE)) {
+>                 svm_leave_nested(svm);
+> -               goto out_set_gif;
+> +               svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+> +               return 0;
+>         }
+>  
+>         if (!page_address_valid(vcpu, kvm_state->hdr.svm.vmcb_pa))
+> @@ -1145,7 +1146,6 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+>         load_nested_vmcb_control(svm, ctl);
+>         nested_prepare_vmcb_control(svm);
+>  
+> -out_set_gif:
+>         svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+>  
+>         ret = 0;
+> 
+> -- 
+> Vitaly
+> 
