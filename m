@@ -2,96 +2,126 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79224C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39120221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138D6221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="n0vjFDUz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=puresoftware-com.20150623.gappssmtp.com header.i=@puresoftware-com.20150623.gappssmtp.com header.b="BCsdMv/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgIKMCq (ORCPT
+        id S1725847AbgIKMDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58376 "EHLO
+        Fri, 11 Sep 2020 08:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKMC0 (ORCPT
+        with ESMTP id S1725793AbgIKMC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:02:26 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E87C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:02:25 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id v123so9554750qkd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:02:25 -0700 (PDT)
+        Fri, 11 Sep 2020 08:02:27 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF9DC061757
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:02:27 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id nw23so13451326ejb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:02:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D0ZOTZlli3YnxT/U7k9I9lkvcB/+y93d4fQplk7yHJk=;
-        b=n0vjFDUzG4qczfNYYEQo0/PtVzhG6uwWdXe6pYAlq+bKliwiMGLEi6iZHnmN+MUf96
-         vigHIL3FLLDBmZ208RA29lbJ853ZlKTcsSZwEjZwRKXuOo3+6wjXFz3y0FmOLmVRhoeE
-         Oh1X21fEv4NbB+KAJR1egsZQ+e47DXNgoawyg+ok8Z3QC60bO3VMpeY+iag7pMD+MWIY
-         SW52UKuvEUkCM3OcftS7ajs50GcI6NhFtwyGZnocEKuyJ3vdMYuu1Pu9MqgVhoApnikw
-         NHC4nNhv//lnRtQ3N/pEnV9a0UkT4bLFNi9SQis9HU+SWBg5yPBUOd3+JQmQPQXkdNuj
-         3rag==
+        d=puresoftware-com.20150623.gappssmtp.com; s=20150623;
+        h=return-receipt-to:from:references:in-reply-to:mime-version
+         :thread-index:disposition-notification-to:date:message-id:subject:to
+         :cc;
+        bh=MB8KR/cuoizxWcYxBx51GB3knSYT3+P7WpQmn9XtoNc=;
+        b=BCsdMv/qZu57CnDlGgysC+BzA1p1EgCDicm8DWRwDUMUhQpDR2Rg9NqQWbXGN6WLZd
+         8O48ycLGqIlQA/c1IXwmaUSIkPV/4xU2qzadkGdTrQ8RzNavt3YE2CeSY2gUGk9+SPvL
+         qGVGVM3x4UBWPSanOTKXqlsOTB3kiwRL5ItGdyIsHHAN0Aips5EhoJohuqZic/kKGbhL
+         bEuOfCuQFUH2Pf0k5u2jmgBM18O5G0BGEBIYAB81moyikw1L9GJ1BNWvcl75mibJR+Cj
+         MXrp0kepHyZVXjzQK9uzr6VFb/iQ1tt4PrXhDOscYK4ONpbe/SQvsyxbGHIIiW4kj2eE
+         kSZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D0ZOTZlli3YnxT/U7k9I9lkvcB/+y93d4fQplk7yHJk=;
-        b=pZK2APKygWoW2uBgWhiIWzFhaQKVoSeeJYggafwToYyM3XS0HIfwHYNasHMjuOlZDE
-         ne4V9XddZ8ocknpVrqvhMaPPeGDCh5tL+w+bV/ROlNcAnlz5KY4ac/gym41BW1CzMtp4
-         7CvyHmsIwGi/56NwhiZ0+3uO0sLKAryAyGT3fAk2CR5xO5HZA0GKMnXotcgZtYuehFJr
-         zDjCiw3s4Pk4KWWCL/aeHvRZECosDk1nqrBAt7llaKinp9OiBTMa6TE2qrixopDypINQ
-         c+SuQv/+oWLWvFCrKWrpOu9S4T40JB2EzRq+NUIjuk/y3qx8J/qXIEXeoqwamnt7dIYB
-         UhBQ==
-X-Gm-Message-State: AOAM532pFjY4rrqWB/1LG+dKcaFgGRneTy9lSBjoMwUTZ6sDAup+A03N
-        u5MJqja/NNtCx2tDibQrioBC2g==
-X-Google-Smtp-Source: ABdhPJygUW9F4tubVaZ2xlkL1ks7ALZ2LGBS6K77k5kTwE5xiNcEmIj8mnjJVgK2kwSwFGx45VighA==
-X-Received: by 2002:a37:4711:: with SMTP id u17mr1100114qka.54.1599825744148;
-        Fri, 11 Sep 2020 05:02:24 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 202sm2417189qkg.56.2020.09.11.05.02.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 05:02:23 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kGhl0-004mB3-60; Fri, 11 Sep 2020 09:02:22 -0300
-Date:   Fri, 11 Sep 2020 09:02:22 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+cc6fc752b3819e082d0c@syzkaller.appspotmail.com>
-Cc:     dledford@redhat.com, leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in ucma_close (2)
-Message-ID: <20200911120222.GT87483@ziepe.ca>
-References: <0000000000008e7c8f05aef61d8d@google.com>
+        h=x-gm-message-state:return-receipt-to:from:references:in-reply-to
+         :mime-version:thread-index:disposition-notification-to:date
+         :message-id:subject:to:cc;
+        bh=MB8KR/cuoizxWcYxBx51GB3knSYT3+P7WpQmn9XtoNc=;
+        b=YN7OEFSgcX0nPEKrZpRk6SrgB9R4X7nD2skJt+6IrfNBWePDemEHiwJENKJEOyNg5g
+         +NyAzkQPXjstk4LLtWAVudzelXuSjQzEf+Mp2kIer9v8DbyHd5x2CeNnJtrIlE6Izxcl
+         awNtjGSbyjmOrdxqJWH+nsIWdFPEltA5iPkhkbGNpLIXXn9OOG1dMnfdTAAMBLR1BTjg
+         VZqhDrA9I9R/pcNOMM6I1N/u9Fl1wkR3tFBOxVQuczYu7QRsEQoJ9UcfjsVVazLKFhp2
+         Vf1/bLPpUVL962QvTMTuvOcPVfWeHJOa5FN0I172gak10iIl+njJOB5Cm0wqOgw21sXp
+         AMNQ==
+X-Gm-Message-State: AOAM5319CMQU2IfGMZG5XeVslsLGDhqZoIRXvqJ9A3SJr7mpgLJQNqY6
+        C6eR6EFg71fL6CZE6b72Bd9Fc1HFJDLNZwAWIhhymg==
+X-Google-Smtp-Source: ABdhPJzsWOdDJHOMjHDQrcC6m+XTKm8emOB/0is3CABIgP+xvTnUtGAWCNKsftUnsw9k4IThb+kSo1/KyqI2UpdtODI=
+X-Received: by 2002:a17:906:915:: with SMTP id i21mr1638194ejd.113.1599825745575;
+ Fri, 11 Sep 2020 05:02:25 -0700 (PDT)
+From:   Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>
+References: <20200911082806.115-1-kuldip.dwivedi@puresoftware.com>
+ <20200911110018.GD4895@sirena.org.uk> <9a6ce5d0-2f39-eb55-c3a9-cae2a8093fbc@arm.com>
+In-Reply-To: <9a6ce5d0-2f39-eb55-c3a9-cae2a8093fbc@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000008e7c8f05aef61d8d@google.com>
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQK/xI2P7uxCBV5mjF/xjkF3M143zQFA0ZONANRlRQCngC+DsA==
+Date:   Fri, 11 Sep 2020 17:32:24 +0530
+Message-ID: <01f42ace75808be76c78a4a67b78ec06@mail.gmail.com>
+Subject: RE: [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+To:     Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Arokia Samy <arokia.samy@nxp.com>,
+        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
+        Paul Yang <Paul.Yang@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:09:24AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    34d4ddd3 Merge tag 'linux-kselftest-5.9-rc5' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1002ea2d900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a9075b36a6ae26c9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cc6fc752b3819e082d0c
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1600e053900000
+> -----Original Message-----
+> From: Ard Biesheuvel <ard.biesheuvel@arm.com>
+> Sent: Friday, September 11, 2020 4:46 PM
+> To: Mark Brown <broonie@kernel.org>; kuldip dwivedi
+> <kuldip.dwivedi@puresoftware.com>
+> Cc: Ashish Kumar <ashish.kumar@nxp.com>; Yogesh Gaur
+> <yogeshgaur.83@gmail.com>; linux-spi@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Varun Sethi <V.Sethi@nxp.com>; Arokia Samy
+> <arokia.samy@nxp.com>; Samer El-Haj-Mahmoud <Samer.El-Haj-
+> Mahmoud@arm.com>; Paul Yang <Paul.Yang@arm.com>
+> Subject: Re: [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+>
+> On 9/11/20 1:00 PM, Mark Brown wrote:
+> > On Fri, Sep 11, 2020 at 01:58:06PM +0530, kuldip dwivedi wrote:
+> >
+> >>   	/* find the resources - configuration register address space */
+> >>   	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> >> "fspi_base");
+> >> +#ifdef CONFIG_ACPI
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0); #endif
+> >
+> > This is buggy, it is equivalent to just removing the name based lookup
+> > since we'll do the name based lookup then unconditionally overwrite
+> > the results with an index based lookup.
+> >
+>
+> Also, note that CONFIG_ACPI kernels may still boot in DT mode.
+In case of ACPI we need to use indexed based lookup.
+For reference Please see , Line :23 and Line:24
+https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platfor
+ms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Dsdt/FSPI.asl?h=LX2160_UEFI_
+ACPI_EAR3
+Here I can think two possible approaches
+1. Changes in DT to use indexed based lookup
+2. We Can check for ACPI fw node to distinguish between DT and ACPI like
+below..
+if (is_acpi_node(f->dev->fwnode))
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+else
+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+"fspi_base");
+Please share your thoughts
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git 308571debccd7004acf02ea1b7163a96ad772292
-
-Jason
+Thanks
