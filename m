@@ -2,93 +2,151 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F45CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C37C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E83820855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D42821D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:36:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OHP6NY3a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5l6BWXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725809AbgIKJf5 (ORCPT
+        id S1725823AbgIKJgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:35:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
+        Fri, 11 Sep 2020 05:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKJf4 (ORCPT
+        with ESMTP id S1725710AbgIKJgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:35:56 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4544FC061573;
-        Fri, 11 Sep 2020 02:35:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ahpwR8TBD77mfd9yBZswIDaF9X/0frtlU0juWV51o08=; b=OHP6NY3aVOUVW3+DAGp1oAqGkO
-        q3PdpUUqSCkfF2gvVwOHaYA1ry/mGdx4NY0KusJ8T3y7ESDvIy9Q3PzZa68tAt8/H9oyoaW1xriGW
-        Z71b19zBiFVDB/Do1FW0CXVKFQceiAXqjginTsLNoWrg0Gj1J0Rk4fFefOJ6waWqmZK6nlAItoVXV
-        hvfUdoJkDMViNd463bFeki5JX+mmuG3QRGWDHUNHh+4GrloMX/mCD96nF8NVD6pSR5iLeJp8hesWK
-        ZRDcf3a4f4Qw4/NsEwCa2CBLwx+y5RydyMtBaFHhA1ORp9zatiRuY5mfj6E8BNmNbyF9CMZRDTlTd
-        6ekTfp9g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGfTC-0003fQ-SK; Fri, 11 Sep 2020 09:35:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AA6143003D8;
-        Fri, 11 Sep 2020 11:35:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 92EE52B06B001; Fri, 11 Sep 2020 11:35:49 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 11:35:49 +0200
-From:   peterz@infradead.org
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v6 2/9] kernel: entry: Support TIF_SYSCAL_INTERCEPT on
- common entry code
-Message-ID: <20200911093549.GE1362448@hirez.programming.kicks-ass.net>
-References: <20200904203147.2908430-1-krisman@collabora.com>
- <20200904203147.2908430-3-krisman@collabora.com>
+        Fri, 11 Sep 2020 05:36:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C7FC061573;
+        Fri, 11 Sep 2020 02:36:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m6so10836551wrn.0;
+        Fri, 11 Sep 2020 02:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=igCOZXDM6PaF8F143CEO3P3+VcsnAkp4IkwrhE7k3LY=;
+        b=e5l6BWXPw4r/OyKUPIpda19V7aQFzeVPZrO8U+/nzgRVNJfJH1dRxBiYZOpPbNNe2s
+         kcVRvbuIsWNPfon8yteSJ3SU60aFDi4pi1yMoFSEjrmsr+b420JWk72sXueprHaBMfPn
+         irxiAtgkUO45x33G8BEoaMcWMo2RJbXdjoCpMiqXNReyxJWJFijhmLgkRIWkIXkdfHy/
+         QOyOWjDFKLjWYL+dGqLtdE6SEfJeOTASCBbdotsSBaEsC73LTwa4om2ZdRn2uJmgPKsq
+         AOFyOt5Bq4bsFOQltWDCJiEphhRMW+Wqo5azEOOwFt9RpMCky/17s5MN5/ljiwXzOXpy
+         rhQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=igCOZXDM6PaF8F143CEO3P3+VcsnAkp4IkwrhE7k3LY=;
+        b=KL+h/ormvmlNrZ7viQsJPTTxdO+MuFNZU4cEKL/lXBBrZki0+QasMzFpVJZjvUBVEk
+         k7WgLu1vyp06r06qFc5wcHWSJuPFvl2jSKDb7ddhHIXG9fRorSyDE363B0+I0zvvtUA6
+         tkILnuWwNbXX47P5czpNseDB1clB9ZqTXDukKbzlth6NzBUhy+fPYh0vzBReyAW3xp3z
+         GJoBE7fjJxJJn76mffhlOQemfptATytB81VDeti8YSFZcSHeSLqG4LuJPUQODBWf5xJK
+         pXG6HQWcbpOfv8m+0SpKyxhsBl98WoSRmHmi0s9peZNdKUAEto7RvY6O1GCt5iKwknj9
+         ld7g==
+X-Gm-Message-State: AOAM532asHSRAWkCR/DxLdTy5aGDJvnB13tkeDCF3TGRkSI+oXdC/pWT
+        Jep/ZuSmhaJ4GSB23CR4LlrraUPZrgw=
+X-Google-Smtp-Source: ABdhPJw//kNWx4ai1cDM24sdziIkXkKoH219MDadcte3j6AKx1hbBQ938lVzBXtNAAb+BIAbYRB/Dg==
+X-Received: by 2002:adf:ec47:: with SMTP id w7mr1232552wrn.175.1599816993479;
+        Fri, 11 Sep 2020 02:36:33 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id t22sm3791467wmt.1.2020.09.11.02.36.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:36:32 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 11/24] stat.2: wsfix
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-12-colomar.6.4.3@gmail.com>
+ <9e397d55-34bd-3df7-57cc-e5726198bb97@gmail.com>
+ <11344e3e-1c0b-b61a-4794-807714b1c09d@gmail.com>
+ <f4b14c0d-248d-669f-b748-3890de7bb73a@gmail.com>
+ <81da8e01-d0bf-958a-3533-aad25f75bbe4@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <b36543ee-b827-3457-99ca-84c00ca54e6b@gmail.com>
+Date:   Fri, 11 Sep 2020 11:36:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904203147.2908430-3-krisman@collabora.com>
+In-Reply-To: <81da8e01-d0bf-958a-3533-aad25f75bbe4@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:31:40PM -0400, Gabriel Krisman Bertazi wrote:
-> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-> index efebbffcd5cc..72ce9ca860c6 100644
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -21,10 +21,6 @@
->  # define _TIF_SYSCALL_TRACEPOINT	(0)
->  #endif
->  
-> -#ifndef _TIF_SECCOMP
-> -# define _TIF_SECCOMP			(0)
-> -#endif
-> -
->  #ifndef _TIF_SYSCALL_AUDIT
->  # define _TIF_SYSCALL_AUDIT		(0)
->  #endif
+On 9/11/20 11:34 AM, Alejandro Colomar wrote:
+> 
+> Hi Michael,
+> 
+> On 2020-09-11 11:19, Michael Kerrisk (man-pages) wrote:
+>> On 9/11/20 11:16 AM, Alejandro Colomar wrote:
+>>> Hi Michael,
+>>>
+>>> On 2020-09-11 09:25, Michael Kerrisk (man-pages) wrote:
+>>>> See my reply to patch 10/24.
+>>>
+>>> As with 10/24, here's the new version.
+>>
+>> Thanks, Alex. Applied.
+>>
+>> Cheers,
+>>
+>> Michael
+> 
+> I accidentally used a tab instead of spaces in my last commit.
+> This fixes that by using only spaces.
+> 
+> Please apply this patch on top of (already applied) v2 11/24.
 
-Why doesn't this add:
+Thansk, Alex. Patch applied.
 
-#ifndef _TIF_SYSCALL_INTERCEPT
-#define _TIF_SYSCALL_INTERCEPT		(0)
-#endif
+Cheers,
 
-?
+Michael
 
+> ----------------------------------------------------------------------
+>  From daad53ccc36a75a0a9928e0807de38925b9b1433 Mon Sep 17 00:00:00 2001
+> From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+> Date: Fri, 11 Sep 2020 11:29:40 +0200
+> Subject: [PATCH v3 11/24] stat.2: wsfix
+> 
+> I accidentally used a tab instead of spaces in my last commit.
+> This fixes that by using only spaces.
+> 
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+> ---
+>   man2/stat.2 | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/man2/stat.2 b/man2/stat.2
+> index 08af24c56..7e5417480 100644
+> --- a/man2/stat.2
+> +++ b/man2/stat.2
+> @@ -665,7 +665,7 @@ main(int argc, char *argv[])
+>       }
+> 
+>       printf("ID of containing device:  [%lx,%lx]\en",
+> -	    (unsigned long) major(sb.st_dev),
+> +            (unsigned long) major(sb.st_dev),
+>               (unsigned long) minor(sb.st_dev));
+> 
+>       printf("File type:                ");
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
