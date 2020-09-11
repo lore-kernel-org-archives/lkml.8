@@ -2,198 +2,225 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0F5C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31631C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B37972078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D272A2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:53:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="vS8pt+Nf"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="avFPWJr3";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y+lLvNsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725613AbgIKDw1 (ORCPT
+        id S1725764AbgIKDxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgIKDwX (ORCPT
+        Thu, 10 Sep 2020 23:53:30 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54567 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725355AbgIKDx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:52:23 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44CEBC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:52:22 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s65so4581187pgb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9IV7HFefw1NIebU4itnNPdbQ5lYPIj2T1tDtgZeUqmc=;
-        b=vS8pt+NfBa8G2NMGBwUEeLv/u22mt84ER/i3XbVd5kfjLV6iWfj5LWSD9iDugOdnJi
-         pnvRudVBrBizJJ2mMTSXO7123cysHit9IRTi5qxshFE/l7znxMilhIyVgzMTUvlwwIVl
-         5AsiwAofwATThXaG71cGe9qJ5ra5/xRjuLPd+L0OFDGgo44tZC0UBijE2aHZuWcaxczx
-         qFpOsOWdJz4NGHwe5S27nH4cb8sWsXOnqCFD7HKGxVRjRnIEHhv/G8beTkJBMWa48og/
-         hwbTtHoUabIfXa/kz0FZFks5V6kzqblc0tEHNIurI3lJQddNf7TkTdF8QrPjis93fL1d
-         fwVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9IV7HFefw1NIebU4itnNPdbQ5lYPIj2T1tDtgZeUqmc=;
-        b=jrOr9Tl/ZhMH3QNZuv4we0nrc9wF4+d3laZPxCB8WdwRcKoTNAqyx3uXpWahRE2HMc
-         gsG1J5zf0Gs/lNWkCXVsoQLLfLuWh1/Oo48fp3QFqI+hlGAvtoLMh/bHoLn6OK+9DK9W
-         nIep1+s9fdsMbH6cT8o1Wvb6oxy37wNBjsN4e7FBOJ6Y4DXBTTqmEFq3fHWSCDDa/bH6
-         yv17vDb8c7263OFHAnejxlwoLtZZ6EFvfaQHf1ATBNWrqZo0VC+/O5hI9FNsUz7zfh3v
-         5226qZnOXKJ8rO0Ny/DeUj3jcIhYZwsFbBXpdgtiOaUP52hPOUz/0JeDGKMi1m3hmFeI
-         z4Vg==
-X-Gm-Message-State: AOAM530ZJ31zdffnfozdba6/bwSMA+smGJ1crh3C0NeePxTluBYjS0Js
-        58intd0NQBSo5/gzmyQHRSwo/syFPw8/KgwDpvT18m98VQk+IPmMjN4=
-X-Google-Smtp-Source: ABdhPJxibbvSxKxO41BlACQqUJkBTdPD+KmfwtRs9Q8JsaaA0IpfDaDkzF2vKoPJHR+yf3YXwcRu+z8uwQCaNwHKXUs=
-X-Received: by 2002:a62:38ce:0:b029:138:838f:dd53 with SMTP id
- f197-20020a6238ce0000b0290138838fdd53mr328874pfa.2.1599796341600; Thu, 10 Sep
- 2020 20:52:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200910084258.22293-1-songmuchun@bytedance.com> <CALvZod5JQWGHUAPnj9S0pKFQreLPST441mZnp+h=fue_nnh1yQ@mail.gmail.com>
-In-Reply-To: <CALvZod5JQWGHUAPnj9S0pKFQreLPST441mZnp+h=fue_nnh1yQ@mail.gmail.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Fri, 11 Sep 2020 11:51:42 +0800
-Message-ID: <CAMZfGtUncFZZe2RDb54ALMt1DAVqBxAD1TQrpjei1H5nRbH6jg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm: memcontrol: Add the missing numa stat
- of anon and file for cgroup v2
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 10 Sep 2020 23:53:26 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 729BC5C00BA;
+        Thu, 10 Sep 2020 23:53:23 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 23:53:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=27Tdf84G1KGqhUUZOW9nEKHS6aZj81m
+        woMOigS8sbT4=; b=avFPWJr3VFTJ+verjATzoQlx3Jf3XukjQhu1345u2edVkJZ
+        +T+SJBJnmKuAiN1fBfvSFOTbaoJcoqjP94YGS3TyTgYD5TsLpr2jePhmwAN90DVm
+        UrF7BbmxKxNsK8/d3K9zKpqfLWiWEjamxUOTZq/VLp96frXnDtc4wH8oXklk12Js
+        1FGQEmvt5Ss0NWMRWwkXCn3yWmuHoyPzpkA2CP0vjqF6AkuplPfIbCyw7D47mlOD
+        t8fTUoZY2r2XHcfm1nuuGRfXIXKZWEtm0RJZMyPVwNblo9vJcBMcLMxQoCOJfgNf
+        TqVbrZypZJxE7TQb2azMXDAmHybuDPMSSs0OAtg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=27Tdf8
+        4G1KGqhUUZOW9nEKHS6aZj81mwoMOigS8sbT4=; b=Y+lLvNsdohw37DiOcG6SND
+        olYNRMM5F3YTlpV1b8zg3F8tpXN5PqajX+whKagZUCcptd2meEusBe11e0REOacM
+        fN1VV2eIEPrYWQOrAtYWq3/pO5jwf6vQF4roLFcf3L682INAvtXRZRLMYeejOkIm
+        gdFNZ+LVhNqNUS7UzTJmeZE7gG70b8Ekls/TGirg5dW4J6ujgaWPvvwIWYQ1JOq1
+        vq824Di7553GDNsOZ0otyub8nM4TN6LVFEEA4OZyFzGww5f0NoW8gA2KFmZq8+db
+        Wve+5H8m9r5UBSRiDsa3E3u5BQwQlpNThUbs/ddeWoXwBkjiACDb0P8KBQBAZEvw
+        ==
+X-ME-Sender: <xms:svRaX3BRSJLRCJpxvLqgJQk6ZEYxh6sYkFp9tvmsj8ix-h-ufKYYtg>
+    <xme:svRaX9hoK70b7NJ_lOEZ2jEHa5GDyG4UrekX8a7T5Kt9L0fQUmgduaoMY72gXApRK
+    uMECN8YslHQqW4VWg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
+    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:svRaXykMLnr4aX0CKAFmrbkRng9q5BMEjPtELyIzCxLvmlJcAd8iJQ>
+    <xmx:svRaX5xvN22jUWRCXkumdSXXvggCC4LT_rlP0PSNZNmsMyp51r0WlA>
+    <xmx:svRaX8Rx9LarFMuM8kDpz7kmKk0LrVXE09NQxkEuNQ4R5X3uI_mT9w>
+    <xmx:s_RaX7HyLEdOE1uB_Z8Xxt7uzn9YcNoGCAVpvSGLPD6K4p1sOpm2KA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 85FBAE00A6; Thu, 10 Sep 2020 23:53:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
+Mime-Version: 1.0
+Message-Id: <38661d63-67ca-4dc9-942d-90a3b8cd8351@www.fastmail.com>
+In-Reply-To: <CACPK8XemZ2YG+nFBwy7sDoo8==YvnVYxt+1mx8QfBCxotG7K6g@mail.gmail.com>
+References: <20200910105440.3087723-1-andrew@aj.id.au>
+ <20200910105440.3087723-3-andrew@aj.id.au>
+ <CACPK8Xf-jys=F0Uqg-hYH-eDThmd5yOSNeC7+vLhra3GdOK1Zw@mail.gmail.com>
+ <57d48d7a-7cea-4be7-92bd-8f3b93f84a06@www.fastmail.com>
+ <CACPK8XemZ2YG+nFBwy7sDoo8==YvnVYxt+1mx8QfBCxotG7K6g@mail.gmail.com>
+Date:   Fri, 11 Sep 2020 13:23:01 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_mmc:_sdhci-of-aspeed:_Expose_data_sample_phase?=
+ =?UTF-8?Q?_delay_tuning?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 12:02 AM Shakeel Butt <shakeelb@google.com> wrote:
->
-> On Thu, Sep 10, 2020 at 1:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
+
+
+On Fri, 11 Sep 2020, at 13:03, Joel Stanley wrote:
+> On Fri, 11 Sep 2020 at 02:49, Andrew Jeffery <andrew@aj.id.au> wrote:
 > >
-> > In the cgroup v1, we have a numa_stat interface. This is useful for
-> > providing visibility into the numa locality information within an
-> > memcg since the pages are allowed to be allocated from any physical
-> > node. One of the use cases is evaluating application performance by
-> > combining this information with the application's CPU allocation.
-> > But the cgroup v2 does not. So this patch adds the missing information.
 > >
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > ---
->
-> I am actually working on exposing this info on v2 as well.
->
-> >  mm/memcontrol.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 44 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 75cd1a1e66c8..c779673f29b2 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -1492,10 +1492,34 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
-> >         return false;
-> >  }
+> > On Fri, 11 Sep 2020, at 11:32, Joel Stanley wrote:
+> > > On Thu, 10 Sep 2020 at 10:55, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > > >
+> > > > Allow sample phase adjustment to deal with layout or tolerance issues.
+> > > >
+> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > > ---
+> > > >  drivers/mmc/host/sdhci-of-aspeed.c | 137 +++++++++++++++++++++++++++--
+> > > >  1 file changed, 132 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > > index 4f008ba3280e..641accbfcde4 100644
+> > > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> 
+> > > > +static void
+> > > > +aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
+> > > > +                          const struct aspeed_sdhci_phase_desc *phase,
+> > > > +                          uint8_t value, bool enable)
+> > > > +{
+> > > > +       u32 reg;
+> > > > +
+> > > > +       spin_lock(&sdc->lock);
+> > >
+> > > What is the lock protecting against?
+> > >
+> > > We call this in the ->probe, so there should be no concurrent access going on.
 > >
-> > +#ifdef CONFIG_NUMA
-> > +static unsigned long memcg_node_page_state(struct mem_cgroup *memcg,
-> > +                                          unsigned int nid,
-> > +                                          enum node_stat_item idx)
-> > +{
-> > +       long x;
-> > +       struct mem_cgroup_per_node *pn;
-> > +       struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
-> > +
-> > +       VM_BUG_ON(nid >= nr_node_ids);
-> > +
-> > +       pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> > +       x = atomic_long_read(&pn->lruvec_stat[idx]);
-> > +#ifdef CONFIG_SMP
-> > +       if (x < 0)
-> > +               x = 0;
-> > +#endif
-> > +       return x;
-> > +}
-> > +#endif
-> > +
-> >  static char *memory_stat_format(struct mem_cgroup *memcg)
-> >  {
-> >         struct seq_buf s;
-> >         int i;
-> > +#ifdef CONFIG_NUMA
-> > +       int nid;
-> > +#endif
+> > Because the register is in the "global" part of the SD/MMC controller address
+> > space (it's not part of the SDHCI), and there are multiple slots that may have
+> > a driver probed concurrently.
+> 
+> That points to having the property be part of the "global" device tree
+> node.
+
+Not really. The settings are slot-specific. The only reason it's in the global
+register space is that the settings cannot be part of the SDHCI. That Aspeed
+chose to pack them in the same register, and _interleaved_ at that, is
+unfortunate.
+
+As the settings are slot-specific they should be associated with each slot's
+node. We should concentrate on representing the intent of the controls and
+not tie the devicetree representation to the register layout that Aspeed came
+up with.
+
+>  This would simplify the code; you wouldn't need the locking
+> either.
+
+IMO this is a loss for readability, so I'm not convinced it should be changed.
+The outcome is some opaque register value that is shoved in the devicetree,
+and given the baffling interleaving and choices of field sizes that's not a place
+I want to be.
+
+> 
 > >
-> >         seq_buf_init(&s, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
-> >         if (!s.buffer)
-> > @@ -1512,12 +1536,30 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
-> >          * Current memory state:
-> >          */
+> > >
+> > >
+> > > > +       reg = readl(sdc->regs + ASPEED_SDC_PHASE);
+> > > > +       reg &= ~phase->enable_mask;
+> > > > +       if (enable) {
+> > > > +               reg &= ~phase->value_mask;
+> > > > +               reg |= value << __ffs(phase->value_mask);
+> > > > +               reg |= phase->enable_value << __ffs(phase->enable_mask);
+> > > > +       }
+> > > > +       writel(reg, sdc->regs + ASPEED_SDC_PHASE);
+> > > > +       spin_unlock(&sdc->lock);
+> > > > +}
+> > > > +
+> > > >  static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> > > >  {
+> > > >         struct sdhci_pltfm_host *pltfm_host;
+> > > > @@ -155,8 +195,58 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> > > >         return (delta / 0x100) - 1;
+> > > >  }
+> > > >
+> > > > +static int aspeed_sdhci_configure_of(struct platform_device *pdev,
+> > > > +                                    struct aspeed_sdhci *sdhci)
+> > > > +{
+> > > > +       u32 iphase, ophase;
+> > > > +       struct device_node *np;
+> > > > +       struct device *dev;
+> > > > +       int ret;
+> > > > +
+> > > > +       if (!sdhci->phase)
+> > > > +               return 0;
+> > > > +
+> > > > +       dev = &pdev->dev;
+> > > > +       np = dev->of_node;
+> > > > +
+> > > > +       ret = of_property_read_u32(np, "aspeed,input-phase", &iphase);
+> > > > +       if (ret < 0) {
+> > > > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->in, 0,
+> > > > +                                          false);
+> > >
+> > > Will this clear any value that eg. u-boot writes?
 > >
->
-> Let's not break the parsers of memory.stat. I would prefer a separate
-> interface like v1 i.e. memory.numa_stat.
+> > No, see the 'enable' test in aspeed_sdc_configure_phase()
+> 
+> OK, so this branch will never cause any change in the register? Best
+> to drop it then.
 
-It is also a good idea to expose a new interface like memory.numa_stat.
+So there are two parts to the phase configuration, the phase adjustment
+value, and a switch to turn phase adjustment on or off. Both fields exist
+for both in and out phase adjustments for both slots.
 
->
-> > -       seq_buf_printf(&s, "anon %llu\n",
-> > +       seq_buf_printf(&s, "anon %llu",
-> >                        (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
-> >                        PAGE_SIZE);
-> > -       seq_buf_printf(&s, "file %llu\n",
-> > +#ifdef CONFIG_NUMA
-> > +       for_each_node_state(nid, N_MEMORY)
-> > +               seq_buf_printf(&s, " N%d=%llu", nid,
-> > +                              (u64)memcg_node_page_state(memcg, nid,
-> > +                                                         NR_ANON_MAPPED) *
-> > +                              PAGE_SIZE);
-> > +#endif
-> > +       seq_buf_putc(&s, '\n');
-> > +
-> > +       seq_buf_printf(&s, "file %llu",
-> >                        (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
-> >                        PAGE_SIZE);
-> > +#ifdef CONFIG_NUMA
-> > +       for_each_node_state(nid, N_MEMORY)
-> > +               seq_buf_printf(&s, " N%d=%llu", nid,
-> > +                              (u64)memcg_node_page_state(memcg, nid,
-> > +                                                         NR_FILE_PAGES) *
-> > +                              PAGE_SIZE);
-> > +#endif
-> > +       seq_buf_putc(&s, '\n');
-> > +
->
-> The v1's numa_stat exposes the LRUs, why NR_ANON_MAPPED and NR_FILE_PAGES?
+So this branch will cause the phase control to be disabled, but it won't
+change the phase value that was originally programmed. If we maintain
+the original semantics it shouldn't be dropped.
 
-If we want to expose the anon per node, we need to add inactive anon and
-active anon together. Why not use NR_ANON_MAPPED directly?
+However, below you suggest we maintain the configuration (both
+enable and value state) in the absence of the property, so the code
+needs to be reworked to uphold suggestion.
 
->
-> Also I think exposing slab_[un]reclaimable per node would be beneficial as well.
-
-Yeah, I agree with you. Maybe kernel_stack and percpu also should
-be exposed.
-
->
-> >         seq_buf_printf(&s, "kernel_stack %llu\n",
-> >                        (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
-> >                        1024);
-> > --
-> > 2.20.1
+> 
 > >
-
-
-
--- 
-Yours,
-Muchun
+> > >
+> > > The register should be left alone if the kernel doesn't have a
+> > > configuration of it's own, otherwise we may end up breaking an
+> > > otherwise working system.
+> >
+> > Right, I can rework that.
+>
