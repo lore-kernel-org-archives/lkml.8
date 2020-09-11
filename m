@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD74C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7B520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA972076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NW913L3M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g9CBES6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgIKKg6 (ORCPT
+        id S1725964AbgIKKhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:36:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40609 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725965AbgIKKgG (ORCPT
+        Fri, 11 Sep 2020 06:37:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30836 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725969AbgIKKgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:36:06 -0400
+        Fri, 11 Sep 2020 06:36:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599820565;
+        s=mimecast20190719; t=1599820568;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pcPWZv9PYAHyw7ygKg8TV8AW3ZEfFOjouUb95Y7pmVU=;
-        b=NW913L3MFk3eBVu/y/JLzO46WKEq8hhfbIdKIEi7OMxaQZ0DV1CtUSToCqh+BS+txOiINf
-        jxVaTPyNvsWbJU6yjMXwdjSJg5gP1oM7f/0+O2GteMWz6GwUQzfUAmxVFSnps9nJ+uJLSG
-        YjQhy/Dp6MrtM3n2AZXpy55tUnPEapM=
+        bh=YsfsAQ2XAkLrSeK5gDaCbmO+kEOKaYFgY1Wng1dGBy0=;
+        b=g9CBES6XmdPYwdYO3WMCcVaUfshazfyylLkIm7GYVCchWXe+SrI43TkFvjGqXlcNZP7BRr
+        Tj8pkc5y8AMfKDy2XEIh3VLn5zyKxMYj50RhMu2k3BaEIQmKn3s5yYjRedRDpMayL66YcP
+        /Fzsh2xOPz9lKhP/pmvlxU41NYXVQMc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-8nXwlIW-OjOX_tpbFlQW3g-1; Fri, 11 Sep 2020 06:36:03 -0400
-X-MC-Unique: 8nXwlIW-OjOX_tpbFlQW3g-1
+ us-mta-583-vEEKprzxPqCtphnzsAQlyw-1; Fri, 11 Sep 2020 06:36:07 -0400
+X-MC-Unique: vEEKprzxPqCtphnzsAQlyw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBF911008301;
-        Fri, 11 Sep 2020 10:36:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98CBD6408E;
+        Fri, 11 Sep 2020 10:36:04 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-113-186.ams2.redhat.com [10.36.113.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B94C81C49;
-        Fri, 11 Sep 2020 10:35:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 444B481C46;
+        Fri, 11 Sep 2020 10:36:01 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
@@ -53,23 +53,19 @@ Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
         linux-s390@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         David Hildenbrand <david@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Andrew Morton <akpmt@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Julien Grall <julien@xen.org>,
+        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
         Baoquan He <bhe@redhat.com>,
         Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v4 7/8] xen/balloon: try to merge system ram resources
-Date:   Fri, 11 Sep 2020 12:34:58 +0200
-Message-Id: <20200911103459.10306-8-david@redhat.com>
+Subject: [PATCH v4 8/8] hv_balloon: try to merge system ram resources
+Date:   Fri, 11 Sep 2020 12:34:59 +0200
+Message-Id: <20200911103459.10306-9-david@redhat.com>
 In-Reply-To: <20200911103459.10306-1-david@redhat.com>
 References: <20200911103459.10306-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,35 +77,34 @@ Let's try to merge system ram resources we add, to minimize the number
 of resources in /proc/iomem. We don't care about the boundaries of
 individual chunks we added.
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: Andrew Morton <akpmt@linux-foundation.org>
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Roger Pau Monné <roger.pau@citrix.com>
-Cc: Julien Grall <julien@xen.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
 Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: Wei Yang <richardw.yang@linux.intel.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/xen/balloon.c | 2 +-
+ drivers/hv/hv_balloon.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index 9f40a294d398d..b57b2067ecbfb 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -331,7 +331,7 @@ static enum bp_state reserve_additional_memory(void)
- 	mutex_unlock(&balloon_mutex);
- 	/* add_memory_resource() requires the device_hotplug lock */
- 	lock_device_hotplug();
--	rc = add_memory_resource(nid, resource, MHP_NONE);
-+	rc = add_memory_resource(nid, resource, MEMHP_MERGE_RESOURCE);
- 	unlock_device_hotplug();
- 	mutex_lock(&balloon_mutex);
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 3c0d52e244520..b64d2efbefe71 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -726,7 +726,7 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
  
+ 		nid = memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
+ 		ret = add_memory(nid, PFN_PHYS((start_pfn)),
+-				(HA_CHUNK << PAGE_SHIFT), MHP_NONE);
++				(HA_CHUNK << PAGE_SHIFT), MEMHP_MERGE_RESOURCE);
+ 
+ 		if (ret) {
+ 			pr_err("hot_add memory failed error is %d\n", ret);
 -- 
 2.26.2
 
