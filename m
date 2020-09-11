@@ -2,75 +2,92 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376FBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAEDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E672083B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376EB208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 01:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725764AbgIKBMK (ORCPT
+        id S1725774AbgIKBQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 21:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        Thu, 10 Sep 2020 21:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgIKBMJ (ORCPT
+        with ESMTP id S1725280AbgIKBQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 21:12:09 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5EAC061573;
-        Thu, 10 Sep 2020 18:12:08 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGXbh-00E2kB-Ba; Fri, 11 Sep 2020 01:12:05 +0000
-Date:   Fri, 11 Sep 2020 02:12:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pipe: honor IOCB_NOWAIT
-Message-ID: <20200911011205.GG1236603@ZenIV.linux.org.uk>
-References: <cedfa436-47a3-7cbc-1948-75d0e28cfdc5@kernel.dk>
+        Thu, 10 Sep 2020 21:16:06 -0400
+Received: from smtp.gentoo.org (smtp.gentoo.org [IPv6:2001:470:ea4a:1:5054:ff:fec7:86e4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5048C061573;
+        Thu, 10 Sep 2020 18:16:06 -0700 (PDT)
+Subject: Re: [PATCH] rtc: ds1685: Fix bank switching to avoid endless loop
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910084124.138560-1-tsbogend@alpha.franken.de>
+From:   Joshua Kinard <kumba@gentoo.org>
+Openpgp: preference=signencrypt
+Message-ID: <3643be60-492c-66bd-1e34-adffb85d3754@gentoo.org>
+Date:   Thu, 10 Sep 2020 21:16:00 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cedfa436-47a3-7cbc-1948-75d0e28cfdc5@kernel.dk>
+In-Reply-To: <20200910084124.138560-1-tsbogend@alpha.franken.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 09:21:02AM -0600, Jens Axboe wrote:
-> Pipe only looks at O_NONBLOCK for non-blocking operation, which means that
-> io_uring can't easily poll for it or attempt non-blocking issues. Check for
-> IOCB_NOWAIT in locking the pipe for reads and writes, and ditto when we
-> decide on whether or not to block or return -EAGAIN.
+On 9/10/2020 04:41, Thomas Bogendoerfer wrote:
+> ds1685_rtc_begin_data_access() tried to access an extended register before
+> enabling access to it by switching to bank 1. Depending on content in NVRAM
+> this could lead to an endless loop. While at it fix also switch back to
+> bank 0 in ds1685_rtc_end_data_access().
 > 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> 
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > ---
+>  drivers/rtc/rtc-ds1685.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> If this is acceptable, then I can add S_ISFIFO to the whitelist on file
-> descriptors we can IOCB_NOWAIT try for, then poll if we get -EAGAIN
-> instead of using thread offload.
+> diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
+> index 56c670af2e50..dfbd7b88b2b9 100644
+> --- a/drivers/rtc/rtc-ds1685.c
+> +++ b/drivers/rtc/rtc-ds1685.c
+> @@ -193,12 +193,12 @@ ds1685_rtc_begin_data_access(struct ds1685_priv *rtc)
+>  	rtc->write(rtc, RTC_CTRL_B,
+>  		   (rtc->read(rtc, RTC_CTRL_B) | RTC_CTRL_B_SET));
+>  
+> +	/* Switch to Bank 1 */
+> +	ds1685_rtc_switch_to_bank1(rtc);
+> +
+>  	/* Read Ext Ctrl 4A and check the INCR bit to avoid a lockout. */
+>  	while (rtc->read(rtc, RTC_EXT_CTRL_4A) & RTC_CTRL_4A_INCR)
+>  		cpu_relax();
+> -
+> -	/* Switch to Bank 1 */
+> -	ds1685_rtc_switch_to_bank1(rtc);
+>  }
+>  
+>  /**
+> @@ -213,7 +213,7 @@ static inline void
+>  ds1685_rtc_end_data_access(struct ds1685_priv *rtc)
+>  {
+>  	/* Switch back to Bank 0 */
+> -	ds1685_rtc_switch_to_bank1(rtc);
+> +	ds1685_rtc_switch_to_bank0(rtc);
+>  
+>  	/* Clear the SET bit in Ctrl B */
+>  	rtc->write(rtc, RTC_CTRL_B,
+> 
 
-Will check.  In the meanwhile, blacklist eventpoll again.  Because your
-attempts at "nonblocking" there had been both ugly as hell *AND* fail
-to prevent blocking.  And frankly, I'm very tempted to rip that crap
-out entirely.  Seriously, *look* at the code you've modified in
-do_epoll_ctl().  And tell me why the hell is grabbing ->mtx in that
-function needs to be infested with trylocks, while exact same mutex
-taken in loop_check_proc() called under those is fine with mutex_lock().
-Ditto for calls of vfs_poll() inside ep_insert(), GFP_KERNEL allocations
-in ep_ptable_queue_proc(), synchronize_rcu() callable from ep_modify()
-(from the same function), et sodding cetera.
+This probably needs to be sent to stable as well.
 
-No, this is _not_ an invitation to spread the same crap over even more
-places in there; I just want to understand where had that kind of voodoo
-approach comes from.  And that's directly relevant for this patch,
-because it looks like the same kind of thing.
-
-What is your semantics for IOCB_NOWAIT?  What should and what should _not_
-be waited for?
+Acked-by: Joshua Kinard <kumba@gentoo.org>
