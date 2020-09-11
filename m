@@ -2,125 +2,208 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A8FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5A1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FD420719
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FE021D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:09:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="xe/Lc3RK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725786AbgIKFFp (ORCPT
+        id S1725771AbgIKFJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 01:05:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32062 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgIKFFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 01:05:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BnkGq5Rzbz9tynY;
-        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id dI0xBi-CVjY0; Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BnkGq2Bbrz9tynX;
-        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DBFAF8B832;
-        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ZU5cwRNYUVST; Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 413958B75E;
-        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0D0E265728; Fri, 11 Sep 2020 05:05:38 +0000 (UTC)
-Message-Id: <8ae4554357da4882612644a74387ae05525b2aaa.1599800716.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] powerpc/kasan: Fix CONFIG_KASAN_VMALLOC for 8xx
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 11 Sep 2020 05:05:38 +0000 (UTC)
+        Fri, 11 Sep 2020 01:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgIKFJs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 01:09:48 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F008DC061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 22:09:47 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s65so4711850pgb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 22:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oR6MVe0czZko8wPQxUg17Yo2wMUks4twWfDs3UPZrmc=;
+        b=xe/Lc3RKIHtd/3Es0xtznXhv5Ow445/pl+hcXan86QmrfwHtsAeuN+tnOfVHBgLcBt
+         f4bA3jCRdMPUEjY9tTkyix/dZRodlBJ1wgQMZrlgXwRNXigGyCoLw9rqr6qVoxKm6M2b
+         /LaWesLODN2lJ27jpy0u1EXBmWvD1qPgjNT9rgl2z+6Yg8PuFbip4Fm039fl9mjFWXJb
+         CW1vMSye1siW/LUyF5qA/cKASegJVD9Nsw2RMhbbswao7ntQSvHpiK52U3iaWKN8+LC9
+         LF0goI7GE4j3RtNNP44ieCzfu445MxWG5fsC93IsApzGygw/bNGLXmuFji45ckrvtfnb
+         t4MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oR6MVe0czZko8wPQxUg17Yo2wMUks4twWfDs3UPZrmc=;
+        b=RSOKaoDQkfZ/Uhk0Pkt3I3aTvQTXZu8mckGOlWCVtX8ltsLJ877CaTreI2bZxqpF06
+         sbGv2IOp8WEzlqzkbU7Oh49LKwCZOc1pHDXRqSTZD1UilqCtpUyp6xOgE5dLuWdpXiuH
+         3zv3DykH/5zJ1g1cEK8N9s7WBEJDnZEYh7ktU///kIyoMDvwRZGvPE9MocEaWWXGvGP8
+         Gu2yJQWbYKi9eTkupdwxAJW9+5rx+zMiVE5keMd46dXfpWamjLgCRna45EMiXQycLqCg
+         OJceb7J29SBGUmLenOE48YwAos31+r3wJkE4deOoD7z5N10B+4rKysb/Lorkf/1f6/Zo
+         zIMA==
+X-Gm-Message-State: AOAM532Ri2F0YERfwEo6yBm4aWQ3tHuODC4ZWoZYN+oNrqo8Hp7x7bnB
+        LUyKV1DHa50bg1RLDv82YL8x9biuCRhrgw5m
+X-Google-Smtp-Source: ABdhPJwbeEW3PS6Zer9V4wwLx6lb74l7rImJ9x8+mFY2ZMvwMJQB0oaOxml2vHvh4JL0cLwdloS9ug==
+X-Received: by 2002:a17:902:b682:: with SMTP id c2mr303719pls.89.1599800987116;
+        Thu, 10 Sep 2020 22:09:47 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id c201sm809261pfb.216.2020.09.10.22.09.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 22:09:46 -0700 (PDT)
+Subject: Re: [PATCH kernel] srcu: Fix static initialization
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+References: <20200908144306.33355-1-aik@ozlabs.ru>
+ <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
+ <20200909115010.GG29330@paulmck-ThinkPad-P72>
+ <37f76aac-d8e3-8ab1-24e9-c417b719e2a6@ozlabs.ru>
+ <20200910185353.GS29330@paulmck-ThinkPad-P72>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <611a6a87-f673-c5b7-3b60-58805fba580a@ozlabs.ru>
+Date:   Fri, 11 Sep 2020 15:09:41 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <20200910185353.GS29330@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before the commit identified below, pages tables allocation was
-performed after the allocation of final shadow area for linear memory.
-But that commit switched the order, leading to page tables being
-already allocated at the time 8xx kasan_init_shadow_8M() is called.
-Due to this, kasan_init_shadow_8M() doesn't map the needed
-shadow entries because there are already page tables.
 
-kasan_init_shadow_8M() installs huge PMD entries instead of page
-tables. We could at that time free the page tables, but there is no
-point in creating page tables that get freed before being used.
 
-Only book3s/32 hash needs early allocation of page tables. For other
-variants, we can keep the initial order and create remaining page
-tables after the allocation of final shadow memory for linear mem.
+On 11/09/2020 04:53, Paul E. McKenney wrote:
+> On Wed, Sep 09, 2020 at 10:31:03PM +1000, Alexey Kardashevskiy wrote:
+>>
+>>
+>> On 09/09/2020 21:50, Paul E. McKenney wrote:
+>>> On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
+>>>>
+>>>>
+>>>> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
+>>>>> init_srcu_struct_nodes() is called with is_static==true only internally
+>>>>> and when this happens, the srcu->sda is not initialized in
+>>>>> init_srcu_struct_fields() and we crash on dereferencing @sdp.
+>>>>>
+>>>>> This fixes the crash by moving "if (is_static)" out of the loop which
+>>>>> only does useful work for is_static=false case anyway.
+>>>>>
+>>>>> Found by syzkaller.
+>>>>>
+>>>>> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+>>>>> ---
+>>>>>  kernel/rcu/srcutree.c | 5 +++--
+>>>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+>>>>> index c100acf332ed..49b54a50bde8 100644
+>>>>> --- a/kernel/rcu/srcutree.c
+>>>>> +++ b/kernel/rcu/srcutree.c
+>>>>> @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
+>>>>>  				   levelspread[level - 1];
+>>>>>  	}
+>>>>>  
+>>>>> +	if (is_static)
+>>>>> +		return;
+>>>>
+>>>> Actually, this is needed here too:
+>>>>
+>>>>  if (!ssp->sda)
+>>>>          return;
+>>>>
+>>>> as
+>>>> ssp->sda = alloc_percpu(struct srcu_data)
+>>>>
+>>>> can fail if the process is killed too soon - it is quite easy to get
+>>>> this situation with syzkaller (syscalls fuzzer)
+>>>>
+>>>> Makes sense?
+>>>
+>>> Just to make sure that I understand, these failures occur when the task
+>>> running init_srcu_struct_nodes() is killed, correct?
+>>
+>> There are multiple user tasks (8) which open /dev/kvm, do 1 ioctl -
+>> KVM_CREATE_VM - and terminate, running on 8 vcpus, 8 VMs, crashes every
+>> 20min or so, less tasks or vcpus - and the problem does not appear.
+>>
+>>
+>>>
+>>> Or has someone managed to invoke (say) synchronize_srcu() on a
+>>> dynamically allocated srcu_struct before invoking init_srcu_struct() on
+>>> that srcu_struct?  
+>>
+>> Nah, none of that :)
+>>
+>> init_srcu_struct_nodes() assumes ssp->sda!=NULL but alloc_percpu() fails
+>> here:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/percpu.c#n1734
+>> ===
+>> 	} else if (mutex_lock_killable(&pcpu_alloc_mutex)) {
+>> 			pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
+>> 			return NULL;
+>> ===
+>>
+>> I am still up to reading that osr-rcuusage.pdf to provide better
+>> analysis :) Thanks,
+> 
+> Ah, got it!  Does the following patch help?
+> 
+> There will likely also need to be changes to cleanup_srcu_struct(),
+> but first let's see if I understand the problem.  ;-)
+> 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+> index c13348e..6f7880a 100644
+> --- a/kernel/rcu/srcutree.c
+> +++ b/kernel/rcu/srcutree.c
+> @@ -177,11 +177,13 @@ static int init_srcu_struct_fields(struct srcu_struct *ssp, bool is_static)
+>  	INIT_DELAYED_WORK(&ssp->work, process_srcu);
+>  	if (!is_static)
+>  		ssp->sda = alloc_percpu(struct srcu_data);
+> +	if (!ssp->sda)
+> +		return -ENOMEM;
+>  	init_srcu_struct_nodes(ssp, is_static);
+>  	ssp->srcu_gp_seq_needed_exp = 0;
+>  	ssp->srcu_last_gp_end = ktime_get_mono_fast_ns();
+>  	smp_store_release(&ssp->srcu_gp_seq_needed, 0); /* Init done. */
 
-Move back the allocation of shadow page tables for
-CONFIG_KASAN_VMALLOC into kasan_init() after the loop which creates
-final shadow memory for linear mem.
 
-Fixes: 41ea93cf7ba4 ("powerpc/kasan: Fix shadow pages allocation failure")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/mm/kasan/kasan_init_32.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+The line above confuses me a bit. What you propose returns without
+smp_store_release() called which should not matter I suppose.
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index fb294046e00e..929716ea21e9 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -127,8 +127,7 @@ void __init kasan_mmu_init(void)
- {
- 	int ret;
- 
--	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
--	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
-+	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
- 		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
- 
- 		if (ret)
-@@ -139,11 +138,11 @@ void __init kasan_mmu_init(void)
- void __init kasan_init(void)
- {
- 	struct memblock_region *reg;
-+	int ret;
- 
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t base = reg->base;
- 		phys_addr_t top = min(base + reg->size, total_lowmem);
--		int ret;
- 
- 		if (base >= top)
- 			continue;
-@@ -153,6 +152,13 @@ void __init kasan_init(void)
- 			panic("kasan: kasan_init_region() failed");
- 	}
- 
-+	if (IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
-+		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
-+
-+		if (ret)
-+			panic("kasan: kasan_init_shadow_page_tables() failed");
-+	}
-+
- 	kasan_remap_early_shadow_ro();
- 
- 	clear_page(kasan_early_shadow_page);
+Otherwise it should work, although I cannot verify right now as my box
+went down and since it is across Pacific - it may take time to power
+cycle it :) Thanks,
+
+
+> -	return ssp->sda ? 0 : -ENOMEM;
+> +	return 0;
+>  }
+>  
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> 
+
 -- 
-2.25.0
-
+Alexey
