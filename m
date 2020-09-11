@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712EFC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DB9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC4921D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165B421D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599832962;
-	bh=NwDlos2Su04sMbf3aXst3vL8NNa1u9JoRt1CPihA33E=;
+	s=default; t=1599832985;
+	bh=8+aKGES8phPY0yHlwA43c9QPgG1sGj0rjTH2xEYGUaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HDo+2ZWjs97+YzxnKA/ZNujCWjH6P7WHPDJNvjif97YaWAmnKKsf+zefmbGtfMfhJ
-	 CcJGkeF7tTsi83ext5V46pddWVGfx5g57xYc0h1hx/FwzR04gUH+vl9YV2AErzDYDO
-	 7lwt2yedUXYXaTLJ2amAtdwMpMUnyXSKb3RW2Y4s=
+	b=aOOVMvSCAmUBEDJHY6j48j68QuQcueklGQtteZvmQzzt/Y+ZmxmZJl1ceoa7g2iw0
+	 AuK7n/HmbNXbtK6ddw6oC7iRcJfW91amgOnes6L/Mu37MiaCm3CCHw4cFZzvezbXZX
+	 PrECZf6G09SrTBKOo6jx6Vrf3inMFnuwd/XKK1bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgIKOCI (ORCPT
+        id S1725869AbgIKODA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35738 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgIKN3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:29:25 -0400
+        id S1726277AbgIKN3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:29:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A9AB2245B;
-        Fri, 11 Sep 2020 13:00:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B0A223E4;
+        Fri, 11 Sep 2020 12:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829201;
-        bh=NwDlos2Su04sMbf3aXst3vL8NNa1u9JoRt1CPihA33E=;
+        s=default; t=1599829137;
+        bh=8+aKGES8phPY0yHlwA43c9QPgG1sGj0rjTH2xEYGUaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdduANGwx31aDHIExtx1pmJ47qrQrEcvoPTLdMYpP9U8EAHO+p7SLrKeHyffmq5PS
-         7J/d6D210cvnQVnIUu30jqKEjhBrgBpcTxymzW2YGnQTJC2b9LsTmMPVvzTou71DOh
-         u5QOn8L1x1e1NjvZCATwFcVT25hd4RicTFRWUDIY=
+        b=i9/4L3maF+HyS/5x1tFwwvucGeq5sxl5Piq8OjbXvQZanfroCstyz4TW+FybVl6LK
+         Og64YkAyDOxx51gKlIzwwvSwoe7xiUZ2O8ytF+tVoWIFDT9Wgwgo4r4J3U00K+pCWk
+         JyzLdGlmFLLcmW4cQ0407L3hlOeph2Bxvu0yNgvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@nvidia.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 07/16] ipv4: Silence suspicious RCU usage warning
-Date:   Fri, 11 Sep 2020 14:47:24 +0200
-Message-Id: <20200911122459.944382043@linuxfoundation.org>
+Subject: [PATCH 4.14 10/12] sctp: not disable bh in the whole sctp_get_port_local()
+Date:   Fri, 11 Sep 2020 14:47:04 +0200
+Message-Id: <20200911122458.915150962@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
-References: <20200911122459.585735377@linuxfoundation.org>
+In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
+References: <20200911122458.413137406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,81 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@nvidia.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 7f6f32bb7d3355cd78ebf1dece9a6ea7a0ca8158 ]
+[ Upstream commit 3106ecb43a05dc3e009779764b9da245a5d082de ]
 
-fib_info_notify_update() is always called with RTNL held, but not from
-an RCU read-side critical section. This leads to the following warning
-[1] when the FIB table list is traversed with
-hlist_for_each_entry_rcu(), but without a proper lockdep expression.
+With disabling bh in the whole sctp_get_port_local(), when
+snum == 0 and too many ports have been used, the do-while
+loop will take the cpu for a long time and cause cpu stuck:
 
-Since modification of the list is protected by RTNL, silence the warning
-by adding a lockdep expression which verifies RTNL is held.
+  [ ] watchdog: BUG: soft lockup - CPU#11 stuck for 22s!
+  [ ] RIP: 0010:native_queued_spin_lock_slowpath+0x4de/0x940
+  [ ] Call Trace:
+  [ ]  _raw_spin_lock+0xc1/0xd0
+  [ ]  sctp_get_port_local+0x527/0x650 [sctp]
+  [ ]  sctp_do_bind+0x208/0x5e0 [sctp]
+  [ ]  sctp_autobind+0x165/0x1e0 [sctp]
+  [ ]  sctp_connect_new_asoc+0x355/0x480 [sctp]
+  [ ]  __sctp_connect+0x360/0xb10 [sctp]
 
-[1]
- =============================
- WARNING: suspicious RCU usage
- 5.9.0-rc1-custom-14233-g2f26e122d62f #129 Not tainted
- -----------------------------
- net/ipv4/fib_trie.c:2124 RCU-list traversed in non-reader section!!
+There's no need to disable bh in the whole function of
+sctp_get_port_local. So fix this cpu stuck by removing
+local_bh_disable() called at the beginning, and using
+spin_lock_bh() instead.
 
- other info that might help us debug this:
+The same thing was actually done for inet_csk_get_port() in
+Commit ea8add2b1903 ("tcp/dccp: better use of ephemeral
+ports in bind()").
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by ip/834:
-  #0: ffffffff85a3b6b0 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
+Thanks to Marcelo for pointing the buggy code out.
 
- stack backtrace:
- CPU: 0 PID: 834 Comm: ip Not tainted 5.9.0-rc1-custom-14233-g2f26e122d62f #129
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
- Call Trace:
-  dump_stack+0x100/0x184
-  lockdep_rcu_suspicious+0x143/0x14d
-  fib_info_notify_update+0x8d1/0xa60
-  __nexthop_replace_notify+0xd2/0x290
-  rtm_new_nexthop+0x35e2/0x5946
-  rtnetlink_rcv_msg+0x4f7/0xbd0
-  netlink_rcv_skb+0x17a/0x480
-  rtnetlink_rcv+0x22/0x30
-  netlink_unicast+0x5ae/0x890
-  netlink_sendmsg+0x98a/0xf40
-  ____sys_sendmsg+0x879/0xa00
-  ___sys_sendmsg+0x122/0x190
-  __sys_sendmsg+0x103/0x1d0
-  __x64_sys_sendmsg+0x7d/0xb0
-  do_syscall_64+0x32/0x50
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7fde28c3be57
- Code: 0c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51
-c3 48 83 ec 28 89 54 24 1c 48 89 74 24 10
-RSP: 002b:00007ffc09330028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fde28c3be57
-RDX: 0000000000000000 RSI: 00007ffc09330090 RDI: 0000000000000003
-RBP: 000000005f45f911 R08: 0000000000000001 R09: 00007ffc0933012c
-R10: 0000000000000076 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc09330290 R14: 00007ffc09330eee R15: 00005610e48ed020
+v1->v2:
+  - use cond_resched() to yield cpu to other tasks if needed,
+    as Eric noticed.
 
-Fixes: 1bff1a0c9bbd ("ipv4: Add function to send route updates")
-Signed-off-by: Ido Schimmel <idosch@nvidia.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Ying Xu <yinxu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fib_trie.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sctp/socket.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2121,7 +2121,8 @@ void fib_info_notify_update(struct net *
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -7086,8 +7086,6 @@ static long sctp_get_port_local(struct s
  
--		hlist_for_each_entry_rcu(tb, head, tb_hlist)
-+		hlist_for_each_entry_rcu(tb, head, tb_hlist,
-+					 lockdep_rtnl_is_held())
- 			__fib_info_notify_update(net, tb, info);
- 	}
+ 	pr_debug("%s: begins, snum:%d\n", __func__, snum);
+ 
+-	local_bh_disable();
+-
+ 	if (snum == 0) {
+ 		/* Search for an available port. */
+ 		int low, high, remaining, index;
+@@ -7106,20 +7104,21 @@ static long sctp_get_port_local(struct s
+ 				continue;
+ 			index = sctp_phashfn(sock_net(sk), rover);
+ 			head = &sctp_port_hashtable[index];
+-			spin_lock(&head->lock);
++			spin_lock_bh(&head->lock);
+ 			sctp_for_each_hentry(pp, &head->chain)
+ 				if ((pp->port == rover) &&
+ 				    net_eq(sock_net(sk), pp->net))
+ 					goto next;
+ 			break;
+ 		next:
+-			spin_unlock(&head->lock);
++			spin_unlock_bh(&head->lock);
++			cond_resched();
+ 		} while (--remaining > 0);
+ 
+ 		/* Exhausted local port range during search? */
+ 		ret = 1;
+ 		if (remaining <= 0)
+-			goto fail;
++			return ret;
+ 
+ 		/* OK, here is the one we will use.  HEAD (the port
+ 		 * hash table list entry) is non-NULL and we hold it's
+@@ -7134,7 +7133,7 @@ static long sctp_get_port_local(struct s
+ 		 * port iterator, pp being NULL.
+ 		 */
+ 		head = &sctp_port_hashtable[sctp_phashfn(sock_net(sk), snum)];
+-		spin_lock(&head->lock);
++		spin_lock_bh(&head->lock);
+ 		sctp_for_each_hentry(pp, &head->chain) {
+ 			if ((pp->port == snum) && net_eq(pp->net, sock_net(sk)))
+ 				goto pp_found;
+@@ -7218,10 +7217,7 @@ success:
+ 	ret = 0;
+ 
+ fail_unlock:
+-	spin_unlock(&head->lock);
+-
+-fail:
+-	local_bh_enable();
++	spin_unlock_bh(&head->lock);
+ 	return ret;
  }
+ 
 
 
