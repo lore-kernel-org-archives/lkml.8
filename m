@@ -2,146 +2,85 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409B0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CBAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A0E22225
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC79206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599841823;
+	bh=Sx4EuGaHyHb+oW4aw/xTYThAtAnevqos0vAP/q03wt4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=h5+UU2f3tG4lxkyL145P/keO50ziSqaZFVa1LxDvIA72/Ah7KiZHLJ+xpZJb4x/Wj
+	 0A/BEx7XRP0bwOSrLWoO+v7HKz3Nd9AYxfzMvkFm9xcco9Y6roTb9nCCcyXIgq7w03
+	 O5JDNZeAnxMPRdi2wldeZ4tgDxZ5pnYgRSW2oJ30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgIKQ3g (ORCPT
+        id S1726254AbgIKQaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:29:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:31677 "EHLO mga09.intel.com"
+        Fri, 11 Sep 2020 12:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726306AbgIKQ23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:28:29 -0400
-IronPort-SDR: YREpwWfwOeD0UPOyTTCQF8x61gsF0Jof46jsue7D293q+jsfaPM/ozeCF8rlkTRMWFrxFPUCxl
- VYJtuD78buLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9741"; a="159738486"
-X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
-   d="scan'208";a="159738486"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:28:22 -0700
-IronPort-SDR: MRaDYQOI+Y37b7XzL5ehbRYu0W1Y6xATNgCXz6/+joIgRZb3IlK35VMeSAxF2m26DAwL9nQmAe
- UHXSMxDELuzQ==
-X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
-   d="scan'208";a="481379882"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:28:22 -0700
-Date:   Fri, 11 Sep 2020 09:28:20 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Colin King <colin.king@canonical.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE" <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH][next] KVM: SVM: nested: fix free of uninitialized
- pointers save and ctl
-Message-ID: <20200911162814.GC4344@sjchrist-ice>
-References: <20200911110730.24238-1-colin.king@canonical.com>
- <87o8mclei1.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8mclei1.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726450AbgIKQ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:28:04 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B19BC22208;
+        Fri, 11 Sep 2020 16:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599841666;
+        bh=Sx4EuGaHyHb+oW4aw/xTYThAtAnevqos0vAP/q03wt4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L1LS9l5vpU3gl6gR7bZMSzrnswJXsY1IESrsIRwWFpsrHiG8Oli9hSUZSGR+mlaRx
+         mZPsdD8ZQc6lZgeNNvnJa1VkdAvVZ4VC4jJEmEzw7PAbqrH/0gdeKthCKTG0iEUElJ
+         r41d5Fj1CLvPAuBx+1pk6WC/AFQkh61Aeb+0G5Jg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 7/7] power: supply: pm2301: drop duplicated i2c_device_id
+Date:   Fri, 11 Sep 2020 18:27:29 +0200
+Message-Id: <20200911162729.3022-7-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200911162729.3022-1-krzk@kernel.org>
+References: <20200911162729.3022-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Joerg
+The driver defines two of 'struct i2c_device_id' but uses only one:
 
-On Fri, Sep 11, 2020 at 01:49:42PM +0200, Vitaly Kuznetsov wrote:
-> Colin King <colin.king@canonical.com> writes:
-> 
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > Currently the error exit path to outt_set_gif will kfree on
-> > uninitialized
-> 
-> typo: out_set_gif
-> 
-> > pointers save and ctl.  Fix this by ensuring these pointers are
-> > inintialized to NULL to avoid garbage pointer freeing.
-> >
-> > Addresses-Coverity: ("Uninitialized pointer read")
-> > Fixes: 6ccbd29ade0d ("KVM: SVM: nested: Don't allocate VMCB structures
-> > on stack")
-> 
-> Where is this commit id from? I don't see it in Paolo's kvm tree, if
-> it's not yet merged, maybe we should fix it and avoid introducing the
-> issue in the first place?
+  drivers/power/supply/pm2301_charger.c:107:35: warning:
+    'pm2xxx_ident' defined but not used [-Wunused-const-variable=]
 
-Ya, AFAIK the series as not been applied.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/power/supply/pm2301_charger.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  arch/x86/kvm/svm/nested.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> > index 28036629abf8..2b15f49f9e5a 100644
-> > --- a/arch/x86/kvm/svm/nested.c
-> > +++ b/arch/x86/kvm/svm/nested.c
-> > @@ -1060,8 +1060,8 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
-> >  	struct vmcb *hsave = svm->nested.hsave;
-> >  	struct vmcb __user *user_vmcb = (struct vmcb __user *)
-> >  		&user_kvm_nested_state->data.svm[0];
-> > -	struct vmcb_control_area *ctl;
-> > -	struct vmcb_save_area *save;
-> > +	struct vmcb_control_area *ctl = NULL;
-> > +	struct vmcb_save_area *save = NULL;
-> >  	int ret;
-> >  	u32 cr0;
-> 
-> I think it would be better if we eliminate 'out_set_gif; completely as
-> the 'error path' we have looks a bit weird anyway. Something like
-> (untested):
+diff --git a/drivers/power/supply/pm2301_charger.c b/drivers/power/supply/pm2301_charger.c
+index 787867805944..2df6a2459d1f 100644
+--- a/drivers/power/supply/pm2301_charger.c
++++ b/drivers/power/supply/pm2301_charger.c
+@@ -104,11 +104,6 @@ static int pm2xxx_charger_current_map[] = {
+ 	3000,
+ };
+ 
+-static const struct i2c_device_id pm2xxx_ident[] = {
+-	{ "pm2301", 0 },
+-	{ }
+-};
+-
+ static void set_lpn_pin(struct pm2xxx_charger *pm2)
+ {
+ 	if (!pm2->ac.charger_connected && gpio_is_valid(pm2->lpn_pin)) {
+-- 
+2.17.1
 
-Ya, I agree that duplicating the single line for this one-off case is
-preferable to creating a convoluted set of labels.
-
-Joerg, can you fold this change into a prep patch for v4 of your "KVM: SVM:
-SEV-ES groundwork" series?
-
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 28036629abf8..d1ae94f40907 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -1092,7 +1092,8 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
->  
->         if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE)) {
->                 svm_leave_nested(svm);
-> -               goto out_set_gif;
-> +               svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
-> +               return 0;
->         }
->  
->         if (!page_address_valid(vcpu, kvm_state->hdr.svm.vmcb_pa))
-> @@ -1145,7 +1146,6 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
->         load_nested_vmcb_control(svm, ctl);
->         nested_prepare_vmcb_control(svm);
->  
-> -out_set_gif:
->         svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
->  
->         ret = 0;
-> 
-> -- 
-> Vitaly
-> 
