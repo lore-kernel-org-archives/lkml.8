@@ -4,91 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C459C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDB8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43291221F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B523B221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbgIKLrN (ORCPT
+        id S1725785AbgIKLsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:47:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11821 "EHLO huawei.com"
+        Fri, 11 Sep 2020 07:48:25 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59608 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbgIKLpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:45:43 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 99CD1B578675154FD8E9;
-        Fri, 11 Sep 2020 19:27:27 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 19:27:19 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <corbet@lwn.net>, <mchehab@kernel.org>, <lkundrak@v3.sk>,
-        <hverkuil-cisco@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] media: marvell-ccic: Fix -Wunused-function warnings
-Date:   Fri, 11 Sep 2020 19:27:07 +0800
-Message-ID: <20200911112707.32232-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200910080933.40684-1-yuehaibing@huawei.com>
-References: <20200910080933.40684-1-yuehaibing@huawei.com>
+        id S1725803AbgIKLrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:47:15 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C9FDFB7BABC0350C4F33;
+        Fri, 11 Sep 2020 19:46:24 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 19:46:22 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <hdegoede@redhat.com>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] fs: vboxsf: Fix a kernel-doc warning in vboxsf_wrappers.c
+Date:   Fri, 11 Sep 2020 19:43:39 +0800
+Message-ID: <20200911114339.62308-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PM is n, gcc warns:
+Fixes the following W=1 kernel build warning(s):
 
-drivers/media/platform/marvell-ccic/mmp-driver.c:324:12: warning: ‘mmpcam_runtime_suspend’ defined but not used [-Wunused-function]
- static int mmpcam_runtime_suspend(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~~~~
-drivers/media/platform/marvell-ccic/mmp-driver.c:310:12: warning: ‘mmpcam_runtime_resume’ defined but not used [-Wunused-function]
- static int mmpcam_runtime_resume(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~~~
-
-Mark them as __maybe_unused to fix this.
+fs/vboxsf/vboxsf_wrappers.c:132: warning: Excess function parameter 'param' description in 'vboxsf_create'
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
 ---
-v2: Adjust based on https://lore.kernel.org/linux-media/20200909112921.5116-1-weiyongjun1@huawei.com/
----
- drivers/media/platform/marvell-ccic/mmp-driver.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/vboxsf/vboxsf_wrappers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
-index c4b28a00a3a2..c046a0ff3b85 100644
---- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-+++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -307,7 +307,7 @@ static int mmpcam_platform_remove(struct platform_device *pdev)
-  * Suspend/resume support.
-  */
- 
--static int mmpcam_runtime_resume(struct device *dev)
-+static int __maybe_unused mmpcam_runtime_resume(struct device *dev)
- {
- 	struct mmp_camera *cam = dev_get_drvdata(dev);
- 	struct mcam_camera *mcam = &cam->mcam;
-@@ -321,7 +321,7 @@ static int mmpcam_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int mmpcam_runtime_suspend(struct device *dev)
-+static int __maybe_unused mmpcam_runtime_suspend(struct device *dev)
- {
- 	struct mmp_camera *cam = dev_get_drvdata(dev);
- 	struct mcam_camera *mcam = &cam->mcam;
+diff --git a/fs/vboxsf/vboxsf_wrappers.c b/fs/vboxsf/vboxsf_wrappers.c
+index bfc78a097dae..3b6630e2847d 100644
+--- a/fs/vboxsf/vboxsf_wrappers.c
++++ b/fs/vboxsf/vboxsf_wrappers.c
+@@ -114,7 +114,7 @@ int vboxsf_unmap_folder(u32 root)
+  * vboxsf_create - Create a new file or folder
+  * @root:         Root of the shared folder in which to create the file
+  * @parsed_path:  The path of the file or folder relative to the shared folder
+- * @param:        create_parms Parameters for file/folder creation.
++ * @create_parms: create_parms Parameters for file/folder creation.
+  *
+  * Create a new file or folder or open an existing one in a shared folder.
+  * Note this function always returns 0 / success unless an exceptional condition
 -- 
 2.17.1
-
 
