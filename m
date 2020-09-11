@@ -2,423 +2,199 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5377C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E350C222B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671AF22286
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599834282;
-	bh=S9PcerItKM6Cw2ZD8pFOea9n8/bLmZUNu5udVH7a+p0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VNb0HUoioKog7t3JO9oikctByNrFr0NIq2xIXdEj/FbJoQNTkw049aAdfeXvHC54y
-	 lRj4HYiJf/98FwcXNtMswm0rpYtwe5i1e+6M4zzNzmghjXdyUmWfRSYS+ddihsu7k6
-	 YuFBdj3GlXjlj75FDSnie005Q7ys8GMtcNNOyYKA=
+	s=default; t=1599834321;
+	bh=QLxLHnsqBMRfkyabux2IZ0Ir8juf+/6Ln1bN5JXHj00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RFFqlxZcpuBeMJWl2i5bl4qu6XpxCb/LblsCRTWcE3+dfGyLIWZ6DdYjQqaxRNxO2
+	 JGnSONRJgDaC9sbxrvbHxpf6LW8oZwWBJLDQvtBVNXYa39SmtuXPEOnfNdrncgzzSG
+	 hKyp5U+Y5a6rvjwNKV734yvzFFvptxamn2/71o/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgIKOYT (ORCPT
+        id S1726276AbgIKOZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56028 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgIKNMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:12:01 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726118AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:12:00 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17A08222B6;
-        Fri, 11 Sep 2020 13:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D1622461;
+        Fri, 11 Sep 2020 13:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829768;
-        bh=S9PcerItKM6Cw2ZD8pFOea9n8/bLmZUNu5udVH7a+p0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YhcyaookAPDw51Q990U/H4iHSkes7SAV///xeaEFkONJm6DmW0cXVVWV3LXDSdum8
-         ycr1CXu+zS721bXn5D9sJLbBskbbgkfYbKYIVgK2Rrw5MjhrGuBiGi2BobWRIKGOk5
-         UV6U3HkzjGkvyXbUuNntJg+h8XKU9wmhd9VT8/SA=
-Received: by mail-ot1-f53.google.com with SMTP id e23so8272298otk.7;
-        Fri, 11 Sep 2020 06:09:28 -0700 (PDT)
-X-Gm-Message-State: AOAM532VyW06cYhNW/r3H/dlrMGep7fQ6qsywGUTeXwgjKUQcxpIAyBm
-        KWMQut79MVBQnpdhea8kVAFzOkgtkSwMNkV6i/k=
-X-Google-Smtp-Source: ABdhPJytyBe4sZU6viXs7xUNVRFVi70nft+TJUekfBR3rj23zgOVrBavkhlO4VjwFFWqd5hvTTRqDBvo0Cw6Zw+MsuI=
-X-Received: by 2002:a9d:6193:: with SMTP id g19mr1130295otk.108.1599829767136;
- Fri, 11 Sep 2020 06:09:27 -0700 (PDT)
+        s=default; t=1599829241;
+        bh=QLxLHnsqBMRfkyabux2IZ0Ir8juf+/6Ln1bN5JXHj00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OpNFhMhyef6c4sxdMePfG212EDrIcccvg4d7945PlSoO6d/zeN2l+asBs/LTKN47U
+         v2Z9HjgEVQXpeshD3oMYVKZ6cXlOZryMQ9a97X9n64KNohYgosTvIMPJZsUuRpq1W5
+         uCX/eGhn6Hd5cl3iTwVHUuQyeblRRiMRwgxKTG78=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 3/8] netlabel: fix problems with mapping removal
+Date:   Fri, 11 Sep 2020 14:54:50 +0200
+Message-Id: <20200911125421.865458250@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911125421.695645838@linuxfoundation.org>
+References: <20200911125421.695645838@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200828172036.8056-1-atish.patra@wdc.com> <20200828172036.8056-6-atish.patra@wdc.com>
-In-Reply-To: <20200828172036.8056-6-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 11 Sep 2020 16:09:15 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXH82MGDLNkyWae=wqNxZY7ZMvrDU3gNAOSF+m9YFGe7aw@mail.gmail.com>
-Message-ID: <CAMj1kXH82MGDLNkyWae=wqNxZY7ZMvrDU3gNAOSF+m9YFGe7aw@mail.gmail.com>
-Subject: Re: [PATCH v7 5/9] RISC-V: Add PE/COFF header for EFI stub
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 20:20, Atish Patra <atish.patra@wdc.com> wrote:
->
-> Linux kernel Image can appear as an EFI application With appropriate
-> PE/COFF header fields in the beginning of the Image header. An EFI
-> application loader can directly load a Linux kernel Image and an EFI
-> stub residing in kernel can boot Linux kernel directly.
->
-> Add the necessary PE/COFF header.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Link: https://lore.kernel.org/r/20200421033336.9663-3-atish.patra@wdc.com
-> [ardb: - use C prefix for c.li to ensure the expected opcode is emitted
->        - align all image sections according to PE/COFF section alignment ]
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
+From: Paul Moore <paul@paul-moore.com>
 
-Since you need to respin this anyway, one comment below on a thing
-that I spotted while revisiting these patches.
+[ Upstream commit d3b990b7f327e2afa98006e7666fb8ada8ed8683 ]
 
-> ---
->  arch/riscv/include/asm/sections.h |  13 ++++
->  arch/riscv/kernel/Makefile        |   4 ++
->  arch/riscv/kernel/efi-header.S    | 104 ++++++++++++++++++++++++++++++
->  arch/riscv/kernel/head.S          |  16 +++++
->  arch/riscv/kernel/image-vars.h    |  51 +++++++++++++++
->  arch/riscv/kernel/vmlinux.lds.S   |  22 ++++++-
->  6 files changed, 208 insertions(+), 2 deletions(-)
->  create mode 100644 arch/riscv/include/asm/sections.h
->  create mode 100644 arch/riscv/kernel/efi-header.S
->  create mode 100644 arch/riscv/kernel/image-vars.h
->
-> diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-> new file mode 100644
-> index 000000000000..3a9971b1210f
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/sections.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + */
-> +#ifndef __ASM_SECTIONS_H
-> +#define __ASM_SECTIONS_H
-> +
-> +#include <asm-generic/sections.h>
-> +
-> +extern char _start[];
-> +extern char _start_kernel[];
-> +
-> +#endif /* __ASM_SECTIONS_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index dc93710f0b2f..41e3895a3192 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -31,6 +31,10 @@ obj-y        += cacheinfo.o
->  obj-y  += patch.o
->  obj-$(CONFIG_MMU) += vdso.o vdso/
->
-> +OBJCOPYFLAGS := --prefix-symbols=__efistub_
-> +$(obj)/%.stub.o: $(obj)/%.o FORCE
-> +       $(call if_changed,objcopy)
-> +
->  obj-$(CONFIG_RISCV_M_MODE)     += traps_misaligned.o
->  obj-$(CONFIG_FPU)              += fpu.o
->  obj-$(CONFIG_SMP)              += smpboot.o
-> diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-header.S
-> new file mode 100644
-> index 000000000000..822b4c9ff2bb
-> --- /dev/null
-> +++ b/arch/riscv/kernel/efi-header.S
-> @@ -0,0 +1,104 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + * Adapted from arch/arm64/kernel/efi-header.S
-> + */
-> +
-> +#include <linux/pe.h>
-> +#include <linux/sizes.h>
-> +
-> +       .macro  __EFI_PE_HEADER
-> +       .long   PE_MAGIC
-> +coff_header:
-> +#ifdef CONFIG_64BIT
-> +       .short  IMAGE_FILE_MACHINE_RISCV64              // Machine
-> +#else
-> +       .short  IMAGE_FILE_MACHINE_RISCV32              // Machine
-> +#endif
-> +       .short  section_count                           // NumberOfSections
-> +       .long   0                                       // TimeDateStamp
-> +       .long   0                                       // PointerToSymbolTable
-> +       .long   0                                       // NumberOfSymbols
-> +       .short  section_table - optional_header         // SizeOfOptionalHeader
-> +       .short  IMAGE_FILE_DEBUG_STRIPPED | \
-> +               IMAGE_FILE_EXECUTABLE_IMAGE | \
-> +               IMAGE_FILE_LINE_NUMS_STRIPPED           // Characteristics
-> +
-> +optional_header:
-> +       .short  PE_OPT_MAGIC_PE32PLUS                   // PE32+ format
+This patch fixes two main problems seen when removing NetLabel
+mappings: memory leaks and potentially extra audit noise.
 
-Are you sure both riscv32 and riscv64 use PE32+? IIUC, 32-bit
-architectures use PE32 not PE32+ (but I could be wrong)
+The memory leaks are caused by not properly free'ing the mapping's
+address selector struct when free'ing the entire entry as well as
+not properly cleaning up a temporary mapping entry when adding new
+address selectors to an existing entry.  This patch fixes both these
+problems such that kmemleak reports no NetLabel associated leaks
+after running the SELinux test suite.
 
-> +       .byte   0x02                                    // MajorLinkerVersion
-> +       .byte   0x14                                    // MinorLinkerVersion
-> +       .long   __pecoff_text_end - efi_header_end      // SizeOfCode
-> +       .long   __pecoff_data_virt_size                 // SizeOfInitializedData
-> +       .long   0                                       // SizeOfUninitializedData
-> +       .long   __efistub_efi_pe_entry - _start         // AddressOfEntryPoint
-> +       .long   efi_header_end - _start                 // BaseOfCode
-> +
-> +extra_header_fields:
-> +       .quad   0                                       // ImageBase
-> +       .long   PECOFF_SECTION_ALIGNMENT                // SectionAlignment
-> +       .long   PECOFF_FILE_ALIGNMENT                   // FileAlignment
-> +       .short  0                                       // MajorOperatingSystemVersion
-> +       .short  0                                       // MinorOperatingSystemVersion
-> +       .short  LINUX_EFISTUB_MAJOR_VERSION             // MajorImageVersion
-> +       .short  LINUX_EFISTUB_MINOR_VERSION             // MinorImageVersion
-> +       .short  0                                       // MajorSubsystemVersion
-> +       .short  0                                       // MinorSubsystemVersion
-> +       .long   0                                       // Win32VersionValue
-> +
-> +       .long   _end - _start                           // SizeOfImage
-> +
-> +       // Everything before the kernel image is considered part of the header
-> +       .long   efi_header_end - _start                 // SizeOfHeaders
-> +       .long   0                                       // CheckSum
-> +       .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         // Subsystem
-> +       .short  0                                       // DllCharacteristics
-> +       .quad   0                                       // SizeOfStackReserve
-> +       .quad   0                                       // SizeOfStackCommit
-> +       .quad   0                                       // SizeOfHeapReserve
-> +       .quad   0                                       // SizeOfHeapCommit
-> +       .long   0                                       // LoaderFlags
-> +       .long   (section_table - .) / 8                 // NumberOfRvaAndSizes
-> +
-> +       .quad   0                                       // ExportTable
-> +       .quad   0                                       // ImportTable
-> +       .quad   0                                       // ResourceTable
-> +       .quad   0                                       // ExceptionTable
-> +       .quad   0                                       // CertificationTable
-> +       .quad   0                                       // BaseRelocationTable
-> +
-> +       // Section table
-> +section_table:
-> +       .ascii  ".text\0\0\0"
-> +       .long   __pecoff_text_end - efi_header_end      // VirtualSize
-> +       .long   efi_header_end - _start                 // VirtualAddress
-> +       .long   __pecoff_text_end - efi_header_end      // SizeOfRawData
-> +       .long   efi_header_end - _start                 // PointerToRawData
-> +
-> +       .long   0                                       // PointerToRelocations
-> +       .long   0                                       // PointerToLineNumbers
-> +       .short  0                                       // NumberOfRelocations
-> +       .short  0                                       // NumberOfLineNumbers
-> +       .long   IMAGE_SCN_CNT_CODE | \
-> +               IMAGE_SCN_MEM_READ | \
-> +               IMAGE_SCN_MEM_EXECUTE                   // Characteristics
-> +
-> +       .ascii  ".data\0\0\0"
-> +       .long   __pecoff_data_virt_size                 // VirtualSize
-> +       .long   __pecoff_text_end - _start              // VirtualAddress
-> +       .long   __pecoff_data_raw_size                  // SizeOfRawData
-> +       .long   __pecoff_text_end - _start              // PointerToRawData
-> +
-> +       .long   0                                       // PointerToRelocations
-> +       .long   0                                       // PointerToLineNumbers
-> +       .short  0                                       // NumberOfRelocations
-> +       .short  0                                       // NumberOfLineNumbers
-> +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA | \
-> +               IMAGE_SCN_MEM_READ | \
-> +               IMAGE_SCN_MEM_WRITE                     // Characteristics
-> +
-> +       .set    section_count, (. - section_table) / 40
-> +
-> +       .balign 0x1000
-> +efi_header_end:
-> +       .endm
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index c6a37e8231a8..3631147732ee 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -13,6 +13,7 @@
->  #include <asm/csr.h>
->  #include <asm/hwcap.h>
->  #include <asm/image.h>
-> +#include "efi-header.S"
->
->  __HEAD
->  ENTRY(_start)
-> @@ -22,10 +23,18 @@ ENTRY(_start)
->          * Do not modify it without modifying the structure and all bootloaders
->          * that expects this header format!!
->          */
-> +#ifdef CONFIG_EFI
-> +       /*
-> +        * This instruction decodes to "MZ" ASCII required by UEFI.
-> +        */
-> +       c.li s4,-13
-> +       j _start_kernel
-> +#else
->         /* jump to start kernel */
->         j _start_kernel
->         /* reserved */
->         .word 0
-> +#endif
->         .balign 8
->  #if __riscv_xlen == 64
->         /* Image load offset(2MB) from start of RAM */
-> @@ -43,7 +52,14 @@ ENTRY(_start)
->         .ascii RISCV_IMAGE_MAGIC
->         .balign 4
->         .ascii RISCV_IMAGE_MAGIC2
-> +#ifdef CONFIG_EFI
-> +       .word pe_head_start - _start
-> +pe_head_start:
-> +
-> +       __EFI_PE_HEADER
-> +#else
->         .word 0
-> +#endif
->
->  .align 2
->  #ifdef CONFIG_MMU
-> diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-> new file mode 100644
-> index 000000000000..8c212efb37a6
-> --- /dev/null
-> +++ b/arch/riscv/kernel/image-vars.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> + * Linker script variables to be set after section resolution, as
-> + * ld.lld does not like variables assigned before SECTIONS is processed.
-> + * Based on arch/arm64/kerne/image-vars.h
-> + */
-> +#ifndef __RISCV_KERNEL_IMAGE_VARS_H
-> +#define __RISCV_KERNEL_IMAGE_VARS_H
-> +
-> +#ifndef LINKER_SCRIPT
-> +#error This file should only be included in vmlinux.lds.S
-> +#endif
-> +
-> +#ifdef CONFIG_EFI
-> +
-> +/*
-> + * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-> + * isolate it from the kernel proper. The following symbols are legally
-> + * accessed by the stub, so provide some aliases to make them accessible.
-> + * Only include data symbols here, or text symbols of functions that are
-> + * guaranteed to be safe when executed at another offset than they were
-> + * linked at. The routines below are all implemented in assembler in a
-> + * position independent manner
-> + */
-> +__efistub_memcmp               = memcmp;
-> +__efistub_memchr               = memchr;
-> +__efistub_memcpy               = memcpy;
-> +__efistub_memmove              = memmove;
-> +__efistub_memset               = memset;
-> +__efistub_strlen               = strlen;
-> +__efistub_strnlen              = strnlen;
-> +__efistub_strcmp               = strcmp;
-> +__efistub_strncmp              = strncmp;
-> +__efistub_strrchr              = strrchr;
-> +
-> +#ifdef CONFIG_KASAN
-> +__efistub___memcpy             = memcpy;
-> +__efistub___memmove            = memmove;
-> +__efistub___memset             = memset;
-> +#endif
-> +
-> +__efistub__start               = _start;
-> +__efistub__start_kernel                = _start_kernel;
-> +__efistub__end                 = _end;
-> +__efistub__edata               = _edata;
-> +__efistub_screen_info          = screen_info;
-> +
-> +#endif
-> +
-> +#endif /* __RISCV_KERNEL_IMAGE_VARS_H */
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index f3586e31ed1e..6dcf790282dd 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -10,6 +10,7 @@
->  #include <asm/cache.h>
->  #include <asm/thread_info.h>
->  #include <asm/set_memory.h>
-> +#include "image-vars.h"
->
->  #include <linux/sizes.h>
->  OUTPUT_ARCH(riscv)
-> @@ -17,6 +18,9 @@ ENTRY(_start)
->
->  jiffies = jiffies_64;
->
-> +PECOFF_SECTION_ALIGNMENT = 0x1000;
-> +PECOFF_FILE_ALIGNMENT = 0x200;
-> +
->  SECTIONS
->  {
->         /* Beginning of code and text segment */
-> @@ -76,6 +80,10 @@ SECTIONS
->
->         EXCEPTION_TABLE(0x10)
->
-> +#ifdef CONFIG_EFI
-> +       . = ALIGN(PECOFF_SECTION_ALIGNMENT);
-> +       __pecoff_text_end = .;
-> +#endif
->         . = ALIGN(SECTION_ALIGN);
->         _data = .;
->
-> @@ -83,16 +91,26 @@ SECTIONS
->         .sdata : {
->                 __global_pointer$ = . + 0x800;
->                 *(.sdata*)
-> -               /* End of data section */
-> -               _edata = .;
->         }
->
-> +#ifdef CONFIG_EFI
-> +       .pecoff_edata_padding : { BYTE(0); . = ALIGN(PECOFF_FILE_ALIGNMENT); }
-> +       __pecoff_data_raw_size = ABSOLUTE(. - __pecoff_text_end);
-> +#endif
-> +
-> +       /* End of data section */
-> +       _edata = .;
-> +
->         BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
->
->         .rel.dyn : {
->                 *(.rel.dyn*)
->         }
->
-> +#ifdef CONFIG_EFI
-> +       . = ALIGN(PECOFF_SECTION_ALIGNMENT);
-> +       __pecoff_data_virt_size = ABSOLUTE(. - __pecoff_text_end);
-> +#endif
->         _end = .;
->
->         STABS_DEBUG
-> --
-> 2.24.0
->
+The potentially extra audit noise was caused by the auditing code in
+netlbl_domhsh_remove_entry() being called regardless of the entry's
+validity.  If another thread had already marked the entry as invalid,
+but not removed/free'd it from the list of mappings, then it was
+possible that an additional mapping removal audit record would be
+generated.  This patch fixes this by returning early from the removal
+function when the entry was previously marked invalid.  This change
+also had the side benefit of improving the code by decreasing the
+indentation level of large chunk of code by one (accounting for most
+of the diffstat).
+
+Fixes: 63c416887437 ("netlabel: Add network address selectors to the NetLabel/LSM domain mapping")
+Reported-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/netlabel/netlabel_domainhash.c |   59 ++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 29 deletions(-)
+
+--- a/net/netlabel/netlabel_domainhash.c
++++ b/net/netlabel/netlabel_domainhash.c
+@@ -99,6 +99,7 @@ static void netlbl_domhsh_free_entry(str
+ 			kfree(netlbl_domhsh_addr6_entry(iter6));
+ 		}
+ #endif /* IPv6 */
++		kfree(ptr->def.addrsel);
+ 	}
+ 	kfree(ptr->domain);
+ 	kfree(ptr);
+@@ -550,6 +551,8 @@ int netlbl_domhsh_add(struct netlbl_dom_
+ 				goto add_return;
+ 		}
+ #endif /* IPv6 */
++		/* cleanup the new entry since we've moved everything over */
++		netlbl_domhsh_free_entry(&entry->rcu);
+ 	} else
+ 		ret_val = -EINVAL;
+ 
+@@ -593,6 +596,12 @@ int netlbl_domhsh_remove_entry(struct ne
+ {
+ 	int ret_val = 0;
+ 	struct audit_buffer *audit_buf;
++	struct netlbl_af4list *iter4;
++	struct netlbl_domaddr4_map *map4;
++#if IS_ENABLED(CONFIG_IPV6)
++	struct netlbl_af6list *iter6;
++	struct netlbl_domaddr6_map *map6;
++#endif /* IPv6 */
+ 
+ 	if (entry == NULL)
+ 		return -ENOENT;
+@@ -610,6 +619,9 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		ret_val = -ENOENT;
+ 	spin_unlock(&netlbl_domhsh_lock);
+ 
++	if (ret_val)
++		return ret_val;
++
+ 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
+ 	if (audit_buf != NULL) {
+ 		audit_log_format(audit_buf,
+@@ -619,40 +631,29 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		audit_log_end(audit_buf);
+ 	}
+ 
+-	if (ret_val == 0) {
+-		struct netlbl_af4list *iter4;
+-		struct netlbl_domaddr4_map *map4;
+-#if IS_ENABLED(CONFIG_IPV6)
+-		struct netlbl_af6list *iter6;
+-		struct netlbl_domaddr6_map *map6;
+-#endif /* IPv6 */
+-
+-		switch (entry->def.type) {
+-		case NETLBL_NLTYPE_ADDRSELECT:
+-			netlbl_af4list_foreach_rcu(iter4,
+-					     &entry->def.addrsel->list4) {
+-				map4 = netlbl_domhsh_addr4_entry(iter4);
+-				cipso_v4_doi_putdef(map4->def.cipso);
+-			}
++	switch (entry->def.type) {
++	case NETLBL_NLTYPE_ADDRSELECT:
++		netlbl_af4list_foreach_rcu(iter4, &entry->def.addrsel->list4) {
++			map4 = netlbl_domhsh_addr4_entry(iter4);
++			cipso_v4_doi_putdef(map4->def.cipso);
++		}
+ #if IS_ENABLED(CONFIG_IPV6)
+-			netlbl_af6list_foreach_rcu(iter6,
+-					     &entry->def.addrsel->list6) {
+-				map6 = netlbl_domhsh_addr6_entry(iter6);
+-				calipso_doi_putdef(map6->def.calipso);
+-			}
++		netlbl_af6list_foreach_rcu(iter6, &entry->def.addrsel->list6) {
++			map6 = netlbl_domhsh_addr6_entry(iter6);
++			calipso_doi_putdef(map6->def.calipso);
++		}
+ #endif /* IPv6 */
+-			break;
+-		case NETLBL_NLTYPE_CIPSOV4:
+-			cipso_v4_doi_putdef(entry->def.cipso);
+-			break;
++		break;
++	case NETLBL_NLTYPE_CIPSOV4:
++		cipso_v4_doi_putdef(entry->def.cipso);
++		break;
+ #if IS_ENABLED(CONFIG_IPV6)
+-		case NETLBL_NLTYPE_CALIPSO:
+-			calipso_doi_putdef(entry->def.calipso);
+-			break;
++	case NETLBL_NLTYPE_CALIPSO:
++		calipso_doi_putdef(entry->def.calipso);
++		break;
+ #endif /* IPv6 */
+-		}
+-		call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 	}
++	call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 
+ 	return ret_val;
+ }
+
+
