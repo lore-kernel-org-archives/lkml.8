@@ -2,104 +2,181 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA29C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4179E208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ukl4e3wp"
+	by mail.kernel.org (Postfix) with ESMTP id C8AA7208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599841954;
+	bh=eVcYg1cJOefDsu6kms7fDMPDr5i2bdkGkA+Hpm7nYuo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c58UAWhkSy5J0TP0cuPtD5tm8ZF5ic0YIZthQkYdjXhsY/P3oEs577YkG9btUTBq1
+	 W06Nc1/9k/EsWenVuqJekffvpQ8q0+VsT1n/R5jBrEPtHU/tEDAI+3CJqejeq0pZ9H
+	 xcXw5+I7RW99RNNgVs5cmc/qI1UCTSqZM4pU1Qrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgIKQcX (ORCPT
+        id S1726479AbgIKQcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:32:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39232 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgIKQbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:31:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BESpG5164100;
-        Fri, 11 Sep 2020 14:30:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=HmeGucpRUi0Eo916me/DU96md3K7p33K6XQmtvXjH+s=;
- b=Ukl4e3wpUDJLhAeU3vKOUT78/8IR6o2lCf6YSVCFRcG+BUHWhql2nqUcdbi3Pw85aix6
- cDpvv4QRkpnc7ggUEoYiCOhzPFpCeXJMug6YIH421gtPQfhe0X8/6zV5EX7dJBnXNKjW
- 85GLEBsKXi9J0shYRYZfMb8ZEqcweCDAwbfbUW0ZxnSiJiHsUA76cAzn/Tij2tfApSBv
- GyKqGnsQcUI4dqv5/B4u83ZShce1128Auz+0g4z4n7DTBGSDpCJk7s30Tdc4mWSsZQyG
- YR/7U2cHcnUr4d5wkf5SIzZO+MuuMKCUrE5RkQqjqoSAJ779ugzh7LGXQb7Gpt2Yu+3E uw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33c2mmegqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Sep 2020 14:30:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BEOZeE103473;
-        Fri, 11 Sep 2020 14:28:45 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 33cmm3fku3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 14:28:45 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08BESfHb018511;
-        Fri, 11 Sep 2020 14:28:41 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Sep 2020 07:28:41 -0700
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Can Guo <cang@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: Re: [PATCH V2] scsi: ufs-pci: Add LTR support for Intel controllers
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1v9gkz8ux.fsf@ca-mkp.ca.oracle.com>
-References: <20200827072030.24655-1-adrian.hunter@intel.com>
-        <yq14kohexka.fsf@ca-mkp.ca.oracle.com>
-        <dc615e02-18a3-334d-dbc4-8aba94e4be6b@intel.com>
-        <a27fa387-356c-82e1-a49f-62602336589e@intel.com>
-        <841d40b4-1181-2bd3-2c7f-4c00e76cbe60@intel.com>
-Date:   Fri, 11 Sep 2020 10:28:38 -0400
-In-Reply-To: <841d40b4-1181-2bd3-2c7f-4c00e76cbe60@intel.com> (Adrian Hunter's
-        message of "Fri, 11 Sep 2020 17:01:08 +0300")
+        Fri, 11 Sep 2020 12:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgIKPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:19:09 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE62422210;
+        Fri, 11 Sep 2020 12:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599829196;
+        bh=eVcYg1cJOefDsu6kms7fDMPDr5i2bdkGkA+Hpm7nYuo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M7v+1825Fz4yuLgDuq4UUEfq3IcawKemnxKy4/mFBbFcn/NYMMBp1WHtz9S+2TtOH
+         pqZYXC3rYitnzWDY6lt3h02Oghx2H7Ohd5vxijo+cMLrmcgJabp2fK2A3N5kjwbCYd
+         pLrDhHciXVbLieCND2X5c6Uq9E+oUhvUGq6rTJuc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 05/16] RDMA/cma: Remove unneeded locking for req paths
+Date:   Fri, 11 Sep 2020 14:47:22 +0200
+Message-Id: <20200911122459.843026940@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
+References: <20200911122459.585735377@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=1
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009110118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=1 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009110119
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-Adrian,
+[ Upstream commit cc9c037343898eb7a775e6b81d092ee21eeff218 ]
 
->> Now there seem to be conflicts between 5.10/scsi-queue and v5.9-rc4.
->> I am not sure what I can do?
->
-> Now I see it does apply to James' for-next branch.  Can it be applied there?
->
+The REQ flows are concerned that once the handler is called on the new
+cm_id the ULP can choose to trigger a rdma_destroy_id() concurrently at
+any time.
 
-I'll set up a dedicated branch.
+However, this is not true, while the ULP can call rdma_destroy_id(), it
+immediately blocks on the handler_mutex which prevents anything harmful
+from running concurrently.
 
+Remove the confusing extra locking and refcounts and make the
+handler_mutex protecting state during destroy more clear.
+
+Link: https://lore.kernel.org/r/20200723070707.1771101-4-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/cma.c | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 04151c301e851..11f43204fee77 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -1831,21 +1831,21 @@ static void cma_leave_mc_groups(struct rdma_id_private *id_priv)
+ 
+ void rdma_destroy_id(struct rdma_cm_id *id)
+ {
+-	struct rdma_id_private *id_priv;
++	struct rdma_id_private *id_priv =
++		container_of(id, struct rdma_id_private, id);
+ 	enum rdma_cm_state state;
+ 
+-	id_priv = container_of(id, struct rdma_id_private, id);
+-	trace_cm_id_destroy(id_priv);
+-	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
+-	cma_cancel_operation(id_priv, state);
+-
+ 	/*
+ 	 * Wait for any active callback to finish.  New callbacks will find
+ 	 * the id_priv state set to destroying and abort.
+ 	 */
+ 	mutex_lock(&id_priv->handler_mutex);
++	trace_cm_id_destroy(id_priv);
++	state = cma_exch(id_priv, RDMA_CM_DESTROYING);
+ 	mutex_unlock(&id_priv->handler_mutex);
+ 
++	cma_cancel_operation(id_priv, state);
++
+ 	rdma_restrack_del(&id_priv->res);
+ 	if (id_priv->cma_dev) {
+ 		if (rdma_cap_ib_cm(id_priv->id.device, 1)) {
+@@ -2205,19 +2205,9 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
+ 	cm_id->context = conn_id;
+ 	cm_id->cm_handler = cma_ib_handler;
+ 
+-	/*
+-	 * Protect against the user destroying conn_id from another thread
+-	 * until we're done accessing it.
+-	 */
+-	cma_id_get(conn_id);
+ 	ret = cma_cm_event_handler(conn_id, &event);
+ 	if (ret)
+ 		goto err3;
+-	/*
+-	 * Acquire mutex to prevent user executing rdma_destroy_id()
+-	 * while we're accessing the cm_id.
+-	 */
+-	mutex_lock(&lock);
+ 	if (cma_comp(conn_id, RDMA_CM_CONNECT) &&
+ 	    (conn_id->id.qp_type != IB_QPT_UD)) {
+ 		trace_cm_send_mra(cm_id->context);
+@@ -2226,13 +2216,11 @@ static int cma_ib_req_handler(struct ib_cm_id *cm_id,
+ 	mutex_unlock(&lock);
+ 	mutex_unlock(&conn_id->handler_mutex);
+ 	mutex_unlock(&listen_id->handler_mutex);
+-	cma_id_put(conn_id);
+ 	if (net_dev)
+ 		dev_put(net_dev);
+ 	return 0;
+ 
+ err3:
+-	cma_id_put(conn_id);
+ 	/* Destroy the CM ID by returning a non-zero value. */
+ 	conn_id->cm_id.ib = NULL;
+ err2:
+@@ -2409,11 +2397,6 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
+ 	memcpy(cma_src_addr(conn_id), laddr, rdma_addr_size(laddr));
+ 	memcpy(cma_dst_addr(conn_id), raddr, rdma_addr_size(raddr));
+ 
+-	/*
+-	 * Protect against the user destroying conn_id from another thread
+-	 * until we're done accessing it.
+-	 */
+-	cma_id_get(conn_id);
+ 	ret = cma_cm_event_handler(conn_id, &event);
+ 	if (ret) {
+ 		/* User wants to destroy the CM ID */
+@@ -2421,13 +2404,11 @@ static int iw_conn_req_handler(struct iw_cm_id *cm_id,
+ 		cma_exch(conn_id, RDMA_CM_DESTROYING);
+ 		mutex_unlock(&conn_id->handler_mutex);
+ 		mutex_unlock(&listen_id->handler_mutex);
+-		cma_id_put(conn_id);
+ 		rdma_destroy_id(&conn_id->id);
+ 		return ret;
+ 	}
+ 
+ 	mutex_unlock(&conn_id->handler_mutex);
+-	cma_id_put(conn_id);
+ 
+ out:
+ 	mutex_unlock(&listen_id->handler_mutex);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.25.1
+
+
+
