@@ -2,220 +2,153 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61288C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12FCA22208
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D202B206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IPiXzooy"
+	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="rDSYCSe7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgIKQZQ (ORCPT
+        id S1726574AbgIKQZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgIKP2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:28:05 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AF1C061786
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:15 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mm21so1719838pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V7c2tVI1sHEIHH1AjuWkw+8Vv4jkByqBwniC8b3+X7E=;
-        b=IPiXzooyc34XdY1D6OA308FNNt0ps3oUF0Df+DJViiEfKqHZVjejg3Ul3W/k9it8IG
-         ZPjc34I3fmGpsJqjMubs6bOIJ+18H5ABsl65dH1Cv1/RcCHX+APupzonwUq2HbhPyVwO
-         LwDTFeNGwv5p2zxycWhDc6202u3+/eR4/G4tPRfGltc0bK1kSgfRjV+U/X4Rufw4l735
-         9+Zzcc+BnyhsOg5mpksee8x7Rv+KQRi32iKb//u+GY7kk+pB+uLyaLoH0ma8BfKjzPWY
-         IxF6DhPh+EglOOw1BTq5Z1DhbyaunfohQkQDTMioOOHUnXpjq2ifNLioiorbOzQwo7Rn
-         IbEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=V7c2tVI1sHEIHH1AjuWkw+8Vv4jkByqBwniC8b3+X7E=;
-        b=dc2j/5y7IZR7F3zgEpOeQbyKC9sTxu1H33cWUBxRYLbvkHRw6GyX8MJ8TvUtdRevmh
-         +TMz8Up3Bl+EU5kR+UyZ06FSbUjufa+kmjW5EuRcFMgkI0g7XZQ/K+Khg7Oh4iPdVdnc
-         pEWQI7lQQ2MJLnIwMGCBZvvp2cnuCp0udFdMFZ3/y0nxmlpCHRmnrZlN4bUbowD43Y9c
-         45TYda45FymzOQ4pxo5+RE5tODwOKGUC10E+KjoOdMeI10gv8SkVfzarxyjvjgsVgSa6
-         WCgVL7qZY9WIhwF9r30kcU1L4sTSmu8THroI+oYHENKKRqFSA53fpDFnqZbk7YD+UcAm
-         VifA==
-X-Gm-Message-State: AOAM532v06G9iusxyFfM1qpA6X8Ziue9Lh8qt93gArDGBtPHmP72PDHC
-        qeVYtxnsX80Bks2PIPEnmnWM4w==
-X-Google-Smtp-Source: ABdhPJy5G1MDK6kqBvQVO9OUwpmI/w6cEPnvwQ+s+rirVNKyqdVtvb8FhGeb80XLNvA9lxYHwbi3wg==
-X-Received: by 2002:a17:90b:100f:: with SMTP id gm15mr2186766pjb.235.1599830955357;
-        Fri, 11 Sep 2020 06:29:15 -0700 (PDT)
-Received: from localhost.localdomain ([117.210.209.48])
-        by smtp.gmail.com with ESMTPSA id e10sm557988pgb.45.2020.09.11.06.29.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Sep 2020 06:29:14 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     maz@kernel.org, catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        jason@lakedaemon.net, mark.rutland@arm.com,
-        julien.thierry.kdev@gmail.com, dianders@chromium.org,
-        daniel.thompson@linaro.org, jason.wessel@windriver.com,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v4 1/5] arm64: Add framework to turn IPI as NMI
-Date:   Fri, 11 Sep 2020 18:58:40 +0530
-Message-Id: <1599830924-13990-2-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
-References: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
+        Fri, 11 Sep 2020 12:25:38 -0400
+Received: from mx01-muc.bfs.de ([193.174.230.67]:6932 "EHLO mx01-muc.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbgIKPYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:24:06 -0400
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx01-muc.bfs.de (Postfix) with ESMTPS id 8F42420199;
+        Fri, 11 Sep 2020 15:07:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1599829623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6E3rYFAFmZrISpyCxa1f771HtF2yNOuq1RjadVZhysY=;
+        b=rDSYCSe7ZDYYWhX+S+0BxwHBsDov1d5CDxN/hhv82w+5fy/R0WfK9WAXSR2A60w0uMgCwt
+        2kcnccbMF246KRqUhFNl8c3pN75jEOSbygmo96+oDwohB2pqSEs2GNXpYAWsSwK8wJ5I3d
+        GOmKgb5uhmsQXhc70RWgSDFU6qmLGmJIcQIqQxQeZ0P6lk34pTVwqPoa6WylUkHiWYRXNk
+        SwvYtE45epmTBdPQTgKkOQinJUnD0OpyaXIFf+GGkYE7mb22wpdS+yj2LWsKt2hthFiaM4
+        a8XQGCIqZYg++BvfXlxfK1/Eb9G6sC8IJnPgynur5iMlcHhzZ2tUTvPch73B0g==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 11 Sep
+ 2020 15:07:02 +0200
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.2044.004; Fri, 11 Sep 2020 15:07:02 +0200
+From:   Walter Harms <wharms@bfs.de>
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>,
+        "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>
+CC:     "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: [PATCH 17/24] get_phys_pages.3: Write 'long' instead of 'long
+ int'
+Thread-Topic: [PATCH 17/24] get_phys_pages.3: Write 'long' instead of 'long
+ int'
+Thread-Index: AQHWh7gQECdZaDE3LEKYFjT0sUW8TaljZ7N2
+Date:   Fri, 11 Sep 2020 13:07:02 +0000
+Message-ID: <c15e4262afea4820961bd36e3386b582@bfs.de>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>,<20200910211344.3562-18-colomar.6.4.3@gmail.com>
+In-Reply-To: <20200910211344.3562-18-colomar.6.4.3@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.40]
+x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25658.007
+x-tm-as-result: No-10--1.508000-5.000000
+x-tmase-matchedrid: v0Uhv4cnyYWe/kF8Pup4HBvgzEPRJaDEWw/S0HB7eoMTiSW9r3PknDyj
+        o+AkzeHqoM9050SCTLIS+pOxtKEjwvXYz2/SDtYzLFqCUQ7xhcyNY/pqxovzxZ9enr+Dhl0GKKi
+        9XIZVdsUEonpJ5L2U1+Mwa0EiWUk5jNea/HVv9rw/ApMPW/xhXkyQ5fRSh265Dfheddyhsqvqs9
+        E0tCHijOfOVcxjDhcwlnP9MMAZcdoLbigRnpKlKZx+7GyJjhAUMZAz0VgWU08+j5WrtZqnge0RO
+        L8uCZYTkvX/T0z5mGJfaa/N/1NR2T5rzQ1n8RpZ30V9wDbJOG3hwGKyRldHxWfvpucVLz+0xutS
+        1t8Wq0GIonbnNHgEwM/qYWYfQTGnSQOPumGIku0fwV6sBPR0lg==
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--1.508000-5.000000
+x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25658.007
+x-tm-snts-smtp: 23665965B90E02EF2CE2DBDB51D0574D52A33A8D3B7234A9258B1F5BAE02FE182000:9
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Authentication-Results: mx01-muc.bfs.de;
+        none
+X-Spamd-Result: default: False [-0.04 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[4];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         TO_DN_SOME(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-1.036];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         BAYES_HAM(-0.04)[57.85%]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce framework to turn an IPI as NMI using pseudo NMIs. In case a
-particular platform doesn't support pseudo NMIs, then request IPI as a
-regular IRQ.
 
-The main motivation for this feature is to have an IPI that can be
-leveraged to invoke NMI functions on other CPUs. And current prospective
-users are NMI backtrace and KGDB CPUs round-up whose support is added
-via future patches.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+sys/sysinfo.h:extern long int get_phys_pages (void)
+
+for the real world i would say that long int =3D=3D long but for the same r=
+eason
+i would say what the include says and stay away from discussions.
+
+jm2c,
+ wh
+________________________________________
+Von: linux-man-owner@vger.kernel.org [linux-man-owner@vger.kernel.org] im A=
+uftrag von Alejandro Colomar [colomar.6.4.3@gmail.com]
+Gesendet: Donnerstag, 10. September 2020 23:13
+An: mtk.manpages@gmail.com
+Cc: linux-man@vger.kernel.org; linux-kernel@vger.kernel.org; Alejandro Colo=
+mar
+Betreff: [PATCH 17/24] get_phys_pages.3: Write 'long' instead of 'long int'
+
+For consistency.
+
+Most man pages use 'long' instead of 'long int'.
+
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- arch/arm64/include/asm/nmi.h | 16 +++++++++
- arch/arm64/kernel/Makefile   |  2 +-
- arch/arm64/kernel/ipi_nmi.c  | 80 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/include/asm/nmi.h
- create mode 100644 arch/arm64/kernel/ipi_nmi.c
+ man3/get_phys_pages.3 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
-new file mode 100644
-index 0000000..3433c55
---- /dev/null
-+++ b/arch/arm64/include/asm/nmi.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_NMI_H
-+#define __ASM_NMI_H
-+
-+#ifndef __ASSEMBLER__
-+
-+#include <linux/cpumask.h>
-+
-+extern void arch_send_call_nmi_func_ipi_mask(cpumask_t *mask);
-+
-+void set_smp_ipi_nmi(int ipi);
-+void ipi_nmi_setup(int cpu);
-+void ipi_nmi_teardown(int cpu);
-+
-+#endif /* !__ASSEMBLER__ */
-+#endif
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index a561cbb..022c26b 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -19,7 +19,7 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
- 			   return_address.o cpuinfo.o cpu_errata.o		\
- 			   cpufeature.o alternative.o cacheinfo.o		\
- 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
--			   syscall.o
-+			   syscall.o ipi_nmi.o
- 
- targets			+= efi-entry.o
- 
-diff --git a/arch/arm64/kernel/ipi_nmi.c b/arch/arm64/kernel/ipi_nmi.c
-new file mode 100644
-index 0000000..355ef92
---- /dev/null
-+++ b/arch/arm64/kernel/ipi_nmi.c
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * NMI support for IPIs
-+ *
-+ * Copyright (C) 2020 Linaro Limited
-+ * Author: Sumit Garg <sumit.garg@linaro.org>
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/smp.h>
-+
-+#include <asm/nmi.h>
-+
-+static struct irq_desc *ipi_desc __read_mostly;
-+static int ipi_id __read_mostly;
-+static bool is_nmi __read_mostly;
-+
-+void arch_send_call_nmi_func_ipi_mask(cpumask_t *mask)
-+{
-+	if (WARN_ON_ONCE(!ipi_desc))
-+		return;
-+
-+	__ipi_send_mask(ipi_desc, mask);
-+}
-+
-+static irqreturn_t ipi_nmi_handler(int irq, void *data)
-+{
-+	/* nop, NMI handlers for special features can be added here. */
-+
-+	return IRQ_HANDLED;
-+}
-+
-+void ipi_nmi_setup(int cpu)
-+{
-+	if (!ipi_desc)
-+		return;
-+
-+	if (is_nmi) {
-+		if (!prepare_percpu_nmi(ipi_id))
-+			enable_percpu_nmi(ipi_id, 0);
-+	} else {
-+		enable_percpu_irq(ipi_id, 0);
-+	}
-+}
-+
-+void ipi_nmi_teardown(int cpu)
-+{
-+	if (!ipi_desc)
-+		return;
-+
-+	if (is_nmi) {
-+		disable_percpu_nmi(ipi_id);
-+		teardown_percpu_nmi(ipi_id);
-+	} else {
-+		disable_percpu_irq(ipi_id);
-+	}
-+}
-+
-+void __init set_smp_ipi_nmi(int ipi)
-+{
-+	int err;
-+
-+	err = request_percpu_nmi(ipi, ipi_nmi_handler, "IPI", &cpu_number);
-+	if (err) {
-+		err = request_percpu_irq(ipi, ipi_nmi_handler, "IPI",
-+					 &cpu_number);
-+		WARN_ON(err);
-+		is_nmi = false;
-+	} else {
-+		is_nmi = true;
-+	}
-+
-+	ipi_desc = irq_to_desc(ipi);
-+	irq_set_status_flags(ipi, IRQ_HIDDEN);
-+	ipi_id = ipi;
-+
-+	/* Setup the boot CPU immediately */
-+	ipi_nmi_setup(smp_processor_id());
-+}
--- 
-2.7.4
+diff --git a/man3/get_phys_pages.3 b/man3/get_phys_pages.3
+index 4a9177dfd..97ba625b7 100644
+--- a/man3/get_phys_pages.3
++++ b/man3/get_phys_pages.3
+@@ -30,8 +30,8 @@ page counts
+ .nf
+ .B "#include <sys/sysinfo.h>"
+ .PP
+-.B long int get_phys_pages(void);
+-.B long int get_avphys_pages(void);
++.B long get_phys_pages(void);
++.B long get_avphys_pages(void);
+ .fi
+ .SH DESCRIPTION
+ The function
+--
+2.28.0
 
