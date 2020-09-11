@@ -2,370 +2,297 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42773C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F24FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78362076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0F320829
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A5Thz3ng"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="hofk5gxq";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KiO0OuYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbgIKHqZ (ORCPT
+        id S1725810AbgIKHpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgIKHqP (ORCPT
+        Fri, 11 Sep 2020 03:45:54 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:38647 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725784AbgIKHph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:46:15 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6798C061756
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:46:13 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g10so7596050otq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xAMAwKSgCkhLU1+HorKufuFkvoMc/AqgwnyXt9BkPkw=;
-        b=A5Thz3ngEySbjfQozNWoh6kyDeOr9U6skoRVGg6dpWiZCUKS2cXHgK8tKD97zWjqBE
-         h/JSJu8GJQFzRXDX/ojxxmD7e+K9lbeeqIiAm/dBnmcP9SZfZfisp48POI2qfeVDvKN4
-         kRr9SzvaFldUyo1Y6OrPSB/pLYYgrZLOlEYEgFFf1oxcpVMLssBUvqrLQpd484fy4iwQ
-         vtGirE+noKTJfQ+81hdDrwTnR1rcXTFqkbqUMbHKJdJjlh3KKzJr3sssp7tjvVGnZ70S
-         HmUEQ9PCplcYemrPHsRJsREXcKs00sRDlJ4oSXRFnkfeQ2IRVxArxrOpaP0/WT9osDjA
-         B/Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xAMAwKSgCkhLU1+HorKufuFkvoMc/AqgwnyXt9BkPkw=;
-        b=MmuDhpjhSEUAXJftrVCEPhzbj+Mw+oh48H0Yb7tQ875Qh2W4yPDl1eRUImicMQ0ue9
-         YEl3jaR7hQFZPfN+4Im7d8MLgzYE0bofEyVjNB8ns4dgICu+RdPKMWYrLJGgv3J+YJYY
-         rS5ZZeQyUnxQSMFmNwhQDH50XsoTgmsJqeLmwGleAD/CfU3UB0frkXGeokbzXco5py1R
-         vBmupRvjG14n117CTDmkp7iCaVYo6oDwTInl3sKqEXK3JkfAtsahvn9XkKuzwarRVuPL
-         V0+f2iZqJdr51UTzJcElrcdCMly5UzXLiCN1+SezewO6Huy8YYA26+K3I5Z+yEVLkU7z
-         6qTw==
-X-Gm-Message-State: AOAM532PiAhJKMGxtVtFyR6+XYOjEtX8MfEPwjQLjRdR+iiau1Ld73Hn
-        qaT5OsUN4ixJmtqgVG6GiEghqbTXBAQ+u7CcOkgw7A==
-X-Google-Smtp-Source: ABdhPJxJoE5Uy6/u1TcmkOLjmHnuPd866OCz1co/k8yFa1X9QStslGeejlqv2wmuOYIl/lxDwiQ7sCHLJOT6KEt2gvk=
-X-Received: by 2002:a9d:3da1:: with SMTP id l30mr459810otc.233.1599810372977;
- Fri, 11 Sep 2020 00:46:12 -0700 (PDT)
+        Fri, 11 Sep 2020 03:45:37 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id EDF37C42;
+        Fri, 11 Sep 2020 03:45:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 11 Sep 2020 03:45:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=pDChSN39tqRkN
+        QAM7YiAOJfg0uxG4cS03G6jTG8UuWU=; b=hofk5gxqzfZMlnCwbiwg9B5CtDrOB
+        O3J8C7PDvsiFJkapAEDjWH0k1GPZbntdJEnsvwQTuXaViPqPf4tZgmDUpHuRStph
+        4nEg0+fYQN+IEsoiqoSJYZ6qfT+A6TnhoKwlXPUV+gD8i8se5y4r8HHMwnzczjAW
+        vmIo54g6YiWUHF2/kobha3fTKS7VCEdjBzEWQC+R9kv88HiTE/t4l8NRY6ZKeDPZ
+        F3d8kdDgovxJaytYUTyU//KGp9+amQZR0Hj306c5OZIID9SY9qF6bbvwJ9Y7/3Kj
+        VxZCEU+ujVlMFJqk7+1kgK7DJZxf/up7CpLjuO1vZ6WVBGljQq3jtRauw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=pDChSN39tqRkNQAM7YiAOJfg0uxG4cS03G6jTG8UuWU=; b=KiO0OuYo
+        FBnrYLzuXzpCvor9RRcZ48NfDlhmukO9i1lnix/H88i0onTcUc6hf7SD1eYajrwE
+        5a3K7hwQgGdG6iXLFR6+aOpAIgmjZQGQYTKgaxZkIhhkiFEy0+qlZzzUV9eMDM2a
+        9cRbbgHXwXiq6PQUTY9YZa0rfy2ZqykUM7r/YltDmShXtbGOmMqV6XYfIRbbYCJk
+        YliPdukwkG9Fva3x4ENd+v7i6qOnPXoOj4F4kdpxKw41zZcXOK6acqvZM7bN91tf
+        yXF+o+lnlPktULL9rI7evF9NJ5Wpc/U+JR802nB3I358HlIexa0av9h/X7CcADvj
+        XbBg0wJ2Xt1BtQ==
+X-ME-Sender: <xms:HytbX5uPoP5pWEqnyw2_6DtuVow6PU78Cc_NnWIWOthADEQUWpl9yA>
+    <xme:HytbXyeDPMBVVyAts2tEg6J8WnShhviP5WM0AbdPAhggEQvRNHug7Yhd1vcQAcdy2
+    iWZwQQlahQINu5wew>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfies
+    rghjrdhiugdrrghuqeenucggtffrrghtthgvrhhnpeejgfdvveehteekveeggeellefgle
+    etteejffelffdvudduveeiffegteelvefhteenucfkphepudegrddvrddutdelrdekheen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurh
+    gvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:HytbX8w57eha_xrzg8YodIcT7KVnsfeLtIRqQQt_eHU42_uJfCIGaQ>
+    <xmx:HytbXwNQ4sMOLPMwx_5WqLDkMGmxP7jIcSLPvrG42Y3xwexQI2t66A>
+    <xmx:HytbX5-HRlScUrGDWyKykwOa2jla0mq83epAvlFYR-U-tQSgFd22KQ>
+    <xmx:HytbX1Y_AHGYsMQtHn_4-Oz-C8RhsdMAOJRq6u5UQCTJq5uqBSGZGw>
+Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D38BC3064682;
+        Fri, 11 Sep 2020 03:45:32 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-mmc@vger.kernel.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] mmc: sdhci-of-aspeed: Expose phase delay tuning
+Date:   Fri, 11 Sep 2020 17:14:51 +0930
+Message-Id: <20200911074452.3148259-3-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200911074452.3148259-1-andrew@aj.id.au>
+References: <20200911074452.3148259-1-andrew@aj.id.au>
 MIME-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-10-elver@google.com>
- <CACT4Y+b-RPYpqErLVPh+qtiuv_LhCyxLE_DJqbM0jegFd_nOKQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+b-RPYpqErLVPh+qtiuv_LhCyxLE_DJqbM0jegFd_nOKQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 11 Sep 2020 09:46:01 +0200
-Message-ID: <CANpmjNOkGChKcav-zRLUTS1tsobXNkounFGSVp0srEk5BDGweg@mail.gmail.com>
-Subject: Re: [PATCH RFC 09/10] kfence, Documentation: add KFENCE documentation
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 at 09:14, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Mon, Sep 7, 2020 at 3:41 PM Marco Elver <elver@google.com> wrote:
-> >
-> > Add KFENCE documentation in dev-tools/kfence.rst, and add to index.
-> >
-> > Co-developed-by: Alexander Potapenko <glider@google.com>
-> > Signed-off-by: Alexander Potapenko <glider@google.com>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  Documentation/dev-tools/index.rst  |   1 +
-> >  Documentation/dev-tools/kfence.rst | 285 +++++++++++++++++++++++++++++
-> >  2 files changed, 286 insertions(+)
-> >  create mode 100644 Documentation/dev-tools/kfence.rst
-> >
-> > diff --git a/Documentation/dev-tools/index.rst b/Documentation/dev-tools/index.rst
-> > index f7809c7b1ba9..1b1cf4f5c9d9 100644
-> > --- a/Documentation/dev-tools/index.rst
-> > +++ b/Documentation/dev-tools/index.rst
-> > @@ -22,6 +22,7 @@ whole; patches welcome!
-> >     ubsan
-> >     kmemleak
-> >     kcsan
-> > +   kfence
-> >     gdb-kernel-debugging
-> >     kgdb
-> >     kselftest
-> > diff --git a/Documentation/dev-tools/kfence.rst b/Documentation/dev-tools/kfence.rst
-> > new file mode 100644
-> > index 000000000000..254f4f089104
-> > --- /dev/null
-> > +++ b/Documentation/dev-tools/kfence.rst
-> > @@ -0,0 +1,285 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +Kernel Electric-Fence (KFENCE)
-> > +==============================
-> > +
-> > +Kernel Electric-Fence (KFENCE) is a low-overhead sampling-based memory safety
-> > +error detector. KFENCE detects heap out-of-bounds access, use-after-free, and
-> > +invalid-free errors.
-> > +
-> > +KFENCE is designed to be enabled in production kernels, and has near zero
-> > +performance overhead. Compared to KASAN, KFENCE trades performance for
-> > +precision. The main motivation behind KFENCE's design, is that with enough
-> > +total uptime KFENCE will detect bugs in code paths not typically exercised by
-> > +non-production test workloads. One way to quickly achieve a large enough total
-> > +uptime is when the tool is deployed across a large fleet of machines.
-> > +
-> > +Usage
-> > +-----
-> > +
-> > +To enable KFENCE, configure the kernel with::
-> > +
-> > +    CONFIG_KFENCE=y
-> > +
-> > +KFENCE provides several other configuration options to customize behaviour (see
-> > +the respective help text in ``lib/Kconfig.kfence`` for more info).
-> > +
-> > +Tuning performance
-> > +~~~~~~~~~~~~~~~~~~
-> > +
-> > +The most important parameter is KFENCE's sample interval, which can be set via
-> > +the kernel boot parameter ``kfence.sample_interval`` in milliseconds. The
-> > +sample interval determines the frequency with which heap allocations will be
-> > +guarded by KFENCE. The default is configurable via the Kconfig option
-> > +``CONFIG_KFENCE_SAMPLE_INTERVAL``. Setting ``kfence.sample_interval=0``
-> > +disables KFENCE.
-> > +
-> > +With the Kconfig option ``CONFIG_KFENCE_NUM_OBJECTS`` (default 255), the number
-> > +of available guarded objects can be controlled. Each object requires 2 pages,
-> > +one for the object itself and the other one used as a guard page; object pages
-> > +are interleaved with guard pages, and every object page is therefore surrounded
-> > +by two guard pages.
-> > +
-> > +The total memory dedicated to the KFENCE memory pool can be computed as::
-> > +
-> > +    ( #objects + 1 ) * 2 * PAGE_SIZE
-> > +
-> > +Using the default config, and assuming a page size of 4 KiB, results in
-> > +dedicating 2 MiB to the KFENCE memory pool.
-> > +
-> > +Error reports
-> > +~~~~~~~~~~~~~
-> > +
-> > +A typical out-of-bounds access looks like this::
-> > +
-> > +    ==================================================================
-> > +    BUG: KFENCE: out-of-bounds in test_out_of_bounds_read+0xa3/0x22b
-> > +
-> > +    Out-of-bounds access at 0xffffffffb672efff (left of kfence-#17):
-> > +     test_out_of_bounds_read+0xa3/0x22b
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    kfence-#17 [0xffffffffb672f000-0xffffffffb672f01f, size=32, cache=kmalloc-32] allocated in:
-> > +     __kfence_alloc+0x42d/0x4c0
-> > +     __kmalloc+0x133/0x200
-> > +     test_alloc+0xf3/0x25b
-> > +     test_out_of_bounds_read+0x98/0x22b
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    CPU: 4 PID: 107 Comm: kunit_try_catch Not tainted 5.8.0-rc6+ #7
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +The header of the report provides a short summary of the function involved in
-> > +the access. It is followed by more detailed information about the access and
-> > +its origin.
-> > +
-> > +Use-after-free accesses are reported as::
-> > +
-> > +    ==================================================================
-> > +    BUG: KFENCE: use-after-free in test_use_after_free_read+0xb3/0x143
-> > +
-> > +    Use-after-free access at 0xffffffffb673dfe0:
-> > +     test_use_after_free_read+0xb3/0x143
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    kfence-#24 [0xffffffffb673dfe0-0xffffffffb673dfff, size=32, cache=kmalloc-32] allocated in:
-> > +     __kfence_alloc+0x277/0x4c0
-> > +     __kmalloc+0x133/0x200
-> > +     test_alloc+0xf3/0x25b
-> > +     test_use_after_free_read+0x76/0x143
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
->
-> Empty line between stacks for consistency and readability.
+The Aspeed SD/eMMC controllers feature up to two SDHCIs alongside a
+a set of "global" configuration registers. The global configuration
+registers house controller-specific settings that aren't exposed by the
+SDHCI, one example being a register for phase tuning.
 
-Done for v2.
+The phase tuning feature is new in the AST2600 design. It's exposed as a
+single register in the global register set and controls both the input
+and output phase adjustment for each slot. As the settings are
+slot-specific, the values to program are extracted from properties in
+the SDHCI devicetree nodes.
 
-> > +    freed in:
-> > +     kfence_guarded_free+0x158/0x380
-> > +     __kfence_free+0x38/0xc0
-> > +     test_use_after_free_read+0xa8/0x143
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    CPU: 4 PID: 109 Comm: kunit_try_catch Tainted: G        W         5.8.0-rc6+ #7
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +KFENCE also reports on invalid frees, such as double-frees::
-> > +
-> > +    ==================================================================
-> > +    BUG: KFENCE: invalid free in test_double_free+0xdc/0x171
-> > +
-> > +    Invalid free of 0xffffffffb6741000:
-> > +     test_double_free+0xdc/0x171
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    kfence-#26 [0xffffffffb6741000-0xffffffffb674101f, size=32, cache=kmalloc-32] allocated in:
-> > +     __kfence_alloc+0x42d/0x4c0
-> > +     __kmalloc+0x133/0x200
-> > +     test_alloc+0xf3/0x25b
-> > +     test_double_free+0x76/0x171
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +    freed in:
-> > +     kfence_guarded_free+0x158/0x380
-> > +     __kfence_free+0x38/0xc0
-> > +     test_double_free+0xa8/0x171
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    CPU: 4 PID: 111 Comm: kunit_try_catch Tainted: G        W         5.8.0-rc6+ #7
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +KFENCE also uses pattern-based redzones on the other side of an object's guard
-> > +page, to detect out-of-bounds writes on the unprotected side of the object.
-> > +These are reported on frees::
-> > +
-> > +    ==================================================================
-> > +    BUG: KFENCE: memory corruption in test_kmalloc_aligned_oob_write+0xef/0x184
-> > +
-> > +    Detected corrupted memory at 0xffffffffb6797ff9 [ 0xac . . . . . . ]:
-> > +     test_kmalloc_aligned_oob_write+0xef/0x184
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    kfence-#69 [0xffffffffb6797fb0-0xffffffffb6797ff8, size=73, cache=kmalloc-96] allocated in:
-> > +     __kfence_alloc+0x277/0x4c0
-> > +     __kmalloc+0x133/0x200
-> > +     test_alloc+0xf3/0x25b
-> > +     test_kmalloc_aligned_oob_write+0x57/0x184
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    CPU: 4 PID: 120 Comm: kunit_try_catch Tainted: G        W         5.8.0-rc6+ #7
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +For such errors, the address where the corruption as well as the corrupt bytes
-> > +are shown.
-> > +
-> > +And finally, KFENCE may also report on invalid accesses to any protected page
-> > +where it was not possible to determine an associated object, e.g. if adjacent
-> > +object pages had not yet been allocated::
-> > +
-> > +    ==================================================================
-> > +    BUG: KFENCE: invalid access in test_invalid_access+0x26/0xe0
-> > +
-> > +    Invalid access at 0xffffffffb670b00a:
-> > +     test_invalid_access+0x26/0xe0
-> > +     kunit_try_run_case+0x51/0x85
-> > +     kunit_generic_run_threadfn_adapter+0x16/0x30
-> > +     kthread+0x137/0x160
-> > +     ret_from_fork+0x22/0x30
-> > +
-> > +    CPU: 4 PID: 124 Comm: kunit_try_catch Tainted: G        W         5.8.0-rc6+ #7
-> > +    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> > +    ==================================================================
-> > +
-> > +DebugFS interface
-> > +~~~~~~~~~~~~~~~~~
-> > +
-> > +Some debugging information is exposed via debugfs:
-> > +
-> > +* The file ``/sys/kernel/debug/kfence/stats`` provides runtime statistics.
-> > +
-> > +* The file ``/sys/kernel/debug/kfence/objects`` provides a list of objects
-> > +  allocated via KFENCE, including those already freed but protected.
-> > +
-> > +Implementation Details
-> > +----------------------
-> > +
-> > +Guarded allocations are set up based on the sample interval. After expiration
-> > +of the sample interval, a guarded allocation from the KFENCE object pool is
-> > +returned to the main allocator (SLAB or SLUB). At this point, the timer is
-> > +reset, and the next allocation is set up after the expiration of the interval.
-> > +To "gate" a KFENCE allocation through the main allocator's fast-path without
-> > +overhead, KFENCE relies on static branches via the static keys infrastructure.
-> > +The static branch is toggled to redirect the allocation to KFENCE.
-> > +
-> > +KFENCE objects each reside on a dedicated page, at either the left or right
->
-> Do we mention anywhere explicitly that KFENCE currently only supports
-> allocations <=page_size?
-> May be worth mentioning. It kinda follows from implementation but
-> quite implicitly. One may also be confused assuming KFENCE handles
-> larger allocations, but then not being able to figure out.
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+In v2:
 
-We can add a note that "allocation sizes up to PAGE_SIZE are supported".
+* Rework devicetree parsing to minimise state disruption
+* Switch some log statements from dev_info() to dev_dbg()
+---
+ drivers/mmc/host/sdhci-of-aspeed.c | 126 +++++++++++++++++++++++++++--
+ 1 file changed, 121 insertions(+), 5 deletions(-)
 
-Thanks,
--- Marco
+diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+index 4f008ba3280e..c61eb42e1ebb 100644
+--- a/drivers/mmc/host/sdhci-of-aspeed.c
++++ b/drivers/mmc/host/sdhci-of-aspeed.c
+@@ -16,9 +16,19 @@
+ 
+ #include "sdhci-pltfm.h"
+ 
+-#define ASPEED_SDC_INFO		0x00
+-#define   ASPEED_SDC_S1MMC8	BIT(25)
+-#define   ASPEED_SDC_S0MMC8	BIT(24)
++#define ASPEED_SDC_INFO			0x00
++#define   ASPEED_SDC_S1_MMC8		BIT(25)
++#define   ASPEED_SDC_S0_MMC8		BIT(24)
++#define ASPEED_SDC_PHASE		0xf4
++#define   ASPEED_SDC_S1_PHASE_IN	GENMASK(25, 21)
++#define   ASPEED_SDC_S0_PHASE_IN	GENMASK(20, 16)
++#define   ASPEED_SDC_S1_PHASE_OUT	GENMASK(15, 11)
++#define   ASPEED_SDC_S1_PHASE_IN_EN	BIT(10)
++#define   ASPEED_SDC_S1_PHASE_OUT_EN	GENMASK(9, 8)
++#define   ASPEED_SDC_S0_PHASE_OUT	GENMASK(7, 3)
++#define   ASPEED_SDC_S0_PHASE_IN_EN	BIT(2)
++#define   ASPEED_SDC_S0_PHASE_OUT_EN	GENMASK(1, 0)
++#define   ASPEED_SDC_PHASE_MAX		31
+ 
+ struct aspeed_sdc {
+ 	struct clk *clk;
+@@ -28,9 +38,21 @@ struct aspeed_sdc {
+ 	void __iomem *regs;
+ };
+ 
++struct aspeed_sdhci_phase_desc {
++	u32 value_mask;
++	u32 enable_mask;
++	u8 enable_value;
++};
++
++struct aspeed_sdhci_phase {
++	struct aspeed_sdhci_phase_desc in;
++	struct aspeed_sdhci_phase_desc out;
++};
++
+ struct aspeed_sdhci {
+ 	struct aspeed_sdc *parent;
+ 	u32 width_mask;
++	const struct aspeed_sdhci_phase *phase;
+ };
+ 
+ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+@@ -50,6 +72,22 @@ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+ 	spin_unlock(&sdc->lock);
+ }
+ 
++static void
++aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
++			   const struct aspeed_sdhci_phase_desc *phase,
++			   uint8_t value)
++{
++	u32 reg;
++
++	spin_lock(&sdc->lock);
++	reg = readl(sdc->regs + ASPEED_SDC_PHASE);
++	reg &= ~(phase->enable_mask | phase->value_mask);
++	reg |= value << __ffs(phase->value_mask);
++	reg |= phase->enable_value << __ffs(phase->enable_mask);
++	writel(reg, sdc->regs + ASPEED_SDC_PHASE);
++	spin_unlock(&sdc->lock);
++}
++
+ static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host;
+@@ -155,8 +193,49 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+ 	return (delta / 0x100) - 1;
+ }
+ 
++static int aspeed_sdhci_configure_of(struct platform_device *pdev,
++				     struct aspeed_sdhci *sdhci)
++{
++	struct device_node *np;
++	struct device *dev;
++	u32 phase;
++
++	if (!sdhci->phase)
++		return 0;
++
++	dev = &pdev->dev;
++	np = dev->of_node;
++
++	if (!of_property_read_u32(np, "aspeed,input-phase", &phase)) {
++		if (phase <= ASPEED_SDC_PHASE_MAX) {
++			aspeed_sdc_configure_phase(sdhci->parent,
++						   &sdhci->phase->in,
++						   phase);
++			dev_dbg(dev, "Input phase adjustment: %u", phase);
++		} else {
++			dev_err(dev, "Invalid input phase value: %u", phase);
++			return -EINVAL;
++		}
++	}
++
++	if (!of_property_read_u32(np, "aspeed,output-phase", &phase)) {
++		if (phase <= ASPEED_SDC_PHASE_MAX) {
++			aspeed_sdc_configure_phase(sdhci->parent,
++						   &sdhci->phase->out,
++						   phase);
++			dev_dbg(dev, "Output phase adjustment: %u", phase);
++		} else {
++			dev_err(dev, "Invalid output phase value: %u", phase);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int aspeed_sdhci_probe(struct platform_device *pdev)
+ {
++	const struct aspeed_sdhci_phase *phase;
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct aspeed_sdhci *dev;
+ 	struct sdhci_host *host;
+@@ -181,7 +260,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 
+ 	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
+-	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
++	dev->width_mask = !slot ? ASPEED_SDC_S0_MMC8 : ASPEED_SDC_S1_MMC8;
++	phase = of_device_get_match_data(&pdev->dev);
++	if (phase)
++		dev->phase = &phase[slot];
+ 
+ 	sdhci_get_of_property(pdev);
+ 
+@@ -195,6 +277,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
+ 
++	ret = aspeed_sdhci_configure_of(pdev, dev);
++	if (ret)
++		goto err_sdhci_add;
++
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret)
+ 		goto err_sdhci_add;
+@@ -230,10 +316,40 @@ static int aspeed_sdhci_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct aspeed_sdhci_phase ast2600_sdhci_phase[] = {
++	/* SDHCI/Slot 0 */
++	[0] = {
++		.in = {
++			.value_mask = ASPEED_SDC_S0_PHASE_IN,
++			.enable_mask = ASPEED_SDC_S0_PHASE_IN_EN,
++			.enable_value = 1,
++		},
++		.out = {
++			.value_mask = ASPEED_SDC_S0_PHASE_OUT,
++			.enable_mask = ASPEED_SDC_S0_PHASE_OUT_EN,
++			.enable_value = 3,
++		},
++	},
++	/* SDHCI/Slot 1 */
++	[1] = {
++		.in = {
++			.value_mask = ASPEED_SDC_S1_PHASE_IN,
++			.enable_mask = ASPEED_SDC_S1_PHASE_IN_EN,
++			.enable_value = 1,
++		},
++		.out = {
++			.value_mask = ASPEED_SDC_S1_PHASE_OUT,
++			.enable_mask = ASPEED_SDC_S1_PHASE_OUT_EN,
++			.enable_value = 3,
++		},
++	},
++};
++
++/* If supported, phase adjustment fields are stored in the data pointer */
+ static const struct of_device_id aspeed_sdhci_of_match[] = {
+ 	{ .compatible = "aspeed,ast2400-sdhci", },
+ 	{ .compatible = "aspeed,ast2500-sdhci", },
+-	{ .compatible = "aspeed,ast2600-sdhci", },
++	{ .compatible = "aspeed,ast2600-sdhci", .data = ast2600_sdhci_phase },
+ 	{ }
+ };
+ 
+-- 
+2.25.1
+
