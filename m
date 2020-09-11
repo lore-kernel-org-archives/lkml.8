@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413CDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF6E22204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF49221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="TMbNTQfP"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="dna9WOP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbgIKIIL (ORCPT
+        id S1725823AbgIKIIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:08:11 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:44722 "EHLO smtp1.axis.com"
+        Fri, 11 Sep 2020 04:08:23 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:44737 "EHLO smtp1.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgIKIIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:08:05 -0400
+        id S1725562AbgIKIIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:08:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=2770; q=dns/txt; s=axis-central1;
-  t=1599811684; x=1631347684;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cPa4cUMFiotpZ68Fm/qKTiIofFwHyG7dO+acVYumhHg=;
-  b=TMbNTQfPV3HcwVwEfOLVVtdj3X4q0Ip7QoKH5fcduBYr4gK+i0irCMEt
-   s8vPwTny3dhkCk7iDGdD0yXcgwGkpk+9RSuWDi9OsMySwlPDAaXpcUfKK
-   jGcD8XbzeCj0uGfewINj3dTwoSlryDBzwz7lORw3py/bddD/WLiomZf1H
-   EZFz3sC2/Z4ou9vr3kDwoToOfHsT0H3RlF3shz8Mm4FRSr26ExbVXB66b
-   TzXFO7mzd+LXbs8KfRe8ktVeIAt+MXI7FI5rX2+VCa52juabvfFpt89Km
-   EB2Gl8LLEheWL55H9K2lW75HpoW5EZW0TjnxN1ZNVb5+iRIvakM9KUklB
-   w==;
-IronPort-SDR: 3tkqyX7XKLPM/R6pI8Xcz34ofl09t0Fwhm+XpilNpZqxb+Pa6otPLkk4027QJuX553TRbIioiQ
- z+y5l2YxCN97cn+I1nhuY/7QwdyDkP4UpLAwN/h5hZ5vCefBBq4EYjMDbIVbAAvAF2Klk5Ngra
- /lWUI20C163PB9adsex6cX+505NFBlMuPQTGpoELj5eg7kTw7lhh6jZq4QUXFyR9sLqlQdnQOy
- ctmei6aGyoYN+R6Yf65C4GKTMY7uHk4BxRB+KsPUOX6QjSaApUMesrk9WiG76y8obKquwrvAIX
- n9g=
+  d=axis.com; l=2561; q=dns/txt; s=axis-central1;
+  t=1599811690; x=1631347690;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=GWBdvjMgI+JP9kgF51iEb5ue97etB2/mb8U6CHpN/hI=;
+  b=dna9WOP5AaCqRgTk8JHT3FtTzhC35ATfRDWyFe86kcWnCc0w3BPSDgks
+   U7+mIuCDOB/FLkdwCS5Le6b2UkFW89lflX3hE9Ifpms8iHjIIDQmpBLXP
+   q/Bmbxdp2AY5268jFDS9SANzQPMsDWsZQS01I4CKZBerqPmTSs8xxPAln
+   zoZ6ZYc+5vgZeRtOhrtTAgvxJs/jkF3gIfo2v+hTg1j1sdyPpHj/Ir8L5
+   X5/2P90u9DQE2zXg+QpSOpwILi7SJIiR4AzDcpjTI5tBAQvl5w3vaEdGt
+   P12fwzgDBj8XgPQYwwkZBxgrRLmxzKRBoNVt2amowcJeeRk8PfqEnYjZU
+   A==;
+IronPort-SDR: BnKEjPvVZxmSMPmALemYWoYMsfP1TELibKrRlQoks6qxAV//kiy6uMQ0GTli5SCk6uimuC/xtS
+ qCm3LqGWCS1mvMbzSh1Y2aT28dhxqmxZGc/bL6ZJ5bk+4HgXB9NX+1x4vcP7nPcWSrrkFOYJT3
+ /LlKjgAsNG39TEEP4d6JfvZx7/4t/9DvpYzMD0kikQIoB+6Dh9CkWj0dppvsTbdJvvq5t8k7Eo
+ xJueWhdyMF06BPehVvBON+jekPq6UdtqWOUFDBJXXzR9dh/5X0eOfslW827MoML4YkPbgSIufg
+ bsk=
 X-IronPort-AV: E=Sophos;i="5.76,414,1592863200"; 
-   d="scan'208";a="12818358"
+   d="scan'208";a="12818398"
 From:   Camel Guo <camel.guo@axis.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <tiwai@suse.com>,
         <dmurphy@ti.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         <kernel@axis.com>, Camel Guo <camelg@axis.com>
-Subject: [PATCH v2 1/3] dt-bindings: tlv320adcx140: Add GPIO config and drive config
-Date:   Fri, 11 Sep 2020 10:07:51 +0200
-Message-ID: <20200911080753.30342-1-camel.guo@axis.com>
+Subject: [PATCH v2 2/3] ASoC: tlv320adcx140: Add support for configuring GPIO pin
+Date:   Fri, 11 Sep 2020 10:07:52 +0200
+Message-ID: <20200911080753.30342-2-camel.guo@axis.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200911080753.30342-1-camel.guo@axis.com>
+References: <20200911080753.30342-1-camel.guo@axis.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -61,76 +63,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Camel Guo <camelg@axis.com>
 
-Add properties for configuring the General Purpose Input Outputs (GPIO).
-There are 2 settings for GPIO, configuration and the output drive type.
+Add support to configure the GPIO pin to the specific configuration.
+The GPIO pin can be configured as GPO, IRQ, SDOUT2, PDMCLK, MICBASE_EN,
+GPI, MCLK, SDIN, PDMDIN1, PDMDIN2, PDMDIN3 or PDMDIN4 and the output
+drive can be configured with various configuration.
 
 Signed-off-by: Camel Guo <camelg@axis.com>
 ---
- .../bindings/sound/tlv320adcx140.yaml         | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ sound/soc/codecs/tlv320adcx140.c | 44 ++++++++++++++++++++++++++++++++
+ sound/soc/codecs/tlv320adcx140.h |  4 +++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-index f578f17f3e04..7b0b4554da59 100644
---- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-+++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-@@ -134,6 +134,49 @@ patternProperties:
-        4d - Drive weak low and active high
-        5d - Drive Hi-Z and active high
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index f33ee604ee78..97f16fbba441 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -837,6 +837,46 @@ static int adcx140_configure_gpo(struct adcx140_priv *adcx140)
  
-+  ti,gpio-config:
-+    description: |
-+       Defines the configuration and output driver for the general purpose
-+       input and output pin (GPIO1). Its value is a pair, the first value is for
-+       the configuration type and the second value is for the output drive
-+       type. The array is defined as <GPIO1_CFG GPIO1_DRV>
+ }
+ 
++static int adcx140_configure_gpio(struct adcx140_priv *adcx140)
++{
++	int gpio_count = 0;
++	u32 gpio_outputs[2];
++	u32 gpio_output_val = 0;
++	int ret;
 +
-+       configuration for the GPIO pin can be one of the following:
-+       0 - disabled
-+       1 - GPIO1 is configured as a general-purpose output (GPO)
-+       2 - (default) GPIO1 is configured as a device interrupt output (IRQ)
-+       3 - GPIO1 is configured as a secondary ASI output (SDOUT2)
-+       4 - GPIO1 is configured as a PDM clock output (PDMCLK)
-+       8 - GPIO1 is configured as an input to control when MICBIAS turns on or
-+           off (MICBIAS_EN)
-+       9 - GPIO1 is configured as a general-purpose input (GPI)
-+       10 - GPIO1 is configured as a master clock input (MCLK)
-+       11 - GPIO1 is configured as an ASI input for daisy-chain (SDIN)
-+       12 - GPIO1 is configured as a PDM data input for channel 1 and channel 2
-+            (PDMDIN1)
-+       13 - GPIO1 is configured as a PDM data input for channel 3 and channel 4
-+            (PDMDIN2)
-+       14 - GPIO1 is configured as a PDM data input for channel 5 and channel 6
-+            (PDMDIN3)
-+       15 - GPIO1 is configured as a PDM data input for channel 7 and channel 8
-+            (PDMDIN4)
++	gpio_count = device_property_count_u32(adcx140->dev,
++			"ti,gpio-config");
++	if (gpio_count == 0)
++		return 0;
 +
-+       output drive type for the GPIO pin can be one of the following:
-+       0 - Hi-Z output
-+       1 - Drive active low and active high
-+       2 - (default) Drive active low and weak high
-+       3 - Drive active low and Hi-Z
-+       4 - Drive weak low and active high
-+       5 - Drive Hi-Z and active high
++	if (gpio_count != 2)
++		return -EINVAL;
 +
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - minItems: 2
-+        maxItems: 2
-+        items:
-+          maximum: 15
-+        default: [2, 2]
++	ret = device_property_read_u32_array(adcx140->dev, "ti,gpio-config",
++			gpio_outputs, gpio_count);
++	if (ret)
++		return ret;
 +
- required:
-   - compatible
-   - reg
-@@ -150,6 +193,7 @@ examples:
-         ti,mic-bias-source = <6>;
-         ti,pdm-edge-select = <0 1 0 1>;
-         ti,gpi-config = <4 5 6 7>;
-+        ti,gpio-config = <10 2>;
-         ti,gpo-config-1 = <0 0>;
-         ti,gpo-config-2 = <0 0>;
-         reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++	if (gpio_outputs[0] > ADCX140_GPIO_CFG_MAX) {
++		dev_err(adcx140->dev, "GPIO config out of range\n");
++		return -EINVAL;
++	}
++
++	if (gpio_outputs[1] > ADCX140_GPIO_DRV_MAX) {
++		dev_err(adcx140->dev, "GPIO drive out of range\n");
++		return -EINVAL;
++	}
++
++	gpio_output_val = gpio_outputs[0] << ADCX140_GPIO_SHIFT
++		| gpio_outputs[1];
++
++	ret = regmap_write(adcx140->regmap, ADCX140_GPIO_CFG0, gpio_output_val);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
+ static int adcx140_codec_probe(struct snd_soc_component *component)
+ {
+ 	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
+@@ -934,6 +974,10 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
+ 			return ret;
+ 	}
+ 
++	ret = adcx140_configure_gpio(adcx140);
++	if (ret)
++		return ret;
++
+ 	ret = adcx140_configure_gpo(adcx140);
+ 	if (ret)
+ 		goto out;
+diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
+index eedbc1d7221f..96f067e65e2a 100644
+--- a/sound/soc/codecs/tlv320adcx140.h
++++ b/sound/soc/codecs/tlv320adcx140.h
+@@ -145,4 +145,8 @@
+ #define ADCX140_GPO_CFG_MAX		4
+ #define ADCX140_GPO_DRV_MAX		5
+ 
++#define ADCX140_GPIO_SHIFT		4
++#define ADCX140_GPIO_CFG_MAX		15
++#define ADCX140_GPIO_DRV_MAX		5
++
+ #endif /* _TLV320ADCX140_ */
 -- 
 2.20.1
 
