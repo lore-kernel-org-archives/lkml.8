@@ -2,102 +2,130 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316CDC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9421C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80F5206CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599840521;
-	bh=iLPXQfche2cl2UNFwVe5Cn0pwE5wjPTc1yMcibij3Cc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BL1ElaaBI8z4He+7pSnTHJJGZEUyzRlOEdNzmc9e4Bu1OQeJLcxlelD288D00lPiy
-	 84kz0lJsD9DT2Rqio+mq202nHhE8e8vcFHYkBnsersK89sLY9efmv5lvaQpmxt0k7w
-	 NRNjR2yKbmQjfak4THDFZsyxQA6LQL6Ua7yzbQU4=
+	by mail.kernel.org (Postfix) with ESMTP id 90223221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3yxJ73U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgIKQIY (ORCPT
+        id S1726624AbgIKQIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgIKQII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:08:08 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F69206CA;
-        Fri, 11 Sep 2020 16:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599840488;
-        bh=iLPXQfche2cl2UNFwVe5Cn0pwE5wjPTc1yMcibij3Cc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LzluMK/42p47BOEhqCg9J+En60njQGbHwN2+0wRwyoosXXO2/pLvAVJsq5zMFx1qz
-         uVCU9qpfDRiLxjKRXW38CC0EKI1OyvSsyZJDC+z8P1OI+d9DW/uqyNEGwC2oXnpu1u
-         AzDXcFsZscFOuTMQXVm2IWUukA/pz77wIuMh5Q60=
-Date:   Fri, 11 Sep 2020 17:08:04 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Salter <msalter@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/perf: xgene_pmu: Fix uninitialized resource
- struct
-Message-ID: <20200911160802.GB20802@willie-the-truck>
-References: <20200902182729.27415-1-msalter@redhat.com>
- <20200907135026.GC12551@willie-the-truck>
- <489a7918b244e83736feff79c59a4b74d4e5cad0.camel@redhat.com>
+        Fri, 11 Sep 2020 12:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgIKQIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:08:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC10C061573;
+        Fri, 11 Sep 2020 09:08:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id b79so5290440wmb.4;
+        Fri, 11 Sep 2020 09:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=W7fDMMpZTmG7XBqh6MqKeeHMVBXF8pHyCf9SNZYBIJY=;
+        b=B3yxJ73UCdHVqqdn451ZNKbdUCTuIhk1iSVZ9zrrYO0RrlVj0PSj74Z2u1MulOWVeK
+         cdqp5f5KxklBhb88gRzDV2if5qK5yCgQ0R2B9/I3DBpaYtjqFhcrgdlhHcHe6cTG6Zg6
+         ZYBdt7WayUHpuciaLy21viNJc8dKUc8lStJmoZpp6ZMEV34MxLLOmx2l4w8OPhS5aXdA
+         rg66Gzcrm1l+HtLqR9Tl8ltOtdSbvxjqizp/0r0Wg81aExd2CIplOpoYwgu4Zq18A0P5
+         HJgACObZ54Gczh4DhBJdURwPYt1XlpKBnwL1IT0cLd4WIGtYEhSt8ocQETVXVnY8x0Ie
+         1rCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=W7fDMMpZTmG7XBqh6MqKeeHMVBXF8pHyCf9SNZYBIJY=;
+        b=bCS3otxayKYkKhOg0vimDcB0fb709ZL2Zua0LiLN4vM0sdekd9UI5vMNJ3J8qKLq+v
+         sWg4QrN8MiCdKZvHv2Yh8V6o+dNdxrq8wuQ2qEvMtWezc21Iw2BdxOfVXeAYlHdg08Sr
+         Jbhi5Sk029/6+wKPwmlecC0keLc2hMdPfvtReDOHTo4Mk4BLqPHa4MIWM1nAqMOO2MZh
+         11yihcqOzlB6m+Tko94XrA/ezL05TAhjDQw70d3NJHmUd2UQelPrG8ZgMJVCLuLZQH94
+         ws+ZASNaL/scafC7Gr9oH6xoaCYPgXaN62oCKUteDa5hMMKdM0zea/B/a7JJMITPiGQ9
+         xDHQ==
+X-Gm-Message-State: AOAM532LGo/DeJorKv1/BSuRJ/i1qjEMuMxilHkPlAhXU/VYU9cQQmLD
+        GKENA+IvT+5fK/PcUNrFKao=
+X-Google-Smtp-Source: ABdhPJzWFMFCNBa91w1CayAVeB17mBHueMRgD3X6E/Xo3Q69yThrCysEgTnScVfosZUKluqsrw2ADQ==
+X-Received: by 2002:a1c:4d14:: with SMTP id o20mr2892715wmh.74.1599840483798;
+        Fri, 11 Sep 2020 09:08:03 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id n4sm5434213wmd.26.2020.09.11.09.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 09:08:03 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] security: keys: Use kvfree_sensitive in a few places
+Date:   Fri, 11 Sep 2020 17:06:50 +0100
+Message-Id: <20200911160649.20164-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911160009.n2drvcjpzrsloxcj@lenovo-laptop>
+References: <20200911160009.n2drvcjpzrsloxcj@lenovo-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <489a7918b244e83736feff79c59a4b74d4e5cad0.camel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:37:22PM -0400, Mark Salter wrote:
-> On Mon, 2020-09-07 at 14:50 +0100, Will Deacon wrote:
-> > On Wed, Sep 02, 2020 at 02:27:29PM -0400, Mark Salter wrote:
-> > > diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-> > > index edac28cd25dd..fdbbd0804b92 100644
-> > > --- a/drivers/perf/xgene_pmu.c
-> > > +++ b/drivers/perf/xgene_pmu.c
-> > > @@ -1483,6 +1483,7 @@ xgene_pmu_dev_ctx *acpi_get_pmu_hw_inf(struct xgene_pmu *xgene_pmu,
-> > >  		return NULL;
-> > >  
-> > >  	INIT_LIST_HEAD(&resource_list);
-> > > +	memset(&res, 0, sizeof(res));
-> > >  	rc = acpi_dev_get_resources(adev, &resource_list,
-> > >  				    acpi_pmu_dev_add_resource, &res);
-> > >  	acpi_dev_free_resource_list(&resource_list);
-> > 
-> > Hmm, to be honest, I'm not sure we should be calling devm_ioremap_resource()
-> > at all here. The resource is clearly bogus, even with this change: the name
-> > and the resource hierarchy pointers will all be NULL. I think it would be
-> > better to follow the TX2 PMU driver (drivers/perf/thunderx2_pmu.c) which
-> > appears to assign the resource directly in tx2_uncore_pmu_init_dev().
-> > 
-> > Is there a reason we can't do that?
-> > 
-> > Will
-> > 
-> 
-> There's no difference between xgene and tx2 wrt resouce name/hierarchy.
-> They both call devm_ioresource_remap() which ends up setting the name
-> and hierarchy. The difference is that xgene calls acpi_dev_resource_memory()
-> directly from the acpi_dev_get_resources() callback. TX2 doesn't use such a
-> callback and in that case, acpi_dev_resource_memory() gets called with a
-> zeroed struct.
-> 
-> That said, changing xgene to avoid the callback like TX2 does would fix the
-> problem as well. If you'd rather go that route, I can send a patch for it.
+In big_key.c, there are a few places where memzero_explicit + kvfree is
+used. Replace these with a single call to kvfree_sensitive, to make the
+code more readable.
 
-Yes please
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+v2 - Update commit message as per James Bottomley's suggestion
 
-Will
+ security/keys/big_key.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+index 691347dea3c1..d17e5f09eeb8 100644
+--- a/security/keys/big_key.c
++++ b/security/keys/big_key.c
+@@ -121,8 +121,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ 		*path = file->f_path;
+ 		path_get(path);
+ 		fput(file);
+-		memzero_explicit(buf, enclen);
+-		kvfree(buf);
++		kvfree_sensitive(buf, enclen);
+ 	} else {
+ 		/* Just store the data in a buffer */
+ 		void *data = kmalloc(datalen, GFP_KERNEL);
+@@ -140,8 +139,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ err_enckey:
+ 	kfree_sensitive(enckey);
+ error:
+-	memzero_explicit(buf, enclen);
+-	kvfree(buf);
++	kvfree_sensitive(buf, enclen);
+ 	return ret;
+ }
+ 
+@@ -273,8 +271,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+ err_fput:
+ 		fput(file);
+ error:
+-		memzero_explicit(buf, enclen);
+-		kvfree(buf);
++		kvfree_sensitive(buf, enclen);
+ 	} else {
+ 		ret = datalen;
+ 		memcpy(buffer, key->payload.data[big_key_data], datalen);
+-- 
+2.28.0
+
