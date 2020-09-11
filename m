@@ -2,91 +2,60 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F1FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1015BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F58C2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89652076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbgIKKcV (ORCPT
+        id S1725875AbgIKKc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:32:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33266 "EHLO mx2.suse.de"
+        Fri, 11 Sep 2020 06:32:59 -0400
+Received: from muru.com ([72.249.23.125]:44576 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKKcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:32:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1E77BAD2F;
-        Fri, 11 Sep 2020 10:32:34 +0000 (UTC)
-Date:   Fri, 11 Sep 2020 12:32:17 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Changki Kim <changki.kim@samsung.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
-        gregkh@linuxfoundation.org, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [POC] printk: Convert dict ring into array
-Message-ID: <20200911103217.GJ3864@alley>
-References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
- <20200904082438.20707-1-changki.kim@samsung.com>
- <874kod6fgh.fsf@jogness.linutronix.de>
- <20200904124530.GB20558@alley>
- <20200911095035.GI3864@alley>
+        id S1725710AbgIKKcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 06:32:54 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 901FD80A3;
+        Fri, 11 Sep 2020 10:32:53 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 13:33:37 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     khilman@kernel.org, linux@armlinux.org.uk,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Subject: Re: [PATCH] omap3: enable off mode automatically
+Message-ID: <20200911103337.GH7101@atomide.com>
+References: <20200911064924.26281-1-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200911095035.GI3864@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200911064924.26281-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-09-11 11:50:35, Petr Mladek wrote:
-> This is POC how the printk() code would look when dict ring
-> gets converted into an array of extended info structures.
-> 
-> It applies on top of the patchset ("[PATCH printk v4 0/6]
-> printk: reimplement LOG_CONT handling"), see
-> https://lore.kernel.org/r/20200908202859.2736-1-john.ogness@linutronix.de
-> 
-> It compiles and even seems to work. But it would need quite
-> some love and discussion to get ready for merging.
+* Andreas Kemnade <andreas@kemnade.info> [200911 09:50]:
+> --- a/arch/arm/mach-omap2/pm.h
+> +++ b/arch/arm/mach-omap2/pm.h
+> @@ -49,11 +49,7 @@ static inline int omap4_opp_init(void)
+>  extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
+>  extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
+>  
+> -#ifdef CONFIG_PM_DEBUG
+>  extern u32 enable_off_mode;
+> -#else
+> -#define enable_off_mode 0
+> -#endif
 
-[...]
+Hmm isn't the above still needed for the other SoCs? Or is omap3 the only
+user?
 
-> Well, there is only small step to bundle these values into the existing
-> struct printk_info.
+Otherwise looks good to me :)
 
-My opinion:
-
-I would like to go this way in the long term because it looks like the most
-easy and reliable solution. But I do _not_ want to block pushing printk
-rework [0][1] into mainline because of this.
-
-Handling more information for each stored message is tangential to the
-printk rework. It would make it easier for crashdump related tools
-when the log buffer format is not modified many times. But it
-might block the rework indefinitely.
-
-The lockless ringbuffer is almost ready for merging into mainline.
-It will be a huge change on its own. The printk rework is very
-important effort. It is cleaning up the printk design and
-helps with many historical problems, like deadlocks or soft-lockups.
-
-I do not want to complicate it much more with adding more meta
-information and yet another format change that would deserve
-more investigation and discussion.
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git/log/?h=printk-rework
-[1] https://lore.kernel.org/r/20200908202859.2736-1-john.ogness@linutronix.de
-
-Best Regards,
-Petr
+Tony
