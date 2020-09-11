@@ -2,68 +2,111 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4FDC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626AAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0B520758
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599839153;
-	bh=zzWjTJEeO1Mzv9RyZoB9yNlnHJKEb/2Y9Tw1813MRsg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fOjhK3cCTV493nxzrQPyipoyjqAadf963INAgBmZXEyr0p2wk4rEtip4/tn4JHVAe
-	 6cCf/N+nqHvCxlQy4EfxeervnXTVkhrJumzePJak5zYWZOq7O9SxiqfyVI/paNVvrP
-	 RauQWllxu9xSL04NaiOr7l+Pekj4PRyiUWgsxxJk=
+	by mail.kernel.org (Postfix) with ESMTP id 13A4F20758
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5xqTemv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgIKPpr (ORCPT
+        id S1726505AbgIKPqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbgIKPk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:40:56 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C107206F4;
-        Fri, 11 Sep 2020 15:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599838850;
-        bh=zzWjTJEeO1Mzv9RyZoB9yNlnHJKEb/2Y9Tw1813MRsg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QLyIooXKlYxu61+c4QrwIBZDSTerUe0S41bGigOTvy8jXDAjalzrjq2wTzPG7CXJD
-         45ow7Z8MvZHw1oIPYp/GBikPkdH+ePuNOARYut91mcsQx+CkGlR7IqMcnVhqnq614E
-         0Jt7GcJRYy7xlBIJyJK8HDkWY55skoZG85sotTEY=
-Date:   Fri, 11 Sep 2020 08:40:48 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fri, 11 Sep 2020 11:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgIKPnj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:43:39 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DCEC06134B;
+        Fri, 11 Sep 2020 07:18:12 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g4so10167195edk.0;
+        Fri, 11 Sep 2020 07:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y6nSNj00j90TgjvRnkc+InI/a7CFYGYzQ75YXhZJXxU=;
+        b=c5xqTemviU3gKg9j+DUEX+mY71ZNYbjKmeQ5vscVlvaFSWmD6fCvE0SM6LAQo0XTIt
+         Lx3xwWuI7aAKuDnJ2TckQY4DqHdIpfZKInFDnKKxH8dPU8lyyvfd0/+T/lGVhMbmrcLd
+         TujlkJnS3Yo7dWNWdRAix6mDCD7FNwDNoDzXjVuLGuj3AfZQ58c40L6C7zkQG2wVX78u
+         DPgqZkJ9CNLAoIiA0NPdQukKpzRy++oowfDvKPWwiNkfRgYWo7j8CuouXISSRV4YdvdG
+         WkKUDWIIGJgDG9USHh+vNrO1J2d43qBlxOgp/s5ba09YtAWMbb/ha3D+r5ZSXC1FjUNm
+         4uMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y6nSNj00j90TgjvRnkc+InI/a7CFYGYzQ75YXhZJXxU=;
+        b=MlxRkt1y06XezsoAr8QAnqrn4+tpfqRLVmreaSSkCXT0/ad6lSjvcqu66v8jgNLdfS
+         3WRwP3uXmNbBvtZUKkYUSnLpjq7jTjVlLkCsGT3rgCMBmU2tK2LvaZHSihjvtV/WaNZV
+         gn2mw8hQVh4wYWW7HHTKk5260qyUfJbENw0j5AZMHg21JgBWM6Kz3TS6Zogua/yrjE5r
+         02v8xJQKcV3z2eqoTVFyH2/jorvMCiMVbQXlId3gNvLT0addktEr0jj6+qbSa9moasXu
+         DH/kn5vT/3YAhZEwN2x82cbK8h+gWcD0H/mHVxKWILLwQrfoosy5dwkfYQT1qUuIw7kZ
+         EI7w==
+X-Gm-Message-State: AOAM532wnlXYCc1Fag5ES4FZ87xsJz2tNuOMPK8YUDdt6vGLEUR6K3d+
+        jJeKWBku0Gyqp/oOtUH2yDkdjEvNGot+iw==
+X-Google-Smtp-Source: ABdhPJzjCmZLQ0J9GrJCMYDaj8Gd2SRJ2HQMB0rcW//JL3LJ60QoL8xE7XGiWQhh1JLMQx6YDUN+BQ==
+X-Received: by 2002:a50:f1d1:: with SMTP id y17mr2136764edl.231.1599833891611;
+        Fri, 11 Sep 2020 07:18:11 -0700 (PDT)
+Received: from aherlnxbspsrv01.lgs-net.com ([193.8.40.126])
+        by smtp.gmail.com with ESMTPSA id q11sm1679069eds.16.2020.09.11.07.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 07:18:10 -0700 (PDT)
+From:   Olympia Giannou <ogiannou@gmail.com>
+X-Google-Original-From: Olympia Giannou <olympia.giannou@leica-geosystems.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-usb@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] net: ag71xx: add ethtool support
-Message-ID: <20200911084048.3d520502@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200911082528.27121-2-o.rempel@pengutronix.de>
-References: <20200911082528.27121-1-o.rempel@pengutronix.de>
-        <20200911082528.27121-2-o.rempel@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     Olympia Giannou <olympia.giannou@leica-geosystems.com>
+Subject: [PATCH] rndis_host: increase sleep time in the query-response loop
+Date:   Fri, 11 Sep 2020 14:17:24 +0000
+Message-Id: <20200911141725.5960-1-olympia.giannou@leica-geosystems.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 10:25:27 +0200 Oleksij Rempel wrote:
-> Add basic ethtool support. The functionality was tested on AR9331 SoC.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Some WinCE devices face connectivity issues via the NDIS interface. They
+fail to register, resulting in -110 timeout errors and failures during the
+probe procedure.
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+In this kind of WinCE devices, the Windows-side ndis driver needs quite
+more time to be loaded and configured, so that the linux rndis host queries
+to them fail to be responded correctly on time.
+
+More specifically, when INIT is called on the WinCE side - no other
+requests can be served by the Client and this results in a failed QUERY
+afterwards.
+
+The increase of the waiting time on the side of the linux rndis host in
+the command-response loop leaves the INIT process to complete and respond
+to a QUERY, which comes afterwards. The WinCE devices with this special
+"feature" in their ndis driver are satisfied by this fix.
+
+Signed-off-by: Olympia Giannou <olympia.giannou@leica-geosystems.com>
+---
+ drivers/net/usb/rndis_host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/rndis_host.c b/drivers/net/usb/rndis_host.c
+index bd9c07888ebb..6fa7a009a24a 100644
+--- a/drivers/net/usb/rndis_host.c
++++ b/drivers/net/usb/rndis_host.c
+@@ -201,7 +201,7 @@ int rndis_command(struct usbnet *dev, struct rndis_msg_hdr *buf, int buflen)
+ 			dev_dbg(&info->control->dev,
+ 				"rndis response error, code %d\n", retval);
+ 		}
+-		msleep(20);
++		msleep(40);
+ 	}
+ 	dev_dbg(&info->control->dev, "rndis response timeout\n");
+ 	return -ETIMEDOUT;
+-- 
+2.17.1
+
