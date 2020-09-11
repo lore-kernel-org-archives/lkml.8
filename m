@@ -2,130 +2,174 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F25CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BE9C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCE7221EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48A2221EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="Qr3jX/bk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lnBSJV9b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="McWhkeW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgIKHCl (ORCPT
+        id S1725817AbgIKHDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:02:41 -0400
-Received: from mail-eopbgr70111.outbound.protection.outlook.com ([40.107.7.111]:48353
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725468AbgIKHC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:02:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e37rFNxcEzti2AjCGonkprh8y9LzeKWStVTdRYI/j1mJP09s9McqdkoQFXMPPLbaSClUrh1kv40Nkv3/JRWuVFpC1JXy7SzH1I0mEHs6EMad+GyDAQBftSdLeW9V6gEUy0KrRouyLwCj07pCRIeanRTGeFMWoATG2rCEibvLbdIIhPzXDEA1IWm8XMvz7klrL2iz4KlqK58bIqLoanRZ0CYh07NOCjVM6oM0NbtTGSRMmbNyhVNS22/5pH6fZq7/ElJ+MCrNQr81YJQHOB98rpEj+bUr+OjnTaeaj43FPD8PwMwTVb5Y48HPk8ZhMWG3cDaBS5Hyowk+hgONGa/MfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mq2C81eBEKbjZS+T7g13tDoEsxYzI3bRRVpu2sGCteg=;
- b=iDSdyX03Oyon9Rb1W6wRCIo29n33W1s5RITvqbI+pfkh/bdpfq/qWkAqqvE44xQyAxVzvBi4YoWu3rQYv6kR+3taM3Ov6dJSdZt+6oiNFIG0mhc1Tqvq31xh+aETqwFcnVDkocjyV/7u4t7EsyPl8XlVlAP6+3s92ai2RG2vz9pbGbxlwONTu0iY2vUeMwY6zM1RqBICgszuak5gWXCeFVO7Le9VjtxdV6s0NMU2Aq8d+rs894fPNJDdZo5IXe7TybzxXVOPME1HssoBKBjbhc5LHbLICQ423X2O2NaM7zZ5zUUMqxIxJoin70KeyDQJZ48la3UTmikG7L1MyyDXEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mq2C81eBEKbjZS+T7g13tDoEsxYzI3bRRVpu2sGCteg=;
- b=Qr3jX/bkaGNcLl50Jxxdqb0IJy53LKPf5cyGv7McZbEOBoGytIR/QpQqwMhLzJa3ctrQyqVNGtGGzprtkz9V8p5N++sOcQfZ4ZaBJMwmIBWCM75rs6f7UYJdUrTVelnOi9t5WTDaUWysfDExUn7zDfpcdWVdMFxita+H9Ez9Nbk=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0300.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5c::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3370.16; Fri, 11 Sep 2020 07:02:21 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::c1ab:71de:6bc2:89fe]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::c1ab:71de:6bc2:89fe%6]) with mapi id 15.20.3370.017; Fri, 11 Sep 2020
- 07:02:20 +0000
-Date:   Fri, 11 Sep 2020 10:02:12 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next v8 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-Message-ID: <20200911070212.GA17183@plvision.eu>
-References: <20200910150055.15598-1-vadym.kochan@plvision.eu>
- <20200910150055.15598-2-vadym.kochan@plvision.eu>
- <20200910183047.39e4cd7c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200910183047.39e4cd7c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BE0P281CA0004.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:a::14) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Fri, 11 Sep 2020 03:03:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45112 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgIKHCd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:02:33 -0400
+Date:   Fri, 11 Sep 2020 07:02:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599807749;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nK+Y+pGcwGyQYhqw3U+d78NVAhziKaGB5comF2R4ZiA=;
+        b=lnBSJV9bIdkFa8DN3Lvz1CA+G3rVL4l21bP2jfAMs+ZdaDyK1jsBHKNXGotvd9EfBcyy/a
+        axVjq6KYlMPwbuwcdc/Y4dYsAtglaQ1WbovpuIh0Y4Vsrvm4Dxy2HByVIUIhfINLrbfc5I
+        0IU203uWaLSSQaIjT+QqeRQiYhahDubrjOy9P1qVsXnpW0Az+ism2Qb+ZFwW+SkIXe7pz/
+        aamGOkOniX6aDAo2FHgnPaFVI/8yl2+/MAX++j1vX+c4WDR86UmelLADNs+YJYH/euD41V
+        iNfiRTppl8ZpIRU9PNROcy0dlmqJLe2JITHOhLhFlhIQflvUz1cfGqDFknlPjw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599807749;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nK+Y+pGcwGyQYhqw3U+d78NVAhziKaGB5comF2R4ZiA=;
+        b=McWhkeW8OMH0xUppniI1KSnVOTBV6QAD5eiaCGz+ICy/zhpAoWGHQv1jLJzFAwcFxzvPZm
+        KgQQdlKEUdrXpkCA==
+From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/amd/uncore: Set all slices and threads to
+ restore perf stat -a behaviour
+Cc:     Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200908214740.18097-2-kim.phillips@amd.com>
+References: <20200908214740.18097-2-kim.phillips@amd.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by BE0P281CA0004.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:a::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.5 via Frontend Transport; Fri, 11 Sep 2020 07:02:19 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2ced28c-2b4c-4683-071b-08d85620a093
-X-MS-TrafficTypeDiagnostic: HE1P190MB0300:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0300FCCB248403383D96B18F95240@HE1P190MB0300.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W0Pqtzpw358xn1Dp7kEjynUW6h7eWUumjIALRuefAefJka8hbWWi6hG6MmY+72Q3W1X8zOIGRX0zpstvdd7g7AsYjCDr1yEPFAbWbZwWa1UZ6adX93RBLXTj82wOUJGKxCAjoY2t7CuKKTukSpyZ8DYPkhmoIa3yhhbPa/ylio2bC28qg/YPt5SpJGRO9PnFI4e3ToHDcYn2RuM+vso8MIMMXlr660ldbU4UuLrt73o8sU8FQX3EdkugpiKmXeXyCLZrEc5bj5UQUndy/OEkjjSSF+8Lywni0yfv3+St+xC25rLs9r/Zv4Mwm/bAdYB+KLoc3jvocFBoPZnq6rtwNA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(346002)(39830400003)(366004)(396003)(6916009)(5660300002)(8936002)(4744005)(36756003)(478600001)(2906002)(4326008)(316002)(1076003)(2616005)(33656002)(83380400001)(55016002)(8886007)(26005)(86362001)(16526019)(66556008)(66476007)(66946007)(44832011)(186003)(956004)(8676002)(54906003)(6666004)(7696005)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: c77I2/wB/pXqBEVHeHC2tl0g8T1smQO1DwI3v1UYnTXLNyujf4OtkrLrk7CKbyc7XdrF5DwwrBg61R+ZqdQrg3WUMcFQgInwwH6OA6RLpTwk8ePMLUzoT29S+rtJ1jzOTmz+A7H5xSAHfe2sJH56AeoZj+VgbNVo8deCjPWv4/9hfMPTGZszZO4jeqUm1o0bru8ibCHUrc+lXPxXysYnD8YaznbhcqhIclhaKmMlN5kNDv1fHSzHEnpetgYvDzayytKSgXgiqe0E+lvSV3ceE7JjpRvI3/vB0nFbrBX+DthubIJj2Cva1J9VUQs4vquTjLl7nUoumIDDvNVxyE2XLp+kjt2MYeCKVcYQvyE965zZGKq6R+afMHcKyCft0FJv8eqG5rEyyZwip/sn1m9iGSwgR3oMRICJhCa0ZRCfc+NZmJVegxLKV11ZxOMR8RWpT5w/21IGR/HwJ5tkQZYUc9PkiPGBbih89pnjzu2u+xmYTxOYoJXa8bVRUEDPRmxdXMsvbdoOYZRiv8l4IMbC10ZBJB8t/sJychfTbQ8IOa0IGvJKUY+sV3RZdEtQxWzMsLpw/rcdJcML9dBpPpurykhWrdwBb3WzIF4Buo+2Y/tLWcYPFm7iwlK4MKWDch173Gxbh9/0zSNDmT0ZM2VveQ==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2ced28c-2b4c-4683-071b-08d85620a093
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 07:02:20.8595
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k9bI6zIUy8xlDoB5mqykwQZuy1dDzcQUR6JshcyKGmtJpW0d9e2Jpzsf21kKwCGiHaep5l+dcK0raEo3jOo5mpLxDIzAktjgJbXqaUcgT+c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0300
+Message-ID: <159980774865.20229.4594347442051094162.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 06:30:47PM -0700, Jakub Kicinski wrote:
-> On Thu, 10 Sep 2020 18:00:50 +0300 Vadym Kochan wrote:
-> > +static int prestera_sdma_tx_wait(struct prestera_sdma *sdma,
-> > +				 struct prestera_tx_ring *tx_ring)
-> > +{
-> > +	int tx_wait_num = PRESTERA_SDMA_WAIT_MUL * tx_ring->max_burst;
-> > +	bool is_ready;
-> > +
-> > +	return read_poll_timeout_atomic(prestera_sdma_is_ready, is_ready, true,
-> > +					1, tx_wait_num, false, sdma);
-> > +}
-> 
-> This is strange and generates a warning:
-> 
-> drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: In function ‘prestera_sdma_tx_wait’:
-> drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:695:7: warning: variable ‘is_ready’ set but not used [-Wunused-but-set-variable]
->   695 |  bool is_ready;
->       |       ^~~~~~~~
+The following commit has been merged into the perf/core branch of tip:
 
-Sorry about this mistake, will re-submit new version.
+Commit-ID:     c8fe99d0701fec9fb849ec880a86bc5592530496
+Gitweb:        https://git.kernel.org/tip/c8fe99d0701fec9fb849ec880a86bc5592530496
+Author:        Kim Phillips <kim.phillips@amd.com>
+AuthorDate:    Tue, 08 Sep 2020 16:47:34 -05:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 10 Sep 2020 11:19:34 +02:00
+
+perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+
+Commit 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for
+F17h L3 PMCs") inadvertently changed the uncore driver's behaviour
+wrt perf tool invocations with or without a CPU list, specified with
+-C / --cpu=.
+
+Change the behaviour of the driver to assume the former all-cpu (-a)
+case, which is the more commonly desired default.  This fixes
+'-a -A' invocations without explicit cpu lists (-C) to not count
+L3 events only on behalf of the first thread of the first core
+in the L3 domain.
+
+BEFORE:
+
+Activity performed by the first thread of the last core (CPU#43) in
+CPU#40's L3 domain is not reported by CPU#40:
+
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                 21,835      l3_request_g1.caching_l3_cache_accesses
+CPU40                 87,066      l3_request_g1.caching_l3_cache_accesses
+CPU44                 17,360      l3_request_g1.caching_l3_cache_accesses
+...
+
+AFTER:
+
+The L3 domain activity is now reported by CPU#40:
+
+sudo perf stat -a -A -e l3_request_g1.caching_l3_cache_accesses taskset -c 43 perf bench mem memcpy -s 32mb -l 100 -f default
+...
+CPU36                354,891      l3_request_g1.caching_l3_cache_accesses
+CPU40              1,780,870      l3_request_g1.caching_l3_cache_accesses
+CPU44                315,062      l3_request_g1.caching_l3_cache_accesses
+...
+
+Fixes: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200908214740.18097-2-kim.phillips@amd.com
+---
+ arch/x86/events/amd/uncore.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 76400c0..e7e61c8 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -181,28 +181,16 @@ static void amd_uncore_del(struct perf_event *event, int flags)
+ }
+ 
+ /*
+- * Convert logical CPU number to L3 PMC Config ThreadMask format
++ * Return a full thread and slice mask until per-CPU is
++ * properly supported.
+  */
+-static u64 l3_thread_slice_mask(int cpu)
++static u64 l3_thread_slice_mask(void)
+ {
+-	u64 thread_mask, core = topology_core_id(cpu);
+-	unsigned int shift, thread = 0;
++	if (boot_cpu_data.x86 <= 0x18)
++		return AMD64_L3_SLICE_MASK | AMD64_L3_THREAD_MASK;
+ 
+-	if (topology_smt_supported() && !topology_is_primary_thread(cpu))
+-		thread = 1;
+-
+-	if (boot_cpu_data.x86 <= 0x18) {
+-		shift = AMD64_L3_THREAD_SHIFT + 2 * (core % 4) + thread;
+-		thread_mask = BIT_ULL(shift);
+-
+-		return AMD64_L3_SLICE_MASK | thread_mask;
+-	}
+-
+-	core = (core << AMD64_L3_COREID_SHIFT) & AMD64_L3_COREID_MASK;
+-	shift = AMD64_L3_THREAD_SHIFT + thread;
+-	thread_mask = BIT_ULL(shift);
+-
+-	return AMD64_L3_EN_ALL_SLICES | core | thread_mask;
++	return AMD64_L3_EN_ALL_SLICES | AMD64_L3_EN_ALL_CORES |
++	       AMD64_L3_F19H_THREAD_MASK;
+ }
+ 
+ static int amd_uncore_event_init(struct perf_event *event)
+@@ -232,7 +220,7 @@ static int amd_uncore_event_init(struct perf_event *event)
+ 	 * For other events, the two fields do not affect the count.
+ 	 */
+ 	if (l3_mask && is_llc_event(event))
+-		hwc->config |= l3_thread_slice_mask(event->cpu);
++		hwc->config |= l3_thread_slice_mask();
+ 
+ 	uncore = event_to_amd_uncore(event);
+ 	if (!uncore)
