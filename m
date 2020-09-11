@@ -3,103 +3,198 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2104C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FAEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA13C221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B9D221EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841178;
-	bh=AIEysMnma8oXpbG6AIqoQmLe/zMLbrm7nTct9i4ClRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qPh+y9D9dGDSjkVhLkeDU2YVMD6+dMNCpOfeWyEOS8ayZyg+NnFBKIR+R/OFLSVd/
-	 NTrJxjCpUmbPqqU207z9xAqmwgVkcdUkGhjAyJxmfROPr8gk+nGsEJW/9D1vrU7LWd
-	 wfAE6CTUKPiRIAVXPi394m+8e50bKS/AIki8DTGM=
+	s=default; t=1599841187;
+	bh=QLxLHnsqBMRfkyabux2IZ0Ir8juf+/6Ln1bN5JXHj00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bjwkvg6wkXvCCKw2dynR6sKMgzGxmi4Uaa7K/daW7ouI16RvIsSBFHyQGb4C1Mglh
+	 Y1fXGTpetnjeiVtO5jw7G3z4sDWPve40N2ZVj+No10/0J/S9ZEKrOZ/CH+5tIWVMTl
+	 bfPvE98dOxGs3LOZFqgTy87ADoehU/UwjzAeO50Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgIKQTL (ORCPT
+        id S1726562AbgIKQTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgIKPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:30:30 -0400
+        id S1726520AbgIKPab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:30:31 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED3A221F1;
-        Fri, 11 Sep 2020 14:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5352224A;
+        Fri, 11 Sep 2020 12:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599832855;
-        bh=AIEysMnma8oXpbG6AIqoQmLe/zMLbrm7nTct9i4ClRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mT0i8FPot4WelBgGvxutd73msYMtd3Ktgf77cdHibTuwVKVRDn4VFno9l1PmzIJWU
-         hvhb2J+YtYWKGnRfzZ9vQgrChNk0kvCxvToMGUWto/AbdbT6JJyGqDHKnx6LOTBq1R
-         cis00TqGiSz5x0Vg9tppQY/5IftmumCe8eKQTYa8=
-Date:   Fri, 11 Sep 2020 16:01:00 +0200
+        s=default; t=1599829122;
+        bh=QLxLHnsqBMRfkyabux2IZ0Ir8juf+/6Ln1bN5JXHj00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HbukDnZvfHaCTnh8zCGBDyyEql9+LoI4oy986LAJ7+5072hRcytTYIL8bZdBK4GyU
+         YdwivvLZedwvo/cf2YctuACy0w32w6aQ8dpkfVUEOUWWhVIh1i3+9qVKLJ9xmPJgq+
+         kXoYpoi32GLi8j0P9ueIqynOSiLnqbaREs4J+5WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, mhocko@kernel.org,
-        linux-mm@kvack.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: don't panic when links can't be created in sysfs
-Message-ID: <20200911140100.GA3812164@kroah.com>
-References: <20200911134831.53258-1-ldufour@linux.ibm.com>
- <20200911134831.53258-4-ldufour@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 68/71] netlabel: fix problems with mapping removal
+Date:   Fri, 11 Sep 2020 14:46:52 +0200
+Message-Id: <20200911122508.337614546@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
+References: <20200911122504.928931589@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911134831.53258-4-ldufour@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 03:48:31PM +0200, Laurent Dufour wrote:
-> At boot time, or when doing memory hot-add operations, if the links in
-> sysfs can't be created, the system is still able to run, so just report the
-> error in the kernel log.
-> 
-> Since the number of memory blocks managed could be high, the messages are
-> rate limited.
-> 
-> As a consequence, link_mem_sections() has no status to report anymore.
-> 
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/node.c  | 25 +++++++++++++++++--------
->  include/linux/node.h | 17 ++++++++---------
->  mm/memory_hotplug.c  |  5 ++---
->  3 files changed, 27 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 862516c5a5ae..749a1c8ea992 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -811,12 +811,21 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
->  		ret = sysfs_create_link_nowarn(&node_devices[nid]->dev.kobj,
->  					&mem_blk->dev.kobj,
->  					kobject_name(&mem_blk->dev.kobj));
-> -		if (ret)
-> -			return ret;
-> +		if (ret && ret != -EEXIST)
-> +			pr_err_ratelimited(
-> +				"can't create %s to %s link in sysfs (%d)\n",
-> +				kobject_name(&node_devices[nid]->dev.kobj),
-> +				kobject_name(&mem_blk->dev.kobj), ret);
+From: Paul Moore <paul@paul-moore.com>
 
-dev_err_ratelimited()?
+[ Upstream commit d3b990b7f327e2afa98006e7666fb8ada8ed8683 ]
 
-Same elsewhere in this patch.
+This patch fixes two main problems seen when removing NetLabel
+mappings: memory leaks and potentially extra audit noise.
 
-thanks,
+The memory leaks are caused by not properly free'ing the mapping's
+address selector struct when free'ing the entire entry as well as
+not properly cleaning up a temporary mapping entry when adding new
+address selectors to an existing entry.  This patch fixes both these
+problems such that kmemleak reports no NetLabel associated leaks
+after running the SELinux test suite.
 
-greg k-h
+The potentially extra audit noise was caused by the auditing code in
+netlbl_domhsh_remove_entry() being called regardless of the entry's
+validity.  If another thread had already marked the entry as invalid,
+but not removed/free'd it from the list of mappings, then it was
+possible that an additional mapping removal audit record would be
+generated.  This patch fixes this by returning early from the removal
+function when the entry was previously marked invalid.  This change
+also had the side benefit of improving the code by decreasing the
+indentation level of large chunk of code by one (accounting for most
+of the diffstat).
+
+Fixes: 63c416887437 ("netlabel: Add network address selectors to the NetLabel/LSM domain mapping")
+Reported-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/netlabel/netlabel_domainhash.c |   59 ++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 29 deletions(-)
+
+--- a/net/netlabel/netlabel_domainhash.c
++++ b/net/netlabel/netlabel_domainhash.c
+@@ -99,6 +99,7 @@ static void netlbl_domhsh_free_entry(str
+ 			kfree(netlbl_domhsh_addr6_entry(iter6));
+ 		}
+ #endif /* IPv6 */
++		kfree(ptr->def.addrsel);
+ 	}
+ 	kfree(ptr->domain);
+ 	kfree(ptr);
+@@ -550,6 +551,8 @@ int netlbl_domhsh_add(struct netlbl_dom_
+ 				goto add_return;
+ 		}
+ #endif /* IPv6 */
++		/* cleanup the new entry since we've moved everything over */
++		netlbl_domhsh_free_entry(&entry->rcu);
+ 	} else
+ 		ret_val = -EINVAL;
+ 
+@@ -593,6 +596,12 @@ int netlbl_domhsh_remove_entry(struct ne
+ {
+ 	int ret_val = 0;
+ 	struct audit_buffer *audit_buf;
++	struct netlbl_af4list *iter4;
++	struct netlbl_domaddr4_map *map4;
++#if IS_ENABLED(CONFIG_IPV6)
++	struct netlbl_af6list *iter6;
++	struct netlbl_domaddr6_map *map6;
++#endif /* IPv6 */
+ 
+ 	if (entry == NULL)
+ 		return -ENOENT;
+@@ -610,6 +619,9 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		ret_val = -ENOENT;
+ 	spin_unlock(&netlbl_domhsh_lock);
+ 
++	if (ret_val)
++		return ret_val;
++
+ 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
+ 	if (audit_buf != NULL) {
+ 		audit_log_format(audit_buf,
+@@ -619,40 +631,29 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		audit_log_end(audit_buf);
+ 	}
+ 
+-	if (ret_val == 0) {
+-		struct netlbl_af4list *iter4;
+-		struct netlbl_domaddr4_map *map4;
+-#if IS_ENABLED(CONFIG_IPV6)
+-		struct netlbl_af6list *iter6;
+-		struct netlbl_domaddr6_map *map6;
+-#endif /* IPv6 */
+-
+-		switch (entry->def.type) {
+-		case NETLBL_NLTYPE_ADDRSELECT:
+-			netlbl_af4list_foreach_rcu(iter4,
+-					     &entry->def.addrsel->list4) {
+-				map4 = netlbl_domhsh_addr4_entry(iter4);
+-				cipso_v4_doi_putdef(map4->def.cipso);
+-			}
++	switch (entry->def.type) {
++	case NETLBL_NLTYPE_ADDRSELECT:
++		netlbl_af4list_foreach_rcu(iter4, &entry->def.addrsel->list4) {
++			map4 = netlbl_domhsh_addr4_entry(iter4);
++			cipso_v4_doi_putdef(map4->def.cipso);
++		}
+ #if IS_ENABLED(CONFIG_IPV6)
+-			netlbl_af6list_foreach_rcu(iter6,
+-					     &entry->def.addrsel->list6) {
+-				map6 = netlbl_domhsh_addr6_entry(iter6);
+-				calipso_doi_putdef(map6->def.calipso);
+-			}
++		netlbl_af6list_foreach_rcu(iter6, &entry->def.addrsel->list6) {
++			map6 = netlbl_domhsh_addr6_entry(iter6);
++			calipso_doi_putdef(map6->def.calipso);
++		}
+ #endif /* IPv6 */
+-			break;
+-		case NETLBL_NLTYPE_CIPSOV4:
+-			cipso_v4_doi_putdef(entry->def.cipso);
+-			break;
++		break;
++	case NETLBL_NLTYPE_CIPSOV4:
++		cipso_v4_doi_putdef(entry->def.cipso);
++		break;
+ #if IS_ENABLED(CONFIG_IPV6)
+-		case NETLBL_NLTYPE_CALIPSO:
+-			calipso_doi_putdef(entry->def.calipso);
+-			break;
++	case NETLBL_NLTYPE_CALIPSO:
++		calipso_doi_putdef(entry->def.calipso);
++		break;
+ #endif /* IPv6 */
+-		}
+-		call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 	}
++	call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 
+ 	return ret_val;
+ }
+
+
