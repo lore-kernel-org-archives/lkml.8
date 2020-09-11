@@ -2,182 +2,220 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E24C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D486DC2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A264208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B3B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BX0LOotV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2/WhwDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgIKPy5 (ORCPT
+        id S1726592AbgIKPzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgIKPwl (ORCPT
+        Fri, 11 Sep 2020 11:55:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27888 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726574AbgIKPyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:52:41 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0AAC0617A2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:52:42 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id g10so8370385otq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nzmY8qHBC7Hn4hT/mqduo9xIcqJb48H8H8bYW2+kdKs=;
-        b=BX0LOotVaYOnKN4OT6XmK+cMBT1CxWmFzPpGGk1mY5LWvunLEszBuF8rCp+wK3bbsg
-         JB6Ceqrdxgab2ORWCFl63fFW+c0flSFFwAmetVwEYcIFHW+SKIj+V//cxLKgQnk56png
-         O5njrWf9XoUCdd2ECAo+ygPmlXqPGhghoCHphtBTAIAr4dsAN0hHNtoz3O0BzKx7r3Ap
-         ZPpmNl//tbXnoWHkCx5DeUG6ELFCT7QQAB02gukcUyhFZsdvwO45O08zRsQxlNOVW+uj
-         8O5KFwFX/IwZ+2pHyC4JLncr2Rrh1WnET/yEi+8AYneoUXgSWHS8bVkb+AjK5N1+2Mjx
-         it+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nzmY8qHBC7Hn4hT/mqduo9xIcqJb48H8H8bYW2+kdKs=;
-        b=jDGlZQP7uo1OI7rMj3bXerxQgZJaGvsU5FW01gAsXzEmXnOyf/+uSlF9iISoJ9oNVH
-         akupcCVoQ9nGGZEK55825UPSZtUb/9q3ops3jp+EI3HjEe9uW6fFxXFX8UgHaYxksbOm
-         cZfFAeX87LqTZxAPM8yTDwuFXk5gXJVQiJCm+Lr7aqJMzAvBgmpFPYZopO92OvymE7xI
-         kTfUEB675ELGn5p3Ixut3AMDmeoN7YAG074wZN1r51DpJlKXs6agn1SB/WG3bX7QrW/w
-         VM/TrFKep+pVHdlm5iYmNjF1Cf+7g68CyiWjshmFsCvzIn+EUdnYrowlw5Mc9I0H2wdf
-         fXCQ==
-X-Gm-Message-State: AOAM533p4mtoAm1/YXmjGGBWBhGK39zh6KdkHA7HhMJb5tr9Zl1ohiFl
-        /DDHwaXfdpTno7uuYTT9E729bw==
-X-Google-Smtp-Source: ABdhPJxY+os+5x0DwAanxGsJ38K45dys4bD8AAAM2cMbDKFwfx8nSxclD9cDMJzBOUbOwthuqItxBg==
-X-Received: by 2002:a9d:5a91:: with SMTP id w17mr1295437oth.345.1599832355866;
-        Fri, 11 Sep 2020 06:52:35 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id p20sm411734ook.27.2020.09.11.06.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 06:52:35 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 08:52:32 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     skakit@codeaurora.org
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V5 2/4] arm64: dts: qcom: sc7180: Add necessary pinctrl
- and interrupt config for BT UART
-Message-ID: <20200911135232.GY3715@yoga>
-References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
- <1599742438-16811-3-git-send-email-skakit@codeaurora.org>
- <CAD=FV=ULJqgHutr524wb-wVq4gejqo1p_zqRXP=h4Co6Gvmzew@mail.gmail.com>
- <010101747ca94cce-42d129fa-0374-4f12-aab8-2ccafd02b3c7-000000@us-west-2.amazonses.com>
+        Fri, 11 Sep 2020 11:54:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599839661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FrqEMuNv+1C+Q9u81rRR/J9O4s8lK0dAQz/GWPxtPKI=;
+        b=D2/WhwDEkFot3uOOIx4Dre8gllxBKcEyT9wxYv5Yh3u2kX+F2jIgWFT3xQBkmyY1nzILxk
+        embxXiUZ4/bPqMmNyShc427HDKvHSJKxk2Gem2s/a6cewc0dT7z42BxxWfXSP4iAWEbLN4
+        y83VfM3UkFophhziIkjP2qbI9dZaVs0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-QWYnVU4QPqOTAx6UqlvlNQ-1; Fri, 11 Sep 2020 11:54:17 -0400
+X-MC-Unique: QWYnVU4QPqOTAx6UqlvlNQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44CFC801AC4;
+        Fri, 11 Sep 2020 15:54:14 +0000 (UTC)
+Received: from [10.10.110.42] (unknown [10.10.110.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 86AD375125;
+        Fri, 11 Sep 2020 15:54:11 +0000 (UTC)
+Subject: Re: [PATCH V2 2/3] integrity: Move import of MokListRT certs to a
+ separate routine
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
+        James Morris <jmorris@namei.org>, serge@hallyn.com,
+        Kees Cook <keescook@chromium.org>, zohar@linux.ibm.com,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Jones <pjones@redhat.com>,
+        David Howells <dhowells@redhat.com>, prarit@redhat.com
+References: <20200905013107.10457-1-lszubowi@redhat.com>
+ <20200905013107.10457-3-lszubowi@redhat.com>
+ <CAMj1kXEdkdeE8VSZqEzhd__Kb7_ZmG2af6iBpbY3=nsj1-phYw@mail.gmail.com>
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+Message-ID: <f0a079b1-5f02-8618-fdfe-aea2278113c9@redhat.com>
+Date:   Fri, 11 Sep 2020 11:54:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010101747ca94cce-42d129fa-0374-4f12-aab8-2ccafd02b3c7-000000@us-west-2.amazonses.com>
+In-Reply-To: <CAMj1kXEdkdeE8VSZqEzhd__Kb7_ZmG2af6iBpbY3=nsj1-phYw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 11 Sep 05:15 CDT 2020, skakit@codeaurora.org wrote:
+On 9/11/20 11:02 AM, Ard Biesheuvel wrote:
+> On Sat, 5 Sep 2020 at 04:31, Lenny Szubowicz <lszubowi@redhat.com> wrote:
+>>
+>> Move the loading of certs from the UEFI MokListRT into a separate
+>> routine to facilitate additional MokList functionality.
+>>
+>> There is no visible functional change as a result of this patch.
+>> Although the UEFI dbx certs are now loaded before the MokList certs,
+>> they are loaded onto different key rings. So the order of the keys
+>> on their respective key rings is the same.
+>>
+>> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> 
+> Why did you drop Mimi's reviewed-by from this patch?
 
-> On 2020-09-10 20:10, Doug Anderson wrote:
-> > Hi,
-> > 
-> > On Thu, Sep 10, 2020 at 5:55 AM satya priya <skakit@codeaurora.org>
-> > wrote:
-> > > 
-> > > Add a suitable sleep configuration for uart3 to support Bluetooth
-> > > wakeup.
-> > > 
-> > > If QUP function is selected in sleep state, UART RTS/RFR is pulled
-> > > high
-> > > during suspend and BT SoC not able to send wakeup bytes. So, configure
-> > > GPIO mode in sleep state to keep it low during suspend.
-> > > 
-> > > Signed-off-by: satya priya <skakit@codeaurora.org>
-> > > Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> > > ---
-> > > Changes in V2:
-> > >  - This patch adds sleep state for BT UART. Newly added in V2.
-> > > 
-> > > Changes in V3:
-> > >  - Remove "output-high" for TX from both sleep and default states
-> > >    as it is not required. Configure pull-up for TX in sleep state.
-> > > 
-> > > Changes in V4:
-> > >  - As per Matthias's comment, removed drive-strength for sleep state
-> > >    and fixed nit-pick.
-> > > 
-> > > Changes in V5:
-> > >  - As per Matthias's comments, moved pinmux change for sleep state,
-> > >    pinctrl and interrupt config to the board specific file.
-> > > 
-> > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 48
-> > > +++++++++++++++++++++++++++++++++
-> > >  1 file changed, 48 insertions(+)
-> > 
-> > Similar comment to patch #1 in that this applies only to the IDP board
-> > but that's not obvious from ${SUBJECT}
-> > 
+It was not intentional. I was just not aware that I needed to propagate
+Mimi Zohar's reviewed-by from V1 of the patch to V2.
+
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
+V2 includes changes in that patch to incorporate suggestions from
+Andy Shevchenko. My assumption was that the maintainer would
+gather up the reviewed-by and add any signed-off-by as appropriate,
+but it sounds like my assumption was incorrect. In retrospect, I
+could see that having the maintainer dig through prior versions
+of a patch set for prior reviewed-by tags could be burdensome.
+
+Advice on the expected handling of this would be appreciated.
+
+                     -Lenny.
+
 > 
-> Okay.
-> 
-> > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > index 04888df..e529a41 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > @@ -344,6 +344,10 @@
-> > >  };
-> > > 
-> > >  &uart3 {
-> > > +       pinctrl-names = "default", "sleep";
-> > > +       pinctrl-1 = <&qup_uart3_sleep>;
-> > > +       interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
-> > > +                               <&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
-> > 
-> > You need a:
-> > 
-> > /delete-property/interrupts;
-> > 
-> > ...or, alternatively, a patch before this one that converts all the
-> > UARTs in sc7180 to just use interrupts-extended.
-> > 
-> 
-> Sure, I will add this. But I think when both are added,
-> "interrupts-extended" will get priority as per [1] and there wouldn't be any
-> problem.
+>> ---
+>>   security/integrity/platform_certs/load_uefi.c | 63 +++++++++++++------
+>>   1 file changed, 44 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+>> index 253fb9a7fc98..c1c622b4dc78 100644
+>> --- a/security/integrity/platform_certs/load_uefi.c
+>> +++ b/security/integrity/platform_certs/load_uefi.c
+>> @@ -66,6 +66,43 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+>>   }
+>>
+>>   /*
+>> + * load_moklist_certs() - Load MokList certs
+>> + *
+>> + * Load the certs contained in the UEFI MokListRT database into the
+>> + * platform trusted keyring.
+>> + *
+>> + * Return:     Status
+>> + */
+>> +static int __init load_moklist_certs(void)
+>> +{
+>> +       efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
+>> +       void *mok;
+>> +       unsigned long moksize;
+>> +       efi_status_t status;
+>> +       int rc;
+>> +
+>> +       /* Get MokListRT. It might not exist, so it isn't an error
+>> +        * if we can't get it.
+>> +        */
+>> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+>> +       if (mok) {
+>> +               rc = parse_efi_signature_list("UEFI:MokListRT",
+>> +                                             mok, moksize, get_handler_for_db);
+>> +               kfree(mok);
+>> +               if (rc)
+>> +                       pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
+>> +               return rc;
+>> +       }
+>> +       if (status == EFI_NOT_FOUND)
+>> +               pr_debug("MokListRT variable wasn't found\n");
+>> +       else
+>> +               pr_info("Couldn't get UEFI MokListRT\n");
+>> +       return 0;
+>> +}
+>> +
+>> +/*
+>> + * load_uefi_certs() - Load certs from UEFI sources
+>> + *
+>>    * Load the certs contained in the UEFI databases into the platform trusted
+>>    * keyring and the UEFI blacklisted X.509 cert SHA256 hashes into the blacklist
+>>    * keyring.
+>> @@ -73,17 +110,16 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+>>   static int __init load_uefi_certs(void)
+>>   {
+>>          efi_guid_t secure_var = EFI_IMAGE_SECURITY_DATABASE_GUID;
+>> -       efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
+>> -       void *db = NULL, *dbx = NULL, *mok = NULL;
+>> -       unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
+>> +       void *db = NULL, *dbx = NULL;
+>> +       unsigned long dbsize = 0, dbxsize = 0;
+>>          efi_status_t status;
+>>          int rc = 0;
+>>
+>>          if (!efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE))
+>>                  return false;
+>>
+>> -       /* Get db, MokListRT, and dbx.  They might not exist, so it isn't
+>> -        * an error if we can't get them.
+>> +       /* Get db and dbx.  They might not exist, so it isn't an error
+>> +        * if we can't get them.
+>>           */
+>>          if (!uefi_check_ignore_db()) {
+>>                  db = get_cert_list(L"db", &secure_var, &dbsize, &status);
+>> @@ -102,20 +138,6 @@ static int __init load_uefi_certs(void)
+>>                  }
+>>          }
+>>
+>> -       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+>> -       if (!mok) {
+>> -               if (status == EFI_NOT_FOUND)
+>> -                       pr_debug("MokListRT variable wasn't found\n");
+>> -               else
+>> -                       pr_info("Couldn't get UEFI MokListRT\n");
+>> -       } else {
+>> -               rc = parse_efi_signature_list("UEFI:MokListRT",
+>> -                                             mok, moksize, get_handler_for_db);
+>> -               if (rc)
+>> -                       pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
+>> -               kfree(mok);
+>> -       }
+>> -
+>>          dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
+>>          if (!dbx) {
+>>                  if (status == EFI_NOT_FOUND)
+>> @@ -131,6 +153,9 @@ static int __init load_uefi_certs(void)
+>>                  kfree(dbx);
+>>          }
+>>
+>> +       /* Load the MokListRT certs */
+>> +       rc = load_moklist_certs();
+>> +
+>>          return rc;
+>>   }
+>>   late_initcall(load_uefi_certs);
+>> --
+>> 2.27.0
+>>
 > 
 
-You're indeed correct, please stick with what you have.
-
-Regards,
-Bjorn
-
-> [1] https://www.kernel.org/doc/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> 
-> > 
-> > >         status = "okay";
-> > 
-> > Slight nit is that usually I see the status line first.  All the other
-> > instances in this file have it that way.  Can you match?
-> > 
-> 
-> Ok, will correct it.
-> 
-> > 
-> > 
-> > 
-> > -Doug
