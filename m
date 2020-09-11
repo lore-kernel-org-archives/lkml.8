@@ -2,145 +2,266 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC8BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9E2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48622075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRvaasQL"
+	by mail.kernel.org (Postfix) with ESMTP id 08AF320731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgIKHTf (ORCPT
+        id S1725858AbgIKHTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgIKHS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:18:59 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA44AC061756;
-        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id o20so6587179pfp.11;
-        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IT/Av6WkMGnwscYg5rCYcAHZEDtZ2ZLSfy2TWZBlkOI=;
-        b=XRvaasQLXfZi4L/MubCaNLsVOzGgVMgXoHQLOZDXqqE8Z7q9DzDMD312rJuB/cfLBD
-         uDkfacySRZUMsBz5WjIVPt/yryNfy6aeldQpBVkEMJNozVVNlYyzXB+FTubsYkKw/3XZ
-         n4ze00UNfGHelIaYnuYjcsgqb90jjmVtf48EMm24h3+V9ICn+n8MwW4GSIix4YBFnF6D
-         cFLxB1dTA1AboS8W66H0l92LX6AR8NyBFtbpMae1zLfGiEGQRqSs0WFhBGeYyxZpA+7Y
-         5tEzLQFlYJBrWeyv+8ICSsew8Vtg0Z3GPzpAPDx7Tebxmi/ANscB4rVUv4G6S8fGZcTA
-         TrPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IT/Av6WkMGnwscYg5rCYcAHZEDtZ2ZLSfy2TWZBlkOI=;
-        b=BvaE6B9fMGPHLJz4JViPz2mqB3qKK4JodoBLQGOp3hJjCp9ZgdfwV5gQubVoHLzhIV
-         QPX2IavB6gJS6URTcZtNqFNGklkt7EQzY9k45hP9oc69vMY/LbbGzVRkcO8eDFwHfBPR
-         Sfdg33dmEFuq5OJv8Wa22WWlMNvm72UvtOS2AflMFqjNM25l0oVOH/isz/DFJmJMu8hQ
-         bmO51UhtIVt1kZxka7F35PPaFFwczrG+xGLWtunolIXkbv3miJloOs8m+f80cs6ucL7Y
-         3zhxUfhPUdY0aYIiSL1NKII79ULtrtlJuNRiJ5Z/Ex9jkZJ50OIqDSi4JXLE7OwX+v5Q
-         JQ7w==
-X-Gm-Message-State: AOAM533u3PNRdqCWvFPzn7Kv0mOi2AgESvYlBZkcYh+gEGAvDCk/SGt1
-        3h/e3N6qm4MfYR9TTfsyb3E=
-X-Google-Smtp-Source: ABdhPJyEI6r0AcSE7Kuaf3mASRla3Lliv+I9mZhI5bV7w6vYeD4EbDgqQzjAVldY4rOnokzlfiJzQw==
-X-Received: by 2002:a17:902:7fc7:: with SMTP id t7mr709678plb.159.1599808739278;
-        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id 131sm1264692pfc.20.2020.09.11.00.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 00:18:58 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     joro@8bytes.org, thierry.reding@gmail.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-tegra@vger.kernel.org, jonathanh@nvidia.com,
-        vdumpa@nvidia.com
-Subject: [PATCH 1/3] iommu/tegra-smmu: Do not use PAGE_SHIFT and PAGE_MASK
-Date:   Fri, 11 Sep 2020 00:16:41 -0700
-Message-Id: <20200911071643.17212-2-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911071643.17212-1-nicoleotsuka@gmail.com>
-References: <20200911071643.17212-1-nicoleotsuka@gmail.com>
+        Fri, 11 Sep 2020 03:19:44 -0400
+Received: from mga07.intel.com ([134.134.136.100]:6315 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgIKHTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:19:44 -0400
+IronPort-SDR: 61VZDsuwhNROJVYlJ7rB8ZUhFPVab7Uo+BLzO/rEUcfD2c04d0SwED7kuyijrU2iGkjTE/7iNV
+ PsM/vE3okUCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="222909528"
+X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
+   d="scan'208";a="222909528"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 00:19:42 -0700
+IronPort-SDR: CZ1WbLe93Ayb0RY7mG8e3V43t21KRQHaKnn5KxD36DNDDub7RU5QViQZH/WP6NAW0oGx6wln+L
+ S67COBPyItlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
+   d="scan'208";a="449896756"
+Received: from lkp-server01.sh.intel.com (HELO a75722977aa5) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 11 Sep 2020 00:19:41 -0700
+Received: from kbuild by a75722977aa5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kGdLQ-00006m-Cm; Fri, 11 Sep 2020 07:19:40 +0000
+Date:   Fri, 11 Sep 2020 15:19:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:objtool/core] BUILD SUCCESS
+ edea9e6bcbeaa41718b022a8b99ffddef2330bbc
+Message-ID: <5f5b24f8.GVJifJL5rIVvVzWS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PAGE_SHIFT and PAGE_MASK are defined corresponding to the page size
-for CPU virtual addresses, which means PAGE_SHIFT could be a number
-other than 12, but tegra-smmu maintains fixed 4KB IOVA pages and has
-fixed [21:12] bit range for PTE entries.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  objtool/core
+branch HEAD: edea9e6bcbeaa41718b022a8b99ffddef2330bbc  objtool: Decode unwind hint register depending on architecture
 
-So this patch replaces all PAGE_SHIFT/PAGE_MASK references with the
-macros defined with SMMU_PTE_SHIFT.
+elapsed time: 722m
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+configs tested: 192
+configs skipped: 7
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+mips                        qi_lb60_defconfig
+mips                           rs90_defconfig
+mips                       lemote2f_defconfig
+riscv                          rv32_defconfig
+powerpc                 mpc832x_rdb_defconfig
+arm                            lart_defconfig
+powerpc                      ppc64e_defconfig
+arm                           omap1_defconfig
+powerpc                      acadia_defconfig
+arm                        trizeps4_defconfig
+arm                         lpc18xx_defconfig
+mips                           ip27_defconfig
+arm                              zx_defconfig
+sh                          sdk7786_defconfig
+powerpc                     rainier_defconfig
+sh                           sh2007_defconfig
+arm                             pxa_defconfig
+mips                           ip28_defconfig
+openrisc                         alldefconfig
+arc                     haps_hs_smp_defconfig
+arm                          prima2_defconfig
+mips                      pistachio_defconfig
+arm                           efm32_defconfig
+arm                       aspeed_g4_defconfig
+mips                         tb0226_defconfig
+mips                          ath79_defconfig
+arm                      integrator_defconfig
+mips                           ip22_defconfig
+arm                           stm32_defconfig
+powerpc                      bamboo_defconfig
+sh                            shmin_defconfig
+mips                            e55_defconfig
+powerpc                     ksi8560_defconfig
+ia64                             alldefconfig
+sh                          lboxre2_defconfig
+mips                        workpad_defconfig
+mips                           gcw0_defconfig
+sh                          sdk7780_defconfig
+openrisc                    or1ksim_defconfig
+arm                          imote2_defconfig
+xtensa                           allyesconfig
+arm                       omap2plus_defconfig
+arc                 nsimosci_hs_smp_defconfig
+h8300                    h8300h-sim_defconfig
+mips                            gpr_defconfig
+powerpc                    sam440ep_defconfig
+arc                          axs101_defconfig
+sh                          rsk7264_defconfig
+arm                         socfpga_defconfig
+sparc64                             defconfig
+arm                     am200epdkit_defconfig
+sh                           se7343_defconfig
+arm                         ebsa110_defconfig
+powerpc                    adder875_defconfig
+powerpc                     asp8347_defconfig
+arm                         s3c2410_defconfig
+mips                     cu1830-neo_defconfig
+arm                         lubbock_defconfig
+s390                             alldefconfig
+mips                          ath25_defconfig
+h8300                     edosk2674_defconfig
+powerpc                   bluestone_defconfig
+powerpc                 mpc837x_mds_defconfig
+arm                            u300_defconfig
+xtensa                           alldefconfig
+nios2                         3c120_defconfig
+powerpc                     powernv_defconfig
+sh                ecovec24-romimage_defconfig
+arm                       cns3420vb_defconfig
+ia64                            zx1_defconfig
+powerpc                     pseries_defconfig
+arm                      pxa255-idp_defconfig
+arm                         mv78xx0_defconfig
+arm                          ixp4xx_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                     taishan_defconfig
+mips                      loongson3_defconfig
+microblaze                    nommu_defconfig
+arc                          axs103_defconfig
+xtensa                generic_kc705_defconfig
+arm                         s5pv210_defconfig
+arm                              alldefconfig
+s390                       zfcpdump_defconfig
+sh                        edosk7760_defconfig
+powerpc                  storcenter_defconfig
+powerpc64                        alldefconfig
+mips                         cobalt_defconfig
+mips                         rt305x_defconfig
+sh                          kfr2r09_defconfig
+arm                         cm_x300_defconfig
+sh                          polaris_defconfig
+arc                    vdk_hs38_smp_defconfig
+mips                        maltaup_defconfig
+powerpc                 mpc8272_ads_defconfig
+arm                           h3600_defconfig
+sh                        apsh4ad0a_defconfig
+arm                        multi_v5_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a004-20200911
+i386                 randconfig-a006-20200911
+i386                 randconfig-a001-20200911
+i386                 randconfig-a003-20200911
+i386                 randconfig-a002-20200911
+i386                 randconfig-a005-20200911
+i386                 randconfig-a004-20200909
+i386                 randconfig-a005-20200909
+i386                 randconfig-a006-20200909
+i386                 randconfig-a002-20200909
+i386                 randconfig-a001-20200909
+i386                 randconfig-a003-20200909
+i386                 randconfig-a004-20200910
+i386                 randconfig-a006-20200910
+i386                 randconfig-a001-20200910
+i386                 randconfig-a003-20200910
+i386                 randconfig-a002-20200910
+i386                 randconfig-a005-20200910
+x86_64               randconfig-a014-20200911
+x86_64               randconfig-a011-20200911
+x86_64               randconfig-a012-20200911
+x86_64               randconfig-a016-20200911
+x86_64               randconfig-a015-20200911
+x86_64               randconfig-a013-20200911
+i386                 randconfig-a015-20200911
+i386                 randconfig-a014-20200911
+i386                 randconfig-a011-20200911
+i386                 randconfig-a013-20200911
+i386                 randconfig-a016-20200911
+i386                 randconfig-a012-20200911
+i386                 randconfig-a016-20200909
+i386                 randconfig-a015-20200909
+i386                 randconfig-a011-20200909
+i386                 randconfig-a013-20200909
+i386                 randconfig-a014-20200909
+i386                 randconfig-a012-20200909
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20200911
+x86_64               randconfig-a006-20200911
+x86_64               randconfig-a003-20200911
+x86_64               randconfig-a002-20200911
+x86_64               randconfig-a005-20200911
+x86_64               randconfig-a001-20200911
+x86_64               randconfig-a013-20200909
+x86_64               randconfig-a016-20200909
+x86_64               randconfig-a011-20200909
+x86_64               randconfig-a012-20200909
+x86_64               randconfig-a015-20200909
+x86_64               randconfig-a014-20200909
+
 ---
- drivers/iommu/tegra-smmu.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 046add7acb61..789d21c01b77 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -130,6 +130,11 @@ static inline u32 smmu_readl(struct tegra_smmu *smmu, unsigned long offset)
- #define SMMU_PDE_SHIFT 22
- #define SMMU_PTE_SHIFT 12
- 
-+#define SMMU_PAGE_MASK		(~(SMMU_SIZE_PT-1))
-+#define SMMU_OFFSET_IN_PAGE(x)	((unsigned long)(x) & ~SMMU_PAGE_MASK)
-+#define SMMU_PFN_PHYS(x)	((phys_addr_t)(x) << SMMU_PTE_SHIFT)
-+#define SMMU_PHYS_PFN(x)	((unsigned long)((x) >> SMMU_PTE_SHIFT))
-+
- #define SMMU_PD_READABLE	(1 << 31)
- #define SMMU_PD_WRITABLE	(1 << 30)
- #define SMMU_PD_NONSECURE	(1 << 29)
-@@ -644,7 +649,7 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
- 			       u32 *pte, dma_addr_t pte_dma, u32 val)
- {
- 	struct tegra_smmu *smmu = as->smmu;
--	unsigned long offset = offset_in_page(pte);
-+	unsigned long offset = SMMU_OFFSET_IN_PAGE(pte);
- 
- 	*pte = val;
- 
-@@ -726,7 +731,7 @@ __tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 		pte_attrs |= SMMU_PTE_WRITABLE;
- 
- 	tegra_smmu_set_pte(as, iova, pte, pte_dma,
--			   __phys_to_pfn(paddr) | pte_attrs);
-+			   SMMU_PHYS_PFN(paddr) | pte_attrs);
- 
- 	return 0;
- }
-@@ -790,7 +795,7 @@ static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
- 
- 	pfn = *pte & as->smmu->pfn_mask;
- 
--	return PFN_PHYS(pfn);
-+	return SMMU_PFN_PHYS(pfn);
- }
- 
- static struct tegra_smmu *tegra_smmu_find(struct device_node *np)
-@@ -1108,7 +1113,8 @@ struct tegra_smmu *tegra_smmu_probe(struct device *dev,
- 	smmu->dev = dev;
- 	smmu->mc = mc;
- 
--	smmu->pfn_mask = BIT_MASK(mc->soc->num_address_bits - PAGE_SHIFT) - 1;
-+	smmu->pfn_mask =
-+		BIT_MASK(mc->soc->num_address_bits - SMMU_PTE_SHIFT) - 1;
- 	dev_dbg(dev, "address bits: %u, PFN mask: %#lx\n",
- 		mc->soc->num_address_bits, smmu->pfn_mask);
- 	smmu->tlb_mask = (smmu->soc->num_tlb_lines << 1) - 1;
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
