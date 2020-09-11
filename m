@@ -2,126 +2,74 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7F0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6058C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD78D2076D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFB22076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyaRqe7R"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O+1UhL1i";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="mJN/XrI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725777AbgIKING (ORCPT
+        id S1725787AbgIKIOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgIKINF (ORCPT
+        Fri, 11 Sep 2020 04:14:03 -0400
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:54636
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725468AbgIKINt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:13:05 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFCFC061573;
-        Fri, 11 Sep 2020 01:13:04 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z9so3902527wmk.1;
-        Fri, 11 Sep 2020 01:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/OA1KQZcR7gYn+DF0+tu9xr0W15DodW6Woi0CUV9fZU=;
-        b=cyaRqe7R5wKr097BgYGWClD/e/vdOEv3M2peromlstHbtr66DFcFAIn8kwtFtSNNII
-         naW3GFAzqJbJ90ytL2BfTzIbwkwZHdrlupsSIvcSdFL+ARusGi/Wz7wgQWr5l0xYMCnq
-         B4bWWBDas0PJKVcQVk8ttzmHoXe+mks4WTyIx8OIFwhxYyOOidwBnjcBmLOQHw9c9QV3
-         gflFjHHX3gJ+VdRvosB5cy1yVI8kBn7C2NhGW+bmwMeZihfazDtmpt2WYGrfLvAgckz6
-         6ls3SyNT7pvy2hhezh1raxJQ7cVPLFWL40NpqgxaknIZ1vvbVofyK6UGIcDLw+pSQT1f
-         uc3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/OA1KQZcR7gYn+DF0+tu9xr0W15DodW6Woi0CUV9fZU=;
-        b=QGKpK/BZPIqMHtqeQmyPGUBs2liZxasst5YCEbNo0g7dwRUCREQAyxL2Vqm/TyiKKu
-         oa1sdA46DG6LIUkmiORzwaQeVmiYf0csGuYd1aI1nwKZ//ai7fDe+XmnCepef+yJGX/R
-         C2O/SvuRyikBtesjyA2YT45Hb+gtUvtYtjKb1W/dfogAtW4Zh7P378g6UxF6jjapAmU4
-         2ZL7WInqxrnRdW9mpkK97MwqZhJ9PX+zqgxDRdyeYxSjm1xzEfMKwYoxMBKDlqWXKyMn
-         T/cJiUy9Rh1KsdLzxct0e0FhsStgHJxLa+/oSmfeJ5oKRB3oMbYOjbGSmxzHZ50uyDfH
-         eeyg==
-X-Gm-Message-State: AOAM530bLcLh8WmWfQ/Q8AwAM31bs+fG/oQ7nq2UcgORezk4ka+DA/PY
-        os71YFfs2Mo9I6Ynv6tT98uHdWCZ0iA=
-X-Google-Smtp-Source: ABdhPJyqVdjcrkGxIed+coChWfs+YIHgg89MoFrd7u4/haiuIfHFZl+HbrrJnIbkfWVItr2BgF4IQQ==
-X-Received: by 2002:a1c:e389:: with SMTP id a131mr984399wmh.181.1599811982849;
-        Fri, 11 Sep 2020 01:13:02 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id z14sm2959346wrh.14.2020.09.11.01.13.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 01:13:02 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/24] eventfd.2: Use 'PRIxN' macros when printing C99
- fixed-width integer types
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-5-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <6f0dbdcb-1939-036a-8a20-791bb57db975@gmail.com>
-Date:   Fri, 11 Sep 2020 10:13:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-5-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 11 Sep 2020 04:13:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812028;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=wosZsh3d7QEkj+Gl49goOxsZWiqmEsfanOW26xfQVNY=;
+        b=O+1UhL1i0WwfdCk9VkTGIEKFTyFSREOtAdxGvoFBumRmFAcB5AtKcEs3kbc9s0y0
+        SPz+8BY1MZz57UmblmFKjvexp7WT8v/cw5liwagLGb5CS+u+OflvmONtpXqDlZbrwW5
+        3tfr/RS7SQqfofz8GRb+dLzmCZ7to5P4Y/l7QVEs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812028;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=wosZsh3d7QEkj+Gl49goOxsZWiqmEsfanOW26xfQVNY=;
+        b=mJN/XrI0N64gEqmahogBq/2OtpPO/EDoSBJPPD0d+UpdBGkJv1ty0i9DmkZ7qRRu
+        obwogjoEuOCZUtdePU7laG6bcVmsAycNWakGaDL1egzHNdcsRCRnXv+JMl3VttkNPiM
+        IK4DW+qOtlbrtkB3d+ZZjgsAmp+vEzY+JCwmIqBw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9287EC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=hemantk@codeaurora.org
+From:   Hemant Kumar <hemantk@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org,
+        Hemant Kumar <hemantk@codeaurora.org>
+Subject: [PATCH v1]: Add const qualifier to MHI config information 
+Date:   Fri, 11 Sep 2020 08:13:48 +0000
+Message-ID: <010101747c3a48b6-357caff4-e345-4b26-8891-be191298fee4-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+X-SES-Outgoing: 2020.09.11-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+This patch is adding const qualifier to the mhi controller config
+information passed to mhi_register_controller which is exported
+API. Currently ath11k MHI controller driver depends on this change
+to pass MHI config information.
 
-Thanks, Alex. Patch Applied.
+Hemant Kumar (1):
+  bus: mhi: core: Add const qualifier to MHI config information
 
-Cheers,
-
-Michael
-
-> ---
->  man2/eventfd.2 | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/man2/eventfd.2 b/man2/eventfd.2
-> index 929234ab7..71e9d85b4 100644
-> --- a/man2/eventfd.2
-> +++ b/man2/eventfd.2
-> @@ -386,6 +386,7 @@ Parent read 28 (0x1c) from efd
->  .EX
->  #include <sys/eventfd.h>
->  #include <unistd.h>
-> +#include <inttypes.h>           /* Definition of PRIu64 & PRIx64 */
->  #include <stdlib.h>
->  #include <stdio.h>
->  #include <stdint.h>             /* Definition of uint64_t */
-> @@ -430,8 +431,7 @@ main(int argc, char *argv[])
->          s = read(efd, &u, sizeof(uint64_t));
->          if (s != sizeof(uint64_t))
->              handle_error("read");
-> -        printf("Parent read %llu (0x%llx) from efd\en",
-> -                (unsigned long long) u, (unsigned long long) u);
-> +        printf("Parent read %"PRIu64" (0x%"PRIx64") from efd\en", u, u);
->          exit(EXIT_SUCCESS);
->  
->      case \-1:
-> 
-
+ drivers/bus/mhi/core/init.c | 12 ++++++------
+ include/linux/mhi.h         |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
