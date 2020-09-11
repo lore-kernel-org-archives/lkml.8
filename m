@@ -2,91 +2,121 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E614BC2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4490CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999AC21D40
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0DC21D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V12WTd61";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bg/3ekZ0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ileaxb2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725786AbgIKISr (ORCPT
+        id S1725793AbgIKITA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:18:47 -0400
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:45320
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725535AbgIKISo (ORCPT
+        Fri, 11 Sep 2020 04:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbgIKISu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:18:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812324;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=HSaJciWnCPvyHhxhEaupZz5L45ElMcl2+afaqaEiPDE=;
-        b=V12WTd61C9BFiCr8/p+ES1RhxqcIg7nulH0mkjctl0BvmPZ8ES/NutydhLYNhaSG
-        julgD3PmmhbZCZLvqunutN2Ij+49iDC55PixHz8qdCceqyzGWH3Inc+Jb8hXNcyx/oB
-        B36M7CjrVqiAMh3c+qeeQyCHm5/QryY7Bam2rYQY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812324;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=HSaJciWnCPvyHhxhEaupZz5L45ElMcl2+afaqaEiPDE=;
-        b=bg/3ekZ0cOgrp65Agx4nHaEwe7axK5rUK3z1xgCJRRwHNAIzGReqL0rlj+X0JIRQ
-        jIiVsilArCMqpuhhOxILOHMEykeEdQXqr2msfMWQlRqbn8f1mF1DdnoBo2WOdtliue2
-        MK8wiR9UAzuPSqllVmWI2p8RQlUfjqe3MrHSaYpQ=
+        Fri, 11 Sep 2020 04:18:50 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 251B6C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:18:50 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id cy2so4820122qvb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yeiTxZHkCcx6zZ/VcroXM91DjF/jL7wBn3ynIVAo6Pg=;
+        b=ileaxb2Y4vF28DZsPqJhuC1Yiw1itkcRZuI0h27M1KwqRupQIPj0IKayC8qsZmGr1v
+         U7HYulUuMq3Uk4PEaG6wE5urDXNVfvjvbJgAGVIaEor6bOqly2775XlVwgivT+BjO+1Q
+         s5Vw33Jqt9MnXnk2kLP7zGwozZpoW2jNSlve0IvwHQgRwIkcxdX1syTR/4ppncxtDMw0
+         flZH1xh8Mq2AOpPn2Yw44Hp+xRnXnTTTmQAD8aBFSkrspSDjoLdDzrizkwu/Vu79Z21x
+         ZiJjReHd/To4f7IPvKFKtX5tgmdvNnWVZ73n2jsL1N1nU/ZZr7kwNaBho5QTEbpJ5K+t
+         9YFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yeiTxZHkCcx6zZ/VcroXM91DjF/jL7wBn3ynIVAo6Pg=;
+        b=FTQLPjDtEJ3Jmgjfkr4OJ0jHqWbgrUDrv3+gAdyinhaVQBML9EauFfSviV4R0s2WUn
+         h3MO4kp0IIXKE+MrSKkml9vES5n3vgURbFbBzAe8ELV7xdgFOCSkS2CREGyKq4SQm9fv
+         +C7mexJl33HRylPIG0egpfYWEBmUhGMaqG7k/8yA1ioNl9oIn0QdFRSx5RNgRjYNHoLV
+         b5d/XoaP2VDkGgmeXQNq4bl00RQ4EVM+gvZhFiem3bC9OyY/PI8bwRJMEjXZ/TiLvA1T
+         dNJOzejB0q1Pm0dCfm0Z5uWO9OPzZvlPv3fM0kyG/+hzNjCfEbxHgQvSjGYph653q4gO
+         JcZw==
+X-Gm-Message-State: AOAM531H69eFe0xK7baXtMQRl+cfy4wz9/xuY3HRLRHuKrWJygC+SG/R
+        4OTPOB/0cO4ZVnjIaTTqhJcloHaMOiq/QjqkOlQQeQ==
+X-Google-Smtp-Source: ABdhPJwA4DRFhdljSWbTlsX52z0nAXDFCcrvp1oH2MLec3WIhtpIfScaFr+gruj5/XyK6Nr9yHGkp4B0Cmd+uwfG3rA=
+X-Received: by 2002:a0c:cc13:: with SMTP id r19mr805512qvk.15.1599812329149;
+ Fri, 11 Sep 2020 01:18:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Sep 2020 08:18:44 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] iommu/arm-smmu: Refactor context bank allocation
-In-Reply-To: <20200904155513.282067-2-bjorn.andersson@linaro.org>
-References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
- <20200904155513.282067-2-bjorn.andersson@linaro.org>
-Message-ID: <010101747c3eca88-35878e4c-07b1-4fee-94fc-77af55456507-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.11-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <000000000000059b7205aa7f906f@google.com> <00000000000026751605aa857914@google.com>
+ <CACT4Y+bUK4icp1TMfhWOj=vEXULbiUQ84RXYaKnB=3J_N3wZCQ@mail.gmail.com>
+ <CAAhDqq0qcnMKdaoRnaGM6G8H1U7SAmTvX=hgEoor1=_eJff-Vw@mail.gmail.com>
+ <CACT4Y+ZktT1S1oi5t+s7rrSH_dLEhyzygXdNUs7pkVPuanPXYg@mail.gmail.com> <20200911080601.GQ20687@gauss3.secunet.de>
+In-Reply-To: <20200911080601.GQ20687@gauss3.secunet.de>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 11 Sep 2020 10:18:37 +0200
+Message-ID: <CACT4Y+ZkUzNi10s+g1ySLn6bNnDtOHs4Ddr8XiDQrwG35hs-kA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in __xfrm6_tunnel_spi_lookup
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        syzbot <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com>,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-04 21:25, Bjorn Andersson wrote:
-> Extract the conditional invocation of the platform defined
-> alloc_context_bank() to a separate function to keep
-> arm_smmu_init_domain_context() cleaner.
-> 
-> Instead pass a reference to the arm_smmu_device as parameter to the
-> call. Also remove the count parameter, as this can be read from the
-> newly passed object.
-> 
-> This allows us to not assign smmu_domain->smmu before attempting to
-> allocate the context bank and as such we don't need to roll back this
-> assignment on failure.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+On Fri, Sep 11, 2020 at 10:06 AM Steffen Klassert
+<steffen.klassert@secunet.com> wrote:
+>
+> On Thu, Sep 10, 2020 at 10:09:50AM +0200, Dmitry Vyukov wrote:
+> > On Thu, Sep 10, 2020 at 10:08 AM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
+> > >
+> > > On Thu, Sep 10, 2020 at 1:32 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > >
+> > > > On Thu, Sep 10, 2020 at 9:20 AM Anant Thazhemadam
+> > > > <anant.thazhemadam@gmail.com> wrote:
+> > > > > Looks like this bug is no longer valid. I'm not sure which commit seems to have fixed it. Can this be marked as invalid or closed yet?
+> > > >
+> > > > You can see on the dashboard (or in mailing list archives) that B K
+> > > > Karthik tested a patch for this bug in July:
+> > > > https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
+> > > >
+> > > > So perhaps that patch fixes it? Karthik, did you send it? Was it
+> > > > merged? Did the commit include the syzbot Reported-by tag?
+> > > >
+> > >
+> > > I did send it. I was taking a u32 spi value and casting it to a
+> > > pointer to an IP address. Steffen Klassert
+> > > <steffen.klassert@secunet.com> pointed out to me that the approach i
+> > > was looking at was completely wrong.
+> > > https://lkml.org/lkml/2020/7/27/361 is the conversation. hope this
+> > > helps.
+> >
+> > +Steffen, was there any other fix merged for this?
+>
+> I think that was already fixed before the sysbot report came in by
+> commit 8b404f46dd6a ("xfrm: interface: not xfrmi_ipv6/ipip_handler twice")
 
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Thanks
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Let's close the report then:
+
+#syz fix: xfrm: interface: not xfrmi_ipv6/ipip_handler twice
