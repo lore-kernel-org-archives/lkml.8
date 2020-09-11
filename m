@@ -2,108 +2,194 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1011DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 915E1221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40637221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kivZljOT"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KhjO3g9X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIKQor (ORCPT
+        id S1726205AbgIKQpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:44:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43858 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgIKQoN (ORCPT
+        Fri, 11 Sep 2020 12:45:15 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34266 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726456AbgIKQpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:44:13 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BGUknW022796;
-        Fri, 11 Sep 2020 12:44:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=nGeabmXdwEAjiTkbWCms3XrTmRW/raRtDCwHiINZh3s=;
- b=kivZljOTf4PdQD+hGHlfhh+ugPo3Zz7dascow4h4FpiOvUhf9Mb0mqWUx5kdP4MnlAGs
- MTHQNPSEsmXlTgekGfTNWJCtxm8g2fhismWKFolx55d2e+v0nZXySvX/I++Ds0zA9dyg
- LU7JsxO1D0F/mUcPii7vxgPCKRJ6inW6/pte7seTbfDho7JKOhFQ9c5z+EyyINVfF68G
- EAobckVyMaFAXfcLZlA+pqg6/Zk6JM11QGWx3tG5ULKOqasLerZgwnw8GQej+kWzvZMB
- y8w3HRDM7KUkVnIA9cSNGmM8VC9T12ZKoCxMggpcDCZr9e3XTCJpFScnujpT+Fu/FfAN zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33g99by7bn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 12:44:10 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BGVTpI025006;
-        Fri, 11 Sep 2020 12:44:10 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33g99by7bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 12:44:10 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BGfbn1028239;
-        Fri, 11 Sep 2020 16:44:10 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04wdc.us.ibm.com with ESMTP id 33c2a9h6w9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 16:44:10 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BGi96D52166992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 16:44:09 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88B71B2068;
-        Fri, 11 Sep 2020 16:44:09 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 838DCB2064;
-        Fri, 11 Sep 2020 16:44:07 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Sep 2020 16:44:07 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, cohuck@redhat.com
-Cc:     pmorel@linux.ibm.com, schnelle@linux.ibm.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vfio iommu: Add dma limit capability
-Date:   Fri, 11 Sep 2020 12:44:02 -0400
-Message-Id: <1599842643-2553-1-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-11_08:2020-09-10,2020-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- malwarescore=0 priorityscore=1501 adultscore=0 phishscore=0 suspectscore=0
- impostorscore=0 mlxlogscore=698 spamscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009110131
+        Fri, 11 Sep 2020 12:45:03 -0400
+Received: from [192.168.86.21] (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 955D820716FC;
+        Fri, 11 Sep 2020 09:44:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 955D820716FC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1599842698;
+        bh=gUgZlvI7DrDjGZFf44Vxy3S7MO/Bh6is8wlbtbN++JI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KhjO3g9XgCN1StTC8gEIDZ9q1vanpS1N5gzlJBhXdjraAawoMc1QD8CpdbbG9iUei
+         D208weHnfgrxqfq0FzSPHSb6XXxC12bumrdbj9oLuxBUC79lIc7W5d2Gt28Bqv1wOt
+         eTcNAtP3r0/DVsSWa/WT2wzgjURxo8n4mUcekG0Y=
+Subject: Re: [PATCH v3 3/6] IMA: update process_buffer_measurement to measure
+ buffer hash
+To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+ <20200828015704.6629-4-tusharsu@linux.microsoft.com>
+ <f11dbfc1382e60c04fdd519ce5122239fa0cab8b.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <c932ae94-d7c3-5d23-2bb4-95517f712ceb@linux.microsoft.com>
+Date:   Fri, 11 Sep 2020 09:44:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <f11dbfc1382e60c04fdd519ce5122239fa0cab8b.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 492855939bdb ("vfio/type1: Limit DMA mappings per container") added
-a limit to the number of concurrent DMA requests for a vfio container.
-However, lazy unmapping in s390 can in fact cause quite a large number of
-outstanding DMA requests to build up prior to being purged, potentially 
-the entire guest DMA space.  This results in unexpected 'VFIO_MAP_DMA
-failed: No space left on device' conditions seen in QEMU.
 
-This patch proposes to provide the DMA limit via the VFIO_IOMMU_GET_INFO
-ioctl as a new capability.  A subsequent patchset to QEMU would collect
-this information and use it in s390 PCI support to tap the guest on the
-shoulder before overrunning the vfio limit.
 
-Matthew Rosato (1):
-  vfio iommu: Add dma limit capability
+On 2020-08-31 10:02 a.m., Mimi Zohar wrote:
+> On Thu, 2020-08-27 at 18:57 -0700, Tushar Sugandhi wrote:
+>> process_buffer_measurement() currently only measures the input buffer.
+>> When the buffer being measured is too large, it may result in bloated
+>> IMA logs.
+> 
+> The subject of  this sentence refers to an individual record, while
+> "bloated" refers to the measurement list.  A "bloated" measurement list
+> would contain too many or unnecessary records.  Your concern seems to
+> be with the size of the individual record, not the number of
+> measurement list entries.
+> 
+The intent behind that description was twofold. One, as you mentioned,
+the individual record size being large; and two, multiple large-sized
+individual records will eventually bloat the measurement list too.
 
- drivers/vfio/vfio_iommu_type1.c | 17 +++++++++++++++++
- include/uapi/linux/vfio.h       | 16 ++++++++++++++++
- 2 files changed, 33 insertions(+)
+It can happen in SeLinux case as we discovered. The SeLinux policy
+(which can be a few MBs) can change from 'foo', to 'bar', back to 'foo'.
+And the requirement from SeLinux is that 'foo' should be measured the
+second time too. When 'foo' and 'bar' are large, the individual records
+in the ima log will be large, which will also result in measurement list
+being bloated.
 
--- 
-1.8.3.1
+But I understand your concern with the current wording. I will update 
+the patch description accordingly.
 
+> Measuring the hash of the buffer data is similar to measuring the file
+> data.  In the case of the file data, however, the attestation server
+> may rely on a white list manifest/DB or the file signature to verify
+> the file data hash.  For buffer measurements, how will the attestation
+> server ascertain what is a valid buffer hash?
+The client and the server implementation will go hand in hand. The
+client/kernel would know what data is measured as-is
+(e.g. KEXEC_CMDLINE), and what data has it’s hash measured
+(e.g. SeLinux Policy). And the attestation server would verify data/hash
+accordingly.
+
+Just like the data being measured in other cases, the attestation server 
+will know what are possible values of the large buffers being measured. 
+It will have to maintain the hash of those buffer values.
+> 
+> Hint:  I assume, correct me if I'm wrong, the measurement list record
+> template data is not meant to be verified, but used to detect if the "critical data" changed.
+> 
+As mentioned above, the use case for this feature is in-memory loaded 
+SeLinux policy, which can be quite large (several MBs) – that's why this 
+functionality. The data is meant to be verified by the attestation server.
+
+> Please update the patch description accordingly.
+I will update the patch description to clarify all this.
+> 
+>>
+>> Introduce a boolean parameter measure_buf_hash to support measuring
+>> hash of a buffer, which would be much smaller, instead of the buffer
+>> itself.
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> ---
+> 
+> <snip>
+> 
+>> +++ b/security/integrity/ima/ima_main.c
+>> @@ -733,17 +733,21 @@ int ima_load_data(enum kernel_load_data_id id)
+>>    * @func: IMA hook
+>>    * @pcr: pcr to extend the measurement
+>>    * @func_data: private data specific to @func, can be NULL.
+>> + * @measure_buf_hash: if set to true - will measure hash of the buf,
+>> + *                    instead of buf
+>>    *
+>>    * Based on policy, the buffer is measured into the ima log.
+>>    */
+>>   int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>>   			       const char *eventname, enum ima_hooks func,
+>> -			       int pcr, const char *func_data)
+>> +			       int pcr, const char *func_data,
+>> +			       bool measure_buf_hash)
+>>   {
+>>   	int ret = 0;
+>>   	const char *audit_cause = "ENOMEM";
+>>   	struct ima_template_entry *entry = NULL;
+>>   	struct integrity_iint_cache iint = {};
+>> +	struct integrity_iint_cache digest_iint = {};
+>>   	struct ima_event_data event_data = {.iint = &iint,
+>>   					    .filename = eventname,
+>>   					    .buf = buf,
+>> @@ -752,7 +756,7 @@ int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>>   	struct {
+>>   		struct ima_digest_data hdr;
+>>   		char digest[IMA_MAX_DIGEST_SIZE];
+>> -	} hash = {};
+>> +	} hash = {}, digest_hash = {};
+>>   	int violation = 0;
+>>   	int action = 0;
+>>   	u32 secid;
+>> @@ -801,6 +805,24 @@ int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>>   		goto out;
+>>   	}
+>>   
+>> +	if (measure_buf_hash) {
+>> +		digest_iint.ima_hash = &digest_hash.hdr;
+>> +		digest_iint.ima_hash->algo = ima_hash_algo;
+>> +		digest_iint.ima_hash->length = hash_digest_size[ima_hash_algo];
+>> +
+>> +		ret = ima_calc_buffer_hash(hash.hdr.digest,
+>> +					   iint.ima_hash->length,
+>> +					   digest_iint.ima_hash);
+>> +		if (ret < 0) {
+>> +			audit_cause = "digest_hashing_error";
+>> +			goto out;
+>> +		}
+>> +
+>> +		event_data.iint = &digest_iint;
+>> +		event_data.buf = hash.hdr.digest;
+>> +		event_data.buf_len = iint.ima_hash->length;
+>> +	}
+>> +
+> 
+> There seems to be some code and variable duplication by doing it this
+> way.  Copying the caluclated buffer data hash to a temporary buffer
+> might eliminate it.
+> 
+With the way ima_calc_buffer_hash() is implemented, I was convinced that
+the variable duplication was needed. I didn't want to write a helper 
+function in order to minimize the unnecessary code churn in p_b_m().
+But I will revisit this to see how I can reduce the code and variable 
+duplication.
+
+Thanks for the feedback.
+>>   	ret = ima_alloc_init_template(&event_data, &entry, template);
+>>   	if (ret < 0) {
+>>   		audit_cause = "alloc_entry";
