@@ -2,53 +2,54 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C57C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44BCC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E192F20770
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0C320855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599830479;
-	bh=bG3eJ2tRfBDEN5yN2uq3eJvefyu2VNA2g6ZcuWyY2jA=;
+	s=default; t=1599830627;
+	bh=TKhMz8I3NA+IKOUpI8KHc0vLIXx46qIjjcsG1hMXFak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oTkCoKT1YyN6YYEu5epRlvKhn5HgzEB/5f4izNpKbOCpQFcoZWP4u1jo+N09O/FiI
-	 OxrAgGaD7qT5rGxJGgJxrKbfBs4C7MZB2oxtPtyVy7iDHfkb2XAV0KRKiP1O3P6M82
-	 W40o79QHXF4MT/oXxSOJAmaSslHg5xVDhRTVyX2o=
+	b=LreYej5JpKvBSJKUQsFx47R5C3RIEDMmRo4tmQv9GrWra6S4c0rW+uIFDnCd2I+6z
+	 wPfSa+PGSG3aKS9m8WE7b9ET044HVVWI+/o/befAdzrS0DfNiqndjSNzEX615TlB+0
+	 OGtem9TLZk9hEADCZMF4I2CmwGV33WNyo6R0z3/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgIKNUl (ORCPT
+        id S1726229AbgIKNX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52808 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726208AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65FE1223DB;
-        Fri, 11 Sep 2020 12:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9ACC22207;
+        Fri, 11 Sep 2020 12:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829094;
-        bh=bG3eJ2tRfBDEN5yN2uq3eJvefyu2VNA2g6ZcuWyY2jA=;
+        s=default; t=1599829087;
+        bh=TKhMz8I3NA+IKOUpI8KHc0vLIXx46qIjjcsG1hMXFak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFN0LgQdPgE47tu8bUtFjnT1SSgf0Y6RDd3fkqOAVbGhIwM4L54NvuP/yCUSMhe3/
-         VP1gP0RToIMYRHwJw1OnVrlFfcpmUNkn7RVt6D8FbP9zDZkvw93TdaZnpN2qsYgzzZ
-         +yVc/5BG92xAm6iOnsTFEhg5psxpkvAn0s742giY=
+        b=MxH/QAHH6K9vFfE7bk5/jouTbd0tZOlSgrF/HI96CAY1X3o/TKKGqFf8eV4Lj/qXE
+         I+JohjraE/gmVd56VvoTjXS4Mqv1f0YZgijZufnhnRlnoyWk6wNehf0R1QULR6Fhmm
+         W/sRIZ2H+nBOpU/mH6IKLyTY4slW1YZ8oPuTCoW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/71] btrfs: fix potential deadlock in the search ioctl
-Date:   Fri, 11 Sep 2020 14:46:19 +0200
-Message-Id: <20200911122506.680591979@linuxfoundation.org>
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 60/71] mm/hugetlb: fix a race between hugetlb sysctl handlers
+Date:   Fri, 11 Sep 2020 14:46:44 +0200
+Message-Id: <20200911122507.908241700@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -61,227 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-[ Upstream commit a48b73eca4ceb9b8a4b97f290a065335dbcd8a04 ]
+commit 17743798d81238ab13050e8e2833699b54e15467 upstream.
 
-With the conversion of the tree locks to rwsem I got the following
-lockdep splat:
+There is a race between the assignment of `table->data` and write value
+to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
+the other thread.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc7-00165-g04ec4da5f45f-dirty #922 Not tainted
-  ------------------------------------------------------
-  compsize/11122 is trying to acquire lock:
-  ffff889fabca8768 (&mm->mmap_lock#2){++++}-{3:3}, at: __might_fault+0x3e/0x90
+  CPU0:                                 CPU1:
+                                        proc_sys_write
+  hugetlb_sysctl_handler                  proc_sys_call_handler
+  hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
+    table->data = &tmp;                       hugetlb_sysctl_handler_common
+                                                table->data = &tmp;
+      proc_doulongvec_minmax
+        do_proc_doulongvec_minmax           sysctl_head_finish
+          __do_proc_doulongvec_minmax         unuse_table
+            i = table->data;
+            *i = val;  // corrupt CPU1's stack
 
-  but task is already holding lock:
-  ffff889fe720fe40 (btrfs-fs-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+Fix this by duplicating the `table`, and only update the duplicate of
+it.  And introduce a helper of proc_hugetlb_doulongvec_minmax() to
+simplify the code.
 
-  which lock already depends on the new lock.
+The following oops was seen:
 
-  the existing dependency chain (in reverse order) is:
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor instruction fetch in kernel mode
+    #PF: error_code(0x0010) - not-present page
+    Code: Bad RIP value.
+    ...
+    Call Trace:
+     ? set_max_huge_pages+0x3da/0x4f0
+     ? alloc_pool_huge_page+0x150/0x150
+     ? proc_doulongvec_minmax+0x46/0x60
+     ? hugetlb_sysctl_handler_common+0x1c7/0x200
+     ? nr_hugepages_store+0x20/0x20
+     ? copy_fd_bitmaps+0x170/0x170
+     ? hugetlb_sysctl_handler+0x1e/0x20
+     ? proc_sys_call_handler+0x2f1/0x300
+     ? unregister_sysctl_table+0xb0/0xb0
+     ? __fd_install+0x78/0x100
+     ? proc_sys_write+0x14/0x20
+     ? __vfs_write+0x4d/0x90
+     ? vfs_write+0xef/0x240
+     ? ksys_write+0xc0/0x160
+     ? __ia32_sys_read+0x50/0x50
+     ? __close_fd+0x129/0x150
+     ? __x64_sys_write+0x43/0x50
+     ? do_syscall_64+0x6c/0x200
+     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  -> #2 (btrfs-fs-00){++++}-{3:3}:
-	 down_write_nested+0x3b/0x70
-	 __btrfs_tree_lock+0x24/0x120
-	 btrfs_search_slot+0x756/0x990
-	 btrfs_lookup_inode+0x3a/0xb4
-	 __btrfs_update_delayed_inode+0x93/0x270
-	 btrfs_async_run_delayed_root+0x168/0x230
-	 btrfs_work_helper+0xd4/0x570
-	 process_one_work+0x2ad/0x5f0
-	 worker_thread+0x3a/0x3d0
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
+Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20200828031146.43035-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  -> #1 (&delayed_node->mutex){+.+.}-{3:3}:
-	 __mutex_lock+0x9f/0x930
-	 btrfs_delayed_update_inode+0x50/0x440
-	 btrfs_update_inode+0x8a/0xf0
-	 btrfs_dirty_inode+0x5b/0xd0
-	 touch_atime+0xa1/0xd0
-	 btrfs_file_mmap+0x3f/0x60
-	 mmap_region+0x3a4/0x640
-	 do_mmap+0x376/0x580
-	 vm_mmap_pgoff+0xd5/0x120
-	 ksys_mmap_pgoff+0x193/0x230
-	 do_syscall_64+0x50/0x90
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #0 (&mm->mmap_lock#2){++++}-{3:3}:
-	 __lock_acquire+0x1272/0x2310
-	 lock_acquire+0x9e/0x360
-	 __might_fault+0x68/0x90
-	 _copy_to_user+0x1e/0x80
-	 copy_to_sk.isra.32+0x121/0x300
-	 search_ioctl+0x106/0x200
-	 btrfs_ioctl_tree_search_v2+0x7b/0xf0
-	 btrfs_ioctl+0x106f/0x30a0
-	 ksys_ioctl+0x83/0xc0
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x50/0x90
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &mm->mmap_lock#2 --> &delayed_node->mutex --> btrfs-fs-00
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(btrfs-fs-00);
-				 lock(&delayed_node->mutex);
-				 lock(btrfs-fs-00);
-    lock(&mm->mmap_lock#2);
-
-   *** DEADLOCK ***
-
-  1 lock held by compsize/11122:
-   #0: ffff889fe720fe40 (btrfs-fs-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  stack backtrace:
-  CPU: 17 PID: 11122 Comm: compsize Kdump: loaded Not tainted 5.8.0-rc7-00165-g04ec4da5f45f-dirty #922
-  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x165/0x180
-   __lock_acquire+0x1272/0x2310
-   lock_acquire+0x9e/0x360
-   ? __might_fault+0x3e/0x90
-   ? find_held_lock+0x72/0x90
-   __might_fault+0x68/0x90
-   ? __might_fault+0x3e/0x90
-   _copy_to_user+0x1e/0x80
-   copy_to_sk.isra.32+0x121/0x300
-   ? btrfs_search_forward+0x2a6/0x360
-   search_ioctl+0x106/0x200
-   btrfs_ioctl_tree_search_v2+0x7b/0xf0
-   btrfs_ioctl+0x106f/0x30a0
-   ? __do_sys_newfstat+0x5a/0x70
-   ? ksys_ioctl+0x83/0xc0
-   ksys_ioctl+0x83/0xc0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x50/0x90
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The problem is we're doing a copy_to_user() while holding tree locks,
-which can deadlock if we have to do a page fault for the copy_to_user().
-This exists even without my locking changes, so it needs to be fixed.
-Rework the search ioctl to do the pre-fault and then
-copy_to_user_nofault for the copying.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c |  8 ++++----
- fs/btrfs/extent_io.h |  6 +++---
- fs/btrfs/ioctl.c     | 27 ++++++++++++++++++++-------
- 3 files changed, 27 insertions(+), 14 deletions(-)
+ mm/hugetlb.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index fa22bb29eee6f..d6c827a9ebc56 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -5488,9 +5488,9 @@ void read_extent_buffer(const struct extent_buffer *eb, void *dstv,
- 	}
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2921,6 +2921,22 @@ static unsigned int cpuset_mems_nr(unsig
  }
  
--int read_extent_buffer_to_user(const struct extent_buffer *eb,
--			       void __user *dstv,
--			       unsigned long start, unsigned long len)
-+int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
-+				       void __user *dstv,
-+				       unsigned long start, unsigned long len)
- {
- 	size_t cur;
- 	size_t offset;
-@@ -5511,7 +5511,7 @@ int read_extent_buffer_to_user(const struct extent_buffer *eb,
- 
- 		cur = min(len, (PAGE_SIZE - offset));
- 		kaddr = page_address(page);
--		if (copy_to_user(dst, kaddr + offset, cur)) {
-+		if (probe_user_write(dst, kaddr + offset, cur)) {
- 			ret = -EFAULT;
- 			break;
- 		}
-diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
-index 9ecdc9584df77..75c03aa1800fe 100644
---- a/fs/btrfs/extent_io.h
-+++ b/fs/btrfs/extent_io.h
-@@ -401,9 +401,9 @@ int memcmp_extent_buffer(const struct extent_buffer *eb, const void *ptrv,
- void read_extent_buffer(const struct extent_buffer *eb, void *dst,
- 			unsigned long start,
- 			unsigned long len);
--int read_extent_buffer_to_user(const struct extent_buffer *eb,
--			       void __user *dst, unsigned long start,
--			       unsigned long len);
-+int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
-+				       void __user *dst, unsigned long start,
-+				       unsigned long len);
- void write_extent_buffer(struct extent_buffer *eb, const void *src,
- 			 unsigned long start, unsigned long len);
- void copy_extent_buffer(struct extent_buffer *dst, struct extent_buffer *src,
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index eefe103c65daa..6db46daeed16b 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -2041,9 +2041,14 @@ static noinline int copy_to_sk(struct btrfs_path *path,
- 		sh.len = item_len;
- 		sh.transid = found_transid;
- 
--		/* copy search result header */
--		if (copy_to_user(ubuf + *sk_offset, &sh, sizeof(sh))) {
--			ret = -EFAULT;
-+		/*
-+		 * Copy search result header. If we fault then loop again so we
-+		 * can fault in the pages and -EFAULT there if there's a
-+		 * problem. Otherwise we'll fault and then copy the buffer in
-+		 * properly this next time through
-+		 */
-+		if (probe_user_write(ubuf + *sk_offset, &sh, sizeof(sh))) {
-+			ret = 0;
- 			goto out;
- 		}
- 
-@@ -2051,10 +2056,14 @@ static noinline int copy_to_sk(struct btrfs_path *path,
- 
- 		if (item_len) {
- 			char __user *up = ubuf + *sk_offset;
--			/* copy the item */
--			if (read_extent_buffer_to_user(leaf, up,
--						       item_off, item_len)) {
--				ret = -EFAULT;
-+			/*
-+			 * Copy the item, same behavior as above, but reset the
-+			 * * sk_offset so we copy the full thing again.
-+			 */
-+			if (read_extent_buffer_to_user_nofault(leaf, up,
-+						item_off, item_len)) {
-+				ret = 0;
-+				*sk_offset -= sizeof(sh);
- 				goto out;
- 			}
- 
-@@ -2142,6 +2151,10 @@ static noinline int search_ioctl(struct inode *inode,
- 	key.offset = sk->min_offset;
- 
- 	while (1) {
-+		ret = fault_in_pages_writeable(ubuf, *buf_size - sk_offset);
-+		if (ret)
-+			break;
+ #ifdef CONFIG_SYSCTL
++static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
++					  void *buffer, size_t *length,
++					  loff_t *ppos, unsigned long *out)
++{
++	struct ctl_table dup_table;
 +
- 		ret = btrfs_search_forward(root, &key, path, sk->min_transid);
- 		if (ret != 0) {
- 			if (ret > 0)
--- 
-2.25.1
-
++	/*
++	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
++	 * can duplicate the @table and alter the duplicate of it.
++	 */
++	dup_table = *table;
++	dup_table.data = out;
++
++	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
++}
++
+ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
+ 			 struct ctl_table *table, int write,
+ 			 void __user *buffer, size_t *length, loff_t *ppos)
+@@ -2932,9 +2948,8 @@ static int hugetlb_sysctl_handler_common
+ 	if (!hugepages_supported())
+ 		return -EOPNOTSUPP;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -2978,9 +2993,8 @@ int hugetlb_overcommit_handler(struct ct
+ 	if (write && hstate_is_gigantic(h))
+ 		return -EINVAL;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
 
 
