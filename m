@@ -2,66 +2,158 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A567C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EDCC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5369E22208
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA94E20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GuqzlQpc";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IATbn8RP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgIKKOh (ORCPT
+        id S1725817AbgIKKP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:14:37 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:59494 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725710AbgIKKOd (ORCPT
+        Fri, 11 Sep 2020 06:15:29 -0400
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:34428
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725777AbgIKKPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:14:33 -0400
-X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
-   d="scan'208";a="57031544"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Sep 2020 19:14:32 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 4BE7A4007548;
-        Fri, 11 Sep 2020 19:14:30 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 0/2] media: rcar-vin: Kconfig: Update Kconfig
-Date:   Fri, 11 Sep 2020 11:14:20 +0100
-Message-Id: <20200911101422.20333-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 06:15:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599819304;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=BPc59itjdfn4S/LEEM1dF+y9OU9b/XO3tELMEjFALsA=;
+        b=GuqzlQpc1x4AU2+Utk5eELnoKOSyjABJhiy3+hdzrmIDqsOjnFeCbJwQ3XBMW6re
+        xthYq1V5zxQYf0AsiA1jCH/qMZ9c60qbFPT/0HekXqbOR6sXFRIPEXwjhGTc8V3pV+m
+        lzJBNAuMF8qMCzAd/GoABqMEZPTELgnIJln4Vi+k=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599819304;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=BPc59itjdfn4S/LEEM1dF+y9OU9b/XO3tELMEjFALsA=;
+        b=IATbn8RPJcUqqh8yja6mbIyfeetT6qIMtEOOHawpWnODKPLUZAFC6Auc4TOa53IS
+        5BMsqiR89RnTJT2a6HPecNoWxchxNCUvElD5dQGxHs2UTCVp4E1oSv/qRRgH09B6Vdc
+        EFsb3Q0Q/CkkdKQOQJh9YH8hamzax0lXrIrwWoqo=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Sep 2020 10:15:04 +0000
+From:   skakit@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Roja Rani Yarubandi <rojay@codeaurora.org>,
+        msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V5 2/4] arm64: dts: qcom: sc7180: Add necessary pinctrl
+ and interrupt config for BT UART
+In-Reply-To: <CAD=FV=ULJqgHutr524wb-wVq4gejqo1p_zqRXP=h4Co6Gvmzew@mail.gmail.com>
+References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
+ <1599742438-16811-3-git-send-email-skakit@codeaurora.org>
+ <CAD=FV=ULJqgHutr524wb-wVq4gejqo1p_zqRXP=h4Co6Gvmzew@mail.gmail.com>
+Message-ID: <010101747ca94cce-42d129fa-0374-4f12-aab8-2ccafd02b3c7-000000@us-west-2.amazonses.com>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.11-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On 2020-09-10 20:10, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, Sep 10, 2020 at 5:55 AM satya priya <skakit@codeaurora.org> 
+> wrote:
+>> 
+>> Add a suitable sleep configuration for uart3 to support Bluetooth 
+>> wakeup.
+>> 
+>> If QUP function is selected in sleep state, UART RTS/RFR is pulled 
+>> high
+>> during suspend and BT SoC not able to send wakeup bytes. So, configure
+>> GPIO mode in sleep state to keep it low during suspend.
+>> 
+>> Signed-off-by: satya priya <skakit@codeaurora.org>
+>> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>  - This patch adds sleep state for BT UART. Newly added in V2.
+>> 
+>> Changes in V3:
+>>  - Remove "output-high" for TX from both sleep and default states
+>>    as it is not required. Configure pull-up for TX in sleep state.
+>> 
+>> Changes in V4:
+>>  - As per Matthias's comment, removed drive-strength for sleep state
+>>    and fixed nit-pick.
+>> 
+>> Changes in V5:
+>>  - As per Matthias's comments, moved pinmux change for sleep state,
+>>    pinctrl and interrupt config to the board specific file.
+>> 
+>>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 48 
+>> +++++++++++++++++++++++++++++++++
+>>  1 file changed, 48 insertions(+)
+> 
+> Similar comment to patch #1 in that this applies only to the IDP board
+> but that's not obvious from ${SUBJECT}
+> 
 
-This is trivial patch series updating the rcar-vin Kconfig to
-include Renesas RZ/Gx SoC's
+Okay.
 
-Cheers,
-Prabhakar
+> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
+>> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> index 04888df..e529a41 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> @@ -344,6 +344,10 @@
+>>  };
+>> 
+>>  &uart3 {
+>> +       pinctrl-names = "default", "sleep";
+>> +       pinctrl-1 = <&qup_uart3_sleep>;
+>> +       interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
+>> +                               <&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
+> 
+> You need a:
+> 
+> /delete-property/interrupts;
+> 
+> ...or, alternatively, a patch before this one that converts all the
+> UARTs in sc7180 to just use interrupts-extended.
+> 
 
-Lad Prabhakar (2):
-  media: rcar-vin: Kconfig: Update help description for VIDEO_RCAR_CSI2
-    config
-  media: rcar-vin: Kconfig: Update help description for VIDEO_RCAR_VIN
-    config
+Sure, I will add this. But I think when both are added, 
+"interrupts-extended" will get priority as per [1] and there wouldn't be 
+any problem.
 
- drivers/media/platform/rcar-vin/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[1] 
+https://www.kernel.org/doc/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
--- 
-2.17.1
+> 
+>>         status = "okay";
+> 
+> Slight nit is that usually I see the status line first.  All the other
+> instances in this file have it that way.  Can you match?
+> 
 
+Ok, will correct it.
+
+> 
+> 
+> 
+> -Doug
