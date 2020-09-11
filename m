@@ -2,229 +2,67 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.3 required=3.0 tests=BAYES_50,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C451C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BC2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F34DB206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpdvMpPq"
+	by mail.kernel.org (Postfix) with ESMTP id 88515206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbgIKMkz (ORCPT
+        id S1725976AbgIKMnJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgIKMcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:32:10 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596B7C061573;
-        Fri, 11 Sep 2020 05:32:10 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a19so4236131ilq.10;
-        Fri, 11 Sep 2020 05:32:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ugTNUn8mm2Ku6DfVm6vxHRWJ3JTBU9LWayGqG53mxMw=;
-        b=MpdvMpPqMKWBctHOkuDpfxbTZK3NqQSwG0yCiF+ibrvu2DHy4mZCcuQx8xzubGiltk
-         fXkGxi9AehKRLwp0zIARnb4WngxM54WeeCagnuDxR29D12RJa1RwACdiwe9q5YMfIJYN
-         ZcUEatOXvTiO9nfXsyZEkNS2co1OVbLzgigfJdoFzuimQ1Fn9s8sKghAhXBZQAx/OENo
-         ziWEcXeoXQ1OdBgW99Ypps/x+fb6rEHBfc6A6iBRcPKTcTtOrep0VtJ0hv/Kg6weibPT
-         Wds0+wkvGyF/NhDJYTE+ScXFZX1lSo4xa05qmXHg/0sC/uX7kHss/xGwC1pxVFNmeCA2
-         QpGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ugTNUn8mm2Ku6DfVm6vxHRWJ3JTBU9LWayGqG53mxMw=;
-        b=aFNay7b0dKNebITLYAjLRyKY1KHJAYMPj18w7DsM965BPgUq2AWhZ1Z6L3mV+CYzrs
-         LWRtE4crh7Pa1vHDMrjrFeK7z1QER0Y67lwofE3CZ9a4RYR80XdMZCteSH54zu5bv5MB
-         Clht3l/DZjiSvZV3gy8e6qWRP5hrFkVBjWNThtr20W45usBLQ1d3iOCgJgOcfdUoUXn9
-         KuqlPiVwbrPv4bQPua4Avu0IWZUgHvAWq0bkSZfZFVzoyNacBI2zt7G1oFM1BqX8+glg
-         aQcUNcj9pgJBsKR9LcQ2izWQrOtgHl+gvUince3S5/DwN8BBN3ba/iGDLNf6CZUySFfZ
-         4qxg==
-X-Gm-Message-State: AOAM5327iensW63wa45mvShIVMVl8MoFC8xNe8oPCdt8HisMLBfP9c7T
-        ryZCRi3ptXt86fx2aNeKofZVeXvhMAQ=
-X-Google-Smtp-Source: ABdhPJxl2ZwcqutABattNSET4QKwUd7/IzX1WiTFxtg4ligGakYCwNb+FcHWlik94jksPpHtKPkWvw==
-X-Received: by 2002:a92:9646:: with SMTP id g67mr1536585ilh.116.1599827529114;
-        Fri, 11 Sep 2020 05:32:09 -0700 (PDT)
-Received: from aford-IdeaCentre-A730.lan (mn-10k-dhcp7-1791.dsl.hickorytech.net. [68.232.239.6])
-        by smtp.gmail.com with ESMTPSA id m18sm1144277iln.80.2020.09.11.05.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 05:32:08 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-pm@vger.kernel.org, linux-omap@vger.kernel.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
-        kernel test robot <lkp@intel.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power management
-Date:   Fri, 11 Sep 2020 07:31:56 -0500
-Message-Id: <20200911123157.759379-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 11 Sep 2020 08:43:09 -0400
+Received: from mx2.homebroker.pl ([91.228.88.39]:36424 "EHLO mx2.homebroker.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgIKMdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:33:47 -0400
+X-Greylist: delayed 516 seconds by postgrey-1.27 at vger.kernel.org; Fri, 11 Sep 2020 08:33:46 EDT
+Received: from localhost (unknown [127.0.0.1])
+        by mx2.homebroker.pl (Postfix) with ESMTP id EF9281C36E9
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 12:25:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at homebroker.pl
+Received: from mx2.homebroker.pl ([127.0.0.1])
+        by localhost (hb-mailgw-ext-2.adm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uftYjFqX1TRr for <linux-kernel@vger.kernel.org>;
+        Fri, 11 Sep 2020 14:25:07 +0200 (CEST)
+Received: from mail.homebroker.pl (unknown [10.84.8.11])
+        by mx2.homebroker.pl (Postfix) with ESMTPS id D2E881C3691
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 12:25:07 +0000 (UTC)
+Received: from juy (unknown [194.36.191.80])
+        (Authenticated sender: kzorawski)
+        by mail.homebroker.pl (Postfix) with ESMTPSA id A5477E0D1F
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 14:25:07 +0200 (CEST)
+From:   "Chan Wong Kee" <kzorawski@hb-partners.pl>
+Subject: Invoice #2334889 is one week overdue
+To:     "linux-kernel" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Reply-To: "Chan Wong Kee" <greeleal1981@gmail.com>
+Organization: Lfi industrial co., ltd.
+Date:   Fri, 11 Sep 2020 08:25:07 -0700
+Message-Id: <20200911122507.EF9281C36E9@mx2.homebroker.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bandgap sensor can be idled when the processor is too, but it
-isn't currently being done, so the power consumption of OMAP3
-boards can elevated if the bangap sensor is enabled.
+Dear Mr. or Ms.
 
-This patch attempts to use some additional power management
-to idle the clock to the bandgap when not needed.
+Our records show that we haven’t yet received payment of $7,980 for Invoice #2334889, which is overdue by one week.
+I would appreciate if you could check this out on your end.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04
----
-V3:  bandgap_omap_cpu_notifier is only defined when CONFIG_PM_SLEEP
-     is enabled, so make all references to it also depend on
-     CONFIG_PM_SLEEP as well
+If the payment has already been sent, please disregard this notice. And if you’ve lost this invoice, please let me know, and I’d be happy to send you another copy.
 
-V2: Fix issue where variable stating the suspend mode isn't being
-    properly set and cleared.
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-index ab19ceff6e2a..5e596168ba73 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-@@ -25,10 +25,20 @@
- #include <linux/of_platform.h>
- #include <linux/of_irq.h>
- #include <linux/io.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include "ti-bandgap.h"
- 
- static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
-+#ifdef CONFIG_PM_SLEEP
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v);
-+#endif
- 
- /***   Helper functions to access registers and their bitfields   ***/
- 
-@@ -1008,6 +1018,11 @@ int ti_bandgap_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+#ifdef CONFIG_PM_SLEEP
-+	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
-+	cpu_pm_register_notifier(&bgp->nb);
-+#endif
-+
- 	return 0;
- 
- remove_last_cooling:
-@@ -1041,7 +1056,9 @@ int ti_bandgap_remove(struct platform_device *pdev)
- 	struct ti_bandgap *bgp = platform_get_drvdata(pdev);
- 	int i;
- 
--	/* First thing is to remove sensor interfaces */
-+	cpu_pm_unregister_notifier(&bgp->nb);
-+
-+	/* Remove sensor interfaces */
- 	for (i = 0; i < bgp->conf->sensor_count; i++) {
- 		if (bgp->conf->sensors[i].unregister_cooling)
- 			bgp->conf->sensors[i].unregister_cooling(bgp, i);
-@@ -1150,9 +1167,43 @@ static int ti_bandgap_suspend(struct device *dev)
- 	if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
- 		clk_disable_unprepare(bgp->fclock);
- 
-+	bgp->is_suspended = true;
-+
- 	return err;
- }
- 
-+static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
-+				  unsigned long cmd, void *v)
-+{
-+	struct ti_bandgap *bgp;
-+
-+	bgp = container_of(nb, struct ti_bandgap, nb);
-+
-+	spin_lock(&bgp->lock);
-+	switch (cmd) {
-+	case CPU_CLUSTER_PM_ENTER:
-+		if (bgp->is_suspended)
-+			break;
-+		ti_bandgap_save_ctxt(bgp);
-+		ti_bandgap_power(bgp, false);
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_disable(bgp->fclock);
-+		break;
-+	case CPU_CLUSTER_PM_ENTER_FAILED:
-+	case CPU_CLUSTER_PM_EXIT:
-+		if (bgp->is_suspended)
-+			break;
-+		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
-+			clk_enable(bgp->fclock);
-+		ti_bandgap_power(bgp, true);
-+		ti_bandgap_restore_ctxt(bgp);
-+		break;
-+	}
-+	spin_unlock(&bgp->lock);
-+
-+	return NOTIFY_OK;
-+}
-+
- static int ti_bandgap_resume(struct device *dev)
- {
- 	struct ti_bandgap *bgp = dev_get_drvdata(dev);
-@@ -1161,6 +1212,7 @@ static int ti_bandgap_resume(struct device *dev)
- 		clk_prepare_enable(bgp->fclock);
- 
- 	ti_bandgap_power(bgp, true);
-+	bgp->is_suspended = false;
- 
- 	return ti_bandgap_restore_ctxt(bgp);
- }
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-index fce4657e9486..ed0ea4b17b25 100644
---- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-@@ -12,6 +12,10 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/err.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pm.h>
- 
- struct gpio_desc;
- 
-@@ -203,6 +207,8 @@ struct ti_bandgap {
- 	int				irq;
- 	struct gpio_desc		*tshut_gpiod;
- 	u32				clk_rate;
-+	struct notifier_block		nb;
-+	unsigned int is_suspended:1;
- };
- 
- /**
--- 
-2.25.1
+-------
+
+Sales Manager, Chan Wong Kee
+Lfi industrial co., ltd.
+Tel 86-750-2633159
+Fax 86-750-2633151
+
 
