@@ -2,199 +2,114 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43312C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9598720770
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599837981;
-	bh=RsCwXletKW4lIzX+X2x9ZKwExmHSFoe5t2j69j9uCbo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Au6Vg036MRbqSQQ8C2F9OfGxc37XtsUlH0DzGkHSyN+syCGhOqIwW3jAZCrRT8w+A
-	 8j3bb0JnfNiltPhts9NEcw5ksn9M4oba9SvA5ZR8Z4D76GRG12GJZrp6AdVRx5Brso
-	 Xv8bOxyn4tN4mpdEJ0DWdHy+DTGqdDbFXbyKrHX0=
+	by mail.kernel.org (Postfix) with ESMTP id F40C720770
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:27:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fjp11hQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgIKP0K (ORCPT
+        id S1726265AbgIKP1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbgIKPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:19:09 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8038F22211;
-        Fri, 11 Sep 2020 13:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829218;
-        bh=RsCwXletKW4lIzX+X2x9ZKwExmHSFoe5t2j69j9uCbo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SXwBcstQ7Rx7Jhg/rAZU+A49Lo5J+dMRufLKxyZw9tiGoUWVHUorfFWgWxVFw+GB6
-         Nf+i7yzFmmp7i6/ydSaE1RQiu08g7ecYwTV30Vc6IOwjTB+z69hhX+ddMICKvXETYe
-         pF+RD3UAzLneb5zSU+UiJ6MkYkG1O8kfIGHZ+K2s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 3/8] netlabel: fix problems with mapping removal
-Date:   Fri, 11 Sep 2020 14:54:41 +0200
-Message-Id: <20200911125420.748103183@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911125420.580564179@linuxfoundation.org>
-References: <20200911125420.580564179@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 11 Sep 2020 11:27:02 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55304 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgIKPUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:20:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BFF3Zc061529;
+        Fri, 11 Sep 2020 15:19:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=/MeEy7v1R447j4T1klPQoqAF2B+oLO9ldzBbaI8x8Es=;
+ b=fjp11hQgk0M2ieGImtTlL3liHO/dyA25V5DntaVVhLX6Ilu+T/TV1XPoOJjeyYixOdXH
+ zTu3b7QveAgDRj+O1ApqsEwqbXRl/lzWg7UZjAG6BWw4KrKZiZe0s1mRw0SMpwW/2LfK
+ 7YUZ5RbrKNusDmRcqbVYffyvdjomq6LGK4rSI1g0g1J8rhlMt28xUhkmSX9FazUWm2G2
+ KyuibgxuaFLMs7xnoMXncD3eDGWm9zUul8GDnF48Ys6F2/7Cr3rvA60y7UAHvg4x611m
+ A4nS3Z4JPOYu1YNBX3PDlGFv2TnzNlgfcG5BSV+f+eoo0qxkMfUYHDPryr29pkH/p7Bu Ng== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 33c2mmesjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Sep 2020 15:19:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BFFHDE118910;
+        Fri, 11 Sep 2020 15:19:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 33cmkd8cfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Sep 2020 15:19:31 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08BFJK2q027490;
+        Fri, 11 Sep 2020 15:19:20 GMT
+Received: from [10.74.86.16] (/10.74.86.16)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 11 Sep 2020 08:19:20 -0700
+Subject: Re: [PATCH v3 00/11] Fix PM hibernation in Xen guests
+To:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        jgross@suse.com, linux-pm@vger.kernel.org, linux-mm@kvack.org,
+        kamatam@amazon.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@kernel.crashing.org
+References: <cover.1598042152.git.anchalag@amazon.com>
+From:   boris.ostrovsky@oracle.com
+Organization: Oracle Corporation
+Message-ID: <03baf888-5c10-429b-3206-b75d4af1e09e@oracle.com>
+Date:   Fri, 11 Sep 2020 11:19:13 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1598042152.git.anchalag@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9741 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009110126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9741 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit d3b990b7f327e2afa98006e7666fb8ada8ed8683 ]
-
-This patch fixes two main problems seen when removing NetLabel
-mappings: memory leaks and potentially extra audit noise.
-
-The memory leaks are caused by not properly free'ing the mapping's
-address selector struct when free'ing the entire entry as well as
-not properly cleaning up a temporary mapping entry when adding new
-address selectors to an existing entry.  This patch fixes both these
-problems such that kmemleak reports no NetLabel associated leaks
-after running the SELinux test suite.
-
-The potentially extra audit noise was caused by the auditing code in
-netlbl_domhsh_remove_entry() being called regardless of the entry's
-validity.  If another thread had already marked the entry as invalid,
-but not removed/free'd it from the list of mappings, then it was
-possible that an additional mapping removal audit record would be
-generated.  This patch fixes this by returning early from the removal
-function when the entry was previously marked invalid.  This change
-also had the side benefit of improving the code by decreasing the
-indentation level of large chunk of code by one (accounting for most
-of the diffstat).
-
-Fixes: 63c416887437 ("netlabel: Add network address selectors to the NetLabel/LSM domain mapping")
-Reported-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/netlabel/netlabel_domainhash.c |   59 ++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 29 deletions(-)
-
---- a/net/netlabel/netlabel_domainhash.c
-+++ b/net/netlabel/netlabel_domainhash.c
-@@ -85,6 +85,7 @@ static void netlbl_domhsh_free_entry(str
- 			kfree(netlbl_domhsh_addr6_entry(iter6));
- 		}
- #endif /* IPv6 */
-+		kfree(ptr->def.addrsel);
- 	}
- 	kfree(ptr->domain);
- 	kfree(ptr);
-@@ -536,6 +537,8 @@ int netlbl_domhsh_add(struct netlbl_dom_
- 				goto add_return;
- 		}
- #endif /* IPv6 */
-+		/* cleanup the new entry since we've moved everything over */
-+		netlbl_domhsh_free_entry(&entry->rcu);
- 	} else
- 		ret_val = -EINVAL;
- 
-@@ -579,6 +582,12 @@ int netlbl_domhsh_remove_entry(struct ne
- {
- 	int ret_val = 0;
- 	struct audit_buffer *audit_buf;
-+	struct netlbl_af4list *iter4;
-+	struct netlbl_domaddr4_map *map4;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	struct netlbl_af6list *iter6;
-+	struct netlbl_domaddr6_map *map6;
-+#endif /* IPv6 */
- 
- 	if (entry == NULL)
- 		return -ENOENT;
-@@ -596,6 +605,9 @@ int netlbl_domhsh_remove_entry(struct ne
- 		ret_val = -ENOENT;
- 	spin_unlock(&netlbl_domhsh_lock);
- 
-+	if (ret_val)
-+		return ret_val;
-+
- 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
- 	if (audit_buf != NULL) {
- 		audit_log_format(audit_buf,
-@@ -605,40 +617,29 @@ int netlbl_domhsh_remove_entry(struct ne
- 		audit_log_end(audit_buf);
- 	}
- 
--	if (ret_val == 0) {
--		struct netlbl_af4list *iter4;
--		struct netlbl_domaddr4_map *map4;
--#if IS_ENABLED(CONFIG_IPV6)
--		struct netlbl_af6list *iter6;
--		struct netlbl_domaddr6_map *map6;
--#endif /* IPv6 */
--
--		switch (entry->def.type) {
--		case NETLBL_NLTYPE_ADDRSELECT:
--			netlbl_af4list_foreach_rcu(iter4,
--					     &entry->def.addrsel->list4) {
--				map4 = netlbl_domhsh_addr4_entry(iter4);
--				cipso_v4_doi_putdef(map4->def.cipso);
--			}
-+	switch (entry->def.type) {
-+	case NETLBL_NLTYPE_ADDRSELECT:
-+		netlbl_af4list_foreach_rcu(iter4, &entry->def.addrsel->list4) {
-+			map4 = netlbl_domhsh_addr4_entry(iter4);
-+			cipso_v4_doi_putdef(map4->def.cipso);
-+		}
- #if IS_ENABLED(CONFIG_IPV6)
--			netlbl_af6list_foreach_rcu(iter6,
--					     &entry->def.addrsel->list6) {
--				map6 = netlbl_domhsh_addr6_entry(iter6);
--				calipso_doi_putdef(map6->def.calipso);
--			}
-+		netlbl_af6list_foreach_rcu(iter6, &entry->def.addrsel->list6) {
-+			map6 = netlbl_domhsh_addr6_entry(iter6);
-+			calipso_doi_putdef(map6->def.calipso);
-+		}
- #endif /* IPv6 */
--			break;
--		case NETLBL_NLTYPE_CIPSOV4:
--			cipso_v4_doi_putdef(entry->def.cipso);
--			break;
-+		break;
-+	case NETLBL_NLTYPE_CIPSOV4:
-+		cipso_v4_doi_putdef(entry->def.cipso);
-+		break;
- #if IS_ENABLED(CONFIG_IPV6)
--		case NETLBL_NLTYPE_CALIPSO:
--			calipso_doi_putdef(entry->def.calipso);
--			break;
-+	case NETLBL_NLTYPE_CALIPSO:
-+		calipso_doi_putdef(entry->def.calipso);
-+		break;
- #endif /* IPv6 */
--		}
--		call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
- 	}
-+	call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
- 
- 	return ret_val;
- }
+On 8/21/20 6:22 PM, Anchal Agarwal wrote:
+>
+> Known issues:
+> 1.KASLR causes intermittent hibernation failures. VM fails to resumes and
+> has to be restarted. I will investigate this issue separately and shouldn't
+> be a blocker for this patch series.
 
 
+Is there any change in status for this? This has been noted since January.
+
+
+-boris
+
+
+> 2. During hibernation, I observed sometimes that freezing of tasks fails due
+> to busy XFS workqueuei[xfs-cil/xfs-sync]. This is also intermittent may be 1
+> out of 200 runs and hibernation is aborted in this case. Re-trying hibernation
+> may work. Also, this is a known issue with hibernation and some
+> filesystems like XFS has been discussed by the community for years with not an
+> effectve resolution at this point.
+>
