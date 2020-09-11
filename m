@@ -2,182 +2,142 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8E0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D98C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56BA2222B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D9B2222D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="NhAveaOX"
+	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="UIOFBFd2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgIKMzi (ORCPT
+        id S1726078AbgIKM4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbgIKMwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:52:17 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7918CC0613ED
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:52:17 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id jw11so1666457pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JBjfpNNCcSR2lMWRcTwj2x61e5MJUnNyTU2oRJeCo1g=;
-        b=NhAveaOXGgERFl5ZKAud73NbmDI+dThozoPKNkxWvHQ5bB9w4oQAsCV7WHF56spxyM
-         r3yo0OOfZZUURq8/cDZCSBXjtQ3F4SxJhmLHkGyyKTrZWw+GNFPKr3XJuxFS/PGI6o0U
-         iBPVkclSUf3GeXFWPTRuc8PE8xvyULPLxbrYk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JBjfpNNCcSR2lMWRcTwj2x61e5MJUnNyTU2oRJeCo1g=;
-        b=GQDRc7Eguw2iq/kP+Hx4rdmteXDIwwBPW5dV5WF9VWl9/Cm4I0Betv72mKvjtqHQMN
-         /yvE4Uf8XIbRow5ev4TCQWXddXJqgD/yyy1MMs4iS7hK23KAihj4ZAfGuuttVe9pkzer
-         2Rzi+ghlyWmw2qTddNOmoptNAF/ZGEd3lisA0z+DQ+K48UvMtG1io70kjKZ8XZwm4Rp5
-         09EA0ap0UDRlY8KGLWJZp/rgCLj23zZXFYE5R/ucmE+n6Bmk0dkL+1OXE9WQpKaBqK8m
-         dypRduzQcNEk9NHpEY0ZTZ0Or/PUoldnZ9FwbrM6qF4xABmCfq3QIOoWoAxhEWPjwJVv
-         y9yg==
-X-Gm-Message-State: AOAM530VD2XQTwo9db1XKo+meeBbEuDrFUH7y9AP4rY26fH7JXdlWglg
-        IocoAaBDHVdtXBOjPIKic+SN9vPAGUolQqRQpks=
-X-Google-Smtp-Source: ABdhPJyxE06IXjEiMlIdvqyFhkPPd6AGf7OYQAxMt+Shm1MLO4D2RnAX3Pg5Tyn7r0RrhY1jVdobag==
-X-Received: by 2002:a17:90b:d90:: with SMTP id bg16mr2084477pjb.199.1599828736809;
-        Fri, 11 Sep 2020 05:52:16 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id gg13sm1239543pjb.3.2020.09.11.05.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 05:52:16 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Yuval Bason <yuval.bason@cavium.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] qedr: fix resource leak in qedr_create_qp
-Date:   Fri, 11 Sep 2020 12:51:59 +0000
-Message-Id: <20200911125159.4577-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <AEYrHjmsd4Sp2R54y55pVL3CXr1KXedoBnTEczCBkpE9+SsFNg@mail.gmail.com>
-References: <AEYrHjmsd4Sp2R54y55pVL3CXr1KXedoBnTEczCBkpE9+SsFNg@mail.gmail.com>
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 11 Sep 2020 08:56:34 -0400
+Received: from mx01-sz.bfs.de ([194.94.69.67]:40956 "EHLO mx01-sz.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgIKMvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:51:20 -0400
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx01-sz.bfs.de (Postfix) with ESMTPS id E6ECB2073B;
+        Fri, 11 Sep 2020 14:50:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1599828647;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=82BtCr1BIfXgeDl5GXv1rw/fP+DslEOiz8/6ePx0tO8=;
+        b=UIOFBFd2nSIIZr+VOEBljBZTefEvhs6PwXX/6SIywkqd/bhD/7EQBYIv0cpz8R/oRm8vGX
+        q0OvHXUtMM0wO6vyPBXyurUwVwykVNIlYydM/jOpiRkXsED374eHWsO5QcPBiYrQmfvK3v
+        wwbP/Emr0Oi3j5qDbu5Fx3bYV2FTtvqNd+/1vi8FfbvuNUOmGz2ciAA84qktoP/aZhT8S7
+        21ZMja7QhVX4TioSvXw7ihiJYgvhp2wzIQu7tZMdn6AJcnJlsS4Sb9/2UAATHaOdgfdxPS
+        jA9hoG3kMuKV5V5Si5NtO6OdbFdppSVnqEX8XpEhwuEBhCdiCYwUMijSqDNpiA==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 11 Sep
+ 2020 14:50:47 +0200
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.2044.004; Fri, 11 Sep 2020 14:50:47 +0200
+From:   Walter Harms <wharms@bfs.de>
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>,
+        "mtk.manpages@gmail.com" <mtk.manpages@gmail.com>
+CC:     "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: AW: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size
+ (instead of hardcoding macro name)
+Thread-Topic: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size
+ (instead of hardcoding macro name)
+Thread-Index: AQHWh7eCoX2qxL9OEkaYnOmAJnp5MKljZJ9j
+Date:   Fri, 11 Sep 2020 12:50:47 +0000
+Message-ID: <00ae0174f35241efa962286b9247c590@bfs.de>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>,<20200910211344.3562-13-colomar.6.4.3@gmail.com>
+In-Reply-To: <20200910211344.3562-13-colomar.6.4.3@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.40]
+x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25658.007
+x-tm-as-result: No-10--0.239100-5.000000
+x-tmase-matchedrid: WWTMasqpueEI9V8p1Mx66XbspjK6JP6qDZxgL2y+vXeRmBpkPchPVWhk
+        SwpykoqVxTsa1zsKwGCfw/TEAf8XTEfX0Ayg3UN3lNomdZyIWKIBDya2JbH/+rqmXM36L3kB6f0
+        gaty5G7GXoanwS/0YwxfSrzWwageNLGmmJTL2jhwD2WXLXdz+ATCeYh/W8m8dmyiLZetSf8mZMP
+        CnTMzfOiq2rl3dzGQ1K7ZhaGn+KBbGTvO0edBGBrShWvgR6aJXJcNhWMWLHUv6M/DbU1xGLVGaw
+        EjxIvbJERzzV5VclxnkTB6XPPm2NbZ4ys4g32NHW96NbUtxv39wKbJm8PBDLa3lqFG8MgYtra3V
+        Vcd6EV7L9ApLJriTv0MMprcbiest
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--0.239100-5.000000
+x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25658.007
+x-tm-snts-smtp: B294097DC822586E46F0A54352DFCF7B02EB2CD9229A448E42B646A1F205ABC52000:9
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Authentication-Results: mx01-sz.bfs.de;
+        none
+X-Spamd-Result: default: False [0.02 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[4];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BAYES_SPAM(0.02)[51.18%];
+         TO_DN_SOME(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-0.848];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When xa_insert() fails, the acquired resource in qedr_create_qp should
-also be freed. However, current implementation does not handle the
-error.
+BUFLEN should  be remove completely or stay
 
-Fix this by adding a new goto label that calls qedr_free_qp_resources.
+jm2c
+ wh
+________________________________________
+Von: linux-man-owner@vger.kernel.org [linux-man-owner@vger.kernel.org] im A=
+uftrag von Alejandro Colomar [colomar.6.4.3@gmail.com]
+Gesendet: Donnerstag, 10. September 2020 23:13
+An: mtk.manpages@gmail.com
+Cc: linux-man@vger.kernel.org; linux-kernel@vger.kernel.org; Alejandro Colo=
+mar
+Betreff: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size (inste=
+ad of hardcoding macro name)
 
-Fixes: 1212767e23bb ("qedr: Add wrapping generic structure for qpidr and adjust idr routines.")
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
-changelog(v3): Fix linebreak of the fix tag
-changelog(v2): Change numbered labels to descriptive labels
+ man3/getgrent_r.3 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/infiniband/hw/qedr/verbs.c | 52 ++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+diff --git a/man3/getgrent_r.3 b/man3/getgrent_r.3
+index 81d81a851..76deec370 100644
+--- a/man3/getgrent_r.3
++++ b/man3/getgrent_r.3
+@@ -186,7 +186,7 @@ main(void)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index b49bef94637e..3b4c84f67023 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -2112,6 +2112,28 @@ static int qedr_create_kernel_qp(struct qedr_dev *dev,
- 	return rc;
- }
- 
-+static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
-+				  struct ib_udata *udata)
-+{
-+	struct qedr_ucontext *ctx =
-+		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
-+					  ibucontext);
-+	int rc;
-+
-+	if (qp->qp_type != IB_QPT_GSI) {
-+		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	if (qp->create_type == QEDR_QP_CREATE_USER)
-+		qedr_cleanup_user(dev, ctx, qp);
-+	else
-+		qedr_cleanup_kernel(dev, qp);
-+
-+	return 0;
-+}
-+
- struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 			     struct ib_qp_init_attr *attrs,
- 			     struct ib_udata *udata)
-@@ -2158,19 +2180,21 @@ struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 		rc = qedr_create_kernel_qp(dev, qp, ibpd, attrs);
- 
- 	if (rc)
--		goto err;
-+		goto out_free_qp;
- 
- 	qp->ibqp.qp_num = qp->qp_id;
- 
- 	if (rdma_protocol_iwarp(&dev->ibdev, 1)) {
- 		rc = xa_insert(&dev->qps, qp->qp_id, qp, GFP_KERNEL);
- 		if (rc)
--			goto err;
-+			goto out_free_qp_resources;
- 	}
- 
- 	return &qp->ibqp;
- 
--err:
-+out_free_qp_resources:
-+	qedr_free_qp_resources(dev, qp, udata);
-+out_free_qp:
- 	kfree(qp);
- 
- 	return ERR_PTR(-EFAULT);
-@@ -2671,28 +2695,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
- 	return rc;
- }
- 
--static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
--				  struct ib_udata *udata)
--{
--	struct qedr_ucontext *ctx =
--		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
--					  ibucontext);
--	int rc;
--
--	if (qp->qp_type != IB_QPT_GSI) {
--		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
--		if (rc)
--			return rc;
--	}
--
--	if (qp->create_type == QEDR_QP_CREATE_USER)
--		qedr_cleanup_user(dev, ctx, qp);
--	else
--		qedr_cleanup_kernel(dev, qp);
--
--	return 0;
--}
--
- int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
- {
- 	struct qedr_qp *qp = get_qedr_qp(ibqp);
--- 
-2.17.1
+     setgrent();
+     while (1) {
+-        i =3D getgrent_r(&grp, buf, BUFLEN, &grpp);
++        i =3D getgrent_r(&grp, buf, sizeof(buf), &grpp);
+         if (i)
+             break;
+         printf("%s (%d):", grpp\->gr_name, grpp\->gr_gid);
+--
+2.28.0
 
