@@ -2,102 +2,110 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989CBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55F6C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55F4A221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxWNVc+M"
+	by mail.kernel.org (Postfix) with ESMTP id 911C022204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgIKQhm (ORCPT
+        id S1726583AbgIKQhn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
+        Fri, 11 Sep 2020 12:37:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgIKPM6 (ORCPT
+        with ESMTP id S1726431AbgIKPM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:12:58 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F129C0612EF;
-        Fri, 11 Sep 2020 07:48:16 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id d190so11315220iof.3;
-        Fri, 11 Sep 2020 07:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IRHtAxZizOydZ9DBGosyH446zFOSQHExSwdB0MTaW5A=;
-        b=hxWNVc+ME2BuN4ZdQ1wDo5wApR+q/VTnX/Wlj2bRhmFGltA3RcpiTwiGxJvgMQVn7K
-         7rlwk0/fZ/kRb8QqUKi7h9+kMivuD65HNIZ+OTsUDw5fyF2SoV8n8B6loIuD5cimIw3L
-         CQrv3tR7OrFPXWmTs81563WAcmVSXod+xK32G+4hxVqWRWeR6tv/YMGE64YVXK67/jRd
-         UVIoRR0zx0nLbKaARLYxR7IxIPbesqPxIcy+YG1cNI9jVdb9m8RL+Cp7VmjcqSdL3gF5
-         rvtqRZ6u98yQnPNh2YWTrFXRY4hXHjYbJE3znKdiwNVY23kA0HY/btJAgVabT2/BJjmg
-         DZWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IRHtAxZizOydZ9DBGosyH446zFOSQHExSwdB0MTaW5A=;
-        b=WSOLnSN/krDmTcZ5Gjm2ul5zYlJIKfTLBBw8KGMR437bxtZ+x0H86aKG7m2mv5RzxO
-         E9mwCKxphegTiwtj8teR0baf2lRaruoqqKeudCHBUP3zDm3NFHxoySil3FCkazi8/Khi
-         uGjkPETpMWBu375JXPzW7TkWYYXG3a0RYe547l3cgqx7GKjnySyFTi0W49sloQ/bo2Ac
-         js82EkLWpI00f2IMcudWROnfe1VgCQ6ay6A8FB3LKzQw3dQcU/oVOkHEPNwp9vKq6HxF
-         vm6DSIxZ3OKaiEsC+pN52Aqj3/8Psd22dWfLPbMSft+/UUB4oF0kqHOi34tkAxm45g97
-         MuLA==
-X-Gm-Message-State: AOAM5307w6MCMHYRaTLN1D9+54aehFqiidKeK5Anb6QgOx6pBzh88AwB
-        X1ylyup4Rg0SbHE1Px9lsAJPGS01/dsH/w==
-X-Google-Smtp-Source: ABdhPJzQq9t7YiA8qCNRdeo3jUS+beivCnAe93THebMKuxyDgl1FX09/VllsRsLrX+A+PlMTy5Vylw==
-X-Received: by 2002:a02:6623:: with SMTP id k35mr2282719jac.105.1599835694446;
-        Fri, 11 Sep 2020 07:48:14 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:9823:5439:510e:c509])
-        by smtp.googlemail.com with ESMTPSA id s2sm1394768ili.49.2020.09.11.07.48.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 07:48:13 -0700 (PDT)
-Subject: Re: [PATCH] ipv6: remove redundant assignment to variable err
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200911103509.22907-1-colin.king@canonical.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <a243b2e5-8d6e-dddf-3e3d-a89949f5ccb6@gmail.com>
-Date:   Fri, 11 Sep 2020 08:48:12 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFEBC061374
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 07:33:36 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kGk7E-0004h8-OX; Fri, 11 Sep 2020 16:33:28 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kGk77-0003hr-RU; Fri, 11 Sep 2020 16:33:21 +0200
+Message-ID: <1ac4ba40a031169b968e3084c132579db921033c.camel@pengutronix.de>
+Subject: Re: [v2,2/3] PCI: mediatek: Add new generation controller support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        davem@davemloft.net, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>
+Date:   Fri, 11 Sep 2020 16:33:21 +0200
+In-Reply-To: <20200910034536.30860-3-jianjun.wang@mediatek.com>
+References: <20200910034536.30860-1-jianjun.wang@mediatek.com>
+         <20200910034536.30860-3-jianjun.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20200911103509.22907-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/20 4:35 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+Hi Jianjun,
+
+On Thu, 2020-09-10 at 11:45 +0800, Jianjun Wang wrote:
+> MediaTek's PCIe host controller has three generation HWs, the new
+> generation HW is an individual bridge, it supoorts Gen3 speed and
+> up to 256 MSI interrupt numbers for multi-function devices.
 > 
-> The variable err is being initialized with a value that is never read and
-> it is being updated later with a new value. The initialization is redundant
-> and can be removed.  Also re-order variable declarations in reverse
-> Christmas tree ordering.
+> Add support for new Gen3 controller which can be found on MT8192.
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  net/ipv6/route.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/Kconfig              |   14 +
+>  drivers/pci/controller/Makefile             |    1 +
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 1076 +++++++++++++++++++
+>  3 files changed, 1091 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-mediatek-gen3.c
 > 
+[...]
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+> new file mode 100644
+> index 000000000000..f8c8bdf88d33
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+[...]
+> +static int mtk_pcie_power_up(struct mtk_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	int err;
+> +
+> +	port->phy_reset = devm_reset_control_get_optional(dev, "phy-rst");
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Please use devm_reset_control_get_optional_exclusive() instead.
 
+> +	if (PTR_ERR(port->phy_reset) == -EPROBE_DEFER)
+> +		return PTR_ERR(port->phy_reset);
+
+This should be
+
+	if (IS_ERR(port->phy_reset))
+		return PTR_ERR(port->phy_reset);
+
+there is no reason to continue if this throws -ENOMEM, for example.
+
+regards
+Philipp
