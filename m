@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCDDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF441208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C26208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725777AbgIKCCP (ORCPT
+        id S1725807AbgIKCC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 22:02:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11808 "EHLO huawei.com"
+        Thu, 10 Sep 2020 22:02:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39272 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725300AbgIKCCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 22:02:13 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5651284925446A64A6DB;
-        Fri, 11 Sep 2020 10:02:08 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 10:02:00 +0800
+        id S1725300AbgIKCCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 22:02:25 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 60668C3B4F2C63A6AD57;
+        Fri, 11 Sep 2020 10:02:21 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 10:02:11 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <geoff@infradead.org>, <mpe@ellerman.id.au>,
-        <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+To:     <tsbogend@alpha.franken.de>, <paulburton@kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] powerpc/ps3: make two symbols static
-Date:   Fri, 11 Sep 2020 10:01:21 +0800
-Message-ID: <20200911020121.1464585-1-yanaijie@huawei.com>
+Subject: [PATCH] MIPS: Make setup_elfcorehdr and setup_elfcorehdr_size static
+Date:   Fri, 11 Sep 2020 10:01:32 +0800
+Message-ID: <20200911020132.1464661-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -47,39 +46,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This addresses the following sparse warning:
 
-arch/powerpc/platforms/ps3/spu.c:451:33: warning: symbol
-'spu_management_ps3_ops' was not declared. Should it be static?
-arch/powerpc/platforms/ps3/spu.c:592:28: warning: symbol
-'spu_priv1_ps3_ops' was not declared. Should it be static?
+arch/mips/kernel/setup.c:446:33: warning: symbol 'setup_elfcorehdr_size'
+was not declared. Should it be static?
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- arch/powerpc/platforms/ps3/spu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/ps3/spu.c b/arch/powerpc/platforms/ps3/spu.c
-index 1193c294b8d0..0c252478e556 100644
---- a/arch/powerpc/platforms/ps3/spu.c
-+++ b/arch/powerpc/platforms/ps3/spu.c
-@@ -448,7 +448,7 @@ static void ps3_disable_spu(struct spu_context *ctx)
- 	ctx->ops->runcntl_stop(ctx);
- }
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 335bd188b8b4..c004a311aaab 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -443,7 +443,7 @@ static int __init early_parse_memmap(char *p)
+ early_param("memmap", early_parse_memmap);
  
--const struct spu_management_ops spu_management_ps3_ops = {
-+static const struct spu_management_ops spu_management_ps3_ops = {
- 	.enumerate_spus = ps3_enumerate_spus,
- 	.create_spu = ps3_create_spu,
- 	.destroy_spu = ps3_destroy_spu,
-@@ -589,7 +589,7 @@ static u64 resource_allocation_enable_get(struct spu *spu)
- 	return 0; /* No support. */
- }
- 
--const struct spu_priv1_ops spu_priv1_ps3_ops = {
-+static const struct spu_priv1_ops spu_priv1_ps3_ops = {
- 	.int_mask_and = int_mask_and,
- 	.int_mask_or = int_mask_or,
- 	.int_mask_set = int_mask_set,
+ #ifdef CONFIG_PROC_VMCORE
+-unsigned long setup_elfcorehdr, setup_elfcorehdr_size;
++static unsigned long setup_elfcorehdr, setup_elfcorehdr_size;
+ static int __init early_parse_elfcorehdr(char *p)
+ {
+ 	phys_addr_t start, end;
 -- 
 2.25.4
 
