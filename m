@@ -2,122 +2,134 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76464C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FEC2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E15C2075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VMTda/Oe"
+	by mail.kernel.org (Postfix) with ESMTP id 39587207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599809531;
+	bh=cXV1CkXTBeihyP2pjnoybF53VLlJRqk7zs9ZrAnC9RQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=j4cAg1gB35zoMQYECcJF91QeX42xru9h99X04gN5ks8KQKPj2IlDP1HlzNtENl2t6
+	 ks7fZP41HgyD4xNYipzsz/avgy7iEhczQNVb7rhFsd0owOj5IkF3j4cFIuiRssH2ae
+	 w8uLRd1WXnnTKRbANyXKcS2qZ1wgssPVd7/Vg+SU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725817AbgIKHZP (ORCPT
+        id S1725780AbgIKHcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKHZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:25:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2460C061573;
-        Fri, 11 Sep 2020 00:25:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e16so10441216wrm.2;
-        Fri, 11 Sep 2020 00:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9ZquUUnURXDxvuD8fXiESlWfcfJ173UE/itZH3BmtBM=;
-        b=VMTda/Oertkd3SCS4f3kBMgN2WgvRGDVxx0KJjFcrPuN1hO/D1Fu8chK9of6Kf5n85
-         4w486GzybxXCMpThkLchDeAVY3uUzc2lO/0AOSTth+94eat6T/tpVQ7BEMpGlbJuf8Kh
-         7vM2iyCSl5xO4cdBUBpsRxBBJmescEUm28lb3l/wyAhkYgxWNsKryTiqHvNnhJD6OQX7
-         oLDSmVTl2gKvUSgdJL68qKpXUcCk3FZAo/nkl2FtCKW+dhpXr4oFbEyydRuZhUWe1nk+
-         MSmyZAP6a/5fr/KjbAvK9ga66RdK8gC8+HdSql+ioG1H4z9i4BvlH56B58lG1sV2HY8/
-         eINw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9ZquUUnURXDxvuD8fXiESlWfcfJ173UE/itZH3BmtBM=;
-        b=Mes9o5amYUo3AysBCx/NHUJVHPQTRrDWxsqAmUcRI+oHHmMvEg1oRrpAnR63cSYIqp
-         ppu+DSX/x5btcY+Aguc79bDUWkHmZCxAZx8yBqW9xw0SBARFfkGGOh/95HkLt1FKBQpY
-         iBZ1NmfTWU+wol/zDITw6A1VaZ3XNodqfekHOEJKsopVjj5GkpW8V0wNVvC8dY7h/JIx
-         J/o8u9lABiKYAp2dAQ9L8UVqtf81Agd5/8c4TMD7PhhGpow1Jvp75yRr/dTHjMd73Rv/
-         YvKbs+O6RKdNK4scHTStpplNhOX9Cn3JRK+UKV2JE1WHYFj5hgGMVtrVrRS0MW5OahTK
-         Z15Q==
-X-Gm-Message-State: AOAM531yhsUEMnQe7EJI5tszfT45Qd/AKxeh9IM0xugGRIgDKPBojQC0
-        qlZlSCqYhNH6yCZFzIwCRhGOXztfWew=
-X-Google-Smtp-Source: ABdhPJzl77RisK72v3J/RIZMgITeJvfzdnhRbtbx1Vxat1RPNf5711xuiAT73lHKySCyM7ywhXmvvQ==
-X-Received: by 2002:adf:91c2:: with SMTP id 60mr669387wri.292.1599809107274;
-        Fri, 11 Sep 2020 00:25:07 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id n124sm2383761wmn.29.2020.09.11.00.25.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 00:25:06 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/24] stat.2: Remove unneeded cast
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-12-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <9e397d55-34bd-3df7-57cc-e5726198bb97@gmail.com>
-Date:   Fri, 11 Sep 2020 09:25:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 03:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725562AbgIKHcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:32:02 -0400
+Received: from coco.lan (ip5f5ad5a5.dynamic.kabel-deutschland.de [95.90.213.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E65207FB;
+        Fri, 11 Sep 2020 07:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599809521;
+        bh=cXV1CkXTBeihyP2pjnoybF53VLlJRqk7zs9ZrAnC9RQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p1a/ROkrKY8+KZKwlchqh3JR+5/q8K4dk/jRlWe/h+7u3iM0oBBgv1iLZ6hy+8vgE
+         eqbS4Na1ObfqwGgy3ZdolPtR+SMftp20WdJLtw1RCxFM4piWYyz/euuQVItqUTKjQ5
+         M39ESj6yB9WXlZnQzQf27gLe8nyzaZx44zsnoQdY=
+Date:   Fri, 11 Sep 2020 09:31:56 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>
+Subject: Re: linux-next: Tree for Sep 10 (drivers/media/pci/ttpci/dvb-ttpci)
+Message-ID: <20200911093156.15282b69@coco.lan>
+In-Reply-To: <97f03d35-acd3-1c65-0c93-4ca4cabf6613@infradead.org>
+References: <20200910174252.0698c743@canb.auug.org.au>
+        <97f03d35-acd3-1c65-0c93-4ca4cabf6613@infradead.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-12-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Both major(3) and minor(3) return an 'unsigned int',
-> so there is no need to use a 'long' for printing.
-> Moreover, it should have been 'unsigned long',
-> as "%lx" expects an unsigned type.
+Hi Randy,
 
-See my reply to patch 10/24.
+Em Thu, 10 Sep 2020 09:02:35 -0700
+Randy Dunlap <rdunlap@infradead.org> escreveu:
+
+> On 9/10/20 12:42 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200909:
+> >   
+> 
+> 
+> on i386:
+> 
+> ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> 
+> 
+> Full randconfig file is attached.
+
+I was unable to reproduce it here with the .config file you sent.
+
+I suspect that the only difference is the compiler version. Here, I'm
+using:
+
+	gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008
+
+While you're using:
+
+	gcc (SUSE Linux) 7.5.0
+
+Yet, the only patch that could possibly have affected it is
+this changeset 13c129066845 ("media: av7110_v4l: avoid a typecast").
+
+It sounds to me that gcc 7.5.0 only does the right math at compile
+time if there is a typecast. Could you please check if the enclosed
+patch fixes it?
 
 Thanks,
+Mauro
 
-Michael
+[PATCH] media: av7110: don't do float point math
 
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-> ---
->  man2/stat.2 | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/man2/stat.2 b/man2/stat.2
-> index b35e3c615..3418e1b5d 100644
-> --- a/man2/stat.2
-> +++ b/man2/stat.2
-> @@ -664,8 +664,8 @@ main(int argc, char *argv[])
->          exit(EXIT_FAILURE);
->      }
->  
-> -    printf("ID of containing device:  [%lx,%lx]\en",
-> -	    (long) major(sb.st_dev), (long) minor(sb.st_dev));
-> +    printf("ID of containing device:  [%x,%x]\en",
-> +	    major(sb.st_dev), minor(sb.st_dev));
->  
->      printf("File type:                ");
->  
-> 
+It sounds that earlier versions of GCC have troubles when
+doing const math at compile time, if no typecast is used:
 
+on i386:
+	ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+	ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+The warning was generated on gcc (SUSE Linux) 7.5.0.
+Gcc 9.2 compiles it fine.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/drivers/media/pci/ttpci/av7110_v4l.c b/drivers/media/pci/ttpci/av7110_v4l.c
+index 6d9c908be713..c89f536f699c 100644
+--- a/drivers/media/pci/ttpci/av7110_v4l.c
++++ b/drivers/media/pci/ttpci/av7110_v4l.c
+@@ -160,9 +160,9 @@ static int ves1820_set_tv_freq(struct saa7146_dev *dev, u32 freq)
+ 	buf[1] = div & 0xff;
+ 	buf[2] = 0x8e;
+ 
+-	if (freq < 16U * 168.25)
++	if (freq < 16U * 16825 / 100)
+ 		config = 0xa0;
+-	else if (freq < 16U * 447.25)
++	else if (freq < 16U * 44725 / 100)
+ 		config = 0x90;
+ 	else
+ 		config = 0x30;
+
