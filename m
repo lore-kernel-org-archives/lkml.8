@@ -2,152 +2,94 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AF7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864A5C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943A4221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BC7206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="bLp4ORPp"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oJf2MOtC";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="MmcWNAdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725812AbgIKI2c (ORCPT
+        id S1725811AbgIKI32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgIKI2W (ORCPT
+        Fri, 11 Sep 2020 04:29:28 -0400
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:59372
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725613AbgIKI30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:28:22 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E445C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:28:20 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id q13so12627674ejo.9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nqgDSp1th5G/M0PdFYX7mO5hM3ICiXr7qIaeDpTGTcU=;
-        b=bLp4ORPpJWoJtKrU+PnODJE/eis6yKpsPkzVKH0XHf5eamhhp8RlA6XpgfAoeCardL
-         vSLYmlyzYTJgoJ0DeDlSn07sKUvKDJlETmJZC4TQQacwtvHXpF/Fe8uiZIzgFLwOwJVe
-         LPKLtwG73oVlviO1tBSrM62bZtJgw3TvG8ftE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nqgDSp1th5G/M0PdFYX7mO5hM3ICiXr7qIaeDpTGTcU=;
-        b=NF2gS5M6Sxw6O8vREo3ccYI2wB/fXM/sjTH3T+C5Ng+T+TonsJf2Bo4Syd9VeHvRg6
-         V0SCFoJId+IDutzhCs3CHFnRmA1kKf/znIoA5V/99KI1GGVNUU6dQ6teGdtDbk2PHZyv
-         jDxAcKzgibdEeURHyYMfHCmootBe8OpnnzKOvMAuyoIbOTPk7KHAJhagxiKQb8USHU8B
-         zZx/zpSl+IW0/HcC8tfYNS0EO/yBrbaz9tGtiNMjdGbhfRNmlwA/LDe/ebr12X57q2bs
-         DwW++TnTVpXbXCPFkTP8diexNg0o17qVRAif9EvYXYw6SwWPTjDbmDUe+1ihNYROR+Re
-         vEYA==
-X-Gm-Message-State: AOAM533kWG3akXtvhILprfo7nA4kj8TvVGNrLtjAmNIqyNwE4lFTQqJU
-        pArcwIZIhsxBUIrLRiWtd3GvijppB9GphpMldrI=
-X-Google-Smtp-Source: ABdhPJzp7/QLZCNmQ/5O5Y2BA2ClIC2TTMD60/G0LfBFa8gP6mFdzJOTxg5yuLdeJcqn6ImyI2052w==
-X-Received: by 2002:a17:906:692:: with SMTP id u18mr929591ejb.43.1599812898711;
-        Fri, 11 Sep 2020 01:28:18 -0700 (PDT)
-Received: from [192.168.1.149] (5.186.115.188.cgn.fibianet.dk. [5.186.115.188])
-        by smtp.gmail.com with ESMTPSA id z10sm1053225eje.122.2020.09.11.01.28.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 01:28:18 -0700 (PDT)
-Subject: Re: [PATCH] scripts/setlocalversion: make git describe output more
- reliable
-To:     Brian Norris <briannorris@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200910112701.13853-1-linux@rasmusvillemoes.dk>
- <CAK7LNARE6NpCYAd7=--m-oO8_LweBWhP2aWfSRdTz=TX8dM5rw@mail.gmail.com>
- <CA+ASDXOuK=iCdzWbtc+aRhBy=8xy860XqxwJg+wFuQaXKfg3UQ@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f3ce9b3e-d3c1-a96b-e14b-a8d3c4600b09@rasmusvillemoes.dk>
-Date:   Fri, 11 Sep 2020 10:28:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 04:29:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812966;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=wF0V9zhnfPcH616CwCLeByLepfZtHk7S+uGcjuckYGg=;
+        b=oJf2MOtCCiIg9cdorU/sxdZpy0r+4s9L45rMpgIk726JZ3VQQaz6SSvFqm7E6p8V
+        WoLEhAbmBCLsDQUIhQzZP5BApaTCAimxty/wSXTyYfyEhrOOPiisoQ/qx8xP5oNbU0M
+        rQzszcz8PzauLodB1fW+1fjrsxyhjq6Y2CLqNoiQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812966;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=wF0V9zhnfPcH616CwCLeByLepfZtHk7S+uGcjuckYGg=;
+        b=MmcWNAdbl+Db5VvtmwK7wMVuFGhyru7twZG9AHqfFMmg1+3NVXQaKk37SDUxO8It
+        LBi1mzi8BxDfcXSWGWQb8G7KMaebwxaAQI66g+O2K2Jkj5zgDoOXj1/ZwkQA7f8gjZa
+        IAvqHKRGsRrXFp6kWMFNIW0PALeO7zyFoYK/P0pk=
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXOuK=iCdzWbtc+aRhBy=8xy860XqxwJg+wFuQaXKfg3UQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Sep 2020 08:29:25 +0000
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-qcom: Setup identity domain for
+ boot mappings
+In-Reply-To: <20200904155513.282067-9-bjorn.andersson@linaro.org>
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+ <20200904155513.282067-9-bjorn.andersson@linaro.org>
+Message-ID: <010101747c489611-70607803-81f3-423c-a85a-c4e31c00971a-000000@us-west-2.amazonses.com>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.11-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/09/2020 21.05, Brian Norris wrote:
-> On Thu, Sep 10, 2020 at 7:35 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->> On Thu, Sep 10, 2020 at 8:57 PM Rasmus Villemoes
->> <linux@rasmusvillemoes.dk> wrote:
->>> So in order to avoid `uname -a` output relying on such random details
->>> of the build environment which are rather hard to ensure are
->>> consistent between developers and buildbots, use an explicit
->>> --abbrev=15 option (and for consistency, also use rev-parse --short=15
->>> for the unlikely case of no signed tags being usable).
+On 2020-09-04 21:25, Bjorn Andersson wrote:
+> With many Qualcomm platforms not having functional S2CR BYPASS a
+> temporary IOMMU domain, without translation, needs to be allocated in
+> order to allow these memory transactions.
 > 
-> For the patch:
+> Unfortunately the boot loader uses the first few context banks, so
+> rather than overwriting a active bank the last context bank is used and
+> streams are diverted here during initialization.
 > 
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> This also performs the readback of SMR registers for the Qualcomm
+> platform, to trigger the mechanism.
 > 
->> I agree that any randomness should be avoided.
->>
->> My question is, do we need 15-digits?
-> ...
->> So, I think the conflict happens
->> only when we have two commits that start with the same 7-digits
->> in the _same_ release. Is this correct?
+> This is based on prior work by Thierry Reding and Laurentiu Tudor.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
 
-No.
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-> For git-describe (the case where we have a tag to base off):
-> "use <n> digits, or as many digits as needed to form a unique object name"
-
-Yes, the abbreviated hash that `git describe` produces is unique among
-all objects (and objects are more than just commits) in the current
-repo, so what matters for probability-of-collision is the total number
-of objects - linus.git itself probably grows ~60000 objects per release.
-
-As for "do we need 15 digits", well, in theory the next time I merge the
-next rt-stable tag into our kernel I could end up with a commit that
-matches some existing object in the first 33 hex chars at which point I
-should have chosen 34 - but of course that's so unlikely that it's
-irrelevant.
-
-But the upshot of that is that there really is no objective answer to
-"how many digits do we need", so it becomes a tradeoff between "low
-enough probability that anyone anywhere in the next few years would have
-needed more than X when building their own kernel" and readability of
-`uname -r` etc. So I decided somewhat arbitrarily that each time one
-rolls a new release, there should be less than 1e-9 probability that
-HEAD collides with some other object when abbreviated to X hexchars.
-X=12 doesn't pass that criteria even when the repo has only 10M objects
-(and, current linus.git already has objects that need 12 to be unique,
-so such collisions do happen in practice, though of course very rarely).
-13 and 14 are just weird numbers, so I ended with 15, which also allows
-many many more objects in the repo before the probability crosses that
-1e-9 threshold.
-
-Rasmus
-
-Side note 1: Note that there really isn't any such thing as "last
-tag/previous tag" in a DAG; I think what git does is a best-effort
-search for the eligible tag that minimizes #({objects reachable from
-commit-to-be-described} - {objects reachable from tag}), where eligible
-tag means at least reachable from commit-to-be-described (so that set
-difference is a proper one), but there can be additional constraints
-(e.g. --match=...).
-
-Side note 2: Linus or Greg releases are actually not interesting here
-(see the logic in setlocalversion that stops early if we're exactly at
-an annotated tag) - the whole raison d'etre for setlocalversion is that
-people do maintain and build non-mainline kernels, and it's extremely
-useful for `uname -a` to accurately tell just which commit is running on
-the target.
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
