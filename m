@@ -2,161 +2,156 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA11C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F81E222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E242226A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599833256;
-	bh=WtLDphGkBiYmdc6BhAHcqBRHKaHreheENgkhJb+8c5k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CiNoHE/TjmTF7Tv5P9n/EM34u6k5gF1XSDDeDPHcUZsI81obfiC6L+fMWz7vqKVjp
-	 w25GKEVC5PDF2onB5CfXczLG1cgHL2JVSWvmeueQAcqU2CaZ8txzCmNipNQ0O4nQCB
-	 imzWQ5dF2qL2AWErY2pSrG1ST0XxuR9Vdn5o1j1Q=
+	s=default; t=1599833366;
+	bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D0IHlUUQZh9ixSzb9P+GUUy153fpT4MpbeRzWEI+iNYRMaW1ox92pC+CiIo7C9IME
+	 P4y5Xxn814HjRFc1YgSapq55izcoYfmQdUbs+VeXgKiYTFspGGOyTT397yT40C/Z7Z
+	 GZGMaivvN0cazwJRRbe2BVwhYFpnlymks7yFsQ24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgIKOGw (ORCPT
+        id S1725785AbgIKOIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726285AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:29:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D246B2220D;
-        Fri, 11 Sep 2020 13:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3214022454;
+        Fri, 11 Sep 2020 12:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829210;
-        bh=WtLDphGkBiYmdc6BhAHcqBRHKaHreheENgkhJb+8c5k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xI+pkjmzFNex8nlX/z6/sow4RrduFhZo7Wd0G+2OWxeooxU4r2XCZyYg6e0MhTiIP
-         BJe2tFp/Mn0i0CdULWZZM8vgmFgJsD9G3jxdOZPliHOZPY/rgpxjRYJ+sUQjcUKkrC
-         MEzlHmamXTN3pOvb8oEQ51z6WnfPNODKpT6qxcRU=
+        s=default; t=1599829175;
+        bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Wn1T2ezpZ/I7K4BdGERS1TsY1h4gwXq1MnuHejCF5y8yWQgoDzpiUx0oO1KKhovKu
+         brQGrObcBuAxluZ8B+TmGlrlUFB4ygRYDO/EIQWmKC8b5aLTiRuVJ3kuseZRHn8PzR
+         z+/zpV1VxPtFHKpwL9o19X4l0yO2o1rhx9eINMgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.8 00/16] 5.8.9-rc1 review
-Date:   Fri, 11 Sep 2020 14:47:17 +0200
-Message-Id: <20200911122459.585735377@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 12/16] taprio: Fix using wrong queues in gate mask
+Date:   Fri, 11 Sep 2020 14:47:29 +0200
+Message-Id: <20200911122500.188587305@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
+In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
+References: <20200911122459.585735377@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.8.9-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.8.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.8.9-rc1
-X-KernelTest-Deadline: 2020-09-13T12:25+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.8.9 release.
-There are 16 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-Responses should be made by Sun, 13 Sep 2020 12:24:42 +0000.
-Anything received after that time might be too late.
+[ Upstream commit 09e31cf0c528dac3358a081dc4e773d1b3de1bc9 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.9-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
-and the diffstat can be found below.
+Since commit 9c66d1564676 ("taprio: Add support for hardware
+offloading") there's a bit of inconsistency when offloading schedules
+to the hardware:
 
-thanks,
+In software mode, the gate masks are specified in terms of traffic
+classes, so if say "sched-entry S 03 20000", it means that the traffic
+classes 0 and 1 are open for 20us; when taprio is offloaded to
+hardware, the gate masks are specified in terms of hardware queues.
 
-greg k-h
+The idea here is to fix hardware offloading, so schedules in hardware
+and software mode have the same behavior. What's needed to do is to
+map traffic classes to queues when applying the offload to the driver.
 
--------------
-Pseudo-Shortlog of commits:
+Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/sched/sch_taprio.c |   30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.8.9-rc1
-
-Florian Westphal <fw@strlen.de>
-    mptcp: free acked data before waiting for more memory
-
-Jakub Kicinski <kuba@kernel.org>
-    net: disable netpoll on fresh napis
-
-Tuong Lien <tuong.t.lien@dektech.com.au>
-    tipc: fix using smp_processor_id() in preemptible
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    tipc: fix shutdown() of connectionless socket
-
-Vinicius Costa Gomes <vinicius.gomes@intel.com>
-    taprio: Fix using wrong queues in gate mask
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: not disable bh in the whole sctp_get_port_local()
-
-Kamil Lorenc <kamil@re-ws.pl>
-    net: usb: dm9601: Add USB ID of Keenetic Plus DSL
-
-Paul Moore <paul@paul-moore.com>
-    netlabel: fix problems with mapping removal
-
-Ido Schimmel <idosch@nvidia.com>
-    ipv6: Fix sysctl max for fib_multipath_hash_policy
-
-Ido Schimmel <idosch@nvidia.com>
-    ipv4: Silence suspicious RCU usage warning
-
-Jason Gunthorpe <jgg@nvidia.com>
-    RDMA/cma: Execute rdma_cm destruction from a handler properly
-
-Jason Gunthorpe <jgg@nvidia.com>
-    RDMA/cma: Remove unneeded locking for req paths
-
-Jason Gunthorpe <jgg@nvidia.com>
-    RDMA/cma: Using the standard locking pattern when delivering the removal event
-
-Jason Gunthorpe <jgg@nvidia.com>
-    RDMA/cma: Simplify DEVICE_REMOVAL for internal_id
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io_uring: fix linked deferred ->files cancellation
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io_uring: fix cancel of deferred reqs with ->files
-
-
--------------
-
-Diffstat:
-
- Makefile                           |   4 +-
- drivers/infiniband/core/cma.c      | 257 ++++++++++++++++++-------------------
- drivers/net/usb/dm9601.c           |   4 +
- fs/io_uring.c                      |  47 +++++++
- net/core/dev.c                     |   3 +-
- net/core/netpoll.c                 |   2 +-
- net/ipv4/fib_trie.c                |   3 +-
- net/ipv6/sysctl_net_ipv6.c         |   3 +-
- net/mptcp/protocol.c               |   3 +-
- net/netlabel/netlabel_domainhash.c |  59 ++++-----
- net/sched/sch_taprio.c             |  30 ++++-
- net/sctp/socket.c                  |  16 +--
- net/tipc/crypto.c                  |  12 +-
- net/tipc/socket.c                  |   9 +-
- 14 files changed, 259 insertions(+), 193 deletions(-)
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1177,9 +1177,27 @@ static void taprio_offload_config_change
+ 	spin_unlock(&q->current_entry_lock);
+ }
+ 
+-static void taprio_sched_to_offload(struct taprio_sched *q,
++static u32 tc_map_to_queue_mask(struct net_device *dev, u32 tc_mask)
++{
++	u32 i, queue_mask = 0;
++
++	for (i = 0; i < dev->num_tc; i++) {
++		u32 offset, count;
++
++		if (!(tc_mask & BIT(i)))
++			continue;
++
++		offset = dev->tc_to_txq[i].offset;
++		count = dev->tc_to_txq[i].count;
++
++		queue_mask |= GENMASK(offset + count - 1, offset);
++	}
++
++	return queue_mask;
++}
++
++static void taprio_sched_to_offload(struct net_device *dev,
+ 				    struct sched_gate_list *sched,
+-				    const struct tc_mqprio_qopt *mqprio,
+ 				    struct tc_taprio_qopt_offload *offload)
+ {
+ 	struct sched_entry *entry;
+@@ -1194,7 +1212,8 @@ static void taprio_sched_to_offload(stru
+ 
+ 		e->command = entry->command;
+ 		e->interval = entry->interval;
+-		e->gate_mask = entry->gate_mask;
++		e->gate_mask = tc_map_to_queue_mask(dev, entry->gate_mask);
++
+ 		i++;
+ 	}
+ 
+@@ -1202,7 +1221,6 @@ static void taprio_sched_to_offload(stru
+ }
+ 
+ static int taprio_enable_offload(struct net_device *dev,
+-				 struct tc_mqprio_qopt *mqprio,
+ 				 struct taprio_sched *q,
+ 				 struct sched_gate_list *sched,
+ 				 struct netlink_ext_ack *extack)
+@@ -1224,7 +1242,7 @@ static int taprio_enable_offload(struct
+ 		return -ENOMEM;
+ 	}
+ 	offload->enable = 1;
+-	taprio_sched_to_offload(q, sched, mqprio, offload);
++	taprio_sched_to_offload(dev, sched, offload);
+ 
+ 	err = ops->ndo_setup_tc(dev, TC_SETUP_QDISC_TAPRIO, offload);
+ 	if (err < 0) {
+@@ -1486,7 +1504,7 @@ static int taprio_change(struct Qdisc *s
+ 	}
+ 
+ 	if (FULL_OFFLOAD_IS_ENABLED(q->flags))
+-		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
++		err = taprio_enable_offload(dev, q, new_admin, extack);
+ 	else
+ 		err = taprio_disable_offload(dev, q, extack);
+ 	if (err)
 
 
