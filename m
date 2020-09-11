@@ -2,52 +2,96 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89B9C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20722C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97CCB206E9
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C13206A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599838543;
+	bh=ugt57UudOowWxtW+wZwTzUmbFy/FfUpWgsziWteq/yQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vv7y+qSK9rDVN6m7Kh1lo40EsOLbi04VgcsnI00Sk48Q1tuYUzrwZ6dy92B5FavFH
+	 bqPXw6hNQPr5P+057nkjlGesacJn6GoTmR2CUX/rzFO6DVKNFA+QvzVubGx48rEMi3
+	 v5QWq0LlW2bppEcnovm1tRpVoal6Zx2Xmb3ZdjpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgIKPfM (ORCPT
+        id S1726516AbgIKPfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58776 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 11:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgIKPaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:30:20 -0400
-Received: from gaia (unknown [46.69.195.48])
+        id S1726521AbgIKPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:30:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7402B221EB;
-        Fri, 11 Sep 2020 15:30:19 +0000 (UTC)
-Date:   Fri, 11 Sep 2020 16:30:17 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        anshuman.khandual@arm.com, will@kernel.org, shan.gavin@gmail.com
-Subject: Re: [PATCH v2 3/3] arm64/mm: Unitify CONT_PMD_SHIFT
-Message-ID: <20200911153016.GJ12835@gaia>
-References: <20200910095936.20307-1-gshan@redhat.com>
- <20200910095936.20307-3-gshan@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FEC21D47;
+        Fri, 11 Sep 2020 14:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599832945;
+        bh=ugt57UudOowWxtW+wZwTzUmbFy/FfUpWgsziWteq/yQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iyMk4uzpjZpEepjpkfSV+Fi7J2/MfhDLNcdKUrA/C32d5IjiQL4/4bGPB0/+2NVUl
+         bBJg0nHnRrt6D6mXYZgu3cQ77PmKM8/BjP/7Kqlm5qjyIKRXDuEzUSUO8NebUNVoLA
+         SazSpnykjUAV4ZS+ytntTdBOjbPleH2bVha2mTyM=
+Date:   Fri, 11 Sep 2020 15:02:19 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Fox Chen <foxhlchen@gmail.com>
+Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        paulmck@kernel.org, akiyks@gmail.com, dlustig@nvidia.com,
+        joel@joelfernandes.org, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH] docs/memory-barriers.txt: Fix a typo in CPU MEMORY
+ BARRIERS section
+Message-ID: <20200911140218.GB19961@willie-the-truck>
+References: <20200909065340.118264-1-foxhlchen@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910095936.20307-3-gshan@redhat.com>
+In-Reply-To: <20200909065340.118264-1-foxhlchen@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:59:36PM +1000, Gavin Shan wrote:
-> Similar to how CONT_PTE_SHIFT is determined, this introduces a new
-> kernel option (CONFIG_CONT_PMD_SHIFT) to determine CONT_PMD_SHIFT.
+On Wed, Sep 09, 2020 at 02:53:40PM +0800, Fox Chen wrote:
+> Commit 39323c6 smp_mb__{before,after}_atomic(): update Documentation
+> has a typo in CPU MEORY BARRIERS section:
+> "RMW functions that do not imply are memory barrier are ..." should be
+> "RMW functions that do not imply a memory barrier are ...".
 > 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> This patch fixes this typo.
+> 
+> Signed-off-by: Fox Chen <foxhlchen@gmail.com>
+> ---
+>  Documentation/memory-barriers.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+> index 96186332e5f4..20b8a7b30320 100644
+> --- a/Documentation/memory-barriers.txt
+> +++ b/Documentation/memory-barriers.txt
+> @@ -1870,7 +1870,7 @@ There are some more advanced barrier functions:
+>  
+>       These are for use with atomic RMW functions that do not imply memory
+>       barriers, but where the code needs a memory barrier. Examples for atomic
+> -     RMW functions that do not imply are memory barrier are e.g. add,
+> +     RMW functions that do not imply a memory barrier are e.g. add,
+>       subtract, (failed) conditional operations, _relaxed functions,
+>       but not atomic_read or atomic_set. A common example where a memory
+>       barrier may be required is when atomic ops are used for reference
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+The document remains unreadable, but this is still worth fixing!
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
