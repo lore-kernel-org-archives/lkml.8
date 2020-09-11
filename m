@@ -2,78 +2,80 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37C7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117ECC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85EBB207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A513720770
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="CX1ZGntT"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="fZQzry+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgIKPjG (ORCPT
+        id S1726448AbgIKPjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35102 "EHLO
+        Fri, 11 Sep 2020 11:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726306AbgIKPfj (ORCPT
+        with ESMTP id S1726378AbgIKPg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:35:39 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8B6C061756
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:33 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w16so10255415qkj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:32 -0700 (PDT)
+        Fri, 11 Sep 2020 11:36:26 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A009CC0617A5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:37 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id j10so5380573qvk.11
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UB/8wNdkDm3ezMOvTd3hwGm2T0KYN22DgvIUjk5dmqk=;
-        b=CX1ZGntTzJQqhGb8UHMy1gSTz3hgRfnUz91q5ex/Yikuwhx7ogSiGkljifjQ7rciTF
-         /y9ZxUah6Bpj3v1rF48I8FPmJw01fNRZoiVw5AQr7GGQ6qQu7G+DorXR5P6mb+Nlji0v
-         biYsfJfCucNUKwB/2NRsdGjNWevVFCkujjR9zibSPNvvd9eWEcdxKAVxNf0vU3lAlEZq
-         suUpseCa4WtCAIS+x0gpjHxl7PmaASJjfLJ7yb12+1cmFinaqDzDT1PXzzqNkHJy0jTL
-         oFZ6RDaODLBBF+oakwbC6Wmfio97RF13uhBeNP41Ft+elXuham5hc7/eX14fkhTxtuVw
-         VR9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WsPjwepdx0CsX0W2iH+opkwycH1cAd/VmPHfgsssETA=;
+        b=fZQzry+hCtrnoa+52FXNS3blkRMCk5HvwNVjsX3f/YDaXBo3WJRUgWkihBcCkda3wH
+         OXPShaOb4WnuCWIQ8qFvXjvVFhQQz9/vvY8qpbi0RXe4GkSD4B73jvdAzqD0hnIBdMWL
+         lywVkKHzT4FOk0xj10Apx9Dyz0Hr5CZZnj333WeQ9vZ0T+aKPfBertLrH8DZFBUtgaA+
+         vtItGqRIdlQekcoRrQCwSAF/SxNKAG/HqjdSOWj9QzL3+O5OcG8chcnZCTuh91xDQF0J
+         ipXqS97rYcHf3Iy648uyNueio62Oi3wthzFM7lQGFdxsrSWiZaA3OTDoIwDlWeHTIsBD
+         DBvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UB/8wNdkDm3ezMOvTd3hwGm2T0KYN22DgvIUjk5dmqk=;
-        b=HJ7CdTBtzhZCKlP/4ofLrFrFYS7eAPDAhQOxFBz0XJ4Kx3Yrx/vSt34HHvoMXew6Qy
-         JfCCWh2BAS7pp5e836Rq6X79Z3SI31xdDk2bnuOQ8B4u2KkvVhm8HshEQFaVZVGHnYNu
-         nIqZ9roZrfhjhdaDEpFVKOIxu54BoMNVUK6ScjEypr/ffdNdc/IQ5fyTrSjfe2YD3TPt
-         nAuEawQwNQXjn22TXWhMAr+syKzExtk4Dr8jooqAF2uPLfS7Bucnbkua4LX8ao5wmA0u
-         djH/1GrSClFetIJslKONKfLzLmjQEPiv6JtK4d6JFgVNYIQVUWJeQT/ux+5GuV85kCU7
-         Txew==
-X-Gm-Message-State: AOAM5303AEFdhY69na0obdy3wUkBz1VnkSMSNNI76BI1qDzlQxzX0tbz
-        7ltiI/dziubQcPArgl7iuQEWYw==
-X-Google-Smtp-Source: ABdhPJxIOGuiAqONyI2gDXdvk31GBfSIxJRtYTLqSi8FdF+FkFeWI7j1Afvd0YeNAoz6A05BlulJow==
-X-Received: by 2002:a05:620a:65a:: with SMTP id a26mr1937093qka.424.1599838532062;
-        Fri, 11 Sep 2020 08:35:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WsPjwepdx0CsX0W2iH+opkwycH1cAd/VmPHfgsssETA=;
+        b=Zfu4TZCSwgVGazeZj0Vgjtv0Bmg0swkkmTN/G+TPo48X5M9YffUe40YtLgtEG2g7if
+         kiTHYs59o8sqjiwQVhWeYRXCg4T7qElOTuJzGUI9RXmFd6NN9lABxemEVaJUdoJoSImm
+         qN8Bge2snQAAswfFThHp7wH8met+ChLe6aii7NoSdwDByp6yc//D9fw3rVXTL7nFAfwi
+         rsbjOp6j8sG+iWI5qe9UIkmJ1xHVkxFR0LNZV/FXWhoz7QojIu6uGAy/gjrpq+iMitYl
+         ZiHcv+xRHzRrum/CRUConk36qcO9YhQ+xv21ziq4CHk25C7eF6hxE86d7CSMTTa4Ohw+
+         L1qA==
+X-Gm-Message-State: AOAM533SSt45/HKObppxFylX/dXDea3D+EfvaESJ0/O1IUbcXyS9tkOw
+        dGnXtjmhkpCHYU4Nk3dGvFvWeA==
+X-Google-Smtp-Source: ABdhPJxVT7wmShH+qDM7q22ttEuV1aHWCNGhiqx81r3AmbzL0gVcrtkCOUv9oTQDmYAvbHTs/shsIA==
+X-Received: by 2002:a0c:e354:: with SMTP id a20mr2464989qvm.43.1599838536879;
+        Fri, 11 Sep 2020 08:35:36 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v16sm3001744qkg.37.2020.09.11.08.35.30
+        by smtp.gmail.com with ESMTPSA id v16sm3001744qkg.37.2020.09.11.08.35.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 08:35:31 -0700 (PDT)
+        Fri, 11 Sep 2020 08:35:36 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list),
         Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v3 0/7] SM8150 and SM8250 dispcc drivers
-Date:   Fri, 11 Sep 2020 11:34:00 -0400
-Message-Id: <20200911153412.21672-1-jonathan@marek.ca>
+        Rob Herring <robh+dt@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 3/7] dt-bindings: clock: combine qcom,sdm845-dispcc and qcom,sc7180-dispcc
+Date:   Fri, 11 Sep 2020 11:34:03 -0400
+Message-Id: <20200911153412.21672-4-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200911153412.21672-1-jonathan@marek.ca>
+References: <20200911153412.21672-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,48 +83,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add display clock drivers required to get DSI and DP displays working on
-SM8150 and SM8250 SoCs.
+These two bindings are almost identical, so combine them into one. This
+will make it easier to add the sm8150 and sm8250 dispcc bindings.
 
-Derived from downstream drivers. Notable changes compared to downstream:
- - EDP clks removed (nothing uses these even in downstream it seems)
- - freq_tbl values for dp_link clk is in Hz and not kHz
-
-v2:
- - updated dts example to reflect the change (first patch)
- - updated config_ctl_hi1_val in sm8250 dispcc to latest downstream
-
-v3:
- - combined dt-binding: "gcc_disp_gpll0_clk_src" is needed by sc7180 too
- - use the right order in drivers/clk/qcom/Kconfig
-
-Jonathan Marek (7):
-  dt-bindings: clock: sdm845-dispcc: same name for dp_phy clocks as
-    sc7180
-  arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
-  dt-bindings: clock: combine qcom,sdm845-dispcc and qcom,sc7180-dispcc
-  dt-bindings: clock: Introduce QCOM SM8150 display clock bindings
-  dt-bindings: clock: Introduce QCOM SM8250 display clock bindings
-  clk: qcom: Add display clock controller driver for SM8150
-  clk: qcom: Add display clock controller driver for SM8250
-
- ...om,sdm845-dispcc.yaml => qcom,dispcc.yaml} |   32 +-
- .../bindings/clock/qcom,sc7180-dispcc.yaml    |   86 --
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |    4 +-
- drivers/clk/qcom/Kconfig                      |   18 +
- drivers/clk/qcom/Makefile                     |    2 +
- drivers/clk/qcom/dispcc-sm8150.c              | 1152 +++++++++++++++++
- drivers/clk/qcom/dispcc-sm8250.c              | 1100 ++++++++++++++++
- .../dt-bindings/clock/qcom,dispcc-sm8150.h    |   69 +
- .../dt-bindings/clock/qcom,dispcc-sm8250.h    |   66 +
- 9 files changed, 2430 insertions(+), 99 deletions(-)
- rename Documentation/devicetree/bindings/clock/{qcom,sdm845-dispcc.yaml => qcom,dispcc.yaml} (74%)
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ ...om,sdm845-dispcc.yaml => qcom,dispcc.yaml} | 18 ++--
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    | 86 -------------------
+ 2 files changed, 12 insertions(+), 92 deletions(-)
+ rename Documentation/devicetree/bindings/clock/{qcom,sdm845-dispcc.yaml => qcom,dispcc.yaml} (86%)
  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
- create mode 100644 drivers/clk/qcom/dispcc-sm8150.c
- create mode 100644 drivers/clk/qcom/dispcc-sm8250.c
- create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8150.h
- create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8250.h
 
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+similarity index 86%
+rename from Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
+rename to Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+index ead44705333b..7d5b25dfe0b1 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,sdm845-dispcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,dispcc.yaml
+@@ -1,32 +1,37 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/clock/qcom,sdm845-dispcc.yaml#
++$id: http://devicetree.org/schemas/clock/qcom,dispcc.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Qualcomm Display Clock & Reset Controller Binding for SDM845
++title: Qualcomm Display Clock & Reset Controller Binding
+ 
+ maintainers:
+   - Taniya Das <tdas@codeaurora.org>
+ 
+ description: |
+   Qualcomm display clock control module which supports the clocks, resets and
+-  power domains on SDM845.
++  power domains on SDM845/SC7180.
+ 
+-  See also dt-bindings/clock/qcom,dispcc-sdm845.h.
++  See also:
++    dt-bindings/clock/qcom,dispcc-sdm845.h
++    dt-bindings/clock/qcom,dispcc-sc7180.h
+ 
+ properties:
+   compatible:
+-    const: qcom,sdm845-dispcc
++    enum:
++      - qcom,sdm845-dispcc
++      - qcom,sc7180-dispcc
+ 
+   # NOTE: sdm845.dtsi existed for quite some time and specified no clocks.
+   # The code had to use hardcoded mechanisms to find the input clocks.
+   # New dts files should have these clocks.
+   clocks:
++    minItems: 8
+     items:
+       - description: Board XO source
+       - description: GPLL0 source from GCC
+-      - description: GPLL0 div source from GCC
++      - description: GPLL0 div source from GCC (sdm845 only)
+       - description: Byte clock from DSI PHY0
+       - description: Pixel clock from DSI PHY0
+       - description: Byte clock from DSI PHY1
+@@ -35,6 +40,7 @@ properties:
+       - description: VCO DIV clock from DP PHY
+ 
+   clock-names:
++    minItems: 8
+     items:
+       - const: bi_tcxo
+       - const: gcc_disp_gpll0_clk_src
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+deleted file mode 100644
+index e94847f92770..000000000000
+--- a/Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
++++ /dev/null
+@@ -1,86 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/clock/qcom,sc7180-dispcc.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Qualcomm Display Clock & Reset Controller Binding for SC7180
+-
+-maintainers:
+-  - Taniya Das <tdas@codeaurora.org>
+-
+-description: |
+-  Qualcomm display clock control module which supports the clocks, resets and
+-  power domains on SC7180.
+-
+-  See also dt-bindings/clock/qcom,dispcc-sc7180.h.
+-
+-properties:
+-  compatible:
+-    const: qcom,sc7180-dispcc
+-
+-  clocks:
+-    items:
+-      - description: Board XO source
+-      - description: GPLL0 source from GCC
+-      - description: Byte clock from DSI PHY
+-      - description: Pixel clock from DSI PHY
+-      - description: Link clock from DP PHY
+-      - description: VCO DIV clock from DP PHY
+-
+-  clock-names:
+-    items:
+-      - const: bi_tcxo
+-      - const: gcc_disp_gpll0_clk_src
+-      - const: dsi0_phy_pll_out_byteclk
+-      - const: dsi0_phy_pll_out_dsiclk
+-      - const: dp_phy_pll_link_clk
+-      - const: dp_phy_pll_vco_div_clk
+-
+-  '#clock-cells':
+-    const: 1
+-
+-  '#reset-cells':
+-    const: 1
+-
+-  '#power-domain-cells':
+-    const: 1
+-
+-  reg:
+-    maxItems: 1
+-
+-required:
+-  - compatible
+-  - reg
+-  - clocks
+-  - clock-names
+-  - '#clock-cells'
+-  - '#reset-cells'
+-  - '#power-domain-cells'
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+-    #include <dt-bindings/clock/qcom,rpmh.h>
+-    clock-controller@af00000 {
+-      compatible = "qcom,sc7180-dispcc";
+-      reg = <0x0af00000 0x200000>;
+-      clocks = <&rpmhcc RPMH_CXO_CLK>,
+-               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+-               <&dsi_phy 0>,
+-               <&dsi_phy 1>,
+-               <&dp_phy 0>,
+-               <&dp_phy 1>;
+-      clock-names = "bi_tcxo",
+-                    "gcc_disp_gpll0_clk_src",
+-                    "dsi0_phy_pll_out_byteclk",
+-                    "dsi0_phy_pll_out_dsiclk",
+-                    "dp_phy_pll_link_clk",
+-                    "dp_phy_pll_vco_div_clk";
+-      #clock-cells = <1>;
+-      #reset-cells = <1>;
+-      #power-domain-cells = <1>;
+-    };
+-...
 -- 
 2.26.1
 
