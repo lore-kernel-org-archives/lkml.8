@@ -2,213 +2,134 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC35C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB3921D92
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUSXE6G6"
+	by mail.kernel.org (Postfix) with ESMTP id 10C6D221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599827213;
+	bh=p0dMZYlvMuBFRvmCSlPIVCxaoQeDTgEw+OKygz501WY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=igdd+q9dI+4iSDFuiY+Ij1DnPRIg2I/uTnlWVjx6IwB3ygCos/fW2LTIdsXFSg7DH
+	 XmLxeXpvi23FZbzB+S7lEji91o5wphXxla+enJjFB1iGforWJbCTJUdNmliDpA+f9L
+	 bfevgwyFPlXtHcu5o6RXydz8HHKinyOKuv5lJsQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgIKMZy (ORCPT
+        id S1725912AbgIKM0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgIKMSa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:18:30 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB337C061573;
-        Fri, 11 Sep 2020 05:18:27 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id r8so7576388qtp.13;
-        Fri, 11 Sep 2020 05:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding:content-disposition;
-        bh=Cs/iobQYRqaFzLTEbvzarWAtlZcWcdH6WTrzD1iXXms=;
-        b=IUSXE6G6aAvVETAfO/9wzVtAQbhmuaBANbZW856L+9qmoQGKQRJyQxoWowvBm4MdCU
-         QsOiF2fwjEOKvOOpl+RiGRXx568y2k33MMaYgyAr37FN5R3p0YT21HaSF8WkUjZ6j8zw
-         i7O0qUMzZhydCtO3XDbAbRNdN3deIogsj5+CyAVD8305408T52Z4OxGzKAGuPBIZYSaU
-         RgL1gOXI9ZcKdMkX0GfjDVW3BTEHr1kwovGWs77Z1WziipDTnbM7o6ygaMI7ybQusCQS
-         VVRobQWt6z5GMdnKXUhikh8Cg+dLNRACf4q88Aqh29j5tqYz0BB2GnxPjNUiCx7q73yD
-         Rd0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding
-         :content-disposition;
-        bh=Cs/iobQYRqaFzLTEbvzarWAtlZcWcdH6WTrzD1iXXms=;
-        b=lBskcOWFOao0vtE190xbz1qSXxAhXjzdR97AONHQP8Eo9Bdyg2LfQn64/8+oa2ktb8
-         obwO77mSb6jp8lsEu9TgO9on3ly+bGT16ZftidIi59NvhjJZYjt/lOUWpG8cuNbmb93t
-         jbsR1bDgZM8IdO+CHFrASS4+U8d018Tg3jBaw6qrKYdqBppPRwWcI5bHVVxYojhvB3ku
-         wT2WPY/auA1/MbFlPSyduO4geSFdueLMiOz4nrO0iA25Y94qiqoMsz9k2qtmPvAvZJaC
-         UPs5NuiX0cBjvhoOi3edQ+9U6rK6H+ZELqwd3ziFqgzoEg2WLbqHoWW2wBta8kNY5E4B
-         g8cw==
-X-Gm-Message-State: AOAM533hwEviA8q4lwognwIM8fIPUaKxMPMwl8uu4cuXbGooJmaW1WoI
-        305KibrGUyPOZ0WNZNQOgPA=
-X-Google-Smtp-Source: ABdhPJx1zaU8fB7FYIimQwDiXZm3pN0k86OKVpf8m5ton+2GLUPtSwQJ7gLWULRv1XFPbncBR3VlFA==
-X-Received: by 2002:ac8:3933:: with SMTP id s48mr1524081qtb.294.1599826705565;
-        Fri, 11 Sep 2020 05:18:25 -0700 (PDT)
-Received: from dwls-dell ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id r42sm2444052qtk.29.2020.09.11.05.18.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Sep 2020 05:18:25 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 09:18:20 -0300
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     "=?utf-8?Q?r.verdejo=40samsung.com?=" <r.verdejo@samsung.com>,
-        "=?utf-8?Q?nicolas=40ndufresne.ca?=" <nicolas@ndufresne.ca>,
-        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
-        <linux-media@vger.kernel.org>,
-        "=?utf-8?Q?skhan=40linuxfoundation.org?=" <skhan@linuxfoundation.org>,
-        "=?utf-8?Q?linux-kernel-mentees=40lists.linuxfoundation.org?=" 
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
-        <linux-kernel@vger.kernel.org>
-Message-ID: <25F257A6-C651-4BE7-8482-14FCF121D88F@getmailspring.com>
-In-Reply-To: <20200911100200.25214c37@coco.lan>
-References: <20200911100200.25214c37@coco.lan>
-Subject: Re: [v10 0/4] media: vidtv: Implement a virtual DVB driver
-X-Mailer: Mailspring
+        Fri, 11 Sep 2020 08:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgIKMUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:20:55 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC44821D40;
+        Fri, 11 Sep 2020 12:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599826818;
+        bh=p0dMZYlvMuBFRvmCSlPIVCxaoQeDTgEw+OKygz501WY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j6OvDJk9lxBEbRg4B+J1hnhaSFZ0S/2rb1x8+sJ/FOilMRPj58ezUJmV6D19UauvF
+         nkSocYDX6gFzgo3xcje+GaziUM4uhAsw9W56BGftYo/mz0h4wN8n0x9oZUTZ/60Pbx
+         USU/zyrOBaXf379zyB0fBe/zkmRgv1cLGH3MfeeI=
+Date:   Fri, 11 Sep 2020 14:20:24 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bob Peterson <rpeterso@redhat.com>
+Cc:     Salvatore Bonaccorso <carnil@debian.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Craig <Daniel.Craig@csiro.au>,
+        Nicolas Courtel <courtel@cena.fr>
+Subject: Re: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail
+ lists
+Message-ID: <20200911122024.GA3758477@kroah.com>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195323.968867013@linuxfoundation.org>
+ <20200910194319.GA131386@eldamar.local>
+ <20200911115816.GB3717176@kroah.com>
+ <942693093.16771250.1599826115915.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <942693093.16771250.1599826115915.JavaMail.zimbra@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Mauro,
-
-> Thanks for all the hard work on it. Very much appreciated!
+On Fri, Sep 11, 2020 at 08:08:35AM -0400, Bob Peterson wrote:
+> ----- Original Message -----
+> > On Thu, Sep 10, 2020 at 09:43:19PM +0200, Salvatore Bonaccorso wrote:
+> > > Hi,
+> > > 
+> > > On Tue, Jun 23, 2020 at 09:57:50PM +0200, Greg Kroah-Hartman wrote:
+> > > > From: Bob Peterson <rpeterso@redhat.com>
+> > > > 
+> > > > [ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+> > > > 
+> > > > Before this patch, transactions could be merged into the system
+> > > > transaction by function gfs2_merge_trans(), but the transaction ail
+> > > > lists were never merged. Because the ail flushing mechanism can run
+> > > > separately, bd elements can be attached to the transaction's buffer
+> > > > list during the transaction (trans_add_meta, etc) but quickly moved
+> > > > to its ail lists. Later, in function gfs2_trans_end, the transaction
+> > > > can be freed (by gfs2_trans_end) while it still has bd elements
+> > > > queued to its ail lists, which can cause it to either lose track of
+> > > > the bd elements altogether (memory leak) or worse, reference the bd
+> > > > elements after the parent transaction has been freed.
+> > > > 
+> > > > Although I've not seen any serious consequences, the problem becomes
+> > > > apparent with the previous patch's addition of:
+> > > > 
+> > > > 	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+> > > > 
+> > > > to function gfs2_trans_free().
+> > > > 
+> > > > This patch adds logic into gfs2_merge_trans() to move the merged
+> > > > transaction's ail lists to the sdp transaction. This prevents the
+> > > > use-after-free. To do this properly, we need to hold the ail lock,
+> > > > so we pass sdp into the function instead of the transaction itself.
+> > > > 
+> > > > Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+> > > > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> (snip)
+> > > 
+> > > In Debian two user confirmed issues on writing on a GFS2 partition
+> > > with this commit applied. The initial Debian report is at
+> > > https://bugs.debian.org/968567 and Daniel Craig reported it into
+> > > Bugzilla at https://bugzilla.kernel.org/show_bug.cgi?id=209217 .
+> > > 
+> > > Writing to a gfs2 filesystem fails and results in a soft lookup of the
+> > > machine for kernels with that commit applied. I cannot reporduce the
+> > > issue myself due not having a respective setup available, but Daniel
+> > > described a minimal serieos of steps to reproduce the issue.
+> > > 
+> > > This might affect as well other stable series where this commit was
+> > > applied, as there was a similar report for someone running 5.4.58 in
+> > > https://www.redhat.com/archives/linux-cluster/2020-August/msg00000.html
+> > 
+> > Can you report this to the gfs2 developers?
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> I finally found some time to test it. For now, just a quick
-> test from my side, without passing any arguments to the
-> driver.
+> Hi Greg,
 > 
+> No need. The patch came from the gfs2 developers. I think he just wants
+> it added to a stable release.
 
-That's nice!
+What commit needs to be added to a stable release?
 
-> My plan is to write some patches on the top of yours, in order to
-> address the problems I'll find on it. If not something more critical
-> won't be solved in time, we may still add it at staging/media. 
-> Let's see.
+confused,
 
-OK
-
-> 	3. dvbv5-zap wrote an empty audio file (without -P flag).
-> 	   Probably there are still some issues at the program
-> 	   channel descriptor or service;
-
-I don't remember whether I tried this. I tried dumping the stream to a
-file with dvbzap, which should work. By the way, I guess we should be
-comparing the output to this
-
-$ ffmpeg -f lavfi -i sine=frequency=1000:duration=5 -ac 2 -c:a s302m
--strict -2 out.ts
-
-Since it produces a playable transport stream file that actually sounds
-like a sine tone.
-
-Inspecting ffmpeg & vidtv output side by side in dvbinspector, you'll
-see that they're mostly the same. I have a separate PID for the PCR and
-some other minor differences.
-
-
-
-> 	4. The provider service field is null. Perhaps we could
-> 	   add some string there, like "linuxtv.org".
-> 	5. Maybe we could also add a simple NIT table, just to
-> 	   avoid dvbv5-scan to wait for it until timeout.
-> 
-> Also, it probably makes sense to add a debugfs interface in
-> order to allow injecting errors at the stream at runtime.
-
-Sure. This is fun, sign me up for it.
-
-
-
-As I said in a previous email, I think the buffer in vidtv_s302m.c is
-not exactly what we want. It sounds like noise.
-
-I got it from here:
-https://www.daycounter.com/Calculators/Sine-Generator-Calculator.phtml
-
-I will just copy what I had in a previous email here:
-
->How do I compute the values for a sine wave such that it can be played indefinitely?
->
->I was thinking about this: (just spitballing here..)
->
->sampling_rate_khz = 48000
->buffer_size = sampling_rate_khz * seconds
->i = 0
->
->for i < buffer_size:
->buffer[i] = 32767 * sin( 2 * PI * freq / (sampling_rate_khz * i) )
->
->
->but rather I want to precompute a single period for a given frequency
->such that I can loop on the array indefinitely
-
-
-
-By the way, after some time trying out stuff, I guess this is actually
-what we need in vidtv_s302m_write_frame:
-
-static u32 vidtv_s302m_write_frame(struct vidtv_encoder *e,
-				   u16 sample)
-{
-	u32 nbytes = 0;
-	struct vidtv_s302m_frame_16 f = {};
-	struct vidtv_s302m_ctx *ctx = e->ctx;
-
-	/* from ffmpeg: see s302enc.c */
-
-	u8 vucf = ctx->frame_index == 0 ? 1 : 0;
-
-	f.data[0] = reverse[sample & 0xff];
-	f.data[1] = reverse[(sample & 0xff00) >>  8];
-	f.data[2] = (vucf << 4)  | (reverse[(sample & 0x0f)] >> 4);
-	f.data[3] = reverse[(sample & 0x0ff0) >>  4];
-	f.data[4] = reverse[(sample & 0xf000) >> 12] >> 4;
-
-	nbytes += vidtv_memcpy(e->encoder_buf,
-			       e->encoder_buf_offset,
-			       VIDTV_S302M_BUF_SZ,
-			       &f,
-			       sizeof(f));
-
-	e->encoder_buf_offset += nbytes;
-
-	ctx->frame_index++;
-	if (ctx->frame_index >= S302M_BLOCK_SZ)
-		ctx->frame_index = 0;
-
-	return nbytes;
-}
-
-
-i.e. see: https://docplayer.net/37828038-For-television-mapping-of-aes3-data-into-an-mpeg-2-transport-stream.html
-Figure 5, page 4.
-
-
-
-
-Lastly, I am somewhat new to C, so a few things might look odd here and
-there. If you come across something that's too verbose tell me and I
-will try to tidy it up.
-
-
---thanks
--- Daniel
-
-
+greg k-h
