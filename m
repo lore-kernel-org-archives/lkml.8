@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC8BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FDF20731
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48622075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Inevjptb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRvaasQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbgIKHTb (ORCPT
+        id S1725852AbgIKHTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42984 "EHLO
+        Fri, 11 Sep 2020 03:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgIKHTB (ORCPT
+        with ESMTP id S1725536AbgIKHS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:19:01 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8373FC0613ED;
-        Fri, 11 Sep 2020 00:19:01 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f2so3978642pgd.3;
-        Fri, 11 Sep 2020 00:19:01 -0700 (PDT)
+        Fri, 11 Sep 2020 03:18:59 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA44AC061756;
+        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id o20so6587179pfp.11;
+        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SS7jLbqMqo7oAIExIEmTdCQZIIujYEeMEKPzckwgOOc=;
-        b=InevjptbbgvQ9h7Iyupif311WbVVYkJoovS5NtNBAZUpv+hJ+zfqvCsdzptDDDruor
-         6IDBuQHCA7/TgfTD5CDBKJ3O0kqDVHJb9tApHoScRDHil3iMCL/Hns2vP1HOZk3mf45A
-         hcx3d7tI3fITed6XgZdYLMuMj/An3/OK2jriLAqsYq8/zdun2109NEluu0z0wB2gPC3k
-         lV8g/q9/jn3dRqkNk5DA8lnEVnqzqDJBoX6psH8H3nOMYmhcSa3/spdhunDwws5NYG19
-         XuDDrRtvNnnXpKSW4p/9B+x8+/Eo7M2R+f8Wqwtar5JQGNh7q3Mcs1xpDHF8A0kMDyc3
-         oBDw==
+        bh=IT/Av6WkMGnwscYg5rCYcAHZEDtZ2ZLSfy2TWZBlkOI=;
+        b=XRvaasQLXfZi4L/MubCaNLsVOzGgVMgXoHQLOZDXqqE8Z7q9DzDMD312rJuB/cfLBD
+         uDkfacySRZUMsBz5WjIVPt/yryNfy6aeldQpBVkEMJNozVVNlYyzXB+FTubsYkKw/3XZ
+         n4ze00UNfGHelIaYnuYjcsgqb90jjmVtf48EMm24h3+V9ICn+n8MwW4GSIix4YBFnF6D
+         cFLxB1dTA1AboS8W66H0l92LX6AR8NyBFtbpMae1zLfGiEGQRqSs0WFhBGeYyxZpA+7Y
+         5tEzLQFlYJBrWeyv+8ICSsew8Vtg0Z3GPzpAPDx7Tebxmi/ANscB4rVUv4G6S8fGZcTA
+         TrPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=SS7jLbqMqo7oAIExIEmTdCQZIIujYEeMEKPzckwgOOc=;
-        b=BvwI9xxg4lnmIKvR38MLo4ujbTWy9Gehmz8KvWX+az1NsYVya1oFPZCbmm6MXE2JYN
-         HPUK0eG8x6xzV/20MQ9vK18YeiF3CT1h2e/cD10KD5DZTxW5tZKQrd5nFYT1vbSNBb35
-         LQXZqXHb5+zRoTxdEvbJs5phzmCC7FLnC3uDZNrsUy97PQ7zjB46Zu0lS2FHFrb+HMBo
-         UydaqHZJ7qyz7crF/DwEeoE0WHhB8hudbzMXSEOrOTncpT8ZWfNB32eTbEn0nzN4i3L5
-         H/UDaKxm5IqXbH0WrJ1VU8P+NMtJvGwZh2w/hJTCjGrztNVjJirsyggOyzSEjKns9bMY
-         NicQ==
-X-Gm-Message-State: AOAM532do0Ax6oGRWY+Lq/8Tt5GK2LAopaRd98pqoh2RjJIu18dSVM4U
-        lnPz/k0T8IxBGYvsNTpg9HqbqGC5u+Q=
-X-Google-Smtp-Source: ABdhPJxDnur/DWFdvxSNIUQJ+nJ1mk1yUkPO5xqZL5sS/HV+nD5vZh/pEnxJKHg5E+09d+0dPkUbxQ==
-X-Received: by 2002:a17:902:bccb:b029:d1:9bf7:22f4 with SMTP id o11-20020a170902bccbb02900d19bf722f4mr1066840pls.27.1599808741034;
-        Fri, 11 Sep 2020 00:19:01 -0700 (PDT)
+        bh=IT/Av6WkMGnwscYg5rCYcAHZEDtZ2ZLSfy2TWZBlkOI=;
+        b=BvaE6B9fMGPHLJz4JViPz2mqB3qKK4JodoBLQGOp3hJjCp9ZgdfwV5gQubVoHLzhIV
+         QPX2IavB6gJS6URTcZtNqFNGklkt7EQzY9k45hP9oc69vMY/LbbGzVRkcO8eDFwHfBPR
+         Sfdg33dmEFuq5OJv8Wa22WWlMNvm72UvtOS2AflMFqjNM25l0oVOH/isz/DFJmJMu8hQ
+         bmO51UhtIVt1kZxka7F35PPaFFwczrG+xGLWtunolIXkbv3miJloOs8m+f80cs6ucL7Y
+         3zhxUfhPUdY0aYIiSL1NKII79ULtrtlJuNRiJ5Z/Ex9jkZJ50OIqDSi4JXLE7OwX+v5Q
+         JQ7w==
+X-Gm-Message-State: AOAM533u3PNRdqCWvFPzn7Kv0mOi2AgESvYlBZkcYh+gEGAvDCk/SGt1
+        3h/e3N6qm4MfYR9TTfsyb3E=
+X-Google-Smtp-Source: ABdhPJyEI6r0AcSE7Kuaf3mASRla3Lliv+I9mZhI5bV7w6vYeD4EbDgqQzjAVldY4rOnokzlfiJzQw==
+X-Received: by 2002:a17:902:7fc7:: with SMTP id t7mr709678plb.159.1599808739278;
+        Fri, 11 Sep 2020 00:18:59 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id 131sm1264692pfc.20.2020.09.11.00.19.00
+        by smtp.gmail.com with ESMTPSA id 131sm1264692pfc.20.2020.09.11.00.18.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 00:19:00 -0700 (PDT)
+        Fri, 11 Sep 2020 00:18:58 -0700 (PDT)
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
 To:     joro@8bytes.org, thierry.reding@gmail.com
 Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-tegra@vger.kernel.org, jonathanh@nvidia.com,
         vdumpa@nvidia.com
-Subject: [PATCH 3/3] iommu/tegra-smmu: Allow to group clients in same swgroup
-Date:   Fri, 11 Sep 2020 00:16:43 -0700
-Message-Id: <20200911071643.17212-4-nicoleotsuka@gmail.com>
+Subject: [PATCH 1/3] iommu/tegra-smmu: Do not use PAGE_SHIFT and PAGE_MASK
+Date:   Fri, 11 Sep 2020 00:16:41 -0700
+Message-Id: <20200911071643.17212-2-nicoleotsuka@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200911071643.17212-1-nicoleotsuka@gmail.com>
 References: <20200911071643.17212-1-nicoleotsuka@gmail.com>
@@ -75,68 +75,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There can be clients using the same swgroup in DT, for example i2c0
-and i2c1. The current driver will add them to separate IOMMU groups,
-though it has implemented device_group() callback which is to group
-devices using different swgroups like DC and DCB.
+PAGE_SHIFT and PAGE_MASK are defined corresponding to the page size
+for CPU virtual addresses, which means PAGE_SHIFT could be a number
+other than 12, but tegra-smmu maintains fixed 4KB IOVA pages and has
+fixed [21:12] bit range for PTE entries.
 
-All clients having the same swgroup should be also added to the same
-IOMMU group so as to share an asid. Otherwise, the asid register may
-get overwritten every time a new device is attached.
+So this patch replaces all PAGE_SHIFT/PAGE_MASK references with the
+macros defined with SMMU_PTE_SHIFT.
 
 Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- drivers/iommu/tegra-smmu.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/iommu/tegra-smmu.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 50b962b0647e..84fdee473873 100644
+index 046add7acb61..789d21c01b77 100644
 --- a/drivers/iommu/tegra-smmu.c
 +++ b/drivers/iommu/tegra-smmu.c
-@@ -23,6 +23,7 @@ struct tegra_smmu_group {
- 	struct tegra_smmu *smmu;
- 	const struct tegra_smmu_group_soc *soc;
- 	struct iommu_group *group;
-+	unsigned int swgroup;
- };
+@@ -130,6 +130,11 @@ static inline u32 smmu_readl(struct tegra_smmu *smmu, unsigned long offset)
+ #define SMMU_PDE_SHIFT 22
+ #define SMMU_PTE_SHIFT 12
  
- struct tegra_smmu {
-@@ -909,14 +910,14 @@ static struct iommu_group *tegra_smmu_group_get(struct tegra_smmu *smmu,
- 	struct tegra_smmu_group *group;
- 	struct iommu_group *grp;
++#define SMMU_PAGE_MASK		(~(SMMU_SIZE_PT-1))
++#define SMMU_OFFSET_IN_PAGE(x)	((unsigned long)(x) & ~SMMU_PAGE_MASK)
++#define SMMU_PFN_PHYS(x)	((phys_addr_t)(x) << SMMU_PTE_SHIFT)
++#define SMMU_PHYS_PFN(x)	((unsigned long)((x) >> SMMU_PTE_SHIFT))
++
+ #define SMMU_PD_READABLE	(1 << 31)
+ #define SMMU_PD_WRITABLE	(1 << 30)
+ #define SMMU_PD_NONSECURE	(1 << 29)
+@@ -644,7 +649,7 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
+ 			       u32 *pte, dma_addr_t pte_dma, u32 val)
+ {
+ 	struct tegra_smmu *smmu = as->smmu;
+-	unsigned long offset = offset_in_page(pte);
++	unsigned long offset = SMMU_OFFSET_IN_PAGE(pte);
  
-+	/* Find group_soc associating with swgroup */
- 	soc = tegra_smmu_find_group(smmu, swgroup);
--	if (!soc)
--		return NULL;
+ 	*pte = val;
  
- 	mutex_lock(&smmu->lock);
+@@ -726,7 +731,7 @@ __tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
+ 		pte_attrs |= SMMU_PTE_WRITABLE;
  
-+	/* Find existing iommu_group associating with swgroup or group_soc */
- 	list_for_each_entry(group, &smmu->groups, list)
--		if (group->soc == soc) {
-+		if ((group->swgroup == swgroup) || (soc && group->soc == soc)) {
- 			grp = iommu_group_ref_get(group->group);
- 			mutex_unlock(&smmu->lock);
- 			return grp;
-@@ -929,6 +930,7 @@ static struct iommu_group *tegra_smmu_group_get(struct tegra_smmu *smmu,
- 	}
+ 	tegra_smmu_set_pte(as, iova, pte, pte_dma,
+-			   __phys_to_pfn(paddr) | pte_attrs);
++			   SMMU_PHYS_PFN(paddr) | pte_attrs);
  
- 	INIT_LIST_HEAD(&group->list);
-+	group->swgroup = swgroup;
- 	group->smmu = smmu;
- 	group->soc = soc;
+ 	return 0;
+ }
+@@ -790,7 +795,7 @@ static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
  
-@@ -940,7 +942,8 @@ static struct iommu_group *tegra_smmu_group_get(struct tegra_smmu *smmu,
- 	}
+ 	pfn = *pte & as->smmu->pfn_mask;
  
- 	iommu_group_set_iommudata(group->group, group, tegra_smmu_group_release);
--	iommu_group_set_name(group->group, soc->name);
-+	if (soc)
-+		iommu_group_set_name(group->group, soc->name);
- 	list_add_tail(&group->list, &smmu->groups);
- 	mutex_unlock(&smmu->lock);
+-	return PFN_PHYS(pfn);
++	return SMMU_PFN_PHYS(pfn);
+ }
  
+ static struct tegra_smmu *tegra_smmu_find(struct device_node *np)
+@@ -1108,7 +1113,8 @@ struct tegra_smmu *tegra_smmu_probe(struct device *dev,
+ 	smmu->dev = dev;
+ 	smmu->mc = mc;
+ 
+-	smmu->pfn_mask = BIT_MASK(mc->soc->num_address_bits - PAGE_SHIFT) - 1;
++	smmu->pfn_mask =
++		BIT_MASK(mc->soc->num_address_bits - SMMU_PTE_SHIFT) - 1;
+ 	dev_dbg(dev, "address bits: %u, PFN mask: %#lx\n",
+ 		mc->soc->num_address_bits, smmu->pfn_mask);
+ 	smmu->tlb_mask = (smmu->soc->num_tlb_lines << 1) - 1;
 -- 
 2.17.1
 
