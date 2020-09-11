@@ -2,129 +2,192 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC50C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E9EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994E022204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8500F22204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jGOWZRFH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwGFgj6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgIKQWJ (ORCPT
+        id S1726619AbgIKQWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
+        Fri, 11 Sep 2020 12:22:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgIKP2P (ORCPT
+        with ESMTP id S1726181AbgIKP2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:28:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77ADC061796
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:29 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z19so7338029pfn.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:29:29 -0700 (PDT)
+        Fri, 11 Sep 2020 11:28:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F7FC061757;
+        Fri, 11 Sep 2020 08:28:34 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l9so5187564wme.3;
+        Fri, 11 Sep 2020 08:28:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Borfb2c/AuKaxrPEvHGpc2ZkIkK0QqkS7G7OkbQVw6o=;
-        b=jGOWZRFHUPusoZoYx87HUc0UdvWsBxz/6APZqblOC9XbCFv0ytJIfpKbUiqGR+qoBp
-         OecjXlHzj+qtca8/4IwvdC6BImis+apETeuCYAtSsst/IzfSeJ9zBlJJOWLAZ8Q3b6pm
-         yKHIP/rm3cGeLhNBMovZS3Ac8tjlfx5ca9yGhAwO+l3zo/53AazZkVt70xeUCA9FCju/
-         EGMp/NOXqs0btZS4XhRbtqqwXskqCdE6JBpojPgaA7D1Dyl9f8kzzekwPx3+YC8LIm61
-         J7tsBhGdMbL0TwkfjHVGE+2z6hAPvDArpTr24zfjOcqFOHryVEhD9n16KKxaEvvfXSfS
-         0BOw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1BB9JHSvWV/knAkuiQWfPijYXPNnyQ+2JuUiQV6W6Co=;
+        b=hwGFgj6rLFGOvu+SssqhWzZFJEv8sPF5dIxYcGW++Eeox4zHxIA8V3jnztSNZcC5HA
+         7GYHV6vMUV78fu6uOr695EyySJpQchFnAzxwdnml9WBnTpujtdkneRN6etPKcRNXlJEy
+         IY91k0GWNzqylGCxSdfvmr6g6IKMAnOiUt+mpMgwx6knE3OxB0VIRbML8d2VrqBeum3e
+         IQQWFFcHusMwprkT0OB8OKCabfFc4ACHelN0ZkzfDMSIuw0NUV5DU3KiFWfRO7HY9oJr
+         Pwynlzf1pRD6b0lvmEmqLfxOZi4epzjRfe0fVAg7OH0CvbTgipYsInBQTPzyhneniZl2
+         LJOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Borfb2c/AuKaxrPEvHGpc2ZkIkK0QqkS7G7OkbQVw6o=;
-        b=LBrFSCR6wE9+srAWXp5+kL4vITu/ADiJfg8KEq6mIi9LC3KF4Ufmdj75WnVbw0JKeC
-         HO8dl3b49SsFYTSLa6pjZDJ84qmYoI4Uir5DA6tJnlC+YKWBq654lg7CkZJ6311Dmska
-         xPz1bo8jbypSuClZEUS2L20jVXYxlhzbYQ5/gS9H9xBAmB97WTUZqKJXgbHFGjpYsjTU
-         bpDCcRxIXbjXR8uwDfL/SR4/4/bZUWPr9vwYrnldRTPGAM5b/u9ynJhelXFujJ9pgQF1
-         rDcL5J0CkRY+OTMQao4t2BWFCu85DaOqaNT+WHFCeBK24qGebP9GYDF8O2GJUZyNaKkp
-         DVlQ==
-X-Gm-Message-State: AOAM533VHPtqS7TS87KKxM0euIlQ+NcfY4Q9HflsAbXz2TieHK3yu9af
-        VNtfXeAa7sz0nvbQD6oSWgk0oQ==
-X-Google-Smtp-Source: ABdhPJxr9ACTHLE1mqe3DgZIxSLIMmNQF1fyLmvRkWYTYL0CQRvGUt3F8c0z0XSGcO/b1SJoc8A1AA==
-X-Received: by 2002:a62:5244:: with SMTP id g65mr2133117pfb.132.1599830968549;
-        Fri, 11 Sep 2020 06:29:28 -0700 (PDT)
-Received: from localhost.localdomain ([117.210.209.48])
-        by smtp.gmail.com with ESMTPSA id e10sm557988pgb.45.2020.09.11.06.29.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Sep 2020 06:29:27 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     maz@kernel.org, catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        jason@lakedaemon.net, mark.rutland@arm.com,
-        julien.thierry.kdev@gmail.com, dianders@chromium.org,
-        daniel.thompson@linaro.org, jason.wessel@windriver.com,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v4 3/5] arm64: smp: Allocate and setup IPI as NMI
-Date:   Fri, 11 Sep 2020 18:58:42 +0530
-Message-Id: <1599830924-13990-4-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
-References: <1599830924-13990-1-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1BB9JHSvWV/knAkuiQWfPijYXPNnyQ+2JuUiQV6W6Co=;
+        b=ANK67CUB2f8n7hHQ2uB0bN17/IfXpFt5b0x9jgG5Itdc+3A0NPFgRTMnmvY+mP4+hQ
+         rxqqEqbgI1GaziZahtdIW1No7yFtFq3kjhmhhgMKrYtcFU6L+Rfrxgco9fJaTK0eQtsY
+         p/iB5m9NttK1yXA/4HyhtTFE1euHlgoldg/BtUCAaADEDVCxDw6HqdRfto5cGnAY65G+
+         HTiWfyWjfYNYR47f5SPOLdnlHxiUWqkIsEfbFlhhWofbu6tW3l1V8MhMH7p5boyToL9x
+         f4W+l4GVmsVslsNEd/YTj5KqQeeDgN4EHkk4xCMuvkAjpsqlVlU+TLiQMdvT6dqwHOn9
+         QPOw==
+X-Gm-Message-State: AOAM530NreBzxunPtqewmu9vzvj44xUDWUzF9Bt/x9PVKiDgqRwPXBtk
+        Ms0ZZLttn3iCBotZj5qFM7ThmvSTPWA=
+X-Google-Smtp-Source: ABdhPJxZ37zKSDi/TZF/gdLnnwwzC878nrj8mTt1e42H+rmVQ8OpYdwtkXBfiwhn8Nl6P7tf8kFrAw==
+X-Received: by 2002:a7b:c14d:: with SMTP id z13mr2743776wmi.107.1599838112235;
+        Fri, 11 Sep 2020 08:28:32 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id d3sm5360958wrr.84.2020.09.11.08.28.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 08:28:31 -0700 (PDT)
+Subject: Re: [PATCH 12/24] getgrent_r.3: Use sizeof() to get buffer size
+ (instead of hardcoding macro name)
+To:     Stefan Puiu <stefan.puiu@gmail.com>
+Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
+        lnx-man <linux-man@vger.kernel.org>, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-13-colomar.6.4.3@gmail.com>
+ <CACKs7VD_p=d+nvuFxkWofSE6jCoKAKx5w44_5ciTJ0NX_H1ZFA@mail.gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <7dd2ab72-3ce7-1f50-229a-e663c3df2dcd@gmail.com>
+Date:   Fri, 11 Sep 2020 17:28:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <CACKs7VD_p=d+nvuFxkWofSE6jCoKAKx5w44_5ciTJ0NX_H1ZFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate an unused IPI that can be turned as NMI using ipi_nmi framework.
-Also, invoke corresponding NMI setup/teardown APIs.
+Hi Stefan,
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- arch/arm64/kernel/smp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 2020-09-11 16:35, Stefan Puiu wrote:
+ > Hi,
+ >
+ > On Fri, Sep 11, 2020 at 12:15 AM Alejandro Colomar
+ > <colomar.6.4.3@gmail.com> wrote:
+ >>
+ >> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+ >> ---
+ >>   man3/getgrent_r.3 | 2 +-
+ >>   1 file changed, 1 insertion(+), 1 deletion(-)
+ >>
+ >> diff --git a/man3/getgrent_r.3 b/man3/getgrent_r.3
+ >> index 81d81a851..76deec370 100644
+ >> --- a/man3/getgrent_r.3
+ >> +++ b/man3/getgrent_r.3
+ >> @@ -186,7 +186,7 @@ main(void)
+ >>
+ >>       setgrent();
+ >>       while (1) {
+ >> -        i = getgrent_r(&grp, buf, BUFLEN, &grpp);
+ >> +        i = getgrent_r(&grp, buf, sizeof(buf), &grpp);
+ >
+ > I'm worried that less attentive people might copy/paste parts of this
+ > in their code, where maybe buf is just a pointer, and expect it to
+ > work. Maybe leaving BUFLEN here is useful as a reminder that they need
+ > to change something to adapt the code?
+ >
+ > Just my 2 cents,
+ > Stefan.
+ >
+That's a very good point.
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index b6bde26..3f3b1ff 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -43,6 +43,7 @@
- #include <asm/daifflags.h>
- #include <asm/kvm_mmu.h>
- #include <asm/mmu_context.h>
-+#include <asm/nmi.h>
- #include <asm/numa.h>
- #include <asm/processor.h>
- #include <asm/smp_plat.h>
-@@ -962,6 +963,8 @@ static void ipi_setup(int cpu)
- 
- 	for (i = 0; i < nr_ipi; i++)
- 		enable_percpu_irq(ipi_irq_base + i, 0);
-+
-+	ipi_nmi_setup(cpu);
- }
- 
- static void ipi_teardown(int cpu)
-@@ -973,6 +976,8 @@ static void ipi_teardown(int cpu)
- 
- 	for (i = 0; i < nr_ipi; i++)
- 		disable_percpu_irq(ipi_irq_base + i);
-+
-+	ipi_nmi_teardown(cpu);
- }
- 
- void __init set_smp_ipi_range(int ipi_base, int n)
-@@ -993,6 +998,9 @@ void __init set_smp_ipi_range(int ipi_base, int n)
- 		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
- 	}
- 
-+	if (n > nr_ipi)
-+		set_smp_ipi_nmi(ipi_base + nr_ipi);
-+
- 	ipi_irq_base = ipi_base;
- 
- 	/* Setup the boot CPU immediately */
--- 
-2.7.4
+So we have 3 options and I will propose now a 4th one.  Let's see all
+of them and see which one is better for the man pages.
 
+1.-	Use the macro everywhere.
+
+pros:
+- It is still valid when the buffer is a pointer and not an array.
+cons:
+- Hardcodes the initializer.  If the array is later initialized with a
+   different value, it may produce a silent bug, or a compilation break.
+
+2.-	Use sizeof() everywhere, and the macro for the initializer.
+
+pros:
+- It is valid as long as the buffer is an array.
+cons:
+- If the code gets into a function, and the buffer is then a pointer,
+   it will definitively produce a silent bug.
+
+3.-	Use sizeof() everywhere, and a magic number for the initializer.
+
+The same as 2.
+
+4.-	Use ARRAY_BYTES() macro
+
+pros:
+- It is always safe and when code changes, it may break compilation, but
+   never a silent bug.
+cons:
+- Add a few lines of code.  Maybe too much complexity for an example.
+   But I'd say that it is the only safe option, and in real code it
+   should probably be used more, so maybe it's good to show a good practice.
+
+
+Here's my definition for ARRAY_BYTES(), which is makes use of
+must_be_array() similar to the kernel ARRAY_SIZE():
+
+4.1-
+
+#define is_same_type(a, b)					\
+	__builtin_types_compatible_p(__typeof__(a), __typeof__(b))
+#define is_array(a)			(!is_same_type((a), &(a)[0]))
+#define must_be__(e, ...)	(				\
+	0 * (int)sizeof(					\
+		struct {					\
+			_Static_assert((e)  __VA_OPT__(,)  __VA_ARGS__); \
+			char ISO_C_forbids_a_struct_with_no_members__; \
+		}						\
+	)							\
+)
+#define must_be_array__(a)	must_be__(is_array(a), "Not an array!")
+#define ARRAY_BYTES(arr)	(sizeof(arr) + must_be_array__(arr))
+
+
+The macro makes use of quite a few GNU extensions, though, which might
+be too much to ask.
+
+Actually, I was also going to propose this macro for the kernel itself,
+to make it a bit safer.
+
+There's a much simpler version of ARRAY_BYTES(), which requires the
+macro to be defined in a header that is not a system header (to avoid
+silencing warnings), and also requires a recent version of the compiler
+to show a warning:
+
+4.2-
+
+#define ARRAY_SIZE(arr)		(sizeof(arr) / sizeof((arr)[0])
+#define ARRAY_BYTES(arr)	(sizeof((arr)[0]) * ARRAY_SIZE(arr))
+
+
+What do you all think about the 5 different options?  I don't know which
+one is better.
