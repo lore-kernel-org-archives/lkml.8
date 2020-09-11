@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B44EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC204C2D0E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F187921D92
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9B7221F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599832284;
-	bh=Z9D407PuPDjKdFeYg8ua1Pb572B3W8AuPKajpC6UwCM=;
+	s=default; t=1599832729;
+	bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MtuoafFUSOjnrqM2P2dfm8+yswoWeHrO8bLbcnYCun1WSjGCsyidryvfKbaJLgQMq
-	 zUQjOBZFpt3yf5J4vJn+pVqhCZxHh4EdmboI953Q6w6orawSe4cWuV/QDV9poTYvRE
-	 I9420gjnkH1pUBnOC9sAnblXgONTm8fxBSUjwUhg=
+	b=E9kOqt4k/YKglgV27aAKw5Y0x5J6muuNkUOQpyYbiMNPzGykAa1G5660Dzq0lipxL
+	 0iI6sltxcdBTmD6sTFbOUseEzg7IU5ZWBsiRmrfkkp5xeZBF/I634hWgeZxjyadahS
+	 JerWn/JX2xaBUOuEWI8Gh2ihveqV+oy9KWPPI0WI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIKNu5 (ORCPT
+        id S1726264AbgIKNzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34920 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgIKNYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:24:48 -0400
+        id S1726268AbgIKNYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:24:47 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA482242C;
-        Fri, 11 Sep 2020 12:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5626F2242F;
+        Fri, 11 Sep 2020 12:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829155;
-        bh=Z9D407PuPDjKdFeYg8ua1Pb572B3W8AuPKajpC6UwCM=;
+        s=default; t=1599829162;
+        bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=huEQ0yWxgXA5dl/DDwnfHdO5mx6prQbaoJ86tBN947N07ETgcsAJBMaNrWhJDqC5L
-         5ksTwvay2SEz2M7zYWQXu06XAjJLhz9bJhvZqh1khA7zKJcGqvTVVmoB53qW/8QSt0
-         werPm0bvy1KCaC8PEWyWAE/VMaBwASoVNsj52Jjk=
+        b=T/3vDmqfCX4DEyPIm3oLH/FicVDvw6MQPJvm0rnZfYTAOdx4ec2/r4krQB4HUfaiR
+         IfmTCxX65S16NlBuki4pPM03D0wsp7hgavGxHz61QWsVn1fXjKtZcfelz/ianagyn5
+         xew6eG90JFZacfS1L+bhAzls1/qpgf5YcWPe7W3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 4.14 06/12] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-Date:   Fri, 11 Sep 2020 14:47:00 +0200
-Message-Id: <20200911122458.729118580@linuxfoundation.org>
+        stable@vger.kernel.org, Kamil Lorenc <kamil@re-ws.pl>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 09/12] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+Date:   Fri, 11 Sep 2020 14:47:03 +0200
+Message-Id: <20200911122458.866898739@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
 References: <20200911122458.413137406@linuxfoundation.org>
@@ -59,62 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Kamil Lorenc <kamil@re-ws.pl>
 
-commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21 upstream.
+[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
 
-SR-IOV VFs do not implement the memory enable bit of the command
-register, therefore this bit is not set in config space after
-pci_enable_device().  This leads to an unintended difference
-between PF and VF in hand-off state to the user.  We can correct
-this by setting the initial value of the memory enable bit in our
-virtualized config space.  There's really no need however to
-ever fault a user on a VF though as this would only indicate an
-error in the user's management of the enable bit, versus a PF
-where the same access could trigger hardware faults.
+Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
 
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/net/usb/dm9601.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -401,9 +401,15 @@ static inline void p_setd(struct perm_bi
- /* Caller should hold memory_lock semaphore */
- bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- {
-+	struct pci_dev *pdev = vdev->pdev;
- 	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+--- a/drivers/net/usb/dm9601.c
++++ b/drivers/net/usb/dm9601.c
+@@ -625,6 +625,10 @@ static const struct usb_device_id produc
+ 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
+ 	 .driver_info = (unsigned long)&dm9601_info,
+ 	},
++	{
++	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
++	 .driver_info = (unsigned long)&dm9601_info,
++	},
+ 	{},			// END
+ };
  
--	return cmd & PCI_COMMAND_MEMORY;
-+	/*
-+	 * SR-IOV VF memory enable is handled by the MSE bit in the
-+	 * PF SR-IOV capability, there's therefore no need to trigger
-+	 * faults based on the virtual value.
-+	 */
-+	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-@@ -1732,6 +1738,15 @@ int vfio_config_init(struct vfio_pci_dev
- 				 vconfig[PCI_INTERRUPT_PIN]);
- 
- 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-+
-+		/*
-+		 * VFs do no implement the memory enable bit of the COMMAND
-+		 * register therefore we'll not have it set in our initial
-+		 * copy of config space after pci_enable_device().  For
-+		 * consistency with PFs, set the virtual enable bit here.
-+		 */
-+		*(__le16 *)&vconfig[PCI_COMMAND] |=
-+					cpu_to_le16(PCI_COMMAND_MEMORY);
- 	}
- 
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
 
 
