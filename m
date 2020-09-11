@@ -2,104 +2,94 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B98C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEB4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF31120855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0937F20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYfN7uYR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZQQgMBfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgIKJcD (ORCPT
+        id S1725831AbgIKJcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:32:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55953 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725774AbgIKJcA (ORCPT
+        Fri, 11 Sep 2020 05:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgIKJc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:32:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599816717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=K4DFyJXY8m+V25NE+T5vQS6MN0ZdnFjFO0L25fv/fME=;
-        b=EYfN7uYRaluIVseqYa+ObOLd0QwCztGQJt8293fz0QMQrFvCH8gZKlF6nkhNqYYZnSHWFt
-        hlwUzUPkgPRMIV5idFXq9ts2iMMMelBKwMP70NAHM8pcZuzu3iBSR4FjTnfYY7U9SjE7zV
-        /cL1Lzs8dX3q5544CamOA+UIFp8tKjQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-5qZrdsEbNLaKlaFb9QaiCw-1; Fri, 11 Sep 2020 05:31:53 -0400
-X-MC-Unique: 5qZrdsEbNLaKlaFb9QaiCw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2C1B18B9F01;
-        Fri, 11 Sep 2020 09:31:51 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.193.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A4A8427BCC;
-        Fri, 11 Sep 2020 09:31:48 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: always allow writing '0' to MSR_KVM_ASYNC_PF_EN
-Date:   Fri, 11 Sep 2020 11:31:47 +0200
-Message-Id: <20200911093147.484565-1-vkuznets@redhat.com>
+        Fri, 11 Sep 2020 05:32:29 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B2DC061573;
+        Fri, 11 Sep 2020 02:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=byQIC6UgJWmseFC9nmbs7RXzJK3qdkILERsCoHCugWs=; b=ZQQgMBfS9f9fKGY16bSRLKCWq1
+        di1lXzV9qLQwRVhx8rKhL5OEqPI40hatWWKJuXZQQ5T3BNIVVheCCUg3aV2SQPk6kRDQsMzhE0I8N
+        3SjYXRORXxuErboIWUpQAq6vztkTGTcbHVENERQl6Thbgotic4jL/3dldPKzMixUYr/U7j3nGzx7R
+        g5BzVFC1Bk7IelEby7CMrUBxgygWVvshaWuR8O6aL2aZhEhSc7RYy2dsuvGddS9pIJ+QRUmjMm++x
+        vsqiYNJPEjwajyMaC+jG54on15/cFnP2rzHLO0VME7+N10ITOsT/Us4xi2tcBfSiLfNfvnADx5xd/
+        MmeLgxcg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGfPr-0002xq-6V; Fri, 11 Sep 2020 09:32:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 59F22303DA0;
+        Fri, 11 Sep 2020 11:32:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4C4F62B06AFFE; Fri, 11 Sep 2020 11:32:21 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 11:32:21 +0200
+From:   peterz@infradead.org
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, willy@infradead.org,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v6 1/9] kernel: Support TIF_SYSCALL_INTERCEPT flag
+Message-ID: <20200911093221.GD1362448@hirez.programming.kicks-ass.net>
+References: <20200904203147.2908430-1-krisman@collabora.com>
+ <20200904203147.2908430-2-krisman@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904203147.2908430-2-krisman@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even without in-kernel LAPIC we should allow writing '0' to
-MSR_KVM_ASYNC_PF_EN as we're not enabling the mechanism. In
-particular, QEMU with 'kernel-irqchip=off' fails to start
-a guest with
+On Fri, Sep 04, 2020 at 04:31:39PM -0400, Gabriel Krisman Bertazi wrote:
+> +static inline void __set_tsk_syscall_intercept(struct task_struct *tsk,
+> +					   unsigned int type)
+> +{
+> +	tsk->syscall_intercept |= type;
+> +
+> +	if (tsk->syscall_intercept)
+> +		set_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT);
+> +}
 
-qemu-system-x86_64: error: failed to set MSR 0x4b564d02 to 0x0
+Did the above want to be:
 
-Fixes: 9d3c447c72fb2 ("KVM: X86: Fix async pf caused null-ptr-deref")
-Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/x86.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+	unsigned int old = tsk->syscall_intercept;
+	tsk->syscall_intercept |= type;
+	if (!old)
+		set_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d39d6cf1d473..44a86f7f2397 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2730,9 +2730,6 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
- 	if (data & 0x30)
- 		return 1;
- 
--	if (!lapic_in_kernel(vcpu))
--		return 1;
--
- 	vcpu->arch.apf.msr_en_val = data;
- 
- 	if (!kvm_pv_async_pf_enabled(vcpu)) {
-@@ -2741,6 +2738,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
- 		return 0;
- 	}
- 
-+	if (!lapic_in_kernel(vcpu))
-+		return 1;
-+
- 	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
- 					sizeof(u64)))
- 		return 1;
--- 
-2.25.4
+?
 
+> +static inline void __clear_tsk_syscall_intercept(struct task_struct *tsk,
+> +					     unsigned int type)
+> +{
+> +	tsk->syscall_intercept &= ~type;
+> +
+> +	if (tsk->syscall_intercept == 0)
+> +		clear_tsk_thread_flag(tsk, TIF_SYSCALL_INTERCEPT);
+> +}
