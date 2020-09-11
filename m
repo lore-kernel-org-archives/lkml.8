@@ -2,109 +2,233 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9D120731
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="op4An1Pn"
+	by mail.kernel.org (Postfix) with ESMTP id D49C5221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599840862;
+	bh=sXRzPln0BMLE/7nS5D7QhnT7C4au3MJsFA391AW4wbo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=McGRYWPhNTNiAgjQoAIDD0KIrP8XUg3npASR1Rk6Y6y1C4HNRBI/IgonSDjBokeAb
+	 xFNfSrqw9mjZpQYlUryYRqBqggA8gikBdal2LV7qMBYGHA8WRN5dq3/7CtrqRyFymc
+	 BFb7W3kKnSdbfGlkODKbBmZv1kMzu472/hJPsYrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgIKQOD (ORCPT
+        id S1726526AbgIKQOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgIKPfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:35:46 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C1DC061798
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:35 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id w12so10264282qki.6
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
-        b=op4An1PnPRWomDDvrh+nKoYRRdPk4XUQj8HNFNnW+U8+QekwP9q6xgikrq/BQ//LEo
-         xSp2bB6ZSxHQjVzhlPB9qQv/Tl4TNas9t8N0d69UAmYJF/nXeP4NXAJFzpasbEHlvP3U
-         K1jH2pSP3EYY8Xe8IHCXrtIFjDpNPm8CwWXZnKTLqQATrLkFF96/ZFG3BdOe0iL6YoJB
-         XI6kgslrLRJUBTbAKvHu7bXN3MpL40BXlD8fDhv8hIycGToaIbDJjUvtNwHPSxbkOe8+
-         dglYYwtMUaWR7X/ceGAzjEJCv730b5do490qSqzomuAeBWjPFnLOAD/7WYJHPmWhAe1J
-         PEwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
-        b=EPbBFHbP3/PU3X9Zkka+ogRVsh4LoS/weaw+eGh1e7S2moW/p7pVYcYQqiwF99lOzt
-         gRUoLo5zfQUsqS5EPCSEdps5HxTM7evO9Lg6bnhNz1yKQryPtE6jDIJTTP6+CGCyeVis
-         RRoCyxp8AKHlU7+DJpjWKVok0fuAh7djwGWEvi23MOVuVP3PrcA8wYuCAR2sUEbYI2Jb
-         hpdMWn14nbaiTeeMkS81+RctZ9LxlbOC5CEB0SfHk3nhJLBSE6e4jCmVkH+7nx8mTCCF
-         XA+OGat8Ik48+9dvcAEJcowsYyiVu6m8GS0vrofWNc+vOuAwMg6qXHQIDRSv9V4HRxao
-         Cm7Q==
-X-Gm-Message-State: AOAM532Z+5Qayop4dyUKJzEohEPJQi9Z4BtVsq4fgaKp9ipyIZCFcaHl
-        ya0A8YyyzE60IQgKNnDs8VTFMA==
-X-Google-Smtp-Source: ABdhPJyRhekVuX88QAgVrUgs4m14RZILH7ZS5TVfcQSTsYzmRTExFXuX3W4AVFA27DUrko7aR730FA==
-X-Received: by 2002:a37:654b:: with SMTP id z72mr1926935qkb.365.1599838534552;
-        Fri, 11 Sep 2020 08:35:34 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id v16sm3001744qkg.37.2020.09.11.08.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 08:35:34 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/7] arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
-Date:   Fri, 11 Sep 2020 11:34:02 -0400
-Message-Id: <20200911153412.21672-3-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200911153412.21672-1-jonathan@marek.ca>
-References: <20200911153412.21672-1-jonathan@marek.ca>
+        Fri, 11 Sep 2020 12:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbgIKQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:14:04 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA83F22206;
+        Fri, 11 Sep 2020 16:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599840841;
+        bh=sXRzPln0BMLE/7nS5D7QhnT7C4au3MJsFA391AW4wbo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=v7DC9Bip64OBV/WMAr4pP3NuV6b4zeYDPdKyB539mVBiSsXMvuB3QHVzIc6OcOnXP
+         cp0zQ2TDe15HODk5Qnf4vnMzYRICCRhNIMvxixTovIIQn/2emwTSx9uNOvoapsQpus
+         CptHXPcGFpARr0zFUUEZBsXszbl6ID53vznTC1eo=
+Received: by mail-oi1-f174.google.com with SMTP id x69so9928244oia.8;
+        Fri, 11 Sep 2020 09:14:01 -0700 (PDT)
+X-Gm-Message-State: AOAM531mV8EvUBCQubhK7bPakw5/o37P66jCfIB1AxRKUcKBxi4FdpGg
+        MJDIoeJNLsrJ9J1jsUHIiIeMdwdqTGFNkhP+iw==
+X-Google-Smtp-Source: ABdhPJwHC3T4JK9v762uzFVSzav/olYzYMUs3vTXsKGdnh0N8gBkZJOAEmUxtmSbbW2tXVBlQio/reghd8R6hSx8txI=
+X-Received: by 2002:aca:4cc7:: with SMTP id z190mr1707432oia.147.1599840840985;
+ Fri, 11 Sep 2020 09:14:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-9-james.quinlan@broadcom.com> <20200910161710.GA456155@bogus>
+ <CA+-6iNwSua4tHvkw-PyGs34f7oRpsdJ38kT9pJ_Sicno=z8u1Q@mail.gmail.com>
+In-Reply-To: <CA+-6iNwSua4tHvkw-PyGs34f7oRpsdJ38kT9pJ_Sicno=z8u1Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 11 Sep 2020 10:13:49 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJJCgheSAfFRRWvDeG2uRBucJEOMvC-RLS9Wh1HfOy_YQ@mail.gmail.com>
+Message-ID: <CAL_JsqJJCgheSAfFRRWvDeG2uRBucJEOMvC-RLS9Wh1HfOy_YQ@mail.gmail.com>
+Subject: Re: [PATCH v11 08/11] PCI: brcmstb: Set additional internal memory
+ DMA viewport sizes
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it easier to combine dt bindings for sdm845/sc7180 dispcc.
+On Fri, Sep 11, 2020 at 9:28 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> On Thu, Sep 10, 2020 at 12:17 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Aug 24, 2020 at 03:30:21PM -0400, Jim Quinlan wrote:
+> > > The Raspberry Pi (RPI) is currently the only chip using this driver
+> > > (pcie-brcmstb.c).  There, only one memory controller is used, without an
+> > > extension region, and the SCB0 viewport size is set to the size of the
+> > > first and only dma-range region.  Other BrcmSTB SOCs have more complicated
+> > > memory configurations that require setting additional viewport sizes.
+> > >
+> > > BrcmSTB PCIe controllers are intimately connected to the memory
+> > > controller(s) on the SOC.  The SOC may have one to three memory
+> > > controllers; they are indicated by the term SCBi.  Each controller has a
+> > > base region and an optional extension region.  In physical memory, the base
+> > > and extension regions of a controller are not adjacent, but in PCIe-space
+> > > they are.
+> > >
+> > > There is a "viewport" for each memory controller that allows DMA from
+> > > endpoint devices.  Each viewport's size must be set to a power of two, and
+> > > that size must be equal to or larger than the amount of memory each
+> > > controller supports which is the sum of base region and its optional
+> > > extension.  Further, the 1-3 viewports are also adjacent in PCIe-space.
+> > >
+> > > Unfortunately the viewport sizes cannot be ascertained from the
+> > > "dma-ranges" property so they have their own property, "brcm,scb-sizes".
+> > > This is because dma-range information does not indicate what memory
+> > > controller it is associated.  For example, consider the following case
+> > > where the size of one dma-range is 2GB and the second dma-range is 1GB:
+> > >
+> > >     /* Case 1: SCB0 size set to 4GB */
+> > >     dma-range0: 2GB (from memc0-base)
+> > >     dma-range1: 1GB (from memc0-extension)
+> > >
+> > >     /* Case 2: SCB0 size set to 2GB, SCB1 size set to 1GB */
+> > >     dma-range0: 2GB (from memc0-base)
+> > >     dma-range1: 1GB (from memc0-extension)
+> > >
+> > > By just looking at the dma-ranges information, one cannot tell which
+> > > situation applies. That is why an additional property is needed.  Its
+> > > length indicates the number of memory controllers being used and each value
+> > > indicates the viewport size.
+> > >
+> > > Note that the RPI DT does not have a "brcm,scb-sizes" property value,
+> > > as it is assumed that it only requires one memory controller and no
+> > > extension.  So the optional use of "brcm,scb-sizes" will be backwards
+> > > compatible.
+> > >
+> > > One last layer of complexity exists: all of the viewports sizes must be
+> > > added and rounded up to a power of two to determine what the "BAR" size is.
+> > > Further, an offset must be given that indicates the base PCIe address of
+> > > this "BAR".  The use of the term BAR is typically associated with endpoint
+> > > devices, and the term is used here because the PCIe HW may be used as an RC
+> > > or an EP.  In the former case, all of the system memory appears in a single
+> > > "BAR" region in PCIe memory.  As it turns out, BrcmSTB PCIe HW is rarely
+> > > used in the EP role and its system of mapping memory is an artifact that
+> > > requires multiple dma-ranges regions.
+> > >
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
+> > >  1 file changed, 50 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > > index 041b8d109563..7150eaa803c2 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -57,6 +57,8 @@
+> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK     0x300000
+> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128              0x0
+> > >  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK          0xf8000000
+> > > +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK          0x07c00000
+> > > +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK          0x0000001f
+> >
+> > Perhaps make 0-2 an arg and then you can just do:
+> >
+> > u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB_SIZE_MASK(memc))
+>
+> I cannot get this to work.  In this case u32p_replace_bits requires
+> that the mask is a compile-time constant; when "memc" is a variable I
+> don't see how to do this.
+> >
+> > >
+> > >  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO             0x400c
+> > >  #define PCIE_MEM_WIN0_LO(win)        \
+> > > @@ -154,6 +156,7 @@
+> > >  #define SSC_STATUS_OFFSET            0x1
+> > >  #define SSC_STATUS_SSC_MASK          0x400
+> > >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
+> > > +#define PCIE_BRCM_MAX_MEMC           3
+> > >
+> > >  #define IDX_ADDR(pcie)                       (pcie->reg_offsets[EXT_CFG_INDEX])
+> > >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
+> > > @@ -259,6 +262,8 @@ struct brcm_pcie {
+> > >       const int               *reg_field_info;
+> > >       enum pcie_type          type;
+> > >       struct reset_control    *rescal;
+> > > +     int                     num_memc;
+> > > +     u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+> > >  };
+> > >
+> > >  /*
+> > > @@ -714,22 +719,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+> > >                                                       u64 *rc_bar2_offset)
+> > >  {
+> > >       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > > -     struct device *dev = pcie->dev;
+> > >       struct resource_entry *entry;
+> > > +     struct device *dev = pcie->dev;
+> > > +     u64 lowest_pcie_addr = ~(u64)0;
+> > > +     int ret, i = 0;
+> > > +     u64 size = 0;
+> > >
+> > > -     entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+> > > -     if (!entry)
+> > > -             return -ENODEV;
+> > > +     resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> > > +             u64 pcie_beg = entry->res->start - entry->offset;
+> > >
+> > > +             size += entry->res->end - entry->res->start + 1;
+> > > +             if (pcie_beg < lowest_pcie_addr)
+> > > +                     lowest_pcie_addr = pcie_beg;
+> > > +     }
+> > >
+> > > -     /*
+> > > -      * The controller expects the inbound window offset to be calculated as
+> > > -      * the difference between PCIe's address space and CPU's. The offset
+> > > -      * provided by the firmware is calculated the opposite way, so we
+> > > -      * negate it.
+> > > -      */
+> > > -     *rc_bar2_offset = -entry->offset;
+> > > -     *rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
+> > > +     if (lowest_pcie_addr == ~(u64)0) {
+> > > +             dev_err(dev, "DT node has no dma-ranges\n");
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
+> > > +                                               PCIE_BRCM_MAX_MEMC);
+> > > +
+> > > +     if (ret <= 0) {
+> > > +             /* Make an educated guess */
+> > > +             pcie->num_memc = 1;
+> > > +             pcie->memc_size[0] = 1ULL << fls64(size - 1);
+> >
+> > Use roundup_pow_of_two()
+> The reason I didn't use roundup_pow_of_two() is that it returns a
+> ulong which on ARM is 32bits and cannot represent  4GB.
 
-Note: nothing upstream provides these clocks and the sdm845 dispcc driver
-hasn't switched to using .fw_name for these clocks (these properties are
-ignored), so changing this shouldn't be a problem.
+Guess time for a roundup_pow_of_two_64... Anyways, save that for another day.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 2884577dcb77..8184d6204b33 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -4139,8 +4139,8 @@ dispcc: clock-controller@af00000 {
- 				      "dsi0_phy_pll_out_dsiclk",
- 				      "dsi1_phy_pll_out_byteclk",
- 				      "dsi1_phy_pll_out_dsiclk",
--				      "dp_link_clk_divsel_ten",
--				      "dp_vco_divided_clk_src_mux";
-+				      "dp_phy_pll_link_clk",
-+				      "dp_phy_pll_vco_div_clk";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
--- 
-2.26.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
