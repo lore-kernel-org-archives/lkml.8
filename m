@@ -2,153 +2,132 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0070EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F06D2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B997722206
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A820622204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="HwlnYVl3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PQxQZ0JS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbgIKQYF (ORCPT
+        id S1726597AbgIKQYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgIKQXs (ORCPT
+        Fri, 11 Sep 2020 12:24:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726252AbgIKQXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:23:48 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94BBEC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:23:48 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id w5so12046551wrp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6SlwUZsnL/qW5jVfhFO7QbUYBoAMLGlcOKF3wt4NfUM=;
-        b=HwlnYVl3wQKzd3A+zX2xtFIOpottAY358rN9GCQQA73v1qRJMPnmTv6QZ9eGylewQ3
-         XVx24cJBjtXE0Gv3UgSpqZ5f3Y3ZOqMNGWjK/aJEnSzwKX+WbDsHeRm15P3EZyTsC9Ni
-         boSUYoPFQ7BNnek2wyVuPNkh1q0toYU17HrwtLbcu8eVI9A+tNQpUBaq6QJ63zqxuUCG
-         AT7STseU6xdcDiaMIeCeoDNYldQYscshX/wKz4N7Fi4eBkPoJcjqFvK0y28FjOMUyCJX
-         gSc/d/WlixwdbBh5sRk99nNJIaNeOo5tcDDi4Omoj/lDp0jr7ToBDhLSyIxpzUHA+ApB
-         kvFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6SlwUZsnL/qW5jVfhFO7QbUYBoAMLGlcOKF3wt4NfUM=;
-        b=CkLc226T1iV0+jPkPAXBpMwR3io8zLTk5no8uGJcrv7dmYWZ06tQo1aQO+Q0X4zGqH
-         wRqeW585YIPy2CLCt9I+1b3fIaBjzMww2xAB+oQqVRGcYRyhCaQ48wEDqiWcdyJkVY/O
-         0jTSydFrZ7LpuWN/ztCRMtmlNAqEuJA14dKv2ySF1aesOfG/9JmgE9O2ozWWUy0u20Ja
-         eBclhGaG/NMTeGwqmqsogRk+3qm87awWdTi+NUCK0PTc7qwTp/FpUIDOJQJprJ4+rYZ4
-         DlHkZrXxEM0GgKpgfyjFcAbJxT/aKO/sZlBt3tH+aA89Aq9+eokRWcDqp+TTGWtEQZxl
-         A0dQ==
-X-Gm-Message-State: AOAM530GblEB+VgkHOrqowMBRO6eRH4ZywtM5hzTz11IOYhoopko6d4l
-        0mQp6u0lZuuZ6Uz62qM3TQEyrw==
-X-Google-Smtp-Source: ABdhPJwFRemssOYrgqwfSGOoTOfqpzQHvvekBhWw2qod9FQm6HNeQ/SIJDdMcQy4aOgiUgwSj62IIg==
-X-Received: by 2002:adf:e9c7:: with SMTP id l7mr2761061wrn.93.1599841427191;
-        Fri, 11 Sep 2020 09:23:47 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:7220:84ff:fe09:7d5c])
-        by smtp.gmail.com with ESMTPSA id s124sm5347757wme.29.2020.09.11.09.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 09:23:46 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 17:23:45 +0100
-From:   Alessio Balsini <balsini@android.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Alessio Balsini <balsini@android.com>,
-        Jann Horn <jannh@google.com>, Jens Axboe <axboe@kernel.dk>,
-        Nikhilesh Reddy <reddyn@codeaurora.org>,
-        Akilesh Kailash <akailash@google.com>,
-        David Anderson <dvander@google.com>,
-        Eric Yan <eric.yan@oneplus.com>,
-        Martijn Coenen <maco@android.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Lawrence <paullawrence@google.com>,
-        Stefano Duo <stefanoduo@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>,
-        kernel-team <kernel-team@android.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
-Message-ID: <20200911162345.GA71562@google.com>
-References: <20200812161452.3086303-1-balsini@android.com>
- <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
- <20200813132809.GA3414542@google.com>
- <CAG48ez0jkU7iwdLYPA0=4PdH0SL8wpEPrYvpSztKG3JEhkeHag@mail.gmail.com>
- <20200818135313.GA3074431@google.com>
- <877dtvb2db.fsf@vostro.rath.org>
- <CAOQ4uxhRzkpg2_JA2MCXe6Hjc1XaA=s3L_4Q298dW3OxxE2nFg@mail.gmail.com>
- <CAJfpegs2LHv4xfb5KPzSRPSAVg3eZEvZKk46SjgwGcgq==qNzw@mail.gmail.com>
+        Fri, 11 Sep 2020 12:23:16 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BG37l7037897;
+        Fri, 11 Sep 2020 12:23:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=lOnrFIuEaE/pDiC6n1rHdJwCuxXfzojQQVwHfi0mask=;
+ b=PQxQZ0JSl2AM7fUeedp6YI8bgfEO9wrdeYcMybbhc2z3RvRTDmByCAzYN4R5RU30V9cz
+ xXH/oQIyvY+rHHxv7iCVZ1P4W+vL6Sf4A4e5SIOO3iRRb8LRXseg8RUWRg28TbU9N0SI
+ 2B01ysIprxD2ifbGkgdIWJOCg5Uhb+3sP46PpeAQSWSwjGycf48vQ1KS3zpTNI9y2s0v
+ mMfTwM7Ub/Dw5/gxJcpYkEqeVVGuSKMYw1z6u26I39qy/7pg3RlP4I/eWNkssKPRzJCR
+ pP7ZJBHc4Ogmll7zSfe84084/ZbO5hbMJ187sbr7iwfrbc07anaD/dMYo11LFjfW6FyA TQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33gc820u4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 12:23:07 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BGI7ip092466;
+        Fri, 11 Sep 2020 12:23:06 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33gc820u3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 12:23:06 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BGMnk7032383;
+        Fri, 11 Sep 2020 16:23:04 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8fdpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 16:23:04 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BGN1fA53608874
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Sep 2020 16:23:01 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1BF4311C052;
+        Fri, 11 Sep 2020 16:23:01 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F87B11C04A;
+        Fri, 11 Sep 2020 16:23:00 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.47.39])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Sep 2020 16:23:00 +0000 (GMT)
+Subject: Re: [PATCH 1/3] mm: replace memmap_context by memplug_context
+To:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        Oscar Salvador <osalvador@suse.de>, mhocko@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-mm@kvack.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200911134831.53258-1-ldufour@linux.ibm.com>
+ <20200911134831.53258-2-ldufour@linux.ibm.com>
+ <09528ef5-29fd-056d-4e58-fc13e55f418f@redhat.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <6552ef9a-ac02-e79f-2eb6-08380ba4b478@linux.ibm.com>
+Date:   Fri, 11 Sep 2020 18:23:00 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegs2LHv4xfb5KPzSRPSAVg3eZEvZKk46SjgwGcgq==qNzw@mail.gmail.com>
+In-Reply-To: <09528ef5-29fd-056d-4e58-fc13e55f418f@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_08:2020-09-10,2020-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks all for the comments.
+Le 11/09/2020 à 16:59, David Hildenbrand a écrit :
+>>   		struct page *start;
+>>   		struct memmap_init_callback_data args;
+>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>> index 375515803cd8..cd2bd21d3a4d 100644
+>> --- a/include/linux/memory_hotplug.h
+>> +++ b/include/linux/memory_hotplug.h
+>> @@ -15,6 +15,15 @@ struct memory_block;
+>>   struct resource;
+>>   struct vmem_altmap;
+>>   
+>> +/*
+>> + * Memory plugin context, use to differentiate memory added at boot time and
+> 
+> "Memory plugin context" sounds weird.
 
-I have a patchset ready that hopefully wraps together the extendability
-suggested by Nikolaus, that I agree is a good idea.
-The way I tried to make it more flexible is first of all transitioning to a
-ioctl(), as suggested by both Jann and Miklos, and by using a data
-structure with flexible array member.
+Any suggestion ?
 
-Thanks Amir for the fuse2 pointer. I didn't notice that project before, but
-I really enjoyed going through its code.
-I'm curious if it's intended to deprecate the current fuse implementation
-or is what the current fuse will converge to. I noticed that some good
-ideas that were in fuse2 have been also added to fuse, so I tried to take
-fuse2 as a reference for my passthrough ioctl().
+>> + * hot-plugged memory.
+>> + */
+>> +enum memplug_context {
+>> +	MEMPLUG_EARLY,
+>> +	MEMPLUG_HOTPLUG,
+>> +};
+> 
+> Not fully sure this is the right place, though. memory_hotplug.h is
+> about MEMPLUG_HOTPLUG only ... I'd leave it at the old spot.
 
-Miklos, can you please give us a glimpse of what's the future of fuse2?
+Fair enough.
 
-Thanks a lot again for the feedback, I'll send the new patch in a few
-minutes.
-
-Cheers,
-Alessio
-
-
-On Mon, Aug 24, 2020 at 02:48:01PM +0200, Miklos Szeredi wrote:
-> On Wed, Aug 19, 2020 at 11:25 AM Amir Goldstein <amir73il@gmail.com> wrote:
-> 
-> > > What I have in mind is things like not coupling the setup of the
-> > > passthrough fds to open(), but having a separate notification message for
-> > > this (like what we use for invalidation of cache), and adding not just
-> > > an "fd" field but also "offset" and "length" fields (which would
-> > > currently be required to be both zero to get the "full file" semantics).
-> > >
-> >
-> > You mean like this?
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/commit/?h=fuse2
-> 
-> Look specifically at fuse_file_map_iter():
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/tree/fs/fuse2/file.c?h=fuse2#n582
-> 
-> and fudev_map_ioctl():
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/tree/fs/fuse2/fudev.c?h=fuse2#n601
-> 
-> This avoids the security issue Jann mentioned as well as allowing
-> arbitrary mapping of file ranges.  E.g. it could also  be used by a
-> block based filesystem to map I/O directly into the block device.
-> 
-> What the implementation lacks is any kind of caching.  Since your
-> usecase involves just one map extent per file, special casing that
-> would be trivial.  We can revisit general caching later.
-> 
-> Thanks,
-> Miklos
