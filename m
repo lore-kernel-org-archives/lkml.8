@@ -2,156 +2,100 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4B4C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D49C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42522087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D152076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSF6uRBP"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JlokXir+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725800AbgIKJT5 (ORCPT
+        id S1725814AbgIKJUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgIKJTv (ORCPT
+        Fri, 11 Sep 2020 05:20:50 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:29716 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725613AbgIKJUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:19:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171C9C061573;
-        Fri, 11 Sep 2020 02:19:51 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t10so10767323wrv.1;
-        Fri, 11 Sep 2020 02:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sq38yT3leqBI1xTDDmzGMa/FybEYhtB8OJfCNQjsMk0=;
-        b=YSF6uRBPwq+trt0IS+q4zQaLOLA6oBhlMfyT/rnxmXUo+L9khikt+9SYdR0wAnrCtr
-         y9oB2kT4F2f5cRz5gQHdv9p/B+//TbVM1IsTWIo8bTjDoQaZBarySB2zkVjaLuVEZgsG
-         avg7UdTjNfiyoWe53YuqGtcz4lwLC2tpu/YzknE5Y0uFG0+hrT47cLmef/OMzJP9v2KG
-         mQg1XtJGnzC+pLR6+nzx36xT8kZinkomJRJV8xx3BNzm+UcLswEDGwG9KyTh8/5sMoUa
-         oS0ZnunyfzBFUUhDKOGWVIFjClJCYjcPiZkMcevnNoJS0OzOwwoFVAXWqWKBcM96doEZ
-         EGVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sq38yT3leqBI1xTDDmzGMa/FybEYhtB8OJfCNQjsMk0=;
-        b=J2Ard4jdG9JYrGnQgzje8dpEDyHDEO133J8KDSfxBPRPKM1gjFL+WaRqf0EVZ68oZn
-         2pcXlItSF/PHqvRXIGpf3RU99U4M7LzmmSU3MVsFOkaqsQa4q+GinxBD6aWWLzCLmjaJ
-         lmhiGbV8yUUe/R8tbVaWqk9MmHkRb0O7/rs4zLxJ4vkEKGE+Ec06V8TNx4nmy2kBjs6R
-         xbtkIdeBpvQgKgTmuMcKpAxOK4UaTM6xnqlAPlpAb5rFSokLjhiS+vVcvJcwI6vLUFNA
-         FmcPjyC8TJTnKOfNK2HHfcd7sPDpSUZxyiqvkgQwvzJZ5XomvyR3R0qD5afZ5IrM1l5n
-         9SmA==
-X-Gm-Message-State: AOAM530285t+nqIu9EYnH/i8c+9BcZDZycvnd5v9EhDl9xSxbga8ATJ2
-        9HptoF6dj+ZYnS012cwIPt2eiBtpqBE=
-X-Google-Smtp-Source: ABdhPJxyEqIcIxGOMiKqs4ted0y/12GEQEo4v3a4fclrTDAgFVXO5zjgUTH4X/Ti/WNfRlR1X5HmsA==
-X-Received: by 2002:adf:a48d:: with SMTP id g13mr1080444wrb.212.1599815989584;
-        Fri, 11 Sep 2020 02:19:49 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id a10sm2882094wmj.38.2020.09.11.02.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 02:19:49 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/24] stat.2: Cast to 'unsigned long' rather than
- 'long' when printing with "%lx"
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-12-colomar.6.4.3@gmail.com>
- <9e397d55-34bd-3df7-57cc-e5726198bb97@gmail.com>
- <11344e3e-1c0b-b61a-4794-807714b1c09d@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <f4b14c0d-248d-669f-b748-3890de7bb73a@gmail.com>
-Date:   Fri, 11 Sep 2020 11:19:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 05:20:49 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08B9GrU1022506;
+        Fri, 11 Sep 2020 11:20:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=3OR8qxZpq3JUZtn+62eu3HHTqXzgdbLMzpf40hJBmi0=;
+ b=JlokXir+4V+MLlcPGz7yfLqDge+HwQS//ZGrCDY6Q2ctmwVeySzbg2YiiYCtz9qgF5ND
+ NBSI58IRoi7wwyHvDSEVP6/uQSVYKFX0d1eazQKJSruCQzSlCN7q1NaOeBlRtNU8KlpE
+ JBM3SkQNR8IUwBf5hjiND2XUKUHXj78oOdjqRDDjOnN0gRNFepP9GsxVLLzqcdC9Efqx
+ 5xQm4SPUUxhwFdB6qXF7QD6dFJc7FyRkdskms9eG7dZUcXFERcc6y/YJN3zIlKyfVLG8
+ QZaR2K20CXkGH4mBKSE9fPYEiFUE6idqcQLB2mQuyc2mrGivTeEZIm4uDB2RJqeV/W9l RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33c0ev88a1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 11:20:24 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 42FBA100034;
+        Fri, 11 Sep 2020 11:20:24 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag6node5.st.com [10.75.127.81])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2DD1721FEBE;
+        Fri, 11 Sep 2020 11:20:24 +0200 (CEST)
+Received: from localhost (10.75.127.44) by GPXDAG6NODE5.st.com (10.75.127.81)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Sep 2020 11:20:23
+ +0200
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <alexandre.torgue@st.com>, <robh@kernel.org>,
+        <mark.rutland@arm.com>, <arnaud.pouliquen@st.com>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH 1/2] ASoC: dt-bindings: add mclk provider support to stm32 i2s
+Date:   Fri, 11 Sep 2020 11:19:51 +0200
+Message-ID: <20200911091952.14696-2-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200911091952.14696-1-olivier.moysan@st.com>
+References: <20200911091952.14696-1-olivier.moysan@st.com>
 MIME-Version: 1.0
-In-Reply-To: <11344e3e-1c0b-b61a-4794-807714b1c09d@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To GPXDAG6NODE5.st.com
+ (10.75.127.81)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_03:2020-09-10,2020-09-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/11/20 11:16 AM, Alejandro Colomar wrote:
-> Hi Michael,
-> 
-> On 2020-09-11 09:25, Michael Kerrisk (man-pages) wrote:
->> See my reply to patch 10/24.
-> 
-> As with 10/24, here's the new version.
+Add master clock provider support to STM32 I2S.
 
-Thanks, Alex. Applied.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Cheers,
-
-Michael
-
-> --------------------------------------------------------
->  From 911c791f0168851cdfdb30a65b6935011e4a161c Mon Sep 17 00:00:00 2001
-> From: Alejandro Colomar <colomar.6.4.3@gmail.com>
-> Date: Fri, 11 Sep 2020 10:52:14 +0200
-> Subject: [PATCH v2 11/24] stat.2: Cast to 'unsigned long' rather than 'long'
->   when printing with "%lx"
-> 
->  From the email conversation:
-> 
-> On 2020-09-11 09:24, Michael Kerrisk (man-pages) wrote:
->  > Hi Alex,
->  >
->  > On 9/10/20 11:13 PM, Alejandro Colomar wrote:
->  >> Both major(3) and minor(3) return an 'unsigned int',
->  >> so there is no need to use a 'long' for printing.
->  >> Moreover, it should have been 'unsigned long',
->  >> as "%lx" expects an unsigned type.
->  >
->  > This may be true on Linux, but is not true on other systems.
->  > For example, on HP-UX, according to one header file I'm
->  > looking at, the return value is 'long'.
->  >
->  > These kinds of casts are intended to improve code portability
->  > across UNIX implementations, so I think they should stay
->  > (although, I do wonder if they would be even better as casts
->  > to 'unsigned long')
->  >
->  > Thanks,
->  >
->  > Michael
-> 
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-> ---
->   man2/stat.2 | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/man2/stat.2 b/man2/stat.2
-> index b35e3c615..08af24c56 100644
-> --- a/man2/stat.2
-> +++ b/man2/stat.2
-> @@ -665,7 +665,8 @@ main(int argc, char *argv[])
->       }
-> 
->       printf("ID of containing device:  [%lx,%lx]\en",
-> -	    (long) major(sb.st_dev), (long) minor(sb.st_dev));
-> +	    (unsigned long) major(sb.st_dev),
-> +            (unsigned long) minor(sb.st_dev));
-> 
->       printf("File type:                ");
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+index f32410890589..6feb5a09c184 100644
+--- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+@@ -54,6 +54,10 @@ properties:
+   resets:
+     maxItems: 1
+ 
++  "#clock-cells":
++    description: Configure the I2S device as MCLK clock provider.
++    const: 0
++
+ required:
+   - compatible
+   - "#sound-dai-cells"
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.17.1
+
