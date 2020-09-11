@@ -2,129 +2,104 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D1C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B98C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5078A20855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF31120855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJQJvD5I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYfN7uYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725817AbgIKJbT (ORCPT
+        id S1725825AbgIKJcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKJbS (ORCPT
+        Fri, 11 Sep 2020 05:32:03 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55953 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725774AbgIKJcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:31:18 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95708C061573;
-        Fri, 11 Sep 2020 02:31:17 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id k15so10761159wrn.10;
-        Fri, 11 Sep 2020 02:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m0zCJ2N1DEmZgbso7kf45dEOHU0CDP0xnWcON3F46QI=;
-        b=MJQJvD5Iz0SVJV57kXowzWjx42l92jQDOKm4ZFaVNyMxLQ6crMDGsvR4x8BR6C4Jk3
-         MWQwBYrUYK+0fE0JF7J59WiFw539V63G9m5sLVTNeaiPMAQwCcUUO2X/82n1V1l0oi0b
-         mRWiKYcHGRXgfOsrNfstgDKTPUMmRGyQWIyb0E3VEXeLxgCBkrZQmW5D6b/4PvBB9W5B
-         AKeAi3tYchOxuknB+6MQKhlMao6Zplt3Fmy3KXWEIitlms7Hh7be31lfD4JI0sAtBuZZ
-         Z2qxCuy2usvXg4q5ycjfBA4npZgZo6Y5GwtPFT99AuFyNsjZJ5VEktSpel+TVXfqWJoH
-         W1zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m0zCJ2N1DEmZgbso7kf45dEOHU0CDP0xnWcON3F46QI=;
-        b=RsywSZBkcmh1glYsptGsu6OzyNs/uwcJVkkqDBXT550lStwiqfr3swsvAw6sCBdVFq
-         rBpL982t+ZtK0lUbL5QbgEoqnhhH5Q+zIMlylaqoJXxqanVlc4cV5BgJDHWcV2E6YNnp
-         4PW9tpSQ6fdaYqNb3CR1iyzbJd9wW8fxXDErxCHAPBc5dv2JSCHCH6udL6cziMjiZqVL
-         C++zSzmNlf0vDk3Fyy+1y7rUd2QPo4TTVTA/8ZZNoDxyId1BH1AfaWc6hauV9Hy9A/m+
-         vB38B1fQ2Eefzpej6bhnb8qFdnj6RPhDOw9g8xWlkPp4XRxYeuG8HszsGFk22fAPbbLM
-         R7nw==
-X-Gm-Message-State: AOAM533sUwt/ScILhl/j5Up9JySrWbA8fhS975+EIz0ZYF85uBnhNCse
-        Ulul/FsWB4vCyT1B6dpFiaoSn6wUCN4=
-X-Google-Smtp-Source: ABdhPJyguEWBifaW2jhYa6LcYiRy5mmAwIUy1Zu8cNpNRjMOe0ZNlD122vq2EG8MYu1lRnbFHMhMMw==
-X-Received: by 2002:a5d:5089:: with SMTP id a9mr1221685wrt.118.1599816675841;
-        Fri, 11 Sep 2020 02:31:15 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id o124sm3167680wmb.2.2020.09.11.02.31.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 02:31:15 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        Fri, 11 Sep 2020 05:32:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599816717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=K4DFyJXY8m+V25NE+T5vQS6MN0ZdnFjFO0L25fv/fME=;
+        b=EYfN7uYRaluIVseqYa+ObOLd0QwCztGQJt8293fz0QMQrFvCH8gZKlF6nkhNqYYZnSHWFt
+        hlwUzUPkgPRMIV5idFXq9ts2iMMMelBKwMP70NAHM8pcZuzu3iBSR4FjTnfYY7U9SjE7zV
+        /cL1Lzs8dX3q5544CamOA+UIFp8tKjQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-5qZrdsEbNLaKlaFb9QaiCw-1; Fri, 11 Sep 2020 05:31:53 -0400
+X-MC-Unique: 5qZrdsEbNLaKlaFb9QaiCw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2C1B18B9F01;
+        Fri, 11 Sep 2020 09:31:51 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.193.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A4A8427BCC;
+        Fri, 11 Sep 2020 09:31:48 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/24] inet_net_pton.3: Use 'PRIx32' rather than "%x" when
- printing 'uint32_t' values
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-2-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <928d25b7-7f97-f9b9-80ce-0550c18131c2@gmail.com>
-Date:   Fri, 11 Sep 2020 11:31:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Subject: [PATCH] KVM: x86: always allow writing '0' to MSR_KVM_ASYNC_PF_EN
+Date:   Fri, 11 Sep 2020 11:31:47 +0200
+Message-Id: <20200911093147.484565-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-2-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Even without in-kernel LAPIC we should allow writing '0' to
+MSR_KVM_ASYNC_PF_EN as we're not enabling the mechanism. In
+particular, QEMU with 'kernel-irqchip=off' fails to start
+a guest with
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-> ---
->  man3/inet_net_pton.3 | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/man3/inet_net_pton.3 b/man3/inet_net_pton.3
-> index 00f94b9d4..d74a33d74 100644
-> --- a/man3/inet_net_pton.3
-> +++ b/man3/inet_net_pton.3
-> @@ -332,6 +332,7 @@ Raw address:              c1a80180
->  /* Link with "\-lresolv" */
->  
->  #include <arpa/inet.h>
-> +#include <inttypes.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  
-> @@ -381,7 +382,7 @@ main(int argc, char *argv[])
->         may not have been touched by inet_net_ntop(), and so will still
->         have any initial value that was specified in argv[2]. */
->  
-> -    printf("Raw address:              %x\en", htonl(addr.s_addr));
-> +    printf("Raw address:              %"PRIx32"\en", htonl(addr.s_addr));
->  
->      exit(EXIT_SUCCESS);
->  }
+qemu-system-x86_64: error: failed to set MSR 0x4b564d02 to 0x0
 
-So, I'm in a little bit of doubt about patches 01 and 02. Does 
-this really win us anything? On the one hand, %"PRIx32" is more
-difficult to read than %x. On the other, does it win us anything
-in terms of portability? At first glance, the answers seems to me 
-to be "no". Your thoughts?
+Fixes: 9d3c447c72fb2 ("KVM: X86: Fix async pf caused null-ptr-deref")
+Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/x86.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-
-Michael
-
-
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d39d6cf1d473..44a86f7f2397 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2730,9 +2730,6 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+ 	if (data & 0x30)
+ 		return 1;
+ 
+-	if (!lapic_in_kernel(vcpu))
+-		return 1;
+-
+ 	vcpu->arch.apf.msr_en_val = data;
+ 
+ 	if (!kvm_pv_async_pf_enabled(vcpu)) {
+@@ -2741,6 +2738,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+ 		return 0;
+ 	}
+ 
++	if (!lapic_in_kernel(vcpu))
++		return 1;
++
+ 	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
+ 					sizeof(u64)))
+ 		return 1;
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+2.25.4
+
