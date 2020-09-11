@@ -2,64 +2,65 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAE6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B107BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB6A222E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B40222E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599835953;
-	bh=v/CxNMoXXw5BDtpf2UJhre6LsDZofzdsS11Gl/0WBYc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vOPYPv1z6j70CEMT6Ivw3MsmI1x8kwRyZIR/phebI2kpfVXMGnsBSns7C8sFPlIVt
-	 GRPn6KCYWj8GjEgnqcmmP9365BrW3mqfVAtMMcup7g8iolkXg+r6XCWY2DJwlG9UyO
-	 Kip1RYEWyOgMW+xpg5qKFAUW6x2Qo7kx6fhfYG+4=
+	s=default; t=1599836022;
+	bh=P240jH9fOACC1mw6dYFlrQLWj64fqpO2G137PLaNOZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CylSiT7wEqZIftbSg6O6faGcFJkWv/NIrPtLJVpEjj4QLx7wNHBna4Ez5+KxtyPRR
+	 shh3Gse1wZJjmq8aydijswu4iWV3ntnnsWZNwvuMha7QLmHW6IwVm/u+XpAEwJaVjL
+	 Pc5XV/08KfXBAZsWXvaHN6NekYgzlu1cLM0/t38k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbgIKOve (ORCPT
+        id S1726080AbgIKOxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:51:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbgIKNCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726176AbgIKNCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:02:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91C9D22288;
-        Fri, 11 Sep 2020 12:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B343222BB;
+        Fri, 11 Sep 2020 12:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829028;
-        bh=v/CxNMoXXw5BDtpf2UJhre6LsDZofzdsS11Gl/0WBYc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=R3r2pnTyQnaIhkeuvgp2zXjMWMTDhw7piEobG+UkMhAyVPm0DAFamTgdTyXGZtmlE
-         qFONSpU3Dt8sgk+cJcNRaoSlgTNW1fLG47xur62glcRXPNZ6VepBvaE1V6VQ67qIvc
-         CrUPA0u1HxmRO42Slc1IWY+IU3eyDFVIg10E98v8=
+        s=default; t=1599829043;
+        bh=P240jH9fOACC1mw6dYFlrQLWj64fqpO2G137PLaNOZU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y2DMYUDf9h0KMtjSWcUqR7IrS88v9j6vRFOtpSfJDohY08oqHLlbvOg/+rsA0jQB5
+         aTUkpqWFGAcEY8SB8TWNEZBXL7uo8Jgv+QgYIK4inSyOhWXG+fj6XZmjfXnr6XIsvm
+         FYJ1a4y1Dhhmwl8j1D+JZtSDGR+JR9fC5UROLems=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/71] 4.9.236-rc1 review
-Date:   Fri, 11 Sep 2020 14:45:44 +0200
-Message-Id: <20200911122504.928931589@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 44/71] block: Move SECTOR_SIZE and SECTOR_SHIFT definitions into <linux/blkdev.h>
+Date:   Fri, 11 Sep 2020 14:46:28 +0200
+Message-Id: <20200911122507.124325111@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
+In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
+References: <20200911122504.928931589@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.236-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.236-rc1
-X-KernelTest-Deadline: 2020-09-13T12:25+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,341 +68,311 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.236 release.
-There are 71 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sun, 13 Sep 2020 12:24:42 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.236-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.236-rc1
-
-Jakub Kicinski <kuba@kernel.org>
-    net: disable netpoll on fresh napis
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: not disable bh in the whole sctp_get_port_local()
-
-Kamil Lorenc <kamil@re-ws.pl>
-    net: usb: dm9601: Add USB ID of Keenetic Plus DSL
-
-Paul Moore <paul@paul-moore.com>
-    netlabel: fix problems with mapping removal
-
-Jakub Kicinski <kuba@kernel.org>
-    bnxt: don't enable NAPI until rings are ready
-
-Shung-Hsi Yu <shung-hsi.yu@suse.com>
-    net: ethernet: mlx4: Fix memory allocation in mlx4_buddy_init()
-
-Max Staudt <max@enpas.org>
-    affs: fix basic permission bits to actually work
-
-Fabian Frederick <fabf@skynet.be>
-    fs/affs: use octal for permissions
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA; firewire-tascam: exclude Tascam FE-8 from detection
-
-Himadri Pandya <himadrispandya@gmail.com>
-    net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
-
-Johannes Berg <johannes.berg@intel.com>
-    cfg80211: regulatory: reject invalid hints
-
-Muchun Song <songmuchun@bytedance.com>
-    mm/hugetlb: fix a race between hugetlb sysctl handlers
-
-Mrinal Pandey <mrinalmni@gmail.com>
-    checkpatch: fix the usage of capture group ( ... )
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-
-Tim Froidcoeur <tim.froidcoeur@tessares.net>
-    net: initialize fastreuse on inet_inherit_port
-
-Tim Froidcoeur <tim.froidcoeur@tessares.net>
-    net: refactor bind_bucket fastreuse into helper
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Survive synchronous exceptions caused by AT instructions
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Defer guest entry when an asynchronous exception is pending
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Add kvm_extable for vaxorcism code
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio-pci: Fault mmaps to enable vma tracking
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/type1: Support faulting PFNMAP vmas
-
-Eugeniu Rosca <erosca@de.adit-jv.com>
-    mm: slub: fix conversion of freelist_corrupted()
-
-Ye Bin <yebin10@huawei.com>
-    dm thin metadata: Avoid returning cmd->bm wild pointer on error
-
-Ye Bin <yebin10@huawei.com>
-    dm cache metadata: Avoid returning cmd->bm wild pointer on error
-
-Tejun Heo <tj@kernel.org>
-    libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-
-Bart Van Assche <bart.vanassche@wdc.com>
-    block: Move SECTOR_SIZE and SECTOR_SHIFT definitions into <linux/blkdev.h>
-
-Ming Lei <ming.lei@redhat.com>
-    block: allow for_each_bvec to support zero len bvec
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Remove superfluous WARN_ON() for mulaw sanity check
-
-Tong Zhang <ztong0001@gmail.com>
-    ALSA: ca0106: fix error code handling
-
-Rogan Dawes <rogan@dawes.za.net>
-    usb: qmi_wwan: add D-Link DWM-222 A2 device ID
-
-Bjørn Mork <bjorn@mork.no>
-    qmi_wwan: new Telewell and Sierra device IDs
-
-Daniele Palmas <dnlplm@gmail.com>
-    drivers: net: usb: qmi_wwan: add QMI_QUIRK_SET_DTR for Telit PID 0x1201
-
-Daniele Palmas <dnlplm@gmail.com>
-    net: usb: qmi_wwan: add Telit 0x1050 composition
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: fix potential deadlock in the search ioctl
-
-Daniel Borkmann <daniel@iogearbox.net>
-    uaccess: Add non-pagefault user-space write function
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    uaccess: Add non-pagefault user-space read functions
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: set the lockdep class for log tree extent buffers
-
-Nikolay Borisov <nborisov@suse.com>
-    btrfs: Remove extraneous extent_buffer_get from tree_mod_log_rewind
-
-Nikolay Borisov <nborisov@suse.com>
-    btrfs: Remove redundant extent_buffer_get in get_old_root
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: drop path before adding new uuid tree entry
-
-Jason Gunthorpe <jgg@nvidia.com>
-    include/linux/log2.h: add missing () around n in roundup_pow_of_two()
-
-Tony Lindgren <tony@atomide.com>
-    thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
-
-Lu Baolu <baolu.lu@linux.intel.com>
-    iommu/vt-d: Serialize IOMMU GCMD register modifications
-
-Michael Chan <michael.chan@broadcom.com>
-    tg3: Fix soft lockup when tg3_reset_task() fails.
-
-Al Viro <viro@zeniv.linux.org.uk>
-    fix regression in "epoll: Keep a reference on files added to the check list"
-
-Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-    bnxt_en: Fix PCI AER error recovery flow
-
-Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-    bnxt_en: Check for zero dir entries in NVRAM.
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    dmaengine: pl330: Fix burst length if burst size is smaller than bus width
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: arc_emac: Fix memleak in arc_mdio_probe
-
-Yuusuke Ashizuka <ashiduka@fujitsu.com>
-    ravb: Fixed to be able to unload modules
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: hns: Fix memleak in hns_nic_dev_probe
-
-Florian Westphal <fw@strlen.de>
-    netfilter: nf_tables: fix destination register zeroing
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: incorrect enum nft_list_attributes definition
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: add NFTA_SET_USERDATA if not null
-
-Florian Fainelli <f.fainelli@gmail.com>
-    MIPS: BMIPS: Also call bmips_cpu_setup() for secondary cores
-
-Florian Fainelli <f.fainelli@gmail.com>
-    MIPS: mm: BMIPS5000 has inclusive physical caches
-
-Yu Kuai <yukuai3@huawei.com>
-    dmaengine: at_hdmac: check return value of of_find_device_by_node() in at_dma_xlate()
-
-Jussi Kivilinna <jussi.kivilinna@haltian.com>
-    batman-adv: bla: use netif_rx_ni when not in interrupt context
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Avoid uninitialized chaddr when handling DHCP
-
-Peter Ujfalusi <peter.ujfalusi@ti.com>
-    dmaengine: of-dma: Fix of_dma_router_xlate's of_dma_xlate handling
-
-Simon Leiner <simon@leiner.me>
-    xen/xenbus: Fix granting of vmalloc'd memory
-
-Sven Schnelle <svens@linux.ibm.com>
-    s390: don't trace preemption in percpu macros
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: don't allow setlease on cephfs
-
-Amit Engel <amit.engel@dell.com>
-    nvmet: Disable keep-alive timer when kato is cleared to 0h
-
-Tom Rix <trix@redhat.com>
-    hwmon: (applesmc) check status earlier.
-
-Kim Phillips <kim.phillips@amd.com>
-    perf record/stat: Explicitly call out event modifiers in the documentation
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Sanitize event code and type when mapping input
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Correctly handle ReportSize being zero
-
-
--------------
-
-Diffstat:
-
- Documentation/filesystems/affs.txt                 |  16 +-
- Makefile                                           |   4 +-
- arch/arm64/include/asm/kvm_arm.h                   |   3 +-
- arch/arm64/include/asm/kvm_asm.h                   |  43 +++
- arch/arm64/kernel/vmlinux.lds.S                    |   8 +
- arch/arm64/kvm/hyp/entry.S                         |  26 +-
- arch/arm64/kvm/hyp/hyp-entry.S                     |  63 ++--
- arch/arm64/kvm/hyp/switch.c                        |  39 ++-
- arch/mips/kernel/smp-bmips.c                       |   2 +
- arch/mips/mm/c-r4k.c                               |   4 +
- arch/s390/include/asm/percpu.h                     |  28 +-
- arch/xtensa/platforms/iss/simdisk.c                |   1 -
- drivers/ata/libata-core.c                          |   5 +-
- drivers/ata/libata-scsi.c                          |   8 +-
- drivers/block/brd.c                                |   1 -
- drivers/block/rbd.c                                |   9 -
- drivers/block/zram/zram_drv.h                      |   1 -
- drivers/dma/at_hdmac.c                             |   2 +
- drivers/dma/of-dma.c                               |   8 +-
- drivers/dma/pl330.c                                |   2 +-
- drivers/hid/hid-core.c                             |  15 +-
- drivers/hid/hid-input.c                            |   4 +
- drivers/hid/hid-multitouch.c                       |   2 +
- drivers/hwmon/applesmc.c                           |  31 +-
- drivers/ide/ide-cd.c                               |   8 +-
- drivers/ide/ide-cd.h                               |   6 +-
- drivers/iommu/intel_irq_remapping.c                |  10 +-
- drivers/md/dm-cache-metadata.c                     |   8 +-
- drivers/md/dm-thin-metadata.c                      |   8 +-
- drivers/net/ethernet/arc/emac_mdio.c               |   1 +
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  12 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |   3 +
- drivers/net/ethernet/broadcom/tg3.c                |  17 +-
- drivers/net/ethernet/hisilicon/hns/hns_enet.c      |   9 +-
- drivers/net/ethernet/mellanox/mlx4/mr.c            |   2 +-
- drivers/net/ethernet/renesas/ravb_main.c           | 110 +++----
- drivers/net/usb/asix_common.c                      |   2 +-
- drivers/net/usb/dm9601.c                           |   4 +
- drivers/net/usb/qmi_wwan.c                         |   8 +-
- drivers/nvdimm/nd.h                                |   1 -
- drivers/nvme/target/core.c                         |   6 +
- drivers/scsi/gdth.h                                |   3 -
- .../thermal/ti-soc-thermal/omap4-thermal-data.c    |  23 +-
- drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h  |  10 +-
- drivers/vfio/pci/vfio_pci.c                        | 351 +++++++++++++++++++--
- drivers/vfio/pci/vfio_pci_config.c                 |  51 ++-
- drivers/vfio/pci/vfio_pci_intrs.c                  |  14 +
- drivers/vfio/pci/vfio_pci_private.h                |  16 +
- drivers/vfio/pci/vfio_pci_rdwr.c                   |  29 +-
- drivers/vfio/vfio_iommu_type1.c                    |  36 ++-
- drivers/xen/xenbus/xenbus_client.c                 |  10 +-
- fs/affs/amigaffs.c                                 |  63 ++--
- fs/affs/file.c                                     |  26 +-
- fs/btrfs/ctree.c                                   |   8 +-
- fs/btrfs/extent_io.c                               |   8 +-
- fs/btrfs/extent_io.h                               |   6 +-
- fs/btrfs/ioctl.c                                   |  27 +-
- fs/btrfs/volumes.c                                 |   3 +-
- fs/ceph/file.c                                     |   1 +
- fs/eventpoll.c                                     |   6 +-
- include/linux/blkdev.h                             |  42 ++-
- include/linux/bvec.h                               |   9 +-
- include/linux/device-mapper.h                      |   2 -
- include/linux/hid.h                                |  42 ++-
- include/linux/ide.h                                |   1 -
- include/linux/libata.h                             |   1 +
- include/linux/log2.h                               |   2 +-
- include/linux/uaccess.h                            |  26 ++
- include/net/inet_connection_sock.h                 |   4 +
- include/net/netfilter/nf_tables.h                  |   2 +
- include/uapi/linux/msdos_fs.h                      |   2 +
- include/uapi/linux/netfilter/nf_tables.h           |   2 +-
- mm/hugetlb.c                                       |  26 +-
- mm/maccess.c                                       | 167 +++++++++-
- mm/slub.c                                          |  12 +-
- net/batman-adv/bridge_loop_avoidance.c             |   5 +-
- net/batman-adv/gateway_client.c                    |   6 +-
- net/core/dev.c                                     |   3 +-
- net/core/netpoll.c                                 |   2 +-
- net/ipv4/inet_connection_sock.c                    |  37 ++-
- net/ipv4/inet_hashtables.c                         |   1 +
- net/netfilter/nf_tables_api.c                      |   3 +-
- net/netfilter/nft_payload.c                        |   4 +-
- net/netlabel/netlabel_domainhash.c                 |  59 ++--
- net/sctp/socket.c                                  |  16 +-
- net/wireless/reg.c                                 |   3 +
- scripts/checkpatch.pl                              |   4 +-
- sound/core/oss/mulaw.c                             |   4 +-
- sound/firewire/digi00x/digi00x.c                   |   5 +
- sound/firewire/tascam/tascam.c                     |  30 +-
- sound/pci/ca0106/ca0106_main.c                     |   3 +-
- tools/perf/Documentation/perf-record.txt           |   4 +
- tools/perf/Documentation/perf-stat.txt             |   4 +
- 93 files changed, 1366 insertions(+), 398 deletions(-)
+From: Bart Van Assche <bart.vanassche@wdc.com>
+
+commit 233bde21aa43516baa013ef7ac33f3427056db3e upstream.
+
+It happens often while I'm preparing a patch for a block driver that
+I'm wondering: is a definition of SECTOR_SIZE and/or SECTOR_SHIFT
+available for this driver? Do I have to introduce definitions of these
+constants before I can use these constants? To avoid this confusion,
+move the existing definitions of SECTOR_SIZE and SECTOR_SHIFT into the
+<linux/blkdev.h> header file such that these become available for all
+block drivers. Make the SECTOR_SIZE definition in the uapi msdos_fs.h
+header file conditional to avoid that including that header file after
+<linux/blkdev.h> causes the compiler to complain about a SECTOR_SIZE
+redefinition.
+
+Note: the SECTOR_SIZE / SECTOR_SHIFT / SECTOR_BITS definitions have
+not been removed from uapi header files nor from NAND drivers in
+which these constants are used for another purpose than converting
+block layer offsets and sizes into a number of sectors.
+
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Nitin Gupta <ngupta@vflare.org>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Bart Van Assche <bart.vanassche@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/xtensa/platforms/iss/simdisk.c |    1 
+ drivers/block/brd.c                 |    1 
+ drivers/block/rbd.c                 |    9 -------
+ drivers/block/zram/zram_drv.h       |    1 
+ drivers/ide/ide-cd.c                |    8 +++---
+ drivers/ide/ide-cd.h                |    6 -----
+ drivers/nvdimm/nd.h                 |    1 
+ drivers/scsi/gdth.h                 |    3 --
+ include/linux/blkdev.h              |   42 ++++++++++++++++++++++++++----------
+ include/linux/device-mapper.h       |    2 -
+ include/linux/ide.h                 |    1 
+ include/uapi/linux/msdos_fs.h       |    2 +
+ 12 files changed, 38 insertions(+), 39 deletions(-)
+
+--- a/arch/xtensa/platforms/iss/simdisk.c
++++ b/arch/xtensa/platforms/iss/simdisk.c
+@@ -21,7 +21,6 @@
+ #include <platform/simcall.h>
+ 
+ #define SIMDISK_MAJOR 240
+-#define SECTOR_SHIFT 9
+ #define SIMDISK_MINORS 1
+ #define MAX_SIMDISK_COUNT 10
+ 
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -25,7 +25,6 @@
+ 
+ #include <asm/uaccess.h>
+ 
+-#define SECTOR_SHIFT		9
+ #define PAGE_SECTORS_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+ #define PAGE_SECTORS		(1 << PAGE_SECTORS_SHIFT)
+ 
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -51,15 +51,6 @@
+ #define RBD_DEBUG	/* Activate rbd_assert() calls */
+ 
+ /*
+- * The basic unit of block I/O is a sector.  It is interpreted in a
+- * number of contexts in Linux (blk, bio, genhd), but the default is
+- * universally 512 bytes.  These symbols are just slightly more
+- * meaningful than the bare numbers they represent.
+- */
+-#define	SECTOR_SHIFT	9
+-#define	SECTOR_SIZE	(1ULL << SECTOR_SHIFT)
+-
+-/*
+  * Increment the given counter and return its updated value.
+  * If the counter is already 0 it will not be incremented.
+  * If the counter is already at its maximum value returns
+--- a/drivers/block/zram/zram_drv.h
++++ b/drivers/block/zram/zram_drv.h
+@@ -37,7 +37,6 @@ static const size_t max_zpage_size = PAG
+ 
+ /*-- End of configurable params */
+ 
+-#define SECTOR_SHIFT		9
+ #define SECTORS_PER_PAGE_SHIFT	(PAGE_SHIFT - SECTOR_SHIFT)
+ #define SECTORS_PER_PAGE	(1 << SECTORS_PER_PAGE_SHIFT)
+ #define ZRAM_LOGICAL_BLOCK_SHIFT 12
+--- a/drivers/ide/ide-cd.c
++++ b/drivers/ide/ide-cd.c
+@@ -704,7 +704,7 @@ static ide_startstop_t cdrom_start_rw(id
+ 	struct request_queue *q = drive->queue;
+ 	int write = rq_data_dir(rq) == WRITE;
+ 	unsigned short sectors_per_frame =
+-		queue_logical_block_size(q) >> SECTOR_BITS;
++		queue_logical_block_size(q) >> SECTOR_SHIFT;
+ 
+ 	ide_debug_log(IDE_DBG_RQ, "rq->cmd[0]: 0x%x, rq->cmd_flags: 0x%x, "
+ 				  "secs_per_frame: %u",
+@@ -900,7 +900,7 @@ static int cdrom_read_capacity(ide_drive
+ 	 * end up being bogus.
+ 	 */
+ 	blocklen = be32_to_cpu(capbuf.blocklen);
+-	blocklen = (blocklen >> SECTOR_BITS) << SECTOR_BITS;
++	blocklen = (blocklen >> SECTOR_SHIFT) << SECTOR_SHIFT;
+ 	switch (blocklen) {
+ 	case 512:
+ 	case 1024:
+@@ -916,7 +916,7 @@ static int cdrom_read_capacity(ide_drive
+ 	}
+ 
+ 	*capacity = 1 + be32_to_cpu(capbuf.lba);
+-	*sectors_per_frame = blocklen >> SECTOR_BITS;
++	*sectors_per_frame = blocklen >> SECTOR_SHIFT;
+ 
+ 	ide_debug_log(IDE_DBG_PROBE, "cap: %lu, sectors_per_frame: %lu",
+ 				     *capacity, *sectors_per_frame);
+@@ -993,7 +993,7 @@ int ide_cd_read_toc(ide_drive_t *drive,
+ 	drive->probed_capacity = toc->capacity * sectors_per_frame;
+ 
+ 	blk_queue_logical_block_size(drive->queue,
+-				     sectors_per_frame << SECTOR_BITS);
++				     sectors_per_frame << SECTOR_SHIFT);
+ 
+ 	/* first read just the header, so we know how long the TOC is */
+ 	stat = cdrom_read_tocentry(drive, 0, 1, 0, (char *) &toc->hdr,
+--- a/drivers/ide/ide-cd.h
++++ b/drivers/ide/ide-cd.h
+@@ -20,11 +20,7 @@
+ 
+ /************************************************************************/
+ 
+-#define SECTOR_BITS 		9
+-#ifndef SECTOR_SIZE
+-#define SECTOR_SIZE		(1 << SECTOR_BITS)
+-#endif
+-#define SECTORS_PER_FRAME	(CD_FRAMESIZE >> SECTOR_BITS)
++#define SECTORS_PER_FRAME	(CD_FRAMESIZE >> SECTOR_SHIFT)
+ #define SECTOR_BUFFER_SIZE	(CD_FRAMESIZE * 32)
+ 
+ /* Capabilities Page size including 8 bytes of Mode Page Header */
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -29,7 +29,6 @@ enum {
+ 	 * BTT instance
+ 	 */
+ 	ND_MAX_LANES = 256,
+-	SECTOR_SHIFT = 9,
+ 	INT_LBASIZE_ALIGNMENT = 64,
+ };
+ 
+--- a/drivers/scsi/gdth.h
++++ b/drivers/scsi/gdth.h
+@@ -177,9 +177,6 @@
+ #define MSG_SIZE        34                      /* size of message structure */
+ #define MSG_REQUEST     0                       /* async. event: message */
+ 
+-/* cacheservice defines */
+-#define SECTOR_SIZE     0x200                   /* always 512 bytes per sec. */
+-
+ /* DPMEM constants */
+ #define DPMEM_MAGIC     0xC0FFEE11
+ #define IC_HEADER_BYTES 48
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -851,6 +851,19 @@ static inline struct request_queue *bdev
+ }
+ 
+ /*
++ * The basic unit of block I/O is a sector. It is used in a number of contexts
++ * in Linux (blk, bio, genhd). The size of one sector is 512 = 2**9
++ * bytes. Variables of type sector_t represent an offset or size that is a
++ * multiple of 512 bytes. Hence these two constants.
++ */
++#ifndef SECTOR_SHIFT
++#define SECTOR_SHIFT 9
++#endif
++#ifndef SECTOR_SIZE
++#define SECTOR_SIZE (1 << SECTOR_SHIFT)
++#endif
++
++/*
+  * blk_rq_pos()			: the current sector
+  * blk_rq_bytes()		: bytes left in the entire request
+  * blk_rq_cur_bytes()		: bytes left in the current segment
+@@ -877,19 +890,20 @@ extern unsigned int blk_rq_err_bytes(con
+ 
+ static inline unsigned int blk_rq_sectors(const struct request *rq)
+ {
+-	return blk_rq_bytes(rq) >> 9;
++	return blk_rq_bytes(rq) >> SECTOR_SHIFT;
+ }
+ 
+ static inline unsigned int blk_rq_cur_sectors(const struct request *rq)
+ {
+-	return blk_rq_cur_bytes(rq) >> 9;
++	return blk_rq_cur_bytes(rq) >> SECTOR_SHIFT;
+ }
+ 
+ static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
+ 						     int op)
+ {
+ 	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
+-		return min(q->limits.max_discard_sectors, UINT_MAX >> 9);
++		return min(q->limits.max_discard_sectors,
++			   UINT_MAX >> SECTOR_SHIFT);
+ 
+ 	if (unlikely(op == REQ_OP_WRITE_SAME))
+ 		return q->limits.max_write_same_sectors;
+@@ -1162,16 +1176,21 @@ extern int blkdev_issue_zeroout(struct b
+ static inline int sb_issue_discard(struct super_block *sb, sector_t block,
+ 		sector_t nr_blocks, gfp_t gfp_mask, unsigned long flags)
+ {
+-	return blkdev_issue_discard(sb->s_bdev, block << (sb->s_blocksize_bits - 9),
+-				    nr_blocks << (sb->s_blocksize_bits - 9),
++	return blkdev_issue_discard(sb->s_bdev,
++				    block << (sb->s_blocksize_bits -
++					      SECTOR_SHIFT),
++				    nr_blocks << (sb->s_blocksize_bits -
++						  SECTOR_SHIFT),
+ 				    gfp_mask, flags);
+ }
+ static inline int sb_issue_zeroout(struct super_block *sb, sector_t block,
+ 		sector_t nr_blocks, gfp_t gfp_mask)
+ {
+ 	return blkdev_issue_zeroout(sb->s_bdev,
+-				    block << (sb->s_blocksize_bits - 9),
+-				    nr_blocks << (sb->s_blocksize_bits - 9),
++				    block << (sb->s_blocksize_bits -
++					      SECTOR_SHIFT),
++				    nr_blocks << (sb->s_blocksize_bits -
++						  SECTOR_SHIFT),
+ 				    gfp_mask, true);
+ }
+ 
+@@ -1278,7 +1297,8 @@ static inline int queue_alignment_offset
+ static inline int queue_limit_alignment_offset(struct queue_limits *lim, sector_t sector)
+ {
+ 	unsigned int granularity = max(lim->physical_block_size, lim->io_min);
+-	unsigned int alignment = sector_div(sector, granularity >> 9) << 9;
++	unsigned int alignment = sector_div(sector, granularity >> SECTOR_SHIFT)
++		<< SECTOR_SHIFT;
+ 
+ 	return (granularity + lim->alignment_offset - alignment) % granularity;
+ }
+@@ -1312,8 +1332,8 @@ static inline int queue_limit_discard_al
+ 		return 0;
+ 
+ 	/* Why are these in bytes, not sectors? */
+-	alignment = lim->discard_alignment >> 9;
+-	granularity = lim->discard_granularity >> 9;
++	alignment = lim->discard_alignment >> SECTOR_SHIFT;
++	granularity = lim->discard_granularity >> SECTOR_SHIFT;
+ 	if (!granularity)
+ 		return 0;
+ 
+@@ -1324,7 +1344,7 @@ static inline int queue_limit_discard_al
+ 	offset = (granularity + alignment - offset) % granularity;
+ 
+ 	/* Turn it back into bytes, gaah */
+-	return offset << 9;
++	return offset << SECTOR_SHIFT;
+ }
+ 
+ static inline int bdev_discard_alignment(struct block_device *bdev)
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -576,8 +576,6 @@ extern struct ratelimit_state dm_ratelim
+ #define DMEMIT(x...) sz += ((sz >= maxlen) ? \
+ 			  0 : scnprintf(result + sz, maxlen - sz, x))
+ 
+-#define SECTOR_SHIFT 9
+-
+ /*
+  * Definitions of return values from target end_io function.
+  */
+--- a/include/linux/ide.h
++++ b/include/linux/ide.h
+@@ -128,7 +128,6 @@ struct ide_io_ports {
+  */
+ #define PARTN_BITS	6	/* number of minor dev bits for partitions */
+ #define MAX_DRIVES	2	/* per interface; 2 assumed by lots of code */
+-#define SECTOR_SIZE	512
+ 
+ /*
+  * Timeouts for various operations:
+--- a/include/uapi/linux/msdos_fs.h
++++ b/include/uapi/linux/msdos_fs.h
+@@ -9,7 +9,9 @@
+  * The MS-DOS filesystem constants/structures
+  */
+ 
++#ifndef SECTOR_SIZE
+ #define SECTOR_SIZE	512		/* sector size (bytes) */
++#endif
+ #define SECTOR_BITS	9		/* log2(SECTOR_SIZE) */
+ #define MSDOS_DPB	(MSDOS_DPS)	/* dir entries per block */
+ #define MSDOS_DPB_BITS	4		/* log2(MSDOS_DPB) */
 
 
