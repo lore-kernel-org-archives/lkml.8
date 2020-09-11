@@ -2,139 +2,104 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F171C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B606EC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67AE421D90
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642C52076D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="E3sf/gt1"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="jHItxRDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725681AbgIKFOW (ORCPT
+        id S1725764AbgIKFSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 01:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgIKFOU (ORCPT
+        Fri, 11 Sep 2020 01:18:05 -0400
+Received: from st43p00im-ztdg10071801.me.com ([17.58.63.171]:42373 "EHLO
+        st43p00im-ztdg10071801.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbgIKFSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 01:14:20 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72904C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 22:14:19 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o8so12047579ejb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 22:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=8BbSYo1EREAfClRHAeNOhoxiKSLE+6Rb+mYEQ7xMTpQ=;
-        b=E3sf/gt1amd1Y+Q31SBtp4NzoMik1iPG9MNUCyHC5P76GqTO9gHBHOI2lKgUNs4lIT
-         dKMXFiR7oBc9wbz3JSaUheDfvIPZDtxr3oYWBf59RT9oo4XR38YCDdJuED3nET8KiNuR
-         +YTWxjUiyJKSqGf7W5LUPf/4u2HJ2ZjBATZAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=8BbSYo1EREAfClRHAeNOhoxiKSLE+6Rb+mYEQ7xMTpQ=;
-        b=HQ0fK6Z9YzAnDW97nsjP8Hue9Xwi8eeeAUc5ImcLUhorQo+PQynPskBIWbVN4J4bT0
-         YAQSMSJQvFwsMyHUvd+HyZitSglE3/ajsbv7NOdMCRZn9n2pFr8JhmcutaAv1COHMNIS
-         TiBVtWD/0sBcTQJzGylkkZjJ0JLe2E8inBGkioibdhxUo5OS9Ow5aV470TY86V8fb6TU
-         lChs1ZTxP09EA96vJNmiZJQRKq324Lpc0AuO6pWgOURD1QWDFNhdKZyQLfWfQQyBfYHl
-         OibhJilnZswqYzGtANMh+aRfWUCbEyQYqqeO0k4tk97HDZJpwpJivDvqS3QbZqPTY6cI
-         ZXUQ==
-X-Gm-Message-State: AOAM533WMlUSPWUziIZhuSlVMt3JBhkvcTBk8NBBT3o46uj561r4srb1
-        F2D2bxUfO7rCa7yHaB7q7LclgwVcDdA0j+onoOmsI+xd0MWfOQ==
-X-Google-Smtp-Source: ABdhPJy4WmGiPzpllI9ZzOgLrbSdWMs4UVt/+yNaow1pjhbEhxCRhkQJp8T5fFqQzgNekNH2a2X0ale6r3WMMjoGa7I=
-X-Received: by 2002:a17:906:fcc7:: with SMTP id qx7mr422294ejb.254.1599801258142;
- Thu, 10 Sep 2020 22:14:18 -0700 (PDT)
-MIME-Version: 1.0
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 11 Sep 2020 05:14:05 +0000
-Message-ID: <CACPK8XdDHEcbdH2HXeFpL9U+SYmydSMw5jkti_0x+EjQy7RDHg@mail.gmail.com>
-Subject: [GIT PULL] FSI changes for 5.10
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-fsi@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        Eddie James <eajames@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 11 Sep 2020 01:18:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1599801481; bh=mLmfO9KHGTwVzdxvKCaMc7ab60/ASrOKOwWiogdgsXo=;
+        h=From:To:Subject:Date:Message-Id;
+        b=jHItxRDsLdS/D8TW2AajPPWmgurAgPVcIx6H41NtqL1C0PUMhbCzxaxrzD9DdRpAV
+         ZqgpMfv15J9BCdgHknZuUa68IxBOQFfKckiHfMryELadeGqieT6J1LEbjAGdnQQNP0
+         G3ifRpJN9IGK8uyTNQzHvW+d9eGJok77o9I7jinbRCVrmXa0SSY6ZAf/cOWwHL56fv
+         ZAXvPfCj+yHn0de6L0rm3t9BvwF4DtqI1V7TJ6L9Fh9sHEL9OIh6b0FwNNkVNEfBX0
+         y1jdYmgON3G5o+MG85VQSBR6HZOYwS7b4JfWggl9jilzMmN0crOitiHqAX1Yq80v25
+         ZR5hNpi0SPl/A==
+Received: from localhost (unknown [80.214.155.133])
+        by st43p00im-ztdg10071801.me.com (Postfix) with ESMTPSA id DF853540358;
+        Fri, 11 Sep 2020 05:18:00 +0000 (UTC)
+From:   Alain Volmat <avolmat@me.com>
+To:     Jassi Brar <jaswinder.singh@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Patrice Chotard <patrice.chotard@st.com>, avolmat@me.com
+Subject: [PATCH] mailbox: sti: fix struct description warnings
+Date:   Fri, 11 Sep 2020 07:17:58 +0200
+Message-Id: <20200911051758.31800-1-avolmat@me.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_01:2020-09-10,2020-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=592 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2006250000 definitions=main-2009110044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Fix formating of struct description to avoid warning highlighted
+by W=1 compilation.
 
-Here are some FSI changes for the 5.10 merge window.
+warning: cannot understand function prototype: 'struct sti_mbox_device '
+warning: cannot understand function prototype: 'struct sti_mbox_pdata '
+warning: cannot understand function prototype: 'struct sti_channel '
 
-The following changes since commit 4a851d714eadeabd65c7e321a2e7830f77d945c4:
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Reviewed-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mailbox/mailbox-sti.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-  fsi: aspeed: Support CFAM reset GPIO (2020-09-10 12:26:43 +0930)
+diff --git a/drivers/mailbox/mailbox-sti.c b/drivers/mailbox/mailbox-sti.c
+index 2baf69a0b81c..0f2bc09c364d 100644
+--- a/drivers/mailbox/mailbox-sti.c
++++ b/drivers/mailbox/mailbox-sti.c
+@@ -36,7 +36,7 @@
+ #define MBOX_BASE(mdev, inst)   ((mdev)->base + ((inst) * 4))
+ 
+ /**
+- * STi Mailbox device data
++ * struct sti_mbox_device - STi Mailbox device data
+  *
+  * An IP Mailbox is currently composed of 4 instances
+  * Each instance is currently composed of 32 channels
+@@ -60,7 +60,7 @@ struct sti_mbox_device {
+ };
+ 
+ /**
+- * STi Mailbox platform specific configuration
++ * struct sti_mbox_pdata - STi Mailbox platform specific configuration
+  *
+  * @num_inst:	Maximum number of instances in one HW Mailbox
+  * @num_chan:	Maximum number of channel per instance
+@@ -71,7 +71,7 @@ struct sti_mbox_pdata {
+ };
+ 
+ /**
+- * STi Mailbox allocated channel information
++ * struct sti_channel - STi Mailbox allocated channel information
+  *
+  * @mdev:	Pointer to parent Mailbox device
+  * @instance:	Instance number channel resides in
+-- 
+2.17.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joel/fsi.git tags/fsi-for-5.10
-
-for you to fetch changes up to 4a851d714eadeabd65c7e321a2e7830f77d945c4:
-
-  fsi: aspeed: Support CFAM reset GPIO (2020-09-10 12:26:43 +0930)
-
-----------------------------------------------------------------
-FSI changes for 5.10
-
- - Misc code cleanups. Thanks to Colin, Xu and Rikard
-
- - Features for the ASPEED FSI master
-  * Detect connection type and routing for Tacoma
-  * Run at full speed (200MHz) by default
-  * Set bus speed with a parameter
-  * CFAM reset GPIO
-  * 23 bit addressing
-
- - Core features
-  * Disable unused links
-  * Set LBUS ownership
-
-----------------------------------------------------------------
-
-Colin Ian King (1):
-      fsi: master-ast-cf: fix spelling mistake "firwmare" -> "firmware"
-
-Eddie James (5):
-      fsi: aspeed: Enable 23-bit addressing
-      fsi: master: Add boolean parameter to link_enable function
-      fsi: core: Disable link when slave init fails
-      fsi: core: Set slave local bus ownership during init
-      fsi: master: Remove link enable read-back
-
-Joel Stanley (5):
-      dt-bindings: fsi: Document gpios
-      fsi: aspeed: Support cabled FSI
-      fsi: aspeed: Run the bus at maximum speed
-      fsi: aspeed: Add module param for bus divisor
-      fsi: aspeed: Support CFAM reset GPIO
-
-Rikard Falkeborn (3):
-      fsi: master: Constify hub_master_ids
-      fsi: sbefifo: Constify sbefifo_ids
-      fsi: scom: Constify scom_ids
-
-Xu Wang (1):
-      fsi: fsi-occ: fix return value check in occ_probe()
-
- Documentation/ABI/testing/sysfs-bus-fsi                     |   8 +++++
- Documentation/devicetree/bindings/fsi/fsi-master-aspeed.txt |  12 +++++++
- drivers/fsi/fsi-core.c                                      |  31
-+++++++++++++++--
- drivers/fsi/fsi-master-aspeed.c                             | 134
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
- drivers/fsi/fsi-master-ast-cf.c                             |   7 ++--
- drivers/fsi/fsi-master-gpio.c                               |   5 +--
- drivers/fsi/fsi-master-hub.c                                |  15 ++++++---
- drivers/fsi/fsi-master.h                                    |   3 +-
- drivers/fsi/fsi-occ.c                                       |   2 +-
- drivers/fsi/fsi-sbefifo.c                                   |   2 +-
- drivers/fsi/fsi-scom.c                                      |   2 +-
- 11 files changed, 188 insertions(+), 33 deletions(-)
