@@ -2,54 +2,84 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE39C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A062FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23FCA221F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD5022204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbgIKHHj (ORCPT
+        id S1725788AbgIKHIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:07:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:35740 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgIKHHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:07:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6D8E568B02; Fri, 11 Sep 2020 09:07:30 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 09:07:30 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 03/12] MIPS/jazzdma: decouple from dma-direct
-Message-ID: <20200911070730.GA22394@lst.de>
-References: <20200908164758.3177341-1-hch@lst.de> <20200910141233.10768-1-hdanton@sina.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910141233.10768-1-hdanton@sina.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Fri, 11 Sep 2020 03:08:50 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:42702 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725468AbgIKHIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:08:49 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id CBB8FCED19;
+        Fri, 11 Sep 2020 09:15:42 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v3 2/2] Bluetooth: sco: new getsockopt options
+ BT_SNDMTU/BT_RCVMTU
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+Date:   Fri, 11 Sep 2020 09:08:46 +0200
+Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        chromeos-bluetooth-upstreaming@chromium.org, josephsih@google.com,
+        Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <758FB16C-5210-4790-8B54-6BA400CB208D@holtmann.org>
+References: <20200910060403.144524-1-josephsih@chromium.org>
+ <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+To:     Joseph Hwang <josephsih@chromium.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:12:33PM +0800, Hillf Danton wrote:
-> 
-> On Tue,  8 Sep 2020 18:47:49 +0200 Christoph Hellwig wrote:
-> > 
-> > The jazzdma ops implement support for a very basic IOMMU.  Thus we really
-> > should not use the dma-direct code that takes physical address limits
-> > into account.  This survived through the great MIPS DMA ops cleanup mostly
-> > because I was lazy, but now it is time to fully split the implementations.
-> 
-> A minor change in behavior, do we need to clear the dma buf as the
-> dma-direct code does?
+Hi Joseph,
 
-Yes, I've fixed this up.
+> This patch defines new getsockopt options BT_SNDMTU/BT_RCVMTU
+> for SCO socket to be compatible with other bluetooth sockets.
+> These new options return the same value as option SCO_OPTIONS
+> which is already present on existing kernels.
+> 
+> Reviewed-by: Alain Michaud <alainm@chromium.org>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Fixed the commit message.
+> 
+> Changes in v2:
+> - Used BT_SNDMTU/BT_RCVMTU instead of creating a new opt name.
+> - Used the existing conn->mtu instead of creating a new member
+>  in struct sco_pinfo.
+> - Noted that the old SCO_OPTIONS in sco_sock_getsockopt_old()
+>  would just work as it uses sco_pi(sk)->conn->mtu.
+> 
+> net/bluetooth/sco.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
+
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
