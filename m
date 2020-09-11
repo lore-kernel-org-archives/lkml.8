@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9041C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E24EC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6888620855
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E28D20855
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgIKJd4 (ORCPT
+        id S1725868AbgIKJeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:33:56 -0400
-Received: from mx.socionext.com ([202.248.49.38]:30109 "EHLO mx.socionext.com"
+        Fri, 11 Sep 2020 05:34:05 -0400
+Received: from mx.socionext.com ([202.248.49.38]:30101 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgIKJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:33:50 -0400
+        id S1725710AbgIKJdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:33:52 -0400
 Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 11 Sep 2020 18:33:48 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id C35441800EE;
-        Fri, 11 Sep 2020 18:33:48 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 18:33:48 +0900
+  by mx.socionext.com with ESMTP; 11 Sep 2020 18:33:50 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id BA5C71800EE;
+        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 18:33:50 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 590FE1A0507;
-        Fri, 11 Sep 2020 18:33:48 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 5E7AD1A0507;
+        Fri, 11 Sep 2020 18:33:50 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -40,9 +40,9 @@ Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v7 1/3] PCI: portdrv: Add pcie_port_service_get_irq() function
-Date:   Fri, 11 Sep 2020 18:33:32 +0900
-Message-Id: <1599816814-16515-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v7 3/3] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+Date:   Fri, 11 Sep 2020 18:33:34 +0900
+Message-Id: <1599816814-16515-4-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1599816814-16515-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -51,53 +51,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pcie_port_service_get_irq() that returns the virtual IRQ number
-for specified portdrv service.
+This patch adds misc interrupt handler to detect and invoke PME/AER event.
 
+In UniPhier PCIe controller, PME/AER signals are assigned to the same
+signal as MSI by the internal logic. These signals should be detected by
+the internal register, however, DWC MSI handler can't handle these signals.
+
+DWC MSI handler calls .msi_host_isr() callback function, that detects
+PME/AER signals with the internal register and invokes the interrupt
+with PME/AER vIRQ numbers.
+
+These vIRQ numbers is obtained from portdrv in uniphier_add_pcie_port()
+function.
+
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- drivers/pci/pcie/portdrv.h      |  1 +
- drivers/pci/pcie/portdrv_core.c | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+ drivers/pci/controller/dwc/pcie-uniphier.c | 77 +++++++++++++++++++++++++-----
+ 1 file changed, 66 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index af7cf23..e256456 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -150,4 +150,5 @@ static inline void pcie_pme_interrupt_enable(struct pci_dev *dev, bool en) {}
- #endif /* !CONFIG_PCIE_PME */
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 4817626..237537a 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -21,6 +21,7 @@
+ #include <linux/reset.h>
  
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
-+int pcie_port_service_get_irq(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 50a9522..f92daf8 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -480,6 +480,22 @@ struct device *pcie_port_find_device(struct pci_dev *dev,
+ #include "pcie-designware.h"
++#include "../../pcie/portdrv.h"
+ 
+ #define PCL_PINCTRL0			0x002c
+ #define PCL_PERST_PLDN_REGEN		BIT(12)
+@@ -44,7 +45,9 @@
+ #define PCL_SYS_AUX_PWR_DET		BIT(8)
+ 
+ #define PCL_RCV_INT			0x8108
++#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+ #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
++#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+ #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+ #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+ #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+@@ -68,6 +71,8 @@ struct uniphier_pcie_priv {
+ 	struct reset_control *rst;
+ 	struct phy *phy;
+ 	struct irq_domain *legacy_irq_domain;
++	int aer_irq;
++	int pme_irq;
+ };
+ 
+ #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
+@@ -167,7 +172,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+ 
+ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+ {
+-	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
++	u32 val;
++
++	val = PCL_RCV_INT_ALL_ENABLE;
++	if (pci_msi_enabled())
++		val |= PCL_RCV_INT_ALL_INT_MASK;
++	else
++		val |= PCL_RCV_INT_ALL_MSI_MASK;
++
++	writel(val, priv->base + PCL_RCV_INT);
+ 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
  }
- EXPORT_SYMBOL_GPL(pcie_port_find_device);
  
-+/*
-+ * pcie_port_service_get_irq - get irq of the service
-+ * @dev: PCI Express port the service is associated with
-+ * @service: For the service to find
-+ *
-+ * Get irq number associated with given service on a pci_dev
-+ */
-+int pcie_port_service_get_irq(struct pci_dev *dev, u32 service)
-+{
-+	struct pcie_device *pciedev;
+@@ -231,28 +244,52 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+ 	.map = uniphier_pcie_intx_map,
+ };
+ 
+-static void uniphier_pcie_irq_handler(struct irq_desc *desc)
++static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+ {
+-	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	unsigned long reg;
+-	u32 val, bit, virq;
++	u32 val;
+ 
+-	/* INT for debug */
+ 	val = readl(priv->base + PCL_RCV_INT);
+ 
+ 	if (val & PCL_CFG_BW_MGT_STATUS)
+ 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
 +
-+	pciedev = to_pcie_device(pcie_port_find_device(dev, service));
+ 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+ 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+-	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+-		dev_dbg(pci->dev, "Root Error\n");
+-	if (val & PCL_CFG_PME_MSI_STATUS)
+-		dev_dbg(pci->dev, "PME Interrupt\n");
 +
-+	return pciedev->irq;
++	if (is_msi) {
++		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
++			dev_dbg(pci->dev, "Root Error Status\n");
++			if (priv->aer_irq)
++				generic_handle_irq(priv->aer_irq);
++		}
++
++		if (val & PCL_CFG_PME_MSI_STATUS) {
++			dev_dbg(pci->dev, "PME Interrupt\n");
++			if (priv->pme_irq)
++				generic_handle_irq(priv->pme_irq);
++		}
++	}
+ 
+ 	writel(val, priv->base + PCL_RCV_INT);
 +}
 +
- /**
-  * pcie_port_device_remove - unregister PCI Express port service devices
-  * @dev: PCI Express port the service devices to unregister are associated with
++static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
++{
++	uniphier_pcie_misc_isr(pp, true);
++}
++
++static void uniphier_pcie_irq_handler(struct irq_desc *desc)
++{
++	struct pcie_port *pp = irq_desc_get_handler_data(desc);
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	unsigned long reg;
++	u32 val, bit, virq;
++
++	uniphier_pcie_misc_isr(pp, false);
+ 
+ 	/* INTx */
+ 	chained_irq_enter(chip, desc);
+@@ -329,6 +366,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
+ 
+ static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+ 	.host_init = uniphier_pcie_host_init,
++	.msi_host_isr = uniphier_pcie_msi_host_isr,
+ };
+ 
+ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+@@ -337,6 +375,7 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+ 	struct dw_pcie *pci = &priv->pci;
+ 	struct pcie_port *pp = &pci->pp;
+ 	struct device *dev = &pdev->dev;
++	struct pci_dev *pcidev;
+ 	int ret;
+ 
+ 	pp->ops = &uniphier_pcie_host_ops;
+@@ -353,6 +392,22 @@ static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
+ 		return ret;
+ 	}
+ 
++	/* irq for PME */
++	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
++		priv->pme_irq =
++			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_PME);
++		if (priv->pme_irq)
++			break;
++	}
++
++	/* irq for AER */
++	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
++		priv->aer_irq =
++			pcie_port_service_get_irq(pcidev, PCIE_PORT_SERVICE_AER);
++		if (priv->aer_irq)
++			break;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
