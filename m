@@ -2,52 +2,51 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA11C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1105C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E242226A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5582226A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599833366;
-	bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+	s=default; t=1599833387;
+	bh=RV6uXMAPMOa5KZMYxcVcnmRvi9ObHug+YNzLU1eB/PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D0IHlUUQZh9ixSzb9P+GUUy153fpT4MpbeRzWEI+iNYRMaW1ox92pC+CiIo7C9IME
-	 P4y5Xxn814HjRFc1YgSapq55izcoYfmQdUbs+VeXgKiYTFspGGOyTT397yT40C/Z7Z
-	 GZGMaivvN0cazwJRRbe2BVwhYFpnlymks7yFsQ24=
+	b=vDGLob0n4AhBzEwVF7gS3X7GKPLgPBW/uqRBd79KIVQUyccQJcfGI5u9V/hoWq9OO
+	 t33hbBO9Ytee9mBZOU6taCC2a5j1FEjKtB4pR9d02po1Q49eP31gy2eLedbcjc/LnD
+	 Ar5ptUSV/Ft763aWNNvq8+IbEbtgqSg4F72GLa+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725785AbgIKOIz (ORCPT
+        id S1725814AbgIKOJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34914 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726282AbgIKN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:29:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3214022454;
-        Fri, 11 Sep 2020 12:59:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3E3E2245D;
+        Fri, 11 Sep 2020 12:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829175;
-        bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+        s=default; t=1599829188;
+        bh=RV6uXMAPMOa5KZMYxcVcnmRvi9ObHug+YNzLU1eB/PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wn1T2ezpZ/I7K4BdGERS1TsY1h4gwXq1MnuHejCF5y8yWQgoDzpiUx0oO1KKhovKu
-         brQGrObcBuAxluZ8B+TmGlrlUFB4ygRYDO/EIQWmKC8b5aLTiRuVJ3kuseZRHn8PzR
-         z+/zpV1VxPtFHKpwL9o19X4l0yO2o1rhx9eINMgc=
+        b=MwFL+i/DY7mteBn340vV9gwEiOG79RAhPLVs6XC/c/rrZDfHQcMrFQm6QaHrXmJIT
+         doD7bPd1l2/RM9L5HERvAqlWLGWZGKNx+bwcL45laOUDnTtB2yVLOvoScv4yGo4vDj
+         f1K3Rh0HsgvIJ+vk8394DOLvGQ0e0vHub7OtCzO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 12/16] taprio: Fix using wrong queues in gate mask
-Date:   Fri, 11 Sep 2020 14:47:29 +0200
-Message-Id: <20200911122500.188587305@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 02/16] io_uring: fix linked deferred ->files cancellation
+Date:   Fri, 11 Sep 2020 14:47:19 +0200
+Message-Id: <20200911122459.714236078@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
 References: <20200911122459.585735377@linuxfoundation.org>
@@ -60,98 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 09e31cf0c528dac3358a081dc4e773d1b3de1bc9 ]
+[ Upstream commit c127a2a1b7baa5eb40a7e2de4b7f0c51ccbbb2ef ]
 
-Since commit 9c66d1564676 ("taprio: Add support for hardware
-offloading") there's a bit of inconsistency when offloading schedules
-to the hardware:
+While looking for ->files in ->defer_list, consider that requests there
+may actually be links.
 
-In software mode, the gate masks are specified in terms of traffic
-classes, so if say "sched-entry S 03 20000", it means that the traffic
-classes 0 and 1 are open for 20us; when taprio is offloaded to
-hardware, the gate masks are specified in terms of hardware queues.
-
-The idea here is to fix hardware offloading, so schedules in hardware
-and software mode have the same behavior. What's needed to do is to
-map traffic classes to queues when applying the offload to the driver.
-
-Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_taprio.c |   30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ fs/io_uring.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1177,9 +1177,27 @@ static void taprio_offload_config_change
- 	spin_unlock(&q->current_entry_lock);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5f627194d0920..d05023ca74bdc 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -7601,6 +7601,28 @@ static bool io_match_link(struct io_kiocb *preq, struct io_kiocb *req)
+ 	return false;
  }
  
--static void taprio_sched_to_offload(struct taprio_sched *q,
-+static u32 tc_map_to_queue_mask(struct net_device *dev, u32 tc_mask)
++static inline bool io_match_files(struct io_kiocb *req,
++				       struct files_struct *files)
 +{
-+	u32 i, queue_mask = 0;
-+
-+	for (i = 0; i < dev->num_tc; i++) {
-+		u32 offset, count;
-+
-+		if (!(tc_mask & BIT(i)))
-+			continue;
-+
-+		offset = dev->tc_to_txq[i].offset;
-+		count = dev->tc_to_txq[i].count;
-+
-+		queue_mask |= GENMASK(offset + count - 1, offset);
-+	}
-+
-+	return queue_mask;
++	return (req->flags & REQ_F_WORK_INITIALIZED) && req->work.files == files;
 +}
 +
-+static void taprio_sched_to_offload(struct net_device *dev,
- 				    struct sched_gate_list *sched,
--				    const struct tc_mqprio_qopt *mqprio,
- 				    struct tc_taprio_qopt_offload *offload)
- {
- 	struct sched_entry *entry;
-@@ -1194,7 +1212,8 @@ static void taprio_sched_to_offload(stru
- 
- 		e->command = entry->command;
- 		e->interval = entry->interval;
--		e->gate_mask = entry->gate_mask;
-+		e->gate_mask = tc_map_to_queue_mask(dev, entry->gate_mask);
++static bool io_match_link_files(struct io_kiocb *req,
++				struct files_struct *files)
++{
++	struct io_kiocb *link;
 +
- 		i++;
- 	}
++	if (io_match_files(req, files))
++		return true;
++	if (req->flags & REQ_F_LINK_HEAD) {
++		list_for_each_entry(link, &req->link_list, link_list) {
++			if (io_match_files(link, files))
++				return true;
++		}
++	}
++	return false;
++}
++
+ /*
+  * We're looking to cancel 'req' because it's holding on to our files, but
+  * 'req' could be a link to another request. See if it is, and cancel that
+@@ -7683,8 +7705,7 @@ static void io_cancel_defer_files(struct io_ring_ctx *ctx,
  
-@@ -1202,7 +1221,6 @@ static void taprio_sched_to_offload(stru
- }
- 
- static int taprio_enable_offload(struct net_device *dev,
--				 struct tc_mqprio_qopt *mqprio,
- 				 struct taprio_sched *q,
- 				 struct sched_gate_list *sched,
- 				 struct netlink_ext_ack *extack)
-@@ -1224,7 +1242,7 @@ static int taprio_enable_offload(struct
- 		return -ENOMEM;
- 	}
- 	offload->enable = 1;
--	taprio_sched_to_offload(q, sched, mqprio, offload);
-+	taprio_sched_to_offload(dev, sched, offload);
- 
- 	err = ops->ndo_setup_tc(dev, TC_SETUP_QDISC_TAPRIO, offload);
- 	if (err < 0) {
-@@ -1486,7 +1504,7 @@ static int taprio_change(struct Qdisc *s
- 	}
- 
- 	if (FULL_OFFLOAD_IS_ENABLED(q->flags))
--		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
-+		err = taprio_enable_offload(dev, q, new_admin, extack);
- 	else
- 		err = taprio_disable_offload(dev, q, extack);
- 	if (err)
+ 	spin_lock_irq(&ctx->completion_lock);
+ 	list_for_each_entry_reverse(req, &ctx->defer_list, list) {
+-		if ((req->flags & REQ_F_WORK_INITIALIZED)
+-			&& req->work.files == files) {
++		if (io_match_link_files(req, files)) {
+ 			list_cut_position(&list, &ctx->defer_list, &req->list);
+ 			break;
+ 		}
+-- 
+2.25.1
+
 
 
