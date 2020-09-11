@@ -2,120 +2,164 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B912C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8487BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D415C2075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4542087C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QC0pb4H6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIKJNB (ORCPT
+        id S1725822AbgIKJN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:13:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39940 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgIKJMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:12:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 85D8DABEA;
-        Fri, 11 Sep 2020 09:13:08 +0000 (UTC)
-Date:   Fri, 11 Sep 2020 11:12:52 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jan =?iso-8859-1?Q?H=F6ppner?= <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device
- ?
-Message-ID: <20200911091252.GD7986@dhcp22.suse.cz>
-References: <f14f7f00-0501-bb93-88cc-780ae4fbaad3@intel.com>
- <3E00A442-7107-48DA-8172-EED95F6E1663@redhat.com>
- <20200911072035.GC7986@dhcp22.suse.cz>
- <02cdbf90-b29f-a9ec-c83d-49f2548e3e91@redhat.com>
+        Fri, 11 Sep 2020 05:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgIKJNW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:13:22 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0896C061573;
+        Fri, 11 Sep 2020 02:13:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so10758859wrm.2;
+        Fri, 11 Sep 2020 02:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=32Pe8Hxy1VmE8mgdxXLbHKqAfEjCAmJB1EfYH72gp/s=;
+        b=QC0pb4H6LVwUILJ224mnkNXhaTZTyfa/aV8Os9M7+lY7pv/6jJh+XUV1u0gIZF3II5
+         txrvGloQNgXcJh23uqHaEtGzHobjAOW7Gc4HT6cD6ZYviBRTWUL0dEqr5/W10HCGvpni
+         RabsSL+OXXV8AxVpcK4jWoUPW24Ds0E6qU/CGYCHXIsvEb//WlxAn4i+hF/0ecMDezMR
+         NwHhn3yV9w0DO5J5p6Vl7VwOQUyCLh3RTdxCPeq5XcZteU9v6/rn5kmHNgNdO95XxPNf
+         i1k4JXWSCsC+PjFWuVduXSVHTGmVy3sX/YwGRtk7a9yUsRFcYe/Wxw1lcn6p4NVFjzbP
+         a/dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=32Pe8Hxy1VmE8mgdxXLbHKqAfEjCAmJB1EfYH72gp/s=;
+        b=S7xqO2hQlLjhYi7CYG6SY2X+tpUQX0q8jyKDBeyBDlE5fc9+WYGjA/vliZgNJF/rh9
+         poKH6Tn9jauRj6Uf2RulJhe787b3FtnMQtRcWt/33uw50O6ArSDj+yXVUhWAzrBY8wEd
+         wOi9L739Mhh+025aJqbzwfAXtwxHTYUtKabPtnDmHpHG1pD+pnKwS+1k1IjolFnFC6+J
+         R46eqyZm2UncU7h30R89cIPi417Aw5NnWeDUMSygNcz183kHLI/dHd9WdADKBkaVIED7
+         PC6B1G6TE+cD7NYvkmaJBTdkxbgWuBkRfROLIXZ1pRLP99dRaEhsFyhTv3VphHLIqyNZ
+         iOrw==
+X-Gm-Message-State: AOAM531s+MgHlCxaGlJAFIcXsd23PUK+u0sC+pYyIIijZStIORulEWl2
+        rhwVK+EqQ8SqcMMC8FbbC2hv5iRAL3M=
+X-Google-Smtp-Source: ABdhPJwOfzaqp3VNZnK5yQVWXFhs7SKYZN14xRQQKKAeax+SNZpS6KzVU0maV9PNd9PK80EHD66I1Q==
+X-Received: by 2002:adf:d0cb:: with SMTP id z11mr1022609wrh.192.1599815600324;
+        Fri, 11 Sep 2020 02:13:20 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id v9sm3260709wru.37.2020.09.11.02.13.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:13:19 -0700 (PDT)
+Subject: [PATCH v2 10/24] ioctl_ns.2: Cast to 'unsigned long' rather than
+ 'long' when printing with "%lx"
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-11-colomar.6.4.3@gmail.com>
+ <e17f617a-4ba2-8788-20fa-7c2596d67ec6@gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <816259de-c577-55c7-9894-11c088720ea7@gmail.com>
+Date:   Fri, 11 Sep 2020 11:13:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02cdbf90-b29f-a9ec-c83d-49f2548e3e91@redhat.com>
+In-Reply-To: <e17f617a-4ba2-8788-20fa-7c2596d67ec6@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 11-09-20 10:09:07, David Hildenbrand wrote:
-[...]
-> Consider two cases:
-> 
-> 1. Hot(un)plugging huge DIMMs: many (not all!) use cases want to
-> online/offline the whole thing. HW can effectively only plug/unplug the
-> whole thing. It makes sense in some (most?) setups to represent one DIMM
-> as one memory block device.
+Hi Michael,
 
-Yes, for the physical hotplug it doesn't really make much sense to me to
-offline portions that the HW cannot hotremove.
+On 2020-09-11 09:24, Michael Kerrisk (man-pages) wrote:
+> This may be true on Linux, but is not true on other systems.
+> For example, on HP-UX, according to one header file I'm
+> looking at, the return value is 'long'. >
+> These kinds of casts are intended to improve code portability
+> across UNIX implementations, so I think they should stay
+> (although, I do wonder if they would be even better as casts
+> to 'unsigned long')
 
-> 2. Hot(un)plugging small memory increments. This is mostly the case in
-> virtualized environments - especially hyper-v balloon, xen balloon,
-> virtio-mem and (drumroll) ppc dlpar and s390x standby memory. On PPC,
-> you want at least all (16MB!) memory block devices that can get
-> unplugged again individually ("LMBs") as separate memory blocks. Same on
-> s390x on memory increment size (currently effectively the memory block
-> size).
+Fine, then here is the patch with the casts to 'unsigned long'.
 
-Yes I do recognize those usecase even though I will not pretend I
-consider it quesitonable. E.g. any hotplug with a smaller granularity
-than the memory model in Linus allows is just dubious. We simply cannot
-implement that without a lot of wasting and then the question is what is
-the real point.
+Cheers,
 
-> In summary, larger memory block devices mostly only make sense with
-> DIMMs (and for boot memory in some cases). We will still end up with
-> many memory block devices in other configurations.
+Alex
 
-And that is fine because the boot time memory is still likely the
-primary source of memory. And reducing memory devices for those is a
-huge improvement already (just think of a multi TB system with
-gazillions pointless memory devices). 
+-------------------------------------------------------------
+ From c5f644e798ffc5dec0c73f324a26059568865c68 Mon Sep 17 00:00:00 2001
+From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Date: Fri, 11 Sep 2020 10:51:26 +0200
+Subject: [PATCH v2 10/24] ioctl_ns.2: Cast to 'unsigned long' rather 
+than 'long'
+  when printing with "%lx"
 
-> I do agree that a "disable sysfs" option is interesting - even with
-> memory hotplug (we mostly need a way to configure it and a way to notify
-> kexec-tools about memory hot(un)plug events). I am currently (once
-> again) looking into improving auto-onlining support in the kernel.
-> 
-> Having that said, I much rather want to see smaller improvements (that
-> can be fine-tuned individually - like allowing variable-sized memory
-> blocks) than doing a switch to "new shiny" and figuring out after a
-> while that we need "new shiny2".
+ From the email conversation:
 
-There is only one certainty. Providing a long term interface with ever
-growing (ab)users is a hard target. And shinyN might be needed in the
-end. Who knows. My main point is that the existing interface is hitting
-a wall on usecases which _do_not_care_ about memory hotplug. And that is
-something we should be looking at.
+On 2020-09-11 09:24, Michael Kerrisk (man-pages) wrote:
+ > Hi Alex,
+ >
+ > On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+ >> Both major(3) and minor(3) return an 'unsigned int',
+ >> so there is no need to use a 'long' for printing.
+ >> Moreover, it should have been 'unsigned long',
+ >> as "%lx" expects an unsigned type.
+ >
+ > This may be true on Linux, but is not true on other systems.
+ > For example, on HP-UX, according to one header file I'm
+ > looking at, the return value is 'long'.
+ >
+ > These kinds of casts are intended to improve code portability
+ > across UNIX implementations, so I think they should stay
+ > (although, I do wonder if they would be even better as casts
+ > to 'unsigned long')
+ >
+ > Thanks,
+ >
+ > Michael
 
-> I consider removing "phys_device" as one of these tunables. The question
-> would be how to make such sysfs changes easy to configure
-> ("-phys_device", "+variable_sized_blocks" ...)
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+---
+  man2/ioctl_ns.2 | 6 ++++--
+  1 file changed, 4 insertions(+), 2 deletions(-)
 
-I am with you on that. There are more candidates in memory block
-directories which have dubious value. Deprecation process is a PITA and
-that's why I thought that it would make sense to focus on something that
-we can mis^Wdesign with exising and forming usecases in mind that would
-get rid of all the cruft that we know it doesn't work (removable would
-be another one.
+diff --git a/man2/ioctl_ns.2 b/man2/ioctl_ns.2
+index 818dde32c..8b8789d1f 100644
+--- a/man2/ioctl_ns.2
++++ b/man2/ioctl_ns.2
+@@ -317,7 +317,8 @@ main(int argc, char *argv[])
+          }
+          printf("Device/Inode of owning user namespace is: "
+                  "[%lx,%lx] / %ld\en",
+-                (long) major(sb.st_dev), (long) minor(sb.st_dev),
++                (unsigned long) major(sb.st_dev),
++                (unsigned long) minor(sb.st_dev),
+                  (long) sb.st_ino);
 
-I am definitely not going to insist and I appreciate you are trying to
-clean this up. That is highly appreciated of course.
+          close(userns_fd);
+@@ -346,7 +347,8 @@ main(int argc, char *argv[])
+              exit(EXIT_FAILURE);
+          }
+          printf("Device/Inode of parent namespace is: [%lx,%lx] / %ld\en",
+-                (long) major(sb.st_dev), (long) minor(sb.st_dev),
++                (unsigned long) major(sb.st_dev),
++                (unsigned long) minor(sb.st_dev),
+                  (long) sb.st_ino);
+
+          close(parent_fd);
 -- 
-Michal Hocko
-SUSE Labs
+2.28.0
