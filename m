@@ -2,297 +2,98 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F24FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C71C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0F320829
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="hofk5gxq";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KiO0OuYo"
+	by mail.kernel.org (Postfix) with ESMTP id B15502076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599810471;
+	bh=I4uLoN15SZgdT8c9PzvgWvYDrFak69CCGmHCBzzkfp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TV/dts7yuILd6+haUYHy0oLpsiDHUQOPfac1cDjLfP7NawN5GeaFNQwCGbcUgo70v
+	 ygSRHakNt2WS/wtG+GWXgooz+Hxp0TL+ZCRT836onQOkRXOhHaWhbWo0pmJIRrD5Ys
+	 glzyqKPpc1MiKoDUpRRjr75OsQF7iI9PYXiJnvWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgIKHpy (ORCPT
+        id S1725842AbgIKHru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:45:54 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:38647 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725784AbgIKHph (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:45:37 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id EDF37C42;
-        Fri, 11 Sep 2020 03:45:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 11 Sep 2020 03:45:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=pDChSN39tqRkN
-        QAM7YiAOJfg0uxG4cS03G6jTG8UuWU=; b=hofk5gxqzfZMlnCwbiwg9B5CtDrOB
-        O3J8C7PDvsiFJkapAEDjWH0k1GPZbntdJEnsvwQTuXaViPqPf4tZgmDUpHuRStph
-        4nEg0+fYQN+IEsoiqoSJYZ6qfT+A6TnhoKwlXPUV+gD8i8se5y4r8HHMwnzczjAW
-        vmIo54g6YiWUHF2/kobha3fTKS7VCEdjBzEWQC+R9kv88HiTE/t4l8NRY6ZKeDPZ
-        F3d8kdDgovxJaytYUTyU//KGp9+amQZR0Hj306c5OZIID9SY9qF6bbvwJ9Y7/3Kj
-        VxZCEU+ujVlMFJqk7+1kgK7DJZxf/up7CpLjuO1vZ6WVBGljQq3jtRauw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=pDChSN39tqRkNQAM7YiAOJfg0uxG4cS03G6jTG8UuWU=; b=KiO0OuYo
-        FBnrYLzuXzpCvor9RRcZ48NfDlhmukO9i1lnix/H88i0onTcUc6hf7SD1eYajrwE
-        5a3K7hwQgGdG6iXLFR6+aOpAIgmjZQGQYTKgaxZkIhhkiFEy0+qlZzzUV9eMDM2a
-        9cRbbgHXwXiq6PQUTY9YZa0rfy2ZqykUM7r/YltDmShXtbGOmMqV6XYfIRbbYCJk
-        YliPdukwkG9Fva3x4ENd+v7i6qOnPXoOj4F4kdpxKw41zZcXOK6acqvZM7bN91tf
-        yXF+o+lnlPktULL9rI7evF9NJ5Wpc/U+JR802nB3I358HlIexa0av9h/X7CcADvj
-        XbBg0wJ2Xt1BtQ==
-X-ME-Sender: <xms:HytbX5uPoP5pWEqnyw2_6DtuVow6PU78Cc_NnWIWOthADEQUWpl9yA>
-    <xme:HytbXyeDPMBVVyAts2tEg6J8WnShhviP5WM0AbdPAhggEQvRNHug7Yhd1vcQAcdy2
-    iWZwQQlahQINu5wew>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtke
-    ertdertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfies
-    rghjrdhiugdrrghuqeenucggtffrrghtthgvrhhnpeejgfdvveehteekveeggeellefgle
-    etteejffelffdvudduveeiffegteelvefhteenucfkphepudegrddvrddutdelrdekheen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurh
-    gvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:HytbX8w57eha_xrzg8YodIcT7KVnsfeLtIRqQQt_eHU42_uJfCIGaQ>
-    <xmx:HytbXwNQ4sMOLPMwx_5WqLDkMGmxP7jIcSLPvrG42Y3xwexQI2t66A>
-    <xmx:HytbX5-HRlScUrGDWyKykwOa2jla0mq83epAvlFYR-U-tQSgFd22KQ>
-    <xmx:HytbX1Y_AHGYsMQtHn_4-Oz-C8RhsdMAOJRq6u5UQCTJq5uqBSGZGw>
-Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D38BC3064682;
-        Fri, 11 Sep 2020 03:45:32 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-mmc@vger.kernel.org
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] mmc: sdhci-of-aspeed: Expose phase delay tuning
-Date:   Fri, 11 Sep 2020 17:14:51 +0930
-Message-Id: <20200911074452.3148259-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200911074452.3148259-1-andrew@aj.id.au>
-References: <20200911074452.3148259-1-andrew@aj.id.au>
+        Fri, 11 Sep 2020 03:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgIKHrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:47:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E1D62076C;
+        Fri, 11 Sep 2020 07:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599810466;
+        bh=I4uLoN15SZgdT8c9PzvgWvYDrFak69CCGmHCBzzkfp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bv7hWyU8RZyuN6jfDc5+ORLIBpvhh5aMtRwI2Nh3NJphbVWjwIZrxhoYb+DHeDr8v
+         8qk4qCKaaZ1kRmiPZpBF/Bc5F55Q4LGfaQ6tNdLgu8nG9ZmlvdGXOU0dWfT0N+iUsa
+         vws3sKPZthzoylmn3VIK9R5h3RGV74Mj8e6O9IJw=
+Date:   Fri, 11 Sep 2020 09:47:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jhugo@codeaurora.org,
+        bbhatt@codeaurora.org
+Subject: Re: [PATCH v5 4/4] bus: mhi: clients: Add userspace client interface
+ driver
+Message-ID: <20200911074752.GB3324216@kroah.com>
+References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
+ <1596696063-17802-5-git-send-email-hemantk@codeaurora.org>
+ <20200907093725.GC1393659@kroah.com>
+ <010101747bd97269-a941d364-78ea-488c-baae-5a1c924d9e43-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <010101747bd97269-a941d364-78ea-488c-baae-5a1c924d9e43-000000@us-west-2.amazonses.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Aspeed SD/eMMC controllers feature up to two SDHCIs alongside a
-a set of "global" configuration registers. The global configuration
-registers house controller-specific settings that aren't exposed by the
-SDHCI, one example being a register for phase tuning.
+On Fri, Sep 11, 2020 at 06:28:02AM +0000, Hemant Kumar wrote:
+> > > +struct uci_dev {
+> > > +	unsigned int minor;
+> > > +	struct mhi_device *mhi_dev;
+> > > +	const char *chan;
+> > > +
+> > > +	/* protects uci_dev struct members */
+> > > +	struct mutex lock;
+> > > +
+> > > +	struct uci_chan ul_chan;
+> > > +	struct uci_chan dl_chan;
+> > > +	size_t mtu;
+> > > +	size_t actual_mtu;
+> > > +	struct kref ref_count;
+> > > +	struct kref open_count;
+> > 
+> > I'm stopping right here.  A structure can only have ONE reference count
+> > to control its lifespan.  You have 2 here, which guarantees that either
+> > you are using a kref incorrectly, or your code is totally confused and
+> > will break easily.
+> > 
+> > Please fix this as this is not how to do this.
+> > 
+> > Also, why does anyone need to care about the number of times that open()
+> > is called?  The vfs layer should handle all of that for you, right?
+> Reason for using open_count was to allow start MHI channel only when first
+> open() was called and stop the MHI channel when last release() is called.
+> Since uci driver just need to handle one open() from user space
+> other calls to open can simply return -EBUSY. i will get rid of open_count
+> and does not let multiple threads to open same file node.
 
-The phase tuning feature is new in the AST2600 design. It's exposed as a
-single register in the global register set and controls both the input
-and output phase adjustment for each slot. As the settings are
-slot-specific, the values to program are extracted from properties in
-the SDHCI devicetree nodes.
+You will fail in trying to attempt only one open on your device node,
+sorry.  You can properly trigger off of the first/last things, but
+having two different reference counts is NOT how to do this, those are
+to control the lifetime of a structure/object.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
-In v2:
-
-* Rework devicetree parsing to minimise state disruption
-* Switch some log statements from dev_info() to dev_dbg()
----
- drivers/mmc/host/sdhci-of-aspeed.c | 126 +++++++++++++++++++++++++++--
- 1 file changed, 121 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-index 4f008ba3280e..c61eb42e1ebb 100644
---- a/drivers/mmc/host/sdhci-of-aspeed.c
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -16,9 +16,19 @@
- 
- #include "sdhci-pltfm.h"
- 
--#define ASPEED_SDC_INFO		0x00
--#define   ASPEED_SDC_S1MMC8	BIT(25)
--#define   ASPEED_SDC_S0MMC8	BIT(24)
-+#define ASPEED_SDC_INFO			0x00
-+#define   ASPEED_SDC_S1_MMC8		BIT(25)
-+#define   ASPEED_SDC_S0_MMC8		BIT(24)
-+#define ASPEED_SDC_PHASE		0xf4
-+#define   ASPEED_SDC_S1_PHASE_IN	GENMASK(25, 21)
-+#define   ASPEED_SDC_S0_PHASE_IN	GENMASK(20, 16)
-+#define   ASPEED_SDC_S1_PHASE_OUT	GENMASK(15, 11)
-+#define   ASPEED_SDC_S1_PHASE_IN_EN	BIT(10)
-+#define   ASPEED_SDC_S1_PHASE_OUT_EN	GENMASK(9, 8)
-+#define   ASPEED_SDC_S0_PHASE_OUT	GENMASK(7, 3)
-+#define   ASPEED_SDC_S0_PHASE_IN_EN	BIT(2)
-+#define   ASPEED_SDC_S0_PHASE_OUT_EN	GENMASK(1, 0)
-+#define   ASPEED_SDC_PHASE_MAX		31
- 
- struct aspeed_sdc {
- 	struct clk *clk;
-@@ -28,9 +38,21 @@ struct aspeed_sdc {
- 	void __iomem *regs;
- };
- 
-+struct aspeed_sdhci_phase_desc {
-+	u32 value_mask;
-+	u32 enable_mask;
-+	u8 enable_value;
-+};
-+
-+struct aspeed_sdhci_phase {
-+	struct aspeed_sdhci_phase_desc in;
-+	struct aspeed_sdhci_phase_desc out;
-+};
-+
- struct aspeed_sdhci {
- 	struct aspeed_sdc *parent;
- 	u32 width_mask;
-+	const struct aspeed_sdhci_phase *phase;
- };
- 
- static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
-@@ -50,6 +72,22 @@ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
- 	spin_unlock(&sdc->lock);
- }
- 
-+static void
-+aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
-+			   const struct aspeed_sdhci_phase_desc *phase,
-+			   uint8_t value)
-+{
-+	u32 reg;
-+
-+	spin_lock(&sdc->lock);
-+	reg = readl(sdc->regs + ASPEED_SDC_PHASE);
-+	reg &= ~(phase->enable_mask | phase->value_mask);
-+	reg |= value << __ffs(phase->value_mask);
-+	reg |= phase->enable_value << __ffs(phase->enable_mask);
-+	writel(reg, sdc->regs + ASPEED_SDC_PHASE);
-+	spin_unlock(&sdc->lock);
-+}
-+
- static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
- {
- 	struct sdhci_pltfm_host *pltfm_host;
-@@ -155,8 +193,49 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
- 	return (delta / 0x100) - 1;
- }
- 
-+static int aspeed_sdhci_configure_of(struct platform_device *pdev,
-+				     struct aspeed_sdhci *sdhci)
-+{
-+	struct device_node *np;
-+	struct device *dev;
-+	u32 phase;
-+
-+	if (!sdhci->phase)
-+		return 0;
-+
-+	dev = &pdev->dev;
-+	np = dev->of_node;
-+
-+	if (!of_property_read_u32(np, "aspeed,input-phase", &phase)) {
-+		if (phase <= ASPEED_SDC_PHASE_MAX) {
-+			aspeed_sdc_configure_phase(sdhci->parent,
-+						   &sdhci->phase->in,
-+						   phase);
-+			dev_dbg(dev, "Input phase adjustment: %u", phase);
-+		} else {
-+			dev_err(dev, "Invalid input phase value: %u", phase);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (!of_property_read_u32(np, "aspeed,output-phase", &phase)) {
-+		if (phase <= ASPEED_SDC_PHASE_MAX) {
-+			aspeed_sdc_configure_phase(sdhci->parent,
-+						   &sdhci->phase->out,
-+						   phase);
-+			dev_dbg(dev, "Output phase adjustment: %u", phase);
-+		} else {
-+			dev_err(dev, "Invalid output phase value: %u", phase);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int aspeed_sdhci_probe(struct platform_device *pdev)
- {
-+	const struct aspeed_sdhci_phase *phase;
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct aspeed_sdhci *dev;
- 	struct sdhci_host *host;
-@@ -181,7 +260,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 
- 	dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
--	dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
-+	dev->width_mask = !slot ? ASPEED_SDC_S0_MMC8 : ASPEED_SDC_S1_MMC8;
-+	phase = of_device_get_match_data(&pdev->dev);
-+	if (phase)
-+		dev->phase = &phase[slot];
- 
- 	sdhci_get_of_property(pdev);
- 
-@@ -195,6 +277,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
- 		goto err_pltfm_free;
- 	}
- 
-+	ret = aspeed_sdhci_configure_of(pdev, dev);
-+	if (ret)
-+		goto err_sdhci_add;
-+
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret)
- 		goto err_sdhci_add;
-@@ -230,10 +316,40 @@ static int aspeed_sdhci_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct aspeed_sdhci_phase ast2600_sdhci_phase[] = {
-+	/* SDHCI/Slot 0 */
-+	[0] = {
-+		.in = {
-+			.value_mask = ASPEED_SDC_S0_PHASE_IN,
-+			.enable_mask = ASPEED_SDC_S0_PHASE_IN_EN,
-+			.enable_value = 1,
-+		},
-+		.out = {
-+			.value_mask = ASPEED_SDC_S0_PHASE_OUT,
-+			.enable_mask = ASPEED_SDC_S0_PHASE_OUT_EN,
-+			.enable_value = 3,
-+		},
-+	},
-+	/* SDHCI/Slot 1 */
-+	[1] = {
-+		.in = {
-+			.value_mask = ASPEED_SDC_S1_PHASE_IN,
-+			.enable_mask = ASPEED_SDC_S1_PHASE_IN_EN,
-+			.enable_value = 1,
-+		},
-+		.out = {
-+			.value_mask = ASPEED_SDC_S1_PHASE_OUT,
-+			.enable_mask = ASPEED_SDC_S1_PHASE_OUT_EN,
-+			.enable_value = 3,
-+		},
-+	},
-+};
-+
-+/* If supported, phase adjustment fields are stored in the data pointer */
- static const struct of_device_id aspeed_sdhci_of_match[] = {
- 	{ .compatible = "aspeed,ast2400-sdhci", },
- 	{ .compatible = "aspeed,ast2500-sdhci", },
--	{ .compatible = "aspeed,ast2600-sdhci", },
-+	{ .compatible = "aspeed,ast2600-sdhci", .data = ast2600_sdhci_phase },
- 	{ }
- };
- 
--- 
-2.25.1
-
+greg k-h
