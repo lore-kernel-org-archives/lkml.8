@@ -2,116 +2,71 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F35CC2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A66C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE9D221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DUSaScYi";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bMRG+z/e"
+	by mail.kernel.org (Postfix) with ESMTP id 4557E206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725780AbgIKIYX (ORCPT
+        id S1725784AbgIKIZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:24:23 -0400
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:37690
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbgIKIYW (ORCPT
+        Fri, 11 Sep 2020 04:25:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgIKIZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:24:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812662;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=YcrG/LuDfQatkkUvVrsoN1HVKrTFRH1ANNeQ0qNYkz8=;
-        b=DUSaScYiCJ+raicYx6PC8kJo1NZWhtaOIhxZaqBLTQfRe266L96vZANC8RplN+ME
-        Fvq3CRdWVJjfMCQIM7NSfeMadS8Qe2cFjhQxjOhPmqiPQRwmBF9CCHXxg+m5CYmIMPo
-        2zuKib071dm6UsLGGZJi+Qd4jBjbl2OaGpL8CJWQ=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812662;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=YcrG/LuDfQatkkUvVrsoN1HVKrTFRH1ANNeQ0qNYkz8=;
-        b=bMRG+z/eKKjD1h7AkzMrPGwmcU/lNl7oPBoiMqSgDXPBPDQmSTDZxtqmCpe3C2HB
-        6IwX9aTMUQSSvJ8H6+nNTJfStgdtTJuhEt7QMCRw445KYnmTXhqhhOxDpC3XCobFaSB
-        74L4A8XMfZ56PYY1erJWRGsBN9umrWbNtgSeGHeM=
+        Fri, 11 Sep 2020 04:25:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBD1C061786
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:25:38 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kGeNB-0002LG-Fw; Fri, 11 Sep 2020 10:25:33 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1kGeN7-00074R-NS; Fri, 11 Sep 2020 10:25:29 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] ag71xx: add ethtool and flow control support 
+Date:   Fri, 11 Sep 2020 10:25:26 +0200
+Message-Id: <20200911082528.27121-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Sep 2020 08:24:22 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 3/8] iommu/arm-smmu: Consult context bank allocator for
- identify domains
-In-Reply-To: <20200904155513.282067-4-bjorn.andersson@linaro.org>
-References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
- <20200904155513.282067-4-bjorn.andersson@linaro.org>
-Message-ID: <010101747c43f329-e6376c08-27e9-4b2e-92cd-f2e0a28d9e3c-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.11-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-04 21:25, Bjorn Andersson wrote:
-> For implementations of the ARM SMMU where stream mappings of bypass 
-> type
-> are prohibited identity domains can be implemented by using context
-> banks with translation disabled.
-> 
-> Postpone the decision to skip allocating a context bank until the
-> implementation specific context bank allocator has been consulted and 
-> if
-> it decides to use a context bank for the identity map, don't enable
-> translation (i.e. omit ARM_SMMU_SCTLR_M).
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
+The main target of this patches is to provide flow control support
+for ag71xx driver. To be able to validate this functionality, I also
+added ethtool support with HW counters. So, this patches was validated
+with iperf3 and counters showing Pause frames send or received by this
+NIC.
 
-<snip>...
+Oleksij Rempel (2):
+  net: ag71xx: add ethtool support
+  net: ag71xx: add flow control support
 
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> index ddf2ca4c923d..235d9a3a6ab6 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-> @@ -243,6 +243,8 @@ enum arm_smmu_cbar_type {
->  #define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
->  #define TLB_SPIN_COUNT			10
-> 
-> +#define ARM_SMMU_CBNDX_BYPASS		0xffff
-> +
->  /* Shared driver definitions */
->  enum arm_smmu_arch_version {
->  	ARM_SMMU_V1,
-> @@ -346,6 +348,7 @@ struct arm_smmu_cfg {
->  	u32				sctlr_clr;    /* bits to mask in SCTLR */
->  	enum arm_smmu_cbar_type		cbar;
->  	enum arm_smmu_context_fmt	fmt;
-> +	bool				m;
-
-Can we use mmu_enable instead of m here to be more descriptive?
-
-Thanks,
-Sai
+ drivers/net/ethernet/atheros/ag71xx.c | 160 +++++++++++++++++++++++++-
+ 1 file changed, 159 insertions(+), 1 deletion(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.28.0
+
