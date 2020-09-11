@@ -2,127 +2,156 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA48C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76A8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E995221E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8ED221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/twqk4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725799AbgIKEST (ORCPT
+        id S1725807AbgIKETU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 00:18:19 -0400
-Received: from twspam01.aspeedtech.com ([211.20.114.71]:11790 "EHLO
-        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgIKESJ (ORCPT
+        Fri, 11 Sep 2020 00:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgIKETO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 00:18:09 -0400
-Received: from twspam01.aspeedtech.com (localhost [127.0.0.2] (may be forged))
-        by twspam01.aspeedtech.com with ESMTP id 08B3Sl36083926
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 11:28:47 +0800 (GMT-8)
-        (envelope-from chiawei_wang@aspeedtech.com)
-Received: from mail.aspeedtech.com ([192.168.0.24])
-        by twspam01.aspeedtech.com with ESMTP id 08B3SMkD083855;
-        Fri, 11 Sep 2020 11:28:23 +0800 (GMT-8)
-        (envelope-from chiawei_wang@aspeedtech.com)
-Received: from ChiaWeiWang-PC.aspeed.com (192.168.2.66) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 11 Sep
- 2020 11:46:32 +0800
-From:   "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
-To:     <robh+dt@kernel.org>, <joel@jms.id.au>, <andrew@aj.id.au>,
-        <minyard@acm.org>, <linus.walleij@linaro.org>,
-        <haiyue.wang@linux.intel.com>, <cyrilbur@gmail.com>,
-        <rlippert@google.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <openbmc@lists.ozlabs.org>
-CC:     <ryan_chen@aspeedtech.com>
-Subject: [PATCH 2/4] soc: aspeed: Fix LPC register offsets
-Date:   Fri, 11 Sep 2020 11:46:29 +0800
-Message-ID: <20200911034631.8473-3-chiawei_wang@aspeedtech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911034631.8473-1-chiawei_wang@aspeedtech.com>
-References: <20200911034631.8473-1-chiawei_wang@aspeedtech.com>
+        Fri, 11 Sep 2020 00:19:14 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08E4C061573;
+        Thu, 10 Sep 2020 21:19:12 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fa1so1088276pjb.0;
+        Thu, 10 Sep 2020 21:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3GKrvUiFlFciRX7VQdx8esQeBBFrNeZILayTSwTWG9g=;
+        b=O/twqk4z0+Ftxyy+kfi7ndIejydgPDPb7gfaVqjXEOnQEUq5VNVC4hlcd5cH9Vnp/4
+         E5H3b7OCINXOcu8PI6b103VXApOcIzphPdrhGGlYWu7BDji7L3TCJd5GT87fQ1MqZx7L
+         pOJZrf18tyrIGe84p/VfjbYgka1B99sVEBCFntut+2s7YkTGEE5xfgNreRc/K+3m3Gvr
+         JI7mC+Gr/9jCU6m1a8Visc+5n+uv2zE4rsLqljBKoQ+/qnC7HMwZFdHqIdbRZgBo4Q52
+         g9i3L+IsLG/v3vm9ekHoLGwVbGCZB7ecaWx5Re4orxJC2TEZweHfeqnQCokiKteIOFi0
+         si/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3GKrvUiFlFciRX7VQdx8esQeBBFrNeZILayTSwTWG9g=;
+        b=smDho3sMGTPiLITzspjSRig6CW9tAKM66oCe7tr5IZV3a1Pep8sqMfNZEOA4IbgaNs
+         17wrZDpiLdixipkLeui7Omxl2uYkQQo3YMTEbsCGnSRZn6d+AP6uOpn+01w6hqDH/LcF
+         GTB3fgdAH5w2rwmHfh7OpfnI0Jm5GFZ0yezOjgntwMbFOLVmTSHxK/crIC+/1DKBKUEu
+         cLdQvgzWWI26YtA5E6t6dGEppVC8OecX6786ZBmzF7Qy4RxaM5XmwmriKKzFls8U+vt3
+         GcGXoYypcRYtilGvFMrhKFpmhWkOd6ygHHzq3D8GBm64NANhmnYrfB0oama45vFAhGuD
+         d/wg==
+X-Gm-Message-State: AOAM530khIHdS8LZJF/xkc9dRjpUU5fsRnuUAsHpeJYTBqQ4Dxn5oXYb
+        p8odOJ8nCPweHGbsNg+h5w07KDVZQw0=
+X-Google-Smtp-Source: ABdhPJxm8ZAn4MLLQXmqYeEclMvS7tgMlxh0wah1WLYGH8L+tUn4lLA/u5kH+I5qeVM4paD5/9ti9Q==
+X-Received: by 2002:a17:90a:f407:: with SMTP id ch7mr489565pjb.142.1599797951051;
+        Thu, 10 Sep 2020 21:19:11 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s9sm493201pgm.40.2020.09.10.21.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 21:19:10 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     olteanv@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: b53: Configure VLANs while not filtering
+Date:   Thu, 10 Sep 2020 21:19:05 -0700
+Message-Id: <20200911041905.58191-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.2.66]
-X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
- (192.168.0.24)
-X-DNSRBL: 
-X-MAIL: twspam01.aspeedtech.com 08B3SMkD083855
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LPC register offsets are fixed to adapt to the LPC DTS change,
-where the LPC partitioning is removed.
+Update the B53 driver to support VLANs while not filtering. This
+requires us to enable VLAN globally within the switch upon driver
+initial configuration (dev->vlan_enabled).
 
-Signed-off-by: Chia-Wei, Wang <chiawei_wang@aspeedtech.com>
+We also need to remove the code that dealt with PVID re-configuration in
+b53_vlan_filtering() since that function worked under the assumption
+that it would only be called to make a bridge VLAN filtering, or not
+filtering, and we would attempt to move the port's PVID accordingly.
+
+Now that VLANs are programmed all the time, even in the case of a
+non-VLAN filtering bridge, we would be programming a default_pvid for
+the bridged switch ports.
+
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/soc/aspeed/aspeed-lpc-ctrl.c  |  6 +++---
- drivers/soc/aspeed/aspeed-lpc-snoop.c | 11 +++++------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ drivers/net/dsa/b53/b53_common.c | 23 ++++-------------------
+ 1 file changed, 4 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-index 01ed21e8bfee..36faa0618ada 100644
---- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-+++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-@@ -17,12 +17,12 @@
- 
- #define DEVICE_NAME	"aspeed-lpc-ctrl"
- 
--#define HICR5 0x0
-+#define HICR5 0x80
- #define HICR5_ENL2H	BIT(8)
- #define HICR5_ENFWH	BIT(10)
- 
--#define HICR7 0x8
--#define HICR8 0xc
-+#define HICR7 0x88
-+#define HICR8 0x8c
- 
- struct aspeed_lpc_ctrl {
- 	struct miscdevice	miscdev;
-diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-index f3d8d53ab84d..7ce5c9fcc73c 100644
---- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-+++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-@@ -28,26 +28,25 @@
- #define NUM_SNOOP_CHANNELS 2
- #define SNOOP_FIFO_SIZE 2048
- 
--#define HICR5	0x0
-+#define HICR5	0x80
- #define HICR5_EN_SNP0W		BIT(0)
- #define HICR5_ENINT_SNP0W	BIT(1)
- #define HICR5_EN_SNP1W		BIT(2)
- #define HICR5_ENINT_SNP1W	BIT(3)
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 6a5796c32721..46ac8875f870 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1377,23 +1377,6 @@ EXPORT_SYMBOL(b53_phylink_mac_link_up);
+ int b53_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
+ {
+ 	struct b53_device *dev = ds->priv;
+-	u16 pvid, new_pvid;
 -
--#define HICR6	0x4
-+#define HICR6	0x84
- #define HICR6_STR_SNP0W		BIT(0)
- #define HICR6_STR_SNP1W		BIT(1)
--#define SNPWADR	0x10
-+#define SNPWADR	0x90
- #define SNPWADR_CH0_MASK	GENMASK(15, 0)
- #define SNPWADR_CH0_SHIFT	0
- #define SNPWADR_CH1_MASK	GENMASK(31, 16)
- #define SNPWADR_CH1_SHIFT	16
--#define SNPWDR	0x14
-+#define SNPWDR	0x94
- #define SNPWDR_CH0_MASK		GENMASK(7, 0)
- #define SNPWDR_CH0_SHIFT	0
- #define SNPWDR_CH1_MASK		GENMASK(15, 8)
- #define SNPWDR_CH1_SHIFT	8
--#define HICRB	0x80
-+#define HICRB	0x100
- #define HICRB_ENSNP0D		BIT(14)
- #define HICRB_ENSNP1D		BIT(15)
+-	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &pvid);
+-	if (!vlan_filtering) {
+-		/* Filtering is currently enabled, use the default PVID since
+-		 * the bridge does not expect tagging anymore
+-		 */
+-		dev->ports[port].pvid = pvid;
+-		new_pvid = b53_default_pvid(dev);
+-	} else {
+-		/* Filtering is currently disabled, restore the previous PVID */
+-		new_pvid = dev->ports[port].pvid;
+-	}
+-
+-	if (pvid != new_pvid)
+-		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port),
+-			    new_pvid);
+ 
+ 	b53_enable_vlan(dev, dev->vlan_enabled, vlan_filtering);
+ 
+@@ -1444,7 +1427,7 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
+ 			untagged = true;
+ 
+ 		vl->members |= BIT(port);
+-		if (untagged && !dsa_is_cpu_port(ds, port))
++		if (untagged)
+ 			vl->untag |= BIT(port);
+ 		else
+ 			vl->untag &= ~BIT(port);
+@@ -1482,7 +1465,7 @@ int b53_vlan_del(struct dsa_switch *ds, int port,
+ 		if (pvid == vid)
+ 			pvid = b53_default_pvid(dev);
+ 
+-		if (untagged && !dsa_is_cpu_port(ds, port))
++		if (untagged)
+ 			vl->untag &= ~(BIT(port));
+ 
+ 		b53_set_vlan_entry(dev, vid, vl);
+@@ -2619,6 +2602,8 @@ struct b53_device *b53_switch_alloc(struct device *base,
+ 	dev->priv = priv;
+ 	dev->ops = ops;
+ 	ds->ops = &b53_switch_ops;
++	ds->configure_vlan_while_not_filtering = true;
++	dev->vlan_enabled = ds->configure_vlan_while_not_filtering;
+ 	mutex_init(&dev->reg_mutex);
+ 	mutex_init(&dev->stats_mutex);
  
 -- 
-2.17.1
+2.25.1
 
