@@ -2,164 +2,95 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8487BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B221DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4542087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QC0pb4H6"
+	by mail.kernel.org (Postfix) with ESMTP id 5EC7A2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725822AbgIKJN0 (ORCPT
+        id S1725813AbgIKJPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgIKJNW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:13:22 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0896C061573;
-        Fri, 11 Sep 2020 02:13:21 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so10758859wrm.2;
-        Fri, 11 Sep 2020 02:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=32Pe8Hxy1VmE8mgdxXLbHKqAfEjCAmJB1EfYH72gp/s=;
-        b=QC0pb4H6LVwUILJ224mnkNXhaTZTyfa/aV8Os9M7+lY7pv/6jJh+XUV1u0gIZF3II5
-         txrvGloQNgXcJh23uqHaEtGzHobjAOW7Gc4HT6cD6ZYviBRTWUL0dEqr5/W10HCGvpni
-         RabsSL+OXXV8AxVpcK4jWoUPW24Ds0E6qU/CGYCHXIsvEb//WlxAn4i+hF/0ecMDezMR
-         NwHhn3yV9w0DO5J5p6Vl7VwOQUyCLh3RTdxCPeq5XcZteU9v6/rn5kmHNgNdO95XxPNf
-         i1k4JXWSCsC+PjFWuVduXSVHTGmVy3sX/YwGRtk7a9yUsRFcYe/Wxw1lcn6p4NVFjzbP
-         a/dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=32Pe8Hxy1VmE8mgdxXLbHKqAfEjCAmJB1EfYH72gp/s=;
-        b=S7xqO2hQlLjhYi7CYG6SY2X+tpUQX0q8jyKDBeyBDlE5fc9+WYGjA/vliZgNJF/rh9
-         poKH6Tn9jauRj6Uf2RulJhe787b3FtnMQtRcWt/33uw50O6ArSDj+yXVUhWAzrBY8wEd
-         wOi9L739Mhh+025aJqbzwfAXtwxHTYUtKabPtnDmHpHG1pD+pnKwS+1k1IjolFnFC6+J
-         R46eqyZm2UncU7h30R89cIPi417Aw5NnWeDUMSygNcz183kHLI/dHd9WdADKBkaVIED7
-         PC6B1G6TE+cD7NYvkmaJBTdkxbgWuBkRfROLIXZ1pRLP99dRaEhsFyhTv3VphHLIqyNZ
-         iOrw==
-X-Gm-Message-State: AOAM531s+MgHlCxaGlJAFIcXsd23PUK+u0sC+pYyIIijZStIORulEWl2
-        rhwVK+EqQ8SqcMMC8FbbC2hv5iRAL3M=
-X-Google-Smtp-Source: ABdhPJwOfzaqp3VNZnK5yQVWXFhs7SKYZN14xRQQKKAeax+SNZpS6KzVU0maV9PNd9PK80EHD66I1Q==
-X-Received: by 2002:adf:d0cb:: with SMTP id z11mr1022609wrh.192.1599815600324;
-        Fri, 11 Sep 2020 02:13:20 -0700 (PDT)
-Received: from [192.168.1.143] ([170.253.60.68])
-        by smtp.gmail.com with ESMTPSA id v9sm3260709wru.37.2020.09.11.02.13.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 02:13:19 -0700 (PDT)
-Subject: [PATCH v2 10/24] ioctl_ns.2: Cast to 'unsigned long' rather than
- 'long' when printing with "%lx"
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-11-colomar.6.4.3@gmail.com>
- <e17f617a-4ba2-8788-20fa-7c2596d67ec6@gmail.com>
-From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
-Message-ID: <816259de-c577-55c7-9894-11c088720ea7@gmail.com>
-Date:   Fri, 11 Sep 2020 11:13:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 11 Sep 2020 05:15:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42696 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgIKJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:15:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2EE61ABEA;
+        Fri, 11 Sep 2020 09:15:59 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 11:15:42 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/traps: fix recoverability of machine check
+ handling on book3s/32
+Message-ID: <20200911091542.GE29521@kitsune.suse.cz>
+References: <1c804764d38fb084b420b12ca13e8c1b2dea075e.1548166189.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <e17f617a-4ba2-8788-20fa-7c2596d67ec6@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c804764d38fb084b420b12ca13e8c1b2dea075e.1548166189.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+Hello,
 
-On 2020-09-11 09:24, Michael Kerrisk (man-pages) wrote:
-> This may be true on Linux, but is not true on other systems.
-> For example, on HP-UX, according to one header file I'm
-> looking at, the return value is 'long'. >
-> These kinds of casts are intended to improve code portability
-> across UNIX implementations, so I think they should stay
-> (although, I do wonder if they would be even better as casts
-> to 'unsigned long')
+does this logic apply to "Unrecoverable System Reset" as well?
 
-Fine, then here is the patch with the casts to 'unsigned long'.
+Thanks
 
-Cheers,
+Michal
 
-Alex
-
--------------------------------------------------------------
- From c5f644e798ffc5dec0c73f324a26059568865c68 Mon Sep 17 00:00:00 2001
-From: Alejandro Colomar <colomar.6.4.3@gmail.com>
-Date: Fri, 11 Sep 2020 10:51:26 +0200
-Subject: [PATCH v2 10/24] ioctl_ns.2: Cast to 'unsigned long' rather 
-than 'long'
-  when printing with "%lx"
-
- From the email conversation:
-
-On 2020-09-11 09:24, Michael Kerrisk (man-pages) wrote:
- > Hi Alex,
- >
- > On 9/10/20 11:13 PM, Alejandro Colomar wrote:
- >> Both major(3) and minor(3) return an 'unsigned int',
- >> so there is no need to use a 'long' for printing.
- >> Moreover, it should have been 'unsigned long',
- >> as "%lx" expects an unsigned type.
- >
- > This may be true on Linux, but is not true on other systems.
- > For example, on HP-UX, according to one header file I'm
- > looking at, the return value is 'long'.
- >
- > These kinds of casts are intended to improve code portability
- > across UNIX implementations, so I think they should stay
- > (although, I do wonder if they would be even better as casts
- > to 'unsigned long')
- >
- > Thanks,
- >
- > Michael
-
-Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
----
-  man2/ioctl_ns.2 | 6 ++++--
-  1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/man2/ioctl_ns.2 b/man2/ioctl_ns.2
-index 818dde32c..8b8789d1f 100644
---- a/man2/ioctl_ns.2
-+++ b/man2/ioctl_ns.2
-@@ -317,7 +317,8 @@ main(int argc, char *argv[])
-          }
-          printf("Device/Inode of owning user namespace is: "
-                  "[%lx,%lx] / %ld\en",
--                (long) major(sb.st_dev), (long) minor(sb.st_dev),
-+                (unsigned long) major(sb.st_dev),
-+                (unsigned long) minor(sb.st_dev),
-                  (long) sb.st_ino);
-
-          close(userns_fd);
-@@ -346,7 +347,8 @@ main(int argc, char *argv[])
-              exit(EXIT_FAILURE);
-          }
-          printf("Device/Inode of parent namespace is: [%lx,%lx] / %ld\en",
--                (long) major(sb.st_dev), (long) minor(sb.st_dev),
-+                (unsigned long) major(sb.st_dev),
-+                (unsigned long) minor(sb.st_dev),
-                  (long) sb.st_ino);
-
-          close(parent_fd);
--- 
-2.28.0
+On Tue, Jan 22, 2019 at 02:11:24PM +0000, Christophe Leroy wrote:
+> Looks like book3s/32 doesn't set RI on machine check, so
+> checking RI before calling die() will always be fatal
+> allthought this is not an issue in most cases.
+> 
+> Fixes: b96672dd840f ("powerpc: Machine check interrupt is a non-maskable interrupt")
+> Fixes: daf00ae71dad ("powerpc/traps: restore recoverability of machine_check interrupts")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/powerpc/kernel/traps.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> index 64936b60d521..c740f8bfccc9 100644
+> --- a/arch/powerpc/kernel/traps.c
+> +++ b/arch/powerpc/kernel/traps.c
+> @@ -763,15 +763,15 @@ void machine_check_exception(struct pt_regs *regs)
+>  	if (check_io_access(regs))
+>  		goto bail;
+>  
+> -	/* Must die if the interrupt is not recoverable */
+> -	if (!(regs->msr & MSR_RI))
+> -		nmi_panic(regs, "Unrecoverable Machine check");
+> -
+>  	if (!nested)
+>  		nmi_exit();
+>  
+>  	die("Machine check", regs, SIGBUS);
+>  
+> +	/* Must die if the interrupt is not recoverable */
+> +	if (!(regs->msr & MSR_RI))
+> +		nmi_panic(regs, "Unrecoverable Machine check");
+> +
+>  	return;
+>  
+>  bail:
+> -- 
+> 2.13.3
+> 
