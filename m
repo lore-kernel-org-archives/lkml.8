@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C219C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1687A208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB18E22204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841966;
-	bh=ts5oWeF545x8yVXPV1jgSxK8OLtD4OAu6ZSBpIqSpDw=;
+	s=default; t=1599841967;
+	bh=m9tXc2nE7B4HdiF9Mv8gCgkhJ7eDPB67iMoOyQxPMuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ouJtVw35UMuhkPbamgsavCPyObOFDyDVwHnksAvY8987WBfwH9zOOlyLVhmRdAjFs
-	 Us3LEr4pypf4jJPr7SxJRICWd1MzakTglOxSvLoQrcfzqtPRcAjQvkbaRMcehJ7Xvp
-	 T3rONkfEd9G7K208CQMYtn0OqPUKPRE5CfbdqJBs=
+	b=qki7rplGY+HkmTl1Hn0U1GpZwULpRRhJOgYziqJAT0bVpxRJydrRH5ViUwdq8bV1J
+	 R3c7WjQLC1lRmNgvQ4pzZUaaRs9EhnOXEk1J6EAPvuFP4Yb/4eFlg85a6xXqohn2yt
+	 NjQHXQeb9Rzt1s5czYJadgQ/GqKB2vrH1nxxFJJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgIKQcn (ORCPT
+        id S1726643AbgIKQcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53400 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726466AbgIKPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:19:08 -0400
+        id S1726453AbgIKPTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:19:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BCA2245C;
-        Fri, 11 Sep 2020 12:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A6C0223FD;
+        Fri, 11 Sep 2020 12:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829186;
-        bh=ts5oWeF545x8yVXPV1jgSxK8OLtD4OAu6ZSBpIqSpDw=;
+        s=default; t=1599829147;
+        bh=m9tXc2nE7B4HdiF9Mv8gCgkhJ7eDPB67iMoOyQxPMuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0hqBdXfa+hp1FV2RfxAXDI2fM9nu6Jwurpu5pla8WdBpnaW5Dj17cAJBeQBMGUb67
-         BBWAnpUIFXwTHVEwGkfm5CcVUM41mHXRcfbRcwhDG0LJULZWsOSdzxHOGGFft0PKgi
-         0fjQ+x4PkVAbcQ4hx4hlpRpBy1q6VXDQrTiIgDiQ=
+        b=DLJXxoo1piSDFfg60UCIm0QIm9HQMd8EFwho2MmH8ThN3MzphB0TTWgWietHftFy+
+         EHzzxYKLeB/7DVAvjRM/2uxrJLXFJ6X4TyWGXBcJPDuKFtB0bE4My5EzcjRMwc0Xcx
+         bX8mAwtiP0m6ThA6Q+GGxuusCR5MTnz+/moSa1KA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 16/16] mptcp: free acked data before waiting for more memory
-Date:   Fri, 11 Sep 2020 14:47:33 +0200
-Message-Id: <20200911122500.382563283@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 4.14 03/12] vfio/type1: Support faulting PFNMAP vmas
+Date:   Fri, 11 Sep 2020 14:46:57 +0200
+Message-Id: <20200911122458.588557479@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
-References: <20200911122459.585735377@linuxfoundation.org>
+In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
+References: <20200911122458.413137406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,45 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 1cec170d458b1d18f6f1654ca84c0804a701c5ef ]
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-After subflow lock is dropped, more wmem might have been made available.
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
 
-This fixes a deadlock in mptcp_connect.sh 'mmap' mode: wmem is exhausted.
-But as the mptcp socket holds on to already-acked data (for retransmit)
-no wakeup will occur.
-
-Using 'goto restart' calls mptcp_clean_una(sk) which will free pages
-that have been acked completely in the mean time.
-
-Fixes: fb529e62d3f3 ("mptcp: break and restart in case mptcp sndbuf is full")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.14]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -772,7 +772,6 @@ fallback:
- restart:
- 	mptcp_clean_una(sk);
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -336,6 +336,32 @@ static int put_pfn(unsigned long pfn, in
+ 	return 0;
+ }
  
--wait_for_sndbuf:
- 	__mptcp_flush_join_list(msk);
- 	ssk = mptcp_subflow_get_send(msk);
- 	while (!sk_stream_memory_free(sk) ||
-@@ -873,7 +872,7 @@ wait_for_sndbuf:
- 				 */
- 				mptcp_set_timeout(sk, ssk);
- 				release_sock(ssk);
--				goto wait_for_sndbuf;
-+				goto restart;
- 			}
- 		}
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 			 int prot, unsigned long *pfn)
+ {
+@@ -375,12 +401,16 @@ static int vaddr_get_pfn(struct mm_struc
+ 
+ 	down_read(&mm->mmap_sem);
+ 
++retry:
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
  	}
+ 
+ 	up_read(&mm->mmap_sem);
 
 
