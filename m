@@ -2,138 +2,169 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D00C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C1DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160B8221EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599807298;
-	bh=LYU8Tb5GMA6mmuFbZxVtsFi/egUHKAmHaWZZIbnXOvo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BJFcIksOjktiqwobXPUU889NQ7+hc9jFH2yoXCyCKSwq2uEfsYbPj/DTst31yv52r
-	 Sim0iAzPsAbCsgswr/uCWRGKlQB23qcTizMs+APE8PDLAkzgUZjN3o3IIoGZTW0hJg
-	 94ErHR3RpvxNRwiV62vRlW/j31mqfF5Sdf2Wwlbw=
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7A221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725765AbgIKGy5 (ORCPT
+        id S1725776AbgIKG4t convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:54:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgIKGy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:54:56 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F097322205;
-        Fri, 11 Sep 2020 06:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599807295;
-        bh=LYU8Tb5GMA6mmuFbZxVtsFi/egUHKAmHaWZZIbnXOvo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JiQ0HGMpnHYgpuekKtUf+8YvvWXHzJEvW2KhxPV1s5oG+08DzzajE6E5TXHZ0XXAn
-         GD28lSc5mGYQpc+tH2JXNbqpTqYfAtLUFNTrchaT69hRx45fzt/oWcj542xAqWz2U6
-         +nsbHt0tt1JmvAU8oVP2XU3yOLPlFIHlOTX7QtZ4=
-Received: by mail-ej1-f50.google.com with SMTP id lo4so12302677ejb.8;
-        Thu, 10 Sep 2020 23:54:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530ef8wsbEoFpHReTp79IIScPGu6EQLEncwTcsZxS/pDIEa6CS0Z
-        mzijpHa4C0NWr7Us4tyYhHx1zE8FFHOUhTuLvAs=
-X-Google-Smtp-Source: ABdhPJwFL/7j5w+fjQzCHgD8gJxiV9FGUB6o363qCx8Mfmt5a32puUoIjMf+DBJD/BgaOz8YT/NIs5ONHQziHSJrLOA=
-X-Received: by 2002:a17:906:4046:: with SMTP id y6mr730092ejj.148.1599807293350;
- Thu, 10 Sep 2020 23:54:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200910175733.11046-1-krzk@kernel.org> <20200910175733.11046-2-krzk@kernel.org>
- <20200910182814.veviax3n377undkv@akan> <CAJKOXPdQJz7aLu4sjds46SiZwxvB-VMBR=stjpUme+8iEo+d-w@mail.gmail.com>
- <CAMuHMdVG6+BsTUxb4wcAwj1WK982S0k2RCxmb3x9gsOS2TphNw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVG6+BsTUxb4wcAwj1WK982S0k2RCxmb3x9gsOS2TphNw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 11 Sep 2020 08:54:40 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcSUY6aqvix7R0YkzQL9Mze9O8jrWLLxKoRyjHTRhrYLA@mail.gmail.com>
-Message-ID: <CAJKOXPcSUY6aqvix7R0YkzQL9Mze9O8jrWLLxKoRyjHTRhrYLA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/15] dt-bindings: gpio: convert bindings for NXP
- PCA953x family to dtschema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Nishanth Menon <nm@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
-        <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 11 Sep 2020 02:56:49 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:48119 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgIKG4s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:56:48 -0400
+Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 15FBBCED19;
+        Fri, 11 Sep 2020 09:03:41 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v1] Bluetooth: btusb: Add Qualcomm Bluetooth SoC WCN6855
+ support
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <0101017457c6b810-cb8b79ae-4663-436b-83d0-4c70c245bd25-000000@us-west-2.amazonses.com>
+Date:   Fri, 11 Sep 2020 08:56:45 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <2E48211B-D62D-43D8-9C97-014966FBB2CB@holtmann.org>
+References: <0101017457c6b810-cb8b79ae-4663-436b-83d0-4c70c245bd25-000000@us-west-2.amazonses.com>
+To:     Rocky Liao <rjliao@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 at 08:42, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Krzysztof,
->
-> On Thu, Sep 10, 2020 at 8:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On Thu, 10 Sep 2020 at 20:28, Nishanth Menon <nm@ti.com> wrote:
-> > > On 19:57-20200910, Krzysztof Kozlowski wrote:
-> > > [...]
-> > > > +  wakeup-source:
-> > > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > > +
-> > > > +patternProperties:
-> > > > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-> > >
-> > > I wonder if "hog" is too generic and might clash with "something-hog" in
-> > > the future?
-> >
-> > This pattern is already used in
-> > Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml. It will
-> > match only children and so far it did not find any other nodes in ARM
-> > and ARM64 dts. I don't expect clashes. Also the question is then - if
-> > one adds a child of GPIO expander named "foobar-hog" and it is not a
-> > GPIO hog, then what is it?
->
-> Perhaps you didn't find any other nodes as children of pca953x
-> controllers?
+Hi Rocky,
 
-There shouldn't be.. unless one makes some i2c-gpio controller under
-such GPIO expander. But now it wouldn't be instantiated as expander is
-not a bus.
+> This patch add support for WCN6855 i.e. patch and nvm download
+> support.
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+> drivers/bluetooth/btusb.c | 42 +++++++++++++++++++++++++++++++++++----
+> 1 file changed, 38 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index fe80588c7bd3..e51e754ca9b8 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -59,6 +59,7 @@ static struct usb_driver btusb_driver;
+> #define BTUSB_MEDIATEK		0x200000
+> #define BTUSB_WIDEBAND_SPEECH	0x400000
+> #define BTUSB_VALID_LE_STATES   0x800000
+> +#define BTUSB_QCA_WCN6855	0x1000000
+> 
+> static const struct usb_device_id btusb_table[] = {
+> 	/* Generic Bluetooth USB device */
+> @@ -273,6 +274,10 @@ static const struct usb_device_id blacklist_table[] = {
+> 	{ USB_DEVICE(0x13d3, 0x3496), .driver_info = BTUSB_QCA_ROME },
+> 	{ USB_DEVICE(0x13d3, 0x3501), .driver_info = BTUSB_QCA_ROME },
+> 
+> +	/* QCA WCN6855 chipset */
+> +	{ USB_DEVICE(0x0cf3, 0xe600), .driver_info = BTUSB_QCA_WCN6855 |
+> +						     BTUSB_WIDEBAND_SPEECH },
+> +
+> 	/* Broadcom BCM2035 */
+> 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
+> 	{ USB_DEVICE(0x0a5c, 0x200a), .driver_info = BTUSB_WRONG_SCO_MTU },
+> @@ -3391,6 +3396,26 @@ static int btusb_set_bdaddr_ath3012(struct hci_dev *hdev,
+> 	return 0;
+> }
+> 
+> +static int btusb_set_bdaddr_wcn6855(struct hci_dev *hdev,
+> +				const bdaddr_t *bdaddr)
+> +{
+> +	struct sk_buff *skb;
+> +	u8 buf[6];
+> +	long ret;
+> +
+> +	memcpy(buf, bdaddr, sizeof(bdaddr_t));
+> +
+> +	skb = __hci_cmd_sync(hdev, 0xfc14, sizeof(buf), buf, HCI_INIT_TIMEOUT);
+> +	if (IS_ERR(skb)) {
+> +		ret = PTR_ERR(skb);
+> +		bt_dev_err(hdev, "Change address command failed (%ld)", ret);
+> +		return ret;
+> +	}
+> +	kfree_skb(skb);
+> +
+> +	return 0;
+> +}
 
-> There are other hog nodes in other types of GPIO controllers. Typically
-> they're named after the purpose, e.g. "wifi-disable", "i2c3_mux_oe_n",
-> "pcie_sata_switch", "lcd0_mux".
->
-> IMHO it's a hog if it contains a "gpio-hog" property, regardless of node
-> naming.
+What is wrong with using qca_set_bdaddr() function.
 
-Yes. The question is then whether to expect the "hog" in name. Just
-like we expect for all other device nodes to represent the class.
+> +
+> #define QCA_DFU_PACKET_LEN	4096
+> 
+> #define QCA_GET_TARGET_VERSION	0x09
+> @@ -3428,6 +3453,8 @@ static const struct qca_device_info qca_devices_table[] = {
+> 	{ 0x00000201, 28, 4, 18 }, /* Rome 2.1 */
+> 	{ 0x00000300, 28, 4, 18 }, /* Rome 3.0 */
+> 	{ 0x00000302, 28, 4, 18 }, /* Rome 3.2 */
+> +	{ 0x00130100, 40, 4, 18 }, /* WCN6855 1.0 */
+> +	{ 0x00130200, 40, 4, 18 }  /* WCN6855 2.0 */
+> };
+> 
+> static int btusb_qca_send_vendor_req(struct usb_device *udev, u8 request,
+> @@ -3530,7 +3557,7 @@ static int btusb_setup_qca_load_rampatch(struct hci_dev *hdev,
+> 	struct qca_rampatch_version *rver;
+> 	const struct firmware *fw;
+> 	u32 ver_rom, ver_patch;
+> -	u16 rver_rom, rver_patch;
+> +	u32 rver_rom, rver_patch;
+> 	char fwname[64];
+> 	int err;
+> 
+> @@ -3552,6 +3579,9 @@ static int btusb_setup_qca_load_rampatch(struct hci_dev *hdev,
+> 	rver_rom = le16_to_cpu(rver->rom_version);
+> 	rver_patch = le16_to_cpu(rver->patch_version);
+> 
+> +	if (ver_rom & ~0xffffU)
+> +		rver_rom = *(u16 *)(fw->data + 16) << 16 | rver_rom;
+> +
 
-Best regards,
-Krzysztof
+You will require proper unaligned access unless you can guarantee things are aligned properly. And since I assume the firmware data is in a specific endian format, you need to convert it correctly.
+
+In addition, you change the variables to u32, but still use le16_to_cpu function above. Something is not adding up. Have you actually run a sparse check?
+
+> 	bt_dev_info(hdev, "QCA: patch rome 0x%x build 0x%x, "
+> 		    "firmware rome 0x%x build 0x%x",
+> 		    rver_rom, rver_patch, ver_rom, ver_patch);
+> @@ -3625,9 +3655,6 @@ static int btusb_setup_qca(struct hci_dev *hdev)
+> 		return err;
+> 
+> 	ver_rom = le32_to_cpu(ver.rom_version);
+> -	/* Don't care about high ROM versions */
+> -	if (ver_rom & ~0xffffU)
+> -		return 0;
+> 
+> 	for (i = 0; i < ARRAY_SIZE(qca_devices_table); i++) {
+> 		if (ver_rom == qca_devices_table[i].rom_version)
+> @@ -4063,6 +4090,13 @@ static int btusb_probe(struct usb_interface *intf,
+> 		btusb_check_needs_reset_resume(intf);
+> 	}
+> 
+> +	if (id->driver_info & BTUSB_QCA_WCN6855) {
+> +		data->setup_on_usb = btusb_setup_qca;
+> +		hdev->set_bdaddr = btusb_set_bdaddr_wcn6855;
+> +		hdev->cmd_timeout = btusb_qca_cmd_timeout;
+> +		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+> +	}
+> +
+
+Regards
+
+Marcel
+
