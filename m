@@ -2,33 +2,32 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5249C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DA4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 746C7206A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493E5204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIKIuX (ORCPT
+        id S1725811AbgIKIuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:50:23 -0400
+        Fri, 11 Sep 2020 04:50:22 -0400
 Received: from mx.socionext.com ([202.248.49.38]:29476 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgIKIuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:50:17 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 11 Sep 2020 17:50:16 +0900
+        id S1725550AbgIKIuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:50:15 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 11 Sep 2020 17:50:13 +0900
 Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 252741800EE;
-        Fri, 11 Sep 2020 17:50:16 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 17:50:16 +0900
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 68CB260060;
+        Fri, 11 Sep 2020 17:50:13 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 11 Sep 2020 17:50:13 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 6316D1A0508;
-        Fri, 11 Sep 2020 17:50:15 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id AE0571A050A;
+        Fri, 11 Sep 2020 17:50:12 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -39,69 +38,36 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 3/3] PCI: keystone: Remove iATU register mapping
-Date:   Fri, 11 Sep 2020 17:50:03 +0900
-Message-Id: <1599814203-14441-4-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/3] PCI: dwc: Move iATU register mapping to common framework
+Date:   Fri, 11 Sep 2020 17:50:00 +0900
+Message-Id: <1599814203-14441-1-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599814203-14441-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1599814203-14441-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After applying "PCI: dwc: Add common iATU register support",
-there is no need to set own iATU in the Keystone driver itself.
+This series is split from the previous patches:
+https://www.spinics.net/lists/linux-pci/msg97608.html
+"[PATCH v6 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller"
 
-Cc: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pci-keystone.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+This moves iATU register mapping in the Keystone driver to common
+framework. And this adds "iatu" property description to the dt-bindings
+for UniPhier PCIe host controller.
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index b554812..a222728 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1154,7 +1154,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	struct keystone_pcie *ks_pcie;
- 	struct device_link **link;
- 	struct gpio_desc *gpiod;
--	void __iomem *atu_base;
- 	struct resource *res;
- 	unsigned int version;
- 	void __iomem *base;
-@@ -1275,23 +1274,12 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 		goto err_get_sync;
- 	}
- 
--	if (pci->version >= 0x480A) {
--		atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
--		if (IS_ERR(atu_base)) {
--			ret = PTR_ERR(atu_base);
--			goto err_get_sync;
--		}
--
--		pci->atu_base = atu_base;
--
-+	if (pci->version >= 0x480A)
- 		ret = ks_pcie_am654_set_mode(dev, mode);
--		if (ret < 0)
--			goto err_get_sync;
--	} else {
-+	else
- 		ret = ks_pcie_set_mode(dev);
--		if (ret < 0)
--			goto err_get_sync;
--	}
-+	if (ret < 0)
-+		goto err_get_sync;
- 
- 	switch (mode) {
- 	case DW_PCIE_RC_TYPE:
+This has been confirmed with PCIe version 4.80 controller on UniPhier platform.
+Please test this series on Keystone platform.
+
+Kunihiko Hayashi (3):
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: dwc: Add common iATU register support
+  PCI: keystone: Remove iATU register mapping
+
+ .../devicetree/bindings/pci/uniphier-pcie.txt        |  1 +
+ drivers/pci/controller/dwc/pci-keystone.c            | 20 ++++----------------
+ drivers/pci/controller/dwc/pcie-designware.c         |  8 +++++++-
+ 3 files changed, 12 insertions(+), 17 deletions(-)
+
 -- 
 2.7.4
 
