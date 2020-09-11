@@ -2,107 +2,168 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B385C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6812C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB0421D40
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTZ0VJBs"
+	by mail.kernel.org (Postfix) with ESMTP id 9F11F21D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgIKDSX (ORCPT
+        id S1725834AbgIKDUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgIKDSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:18:15 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF7AC061573;
-        Thu, 10 Sep 2020 20:18:14 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w3so10865906ljo.5;
-        Thu, 10 Sep 2020 20:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zdf2mY0Hpp+zhTED7uaaOQ2cMS5QXQ9s91tBQuejTgo=;
-        b=GTZ0VJBs0+r85HTOcssbbpkMyr9mZ5OeWIdDfFFJA9JWUlE34+guN4WfJMgeXrxRLq
-         QaBGugeqSPXQkw4ooLb/WqhTBECmzx4rhwvbguOteDedJXVGlFdzjs59slGqNAYTT5aS
-         /HnnJlAogmWOimEnITOvzaN3acxGLFvmlH+m/vImtYOjxdea54hCBBpMlwJb9YHW+a7T
-         wylUBmgXUYHKm3Q2J3ODVEBOl9TGkcM2pwrdOZ1w8JtOs6rUjVjZHB+kpxnLDICH5awp
-         nRi5/fUahAD/K22h2Y+0QBHxnXPgMJ/L9Y4BpdBTdO+GZXVQ+PsO3HPhruNVIEC1S6f9
-         xHLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zdf2mY0Hpp+zhTED7uaaOQ2cMS5QXQ9s91tBQuejTgo=;
-        b=RlTHVyfIkBp0zlNM1wvKZGDVUFeWGyWAW3F5SMZdFPsCIkSTd8CSV/4bB+mB72cqE0
-         vA+SS3Z68xnO8eyd9Fk1Auqx6joFVZOh00X4QoI/9qNRoS3fqmS0r6IFWkJ9oBMAeurv
-         WpSNoIxgF+ud73TKBOcOvAy1Zwvd0/Bz14udk5SRYiwrygu1j9I2ueAkgbYc8R8pcwgC
-         nujyOparBD69tEBT/dLYTKIIUprEa2Rhd0QdYXPC5cz0m3L/pclneP+sAWPNZloTH4QM
-         BU0y7SWCSyOcljalQwHi1ZmsLvhhobcqAkuYaoHIbMlLoLDRt8ICrf8V3JQue+qRZY4G
-         W1dg==
-X-Gm-Message-State: AOAM532T+Ij+vPAskgLSBtpaWgmPHzL9ue+GW+M+6BjXBex1BSUGV5zC
-        ctQ3nJM3ea+IpEecsHIzNqcddPqojYrTkFPIEiY=
-X-Google-Smtp-Source: ABdhPJyYAl75efBV+5KmHCF0d/2RYY9Sn7aNJx1H5//c8E2GxJK93up+JiNHw1s73brzahSfIWqMcumFUA45tjT63to=
-X-Received: by 2002:a2e:8593:: with SMTP id b19mr5644163lji.290.1599794293056;
- Thu, 10 Sep 2020 20:18:13 -0700 (PDT)
+        Thu, 10 Sep 2020 23:20:05 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53688 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725300AbgIKDUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 23:20:05 -0400
+Received: from [10.130.0.155] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr9_a7FpfRnEUAA--.4009S3;
+        Fri, 11 Sep 2020 11:19:55 +0800 (CST)
+Subject: Re: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device()
+ during shutdown
+To:     Oliver O'Halloran <oohall@gmail.com>
+References: <20200910202106.GA811000@bjorn-Precision-5520>
+ <b8f0d64d-8a29-aa4f-c764-397e87527600@loongson.cn>
+ <CAOSf1CGM0SV2ux-TYv_N2frgZtqin8yfvh1wUDj+oMVmjr3GHQ@mail.gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <da291cff-4f56-c849-f0c3-3af1115bd06e@loongson.cn>
+Date:   Fri, 11 Sep 2020 11:19:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20200910201956.GA24190@paulmck-ThinkPad-P72> <20200910202052.5073-4-paulmck@kernel.org>
-In-Reply-To: <20200910202052.5073-4-paulmck@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 10 Sep 2020 20:18:01 -0700
-Message-ID: <CAADnVQK4Rgrzq+cUKCMkr5anZF+UbHmAc7-FH4BjA23aMM03rQ@mail.gmail.com>
-Subject: Re: [PATCH RFC tip/core/rcu 4/4] rcu-tasks: Shorten per-grace-period
- sleep for RCU Tasks Trace
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, dipankar@in.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@redhat.com>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOSf1CGM0SV2ux-TYv_N2frgZtqin8yfvh1wUDj+oMVmjr3GHQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxr9_a7FpfRnEUAA--.4009S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAr45Xw1rZFW8KF4fCFWUCFg_yoW5ZF1UpF
+        W3Ja4vk3yrWF12gwsIqr1UXFy5JwsFy34rtr18Gw43Cr4IyFyrtFWxta4Yva4UXa9Y9F12
+        qa98ta48Way5JaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+        W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
+        67vIY487MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VUj8nY7UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 1:20 PM <paulmck@kernel.org> wrote:
->
-> From: "Paul E. McKenney" <paulmck@kernel.org>
->
-> The various RCU tasks flavors currently wait 100 milliseconds between each
-> grace period in order to prevent CPU-bound loops and to favor efficiency
-> over latency.  However, RCU Tasks Trace needs to have a grace-period
-> latency of roughly 25 milliseconds, which is completely infeasible given
-> the 100-millisecond per-grace-period sleep.  This commit therefore reduces
-> this sleep duration to 5 milliseconds (or one jiffy, whichever is longer)
-> in kernels built with CONFIG_TASKS_TRACE_RCU_READ_MB=y.
+On 09/11/2020 10:35 AM, Oliver O'Halloran wrote:
+> On Fri, Sep 11, 2020 at 11:55 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>> On 09/11/2020 04:21 AM, Bjorn Helgaas wrote:
+>>> [+cc Huacai]
+>>>
+>>> On Thu, Sep 10, 2020 at 02:41:39PM -0500, Bjorn Helgaas wrote:
+>>>> On Sat, Sep 05, 2020 at 04:33:26PM +0800, Tiezhu Yang wrote:
+>>>>> After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
+>>>>> during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
+>>>>> services during shutdown"), it also calls pci_disable_device() during
+>>>>> shutdown, this seems unnecessary, so just remove it.
+>>>> I would like to get rid of the portdrv completely by folding its
+>>>> functionality into the PCI core itself, so there would be no portdrv
+>>>> probe or remove.
+>>>>
+>>>> Does this solve a problem?
+>> Yes, sometimes it can not shutdown or reboot normally with
+>> pci_disable_device().
+> Do you have any more details about what goes wrong here?
 
-The commit log is either misleading or wrong?
-If I read the code correctly in CONFIG_TASKS_TRACE_RCU_READ_MB=y
-case the existing HZ/10 "paranoid sleep" is preserved.
-It's for the MB=n case it is reduced to HZ/200.
-Also I don't understand why you're talking about milliseconds but
-all numbers are HZ based. HZ/10 gives different number of
-milliseconds depending on HZ.
+This issue is related with the operation "pci_command &= 
+~PCI_COMMAND_MASTER;"
+in the following function:
+
+drivers/pci/pci.c
+static void do_pci_disable_device(struct pci_dev *dev)
+{
+     u16 pci_command;
+
+     pci_read_config_word(dev, PCI_COMMAND, &pci_command);
+     if (pci_command & PCI_COMMAND_MASTER) {
+         pci_command &= ~PCI_COMMAND_MASTER;
+         pci_write_config_word(dev, PCI_COMMAND, pci_command);
+     }
+
+     pcibios_disable_device(dev);
+}
+
+When remove "pci_command &= ~PCI_COMMAND_MASTER;", it can work well.
+
+> Leaving
+> devices enabled when actually shutting down probably doesn't matter.
+
+Yes, I think so too.
+
+> However, .shutdown() is also used when kexec()ing into a new kernel
+> and we probably should be disabling devices before handing over to the
+> new kernel.
+>
+> Is the real issue that we're closing the bridge windows before the
+> endpoint drivers have had a chance to clean up?
+
+I notice that check kexec_in_progress first before call pci_disable_devie()
+in pci_device_shutdown(), can we do the similar thing in pcie?
+
+drivers/pci/pci-driver.c
+static void pci_device_shutdown(struct device *dev)
+{
+     struct pci_dev *pci_dev = to_pci_dev(dev);
+     struct pci_driver *drv = pci_dev->driver;
+
+     pm_runtime_resume(dev);
+
+     if (drv && drv->shutdown)
+         drv->shutdown(pci_dev);
+
+     /*
+      * If this is a kexec reboot, turn off Bus Master bit on the
+      * device to tell it to not continue to do DMA. Don't touch
+      * devices in D3cold or unknown states.
+      * If it is not a kexec reboot, firmware will hit the PCI
+      * devices with big hammer and stop their DMA any way.
+      */
+     if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+         pci_clear_master(pci_dev);
+}
+
+Something like this:
+
+diff --git a/drivers/pci/pcie/portdrv_core.c 
+b/drivers/pci/pcie/portdrv_core.c
+index 50a9522..3de1dab 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -491,7 +491,8 @@ void pcie_port_device_remove(struct pci_dev *dev)
+  {
+         device_for_each_child(&dev->dev, NULL, remove_iter);
+         pci_free_irq_vectors(dev);
+-       pci_disable_device(dev);
++       if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
++               pci_disable_device(dev);
+  }
+
+  /**
+
+>
+> Oliver
+
