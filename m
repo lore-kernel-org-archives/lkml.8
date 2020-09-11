@@ -2,84 +2,62 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A062FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD5022204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF33C21D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgIKHIu (ORCPT
+        id S1725791AbgIKHJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:08:50 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42702 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgIKHIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:08:49 -0400
-Received: from marcel-macbook.fritz.box (p4ff9f430.dip0.t-ipconnect.de [79.249.244.48])
-        by mail.holtmann.org (Postfix) with ESMTPSA id CBB8FCED19;
-        Fri, 11 Sep 2020 09:15:42 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v3 2/2] Bluetooth: sco: new getsockopt options
- BT_SNDMTU/BT_RCVMTU
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-Date:   Fri, 11 Sep 2020 09:08:46 +0200
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        =?utf-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org, josephsih@google.com,
-        Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <758FB16C-5210-4790-8B54-6BA400CB208D@holtmann.org>
-References: <20200910060403.144524-1-josephsih@chromium.org>
- <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-To:     Joseph Hwang <josephsih@chromium.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
+        Fri, 11 Sep 2020 03:09:58 -0400
+Received: from verein.lst.de ([213.95.11.211]:35756 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgIKHJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:09:54 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DFED868B02; Fri, 11 Sep 2020 09:09:50 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 09:09:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        iommu@lists.linux-foundation.org, Tomasz Figa <tfiga@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 04/12] dma-mapping: fix DMA_OPS dependencies
+Message-ID: <20200911070950.GB22394@lst.de>
+References: <20200908164758.3177341-1-hch@lst.de> <20200908164758.3177341-5-hch@lst.de> <1e3c7094-62da-6e8c-0a41-0bc63dd3db68@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e3c7094-62da-6e8c-0a41-0bc63dd3db68@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joseph,
+On Thu, Sep 10, 2020 at 01:55:37PM +0100, Robin Murphy wrote:
+> AFAICS all three of these bus drivers are only proxying a struct 
+> dma_map_ops * pointer around, so if they used the set_dma_ops() helper they 
+> shouldn't even need these selects at all. Only INTEL_MIC_HOST appears to 
+> have a logical dependency on DMA_OPS for actual functionality.
+>
+> However, I have a vague feeling you might not be fond of those dma_ops 
+> helpers, and I have no great objection to this one-liner as-is, so (modulo 
+> the couple of commit message typos),
 
-> This patch defines new getsockopt options BT_SNDMTU/BT_RCVMTU
-> for SCO socket to be compatible with other bluetooth sockets.
-> These new options return the same value as option SCO_OPTIONS
-> which is already present on existing kernels.
-> 
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> ---
-> 
-> Changes in v3:
-> - Fixed the commit message.
-> 
-> Changes in v2:
-> - Used BT_SNDMTU/BT_RCVMTU instead of creating a new opt name.
-> - Used the existing conn->mtu instead of creating a new member
->  in struct sco_pinfo.
-> - Noted that the old SCO_OPTIONS in sco_sock_getsockopt_old()
->  would just work as it uses sco_pi(sk)->conn->mtu.
-> 
-> net/bluetooth/sco.c | 6 ++++++
-> 1 file changed, 6 insertions(+)
-
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
-
+The problem with these inherіtances is that they don't actually work
+for the general case.  You'd also need to inherity things like the
+dma ranges, the bus limits, etc, etc.  So we need to kill them instead.
+That whole mic/vop case is even worse than that with it's weird set
+of chained dma ops that seems to implement some kind of device side
+iommu that isn't in scope for the DMA API at all.
