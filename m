@@ -2,221 +2,319 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A299AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75347C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41470206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JJR/R2cK"
+	by mail.kernel.org (Postfix) with ESMTP id 34AD220719
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIKIfM (ORCPT
+        id S1725828AbgIKIfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:35:12 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:27191 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKIfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:35:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1599813302;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=7sx4/EPNUP09DwZc2KWs5gmrSO/3qsHOgl5SFdZtzfk=;
-        b=JJR/R2cK3UENYguz9SU5aSJP754bpZrYivWGarMPO6HshroE/IcehOPwg2yw7w4DTS
-        zd4E0j2FkGCcjJIYxiwfOAg0ddEQhOq9yxbFVWj5deFAAi1HrMhxNkYdlFh517r7hEOD
-        EsSLo0Kw9hsF6JKiz520RNfurX5w3R2Kki19taCQfE3l9jKjpViwL5g9WzU2q3xAi3ui
-        Zt20cBYzDPEfConBD5ULwkT7K4puSrLpnyCYAaxkeE5TbfjYxmuJGIlR6xoR8eMo7rDO
-        g71fKq49geCo24nqJ2Hw2yZSPS9OGGczcAEaKSts2jMzuOfBhiiiomS/TrN4FPmkAId/
-        sg5Q==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEIdhPgVC7iy9yGr7ESbX"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w8B8Z0Lek
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 11 Sep 2020 10:35:00 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 10:34:55 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
- OPP core
-Message-ID: <20200911083455.GA1591@gerhold.net>
-References: <20200826093328.88268-1-stephan@gerhold.net>
- <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
- <20200827114422.GA1784@gerhold.net>
- <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
- <20200828095706.GA1865@gerhold.net>
+        Fri, 11 Sep 2020 04:35:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11815 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725710AbgIKIfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:35:30 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0BD3BA509FB866CF4467;
+        Fri, 11 Sep 2020 16:35:26 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.103) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 16:35:20 +0800
+Subject: Re: [RFC PATCH V4] iomap: add support to track dirty state of sub
+ pages
+From:   "yukuai (C)" <yukuai3@huawei.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
+        <david@fromorbit.com>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+References: <20200821123306.1658495-1-yukuai3@huawei.com>
+ <20200821124424.GQ17456@casper.infradead.org>
+ <7fb4bb5a-adc7-5914-3aae-179dd8f3adb1@huawei.com>
+Message-ID: <a87e93cc-6faf-64fb-add8-39bfcd7febba@huawei.com>
+Date:   Fri, 11 Sep 2020 16:35:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828095706.GA1865@gerhold.net>
+In-Reply-To: <7fb4bb5a-adc7-5914-3aae-179dd8f3adb1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.103]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+Hi,
 
-On Fri, Aug 28, 2020 at 11:57:28AM +0200, Stephan Gerhold wrote:
-> On Fri, Aug 28, 2020 at 12:05:11PM +0530, Viresh Kumar wrote:
-> > On 27-08-20, 13:44, Stephan Gerhold wrote:
-> > > Hmm. Actually I was using this parameter for initial testing, and forced
-> > > on the power domains from the qcom-cpufreq-nvmem driver. For my v1 patch
-> > > I wanted to enable the power domains in dev_pm_opp_set_rate(), so there
-> > > using the virt_devs parameter was not possible.
-> > 
-> > Right, as we really do not want to enable it there and leave it for
-> > the real consumers to handle.
-> > 
-> > > On the other hand, creating the device links would be possible from the
-> > > platform driver by using the parameter.
-> > 
-> > Right.
-> > 
-> > > > And so I think again if this patch should be picked instead of letting
-> > > > the platform handle this ?
-> > > 
-> > > It seems like originally the motivation for the parameter was that
-> > > cpufreq consumers do *not* need to power on the power domains:
-> > > 
-> > > Commit 17a8f868ae3e ("opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()"):
-> > >  "The cpufreq drivers don't need to do runtime PM operations on
-> > >   the virtual devices returned by dev_pm_domain_attach_by_name() and so
-> > >   the virtual devices weren't shared with the callers of
-> > >   dev_pm_opp_attach_genpd() earlier.
-> > > 
-> > >   But the IO device drivers would want to do that. This patch updates
-> > >   the prototype of dev_pm_opp_attach_genpd() to accept another argument
-> > >   to return the pointer to the array of genpd virtual devices."
-> > 
-> > Not just that I believe. There were also arguments that only the real
-> > consumer knows how to handle multiple power domains. For example for a
-> > USB or Camera module which can work in multiple modes, we may want to
-> > enable only one power domain in say slow mode and another power domain
-> > in fast mode. And so these kind of complex behavior/choices better be
-> > left for the end consumer and not try to handle this generically in
-> > the OPP core.
-> > 
-> [...]
+Sorry that after copy and paste, the content of the patch somehow 
+changed and looks strange.
+
+Best regards,
+Yu Kuai
+
+On 2020/09/11 16:27, yukuai (C) wrote:
+> On 2020/08/21 20:44, Matthew Wilcox wrote:
+>> On Fri, Aug 21, 2020 at 08:33:06PM +0800, Yu Kuai wrote:
+>>> changes from v3: - add IOMAP_STATE_ARRAY_SIZE - replace set_bit / 
+>>> clear_bit with bitmap_set / bitmap_clear - move 
+>>> iomap_set_page_dirty() out of 'iop->state_lock' - merge 
+>>> iomap_set/clear_range_dirty() and iomap_iop_clear/clear_range_dirty()
+>>
+>> I'm still working on the iomap parts of the THP series (fixing up 
+>> invalidatepage right now), but here are some of the relevant bits 
+>> (patch series to follow)
+>>
 > 
-> It seems to me that there is more work needed to make such a use case
-> really work, but it's hard to speculate without a real example.
+> Hi, Matthew
 > 
-
-So it seems like we have a real example now. :)
-
-As mentioned in my other mail [1] it turns out I actually have such a
-use case. I briefly explained it in [2], basically the clock that
-provides higher CPU frequencies has some voltage requirements that
-should be voted for using a power domain.
-
-The clock that provides the lower CPU frequencies has no such
-requirement, so I need to scale (and power on) a power domain only for
-some of the OPPs.
-
-[1]: https://lore.kernel.org/linux-pm/20200831154938.GA33622@gerhold.net/
-[2]: https://lore.kernel.org/linux-arm-msm/20200910162610.GA7008@gerhold.net/
-
-So I think it would be good to discuss this use case first before we
-decide on this patch (how to enable power domains managed by the OPP
-core). I think there are two problems that need to be solved:
-
-1. How can we drop our performance state votes for some of the OPPs?
-   I explained that problem earlier already:
-
+> Since your THP iomap patches were reviewed, I made some modifications
+> based on these patches.
 > 
-> I was thinking about something like that, but can you actually drop
-> your performance state vote for one of the power domains using
-> "required-opps"?
+> Best regards,
+> Yu Kuai
 > 
-> At the moment it does not seem possible. I tried adding a special OPP
-> using opp-level = <0> to reference that from required-opps, but the OPP
-> core does not allow this:
+> ---
+>   fs/iomap/buffered-io.c | 92 +++++++++++++++++++++++++++++++++---------
+>   1 file changed, 74 insertions(+), 18 deletions(-)
 > 
-> 	vddcx: Not all nodes have performance state set (7: 6)
-> 	vddcx: Failed to add OPP table for index 0: -2
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index edf5eea56cf5..bc7f57748be8 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -23,13 +23,17 @@
 > 
-> So the "virt_devs" parameter would allow you to disable the power
-> domain, but not to drop your performance state vote (you could only vote
-> for the lowest OPP, not 0...)
+>   /*
+>    * Structure allocated for each page or THP when block size < page size
+> - * to track sub-page uptodate status and I/O completions.
+> + * to track sub-page status and I/O completions.
+>    */
+>   struct iomap_page {
+>       atomic_t        read_bytes_pending;
+>       atomic_t        write_bytes_pending;
+> -    spinlock_t        uptodate_lock;
+> -    unsigned long        uptodate[];
+> +    spinlock_t        state_lock;
+> +    /*
+> +     * The first half bits are used to track sub-page uptodate status,
+> +     * the second half bits are for dirty status.
+> +     */
+> +    unsigned long        state[];
+>   };
+> 
+>   static inline struct iomap_page *to_iomap_page(struct page *page)
+> @@ -57,9 +61,9 @@ iomap_page_create(struct inode *inode, struct page *page)
+>       if (iop || nr_blocks <= 1)
+>           return iop;
+> 
+> -    iop = kzalloc(struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
+> +    iop = kzalloc(struct_size(iop, state, BITS_TO_LONGS(2 * nr_blocks)),
+>               GFP_NOFS | __GFP_NOFAIL);
+> -    spin_lock_init(&iop->uptodate_lock);
+> +    spin_lock_init(&iop->state_lock);
+>       attach_page_private(page, iop);
+>       return iop;
+>   }
+> @@ -74,7 +78,7 @@ iomap_page_release(struct page *page)
+>           return;
+>       WARN_ON_ONCE(atomic_read(&iop->read_bytes_pending));
+>       WARN_ON_ONCE(atomic_read(&iop->write_bytes_pending));
+> -    WARN_ON_ONCE(bitmap_full(iop->uptodate, nr_blocks) !=
+> +    WARN_ON_ONCE(bitmap_full(iop->state, nr_blocks) !=
+>               PageUptodate(page));
+>       kfree(iop);
+>   }
+> @@ -105,7 +109,7 @@ iomap_adjust_read_range(struct inode *inode, struct 
+> iomap_page *iop,
+> 
+>           /* move forward for each leading block marked uptodate */
+>           for (i = first; i <= last; i++) {
+> -            if (!test_bit(i, iop->uptodate))
+> +            if (!test_bit(i, iop->state))
+>                   break;
+>               *pos += block_size;
+>               poff += block_size;
+> @@ -115,7 +119,7 @@ iomap_adjust_read_range(struct inode *inode, struct 
+> iomap_page *iop,
+> 
+>           /* truncate len if we find any trailing uptodate block(s) */
+>           for ( ; i <= last; i++) {
+> -            if (test_bit(i, iop->uptodate)) {
+> +            if (test_bit(i, iop->state)) {
+>                   plen -= (last - i + 1) * block_size;
+>                   last = i - 1;
+>                   break;
+> @@ -139,6 +143,55 @@ iomap_adjust_read_range(struct inode *inode, struct 
+> iomap_page *iop,
+>       *lenp = plen;
+>   }
+> 
+> +static void
+> +iomap_set_range_dirty(struct page *page, unsigned int off,
+> +        unsigned int len)
+> +{
+> +    struct inode *inode = page->mapping->host;
+> +    unsigned int blocks_per_page = i_blocks_per_page(inode, page);
+> +    unsigned int first = (off >> inode->i_blkbits) + blocks_per_page;
+> +    unsigned int last = ((off + len - 1) >> inode->i_blkbits) + 
+> blocks_per_page;
+> +    unsigned long flags;
+> +    struct iomap_page *iop;
+> +
+> +    if (PageError(page))
+> +        return;
+> +
+> +    if (len)
+> +        iomap_set_page_dirty(page);
+> +
+> +    if (!page_has_private(page))
+> +        return;
+> +
+> +    iop = to_iomap_page(page);
+> +    spin_lock_irqsave(&iop->state_lock, flags);
+> +    bitmap_set(iop->state, first, last - first + 1);
+> +    spin_unlock_irqrestore(&iop->state_lock, flags);
+> +}
+> +
+> +static void
+> +iomap_clear_range_dirty(struct page *page, unsigned int off,
+> +        unsigned int len)
+> +{
+> +    struct inode *inode = page->mapping->host;
+> +    unsigned int blocks_per_page = i_blocks_per_page(inode, page);
+> +    unsigned int first = (off >> inode->i_blkbits) + blocks_per_page;
+> +    unsigned int last = ((off + len - 1) >> inode->i_blkbits) + 
+> blocks_per_page;
+> +    unsigned long flags;
+> +    struct iomap_page *iop;
+> +
+> +    if (PageError(page))
+> +        return;
+> +
+> +    if (!page_has_private(page))
+> +        return;
+> +
+> +    iop = to_iomap_page(page);
+> +    spin_lock_irqsave(&iop->state_lock, flags);
+> +    bitmap_clear(iop->state, first, last - first + 1);
+> +    spin_unlock_irqrestore(&iop->state_lock, flags);
+> +}
+> +
+>   static void
+>   iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned 
+> len)
+>   {
+> @@ -148,11 +201,11 @@ iomap_iop_set_range_uptodate(struct page *page, 
+> unsigned off, unsigned len)
+>       unsigned last = (off + len - 1) >> inode->i_blkbits;
+>       unsigned long flags;
+> 
+> -    spin_lock_irqsave(&iop->uptodate_lock, flags);
+> -    bitmap_set(iop->uptodate, first, last - first + 1);
+> -    if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
+> +    spin_lock_irqsave(&iop->state_lock, flags);
+> +    bitmap_set(iop->state, first, last - first + 1);
+> +    if (bitmap_full(iop->state, i_blocks_per_page(inode, page)))
+>           SetPageUptodate(page);
+> -    spin_unlock_irqrestore(&iop->uptodate_lock, flags);
+> +    spin_unlock_irqrestore(&iop->state_lock, flags);
+>   }
+> 
+>   static void
+> @@ -445,7 +498,7 @@ iomap_is_partially_uptodate(struct page *page, 
+> unsigned long from,
+> 
+>       if (iop) {
+>           for (i = first; i <= last; i++)
+> -            if (!test_bit(i, iop->uptodate))
+> +            if (!test_bit(i, iop->state))
+>                   return 0;
+>           return 1;
+>       }
+> @@ -683,7 +736,7 @@ static size_t __iomap_write_end(struct inode *inode, 
+> loff_t pos, size_t len,
+>       if (unlikely(copied < len && !PageUptodate(page)))
+>           return 0;
+>       iomap_set_range_uptodate(page, offset_in_page(pos), len);
+> -    iomap_set_page_dirty(page);
+> +    iomap_set_range_dirty(page, offset_in_page(pos), len);
+>       return copied;
+>   }
+> 
+> @@ -997,7 +1050,6 @@ iomap_page_mkwrite_actor(struct inode *inode, 
+> loff_t pos, loff_t length,
+>       } else {
+>           WARN_ON_ONCE(!PageUptodate(page));
+>           iomap_page_create(inode, page);
+> -        set_page_dirty(page);
+>       }
+> 
+>       return length;
+> @@ -1007,7 +1059,7 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault 
+> *vmf, const struct iomap_ops *ops)
+>   {
+>       struct page *page = vmf->page;
+>       struct inode *inode = file_inode(vmf->vma->vm_file);
+> -    unsigned long length;
+> +    unsigned int length, dirty_bits;
+>       loff_t offset;
+>       ssize_t ret;
+> 
+> @@ -1016,6 +1068,7 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault 
+> *vmf, const struct iomap_ops *ops)
+>       if (ret < 0)
+>           goto out_unlock;
+>       length = ret;
+> +    dirty_bits = ret;
+> 
+>       offset = page_offset(page);
+>       while (length > 0) {
+> @@ -1028,6 +1081,7 @@ vm_fault_t iomap_page_mkwrite(struct vm_fault 
+> *vmf, const struct iomap_ops *ops)
+>           length -= ret;
+>       }
+> 
+> +    iomap_set_range_dirty(page, 0, dirty_bits);
+>       wait_for_stable_page(page);
+>       return VM_FAULT_LOCKED;
+>   out_unlock:
+> @@ -1340,11 +1394,12 @@ iomap_writepage_map(struct iomap_writepage_ctx 
+> *wpc,
+>       struct iomap_page *iop = to_iomap_page(page);
+>       struct iomap_ioend *ioend, *next;
+>       unsigned len = i_blocksize(inode);
+> +    unsigned int blocks_per_page = i_blocks_per_page(inode, page);
+>       u64 file_offset; /* file offset of page */
+>       int error = 0, count = 0, i;
+>       LIST_HEAD(submit_list);
+> 
+> -    WARN_ON_ONCE(i_blocks_per_page(inode, page) > 1 && !iop);
+> +    WARN_ON_ONCE(blocks_per_page > 1 && !iop);
+>       WARN_ON_ONCE(iop && atomic_read(&iop->write_bytes_pending) != 0);
+> 
+>       /*
+> @@ -1355,7 +1410,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+>       for (i = 0, file_offset = page_offset(page);
+>            i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
+>            i++, file_offset += len) {
+> -        if (iop && !test_bit(i, iop->uptodate))
+> +        if (iop && !test_bit(i, iop->state + blocks_per_page))
+>               continue;
+> 
+>           error = wpc->ops->map_blocks(wpc, inode, file_offset);
+> @@ -1404,6 +1459,7 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
+>            */
+>           set_page_writeback_keepwrite(page);
+>       } else {
+> +        iomap_clear_range_dirty(page, 0, PAGE_SIZE);
+>           clear_page_dirty_for_io(page);
+>           set_page_writeback(page);
+>       }
 
-Not sure if it makes sense but I think somehow allowing the additional
-opp-level = <0> would be a simple solution. For example:
-
-	rpmpd: power-controller {
-		rpmpd_opp_table: opp-table {
-			compatible = "operating-points-v2";
-
-            /*
-             * This one can be referenced to drop the performance state
-             * vote within required-opps.
-             */
-            rpmpd_opp_none: opp0 {
-                opp-level = <0>;
-            };
-
-			rpmpd_opp_retention: opp1 {
-				opp-level = <1>;
-			};
-
-            /* ... */
-        };
-    };                
-
-	cpu_opp_table: cpu-opp-table {
-		compatible = "operating-points-v2";
-		opp-shared;
-
-        /* Power domain is only needed for frequencies >= 998 MHz */
-		opp-200000000 {
-			opp-hz = /bits/ 64 <200000000>;
-			required-opps = <&rpmpd_opp_none>; /* = drop perf state */
-		};
-		opp-998400000 {
-			opp-hz = /bits/ 64 <998400000>;
-			required-opps = <&rpmpd_opp_svs_soc>;
-		};
-		opp-1209600000 {
-			opp-hz = /bits/ 64 <1209600000>;
-			required-opps = <&rpmpd_opp_nominal>;
-		};
-	};	
-
-2. Where/when to enable the power domains: I need to enable the power
-   domain whenever I have a vote for a performance state. In the example
-   above the power domain should get enabled for >= 998 MHz and disabled
-   otherwise.
-
-   At least for the CPUFreq case the "virt_devs" parameter does not
-   really help in this case...
-   dev_pm_opp_set_rate() is called within cpufreq-dt which is supposed
-   to be generic. So I can't enable the power domains myself from there.
-   Even if I made a custom cpufreq driver that has control over the
-   dev_pm_opp_set_rate() call - I don't really know exactly in the
-   driver for which frequencies a power domain is needed.
-
-   On the other hand, the OPP core does have that information.
-   This brings me back to my PATCH v1 (where I used runtime PM functions
-   instead of device links). If I modify it to enable the power domain
-   whenever we have a performance state vote > 0 when setting an OPP,
-   it would do exactly what I need...
-
-   I don't think it makes sense to do performance state votes without
-   enabling a power domain, so this approach sounds good to me...
-
-What do you think?
-
-Thanks!
-Stephan
