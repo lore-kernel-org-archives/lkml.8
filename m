@@ -2,131 +2,119 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01596C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F936C43461
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BE8206E9
+	by mail.kernel.org (Postfix) with ESMTP id E28C620770
 	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kYXBwAYa";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YgqZTcpZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ka9IYn1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgIKPbC (ORCPT
+        id S1726515AbgIKPaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:31:02 -0400
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:56908
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726378AbgIKP1G (ORCPT
+        Fri, 11 Sep 2020 11:30:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30212 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726462AbgIKPYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:27:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gbvhytky6xpx7itkhb67ktsxbiwpnxix; d=codeaurora.org; t=1599834457;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-        bh=5tZsB/wJn1cwAYaUlKplKeAwB+VSLVJQXUcWnRzqmpA=;
-        b=kYXBwAYa4zGGomoglLkcXFpNWTvuBi2ptPv+mrkC7sAVSvjziYxITXoCczXtz9es
-        tK2Yvf1lTUOpo65TMbdXEQT03B6QHx59C+zRmumovJ6b4oZPlp3xF1t5c9828/UjHwK
-        vLDObo8ZX3fzEqT25ihpYTC7i9MWDxuqNEvAwxAE=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599834457;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=5tZsB/wJn1cwAYaUlKplKeAwB+VSLVJQXUcWnRzqmpA=;
-        b=YgqZTcpZwcADidyNcNTZrZ4o4YtdOw0ssihG1ddi4kV6jS6ea/f4uonJEyjyGxAS
-        cNEm5cIjtxPEQhXK/rH3wDnP9rNcUYqnuXAoxhouYt1oyPMqK9j3XiOApHYA+/drG11
-        xnHd4M0S6N8s0SJQ6rv01D5cBUriCXq5Q0obXytQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A1F0C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        dri-devel@lists.freedesktop.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv4 0/6] System Cache support for GPU and required SMMU support
-Date:   Fri, 11 Sep 2020 14:27:37 +0000
-Message-ID: <010101747d908304-dc01ef4a-72b7-4163-8405-4fa82465ac84-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 11 Sep 2020 11:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599837860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iJ/U/CoQkEukOmnim/wnnLlXQJbF+mCf7O0yvaasEUI=;
+        b=Ka9IYn1OYm7kntVMXBDiVtFCrTVISjmh6q5rAuzGkdB9jLsFDCtLfTywlmdb0csDvfCQjN
+        KBkefUQzqq7nIr6J/WWVoHuV4yQVdK6S9nYfazAKeE/8/GXC+44LD2id7prczQxl1uADMC
+        nQGLMc5QBvPNM9Rd5vN8+B4X1ANhHzc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-GWhH9Sb-Pf2rVZMqBlDXxA-1; Fri, 11 Sep 2020 11:24:17 -0400
+X-MC-Unique: GWhH9Sb-Pf2rVZMqBlDXxA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA8E9107B270;
+        Fri, 11 Sep 2020 15:24:14 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-3.gru2.redhat.com [10.97.112.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44A057ED65;
+        Fri, 11 Sep 2020 15:24:11 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id EFACE41853FD; Fri, 11 Sep 2020 12:23:44 -0300 (-03)
+Date:   Fri, 11 Sep 2020 12:23:44 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, frederic@kernel.org,
+        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
+Subject: Re: [RFC][Patch v1 2/3] i40e: limit msix vectors based on
+ housekeeping CPUs
+Message-ID: <20200911152344.GA21157@fuller.cnet>
+References: <20200909150818.313699-1-nitesh@redhat.com>
+ <20200909150818.313699-3-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2020.09.11-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909150818.313699-3-nitesh@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some hardware variants contain a system cache or the last level
-cache(llc). This cache is typically a large block which is shared
-by multiple clients on the SOC. GPU uses the system cache to cache
-both the GPU data buffers(like textures) as well the SMMU pagetables.
-This helps with improved render performance as well as lower power
-consumption by reducing the bus traffic to the system memory.
+On Wed, Sep 09, 2020 at 11:08:17AM -0400, Nitesh Narayan Lal wrote:
+> In a realtime environment, it is essential to isolate unwanted IRQs from
+> isolated CPUs to prevent latency overheads. Creating MSIX vectors only
+> based on the online CPUs could lead to a potential issue on an RT setup
+> that has several isolated CPUs but a very few housekeeping CPUs. This is
+> because in these kinds of setups an attempt to move the IRQs to the
+> limited housekeeping CPUs from isolated CPUs might fail due to the per
+> CPU vector limit. This could eventually result in latency spikes because
+> of the IRQ threads that we fail to move from isolated CPUs.
+> 
+> This patch prevents i40e to add vectors only based on available
+> housekeeping CPUs by using num_housekeeping_cpus().
+> 
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> index 2e433fdbf2c3..3b4cd4b3de85 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/of_net.h>
+>  #include <linux/pci.h>
+>  #include <linux/bpf.h>
+> +#include <linux/sched/isolation.h>
+>  #include <generated/utsrelease.h>
+>  
+>  /* Local includes */
+> @@ -11002,7 +11003,7 @@ static int i40e_init_msix(struct i40e_pf *pf)
+>  	 * will use any remaining vectors to reach as close as we can to the
+>  	 * number of online CPUs.
+>  	 */
+> -	cpus = num_online_cpus();
+> +	cpus = num_housekeeping_cpus();
+>  	pf->num_lan_msix = min_t(int, cpus, vectors_left / 2);
+>  	vectors_left -= pf->num_lan_msix;
+>  
+> -- 
+> 2.27.0
 
-The system cache architecture allows the cache to be split into slices
-which then be used by multiple SOC clients. This patch series is an
-effort to enable and use two of those slices perallocated for the GPU,
-one for the GPU data buffers and another for the GPU SMMU hardware
-pagetables.
+For patches 1 and 2:
 
-Patch 1 - Patch 4 adds system cache support in SMMU and GPU driver.
-Patch 5 and 6 are minor cleanups for arm-smmu impl.
-
-The series is based on top of https://gitlab.freedesktop.org/drm/msm/-/tree/msm-next-pgtables
-
-Changes in v4:
- * Drop IOMMU_SYS_CACHE prot flag
- * Rebase on top of https://gitlab.freedesktop.org/drm/msm/-/tree/msm-next-pgtables
-
-Changes in v3:
- * Fix domain attribute setting to before iommu_attach_device()
- * Fix few code style and checkpatch warnings
- * Rebase on top of Jordan's latest split pagetables and per-instance
-   pagetables support
-
-Changes in v2:
- * Addressed review comments and rebased on top of Jordan's split
-   pagetables series
-
-Sai Prakash Ranjan (4):
-  iommu/io-pgtable-arm: Add support to use system cache
-  iommu/arm-smmu: Add domain attribute for system cache
-  iommu: arm-smmu-impl: Use table to list QCOM implementations
-  iommu: arm-smmu-impl: Remove unwanted extra blank lines
-
-Sharat Masetty (2):
-  drm/msm: rearrange the gpu_rmw() function
-  drm/msm/a6xx: Add support for using system cache(LLC)
-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 83 ++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h      |  4 ++
- drivers/gpu/drm/msm/adreno/adreno_gpu.c    | 21 +++++-
- drivers/gpu/drm/msm/msm_drv.c              |  8 +++
- drivers/gpu/drm/msm/msm_drv.h              |  1 +
- drivers/gpu/drm/msm/msm_gpu.h              |  5 +-
- drivers/iommu/arm/arm-smmu/arm-smmu-impl.c | 17 ++---
- drivers/iommu/arm/arm-smmu/arm-smmu.c      | 17 +++++
- drivers/iommu/arm/arm-smmu/arm-smmu.h      |  1 +
- drivers/iommu/io-pgtable-arm.c             |  7 +-
- include/linux/io-pgtable.h                 |  4 ++
- include/linux/iommu.h                      |  1 +
- 12 files changed, 155 insertions(+), 14 deletions(-)
-
-
-base-commit: 11e579ab6a3c2003efa2cfd1f0b3b4395f041618
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Reviewed-by: Marcelo Tosatti <mtosatti@redhat.com>
 
