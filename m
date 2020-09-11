@@ -2,122 +2,188 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24A8C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A412DC2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F08A21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="seclKN+x"
+	by mail.kernel.org (Postfix) with ESMTP id 67ACC221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599795519;
+	bh=/15sHXUMS5bZMMVGwImaO3Nf2729mfMyueOtRu2lcA4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kPtpaPwz7srkI8brP/xo3NVtRSRcpTMIxqYKwHkUh8K/v5lLQnBflD9jmAq0rs1BK
+	 6WUBtY+PYgZMjhvlHB8zPyI0FSzhP+KoryOxbVJ9Rr4QpP90NFbF/B/4xehIDUqKXn
+	 uUsQ86hARArny/aQPoH/OzRoH63F9txpie9/c7uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgIKDih (ORCPT
+        id S1725832AbgIKDii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:38:37 -0400
-Received: from mail-eopbgr70048.outbound.protection.outlook.com ([40.107.7.48]:51841
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725810AbgIKDiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:38:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V9eBdoILkqjzksadjQ8g6/NeHU8BB9duYdNQcA47++18xFN2vUOGiJi4k15x/+f5rwhyIpxV54CQdrE9oZBVj3B7PrCu+o5lD+2J8F3tCeGPYKTNwNYAkLJ/DL4zIR4KArqMuBujgVFmCR6azjXrTu1Ys4K5jjl0lQitvt8XhgN9AolLBEd1I0uZMfdXT3SZcoaxgkN/7M+EGzLkkQV8mOTDTAmvn9VcXvKrkJeXF4XiHdfixvhQLzdiV1hh+8YHWSM6TedfHTs7OG3NwYKK0S0CC5hPxwOsU5CdwIzlsQdqIxugv/cS4DDblA0D9n35rMnOZzE9azZApUCzmlhSuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZHK6L2elfkKsJH8vNgUGijKaz22d5anduyA45WjKPLE=;
- b=CeLFYa5vQ2NqSxQsnpVkgxQOgn7VsMM9PVgx9b91xhZtKK383MD8CEStMJVMXQ1YOCwNX/VBNTCMAFfWj5FKelYXIEfotklQMOBsrSW+ruBVjlNBesg3el2cdxTt/IsgHb4E9KaWw/UxOWP6H3rwpQ75a0OqUXzOUvWU+2gZ9qgc1tFtAo25uHCGKmxVUlcrpchmlh6c4bB82ne5ccL5mfSc2PmKKcSQ0/Eys6ad9tmAnh4FFmefCA6JMMWptyMsNAKIi7KRwpON+uO2UFftgMdgADx6/AemMEbGxDrMUu6IwYjLiwdjbvMmPYW/4I6t3YvsE55+cPoY2SuklC5IVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZHK6L2elfkKsJH8vNgUGijKaz22d5anduyA45WjKPLE=;
- b=seclKN+xaPFme7SvDgq9aPHxSv/ZN4lUuiWvmAjVqFArPX6JDLouyQkRuSN8nweQQKsuzv4Vr+CI9PzhAaaLOl2aCQ0WouK6WFBpGmEZzPFa4BgPTvY5+xMHf3A4ODQw1kNh+WVgnugn1qcALkTAFUYkb2IFCFfHshiX36uzXow=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB7PR04MB5084.eurprd04.prod.outlook.com (2603:10a6:10:1c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Fri, 11 Sep
- 2020 03:38:19 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3348.019; Fri, 11 Sep
- 2020 03:38:19 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        abel.vesa@nxp.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        aisheng.dong@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] ARM: imx7ulp: enable cpufreq
-Date:   Fri, 11 Sep 2020 11:31:44 +0800
-Message-Id: <1599795104-7016-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0031.apcprd02.prod.outlook.com
- (2603:1096:3:18::19) To DB6PR0402MB2760.eurprd04.prod.outlook.com
- (2603:10a6:4:a1::14)
+        Thu, 10 Sep 2020 23:38:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33212 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbgIKDiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 23:38:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e11so3163972wme.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:38:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ubpubHMmpIK4k+lKnVJwMufxG2srCcv3kA9sPBkOZNQ=;
+        b=DfTxxLZS13eXx6aNlJiQZd68PoqODMbA/uKDPgKlawzFSqM/b8LWj9Cgh4rVVYiazn
+         HQXVlFnamqZ0JG9g4CuvPF+fNSi/htavkPdwJIIUWyGiyu1enS2d4QpFByJ80wtvQdkb
+         aw2B86hOab9IDNJ55GQw7iFp8hXl4mV1Oh+pyx/nVoPLWeJDJmGqcV5VShXSrrHLg4MN
+         p5tmDiU/ordYEoigJs1JokD+RMcW0DVPJzdABzJo0jCPb3pvn8upRzHfXFxzAL48jWMQ
+         flvv7UugbKrGHH/oyWJhyQ9tEUs/wPT3iPUOkk4kZe4eZu5jtdzaUywWJPk0ygb2lN8+
+         HwBQ==
+X-Gm-Message-State: AOAM531gVTWV8k1OUZamxgsigBVIw+AghiFiBk74LYz8B1kvwk5yOvWt
+        G7bgKDrvx9wEj/+qU3HmOvIHJilnBJgTSvSVqbI=
+X-Google-Smtp-Source: ABdhPJx4fBS16ussmvLUlYyfdsg1yC2CywxxdPPdPG27b9awQkH8C+NFSa9OZGZzyRNvuQ4MaA76bTC36+zs2JVUoiM=
+X-Received: by 2002:a1c:2dc6:: with SMTP id t189mr55243wmt.92.1599795479622;
+ Thu, 10 Sep 2020 20:37:59 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 10.192.242.69 (119.31.174.66) by SG2PR02CA0031.apcprd02.prod.outlook.com (2603:1096:3:18::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Fri, 11 Sep 2020 03:38:15 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5b61ecb0-316b-4122-02dd-08d856041ffe
-X-MS-TrafficTypeDiagnostic: DB7PR04MB5084:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB7PR04MB5084ABF6E4497A78DE4AA2BF88240@DB7PR04MB5084.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:270;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KQaqQgLrOoxvVFhqgjGfHlbY2xCtnCaBFkAiX8q6KqLK6zdZxz8HKjYY7idaKldYLMoO9onJlrY4qHMJTyylqg5RYlU3T3fDADzWejICWemepXJ3rIaHQt77y+GjblZzFxNXaC37bmaxmXAlzsl93EphuwNgtu/SCHu3pcLTS9UtledeICRZwMBYSQT/B89ZuIa0zrWmN674VESt+zLGHbtsMhujRg+Z/9Uvfzpw2j+V8TZVxd5nfRXCa/MYmIpiQL5gbwdvdaIrF4dXaGSCCW61bf4uKbyC1aappfdwuCFZYq88pBKLrn92S0uW04vBvLVKU4gkHYgTXHHn1IVbQQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(956004)(2616005)(478600001)(86362001)(36756003)(66556008)(66476007)(9686003)(16526019)(186003)(26005)(6666004)(52116002)(8676002)(5660300002)(4744005)(4326008)(8936002)(2906002)(66946007)(16576012)(316002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B0uK1bhLZQwiVHraLsoW+b+fC84yMd6j0YqxRuK+j3sN8nO7P5wat/Q64J34LlZ5bbBpps9l0kPl9VESetMrYg4eOzq8rLsXaUg5mz4Ftl0LEuleSh0iitgX7Fe56Y3fuQbxi+jgiBHiRy7cTeBIx508ETBWX3dQ8n8jLU/mVrNvxnvvVldAB7DbnQIWzM3hCAB/UbPYErvaagX8fEhCWSbopuWQPegN4kDEJ7CFwAyJcfubdAiUCxp8Jq8vI1uvzktbnlG8AfiE6wZsXdDvbGiHmdirtVgVFmHd+HZn8Q750vZAEcURWN2kFN4AF40YWIlAF697NP3DrCiypWBtxckloum5ayt/F+c3ptL7UWM6KPUFZkpshZ8VEmnstb15jFS/msGKsTm1KV4cQ5cj7UdHtma/BcBsPHY2PhzrG6Sc6PHlRvzA5bcCiabq28exhzACnNZ/8J/Eiim78SZU1PgQstPex8STth9/6UfhNCFe1NrXkquCQ3+n9zz3jrl8AVc14LS7EN5VPjN7QJFO5vx1Er9LDyaktDdhg81pQYmiA1LWG/qDdvBQ5VMRiBdamXlUUyhmj9kiFwMkn9joR2w7IFO2TCof7PP2FxbuIRwryCgpHauIFFwBI6k8jqF6eT+iz+p7gr97xuzZM3XyvQ==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b61ecb0-316b-4122-02dd-08d856041ffe
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2020 03:38:19.5221
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ueIX/J0P9NlAKkpfuBA+U+2bD+ebX6QZyYtXD5dxK/b/d6kDcJ0Bce43YtRHfgQJeYJILpmKDDH4Jn3ko8+/0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5084
+References: <20200910134501.11352-1-kan.liang@linux.intel.com> <20200910134501.11352-4-kan.liang@linux.intel.com>
+In-Reply-To: <20200910134501.11352-4-kan.liang@linux.intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 11 Sep 2020 12:37:48 +0900
+Message-ID: <CAM9d7ci1p1Ej-9=RuJLHJWQ76GR6gjHS2Y=rsQQ0LhNW5YKUBg@mail.gmail.com>
+Subject: Re: [PATCH V2 3/4] perf stat: Support new per thread TopDown metrics
+To:     Kan Liang <kan.liang@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Hello,
 
-Enable cpufreq for i.MX7ULP when imx cpufreq dt driver enabled.
+On Thu, Sep 10, 2020 at 10:48 PM <kan.liang@linux.intel.com> wrote:
+>
+> From: Andi Kleen <ak@linux.intel.com>
+>
+> Icelake has support for reporting per thread TopDown metrics.
+> These are reported differently than the previous TopDown support,
+> each metric is standalone, but scaled to pipeline "slots".
+> We don't need to do anything special for HyperThreading anymore.
+> Teach perf stat --topdown to handle these new metrics and
+> print them in the same way as the previous TopDown metrics.
+> The restrictions of only being able to report information per core is
+> gone.
+>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-stat.txt |  7 +-
+>  tools/perf/builtin-stat.c              | 30 ++++++++-
+>  tools/perf/util/stat-shadow.c          | 89 ++++++++++++++++++++++++++
+>  tools/perf/util/stat.c                 |  4 ++
+>  tools/perf/util/stat.h                 |  8 +++
+>  5 files changed, 134 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index c9bfefc051fb..e803dbdc88a8 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -357,6 +357,11 @@ if the workload is actually bound by the CPU and not by something else.
+>  For best results it is usually a good idea to use it with interval
+>  mode like -I 1000, as the bottleneck of workloads can change often.
+>
+> +This enables --metric-only, unless overridden with --no-metric-only.
+> +
+> +The following restrictions only apply to older Intel CPUs and Atom,
+> +on newer CPUs (IceLake and later) TopDown can be collected for any thread:
+> +
+>  The top down metrics are collected per core instead of per
+>  CPU thread. Per core mode is automatically enabled
+>  and -a (global monitoring) is needed, requiring root rights or
+> @@ -368,8 +373,6 @@ echo 0 > /proc/sys/kernel/nmi_watchdog
+>  for best results. Otherwise the bottlenecks may be inconsistent
+>  on workload with changing phases.
+>
+> -This enables --metric-only, unless overridden with --no-metric-only.
+> -
+>  To interpret the results it is usually needed to know on which
+>  CPUs the workload runs on. If needed the CPUs can be forced using
+>  taskset.
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 5583e22ca808..6290da5bd142 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -128,6 +128,15 @@ static const char * topdown_attrs[] = {
+>         NULL,
+>  };
+>
+> +static const char *topdown_metric_attrs[] = {
+> +       "slots",
+> +       "topdown-retiring",
+> +       "topdown-bad-spec",
+> +       "topdown-fe-bound",
+> +       "topdown-be-bound",
+> +       NULL,
+> +};
+> +
+>  static const char *smi_cost_attrs = {
+>         "{"
+>         "msr/aperf/,"
+> @@ -1691,6 +1700,24 @@ static int add_default_attributes(void)
+>                 char *str = NULL;
+>                 bool warn = false;
+>
+> +               if (!force_metric_only)
+> +                       stat_config.metric_only = true;
+> +
+> +               if (topdown_filter_events(topdown_metric_attrs, &str, 1) < 0) {
+> +                       pr_err("Out of memory\n");
+> +                       return -1;
+> +               }
+> +               if (topdown_metric_attrs[0] && str) {
+> +                       if (!stat_config.interval && !stat_config.metric_only) {
+> +                               fprintf(stat_config.output,
+> +                                       "Topdown accuracy may decrease when measuring long periods.\n"
+> +                                       "Please print the result regularly, e.g. -I1000\n");
+> +                       }
+> +                       goto setup_metrics;
+> +               }
+> +
+> +               str = NULL;
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm/mach-imx/mach-imx7ulp.c | 3 +++
- 1 file changed, 3 insertions(+)
+zfree(&str) ?
 
-diff --git a/arch/arm/mach-imx/mach-imx7ulp.c b/arch/arm/mach-imx/mach-imx7ulp.c
-index 128cf4c92aab..445256e6a4a0 100644
---- a/arch/arm/mach-imx/mach-imx7ulp.c
-+++ b/arch/arm/mach-imx/mach-imx7ulp.c
-@@ -67,6 +67,9 @@ static const char *const imx7ulp_dt_compat[] __initconst = {
- 
- static void __init imx7ulp_init_late(void)
- {
-+	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
-+		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
-+
- 	imx7ulp_cpuidle_init();
- }
- 
--- 
-2.28.0
+Thanks
+Namhyung
 
+
+> +
+>                 if (stat_config.aggr_mode != AGGR_GLOBAL &&
+>                     stat_config.aggr_mode != AGGR_CORE) {
+>                         pr_err("top down event configuration requires --per-core mode\n");
+> @@ -1702,8 +1729,6 @@ static int add_default_attributes(void)
+>                         return -1;
+>                 }
+>
+> -               if (!force_metric_only)
+> -                       stat_config.metric_only = true;
+>                 if (topdown_filter_events(topdown_attrs, &str,
+>                                 arch_topdown_check_group(&warn)) < 0) {
+>                         pr_err("Out of memory\n");
+> @@ -1712,6 +1737,7 @@ static int add_default_attributes(void)
+>                 if (topdown_attrs[0] && str) {
+>                         if (warn)
+>                                 arch_topdown_group_warn();
+> +setup_metrics:
+>                         err = parse_events(evsel_list, str, &errinfo);
+>                         if (err) {
+>                                 fprintf(stderr,
