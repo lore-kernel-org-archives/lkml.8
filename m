@@ -2,76 +2,82 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3318FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBBAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D136D221F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="nkb0qvhj"
+	by mail.kernel.org (Postfix) with ESMTP id 67E08221F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbgIKLG5 (ORCPT
+        id S1725817AbgIKLIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:06:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49280 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgIKLGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:06:52 -0400
-Received: from zn.tnic (p200300ec2f0ce000fc39479f3b37cbf3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:e000:fc39:479f:3b37:cbf3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3A77F1EC050F;
-        Fri, 11 Sep 2020 13:06:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599822411;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=FmQIYnrc2hwilIfPoogJbnGbFEsJDR+JvWYLvbwl8t8=;
-        b=nkb0qvhj+tDyB3jA40UUlu0tHinMKz3lVH80aLb4mADu1cHCmD16wIjcLuBfuJRx37ayKF
-        21HkFJSeKMKsvrR6SPEJlV3D3HwlCJa9Cg3cKN2L75iUOyJuHt6j1IygFd+Lz2hJOko/JQ
-        5kb3T9vSePAfypBjVVCucSxmZg403iQ=
-Date:   Fri, 11 Sep 2020 13:06:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc:     "york.sun@nxp.com" <york.sun@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: (EXT) Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data
- message
-Message-ID: <20200911110646.GA8472@zn.tnic>
-References: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
- <20200904091718.GC21499@zn.tnic>
- <20200904133258.GA21716@herburgerg-w.tq-net.de>
- <20200908192400.GL25236@zn.tnic>
- <20200910150628.GA26249@herburgerg-w.tq-net.de>
+        Fri, 11 Sep 2020 07:08:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37556 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgIKLHy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:07:54 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1kGgtu-0006tV-Hl; Fri, 11 Sep 2020 11:07:30 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE),
+        "H . Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] KVM: SVM: nested: fix free of uninitialized pointers save and ctl
+Date:   Fri, 11 Sep 2020 12:07:30 +0100
+Message-Id: <20200911110730.24238-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200910150628.GA26249@herburgerg-w.tq-net.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 05:06:28PM +0200, Gregor Herburger wrote:
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-Dunno if you were trying to say something but this mail is empty:
+Currently the error exit path to outt_set_gif will kfree on uninitialized
+pointers save and ctl.  Fix this by ensuring these pointers are
+inintialized to NULL to avoid garbage pointer freeing.
 
-Content-Length: 1
-Lines: 1
+Addresses-Coverity: ("Uninitialized pointer read")
+Fixes: 6ccbd29ade0d ("KVM: SVM: nested: Don't allocate VMCB structures on stack")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ arch/x86/kvm/svm/nested.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 28036629abf8..2b15f49f9e5a 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -1060,8 +1060,8 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	struct vmcb *hsave = svm->nested.hsave;
+ 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+ 		&user_kvm_nested_state->data.svm[0];
+-	struct vmcb_control_area *ctl;
+-	struct vmcb_save_area *save;
++	struct vmcb_control_area *ctl = NULL;
++	struct vmcb_save_area *save = NULL;
+ 	int ret;
+ 	u32 cr0;
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.27.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
