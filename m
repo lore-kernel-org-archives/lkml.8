@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E3C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE186C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF5D222EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70365222EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599835793;
-	bh=iLOOVfghMdz+HjBlYtn1WLMQivxIiIsjgDaBTdNxMNc=;
+	s=default; t=1599835824;
+	bh=HEx7XSycJRXGxGtCHabvPFr3quqD8R7LQYqFgUzcnSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xsL332XCm1Nmdmq4emdms0ITNHRqnHw0o4EV+lGcFtKfkJM1HnX7TuTJJd0kPE4Tq
-	 jPhRMUWprcaLWBfbH+CjvLQyU0z5nQ1pjiQgNyWW+QIBOo69oJzmLIEwEMExIxrb8s
-	 HnWWWUN5o61kipqWvTL6g6I10tZt0OOtKUkA9kf0=
+	b=QrEAqoPPS3Oz5fc0N6CB5KJe/SDkfuTU//a4utmcHuhrzoTwTCVWznUCeipXnG2I8
+	 FFtgIc9zNpHTapYAp4jHn2go0l+jgimcGVQJHR4fkvoH/ZEX2DGCdH2cw2umBwjG5Q
+	 eGZ7LNyTdWQF9XXtYKvHy1MxmsENxK6SH5SVRF7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgIKOtr (ORCPT
+        id S1726275AbgIKOuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726161AbgIKNDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726201AbgIKNDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:03:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6589222C4;
-        Fri, 11 Sep 2020 12:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6757122286;
+        Fri, 11 Sep 2020 12:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829055;
-        bh=iLOOVfghMdz+HjBlYtn1WLMQivxIiIsjgDaBTdNxMNc=;
+        s=default; t=1599829065;
+        bh=HEx7XSycJRXGxGtCHabvPFr3quqD8R7LQYqFgUzcnSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j2Pid8HSUmJ6uKSbwyZ0TIWYLLxEWfpcvTHF1ia7xZk9iqmRG0Spe25/Wz/rgCYR/
-         BIY3k5VP/TNu71sJGazoPvuxT4U40e5wIvhWIrLmSusY6FWFmrPH/eg6vGxR7nDjsF
-         Bm+X8Fg5cOIGPIS4hvNDATGDX+Kg0KrJiEvfS3DA=
+        b=fhT1vhfqPN4WCgQjVhQjz/KoLqcvQBhGh1z1E4E5roGurUSkvOgU11/08byv4BgQh
+         Kdm4N2JaXrnxJ1j1M0zz+V9wDZGpEs6zEKYT8TS1t98wgniTFpFpiB/GfqxvW9nu7W
+         uhE4D9QhJL+86aHyBByMj4nUpTxegmvnfyrxJ4FY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 4.9 49/71] vfio/type1: Support faulting PFNMAP vmas
-Date:   Fri, 11 Sep 2020 14:46:33 +0200
-Message-Id: <20200911122507.364735199@linuxfoundation.org>
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH 4.9 52/71] KVM: arm64: Add kvm_extable for vaxorcism code
+Date:   Fri, 11 Sep 2020 14:46:36 +0200
+Message-Id: <20200911122507.505484831@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -60,77 +61,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: James Morse <james.morse@arm.com>
 
-commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
+commit e9ee186bb735bfc17fa81dbc9aebf268aee5b41e upstream.
 
-With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
-the range being faulted into the vma.  Add support to manually provide
-that, in the same way as done on KVM with hva_to_pfn_remapped().
+KVM has a one instruction window where it will allow an SError exception
+to be consumed by the hypervisor without treating it as a hypervisor bug.
+This is used to consume asynchronous external abort that were caused by
+the guest.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[Ajay: Regenerated the patch for v4.9]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+As we are about to add another location that survives unexpected exceptions,
+generalise this code to make it behave like the host's extable.
+
+KVM's version has to be mapped to EL2 to be accessible on nVHE systems.
+
+The SError vaxorcism code is a one instruction window, so has two entries
+in the extable. Because the KVM code is copied for VHE and nVHE, we end up
+with four entries, half of which correspond with code that isn't mapped.
+
+Cc: stable@vger.kernel.org # v4.9
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/kvm_asm.h |   15 +++++++++++
+ arch/arm64/kernel/vmlinux.lds.S  |    8 ++++++
+ arch/arm64/kvm/hyp/entry.S       |   16 +++++++-----
+ arch/arm64/kvm/hyp/hyp-entry.S   |   51 ++++++++++++++++++++++++---------------
+ arch/arm64/kvm/hyp/switch.c      |   31 +++++++++++++++++++++++
+ 5 files changed, 96 insertions(+), 25 deletions(-)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -213,6 +213,32 @@ static int put_pfn(unsigned long pfn, in
- 	return 0;
- }
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -106,6 +106,21 @@ extern u32 __init_stage2_translation(voi
+ 	kern_hyp_va	\vcpu
+ .endm
  
-+static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
-+			    unsigned long vaddr, unsigned long *pfn,
-+			    bool write_fault)
++/*
++ * KVM extable for unexpected exceptions.
++ * In the same format _asm_extable, but output to a different section so that
++ * it can be mapped to EL2. The KVM version is not sorted. The caller must
++ * ensure:
++ * x18 has the hypervisor value to allow any Shadow-Call-Stack instrumented
++ * code to write to it, and that SPSR_EL2 and ELR_EL2 are restored by the fixup.
++ */
++.macro	_kvm_extable, from, to
++	.pushsection	__kvm_ex_table, "a"
++	.align		3
++	.long		(\from - .), (\to - .)
++	.popsection
++.endm
++
+ #endif
+ 
+ #endif /* __ARM_KVM_ASM_H__ */
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -23,6 +23,13 @@ ENTRY(_text)
+ 
+ jiffies = jiffies_64;
+ 
++
++#define HYPERVISOR_EXTABLE					\
++	. = ALIGN(SZ_8);					\
++	VMLINUX_SYMBOL(__start___kvm_ex_table) = .;		\
++	*(__kvm_ex_table)					\
++	VMLINUX_SYMBOL(__stop___kvm_ex_table) = .;
++
+ #define HYPERVISOR_TEXT					\
+ 	/*						\
+ 	 * Align to 4 KB so that			\
+@@ -38,6 +45,7 @@ jiffies = jiffies_64;
+ 	VMLINUX_SYMBOL(__hyp_idmap_text_end) = .;	\
+ 	VMLINUX_SYMBOL(__hyp_text_start) = .;		\
+ 	*(.hyp.text)					\
++	HYPERVISOR_EXTABLE				\
+ 	VMLINUX_SYMBOL(__hyp_text_end) = .;
+ 
+ #define IDMAP_TEXT					\
+--- a/arch/arm64/kvm/hyp/entry.S
++++ b/arch/arm64/kvm/hyp/entry.S
+@@ -135,18 +135,22 @@ ENTRY(__guest_exit)
+ 	// This is our single instruction exception window. A pending
+ 	// SError is guaranteed to occur at the earliest when we unmask
+ 	// it, and at the latest just after the ISB.
+-	.global	abort_guest_exit_start
+ abort_guest_exit_start:
+ 
+ 	isb
+ 
+-	.global	abort_guest_exit_end
+ abort_guest_exit_end:
++	msr	daifset, #4	// Mask aborts
++	ret
+ 
+-	// If the exception took place, restore the EL1 exception
+-	// context so that we can report some information.
+-	// Merge the exception code with the SError pending bit.
+-	tbz	x0, #ARM_EXIT_WITH_SERROR_BIT, 1f
++	_kvm_extable	abort_guest_exit_start, 9997f
++	_kvm_extable	abort_guest_exit_end, 9997f
++9997:
++	msr	daifset, #4	// Mask aborts
++	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
++
++	// restore the EL1 exception context so that we can report some
++	// information. Merge the exception code with the SError pending bit.
+ 	msr	elr_el2, x2
+ 	msr	esr_el2, x3
+ 	msr	spsr_el2, x4
+--- a/arch/arm64/kvm/hyp/hyp-entry.S
++++ b/arch/arm64/kvm/hyp/hyp-entry.S
+@@ -25,6 +25,30 @@
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_mmu.h>
+ 
++.macro save_caller_saved_regs_vect
++	stp	x0, x1,   [sp, #-16]!
++	stp	x2, x3,   [sp, #-16]!
++	stp	x4, x5,   [sp, #-16]!
++	stp	x6, x7,   [sp, #-16]!
++	stp	x8, x9,   [sp, #-16]!
++	stp	x10, x11, [sp, #-16]!
++	stp	x12, x13, [sp, #-16]!
++	stp	x14, x15, [sp, #-16]!
++	stp	x16, x17, [sp, #-16]!
++.endm
++
++.macro restore_caller_saved_regs_vect
++	ldp	x16, x17, [sp], #16
++	ldp	x14, x15, [sp], #16
++	ldp	x12, x13, [sp], #16
++	ldp	x10, x11, [sp], #16
++	ldp	x8, x9,   [sp], #16
++	ldp	x6, x7,   [sp], #16
++	ldp	x4, x5,   [sp], #16
++	ldp	x2, x3,   [sp], #16
++	ldp	x0, x1,   [sp], #16
++.endm
++
+ 	.text
+ 	.pushsection	.hyp.text, "ax"
+ 
+@@ -178,25 +202,14 @@ el1_error:
+ 	b	__guest_exit
+ 
+ el2_error:
+-	/*
+-	 * Only two possibilities:
+-	 * 1) Either we come from the exit path, having just unmasked
+-	 *    PSTATE.A: change the return code to an EL2 fault, and
+-	 *    carry on, as we're already in a sane state to handle it.
+-	 * 2) Or we come from anywhere else, and that's a bug: we panic.
+-	 *
+-	 * For (1), x0 contains the original return code and x1 doesn't
+-	 * contain anything meaningful at that stage. We can reuse them
+-	 * as temp registers.
+-	 * For (2), who cares?
+-	 */
+-	mrs	x0, elr_el2
+-	adr	x1, abort_guest_exit_start
+-	cmp	x0, x1
+-	adr	x1, abort_guest_exit_end
+-	ccmp	x0, x1, #4, ne
+-	b.ne	__hyp_panic
+-	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
++	save_caller_saved_regs_vect
++	stp     x29, x30, [sp, #-16]!
++
++	bl	kvm_unexpected_el2_exception
++
++	ldp     x29, x30, [sp], #16
++	restore_caller_saved_regs_vect
++
+ 	eret
+ 
+ ENTRY(__hyp_do_panic)
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -25,6 +25,10 @@
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
++#include <asm/uaccess.h>
++
++extern struct exception_table_entry __start___kvm_ex_table;
++extern struct exception_table_entry __stop___kvm_ex_table;
+ 
+ static bool __hyp_text __fpsimd_enabled_nvhe(void)
+ {
+@@ -454,3 +458,30 @@ void __hyp_text __noreturn hyp_panic(str
+ 
+ 	unreachable();
+ }
++
++asmlinkage void __hyp_text kvm_unexpected_el2_exception(void)
 +{
-+	int ret;
++	unsigned long addr, fixup;
++	struct kvm_cpu_context *host_ctxt;
++	struct exception_table_entry *entry, *end;
++	unsigned long elr_el2 = read_sysreg(elr_el2);
 +
-+	ret = follow_pfn(vma, vaddr, pfn);
-+	if (ret) {
-+		bool unlocked = false;
++	entry = hyp_symbol_addr(__start___kvm_ex_table);
++	end = hyp_symbol_addr(__stop___kvm_ex_table);
++	host_ctxt = __hyp_this_cpu_ptr(kvm_host_cpu_state);
 +
-+		ret = fixup_user_fault(NULL, mm, vaddr,
-+				       FAULT_FLAG_REMOTE |
-+				       (write_fault ?  FAULT_FLAG_WRITE : 0),
-+				       &unlocked);
-+		if (unlocked)
-+			return -EAGAIN;
++	while (entry < end) {
++		addr = (unsigned long)&entry->insn + entry->insn;
++		fixup = (unsigned long)&entry->fixup + entry->fixup;
 +
-+		if (ret)
-+			return ret;
++		if (addr != elr_el2) {
++			entry++;
++			continue;
++		}
 +
-+		ret = follow_pfn(vma, vaddr, pfn);
++		write_sysreg(fixup, elr_el2);
++		return;
 +	}
 +
-+	return ret;
++	hyp_panic(host_ctxt);
 +}
-+
- static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
- {
- 	struct page *page[1];
-@@ -226,12 +252,16 @@ static int vaddr_get_pfn(unsigned long v
- 
- 	down_read(&current->mm->mmap_sem);
- 
-+retry:
- 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
- 
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		if (!follow_pfn(vma, vaddr, pfn) &&
--		    is_invalid_reserved_pfn(*pfn))
--			ret = 0;
-+		ret = follow_fault_pfn(vma, current->mm, vaddr, pfn, prot & IOMMU_WRITE);
-+		if (ret == -EAGAIN)
-+			goto retry;
-+
-+		if (!ret && !is_invalid_reserved_pfn(*pfn))
-+			ret = -EFAULT;
- 	}
- 
- 	up_read(&current->mm->mmap_sem);
 
 
