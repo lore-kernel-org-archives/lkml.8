@@ -2,225 +2,187 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31631C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA831C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D272A2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8690221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="avFPWJr3";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Y+lLvNsd"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="LZI6gdr1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725764AbgIKDxa (ORCPT
+        id S1725772AbgIKDyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:53:30 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54567 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725355AbgIKDx0 (ORCPT
+        Thu, 10 Sep 2020 23:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgIKDx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:53:26 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 729BC5C00BA;
-        Thu, 10 Sep 2020 23:53:23 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 10 Sep 2020 23:53:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=27Tdf84G1KGqhUUZOW9nEKHS6aZj81m
-        woMOigS8sbT4=; b=avFPWJr3VFTJ+verjATzoQlx3Jf3XukjQhu1345u2edVkJZ
-        +T+SJBJnmKuAiN1fBfvSFOTbaoJcoqjP94YGS3TyTgYD5TsLpr2jePhmwAN90DVm
-        UrF7BbmxKxNsK8/d3K9zKpqfLWiWEjamxUOTZq/VLp96frXnDtc4wH8oXklk12Js
-        1FGQEmvt5Ss0NWMRWwkXCn3yWmuHoyPzpkA2CP0vjqF6AkuplPfIbCyw7D47mlOD
-        t8fTUoZY2r2XHcfm1nuuGRfXIXKZWEtm0RJZMyPVwNblo9vJcBMcLMxQoCOJfgNf
-        TqVbrZypZJxE7TQb2azMXDAmHybuDPMSSs0OAtg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=27Tdf8
-        4G1KGqhUUZOW9nEKHS6aZj81mwoMOigS8sbT4=; b=Y+lLvNsdohw37DiOcG6SND
-        olYNRMM5F3YTlpV1b8zg3F8tpXN5PqajX+whKagZUCcptd2meEusBe11e0REOacM
-        fN1VV2eIEPrYWQOrAtYWq3/pO5jwf6vQF4roLFcf3L682INAvtXRZRLMYeejOkIm
-        gdFNZ+LVhNqNUS7UzTJmeZE7gG70b8Ekls/TGirg5dW4J6ujgaWPvvwIWYQ1JOq1
-        vq824Di7553GDNsOZ0otyub8nM4TN6LVFEEA4OZyFzGww5f0NoW8gA2KFmZq8+db
-        Wve+5H8m9r5UBSRiDsa3E3u5BQwQlpNThUbs/ddeWoXwBkjiACDb0P8KBQBAZEvw
-        ==
-X-ME-Sender: <xms:svRaX3BRSJLRCJpxvLqgJQk6ZEYxh6sYkFp9tvmsj8ix-h-ufKYYtg>
-    <xme:svRaX9hoK70b7NJ_lOEZ2jEHa5GDyG4UrekX8a7T5Kt9L0fQUmgduaoMY72gXApRK
-    uMECN8YslHQqW4VWg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
-    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:svRaXykMLnr4aX0CKAFmrbkRng9q5BMEjPtELyIzCxLvmlJcAd8iJQ>
-    <xmx:svRaX5xvN22jUWRCXkumdSXXvggCC4LT_rlP0PSNZNmsMyp51r0WlA>
-    <xmx:svRaX8Rx9LarFMuM8kDpz7kmKk0LrVXE09NQxkEuNQ4R5X3uI_mT9w>
-    <xmx:s_RaX7HyLEdOE1uB_Z8Xxt7uzn9YcNoGCAVpvSGLPD6K4p1sOpm2KA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 85FBAE00A6; Thu, 10 Sep 2020 23:53:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
-Mime-Version: 1.0
-Message-Id: <38661d63-67ca-4dc9-942d-90a3b8cd8351@www.fastmail.com>
-In-Reply-To: <CACPK8XemZ2YG+nFBwy7sDoo8==YvnVYxt+1mx8QfBCxotG7K6g@mail.gmail.com>
-References: <20200910105440.3087723-1-andrew@aj.id.au>
- <20200910105440.3087723-3-andrew@aj.id.au>
- <CACPK8Xf-jys=F0Uqg-hYH-eDThmd5yOSNeC7+vLhra3GdOK1Zw@mail.gmail.com>
- <57d48d7a-7cea-4be7-92bd-8f3b93f84a06@www.fastmail.com>
- <CACPK8XemZ2YG+nFBwy7sDoo8==YvnVYxt+1mx8QfBCxotG7K6g@mail.gmail.com>
-Date:   Fri, 11 Sep 2020 13:23:01 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_mmc:_sdhci-of-aspeed:_Expose_data_sample_phase?=
- =?UTF-8?Q?_delay_tuning?=
-Content-Type: text/plain
+        Thu, 10 Sep 2020 23:53:56 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222F1C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:53:56 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m5so5635627pgj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=er3tHzvhZmVFoY1Ivnz+K1dwvMdQAfXcT7CPtzE9jbQ=;
+        b=LZI6gdr1lcNG+T40igoRu0JN4jGfD5sx5a/SyqRrP57AM+ZSAtTuhFo/sOHC5E+o+i
+         I2mFM2szh+B4GzS0Ny0UJ6t7GIbuwqP4suWkDgdI1YeTKbwTZ1iW7CGxg11JsnwnhL4y
+         WOxFVL5OPv1qox3qHMwWtAD6FqqWoQ6BkUMmpHuAlGrmLeou8qXpeGZdp2cg4TXOVhPM
+         7S8BqxJUdC3zjfKFR0I9eX405zgFh31uYhIZS0twoFEHhAjITZwcTaa9Xw/5uiUq4WvY
+         eLAg/b9f+tCBQL9t4UK0ChS/RQFf0/I0aOP6CeAOvkqt6UbPcLjXce+V1J63I3dTtjiC
+         Fv0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=er3tHzvhZmVFoY1Ivnz+K1dwvMdQAfXcT7CPtzE9jbQ=;
+        b=gFjSsouzjysjqYx059+CLHoOrSABWJ4SbM/UMW6LogJAycsfDCwfo2UV+NpVJo2ZCY
+         Wx9aHBfLpLE0oiJb/7O16yQ3wxzXabIlhJW9DIPBp/HuakTbaHqsuibNl7lbldtcnaXj
+         gs0112vFEDxP2rEDNVt4+2VQ8Nk8L4Pf6ThoCGZCIwr8d9dYrqBb0SlO0C4NI4svrWlC
+         OYdDfD1vswOkeLdFeiQFwERJ7pz6Teq3q6QgS8tyVDtohDxhfW6lK27AM/gR/Gep9LtX
+         ejq1oCUbi6hyaUg2LrJCHeIb6NM37ZdBQltMGNCiCwJCYnORRbhb0NE7ipclPkMj/vol
+         e4qw==
+X-Gm-Message-State: AOAM531vfLn5ykT3EKDGbhyWuzT/EkfaHqZb0+cVljP7NyNRt5fmYdWU
+        FwPxmmk9GpzeOmwU5mjxEnDuuTNjjG8yinmupfa6JA==
+X-Google-Smtp-Source: ABdhPJxAQLsWWLTq+Ndedf8vMMByB477wxWCyqpKJ7J71xiP4s0gqwnl2QFRZTCEoi5Qdhqdq6eLUb2CucMLM6qFjC4=
+X-Received: by 2002:a63:9041:: with SMTP id a62mr239553pge.273.1599796435635;
+ Thu, 10 Sep 2020 20:53:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200828031928.43584-1-songmuchun@bytedance.com>
+ <CAMZfGtWtAYNexRq1xf=5At1+YJ+_TtN=F6bVnm9EPuqRnMuroA@mail.gmail.com>
+ <8c288fd4-2ef7-ca47-1f3b-e4167944b235@linux.com> <CAMZfGtXsXWtHh_G0TWm=DxG_5xT6kN_BbfqNgoQvTRu89FJihA@mail.gmail.com>
+In-Reply-To: <CAMZfGtXsXWtHh_G0TWm=DxG_5xT6kN_BbfqNgoQvTRu89FJihA@mail.gmail.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Fri, 11 Sep 2020 11:53:16 +0800
+Message-ID: <CAMZfGtW44zaQYQTG3twx82adZH-MTd=B5zESAeFCz-zYki=EYA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2] stackleak: Fix a race between stack
+ erasing sysctl handlers
+To:     alex.popov@linux.com, Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        miguel.ojeda.sandonis@gmail.com
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ping guys. Thanks.
 
-
-On Fri, 11 Sep 2020, at 13:03, Joel Stanley wrote:
-> On Fri, 11 Sep 2020 at 02:49, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> >
-> >
-> > On Fri, 11 Sep 2020, at 11:32, Joel Stanley wrote:
-> > > On Thu, 10 Sep 2020 at 10:55, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > >
-> > > > Allow sample phase adjustment to deal with layout or tolerance issues.
-> > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > > ---
-> > > >  drivers/mmc/host/sdhci-of-aspeed.c | 137 +++++++++++++++++++++++++++--
-> > > >  1 file changed, 132 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > index 4f008ba3280e..641accbfcde4 100644
-> > > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> 
-> > > > +static void
-> > > > +aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
-> > > > +                          const struct aspeed_sdhci_phase_desc *phase,
-> > > > +                          uint8_t value, bool enable)
-> > > > +{
-> > > > +       u32 reg;
-> > > > +
-> > > > +       spin_lock(&sdc->lock);
-> > >
-> > > What is the lock protecting against?
-> > >
-> > > We call this in the ->probe, so there should be no concurrent access going on.
-> >
-> > Because the register is in the "global" part of the SD/MMC controller address
-> > space (it's not part of the SDHCI), and there are multiple slots that may have
-> > a driver probed concurrently.
-> 
-> That points to having the property be part of the "global" device tree
-> node.
-
-Not really. The settings are slot-specific. The only reason it's in the global
-register space is that the settings cannot be part of the SDHCI. That Aspeed
-chose to pack them in the same register, and _interleaved_ at that, is
-unfortunate.
-
-As the settings are slot-specific they should be associated with each slot's
-node. We should concentrate on representing the intent of the controls and
-not tie the devicetree representation to the register layout that Aspeed came
-up with.
-
->  This would simplify the code; you wouldn't need the locking
-> either.
-
-IMO this is a loss for readability, so I'm not convinced it should be changed.
-The outcome is some opaque register value that is shoved in the devicetree,
-and given the baffling interleaving and choices of field sizes that's not a place
-I want to be.
-
-> 
-> >
-> > >
-> > >
-> > > > +       reg = readl(sdc->regs + ASPEED_SDC_PHASE);
-> > > > +       reg &= ~phase->enable_mask;
-> > > > +       if (enable) {
-> > > > +               reg &= ~phase->value_mask;
-> > > > +               reg |= value << __ffs(phase->value_mask);
-> > > > +               reg |= phase->enable_value << __ffs(phase->enable_mask);
-> > > > +       }
-> > > > +       writel(reg, sdc->regs + ASPEED_SDC_PHASE);
-> > > > +       spin_unlock(&sdc->lock);
-> > > > +}
-> > > > +
-> > > >  static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
-> > > >  {
-> > > >         struct sdhci_pltfm_host *pltfm_host;
-> > > > @@ -155,8 +195,58 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
-> > > >         return (delta / 0x100) - 1;
-> > > >  }
-> > > >
-> > > > +static int aspeed_sdhci_configure_of(struct platform_device *pdev,
-> > > > +                                    struct aspeed_sdhci *sdhci)
-> > > > +{
-> > > > +       u32 iphase, ophase;
-> > > > +       struct device_node *np;
-> > > > +       struct device *dev;
-> > > > +       int ret;
-> > > > +
-> > > > +       if (!sdhci->phase)
-> > > > +               return 0;
-> > > > +
-> > > > +       dev = &pdev->dev;
-> > > > +       np = dev->of_node;
-> > > > +
-> > > > +       ret = of_property_read_u32(np, "aspeed,input-phase", &iphase);
-> > > > +       if (ret < 0) {
-> > > > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->in, 0,
-> > > > +                                          false);
-> > >
-> > > Will this clear any value that eg. u-boot writes?
-> >
-> > No, see the 'enable' test in aspeed_sdc_configure_phase()
-> 
-> OK, so this branch will never cause any change in the register? Best
-> to drop it then.
-
-So there are two parts to the phase configuration, the phase adjustment
-value, and a switch to turn phase adjustment on or off. Both fields exist
-for both in and out phase adjustments for both slots.
-
-So this branch will cause the phase control to be disabled, but it won't
-change the phase value that was originally programmed. If we maintain
-the original semantics it shouldn't be dropped.
-
-However, below you suggest we maintain the configuration (both
-enable and value state) in the absence of the property, so the code
-needs to be reworked to uphold suggestion.
-
-> 
-> >
-> > >
-> > > The register should be left alone if the kernel doesn't have a
-> > > configuration of it's own, otherwise we may end up breaking an
-> > > otherwise working system.
-> >
-> > Right, I can rework that.
+On Mon, Sep 7, 2020 at 9:53 PM Muchun Song <songmuchun@bytedance.com> wrote:
 >
+> On Mon, Sep 7, 2020 at 7:24 PM Alexander Popov <alex.popov@linux.com> wrote:
+> >
+> > On 07.09.2020 05:54, Muchun Song wrote:
+> > > Hi all,
+> > >
+> > > Any comments or suggestions? Thanks.
+> > >
+> > > On Fri, Aug 28, 2020 at 11:19 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > >>
+> > >> There is a race between the assignment of `table->data` and write value
+> > >> to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
+> > >> the other thread.
+> > >>
+> > >>     CPU0:                                 CPU1:
+> > >>                                           proc_sys_write
+> > >>     stack_erasing_sysctl                    proc_sys_call_handler
+> > >>       table->data = &state;                   stack_erasing_sysctl
+> > >>                                                 table->data = &state;
+> > >>       proc_doulongvec_minmax
+> > >>         do_proc_doulongvec_minmax             sysctl_head_finish
+> > >>           __do_proc_doulongvec_minmax           unuse_table
+> > >>             i = table->data;
+> > >>             *i = val;  // corrupt CPU1's stack
+> >
+> > Hello everyone!
+> >
+> > As I remember, I implemented stack_erasing_sysctl() very similar to other sysctl
+> > handlers. Is that issue relevant for other handlers as well?
+>
+> Yeah, it's very similar. But the difference is that others use a
+> global variable as the
+> `table->data`, but here we use a local variable as the `table->data`.
+> The local variable
+> is allocated from the stack. So other thread could corrupt the stack
+> like the diagram
+> above.
+>
+> >
+> > Muchun, could you elaborate how CPU1's stack is corrupted and how you detected
+> > that? Thanks!
+>
+> Why did I find this problem? Because I solve another problem which is
+> very similar to
+> this issue. You can reference the following fix patch. Thanks.
+>
+>   https://lkml.org/lkml/2020/8/22/105
+>
+>
+>
+>
+> >
+> > Best regards,
+> > Alexander
+> >
+> > >> Fix this by duplicating the `table`, and only update the duplicate of
+> > >> it.
+> > >>
+> > >> Fixes: 964c9dff0091 ("stackleak: Allow runtime disabling of kernel stack erasing")
+> > >> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > >> ---
+> > >> changelogs in v2:
+> > >>  1. Add more details about how the race happened to the commit message.
+> > >>
+> > >>  kernel/stackleak.c | 11 ++++++++---
+> > >>  1 file changed, 8 insertions(+), 3 deletions(-)
+> > >>
+> > >> diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+> > >> index a8fc9ae1d03d..fd95b87478ff 100644
+> > >> --- a/kernel/stackleak.c
+> > >> +++ b/kernel/stackleak.c
+> > >> @@ -25,10 +25,15 @@ int stack_erasing_sysctl(struct ctl_table *table, int write,
+> > >>         int ret = 0;
+> > >>         int state = !static_branch_unlikely(&stack_erasing_bypass);
+> > >>         int prev_state = state;
+> > >> +       struct ctl_table dup_table = *table;
+> > >>
+> > >> -       table->data = &state;
+> > >> -       table->maxlen = sizeof(int);
+> > >> -       ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+> > >> +       /*
+> > >> +        * In order to avoid races with __do_proc_doulongvec_minmax(), we
+> > >> +        * can duplicate the @table and alter the duplicate of it.
+> > >> +        */
+> > >> +       dup_table.data = &state;
+> > >> +       dup_table.maxlen = sizeof(int);
+> > >> +       ret = proc_dointvec_minmax(&dup_table, write, buffer, lenp, ppos);
+> > >>         state = !!state;
+> > >>         if (ret || !write || state == prev_state)
+> > >>                 return ret;
+> > >> --
+> > >> 2.11.0
+> > >>
+> > >
+> > >
+> >
+>
+>
+> --
+> Yours,
+> Muchun
+
+
+
+-- 
+Yours,
+Muchun
