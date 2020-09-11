@@ -2,118 +2,96 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3781FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE71021D90
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jzm76A5J"
+	by mail.kernel.org (Postfix) with ESMTP id E6D2F21D90
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725778AbgIKF5H (ORCPT
+        id S1725783AbgIKF5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 01:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgIKF5E (ORCPT
+        Fri, 11 Sep 2020 01:57:41 -0400
+Received: from regular1.263xmail.com ([211.150.70.206]:38454 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgIKF5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 01:57:04 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B6BC061573;
-        Thu, 10 Sep 2020 22:57:03 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id u25so7422291otq.6;
-        Thu, 10 Sep 2020 22:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bXRDcpcdk/Mv5GNEux60X8UU9ajHOjMM0sdDWglatzg=;
-        b=Jzm76A5J/d1K96oMaHeTblKjAR7NYcEU5JmyKqGN9TfouTYNAkZH9bYa4o4dSvuvGl
-         vVTb3FWIRo1E/kicwmEyTW49kQeGF56csdG9I60QXBWjZZUo8JV+3W4+yIE2xw9arWbV
-         6LEwfObp38nOgKLo2gc473gb+QeI21sPdfrB9Ky+cJY8ttK02BHNM9xg14W1/cX3W/tV
-         CnVt225QGFltT7CtUNX2p0bn7FLAyfYpvdLgHjkLRaVuqsYoutPzHQSD0HAMXYxb2ZwI
-         paPAE7jqIImE/1RQNc+GALcruF18UBi1TX8NsB0Mq0WwM+Tti2Wt4jTNSy5i/JV1l9Lc
-         YpJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bXRDcpcdk/Mv5GNEux60X8UU9ajHOjMM0sdDWglatzg=;
-        b=EvysNWDEBcioW5bcXySpbPbIqdG3aqS1eK3+KlPhLJGEAX5kfo09aQLOzMYSbWgDzW
-         IqfKKA/6XuUyB/XwGGGDEq8zPLvfwiTUjaslYpoAMX09CV4tKoEOYhBqSu71e0mcKR18
-         zB9dfGSEMGc5j9Ipen8j8++fkyCTM2VNpd0fhLK0OhQnfmEZChgsfWHBSkN2Po/v/fkU
-         W43o4LyEPCcnYsyOdMBnie1bqUlWZvGC4pa8d57ifd8InzNR/3JSEY6NvL9BXInlAgue
-         LdymfVwpsiwzpDFZ2J7wwJYJYbSIfacfuVoiBfXJHaeYIpzXL/uV7+JLFQNxJ90IyAVc
-         2pKg==
-X-Gm-Message-State: AOAM533/3iLsyXwU6jcZbkickGGgB+3Ody/5NouZbvJty80w52gxlI8g
-        d5toZAiqTTJCS4C432+98pqvIfKR1rIHRJ6+/9M=
-X-Google-Smtp-Source: ABdhPJwZlCcBfE23ZIWj4B9Fbnh0ADcF5CcKkBnr4rjFillgbSG1GAfMsJ8VnQfF5J6jUdkURyR45XlLMBnhmHTGTB4=
-X-Received: by 2002:a05:6830:2246:: with SMTP id t6mr242842otd.264.1599803823245;
- Thu, 10 Sep 2020 22:57:03 -0700 (PDT)
+        Fri, 11 Sep 2020 01:57:38 -0400
+Received: from localhost (unknown [192.168.167.69])
+        by regular1.263xmail.com (Postfix) with ESMTP id 0FD7049A;
+        Fri, 11 Sep 2020 13:57:13 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from localhost.localdomain (unknown [125.88.171.115])
+        by smtp.263.net (postfix) whith ESMTP id P25136T140525459982080S1599803826185079_;
+        Fri, 11 Sep 2020 13:57:12 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <6aaa4e79d86ee4d5edf8d473087f072a>
+X-RL-SENDER: yili@winhong.com
+X-SENDER: yili@winhong.com
+X-LOGIN-NAME: yili@winhong.com
+X-FST-TO: pbonzini@redhat.com
+X-SENDER-IP: 125.88.171.115
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yi Li <yili@winhong.com>
+To:     pbonzini@redhat.com
+Cc:     yilikernel@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Yi Li <yili@winhong.com>
+Subject: [PATCH] kvm/eventfd:do wildcard calculation before list_for_each_entry_safe
+Date:   Fri, 11 Sep 2020 13:56:52 +0800
+Message-Id: <20200911055652.3041762-1-yili@winhong.com>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-References: <20200817084614.24263-1-allen.cryptic@gmail.com>
-In-Reply-To: <20200817084614.24263-1-allen.cryptic@gmail.com>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Fri, 11 Sep 2020 11:26:52 +0530
-Message-ID: <CAOMdWSJohOLK023ZM-yTnZiNHdy2TfyyWV3+iuuQiALiYV2NLQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] drivers: net: convert tasklets to use new tasklet_setup()
-To:     David Miller <davem@davemloft.net>
-Cc:     m.grzeschik@pengutronix.de, paulus@samba.org, oliver@neukum.org,
-        woojung.huh@microchip.com, petkan@nucleusys.com,
-        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-        linux-ppp@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David,
->
-> Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
-> introduced a new tasklet initialization API. This series converts
-> all the net/* drivers to use the new tasklet_setup() API
->
-> Allen Pais (8):
->   net: dccp: convert tasklets to use new tasklet_setup() API
->   net: ipv4: convert tasklets to use new tasklet_setup() API
->   net: mac80211: convert tasklets to use new tasklet_setup() API
->   net: mac802154: convert tasklets to use new tasklet_setup() API
->   net: rds: convert tasklets to use new tasklet_setup() API
->   net: sched: convert tasklets to use new tasklet_setup() API
->   net: smc: convert tasklets to use new tasklet_setup() API
->   net: xfrm: convert tasklets to use new tasklet_setup() API
->
->  net/dccp/timer.c           | 10 +++++-----
->  net/ipv4/tcp_output.c      |  8 +++-----
->  net/mac80211/ieee80211_i.h |  4 ++--
->  net/mac80211/main.c        | 14 +++++---------
->  net/mac80211/tx.c          |  5 +++--
->  net/mac80211/util.c        |  5 +++--
->  net/mac802154/main.c       |  8 +++-----
->  net/rds/ib_cm.c            | 14 ++++++--------
->  net/sched/sch_atm.c        |  9 +++++----
->  net/smc/smc_cdc.c          |  6 +++---
->  net/smc/smc_wr.c           | 14 ++++++--------
->  net/xfrm/xfrm_input.c      |  7 +++----
->  12 files changed, 47 insertions(+), 57 deletions(-)
->
-> --
-> 2.17.1
->
+There is no need to calculate wildcard in each loop
+since wildcard is not changed.
 
-Will you pick these up or should I send these out again when I
-have fixed the two patches on the other thread.
+Signed-off-by: Yi Li <yili@winhong.com>
+---
+ virt/kvm/eventfd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index d6408bb497dc..c2323c27a28b 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -853,15 +853,17 @@ kvm_deassign_ioeventfd_idx(struct kvm *kvm, enum kvm_bus bus_idx,
+ 	struct eventfd_ctx       *eventfd;
+ 	struct kvm_io_bus	 *bus;
+ 	int                       ret = -ENOENT;
++	bool                      wildcard;
+ 
+ 	eventfd = eventfd_ctx_fdget(args->fd);
+ 	if (IS_ERR(eventfd))
+ 		return PTR_ERR(eventfd);
+ 
++	wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
++
+ 	mutex_lock(&kvm->slots_lock);
+ 
+ 	list_for_each_entry_safe(p, tmp, &kvm->ioeventfds, list) {
+-		bool wildcard = !(args->flags & KVM_IOEVENTFD_FLAG_DATAMATCH);
+ 
+ 		if (p->bus_idx != bus_idx ||
+ 		    p->eventfd != eventfd  ||
 -- 
-       - Allen
+2.25.3
+
+
+
