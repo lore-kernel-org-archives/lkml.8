@@ -2,49 +2,96 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D019C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FBFC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34AF7206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE5E221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UJE/6zWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgIKQ0G (ORCPT
+        id S1726612AbgIKQ0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbgIKPYF (ORCPT
+        Fri, 11 Sep 2020 12:26:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39908 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgIKPXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:24:05 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D4DC061371;
-        Fri, 11 Sep 2020 07:32:56 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGk6W-00EMOm-ND; Fri, 11 Sep 2020 14:32:44 +0000
-Date:   Fri, 11 Sep 2020 15:32:44 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Subject: Re: [PATCH] ia64: remove perfmon
-Message-ID: <20200911143244.GA3421308@ZenIV.linux.org.uk>
-References: <20200911094920.1173631-1-hch@lst.de>
+        Fri, 11 Sep 2020 11:23:10 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08BEiH8S080691;
+        Fri, 11 Sep 2020 09:44:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599835457;
+        bh=VeiJJJ5bDbdPOe8X83iD+SDZUH01GPEKBkwwWMTRjgc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UJE/6zWtsV+dKAnUUe1kgx4juYG0EdbHLsIxlqQHR/qXPSPaff8coqPtO9DENjKvM
+         KXBa1Phfd6Bxzs7qBKxWzdfy+oP+0y6GsXXNC9F6nlBk7gsAOEndpke4lriNBhn9v6
+         AraTG/qSLZARBudKKUIAalacflPPOiQ7+mqZ5TgM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08BEiH7P001244
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Sep 2020 09:44:17 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 11
+ Sep 2020 09:44:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 11 Sep 2020 09:44:16 -0500
+Received: from [10.250.66.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08BEiEGY111883;
+        Fri, 11 Sep 2020 09:44:15 -0500
+Subject: Re: [v4,3/4] reset-controller: ti: introduce a new reset handler
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Crystal Guo <crystal.guo@mediatek.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
+        <seiya.wang@mediatek.com>,
+        =?UTF-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= 
+        <stanley.chu@mediatek.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <Yingjoe.Chen@mediatek.com>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?WW9uZyBMaWFuZyAo5qKB5YuHKQ==?= <Yong.Liang@mediatek.com>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-4-crystal.guo@mediatek.com>
+ <3a5decee-5f31-e27d-a120-1f835241a87c@ti.com>
+ <1599620279.14806.18.camel@mhfsdcap03>
+ <096362e9-dee8-4e7a-2518-47328068c2fd@ti.com>
+ <1599792140.14806.22.camel@mhfsdcap03>
+ <9d72aaef-49fe-ebb6-215d-05ad3ab27af4@ti.com>
+ <1599804422.14806.27.camel@mhfsdcap03>
+ <dae4ab91ec20e72963f2658efca4874a35dd739e.camel@pengutronix.de>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <407863ba-e336-11fc-297d-f1be1f58adaa@ti.com>
+Date:   Fri, 11 Sep 2020 09:44:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911094920.1173631-1-hch@lst.de>
+In-Reply-To: <dae4ab91ec20e72963f2658efca4874a35dd739e.camel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200911144414.Bmsuz6VQRaghLXHpVPZWJwMtFWUe6s1TXkYmJHV7XyA@z>
 
-On Fri, Sep 11, 2020 at 11:49:19AM +0200, Christoph Hellwig wrote:
-> perfmon has been marked broken and thus been disabled for all builds
-> for more than two years.  Remove it entirely.
-
-Enthusiastically-ACKed-by: Al Viro <viro@zeniv.linux.org.uk>
+<<< No Message Collected >>>
