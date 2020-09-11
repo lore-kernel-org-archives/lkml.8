@@ -2,96 +2,90 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20722C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F978C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1C13206A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599838543;
-	bh=ugt57UudOowWxtW+wZwTzUmbFy/FfUpWgsziWteq/yQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vv7y+qSK9rDVN6m7Kh1lo40EsOLbi04VgcsnI00Sk48Q1tuYUzrwZ6dy92B5FavFH
-	 bqPXw6hNQPr5P+057nkjlGesacJn6GoTmR2CUX/rzFO6DVKNFA+QvzVubGx48rEMi3
-	 v5QWq0LlW2bppEcnovm1tRpVoal6Zx2Xmb3ZdjpQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0ED8B2073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVGo0/vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgIKPfk (ORCPT
+        id S1726170AbgIKPfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgIKPaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:30:30 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61FEC21D47;
-        Fri, 11 Sep 2020 14:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599832945;
-        bh=ugt57UudOowWxtW+wZwTzUmbFy/FfUpWgsziWteq/yQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iyMk4uzpjZpEepjpkfSV+Fi7J2/MfhDLNcdKUrA/C32d5IjiQL4/4bGPB0/+2NVUl
-         bBJg0nHnRrt6D6mXYZgu3cQ77PmKM8/BjP/7Kqlm5qjyIKRXDuEzUSUO8NebUNVoLA
-         SazSpnykjUAV4ZS+ytntTdBOjbPleH2bVha2mTyM=
-Date:   Fri, 11 Sep 2020 15:02:19 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Fox Chen <foxhlchen@gmail.com>
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        paulmck@kernel.org, akiyks@gmail.com, dlustig@nvidia.com,
-        joel@joelfernandes.org, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-doc@vger.kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH] docs/memory-barriers.txt: Fix a typo in CPU MEMORY
- BARRIERS section
-Message-ID: <20200911140218.GB19961@willie-the-truck>
-References: <20200909065340.118264-1-foxhlchen@gmail.com>
+        Fri, 11 Sep 2020 11:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgIKPdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:33:00 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A968BC061348;
+        Fri, 11 Sep 2020 07:15:59 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o68so7581726pfg.2;
+        Fri, 11 Sep 2020 07:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/b9XBDQk1ajrYn0hzkaRXAYS7n96OUtEwCmlwlx4kE0=;
+        b=WVGo0/vh5Ry5H3l7PXexj2/RL9waZahUbKk8WrUfbSNtbrB/RnC6ax2hezjYZ5yI/1
+         zmW0sPUFpT7PJLWBdw+ycGOwlFjQStATATXF1D1N1J3vbCV5kFFnvVjeCmUrrJR0L6gy
+         JU7mes/+p0ScZy0lwMcHqSNdwbeewByrV+H1Z0rmJgZCA5d78o3kBD3LlUQYwv9wq+20
+         O6yumAaHEU+EHhXHfBdRbPR3mfSik+Aa68tTtlVFdr90W9F09QCu16qbaa9W3XdkThGm
+         z7S6OwpDghpG80Y1moDUxX9v4RmtOaSOGjCiOUGhWVEYB6bpA2bqEWWHPR68UrTlSs5E
+         jPwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/b9XBDQk1ajrYn0hzkaRXAYS7n96OUtEwCmlwlx4kE0=;
+        b=Z7fmv+MkrHeuyi6i3HiOPpVt9x6z8gVNgVCX9BmjLABZfK4Bcj8kJlLsORA2i4+OVt
+         pFvi1+rYZIcOv/L0dLUujqaPa1kysrpc6ztx0GF6/moPxQTuIP32QFNb/58iIAEEF8Q8
+         OLGCxA6nTJwk5eIddWLzG7iHJw9aD1ZjTdhVttELBn2sEh19XefBfsukl7tL59GMhK0W
+         2B1q/IrG4SO9gKytvwV+tc7fpd0YfdPNpSlXr6aySXVl3XL2+FvfB1mwjySx549X7Z4g
+         CRQqe1f/5OBOfVCEGovpXvZhtUwZ3vZGRVmshXr1yL0DBBYdQlQnp1IiyH3QZpsY7Nas
+         abMg==
+X-Gm-Message-State: AOAM533hY/eznjIO5WhTHC14DinpEprUkhfv/FNxAn2iC/Q7XmvI8b17
+        c3ThijqOlBX//4dW7n4Nm58=
+X-Google-Smtp-Source: ABdhPJxO8xBMW2b2qAKrC4EW1koJNssG2C6MihNWSugbwe/RG7EeVrT37R8Tt329rdW5Ddk8QeGqqA==
+X-Received: by 2002:a17:902:8d86:b029:d1:9237:6dfd with SMTP id v6-20020a1709028d86b02900d192376dfdmr2515568plo.22.1599833758731;
+        Fri, 11 Sep 2020 07:15:58 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id a74sm2546517pfa.16.2020.09.11.07.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 07:15:57 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 23:15:55 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT flag
+Message-ID: <20200911141555.GA535@jagdpanzerIV.localdomain>
+References: <20200911030758.73745-1-sergey.senozhatsky@gmail.com>
+ <20200911100919.GA1945@lst.de>
+ <262a3acd-9070-8992-f13f-1f02bfe18eb8@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909065340.118264-1-foxhlchen@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <262a3acd-9070-8992-f13f-1f02bfe18eb8@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 02:53:40PM +0800, Fox Chen wrote:
-> Commit 39323c6 smp_mb__{before,after}_atomic(): update Documentation
-> has a typo in CPU MEORY BARRIERS section:
-> "RMW functions that do not imply are memory barrier are ..." should be
-> "RMW functions that do not imply a memory barrier are ...".
-> 
-> This patch fixes this typo.
-> 
-> Signed-off-by: Fox Chen <foxhlchen@gmail.com>
-> ---
->  Documentation/memory-barriers.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-> index 96186332e5f4..20b8a7b30320 100644
-> --- a/Documentation/memory-barriers.txt
-> +++ b/Documentation/memory-barriers.txt
-> @@ -1870,7 +1870,7 @@ There are some more advanced barrier functions:
->  
->       These are for use with atomic RMW functions that do not imply memory
->       barriers, but where the code needs a memory barrier. Examples for atomic
-> -     RMW functions that do not imply are memory barrier are e.g. add,
-> +     RMW functions that do not imply a memory barrier are e.g. add,
->       subtract, (failed) conditional operations, _relaxed functions,
->       but not atomic_read or atomic_set. A common example where a memory
->       barrier may be required is when atomic ops are used for reference
+On (20/09/11 12:37), Hans Verkuil wrote:
+> I'll take care of that. I also discovered that one call to vb2_core_reqbufs()
+> wasn't updated (in drivers/media/dvb-core/dvb_vb2.c). I've fixed that as well.
 
-The document remains unreadable, but this is still worth fixing!
+Oh.. how did I miss drivers/media/dvb-core/dvb_vb2.c?
+Should have grep-ed more.
 
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+	-ss
