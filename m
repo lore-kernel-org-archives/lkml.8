@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7E4C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D11C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3747C22286
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6DC22286
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599834528;
-	bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+	s=default; t=1599834619;
+	bh=9FMYo2bufVujsHw85HNr708jaQ3F376AuTAIpj9bjuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4DHT5+aF5GU4C3dVKZ/lE3379ePbQIIkw4olOdktpH7Pd77WpO1Nj2TrzBDRr+ZP
-	 mNb1el6+YAJakvE39Z/GZckOkpZ6aui1k/umL0b4U+qpdmiMOYMilIo7xzZZlvgVwz
-	 z1yRVnb8vyX/+FUnnTO97u+ZOzVWhb2UCJCpZ4V0=
+	b=ZRsvOekuiXun9vhxiWBRPgHk7gaR8CVw8dPSAHhfWo0zMnzP8XfMV9h8+J0n6UUZJ
+	 FxiYhBZlp7tS8PRhWLRRe6wn1A7ucLYINmxicHoVXaP6XJ/M4D0zAqs6CWY8ccOwuz
+	 w4GWzVBjOARI6k5KHk9iCMAtNeG8aOtkXguEw7j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgIKO2j (ORCPT
+        id S1726253AbgIKOaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:28:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726101AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:12:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325C022225;
-        Fri, 11 Sep 2020 13:00:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B992D2245F;
+        Fri, 11 Sep 2020 13:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829225;
-        bh=W1ZGXPCPWg4GDwJhPkYdlGLPtpBi+3EawQT0rGrBiAU=;
+        s=default; t=1599829233;
+        bh=9FMYo2bufVujsHw85HNr708jaQ3F376AuTAIpj9bjuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nftCcjhvIiJ3GXmK4jnsxURVRSFpp9WQm8podGNH1KrQGPc5hSUxoSIi8mYQ0tG8/
-         xNrItN4mNwPVgp0eTq2hNknKq3NhYhdDKbVXdipftnmmK+lgcrj7BMOg1W1GYoRvJr
-         jP5zpBNKCYozUzxuE1XOzDq6Mp2sGVUhSMuhuAF0=
+        b=WNWME/k1O/d7VwmZGjF8r4hGgwpjLbu41LG+SFXxc5JnKEBJr/UPOjx7v2knLvZv7
+         5LLL09ilmh5MaHgEdOfJniDWbjCTp7TtqCKv2/DDFI3XWIP4DGpnjg01ZeGM3YKM7E
+         +w2qi1kLWm1PkdjBPnBBBUpsKwK2U0aVKYKNF1ZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@nvidia.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 6/8] taprio: Fix using wrong queues in gate mask
-Date:   Fri, 11 Sep 2020 14:54:44 +0200
-Message-Id: <20200911125420.881569917@linuxfoundation.org>
+Subject: [PATCH 5.4 1/8] ipv4: Silence suspicious RCU usage warning
+Date:   Fri, 11 Sep 2020 14:54:39 +0200
+Message-Id: <20200911125420.653876365@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911125420.580564179@linuxfoundation.org>
 References: <20200911125420.580564179@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,98 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 09e31cf0c528dac3358a081dc4e773d1b3de1bc9 ]
+[ Upstream commit 7f6f32bb7d3355cd78ebf1dece9a6ea7a0ca8158 ]
 
-Since commit 9c66d1564676 ("taprio: Add support for hardware
-offloading") there's a bit of inconsistency when offloading schedules
-to the hardware:
+fib_info_notify_update() is always called with RTNL held, but not from
+an RCU read-side critical section. This leads to the following warning
+[1] when the FIB table list is traversed with
+hlist_for_each_entry_rcu(), but without a proper lockdep expression.
 
-In software mode, the gate masks are specified in terms of traffic
-classes, so if say "sched-entry S 03 20000", it means that the traffic
-classes 0 and 1 are open for 20us; when taprio is offloaded to
-hardware, the gate masks are specified in terms of hardware queues.
+Since modification of the list is protected by RTNL, silence the warning
+by adding a lockdep expression which verifies RTNL is held.
 
-The idea here is to fix hardware offloading, so schedules in hardware
-and software mode have the same behavior. What's needed to do is to
-map traffic classes to queues when applying the offload to the driver.
+[1]
+ =============================
+ WARNING: suspicious RCU usage
+ 5.9.0-rc1-custom-14233-g2f26e122d62f #129 Not tainted
+ -----------------------------
+ net/ipv4/fib_trie.c:2124 RCU-list traversed in non-reader section!!
 
-Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by ip/834:
+  #0: ffffffff85a3b6b0 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
+
+ stack backtrace:
+ CPU: 0 PID: 834 Comm: ip Not tainted 5.9.0-rc1-custom-14233-g2f26e122d62f #129
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+ Call Trace:
+  dump_stack+0x100/0x184
+  lockdep_rcu_suspicious+0x143/0x14d
+  fib_info_notify_update+0x8d1/0xa60
+  __nexthop_replace_notify+0xd2/0x290
+  rtm_new_nexthop+0x35e2/0x5946
+  rtnetlink_rcv_msg+0x4f7/0xbd0
+  netlink_rcv_skb+0x17a/0x480
+  rtnetlink_rcv+0x22/0x30
+  netlink_unicast+0x5ae/0x890
+  netlink_sendmsg+0x98a/0xf40
+  ____sys_sendmsg+0x879/0xa00
+  ___sys_sendmsg+0x122/0x190
+  __sys_sendmsg+0x103/0x1d0
+  __x64_sys_sendmsg+0x7d/0xb0
+  do_syscall_64+0x32/0x50
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fde28c3be57
+ Code: 0c 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51
+c3 48 83 ec 28 89 54 24 1c 48 89 74 24 10
+RSP: 002b:00007ffc09330028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fde28c3be57
+RDX: 0000000000000000 RSI: 00007ffc09330090 RDI: 0000000000000003
+RBP: 000000005f45f911 R08: 0000000000000001 R09: 00007ffc0933012c
+R10: 0000000000000076 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffc09330290 R14: 00007ffc09330eee R15: 00005610e48ed020
+
+Fixes: 1bff1a0c9bbd ("ipv4: Add function to send route updates")
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_taprio.c |   30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ net/ipv4/fib_trie.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1177,9 +1177,27 @@ static void taprio_offload_config_change
- 	spin_unlock(&q->current_entry_lock);
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2010,7 +2010,8 @@ void fib_info_notify_update(struct net *
+ 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
+ 		struct fib_table *tb;
+ 
+-		hlist_for_each_entry_rcu(tb, head, tb_hlist)
++		hlist_for_each_entry_rcu(tb, head, tb_hlist,
++					 lockdep_rtnl_is_held())
+ 			__fib_info_notify_update(net, tb, info);
+ 	}
  }
- 
--static void taprio_sched_to_offload(struct taprio_sched *q,
-+static u32 tc_map_to_queue_mask(struct net_device *dev, u32 tc_mask)
-+{
-+	u32 i, queue_mask = 0;
-+
-+	for (i = 0; i < dev->num_tc; i++) {
-+		u32 offset, count;
-+
-+		if (!(tc_mask & BIT(i)))
-+			continue;
-+
-+		offset = dev->tc_to_txq[i].offset;
-+		count = dev->tc_to_txq[i].count;
-+
-+		queue_mask |= GENMASK(offset + count - 1, offset);
-+	}
-+
-+	return queue_mask;
-+}
-+
-+static void taprio_sched_to_offload(struct net_device *dev,
- 				    struct sched_gate_list *sched,
--				    const struct tc_mqprio_qopt *mqprio,
- 				    struct tc_taprio_qopt_offload *offload)
- {
- 	struct sched_entry *entry;
-@@ -1194,7 +1212,8 @@ static void taprio_sched_to_offload(stru
- 
- 		e->command = entry->command;
- 		e->interval = entry->interval;
--		e->gate_mask = entry->gate_mask;
-+		e->gate_mask = tc_map_to_queue_mask(dev, entry->gate_mask);
-+
- 		i++;
- 	}
- 
-@@ -1202,7 +1221,6 @@ static void taprio_sched_to_offload(stru
- }
- 
- static int taprio_enable_offload(struct net_device *dev,
--				 struct tc_mqprio_qopt *mqprio,
- 				 struct taprio_sched *q,
- 				 struct sched_gate_list *sched,
- 				 struct netlink_ext_ack *extack)
-@@ -1224,7 +1242,7 @@ static int taprio_enable_offload(struct
- 		return -ENOMEM;
- 	}
- 	offload->enable = 1;
--	taprio_sched_to_offload(q, sched, mqprio, offload);
-+	taprio_sched_to_offload(dev, sched, offload);
- 
- 	err = ops->ndo_setup_tc(dev, TC_SETUP_QDISC_TAPRIO, offload);
- 	if (err < 0) {
-@@ -1486,7 +1504,7 @@ static int taprio_change(struct Qdisc *s
- 	}
- 
- 	if (FULL_OFFLOAD_IS_ENABLED(q->flags))
--		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
-+		err = taprio_enable_offload(dev, q, new_admin, extack);
- 	else
- 		err = taprio_disable_offload(dev, q, extack);
- 	if (err)
 
 
