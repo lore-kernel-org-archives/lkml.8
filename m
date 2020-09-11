@@ -2,82 +2,108 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF94C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20EF121D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB7A21D79
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgIKLcf (ORCPT
+        id S1725798AbgIKLdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:32:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:60404 "EHLO foss.arm.com"
+        Fri, 11 Sep 2020 07:33:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgIKL2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:28:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECC2F113E;
-        Fri, 11 Sep 2020 04:27:24 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59C303F68F;
-        Fri, 11 Sep 2020 04:27:22 -0700 (PDT)
-Subject: Re: [PATCH 2/3] ARM/keystone: move the DMA offset handling under
- ifdef CONFIG_ARM_LPAE
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org
-References: <20200910054038.324517-1-hch@lst.de>
- <20200910054038.324517-3-hch@lst.de>
- <20200911111551.GG1551@shell.armlinux.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <211af505-04fa-9cff-3178-1c8c24548485@arm.com>
-Date:   Fri, 11 Sep 2020 12:27:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1725774AbgIKL3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:29:48 -0400
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E44C221EB;
+        Fri, 11 Sep 2020 11:29:15 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 12:29:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Oli Swede <oli.swede@arm.com>, Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] arm64: Optimise and update memcpy, user copy
+ and string routines
+Message-ID: <20200911112911.GA12835@gaia>
+References: <20200630194822.1082-1-oli.swede@arm.com>
+ <f52401d9-787c-667b-c1ec-8b91106d6d14@arm.com>
+ <20200907101003.GA11970@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200911111551.GG1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907101003.GA11970@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-11 12:15, Russell King - ARM Linux admin wrote:
-> On Thu, Sep 10, 2020 at 07:40:37AM +0200, Christoph Hellwig wrote:
->> The DMA offset notifier can only be used if PHYS_OFFSET is at least
->> KEYSTONE_HIGH_PHYS_START, which can't be represented by a 32-bit
->> phys_addr_t.  Currently the code compiles fine despite that, a pending
->> change to the DMA offset handling would create a compiler warning for
->> this case.  Add an ifdef to not compile the code except for LPAE
->> configs.
+On Mon, Sep 07, 2020 at 11:10:03AM +0100, Will Deacon wrote:
+> On Wed, Jul 01, 2020 at 09:12:49AM +0100, Oli Swede wrote:
+> > > Version 3 addressed this but I later found some issues with the fixup
+> > > correctness after further testing, and have partially re-written them
+> > > here, and addressed some other behaviours of the copy algorithm.
 > 
-> However, to have use of the high physical offset, LPAE needs to be
-> enabled, which ensures that phys_addr_t is 64-bit.
+> [...]
 > 
-> I believe that DMA is non-coherent on this platform unless the high
-> physical address is used. Or something like that.
+> > I am waiting on access to the relevant machine before posting the benchmark
+> > results for this optimized memcpy, but Sam reported the following with the
+> > similar (but now slightly older) cortex-strings version:
+> >   * copy_from_user: 13.17%
+> >   * copy_to_user: 4.8%
+> >   * memcpy: 27.88%
+> >   * copy_in_user: Didn't appear in the test results.
+> > This machine will also be used to check the fixups are accurate on a system
+> > with UAO - they appear to be exact on a non-UAO system with PAN that I've
+> > been working on locally.
+> 
+> I'm inclined to say that cortex-strings is probably not a good basis for
+> our uaccess routines. The code needs to be adapted in a non-straightforward
+> way so that we lose pretty much all of the benefits we'd usually get from
+> adopted an existing implementation; we can't pull in fixes or improvements
+> without a lot of manual effort, we can't reuse existing testing infrastructure
+> (see below) and we end up being a "second-class" user of the routines
+> because of the discrepancies in implementation.
 
-Yeah, it's probably not a configuration that anyone would actually want 
-to use in anger on Keystone itself, but as long as folks might have 
-ARCH_KEYSTONE selected in their non-LPAE multiplatform config we should 
-avoid build regressions. I did wonder if Keystone should simply have a 
-hard dependency on LPAE, but there does appear to be some explicit 
-support for running directly from the non-coherent low 2G alias :/
+I was a bit more optimistic about this series until I saw the
+copy_user_fixup.S changes (patches 12 to 14). I have a suspicion it's
+only Oli (and maybe Robin) who understands it, so from a maintainer's
+perspective it doesn't really scale. It's also very fragile with any
+minor tweak in the actual copy routine potentially breaking the fixup
+code.
 
-Robin.
+> So why don't we use cortex-strings as a basis for the in-kernel routines
+> only, preferably in a form where the code can be used directly and updated
+> with a script (e.g. similar to how we pull in arch/arm64/crypto routines
+> from OpenSSL). We can then roll our own uaccess routines, using a slightly
+> more straight-forward implementation which is more amenable to handling
+> user faults and doesn't do things like over copying.
+
+I think that's probably the best option. I wouldn't mind replacing the
+in-kernel memcpy/strcpy etc. with these patches since the work was done
+already but definitely not for the uaccess and fixup routines (we still
+have the original implementation in the git log).
+
+A script would work even better. Do we have any issue with licensing
+though? Cortex Strings is BSD (3-clause IIRC) and copyright owned by
+Linaro. I got them to officially agree with relicensing (dual license)
+the latest copy under GPLv2 so that we can contribute it to the kernel.
+But since the project license is still BSD, any future updates in there
+are BSD-only.
+
+Maybe someone who understands this stuff can confirm that it's ok to
+regularly grab the Cortex Strings files into a GPLv2 codebase without
+asking for Linaro's permission.
+
+BTW, you could pick the kprobes patch in here, that explicit fixup call
+is not necessary.
+
+-- 
+Catalin
