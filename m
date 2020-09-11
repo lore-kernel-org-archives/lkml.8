@@ -2,193 +2,167 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BB0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8D5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5560221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D673A221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcIv65g3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cDk7oIWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725770AbgIKQo1 (ORCPT
+        id S1726434AbgIKQoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:44:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgIKPIW (ORCPT
+        Fri, 11 Sep 2020 12:44:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13128 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726392AbgIKQoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:08:22 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217D4C0612F3;
-        Fri, 11 Sep 2020 07:50:31 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c2so12634400ljj.12;
-        Fri, 11 Sep 2020 07:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=keOmaMSC1f/6krcZUSHtu67VeNUhv2XTpQaabLC7Uxs=;
-        b=HcIv65g3o85yTMO5d3Qd2bJTGTIMibPKbLp5vphXPbT4Z7r0lWk1X0Uz+UoXX84Ojc
-         b/XSw2GCGUC49nK5TjR5jvIX/Ow0ZISBu/xcF51fJva9kl3M9raYXOVw4bQnqwI9wG1n
-         2JCZ5smTAliiSx49/jqQb/JAWawe4McWQTTCE5JW+zM0gdCIQnwwg/hn561LyS7fVCpB
-         NzsrvmP3f+uJZF7tqYGzFPI6VrC6T32EreOMJDA9jDLmapUACXuhIz5VMS4nFfoOUVWD
-         IHD1RZqyBn30jzBhpKkj2ijgp3UWakWvJDuMLSmw+a1B/ORRwIcO/mjmvhZii5zKrhAY
-         vVqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=keOmaMSC1f/6krcZUSHtu67VeNUhv2XTpQaabLC7Uxs=;
-        b=L2+H0KUH23US/mbmo7NIkqaIKe6h5rUqzXSXVSQy8A7yqnqSQAqPANIHvBcBFUCcT9
-         CgFrRMWLRy5YRlIllA8O5J282My9OPcsk8EAXPqYmGsgCFzeO5DBCIluQOUvbAC8lEVT
-         TSJo5PZP+4fp6Huu/R/Lz7dAvL7a6wiFh/sz7siR/FOIiHD333LH+tXuscxT9ROuC/bY
-         tNkJqQe1DVsv4xfz7dkay+CScwWTn+/1xw6ltaOrPjV9nNETe0Hbi2cQ5+rZ+gWjKkpx
-         fhF+obsBR2o++xa67Ozt4J/Kg1rbrLFxcFDA+cZOftLQk3Lv/ofAWEn+OnTxmedHpvHz
-         Dt9Q==
-X-Gm-Message-State: AOAM531lvRC8I5uLDoY76s26aX7OuHqq3ZSWvd2wsIKC4o+APp1e/Iqv
-        k8ExT2rlTcxPF/jRL7I3mso=
-X-Google-Smtp-Source: ABdhPJz96jWQ7avP9u0tV5ffhgxC3hXOAhFpEQMWJnI4tOBpx9/gReMaiGE6y+nOqEHgQUuQctGwoQ==
-X-Received: by 2002:a2e:98c8:: with SMTP id s8mr974424ljj.268.1599835829537;
-        Fri, 11 Sep 2020 07:50:29 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id 18sm465533lfg.29.2020.09.11.07.50.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 07:50:28 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] Input: atmel_mxt_ts - implement I2C retries
-To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew_Gabbasov@mentor.com, erosca@de.adit-jv.com
-References: <20200908151617.12199-1-jiada_wang@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6041c677-592b-388e-2eb6-3287a3d92e4b@gmail.com>
-Date:   Fri, 11 Sep 2020 17:50:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200908151617.12199-1-jiada_wang@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 11 Sep 2020 12:44:19 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BGYkvk024226;
+        Fri, 11 Sep 2020 12:44:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pp1;
+ bh=jaxEgQC6wdaz4q4DPBtqSbQcompo/vEQ4h4vw9qyZ58=;
+ b=cDk7oIWtwX2DxKkZwQcb581iwmL4GVmZSOpFkK5XUYF/hKTA/pnYztMgC6k/BrmXOfFA
+ PZt6w5k7rTjO9SWHS/VVqc8DQv+628stSHRrAPpSCsPTHGN4DkWBsrLlbIh7EnIf0PbM
+ 5AQhPjyoBRMobOZ/63lp+rBJUO2RsdktlMuMkZAbOZbNSocv12UznaJPfN6CKVEnpiuj
+ 6EoSYAr4KmSi+U/ZGNgpffuuUec2pulTVaCd2ouRIiAyMMHN/DtUK0vJk9gn2suhpGvh
+ P3xUfqLCVCFR5WDp66shLW75Fx5GQ4Ms7Obdzs+wgKRnV/Ej1ii6LpbDVt6M9vcxhpDP fA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33gcdy8y2h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 12:44:13 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BGZ82e025595;
+        Fri, 11 Sep 2020 12:44:13 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33gcdy8y2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 12:44:13 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BGgVux018955;
+        Fri, 11 Sep 2020 16:44:12 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 33c2aa5f8a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 16:44:12 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BGiBQr38928760
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Sep 2020 16:44:11 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6FC48B205F;
+        Fri, 11 Sep 2020 16:44:11 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBDE8B2064;
+        Fri, 11 Sep 2020 16:44:09 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Sep 2020 16:44:09 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, cohuck@redhat.com
+Cc:     pmorel@linux.ibm.com, schnelle@linux.ibm.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vfio iommu: Add dma limit capability
+Date:   Fri, 11 Sep 2020 12:44:03 -0400
+Message-Id: <1599842643-2553-2-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1599842643-2553-1-git-send-email-mjrosato@linux.ibm.com>
+References: <1599842643-2553-1-git-send-email-mjrosato@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_08:2020-09-10,2020-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=887 impostorscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.09.2020 18:16, Jiada Wang пишет:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
-> 
-> Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
-> when they are in a sleep state. It must be retried after a delay for the
-> chip to wake up.
-> 
-> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-> Acked-by: Yufeng Shen <miletus@chromium.org>
+Commit 492855939bdb ("vfio/type1: Limit DMA mappings per container")
+added the ability to limit the number of memory backed DMA mappings.
+However on s390x, when lazy mapping is in use, we use a very large
+number of concurrent mappings.  Let's provide the limitation to
+userspace via the IOMMU info chain so that userspace can take
+appropriate mitigation.
 
-> (cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
+Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 17 +++++++++++++++++
+ include/uapi/linux/vfio.h       | 16 ++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-Hello, Jiada!
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 5fbf0c1..573c2c9 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -2609,6 +2609,20 @@ static int vfio_iommu_migration_build_caps(struct vfio_iommu *iommu,
+ 	return vfio_info_add_capability(caps, &cap_mig.header, sizeof(cap_mig));
+ }
+ 
++static int vfio_iommu_dma_limit_build_caps(struct vfio_iommu *iommu,
++					   struct vfio_info_cap *caps)
++{
++	struct vfio_iommu_type1_info_dma_limit cap_dma_limit;
++
++	cap_dma_limit.header.id = VFIO_IOMMU_TYPE1_INFO_DMA_LIMIT;
++	cap_dma_limit.header.version = 1;
++
++	cap_dma_limit.max = dma_entry_limit;
++
++	return vfio_info_add_capability(caps, &cap_dma_limit.header,
++					sizeof(cap_dma_limit));
++}
++
+ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+ 				     unsigned long arg)
+ {
+@@ -2642,6 +2656,9 @@ static int vfio_iommu_type1_get_info(struct vfio_iommu *iommu,
+ 	ret = vfio_iommu_migration_build_caps(iommu, &caps);
+ 
+ 	if (!ret)
++		ret = vfio_iommu_dma_limit_build_caps(iommu, &caps);
++
++	if (!ret)
+ 		ret = vfio_iommu_iova_build_caps(iommu, &caps);
+ 
+ 	mutex_unlock(&iommu->lock);
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 9204705..c91e471 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1039,6 +1039,22 @@ struct vfio_iommu_type1_info_cap_migration {
+ 	__u64	max_dirty_bitmap_size;		/* in bytes */
+ };
+ 
++/*
++ * The DMA limit capability allows to report the number of simultaneously
++ * outstanding DMA mappings are supported.
++ *
++ * The structures below define version 1 of this capability.
++ *
++ * max: specifies the maximum number of outstanding DMA mappings allowed.
++ */
++#define VFIO_IOMMU_TYPE1_INFO_DMA_LIMIT 3
++
++struct vfio_iommu_type1_info_dma_limit {
++	struct	vfio_info_cap_header header;
++	__u32	max;
++};
++
++
+ #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
+ 
+ /**
+-- 
+1.8.3.1
 
-In the comment to v2 Andy Shevchenko suggested that it should be better
-to remove the "cherry picked from ..." info from the commit message
-because that commit can't be found in the kernel.org git repo, and thus,
-it's not a very useful information.
-
-Also, please note that the original ACK from Yufeng Shen probably isn't
-valid anymore since you modified the patch. Hence it should be better to
-remove it.
-
-
-You may also add my r-b and t-b tags to the commit message that I gave
-to the v2.
-
-> [gdavis: Forward port and fix conflicts.]
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> [jiada: return exact errno when i2c_transfer & i2c_master_send fails,
-> 	add "_MS" suffix MXT_WAKEUP_TIME]
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> ---
->  drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
->  1 file changed, 30 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index a2189739e30f..145780f78122 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -196,6 +196,7 @@ enum t100_type {
->  #define MXT_CRC_TIMEOUT		1000	/* msec */
->  #define MXT_FW_RESET_TIME	3000	/* msec */
->  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-
-> +#define MXT_WAKEUP_TIME_MS	25	/* msec */
-
-I think Andy Shevchenko meant here that the "/* msec */" comment won't
-be needed and should be removed if _MS postfix is added to the name.
-
-But I think you should keep this hunk as it was in v2 and then there
-could be a new separate patch which renames all those timeouts at once.
-This will keep code consistent in regards to the chosen naming convention.
-
->  /* Command to unlock bootloader */
->  #define MXT_UNLOCK_CMD_MSB	0xaa
-> @@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
->  	struct i2c_msg xfer[2];
->  	u8 buf[2];
->  	int ret;
-> +	bool retry = false;
->  
->  	buf[0] = reg & 0xff;
->  	buf[1] = (reg >> 8) & 0xff;
-> @@ -642,17 +644,22 @@ static int __mxt_read_reg(struct i2c_client *client,
->  	xfer[1].len = len;
->  	xfer[1].buf = val;
->  
-> -	ret = i2c_transfer(client->adapter, xfer, 2);
-> -	if (ret == 2) {
-> -		ret = 0;
-> -	} else {
-> -		if (ret >= 0)
-> -			ret = -EIO;
-> -		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-> -			__func__, ret);
-> +retry_read:
-> +	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
-> +	if (ret != ARRAY_SIZE(xfer)) {
-> +		if (!retry) {
-> +			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-> +			msleep(MXT_WAKEUP_TIME_MS);
-> +			retry = true;
-> +			goto retry_read;
-> +		} else {
-> +			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-> +				__func__, ret);
-> +			return ret < 0 ? ret : -EIO;
-> +		}
-
-Andy also suggested that it could be a cleaner to write such code like this:
-
-if (ret != ARRAY_SIZE(xfer)) {
-	if (!retry) {
-		...
-		goto retry_read;
-	}
-
-	dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-		__func__, ret);
-
-	return ret < 0 ? ret : -EIO;
-}
-
->  	}
->  
-> -	return ret;
-> +	return 0;
->  }
-...
