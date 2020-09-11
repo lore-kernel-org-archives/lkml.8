@@ -2,164 +2,133 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51789C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3DFC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D64222B9
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D513222BA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599834794;
-	bh=AK6d7eG2Zg7YdbpeAndsqVtnQZdpe2ANMZDR0XaWA4Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8ylILdrrHsH3J1S4NwWm9bX1JCQhEaoBh6GfbTGGwBkI6ewluCiAS5NLkmIGh/jA
-	 KjO05acpDyWy5aC/rEXDoDlHlgrH+Y67gUCLxmBMJnVoKzSEzHVPReQ2ykf/nshKUI
-	 rd+RXuOU0s41FQzpnVbc90uNnFBXZErq8lBV04Z4=
+	s=default; t=1599834863;
+	bh=9SZnSJ2IUQMOnQv1v0HyutS6AgCI4nGtzKD+DXqCrBU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NRvVfgCf5El8Qv8KNg2NpJwTto1KvlyXr0QfuSL6aHa+OFuuuwkjeJ3kLyLOgo7Wo
+	 X5D9tkmWYcwLum2359etKTDY7QYDi6dMePEesD0UKB83MQfqu5Nu3V+7GdcvEbajsa
+	 ihmIlit5tS177CEskdjc94/pb+khW3cjY8fHdVG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgIKObg (ORCPT
+        id S1725710AbgIKOd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56022 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726183AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:12:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA52222224;
-        Fri, 11 Sep 2020 13:00:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57E5B2224F;
+        Fri, 11 Sep 2020 13:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829223;
-        bh=AK6d7eG2Zg7YdbpeAndsqVtnQZdpe2ANMZDR0XaWA4Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBwKdltwO5u5nKJLKZc5NlZ9Xck0Zc5s6//stPPVdJ+Mi+6/8rwmld5O8YslTtj5D
-         70biqPmZ/gTzoTCYs4IPM/6UrtgfnIgVgASLEP3fcxpPimGNTs00KgaN5cvxNOv1Bv
-         hLm7xFlyMh/akYRgZxrRjulaaADquyxSd9yFpBIU=
+        s=default; t=1599829256;
+        bh=9SZnSJ2IUQMOnQv1v0HyutS6AgCI4nGtzKD+DXqCrBU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jaaXaJZopyN/TgUD0qS56chD/HJhj8rB0uTjFru3mSXELCYh9gPhrPhw6iHM5U1zG
+         GkRJudPUi+va7mI5H8/3G6ZVdbqK40Vr5gO9caaPWSELxPjfMDKFS3zeoilRTj3vXS
+         hD8LpvpiCSIrDkD0WaCLe9gvpL6nf7cC+TGwKerA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 5/8] sctp: not disable bh in the whole sctp_get_port_local()
-Date:   Fri, 11 Sep 2020 14:54:43 +0200
-Message-Id: <20200911125420.834670756@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 0/8] 4.19.145-rc1 review
+Date:   Fri, 11 Sep 2020 14:54:47 +0200
+Message-Id: <20200911125421.695645838@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911125420.580564179@linuxfoundation.org>
-References: <20200911125420.580564179@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.145-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.145-rc1
+X-KernelTest-Deadline: 2020-09-13T12:54+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+This is the start of the stable review cycle for the 4.19.145 release.
+There are 8 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 3106ecb43a05dc3e009779764b9da245a5d082de ]
+Responses should be made by Sun, 13 Sep 2020 12:54:13 +0000.
+Anything received after that time might be too late.
 
-With disabling bh in the whole sctp_get_port_local(), when
-snum == 0 and too many ports have been used, the do-while
-loop will take the cpu for a long time and cause cpu stuck:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.145-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-  [ ] watchdog: BUG: soft lockup - CPU#11 stuck for 22s!
-  [ ] RIP: 0010:native_queued_spin_lock_slowpath+0x4de/0x940
-  [ ] Call Trace:
-  [ ]  _raw_spin_lock+0xc1/0xd0
-  [ ]  sctp_get_port_local+0x527/0x650 [sctp]
-  [ ]  sctp_do_bind+0x208/0x5e0 [sctp]
-  [ ]  sctp_autobind+0x165/0x1e0 [sctp]
-  [ ]  sctp_connect_new_asoc+0x355/0x480 [sctp]
-  [ ]  __sctp_connect+0x360/0xb10 [sctp]
+thanks,
 
-There's no need to disable bh in the whole function of
-sctp_get_port_local. So fix this cpu stuck by removing
-local_bh_disable() called at the beginning, and using
-spin_lock_bh() instead.
+greg k-h
 
-The same thing was actually done for inet_csk_get_port() in
-Commit ea8add2b1903 ("tcp/dccp: better use of ephemeral
-ports in bind()").
+-------------
+Pseudo-Shortlog of commits:
 
-Thanks to Marcelo for pointing the buggy code out.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.145-rc1
 
-v1->v2:
-  - use cond_resched() to yield cpu to other tasks if needed,
-    as Eric noticed.
+Roi Dayan <roid@mellanox.com>
+    net/mlx5e: Don't support phys switch id if not in switchdev mode
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Ying Xu <yinxu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sctp/socket.c |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Jakub Kicinski <kuba@kernel.org>
+    net: disable netpoll on fresh napis
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -8176,8 +8176,6 @@ static int sctp_get_port_local(struct so
- 
- 	pr_debug("%s: begins, snum:%d\n", __func__, snum);
- 
--	local_bh_disable();
--
- 	if (snum == 0) {
- 		/* Search for an available port. */
- 		int low, high, remaining, index;
-@@ -8196,20 +8194,21 @@ static int sctp_get_port_local(struct so
- 				continue;
- 			index = sctp_phashfn(sock_net(sk), rover);
- 			head = &sctp_port_hashtable[index];
--			spin_lock(&head->lock);
-+			spin_lock_bh(&head->lock);
- 			sctp_for_each_hentry(pp, &head->chain)
- 				if ((pp->port == rover) &&
- 				    net_eq(sock_net(sk), pp->net))
- 					goto next;
- 			break;
- 		next:
--			spin_unlock(&head->lock);
-+			spin_unlock_bh(&head->lock);
-+			cond_resched();
- 		} while (--remaining > 0);
- 
- 		/* Exhausted local port range during search? */
- 		ret = 1;
- 		if (remaining <= 0)
--			goto fail;
-+			return ret;
- 
- 		/* OK, here is the one we will use.  HEAD (the port
- 		 * hash table list entry) is non-NULL and we hold it's
-@@ -8224,7 +8223,7 @@ static int sctp_get_port_local(struct so
- 		 * port iterator, pp being NULL.
- 		 */
- 		head = &sctp_port_hashtable[sctp_phashfn(sock_net(sk), snum)];
--		spin_lock(&head->lock);
-+		spin_lock_bh(&head->lock);
- 		sctp_for_each_hentry(pp, &head->chain) {
- 			if ((pp->port == snum) && net_eq(pp->net, sock_net(sk)))
- 				goto pp_found;
-@@ -8324,10 +8323,7 @@ success:
- 	ret = 0;
- 
- fail_unlock:
--	spin_unlock(&head->lock);
--
--fail:
--	local_bh_enable();
-+	spin_unlock_bh(&head->lock);
- 	return ret;
- }
- 
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    tipc: fix shutdown() of connectionless socket
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: not disable bh in the whole sctp_get_port_local()
+
+Kamil Lorenc <kamil@re-ws.pl>
+    net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+
+Paul Moore <paul@paul-moore.com>
+    netlabel: fix problems with mapping removal
+
+Jens Axboe <axboe@kernel.dk>
+    block: ensure bdi->io_pages is always initialized
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA; firewire-tascam: exclude Tascam FE-8 from detection
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                         |  4 +-
+ block/blk-core.c                                 |  2 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |  2 +-
+ drivers/net/usb/dm9601.c                         |  4 ++
+ net/core/dev.c                                   |  3 +-
+ net/core/netpoll.c                               |  2 +-
+ net/netlabel/netlabel_domainhash.c               | 59 ++++++++++++------------
+ net/sctp/socket.c                                | 16 +++----
+ net/tipc/socket.c                                |  9 ++--
+ sound/firewire/tascam/tascam.c                   | 30 +++++++++++-
+ 10 files changed, 83 insertions(+), 48 deletions(-)
 
 
