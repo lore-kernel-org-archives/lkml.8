@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE60C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B8222251
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A112F22266
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599830904;
-	bh=Ck6R26J1uh6Rx8WttW2mXHHMdiQg0iuI2zMfWNWohzE=;
+	s=default; t=1599830985;
+	bh=Ymhy7pBqFq4zHj0gNByHoRyYK6cTCXC4fO4ECNKEVLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gC+g2bnEn3qD6/k5JVc5QmXuraveb8jep8gPJqIc8K874ZGcQJ5rrJCL9lN4+nRcx
-	 e0PHmbLtr6n+2LjUhTg6K8eolTUZnzDxazPb6f4u3nsC1UBD3SF/x1rq9bnakmEirL
-	 U0BTcPHDpEcowPUugQUuSmCKMgG1nylWZeiEgETU=
+	b=ub258ogEB1T+dxXVHGlcthZONhJqIzLzYymAnwyuqET+5P3FY6wm5x9KSjwpIXuaV
+	 sRAIdujFKDFRZfzDoOIUFh8yI9k0Bzh8MX+S558LJa8IwZlJT7Kzn8895EPfpQjc6z
+	 I9tO+P1fWAjBMv6qwbdhCg4wOm6AnFKtFs+eBobA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgIKN2V (ORCPT
+        id S1726312AbgIKN3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726197AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6ABC22204;
-        Fri, 11 Sep 2020 12:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC66922241;
+        Fri, 11 Sep 2020 12:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829072;
-        bh=Ck6R26J1uh6Rx8WttW2mXHHMdiQg0iuI2zMfWNWohzE=;
+        s=default; t=1599829077;
+        bh=Ymhy7pBqFq4zHj0gNByHoRyYK6cTCXC4fO4ECNKEVLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0I4YvmYoockp/XpZmGwNq5vyBJ6OuhtHcTYMo/OD/OSVF7U/BxIDT9k0elnrp9Ze
-         rOqFroGO4myp0EXmwiia1OPLI1HyLgHOgTEybCGae22DqJ0OVoIpfA7NvCGojzS3av
-         MCq/pXjvC2uSxpJliwqeqZmykc0UZYdDulHjvyHU=
+        b=Q+9xeVbTGHfOPH2hin7pVjmb7ZlSTuCXT/HuM0IfUT6w2o4hMrNbDC7d0LFnhVcyw
+         Xo0+gr/4mryUA9THb4q6MYuDT1qhDgiJ/vAWwoW9VHHkN/zLzXYtngSkYYIT4yr272
+         VELuXsyVORa6IzBNIhUFLhMO5VTGp2GWKL4Gbby4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.9 55/71] KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-Date:   Fri, 11 Sep 2020 14:46:39 +0200
-Message-Id: <20200911122507.657997515@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 57/71] net: initialize fastreuse on inet_inherit_port
+Date:   Fri, 11 Sep 2020 14:46:41 +0200
+Message-Id: <20200911122507.757667428@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -61,56 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-commit 71a7f8cb1ca4ca7214a700b1243626759b6c11d4 upstream.
+commit d76f3351cea2d927fdf70dd7c06898235035e84e upstream.
 
-AT instructions do a translation table walk and return the result, or
-the fault in PAR_EL1. KVM uses these to find the IPA when the value is
-not provided by the CPU in HPFAR_EL1.
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
-If a translation table walk causes an external abort it is taken as an
-exception, even if it was due to an AT instruction. (DDI0487F.a's D5.2.11
-"Synchronous faults generated by address translation instructions")
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
 
-While we previously made KVM resilient to exceptions taken due to AT
-instructions, the device access causes mismatched attributes, and may
-occur speculatively. Prevent this, by forbidding a walk through memory
-described as device at stage2. Now such AT instructions will report a
-stage2 fault.
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
 
-Such a fault will cause KVM to restart the guest. If the AT instructions
-always walk the page tables, but guest execution uses the translation cached
-in the TLB, the guest can't make forward progress until the TLB entry is
-evicted. This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64:
-Defer guest entry when an asynchronous exception is pending"), KVM will
-return to the host to process IRQs allowing the rest of the system to keep
-running.
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
 
-Cc: stable@vger.kernel.org # v4.9
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
+
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
+
+Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the
+listen socket.
+
+Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/kvm_arm.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/ipv4/inet_hashtables.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -78,10 +78,11 @@
-  * IMO:		Override CPSR.I and enable signaling with VI
-  * FMO:		Override CPSR.F and enable signaling with VF
-  * SWIO:	Turn set/way invalidates into set/way clean+invalidate
-+ * PTW:		Take a stage2 fault if a stage1 walk steps in device memory
-  */
- #define HCR_GUEST_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
- 			 HCR_TVM | HCR_BSU_IS | HCR_FB | HCR_TAC | \
--			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW)
-+			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_PTW)
- #define HCR_VIRT_EXCP_MASK (HCR_VSE | HCR_VI | HCR_VF)
- #define HCR_INT_OVERRIDE   (HCR_FMO | HCR_IMO)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK)
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -163,6 +163,7 @@ int __inet_inherit_port(const struct soc
+ 				return -ENOMEM;
+ 			}
+ 		}
++		inet_csk_update_fastreuse(tb, child);
+ 	}
+ 	inet_bind_hash(child, tb, port);
+ 	spin_unlock(&head->lock);
 
 
