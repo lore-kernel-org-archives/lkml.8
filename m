@@ -5,237 +5,97 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD73C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A44C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41A6221EE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15685206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:25:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D8pjuYf2"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S5AaYjku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgIKKYj (ORCPT
+        id S1725929AbgIKKZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43158 "EHLO
+        Fri, 11 Sep 2020 06:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgIKKX1 (ORCPT
+        with ESMTP id S1725832AbgIKKZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:23:27 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FB6C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:23:25 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 7so6313057pgm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:23:25 -0700 (PDT)
+        Fri, 11 Sep 2020 06:25:50 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21B8C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:25:49 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gf14so1480197pjb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yqH4yqc10hEpkIrg/aMbO2IwxNCKJmgXegk9rRTi+t4=;
-        b=D8pjuYf2QM/MK90zDGnk61XNcaIkOvPFVwRgAcwnFo3MMuIHlZQjcdxBvslpJKOc8a
-         NczVh6k40ytAxSlEu3T4xqqQVEMh8aTHMUdBgS22bNshn1f8TEdU/m94AtUitgNrD9Lr
-         WwTIUM0uM12VPUvSuwc9voIsi8yJpqAPlLh6I=
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=e46DHbzTBFXI2qUO06Xr5hYaBwt3naS56LAsBV+A8t0=;
+        b=S5AaYjkuSLMxqDh1NKhipUCvP8LgUI4CrWq0Gy+35B9PP8LBCI/Pf2buHxS6pb8Wbt
+         yYzgLIwcAA1qjq+oAhM6N2dy39Q70v5y0XGOPpwGVSn9Ihb0wWEQ1LccJDresNLt1Y1l
+         MRykiJAhxTBrXPmgcaVL+jKTiqA9B+uniRY8Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yqH4yqc10hEpkIrg/aMbO2IwxNCKJmgXegk9rRTi+t4=;
-        b=E1pwttUE5r2VjwaMHs5vRzkn0I82243pmGVaLkJcc724O/r4O02A5pPE5/HN7Lvaqp
-         pV1xcuQRN3rj1+BrZ+tpeR4VFwi6qCS8igrKDeWkHNXnKEfglZwoVNQFhdIR+fz2CMBZ
-         PyFhXJTmDB2XfCentbzBPEDh8GcAaV9NBftkslZrExYjPzw1FjsEi02rN2nF5oH4kfts
-         i30ggBznegnuTwdAfIKAn590/Zr8UnPORa+UedUmx8c2gEVuCwwCDHOTmTJh/NlEM97h
-         oWwsmN7d9W3wWexvSbiBT5hJhNvhbMSiiaHsSX74napU8ufU0nc249gTBBAzElm/hQEl
-         vScg==
-X-Gm-Message-State: AOAM531h6NxlKgLam8P7hx6LrfGea8/Iw5T2j90QhksRTg8AFw9KGKVU
-        BQfwF8B8tRU18qP8yn5qVxHJ30ZYJZD7ouoh
-X-Google-Smtp-Source: ABdhPJylmjQVh53sbYRpso8tKRK9CeBGsRQFoKJr4PigH8S8kBPYO+6bX4p/dVZuB/volU6e2Xe1cw==
-X-Received: by 2002:a63:e345:: with SMTP id o5mr1235824pgj.208.1599819804149;
-        Fri, 11 Sep 2020 03:23:24 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id np1sm1579434pjb.2.2020.09.11.03.23.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 03:23:23 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v9 2/3] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
-Date:   Fri, 11 Sep 2020 18:22:58 +0800
-Message-Id: <20200911102259.3667381-3-cychiang@chromium.org>
-X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
-In-Reply-To: <20200911102259.3667381-1-cychiang@chromium.org>
-References: <20200911102259.3667381-1-cychiang@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=e46DHbzTBFXI2qUO06Xr5hYaBwt3naS56LAsBV+A8t0=;
+        b=S40GNVwBmjpItk/MIEPcvAGlLvGrMfiEl6Rcf73gmOdnHJFDHJkPuKxJyKnGakjQQe
+         AWAEUtOCc3b/bF2T+WS9QW8mnlL6limf0pYuzbMftKulIiRBGHB4oFbko8o18Uq98PpV
+         D5RgY3LuhAYTJNDcfYfoVDrR9MRct5/cE4x6i37tTZLBgKI/3ML80+xyhG9bEiJtnrRY
+         0oL3JT8ZpXZR48O98BwQGac37LdH+t1axDlO6cEEbOdf8nbeczvaC103+sQNBlfvBv41
+         xRQy3eiRowegsWZqf+FaxtCnb+p2Up1GfukZHp3y243tfbSLsvLTdXsjuE2IOy3CBeww
+         mwZg==
+X-Gm-Message-State: AOAM531DAsCj7/GKCIej2Q4XZeSSG5B4uUOkKN0h5+XxT0RqEwIB41WO
+        wcs/Q8EFFMgzyig5iqesgVtOfw==
+X-Google-Smtp-Source: ABdhPJxPDMHj7bY9B1+rquyIhx1L1LA2oRdhPi5GLC9/YQnGbN3wlM27C1EJ7k/EZkniTjjK6iCpNA==
+X-Received: by 2002:a17:90a:ad8b:: with SMTP id s11mr1642230pjq.40.1599819948441;
+        Fri, 11 Sep 2020 03:25:48 -0700 (PDT)
+Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id i17sm1929584pfa.2.2020.09.11.03.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 03:25:47 -0700 (PDT)
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, poza@codeaurora.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH v2] iommu/dma: Fix IOVA reserve dma ranges
+Date:   Fri, 11 Sep 2020 15:55:34 +0530
+Message-Id: <20200911102534.25218-1-srinath.mannam@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree bindings documentation file for sc7180 sound card.
+Fix IOVA reserve failure in the case when address of first memory region
+listed in dma-ranges is equal to 0x0.
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Fixes: aadad097cd46f ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 ---
- .../bindings/sound/qcom,sc7180.yaml           | 130 ++++++++++++++++++
- 1 file changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+Changes from v1:
+   Removed unnecessary changes based on Robin's review comments.
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-new file mode 100644
-index 000000000000..a1fc53e33b07
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-@@ -0,0 +1,130 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-+
-+maintainers:
-+  - Rohit kumar <rohitkr@codeaurora.org>
-+  - Cheng-Yi Chiang <cychiang@chromium.org>
-+
-+description:
-+  This binding describes the SC7180 sound card which uses LPASS for audio.
-+
-+properties:
-+  compatible:
-+    const: qcom,sc7180-sndcard
-+
-+  audio-routing:
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    description:
-+      A list of the connections between audio components. Each entry is a
-+      pair of strings, the first being the connection's sink, the second
-+      being the connection's source.
-+
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: User specified audio sound card name
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^dai-link(@[0-9])?$":
-+    description:
-+      Each subnode represents a dai link. Subnodes of each dai links would be
-+      cpu/codec dais.
-+
-+    type: object
-+
-+    properties:
-+      link-name:
-+        description: Indicates dai-link name and PCM stream name.
-+        $ref: /schemas/types.yaml#/definitions/string
-+        maxItems: 1
-+
-+      reg:
-+        description: dai link address.
-+
-+      cpu:
-+        description: Holds subnode which indicates cpu dai.
-+        type: object
-+        properties:
-+          sound-dai: true
-+
-+      codec:
-+        description: Holds subnode which indicates codec dai.
-+        type: object
-+        properties:
-+          sound-dai: true
-+
-+    required:
-+      - link-name
-+      - cpu
-+      - codec
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - model
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+
-+  - |
-+    sound {
-+        compatible = "qcom,sc7180-sndcard";
-+        model = "sc7180-snd-card";
-+
-+        audio-routing =
-+                    "Headphone Jack", "HPOL",
-+                    "Headphone Jack", "HPOR";
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        dai-link@0 {
-+            link-name = "MultiMedia0";
-+            reg = <0>;
-+            cpu {
-+                sound-dai = <&lpass_cpu 0>;
-+            };
-+
-+            codec {
-+                sound-dai = <&alc5682 0>;
-+            };
-+        };
-+
-+        dai-link@1 {
-+            link-name = "MultiMedia1";
-+            reg = <1>;
-+            cpu {
-+                sound-dai = <&lpass_cpu 1>;
-+            };
-+
-+            codec {
-+                sound-dai = <&max98357a>;
-+            };
-+        };
-+
-+        dai-link@2 {
-+            link-name = "MultiMedia2";
-+            reg = <2>;
-+            cpu {
-+                sound-dai = <&lpass_hdmi 0>;
-+            };
-+
-+            codec {
-+                sound-dai = <&msm_dp>;
-+            };
-+        };
-+    };
+ drivers/iommu/dma-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 5141d49a046b..682068a9aae7 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -217,7 +217,7 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
+ 			lo = iova_pfn(iovad, start);
+ 			hi = iova_pfn(iovad, end);
+ 			reserve_iova(iovad, lo, hi);
+-		} else {
++		} else if (end < start) {
+ 			/* dma_ranges list should be sorted */
+ 			dev_err(&dev->dev, "Failed to reserve IOVA\n");
+ 			return -EINVAL;
 -- 
-2.28.0.618.gf4bc123cb7-goog
+2.17.1
 
