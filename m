@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55205C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 225DE22461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554A6223DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599836205;
-	bh=msF5bf0BUlSzBRo/Fv0SbhSCTalssUiDIJoh9XsA56g=;
+	s=default; t=1599836248;
+	bh=8H8bi/4fqFJP5lm0n3vTS8BL9cueu8eUwd/feLHSsRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xD5h1hgSlF8CsVmlnVjW4i2J2DibMholh3lkb+pAzij+9v57aIYSYWJgECsPRDQX5
-	 j/pmE0KmHtwfy7qW6jjN0hTPbigMj0q9RsJA6e46WVSs/9wR7dRsCBxmeYTdDRHrH1
-	 TnLyFiuM5mcce/s6cjghldfV1+d2T/lBpPUXpN/Y=
+	b=ZOrQohODF5yiTSW5T9xINLRbkJvVs4hmWVgsfFZoBUayYLwcAMUbFIZtpLSggThd1
+	 uDnNEHO97F9JMIQH3Rms/8kR303HGmlBDbGW4zKxX5+GIuCxWSi37K4adgZBkx2Q0f
+	 Re4wrI1IFzZGVzymWb+tE3IEvjUt3u0PGroSinCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgIKO4j (ORCPT
+        id S1725912AbgIKO5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:56:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54388 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgIKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726173AbgIKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:02:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB1622243;
-        Fri, 11 Sep 2020 12:57:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A212223E;
+        Fri, 11 Sep 2020 12:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829052;
-        bh=msF5bf0BUlSzBRo/Fv0SbhSCTalssUiDIJoh9XsA56g=;
+        s=default; t=1599829045;
+        bh=8H8bi/4fqFJP5lm0n3vTS8BL9cueu8eUwd/feLHSsRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYhfyos27EKkXpSwhMU9liHyRCOpWrJBTHwILYEIP+fAkFnKn6mRWhjBd8kozw0cp
-         3e3c1PzUncUJgTaXEDqnYLR7+Rx5Ncyy3xq+8prjrz4EYGqrRtfGNY4V+eM0Jum0kX
-         qQfTzvBvDOMfwI3xj6NPtErGDGWhYspzc9BU2r00=
+        b=yw9ArAMJGgQZRacAof8SVKkbN6T4SZvUOehu/qb+vkUUIUNitde1jO63XxYc+DlkW
+         RXfnz10j1PQ3bOwUWEKj3eIHUM4Ld/HkHKNCDQUSLg92r8bUIFDqc8LZWxGloKckrW
+         7Z9IxNhRAUiydCxf2BJFkt1hmf34h1Z5V5QTycBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 48/71] mm: slub: fix conversion of freelist_corrupted()
-Date:   Fri, 11 Sep 2020 14:46:32 +0200
-Message-Id: <20200911122507.315341477@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Karthik Shivaram <karthikgs@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.9 45/71] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
+Date:   Fri, 11 Sep 2020 14:46:29 +0200
+Message-Id: <20200911122507.174382370@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -65,76 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
+commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
 
-Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
-deactivate_slab()") suffered an update when picked up from LKML [1].
+All three generations of Sandisk SSDs lock up hard intermittently.
+Experiments showed that disabling NCQ lowered the failure rate significantly
+and the kernel has been disabling NCQ for some models of SD7's and 8's,
+which is obviously undesirable.
 
-Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
-created a no-op statement.  Fix it by sticking to the behavior intended
-in the original patch [1].  In addition, make freelist_corrupted()
-immune to passing NULL instead of &freelist.
+Karthik worked with Sandisk to root cause the hard lockups to trim commands
+larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
+limits max trim size to 128M and applies it to all three generations of
+Sandisk SSDs.
 
-The issue has been spotted via static analysis and code review.
-
-[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
-
-Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Karthik Shivaram <karthikgs@fb.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/ata/libata-core.c |    5 ++---
+ drivers/ata/libata-scsi.c |    8 +++++++-
+ include/linux/libata.h    |    1 +
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -625,12 +625,12 @@ static void slab_fix(struct kmem_cache *
- }
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4371,9 +4371,8 @@ static const struct ata_blacklist_entry
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
+ 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
+-	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
+-	   SD7SN6S256G and SD8SN8U256G */
+-	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
++	/* Sandisk SD7/8/9s lock up hard on large trims */
++	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
+ 
+ 	/* devices which puke on READ_NATIVE_MAX */
+ 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2314,6 +2314,7 @@ static unsigned int ata_scsiop_inq_89(st
+ 
+ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
  {
- 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
--	    !check_valid_pointer(s, page, nextfree)) {
--		object_err(s, page, freelist, "Freechain corrupt");
--		freelist = NULL;
-+	    !check_valid_pointer(s, page, nextfree) && freelist) {
-+		object_err(s, page, *freelist, "Freechain corrupt");
-+		*freelist = NULL;
- 		slab_fix(s, "Isolate corrupted freechain");
- 		return true;
++	struct ata_device *dev = args->dev;
+ 	u16 min_io_sectors;
+ 
+ 	rbuf[1] = 0xb0;
+@@ -2339,7 +2340,12 @@ static unsigned int ata_scsiop_inq_b0(st
+ 	 * with the unmap bit set.
+ 	 */
+ 	if (ata_id_has_trim(args->id)) {
+-		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
++		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
++
++		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
++			max_blocks = 128 << (20 - SECTOR_SHIFT);
++
++		put_unaligned_be64(max_blocks, &rbuf[36]);
+ 		put_unaligned_be32(1, &rbuf[28]);
  	}
-@@ -1320,7 +1320,7 @@ static inline void dec_slabs_node(struct
- 							int objects) {}
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	return false;
- }
-@@ -2040,7 +2040,7 @@ static void deactivate_slab(struct kmem_
- 		 * 'freelist' is already corrupted.  So isolate all objects
- 		 * starting at 'freelist'.
- 		 */
--		if (freelist_corrupted(s, page, freelist, nextfree))
-+		if (freelist_corrupted(s, page, &freelist, nextfree))
- 			break;
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -435,6 +435,7 @@ enum {
+ 	ATA_HORKAGE_NO_NCQ_LOG	= (1 << 23),	/* don't use NCQ for log read */
+ 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
+ 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
++	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
  
- 		do {
+ 	 /* DMA mask for user DMA control: User visible values; DO NOT
+ 	    renumber */
 
 
