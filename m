@@ -2,142 +2,189 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA3FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A48C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F5C221E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D376221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CNlsHBhS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2jghuXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgIKI3y (ORCPT
+        id S1725849AbgIKIaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:29:54 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1229 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725613AbgIKI3v (ORCPT
+        Fri, 11 Sep 2020 04:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgIKIaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:29:51 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08B8S3D7001767;
-        Fri, 11 Sep 2020 10:29:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=NPQB3mzG+KC4r8q2wcOs8xMlMzwaex4jb/8qkinpIxc=;
- b=CNlsHBhSyGwnpGkj2SWWaXCRpwaUROtYzB2TT9dBHLqDdA+JZFHivlYm0ThANbnpaEMT
- 74Dy7lamZNKG42XyNUEYz9PRy3qmU1tQZyXTnEhe1+9bWvndHfrbO5SD+01lBy1RSFG4
- 6YAMCz65sqM4uExpu2EivULV+jvgb4OhLQKTSecSDeMLn3GQT0BSJPlCf4FRSwTZPopO
- Dv4zwUKvS88IhUuOc7UNmVvS+LmkcY0OLm2HZ5ev13N66+V9vvRRQHc/cYVz7TjifNSK
- IwjoQluegbaufQzOyZYvIvBG3qOwM5BcIDXzLsprZn3ssMDVT359J++omDTbhk1UFtuL XA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 33byt88mek-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 10:29:30 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CF67310002A;
-        Fri, 11 Sep 2020 10:29:27 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BA60321E26A;
-        Fri, 11 Sep 2020 10:29:27 +0200 (CEST)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Sep
- 2020 10:29:27 +0200
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Fri, 11 Sep 2020 10:29:27 +0200
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "jonas@kwiboo.se" <jonas@kwiboo.se>,
-        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
-CC:     "heiko.stuebner@theobroma-systems.com" 
-        <heiko.stuebner@theobroma-systems.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>
-Subject: Re: [PATCH] drm/bridge: dw-mipi-dsi: permit configuring the escape
- clock rate
-Thread-Topic: [PATCH] drm/bridge: dw-mipi-dsi: permit configuring the escape
- clock rate
-Thread-Index: AQHWgrq0GnmfCHcy9EO3+U4LDjE6p6ljBFQA
-Date:   Fri, 11 Sep 2020 08:29:27 +0000
-Message-ID: <078aae69-936f-cb78-623f-6bdcb1c2630d@st.com>
-References: <20200904125531.15248-1-narmstrong@baylibre.com>
-In-Reply-To: <20200904125531.15248-1-narmstrong@baylibre.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C82391012D30F14E973A5E5130F2B86A@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 11 Sep 2020 04:30:15 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A652C061573;
+        Fri, 11 Sep 2020 01:30:12 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y2so5032888lfy.10;
+        Fri, 11 Sep 2020 01:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v3X+VL4+MsixaR62rPp7HwB6Wzg0tRmPuvJoIJorT2g=;
+        b=c2jghuXtnbNv5767gqGXY+pPhE9HA7vje+0qO1UeB9hLYukfKNNfu5vKtRGTUk70jm
+         77zzBzRNCDISWsgvWp2d3rHq1VqFPJRyOaGnJpFfHkjNI8LoSWbMRhj4CbExcwWHALPD
+         12FPeWX1q6VU3qmyJlHtEaa7S6QYtMANjlfTsPzNvfjTOGcvj4iS/38Tc7U6tMzlP5cr
+         Z+N3C1z1OdMr06KhWSVC+M88jA7GW/99zMVcyfV1iyaaXARfuy4cMpfE77KM/Tgj0ABy
+         zbvoMvYoX/oDiI/JVUnoqWD7mUfDTO/uNP0Fk2eXMp6bXtVPH3OqCdGbCLq794f4GIh7
+         XZdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=v3X+VL4+MsixaR62rPp7HwB6Wzg0tRmPuvJoIJorT2g=;
+        b=cxLULYK0LlrL9bfHyLvtDF1mFGUl+e7C3YL+Y557IZvqnQ3yDxteZE+spPSg/6BNS/
+         UALJq5eqVvr4cT582pDabgV3et0+vwwpcdGec5VjIFKl+Ry7cWhwNlRxC4595cH9Rotz
+         1NhyOx3hCN3CzlNjL7W25Zd+7Sod3dzriQWrggq9ue9VXuAYu6t/4XbM5mKI/Nc2RSzf
+         t3lyVnhK+aE9+3Bq0LAjyUqjur3o0GWfMM+Ro5WbXticWZvhjBlQvS7dIPV4ja51pcyk
+         /1ungX6I592viHh4FDa486T0jgluBDAqSeIiOLlyxJDFeStDA0GazFtk5E0pM23Nh0lM
+         BINA==
+X-Gm-Message-State: AOAM530rl28Y+PnIhOwfZEcx7zRrbDnJQAsDnu0oqEaUCsOTjJhopQvG
+        Jvk8t6ljrrq0emaGzCoOf6k=
+X-Google-Smtp-Source: ABdhPJx9nUeV/83qz7H1mGdfts1xPRTGfCTDFwjiGZJTuXH+zznv/fgZvjUnwsdAo5TlZkuTcP6u0Q==
+X-Received: by 2002:a05:6512:36cd:: with SMTP id e13mr409270lfs.165.1599813010980;
+        Fri, 11 Sep 2020 01:30:10 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4498:c7cc:1d90:b990:ebe6:7df7? ([2a00:1fa0:4498:c7cc:1d90:b990:ebe6:7df7])
+        by smtp.gmail.com with ESMTPSA id z15sm400438lji.78.2020.09.11.01.30.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 01:30:10 -0700 (PDT)
+Subject: Re: [PATCH] usb: phy: tegra: Use IS_ERR() to check and simplify code
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+References: <20200910115607.11392-1-tangbin@cmss.chinamobile.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <d0bd4d4c-0447-6c5f-6dc3-17e5ceae2623@gmail.com>
+Date:   Fri, 11 Sep 2020 11:29:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-11_02:2020-09-10,2020-09-11 signatures=0
+In-Reply-To: <20200910115607.11392-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDkvNC8yMCAyOjU1IFBNLCBOZWlsIEFybXN0cm9uZyB3cm90ZToNCj4gVGhlIEFtbG9n
-aWMgRC1QSFkgaW4gdGhlIEFtbG9naWMgQVhHIFNvQyBGYW1pbHkgZG9lcyBzdXBwb3J0IGEgZnJl
-cXVlbmN5DQo+IGhpZ2hlciB0aGFuIDEwTUh6IGZvciB0aGUgVFggRXNjYXBlIENsb2NrLCB0aHVz
-IG1ha2UgdGhlIHRhcmdldCByYXRlDQo+IGNvbmZpZ3VyYWJsZS4NCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT4NCj4gLS0tDQo+ICAg
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMjUgKysrKysr
-KysrKysrKysrLS0tLQ0KPiAgIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oICAgICAg
-ICAgICAgICB8ICAxICsNCj4gICAyIGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDUg
-ZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
-eW5vcHN5cy9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9k
-dy1taXBpLWRzaS5jDQo+IGluZGV4IGQ1ODBiMmFhNGNlOS4uMzFmYzk2NWM2NmZkIDEwMDY0NA0K
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMNCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jDQo+IEBA
-IC01NjIsMTUgKzU2MiwzMCBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9kaXNhYmxlKHN0cnVj
-dCBkd19taXBpX2RzaSAqZHNpKQ0KPiAgIA0KPiAgIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2lu
-aXQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpDQo+ICAgew0KPiArCWNvbnN0IHN0cnVjdCBkd19t
-aXBpX2RzaV9waHlfb3BzICpwaHlfb3BzID0gZHNpLT5wbGF0X2RhdGEtPnBoeV9vcHM7DQo+ICsJ
-dW5zaWduZWQgaW50IGVzY19yYXRlOyAvKiBpbiBNSHogKi8NCj4gKwl1MzIgZXNjX2Nsa19kaXZp
-c2lvbjsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICAgCS8qDQo+ICAgCSAqIFRoZSBtYXhpbXVtIHBl
-cm1pdHRlZCBlc2NhcGUgY2xvY2sgaXMgMjBNSHogYW5kIGl0IGlzIGRlcml2ZWQgZnJvbQ0KPiAt
-CSAqIGxhbmVieXRlY2xrLCB3aGljaCBpcyBydW5uaW5nIGF0ICJsYW5lX21icHMgLyA4Ii4gIFRo
-dXMgd2Ugd2FudDoNCj4gLQkgKg0KPiAtCSAqICAgICAobGFuZV9tYnBzID4+IDMpIC8gZXNjX2Ns
-a19kaXZpc2lvbiA8IDIwDQo+ICsJICogbGFuZWJ5dGVjbGssIHdoaWNoIGlzIHJ1bm5pbmcgYXQg
-ImxhbmVfbWJwcyAvIDgiLg0KPiArCSAqLw0KPiArCWlmIChwaHlfb3BzLT5nZXRfZXNjX2Nsa19y
-YXRlKSB7DQo+ICsJCXJldCA9IHBoeV9vcHMtPmdldF9lc2NfY2xrX3JhdGUoZHNpLT5wbGF0X2Rh
-dGEtPnByaXZfZGF0YSwNCj4gKwkJCQkJCSZlc2NfcmF0ZSk7DQo+ICsJCWlmIChyZXQpDQo+ICsJ
-CQlEUk1fREVCVUdfRFJJVkVSKCJQaHkgZ2V0X2VzY19jbGtfcmF0ZSgpIGZhaWxlZFxuIik7DQo+
-ICsJfSBlbHNlDQo+ICsJCWVzY19yYXRlID0gMjA7IC8qIERlZmF1bHQgdG8gMjBNSHogKi8NCj4g
-Kw0KPiArCS8qDQo+ICsJICogV2Ugd2FudCA6DQo+ICsJICogICAgIChsYW5lX21icHMgPj4gMykg
-LyBlc2NfY2xrX2RpdmlzaW9uIDwgWA0KPiAgIAkgKiB3aGljaCBpczoNCj4gLQkgKiAgICAgKGxh
-bmVfbWJwcyA+PiAzKSAvIDIwID4gZXNjX2Nsa19kaXZpc2lvbg0KPiArCSAqICAgICAobGFuZV9t
-YnBzID4+IDMpIC8gWCA+IGVzY19jbGtfZGl2aXNpb24NCj4gICAJICovDQo+IC0JdTMyIGVzY19j
-bGtfZGl2aXNpb24gPSAoZHNpLT5sYW5lX21icHMgPj4gMykgLyAyMCArIDE7DQo+ICsJZXNjX2Ns
-a19kaXZpc2lvbiA9IChkc2ktPmxhbmVfbWJwcyA+PiAzKSAvIGVzY19yYXRlICsgMTsNCj4gICAN
-Cj4gICAJZHNpX3dyaXRlKGRzaSwgRFNJX1BXUl9VUCwgUkVTRVQpOw0KPiAgIA0KPiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmggYi9pbmNsdWRlL2RybS9icmlk
-Z2UvZHdfbWlwaV9kc2kuaA0KPiBpbmRleCBiMGUzOTBiMzI4OGUuLmJkYThhYTdjMjI4MCAxMDA2
-NDQNCj4gLS0tIGEvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgNCj4gKysrIGIvaW5j
-bHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgNCj4gQEAgLTM2LDYgKzM2LDcgQEAgc3RydWN0
-IGR3X21pcGlfZHNpX3BoeV9vcHMgew0KPiAgIAkJCSAgICAgdW5zaWduZWQgaW50ICpsYW5lX21i
-cHMpOw0KPiAgIAlpbnQgKCpnZXRfdGltaW5nKSh2b2lkICpwcml2X2RhdGEsIHVuc2lnbmVkIGlu
-dCBsYW5lX21icHMsDQo+ICAgCQkJICBzdHJ1Y3QgZHdfbWlwaV9kc2lfZHBoeV90aW1pbmcgKnRp
-bWluZyk7DQo+ICsJaW50ICgqZ2V0X2VzY19jbGtfcmF0ZSkodm9pZCAqcHJpdl9kYXRhLCB1bnNp
-Z25lZCBpbnQgKmVzY19jbGtfcmF0ZSk7DQo+ICAgfTsNCj4gICANCj4gICBzdHJ1Y3QgZHdfbWlw
-aV9kc2lfaG9zdF9vcHMgew0KPiANCg0KSGkgTmVpbCwNClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNo
-DQoNClJldmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0K
-DQpQaGlsaXBwZSA6LSk=
+Hello!
+
+On 10.09.2020 14:56, Tang Bin wrote:
+
+> Use IS_ERR() and PTR_ERR() instead of PTR_ERR_OR_ZERO() to
+> simplify code, avoid redundant judgements.
+> 
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+>   drivers/usb/phy/phy-tegra-usb.c | 25 ++++++++++---------------
+>   1 file changed, 10 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+> index 6153cc35a..3b901429d 100644
+> --- a/drivers/usb/phy/phy-tegra-usb.c
+> +++ b/drivers/usb/phy/phy-tegra-usb.c
+> @@ -1121,10 +1121,9 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+>   		return PTR_ERR(tegra_phy->vbus);
+>   
+>   	tegra_phy->pll_u = devm_clk_get(&pdev->dev, "pll_u");
+> -	err = PTR_ERR_OR_ZERO(tegra_phy->pll_u);
+> -	if (err) {
+> +	if (IS_ERR(tegra_phy->pll_u)) {
+>   		dev_err(&pdev->dev, "Failed to get pll_u clock: %d\n", err);
+
+    'err' should be changed here too...
+
+> -		return err;
+> +		return PTR_ERR(tegra_phy->pll_u);
+>   	}
+>   
+>   	phy_type = of_usb_get_phy_mode(np);
+> @@ -1135,20 +1134,18 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+>   			return err;
+>   
+>   		tegra_phy->pad_clk = devm_clk_get(&pdev->dev, "utmi-pads");
+> -		err = PTR_ERR_OR_ZERO(tegra_phy->pad_clk);
+> -		if (err) {
+> +		if (IS_ERR(tegra_phy->pad_clk)) {
+>   			dev_err(&pdev->dev,
+>   				"Failed to get UTMIP pad clock: %d\n", err);
+
+    Same here.
+
+> -			return err;
+> +			return PTR_ERR(tegra_phy->pad_clk);
+>   		}
+>   
+>   		reset = devm_reset_control_get_optional_shared(&pdev->dev,
+>   							       "utmi-pads");
+> -		err = PTR_ERR_OR_ZERO(reset);
+> -		if (err) {
+> +		if (IS_ERR(reset)) {
+>   			dev_err(&pdev->dev,
+>   				"Failed to get UTMI-pads reset: %d\n", err);
+
+    And here.
+
+> -			return err;
+> +			return PTR_ERR(reset);
+>   		}
+>   		tegra_phy->pad_rst = reset;
+>   		break;
+> @@ -1157,22 +1154,20 @@ static int tegra_usb_phy_probe(struct platform_device *pdev)
+>   		tegra_phy->is_ulpi_phy = true;
+>   
+>   		tegra_phy->clk = devm_clk_get(&pdev->dev, "ulpi-link");
+> -		err = PTR_ERR_OR_ZERO(tegra_phy->clk);
+> -		if (err) {
+> +		if (IS_ERR(tegra_phy->clk)) {
+>   			dev_err(&pdev->dev,
+>   				"Failed to get ULPI clock: %d\n", err);
+
+    And here.
+
+> -			return err;
+> +			return PTR_ERR(tegra_phy->clk);
+>   		}
+>   
+>   		gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
+>   						    "nvidia,phy-reset-gpio",
+>   						    0, GPIOD_OUT_HIGH,
+>   						    "ulpi_phy_reset_b");
+> -		err = PTR_ERR_OR_ZERO(gpiod);
+> -		if (err) {
+> +		if (IS_ERR(gpiod)) {
+>   			dev_err(&pdev->dev,
+>   				"Request failed for reset GPIO: %d\n", err);
+
+    And here.
+
+> -			return err;
+> +			return PTR_ERR(gpiod);
+>   		}
+>   		tegra_phy->reset_gpio = gpiod;
+>   
+
+    Overall, this patch is broken and not even worth redoing -- the current 
+code seems good...
+
+MBR, Sergei
