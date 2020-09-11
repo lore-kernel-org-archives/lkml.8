@@ -2,205 +2,143 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5541EC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D80721D47
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599840073;
-	bh=LjRDiylts7q6dZKcMRvThFmI0JzgRUaAQ0Zu9SWC8cM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=t25VQeWwZaGfC0fHCt7pZoI21YjIFGTpeaOve9OgJuequ3JGULVR0lZ9hFcb02Ar1
-	 byKZuo97BbqLylFVN9/8pmt81pvy3YGiolIecPBS+BZ7ycRz4IaYEMPRbHMcKifiyA
-	 nHJ4ilSfZ49ASP2719z5UnKYPXcoXJRj5VIy2rNc=
+	by mail.kernel.org (Postfix) with ESMTP id 0652721D47
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e5pnrFZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbgIKQBA (ORCPT
+        id S1726596AbgIKQAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgIKQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:00:42 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 484C521D92;
-        Fri, 11 Sep 2020 13:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599832329;
-        bh=LjRDiylts7q6dZKcMRvThFmI0JzgRUaAQ0Zu9SWC8cM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G5S6/nCShLAwtjYpYZ/sM6FbyJH0ARlqvOpABTac5+ViMQ2glNr5jV/WVKCDHfAUU
-         PaA2zyNBo+YVCHMGgUpEUVDBQWZJ1i4fbBU/PbBFethII4/munr/J+4gkiRZ3HfDkP
-         NUgPxtx6zG1bBypf1Yc7A26cDrkl5ghXvhiaD0rI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 042A43522679; Fri, 11 Sep 2020 06:52:09 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 06:52:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH kernel] srcu: Fix static initialization
-Message-ID: <20200911135208.GX29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200908144306.33355-1-aik@ozlabs.ru>
- <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
- <20200909115010.GG29330@paulmck-ThinkPad-P72>
- <37f76aac-d8e3-8ab1-24e9-c417b719e2a6@ozlabs.ru>
- <20200910185353.GS29330@paulmck-ThinkPad-P72>
- <611a6a87-f673-c5b7-3b60-58805fba580a@ozlabs.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <611a6a87-f673-c5b7-3b60-58805fba580a@ozlabs.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 11 Sep 2020 12:00:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726486AbgIKP7c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:59:32 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BFg9QW081422;
+        Fri, 11 Sep 2020 11:59:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=uZDTO2GkQg+Od5pn1R1dGCVVyOGSxX9njGLsk+QgEdQ=;
+ b=e5pnrFZuvYtzcUS40VWKTHD1wbawkwx6oagAwtmOyehwmUvsneTpPXp5ZnAXvx6D+cPm
+ 6cdx1Qe/OSkVof5RiEhwg8rqwCT4Qv0YQa/cwjF4qs8cbCqy2ylh7Vp5RllPjpn9Pi2F
+ l5hcs+OnrQ8PIPHBfx08gNUrsQvFpiMBJqx33CbgGXhUHvJDwMnUy2yPFviYKxhqbd3E
+ L8324neHoulfAiGj1v5O9aB626UDOVHBQmy0yDXUo7NulJsfut+qz6fuOvLw9Ml1Q6Cr
+ rFEk6X9DuUGw2vOfYymjt7NjX+Suzk5nWaMoyri+3fl/uWbJqTG8eUEbg5KE+1Zk58ya +g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33gc3p0cmq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 11:59:16 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BFhmgX086123;
+        Fri, 11 Sep 2020 11:59:16 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33gc3p0cm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 11:59:15 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BFuno5016580;
+        Fri, 11 Sep 2020 15:59:14 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 33dxdr4jjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 11 Sep 2020 15:59:14 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BFxBu17667972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Sep 2020 15:59:11 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 915C94C05E;
+        Fri, 11 Sep 2020 15:59:11 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E33074C046;
+        Fri, 11 Sep 2020 15:59:08 +0000 (GMT)
+Received: from sig-9-65-251-51.ibm.com (unknown [9.65.251.51])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 11 Sep 2020 15:59:08 +0000 (GMT)
+Message-ID: <cb8b4ebaa35d79eba65b011d042d20a991adf540.camel@linux.ibm.com>
+Subject: Re: [PATCH V2 2/3] integrity: Move import of MokListRT certs to a
+ separate routine
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lenny Szubowicz <lszubowi@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
+        James Morris <jmorris@namei.org>, serge@hallyn.com,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Jones <pjones@redhat.com>,
+        David Howells <dhowells@redhat.com>, prarit@redhat.com
+Date:   Fri, 11 Sep 2020 11:59:07 -0400
+In-Reply-To: <f0a079b1-5f02-8618-fdfe-aea2278113c9@redhat.com>
+References: <20200905013107.10457-1-lszubowi@redhat.com>
+         <20200905013107.10457-3-lszubowi@redhat.com>
+         <CAMj1kXEdkdeE8VSZqEzhd__Kb7_ZmG2af6iBpbY3=nsj1-phYw@mail.gmail.com>
+         <f0a079b1-5f02-8618-fdfe-aea2278113c9@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-11_05:2020-09-10,2020-09-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=3 adultscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 03:09:41PM +1000, Alexey Kardashevskiy wrote:
+On Fri, 2020-09-11 at 11:54 -0400, Lenny Szubowicz wrote:
+> On 9/11/20 11:02 AM, Ard Biesheuvel wrote:
+> > On Sat, 5 Sep 2020 at 04:31, Lenny Szubowicz <lszubowi@redhat.com> wrote:
+> >>
+> >> Move the loading of certs from the UEFI MokListRT into a separate
+> >> routine to facilitate additional MokList functionality.
+> >>
+> >> There is no visible functional change as a result of this patch.
+> >> Although the UEFI dbx certs are now loaded before the MokList certs,
+> >> they are loaded onto different key rings. So the order of the keys
+> >> on their respective key rings is the same.
+> >>
+> >> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> > 
+> > Why did you drop Mimi's reviewed-by from this patch?
 > 
+> It was not intentional. I was just not aware that I needed to propagate
+> Mimi Zohar's reviewed-by from V1 of the patch to V2.
 > 
-> On 11/09/2020 04:53, Paul E. McKenney wrote:
-> > On Wed, Sep 09, 2020 at 10:31:03PM +1000, Alexey Kardashevskiy wrote:
-> >>
-> >>
-> >> On 09/09/2020 21:50, Paul E. McKenney wrote:
-> >>> On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
-> >>>>
-> >>>>
-> >>>> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
-> >>>>> init_srcu_struct_nodes() is called with is_static==true only internally
-> >>>>> and when this happens, the srcu->sda is not initialized in
-> >>>>> init_srcu_struct_fields() and we crash on dereferencing @sdp.
-> >>>>>
-> >>>>> This fixes the crash by moving "if (is_static)" out of the loop which
-> >>>>> only does useful work for is_static=false case anyway.
-> >>>>>
-> >>>>> Found by syzkaller.
-> >>>>>
-> >>>>> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> >>>>> ---
-> >>>>>  kernel/rcu/srcutree.c | 5 +++--
-> >>>>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> >>>>> index c100acf332ed..49b54a50bde8 100644
-> >>>>> --- a/kernel/rcu/srcutree.c
-> >>>>> +++ b/kernel/rcu/srcutree.c
-> >>>>> @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
-> >>>>>  				   levelspread[level - 1];
-> >>>>>  	}
-> >>>>>  
-> >>>>> +	if (is_static)
-> >>>>> +		return;
-> >>>>
-> >>>> Actually, this is needed here too:
-> >>>>
-> >>>>  if (!ssp->sda)
-> >>>>          return;
-> >>>>
-> >>>> as
-> >>>> ssp->sda = alloc_percpu(struct srcu_data)
-> >>>>
-> >>>> can fail if the process is killed too soon - it is quite easy to get
-> >>>> this situation with syzkaller (syscalls fuzzer)
-> >>>>
-> >>>> Makes sense?
-> >>>
-> >>> Just to make sure that I understand, these failures occur when the task
-> >>> running init_srcu_struct_nodes() is killed, correct?
-> >>
-> >> There are multiple user tasks (8) which open /dev/kvm, do 1 ioctl -
-> >> KVM_CREATE_VM - and terminate, running on 8 vcpus, 8 VMs, crashes every
-> >> 20min or so, less tasks or vcpus - and the problem does not appear.
-> >>
-> >>
-> >>>
-> >>> Or has someone managed to invoke (say) synchronize_srcu() on a
-> >>> dynamically allocated srcu_struct before invoking init_srcu_struct() on
-> >>> that srcu_struct?  
-> >>
-> >> Nah, none of that :)
-> >>
-> >> init_srcu_struct_nodes() assumes ssp->sda!=NULL but alloc_percpu() fails
-> >> here:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/percpu.c#n1734
-> >> ===
-> >> 	} else if (mutex_lock_killable(&pcpu_alloc_mutex)) {
-> >> 			pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
-> >> 			return NULL;
-> >> ===
-> >>
-> >> I am still up to reading that osr-rcuusage.pdf to provide better
-> >> analysis :) Thanks,
-> > 
-> > Ah, got it!  Does the following patch help?
-> > 
-> > There will likely also need to be changes to cleanup_srcu_struct(),
-> > but first let's see if I understand the problem.  ;-)
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > index c13348e..6f7880a 100644
-> > --- a/kernel/rcu/srcutree.c
-> > +++ b/kernel/rcu/srcutree.c
-> > @@ -177,11 +177,13 @@ static int init_srcu_struct_fields(struct srcu_struct *ssp, bool is_static)
-> >  	INIT_DELAYED_WORK(&ssp->work, process_srcu);
-> >  	if (!is_static)
-> >  		ssp->sda = alloc_percpu(struct srcu_data);
-> > +	if (!ssp->sda)
-> > +		return -ENOMEM;
-> >  	init_srcu_struct_nodes(ssp, is_static);
-> >  	ssp->srcu_gp_seq_needed_exp = 0;
-> >  	ssp->srcu_last_gp_end = ktime_get_mono_fast_ns();
-> >  	smp_store_release(&ssp->srcu_gp_seq_needed, 0); /* Init done. */
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 > 
-> The line above confuses me a bit. What you propose returns without
-> smp_store_release() called which should not matter I suppose.
+> V2 includes changes in that patch to incorporate suggestions from
+> Andy Shevchenko. My assumption was that the maintainer would
+> gather up the reviewed-by and add any signed-off-by as appropriate,
+> but it sounds like my assumption was incorrect. In retrospect, I
+> could see that having the maintainer dig through prior versions
+> of a patch set for prior reviewed-by tags could be burdensome.
 
-The idea is that if init_srcu_struct() returns -ENOMEM, the structure
-has not been initialized and had better not be used.  If the calling code
-cannot handle that outcome, then the calling code needs to do something
-to insulate init_srcu_struct() from signals.  One thing that it could
-do would be to invoke init_srcu_struct() from a workqueue handler and
-wait for this handler to complete.
+As much as possible moving code should be done without making changes,
+simpler for code review.   Then as a separate patch you make changes.  
+That way you could also have retained my Reviewed-by.
 
-Please keep in mind that there is nothing init_srcu_struct() can do
-about this:  The srcu_struct is useless unless alloc_percpu() succeeds.
+Mimi
 
-And yes, I do need to update the header comments to make this clear.
-
-> Otherwise it should work, although I cannot verify right now as my box
-> went down and since it is across Pacific - it may take time to power
-> cycle it :) Thanks,
-
-I know that feeling!  And here is hoping that the box is out of reach
-of the local hot spots.  ;-)
-
-							Thanx, Paul
-
-> > -	return ssp->sda ? 0 : -ENOMEM;
-> > +	return 0;
-> >  }
-> >  
-> >  #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > 
 > 
-> -- 
-> Alexey
+> Advice on the expected handling of this would be appreciated.
+
+
