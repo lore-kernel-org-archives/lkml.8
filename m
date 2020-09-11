@@ -2,286 +2,225 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE186C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55488C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70365222EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599835824;
-	bh=HEx7XSycJRXGxGtCHabvPFr3quqD8R7LQYqFgUzcnSs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrEAqoPPS3Oz5fc0N6CB5KJe/SDkfuTU//a4utmcHuhrzoTwTCVWznUCeipXnG2I8
-	 FFtgIc9zNpHTapYAp4jHn2go0l+jgimcGVQJHR4fkvoH/ZEX2DGCdH2cw2umBwjG5Q
-	 eGZ7LNyTdWQF9XXtYKvHy1MxmsENxK6SH5SVRF7c=
+	by mail.kernel.org (Postfix) with ESMTP id EB6C420735
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DmN3G9E5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgIKOuT (ORCPT
+        id S1726289AbgIKOvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbgIKNDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:03:45 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6757122286;
-        Fri, 11 Sep 2020 12:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829065;
-        bh=HEx7XSycJRXGxGtCHabvPFr3quqD8R7LQYqFgUzcnSs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fhT1vhfqPN4WCgQjVhQjz/KoLqcvQBhGh1z1E4E5roGurUSkvOgU11/08byv4BgQh
-         Kdm4N2JaXrnxJ1j1M0zz+V9wDZGpEs6zEKYT8TS1t98wgniTFpFpiB/GfqxvW9nu7W
-         uhE4D9QhJL+86aHyBByMj4nUpTxegmvnfyrxJ4FY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.9 52/71] KVM: arm64: Add kvm_extable for vaxorcism code
-Date:   Fri, 11 Sep 2020 14:46:36 +0200
-Message-Id: <20200911122507.505484831@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
-References: <20200911122504.928931589@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 11 Sep 2020 10:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgIKNCg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:02:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AACC061757
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:02:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e11so4060225wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XPvTdtmbRMfkD4iZPz3f6M4OzS2nS0OYc/aAuQpERAQ=;
+        b=DmN3G9E5R8pQKcwsR/QOYPBt0YGPigmdnzridG6jujYOUJnrmuUfWqlsNqHvMNfOpN
+         3rROpEaWF03I1p9azSOdOLoqBkWFNYXwQcWWkXtMrxgmrP/v6dTiar2qa6V2usdl/MC2
+         PRd+bF8RuP1DMPnG8ovJ8LIiiux+gGucx2K+2UDA3X+gp4hxZAEsa/eoSXKX2JmB2R7Q
+         T3CTa8kmL6aDJtOObN4DKylrMo+0UKnbZdup2fDXxDHClQQKt861N3dDFPlregRtQKB1
+         l0VkkxU+SXlkYeZQCJ4iMPn8v2yrH7HtO0iGSIyX+xBbx+nPZWlftmnt4Sx4UZDjxB/Q
+         CQfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XPvTdtmbRMfkD4iZPz3f6M4OzS2nS0OYc/aAuQpERAQ=;
+        b=JAZdb7vaF/PXua31DZ1q/ZTBlp46TZMPFQzhyA0oBxaNQKjFbacdYGJ3TkMQQsNmbX
+         cpAZYzWGDwZdnEwgZMp70LXa2UVxPa2YFXufMYHWsKlHvm3CSwpyWQhvf35tqUeOFHyh
+         qIhphfMfzmCN/MTdvQyRLBP46kDkCPz+A+9QoV3je73CT1ba9IKrJUo4W0zSwCbUudsJ
+         k9zh0dJfikds3CkVz7WEDUQmHVDaqvHWnNNrlT90JQjnnpT/OKKsi2lFp2yx6iz7lAcz
+         4CnyoQybQt7iW7J0T/T1q1RLVCsm97KEbs0LUgIil98ydyvtuHA+/kSCnzhUQ24EHjdH
+         VjQw==
+X-Gm-Message-State: AOAM5325DM4W0a0pMdl5fzg6pCBrSXld/CS1tLjfxOycrvGFkkvm5YwN
+        S8slzE2d7kaqR/n8mhK0vIhwpQ==
+X-Google-Smtp-Source: ABdhPJyoawmkjTBcyhGQBhaZdB4iRLwZ1Di8GGM++7EJ3K2peppUMQ3WUQoQLFZBOndDUXUVYdGtlg==
+X-Received: by 2002:a7b:c210:: with SMTP id x16mr2057345wmi.76.1599829354408;
+        Fri, 11 Sep 2020 06:02:34 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:28ac:1772:9398:891a? ([2a01:e35:2ec0:82b0:28ac:1772:9398:891a])
+        by smtp.gmail.com with ESMTPSA id t1sm3958177wmi.16.2020.09.11.06.02.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 06:02:33 -0700 (PDT)
+Subject: Re: [PATCH] drm/bridge: dw-mipi-dsi: permit configuring the escape
+ clock rate
+To:     Philippe CORNU <philippe.cornu@st.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>
+Cc:     "heiko.stuebner@theobroma-systems.com" 
+        <heiko.stuebner@theobroma-systems.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>
+References: <20200904125531.15248-1-narmstrong@baylibre.com>
+ <078aae69-936f-cb78-623f-6bdcb1c2630d@st.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <20e589a9-ce81-e53e-72b1-6022f632d591@baylibre.com>
+Date:   Fri, 11 Sep 2020 15:02:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <078aae69-936f-cb78-623f-6bdcb1c2630d@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+On 11/09/2020 10:29, Philippe CORNU wrote:
+> 
+> 
+> On 9/4/20 2:55 PM, Neil Armstrong wrote:
+>> The Amlogic D-PHY in the Amlogic AXG SoC Family does support a frequency
+>> higher than 10MHz for the TX Escape Clock, thus make the target rate
+>> configurable.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 25 +++++++++++++++----
+>>   include/drm/bridge/dw_mipi_dsi.h              |  1 +
+>>   2 files changed, 21 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+>> index d580b2aa4ce9..31fc965c66fd 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+>> @@ -562,15 +562,30 @@ static void dw_mipi_dsi_disable(struct dw_mipi_dsi *dsi)
+>>   
+>>   static void dw_mipi_dsi_init(struct dw_mipi_dsi *dsi)
+>>   {
+>> +	const struct dw_mipi_dsi_phy_ops *phy_ops = dsi->plat_data->phy_ops;
+>> +	unsigned int esc_rate; /* in MHz */
+>> +	u32 esc_clk_division;
+>> +	int ret;
+>> +
+>>   	/*
+>>   	 * The maximum permitted escape clock is 20MHz and it is derived from
+>> -	 * lanebyteclk, which is running at "lane_mbps / 8".  Thus we want:
+>> -	 *
+>> -	 *     (lane_mbps >> 3) / esc_clk_division < 20
+>> +	 * lanebyteclk, which is running at "lane_mbps / 8".
+>> +	 */
+>> +	if (phy_ops->get_esc_clk_rate) {
+>> +		ret = phy_ops->get_esc_clk_rate(dsi->plat_data->priv_data,
+>> +						&esc_rate);
+>> +		if (ret)
+>> +			DRM_DEBUG_DRIVER("Phy get_esc_clk_rate() failed\n");
+>> +	} else
+>> +		esc_rate = 20; /* Default to 20MHz */
+>> +
+>> +	/*
+>> +	 * We want :
+>> +	 *     (lane_mbps >> 3) / esc_clk_division < X
+>>   	 * which is:
+>> -	 *     (lane_mbps >> 3) / 20 > esc_clk_division
+>> +	 *     (lane_mbps >> 3) / X > esc_clk_division
+>>   	 */
+>> -	u32 esc_clk_division = (dsi->lane_mbps >> 3) / 20 + 1;
+>> +	esc_clk_division = (dsi->lane_mbps >> 3) / esc_rate + 1;
+>>   
+>>   	dsi_write(dsi, DSI_PWR_UP, RESET);
+>>   
+>> diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
+>> index b0e390b3288e..bda8aa7c2280 100644
+>> --- a/include/drm/bridge/dw_mipi_dsi.h
+>> +++ b/include/drm/bridge/dw_mipi_dsi.h
+>> @@ -36,6 +36,7 @@ struct dw_mipi_dsi_phy_ops {
+>>   			     unsigned int *lane_mbps);
+>>   	int (*get_timing)(void *priv_data, unsigned int lane_mbps,
+>>   			  struct dw_mipi_dsi_dphy_timing *timing);
+>> +	int (*get_esc_clk_rate)(void *priv_data, unsigned int *esc_clk_rate);
+>>   };
+>>   
+>>   struct dw_mipi_dsi_host_ops {
+>>
+> 
+> Hi Neil,
+> Thank you for the patch
+> 
+> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
+> 
+> Philippe :-)
+> 
 
-commit e9ee186bb735bfc17fa81dbc9aebf268aee5b41e upstream.
+Thanks !
 
-KVM has a one instruction window where it will allow an SError exception
-to be consumed by the hypervisor without treating it as a hypervisor bug.
-This is used to consume asynchronous external abort that were caused by
-the guest.
+Applying to drm-misc-next
 
-As we are about to add another location that survives unexpected exceptions,
-generalise this code to make it behave like the host's extable.
-
-KVM's version has to be mapped to EL2 to be accessible on nVHE systems.
-
-The SError vaxorcism code is a one instruction window, so has two entries
-in the extable. Because the KVM code is copied for VHE and nVHE, we end up
-with four entries, half of which correspond with code that isn't mapped.
-
-Cc: stable@vger.kernel.org # v4.9
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_asm.h |   15 +++++++++++
- arch/arm64/kernel/vmlinux.lds.S  |    8 ++++++
- arch/arm64/kvm/hyp/entry.S       |   16 +++++++-----
- arch/arm64/kvm/hyp/hyp-entry.S   |   51 ++++++++++++++++++++++++---------------
- arch/arm64/kvm/hyp/switch.c      |   31 +++++++++++++++++++++++
- 5 files changed, 96 insertions(+), 25 deletions(-)
-
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -106,6 +106,21 @@ extern u32 __init_stage2_translation(voi
- 	kern_hyp_va	\vcpu
- .endm
- 
-+/*
-+ * KVM extable for unexpected exceptions.
-+ * In the same format _asm_extable, but output to a different section so that
-+ * it can be mapped to EL2. The KVM version is not sorted. The caller must
-+ * ensure:
-+ * x18 has the hypervisor value to allow any Shadow-Call-Stack instrumented
-+ * code to write to it, and that SPSR_EL2 and ELR_EL2 are restored by the fixup.
-+ */
-+.macro	_kvm_extable, from, to
-+	.pushsection	__kvm_ex_table, "a"
-+	.align		3
-+	.long		(\from - .), (\to - .)
-+	.popsection
-+.endm
-+
- #endif
- 
- #endif /* __ARM_KVM_ASM_H__ */
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -23,6 +23,13 @@ ENTRY(_text)
- 
- jiffies = jiffies_64;
- 
-+
-+#define HYPERVISOR_EXTABLE					\
-+	. = ALIGN(SZ_8);					\
-+	VMLINUX_SYMBOL(__start___kvm_ex_table) = .;		\
-+	*(__kvm_ex_table)					\
-+	VMLINUX_SYMBOL(__stop___kvm_ex_table) = .;
-+
- #define HYPERVISOR_TEXT					\
- 	/*						\
- 	 * Align to 4 KB so that			\
-@@ -38,6 +45,7 @@ jiffies = jiffies_64;
- 	VMLINUX_SYMBOL(__hyp_idmap_text_end) = .;	\
- 	VMLINUX_SYMBOL(__hyp_text_start) = .;		\
- 	*(.hyp.text)					\
-+	HYPERVISOR_EXTABLE				\
- 	VMLINUX_SYMBOL(__hyp_text_end) = .;
- 
- #define IDMAP_TEXT					\
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -135,18 +135,22 @@ ENTRY(__guest_exit)
- 	// This is our single instruction exception window. A pending
- 	// SError is guaranteed to occur at the earliest when we unmask
- 	// it, and at the latest just after the ISB.
--	.global	abort_guest_exit_start
- abort_guest_exit_start:
- 
- 	isb
- 
--	.global	abort_guest_exit_end
- abort_guest_exit_end:
-+	msr	daifset, #4	// Mask aborts
-+	ret
- 
--	// If the exception took place, restore the EL1 exception
--	// context so that we can report some information.
--	// Merge the exception code with the SError pending bit.
--	tbz	x0, #ARM_EXIT_WITH_SERROR_BIT, 1f
-+	_kvm_extable	abort_guest_exit_start, 9997f
-+	_kvm_extable	abort_guest_exit_end, 9997f
-+9997:
-+	msr	daifset, #4	// Mask aborts
-+	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
-+
-+	// restore the EL1 exception context so that we can report some
-+	// information. Merge the exception code with the SError pending bit.
- 	msr	elr_el2, x2
- 	msr	esr_el2, x3
- 	msr	spsr_el2, x4
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -25,6 +25,30 @@
- #include <asm/kvm_asm.h>
- #include <asm/kvm_mmu.h>
- 
-+.macro save_caller_saved_regs_vect
-+	stp	x0, x1,   [sp, #-16]!
-+	stp	x2, x3,   [sp, #-16]!
-+	stp	x4, x5,   [sp, #-16]!
-+	stp	x6, x7,   [sp, #-16]!
-+	stp	x8, x9,   [sp, #-16]!
-+	stp	x10, x11, [sp, #-16]!
-+	stp	x12, x13, [sp, #-16]!
-+	stp	x14, x15, [sp, #-16]!
-+	stp	x16, x17, [sp, #-16]!
-+.endm
-+
-+.macro restore_caller_saved_regs_vect
-+	ldp	x16, x17, [sp], #16
-+	ldp	x14, x15, [sp], #16
-+	ldp	x12, x13, [sp], #16
-+	ldp	x10, x11, [sp], #16
-+	ldp	x8, x9,   [sp], #16
-+	ldp	x6, x7,   [sp], #16
-+	ldp	x4, x5,   [sp], #16
-+	ldp	x2, x3,   [sp], #16
-+	ldp	x0, x1,   [sp], #16
-+.endm
-+
- 	.text
- 	.pushsection	.hyp.text, "ax"
- 
-@@ -178,25 +202,14 @@ el1_error:
- 	b	__guest_exit
- 
- el2_error:
--	/*
--	 * Only two possibilities:
--	 * 1) Either we come from the exit path, having just unmasked
--	 *    PSTATE.A: change the return code to an EL2 fault, and
--	 *    carry on, as we're already in a sane state to handle it.
--	 * 2) Or we come from anywhere else, and that's a bug: we panic.
--	 *
--	 * For (1), x0 contains the original return code and x1 doesn't
--	 * contain anything meaningful at that stage. We can reuse them
--	 * as temp registers.
--	 * For (2), who cares?
--	 */
--	mrs	x0, elr_el2
--	adr	x1, abort_guest_exit_start
--	cmp	x0, x1
--	adr	x1, abort_guest_exit_end
--	ccmp	x0, x1, #4, ne
--	b.ne	__hyp_panic
--	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
-+	save_caller_saved_regs_vect
-+	stp     x29, x30, [sp, #-16]!
-+
-+	bl	kvm_unexpected_el2_exception
-+
-+	ldp     x29, x30, [sp], #16
-+	restore_caller_saved_regs_vect
-+
- 	eret
- 
- ENTRY(__hyp_do_panic)
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -25,6 +25,10 @@
- #include <asm/kvm_asm.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_hyp.h>
-+#include <asm/uaccess.h>
-+
-+extern struct exception_table_entry __start___kvm_ex_table;
-+extern struct exception_table_entry __stop___kvm_ex_table;
- 
- static bool __hyp_text __fpsimd_enabled_nvhe(void)
- {
-@@ -454,3 +458,30 @@ void __hyp_text __noreturn hyp_panic(str
- 
- 	unreachable();
- }
-+
-+asmlinkage void __hyp_text kvm_unexpected_el2_exception(void)
-+{
-+	unsigned long addr, fixup;
-+	struct kvm_cpu_context *host_ctxt;
-+	struct exception_table_entry *entry, *end;
-+	unsigned long elr_el2 = read_sysreg(elr_el2);
-+
-+	entry = hyp_symbol_addr(__start___kvm_ex_table);
-+	end = hyp_symbol_addr(__stop___kvm_ex_table);
-+	host_ctxt = __hyp_this_cpu_ptr(kvm_host_cpu_state);
-+
-+	while (entry < end) {
-+		addr = (unsigned long)&entry->insn + entry->insn;
-+		fixup = (unsigned long)&entry->fixup + entry->fixup;
-+
-+		if (addr != elr_el2) {
-+			entry++;
-+			continue;
-+		}
-+
-+		write_sysreg(fixup, elr_el2);
-+		return;
-+	}
-+
-+	hyp_panic(host_ctxt);
-+}
-
-
+Neil
