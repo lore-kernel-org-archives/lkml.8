@@ -2,103 +2,291 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B745DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937E5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9E720731
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F4B206B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="aowX1kkd"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aRs/0/ZD";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="H+wp3mYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbgIKQPN (ORCPT
+        id S1725959AbgIKQPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:15:13 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:35644 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbgIKQOw (ORCPT
+        Fri, 11 Sep 2020 12:15:19 -0400
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:41388
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726500AbgIKQO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MwrdSe8WFHXr29NOm/NiXpeNHwXZYZQa5mCvsCZ9j68=; b=aowX1kkdsr5U5Csum1KHk6yTp8
-        2VG0op7gcgZpd5VO7EXE1bRDVSaYGpz+SC57u/bqwv0nLMH5GBcH+xn3TN05tgvDhTARVywdR3WKH
-        OkislVwCqPfjFN0A0V3q3BOfAIGpu9ZxMF+/9LzVS3f/eWcgwLXZp3K0p/qdEvX26n5vaMSZbF0pw
-        EWXUba0PdX5Imh0zgUDxQMBkQIObtG3A3TAuG7Bhohx3SIBVuxdb2M9Y+zr5eKGiEjqRE52AxEpKP
-        0gFPmq/4BcM/oZMOl2gmQyVwEoyjF1gtly9ndGgjvR5+5CC1HuCrx6HUuOQ3n7KqHPdVjOKbXHqLe
-        cGI1B0MQ==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1kGlhF-0001q3-UN; Fri, 11 Sep 2020 10:14:46 -0600
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Borislav Petkov <bp@alien8.de>
-References: <c0ba7077-7977-0155-d7be-d4133ebaee5c@deltatee.com>
- <20200911160053.w66xit3imcqsn33g@treble>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <5a66f512-960b-7f24-068a-01c043ca9877@deltatee.com>
-Date:   Fri, 11 Sep 2020 10:14:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 11 Sep 2020 12:14:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gbvhytky6xpx7itkhb67ktsxbiwpnxix; d=codeaurora.org; t=1599834489;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+        bh=EohA/RPgLsQifsaqlGdO8cLmSjFdg04RXQoLbabyzvo=;
+        b=aRs/0/ZDavabIvN/JeAVp2kWLA5uBTA78YIhc5xAwiWkBpfk59txPhGcoin0/PlL
+        w75y3VqbGYLE8zq8aDHhze2teNhzknRE20LcGmz7Hoaqbh/QZdCCXZWJKy0Vms6e5NU
+        O+FA2SJi1B1lm+MomgGIfHflx79BgW0M4NWsbq2w=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599834489;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=EohA/RPgLsQifsaqlGdO8cLmSjFdg04RXQoLbabyzvo=;
+        b=H+wp3mYtzji2t2bJCylI7b+PJv43uSYvyyG0nJnu2SeeJBAU9bUcNl5ZV3ul4Vgt
+        q/MUYZdxxiAGIxwkHnRB5bmBBIaw437NhkhwAQq7n32ilyiq6iKJoRt1EdZ7mdmUI+V
+        f9TYQDTWgDDvunz4qXahx2QswD+tHRc8HMdGeJVY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB69CC433F0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        dri-devel@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv4 4/6] drm/msm/a6xx: Add support for using system cache(LLC)
+Date:   Fri, 11 Sep 2020 14:28:09 +0000
+Message-ID: <010101747d9103c9-4a00ee4c-1f4f-4cc3-b612-895a6dd5e6b6-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1599832685.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1599832685.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200911160053.w66xit3imcqsn33g@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: bp@alien8.de, naresh.kamboju@linaro.org, luto@kernel.org, mingo@kernel.org, tglx@linutronix.de, x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: WARNING: Kernel stack regs has bad 'bp' value
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2020.09.11-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Sharat Masetty <smasetty@codeaurora.org>
 
+The last level system cache can be partitioned to 32 different
+slices of which GPU has two slices preallocated. One slice is
+used for caching GPU buffers and the other slice is used for
+caching the GPU SMMU pagetables. This talks to the core system
+cache driver to acquire the slice handles, configure the SCID's
+to those slices and activates and deactivates the slices upon
+GPU power collapse and restore.
 
-On 2020-09-11 10:00 a.m., Josh Poimboeuf wrote:
-> Hi Logan,
-> 
-> Thanks for the bug report.  (Sorry I missed the first one, Naresh.)
-> 
-> The problem is that ret_from_fork() is no longer in .entry.text, so the
-> following check in the FP unwinder doesn't work when ret_from_fork()
-> gets interrupted.
-> 
-> 	/*
-> 	 * Don't warn if the unwinder got lost due to an interrupt in entry
-> 	 * code or in the C handler before the first frame pointer got set up:
-> 	 */
-> 	if (state->got_irq && in_entry_code(state->ip))
-> 		goto the_end;
-> 
-> If you have the ability to recreate, can you try the following patch?
+Some support from the IOMMU driver is also needed to make use
+of the system cache to set the right TCR attributes. GPU then
+has the ability to override a few cacheability parameters which
+it does to override write-allocate to write-no-allocate as the
+GPU hardware does not benefit much from it.
 
-Sorry, but I can not reliably hit this bug. I hit it randomly twice last
-week however, despite doing a bunch more runs this week, I haven't hit
-it again.
+DOMAIN_ATTR_SYS_CACHE is another domain level attribute used by the
+IOMMU driver to set the right attributes to cache the hardware
+pagetables into the system cache.
 
-I can add the patch to my testing next week but I ca not give you a
-definitive answer on whether this fixes the bug.
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+(saiprakash.ranjan: fix to set attr before device attach to iommu and rebase)
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 83 +++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h   |  4 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 21 ++++++-
+ 3 files changed, 107 insertions(+), 1 deletion(-)
 
-Perhaps Naresh's test is a better reproducer.
-
-Thanks!
-
-Logan
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index a3a8d6fd06bb..6241b93ed375 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -9,6 +9,8 @@
+ #include "a6xx_gmu.xml.h"
+ 
+ #include <linux/devfreq.h>
++#include <linux/bitfield.h>
++#include <linux/soc/qcom/llcc-qcom.h>
+ 
+ #define GPU_PAS_ID 13
+ 
+@@ -969,6 +971,79 @@ static const u32 a6xx_register_offsets[REG_ADRENO_REGISTER_MAX] = {
+ 	REG_ADRENO_DEFINE(REG_ADRENO_CP_RB_CNTL, REG_A6XX_CP_RB_CNTL),
+ };
+ 
++static void a6xx_llc_rmw(struct a6xx_gpu *a6xx_gpu, u32 reg, u32 mask, u32 or)
++{
++	return msm_rmw(a6xx_gpu->llc_mmio + (reg << 2), mask, or);
++}
++
++static void a6xx_llc_write(struct a6xx_gpu *a6xx_gpu, u32 reg, u32 value)
++{
++	return msm_writel(value, a6xx_gpu->llc_mmio + (reg << 2));
++}
++
++static void a6xx_llc_deactivate(struct a6xx_gpu *a6xx_gpu)
++{
++	llcc_slice_deactivate(a6xx_gpu->llc_slice);
++	llcc_slice_deactivate(a6xx_gpu->htw_llc_slice);
++}
++
++static void a6xx_llc_activate(struct a6xx_gpu *a6xx_gpu)
++{
++	u32 cntl1_regval = 0;
++
++	if (IS_ERR(a6xx_gpu->llc_mmio))
++		return;
++
++	if (!llcc_slice_activate(a6xx_gpu->llc_slice)) {
++		u32 gpu_scid = llcc_get_slice_id(a6xx_gpu->llc_slice);
++
++		gpu_scid &= 0x1f;
++		cntl1_regval = (gpu_scid << 0) | (gpu_scid << 5) | (gpu_scid << 10) |
++			       (gpu_scid << 15) | (gpu_scid << 20);
++	}
++
++	if (!llcc_slice_activate(a6xx_gpu->htw_llc_slice)) {
++		u32 gpuhtw_scid = llcc_get_slice_id(a6xx_gpu->htw_llc_slice);
++
++		gpuhtw_scid &= 0x1f;
++		cntl1_regval |= FIELD_PREP(GENMASK(29, 25), gpuhtw_scid);
++	}
++
++	if (cntl1_regval) {
++		/*
++		 * Program the slice IDs for the various GPU blocks and GPU MMU
++		 * pagetables
++		 */
++		a6xx_llc_write(a6xx_gpu, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_1, cntl1_regval);
++
++		/*
++		 * Program cacheability overrides to not allocate cache lines on
++		 * a write miss
++		 */
++		a6xx_llc_rmw(a6xx_gpu, REG_A6XX_CX_MISC_SYSTEM_CACHE_CNTL_0, 0xF, 0x03);
++	}
++}
++
++static void a6xx_llc_slices_destroy(struct a6xx_gpu *a6xx_gpu)
++{
++	llcc_slice_putd(a6xx_gpu->llc_slice);
++	llcc_slice_putd(a6xx_gpu->htw_llc_slice);
++}
++
++static void a6xx_llc_slices_init(struct platform_device *pdev,
++		struct a6xx_gpu *a6xx_gpu)
++{
++	a6xx_gpu->llc_mmio = msm_ioremap(pdev, "cx_mem", "gpu_cx");
++	if (IS_ERR(a6xx_gpu->llc_mmio))
++		return;
++
++	a6xx_gpu->llc_slice = llcc_slice_getd(LLCC_GPU);
++	a6xx_gpu->htw_llc_slice = llcc_slice_getd(LLCC_GPUHTW);
++
++	if (IS_ERR(a6xx_gpu->llc_slice) && IS_ERR(a6xx_gpu->htw_llc_slice))
++		a6xx_gpu->llc_mmio = ERR_PTR(-EINVAL);
++}
++
+ static int a6xx_pm_resume(struct msm_gpu *gpu)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+@@ -985,6 +1060,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
+ 
+ 	msm_gpu_resume_devfreq(gpu);
+ 
++	a6xx_llc_activate(a6xx_gpu);
++
+ 	return 0;
+ }
+ 
+@@ -995,6 +1072,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
+ 
+ 	trace_msm_gpu_suspend(0);
+ 
++	a6xx_llc_deactivate(a6xx_gpu);
++
+ 	devfreq_suspend_device(gpu->devfreq.devfreq);
+ 
+ 	return a6xx_gmu_stop(a6xx_gpu);
+@@ -1033,6 +1112,8 @@ static void a6xx_destroy(struct msm_gpu *gpu)
+ 		drm_gem_object_put(a6xx_gpu->sqe_bo);
+ 	}
+ 
++	a6xx_llc_slices_destroy(a6xx_gpu);
++
+ 	a6xx_gmu_remove(a6xx_gpu);
+ 
+ 	adreno_gpu_cleanup(adreno_gpu);
+@@ -1132,6 +1213,8 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+ 	if (adreno_is_a650(adreno_gpu))
+ 		adreno_gpu->base.hw_apriv = true;
+ 
++	a6xx_llc_slices_init(pdev, a6xx_gpu);
++
+ 	ret = adreno_gpu_init(dev, pdev, adreno_gpu, &funcs, 1);
+ 	if (ret) {
+ 		a6xx_destroy(&(a6xx_gpu->base.base));
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index da22d7549d9b..da4c8a817025 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -22,6 +22,10 @@ struct a6xx_gpu {
+ 	struct msm_file_private *cur_ctx;
+ 
+ 	struct a6xx_gmu gmu;
++
++	void __iomem *llc_mmio;
++	void *llc_slice;
++	void *htw_llc_slice;
+ };
+ 
+ #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index b703e5308b01..b7a152451f78 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -16,6 +16,7 @@
+ #include <linux/soc/qcom/mdt_loader.h>
+ #include <soc/qcom/ocmem.h>
+ #include "adreno_gpu.h"
++#include "a6xx_gpu.h"
+ #include "msm_gem.h"
+ #include "msm_mmu.h"
+ 
+@@ -190,10 +191,28 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+ 		struct platform_device *pdev)
+ {
+ 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
+-	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
++	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
++	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
+ 	struct msm_gem_address_space *aspace;
++	struct msm_mmu *mmu;
+ 	u64 start, size;
+ 
++	/*
++	 * This allows GPU to set the bus attributes required to use system
++	 * cache on behalf of the iommu page table walker.
++	 */
++	if (!IS_ERR(a6xx_gpu->htw_llc_slice)) {
++		int gpu_htw_llc = 1;
++
++		iommu_domain_set_attr(iommu, DOMAIN_ATTR_SYS_CACHE, &gpu_htw_llc);
++	}
++
++	mmu = msm_iommu_new(&pdev->dev, iommu);
++	if (IS_ERR(mmu)) {
++		iommu_domain_free(iommu);
++		return ERR_CAST(mmu);
++	}
++
+ 	/*
+ 	 * Use the aperture start or SZ_16M, whichever is greater. This will
+ 	 * ensure that we align with the allocated pagetable range while still
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
