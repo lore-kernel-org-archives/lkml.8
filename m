@@ -2,52 +2,53 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B03C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 554A6223DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28015223EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599836248;
-	bh=8H8bi/4fqFJP5lm0n3vTS8BL9cueu8eUwd/feLHSsRI=;
+	s=default; t=1599836263;
+	bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOrQohODF5yiTSW5T9xINLRbkJvVs4hmWVgsfFZoBUayYLwcAMUbFIZtpLSggThd1
-	 uDnNEHO97F9JMIQH3Rms/8kR303HGmlBDbGW4zKxX5+GIuCxWSi37K4adgZBkx2Q0f
-	 Re4wrI1IFzZGVzymWb+tE3IEvjUt3u0PGroSinCo=
+	b=FYx2Rw/4XR/EEtbrzAU6lm4xBxb3ZR8SQvZkSjZfXpVL1R5tiVh6aj0jdwQ9z9moM
+	 WjInAMh+mbwYRtdtj6Fje62bucxSePKm099BlROuVfUm6tPpo4vY/iqiLwDjweHcFi
+	 RrD0l0GAS35CZRpR1epCrGxJvXkemOih0zDGi0Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgIKO5T (ORCPT
+        id S1726108AbgIKO5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52782 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgIKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726165AbgIKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:02:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19A212223E;
-        Fri, 11 Sep 2020 12:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC2B622276;
+        Fri, 11 Sep 2020 12:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829045;
-        bh=8H8bi/4fqFJP5lm0n3vTS8BL9cueu8eUwd/feLHSsRI=;
+        s=default; t=1599829012;
+        bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yw9ArAMJGgQZRacAof8SVKkbN6T4SZvUOehu/qb+vkUUIUNitde1jO63XxYc+DlkW
-         RXfnz10j1PQ3bOwUWEKj3eIHUM4Ld/HkHKNCDQUSLg92r8bUIFDqc8LZWxGloKckrW
-         7Z9IxNhRAUiydCxf2BJFkt1hmf34h1Z5V5QTycBQ=
+        b=VEo5NBZOL6crJ4Y/k4Nq8MwUqwGLDETBBaj/KhfxtAdUEhiGVTsoE8rHjNDtif5aL
+         4c9aRyKN8+YD4sUZNCqmiAHgzWMrWw8hic1kkWnfKY9KbENJO484bO+SvTLdRs3iy+
+         iepwO6yNGPm0I2Qc0WoLXehcqjaLFlCNIBoG0OfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Karthik Shivaram <karthikgs@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 45/71] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-Date:   Fri, 11 Sep 2020 14:46:29 +0200
-Message-Id: <20200911122507.174382370@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 04/71] hwmon: (applesmc) check status earlier.
+Date:   Fri, 11 Sep 2020 14:45:48 +0200
+Message-Id: <20200911122505.158628111@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -60,79 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Tom Rix <trix@redhat.com>
 
-commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
+[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
 
-All three generations of Sandisk SSDs lock up hard intermittently.
-Experiments showed that disabling NCQ lowered the failure rate significantly
-and the kernel has been disabling NCQ for some models of SD7's and 8's,
-which is obviously undesirable.
+clang static analysis reports this representative problem
 
-Karthik worked with Sandisk to root cause the hard lockups to trim commands
-larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
-limits max trim size to 128M and applies it to all three generations of
-Sandisk SSDs.
+applesmc.c:758:10: warning: 1st function call argument is an
+  uninitialized value
+        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Karthik Shivaram <karthikgs@fb.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+buffer is filled by the earlier call
 
+	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
+
+This problem is reported because a goto skips the status check.
+Other similar problems use data from applesmc_read_key before checking
+the status.  So move the checks to before the use.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
+Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-core.c |    5 ++---
- drivers/ata/libata-scsi.c |    8 +++++++-
- include/linux/libata.h    |    1 +
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4371,9 +4371,8 @@ static const struct ata_blacklist_entry
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
- 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
- 
--	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
--	   SD7SN6S256G and SD8SN8U256G */
--	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
-+	/* Sandisk SD7/8/9s lock up hard on large trims */
-+	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
- 
- 	/* devices which puke on READ_NATIVE_MAX */
- 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -2314,6 +2314,7 @@ static unsigned int ata_scsiop_inq_89(st
- 
- static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
- {
-+	struct ata_device *dev = args->dev;
- 	u16 min_io_sectors;
- 
- 	rbuf[1] = 0xb0;
-@@ -2339,7 +2340,12 @@ static unsigned int ata_scsiop_inq_b0(st
- 	 * with the unmap bit set.
- 	 */
- 	if (ata_id_has_trim(args->id)) {
--		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
-+		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
-+
-+		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
-+			max_blocks = 128 << (20 - SECTOR_SHIFT);
-+
-+		put_unaligned_be64(max_blocks, &rbuf[36]);
- 		put_unaligned_be32(1, &rbuf[28]);
+diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+index 0af7fd311979d..587fc5c686b3c 100644
+--- a/drivers/hwmon/applesmc.c
++++ b/drivers/hwmon/applesmc.c
+@@ -758,15 +758,18 @@ static ssize_t applesmc_light_show(struct device *dev,
  	}
  
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -435,6 +435,7 @@ enum {
- 	ATA_HORKAGE_NO_NCQ_LOG	= (1 << 23),	/* don't use NCQ for log read */
- 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
- 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
-+	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
+ 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
++	if (ret)
++		goto out;
+ 	/* newer macbooks report a single 10-bit bigendian value */
+ 	if (data_length == 10) {
+ 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+ 		goto out;
+ 	}
+ 	left = buffer[2];
++
++	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	if (ret)
+ 		goto out;
+-	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	right = buffer[2];
  
- 	 /* DMA mask for user DMA control: User visible values; DO NOT
- 	    renumber */
+ out:
+@@ -814,12 +817,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
+ 	sprintf(newkey, fan_speed_fmt[to_option(attr)], to_index(attr));
+ 
+ 	ret = applesmc_read_key(newkey, buffer, 2);
+-	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
++
++	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
++	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+ static ssize_t applesmc_store_fan_speed(struct device *dev,
+@@ -854,12 +856,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
+ 	u8 buffer[2];
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
++
++	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
+ }
+ 
+ static ssize_t applesmc_store_fan_manual(struct device *dev,
+@@ -875,10 +876,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	val = (buffer[0] << 8 | buffer[1]);
+ 	if (ret)
+ 		goto out;
+ 
++	val = (buffer[0] << 8 | buffer[1]);
++
+ 	if (input)
+ 		val = val | (0x01 << to_index(attr));
+ 	else
+@@ -954,13 +956,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
+ 	u32 count;
+ 
+ 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
+-	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
+-						((u32)buffer[2]<<8) + buffer[3];
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
++
++	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
++						((u32)buffer[2]<<8) + buffer[3];
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
+ }
+ 
+ static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+-- 
+2.25.1
+
 
 
