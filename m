@@ -2,82 +2,75 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECEFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D34DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19665221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599842533;
-	bh=aRm/nSH7/SoWVBtD3aaiB7zpszrW2lrJPlUGWAXYJNk=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fvKJEr5iVnBoj1giBQFnnEedY8Qw7w6xYRciZ8VONAw6SLvS5/0ICQfJntCc9QOkp
-	 17q5o0OallEKGEhjk7Sz2efc7OS4OHXHqwDLl/Oxs1mFWdiH/Quo5JL33cJC3Jk77s
-	 2zYI+9c3ekfo7eNxRMO9dZIV1RUnw+2JGqHMsbDs=
+	by mail.kernel.org (Postfix) with ESMTP id 16031221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgIKQmI (ORCPT
+        id S1726458AbgIKQmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51332 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbgIKPKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726359AbgIKPKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:10:04 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FB4222C3;
-        Fri, 11 Sep 2020 14:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599834842;
-        bh=aRm/nSH7/SoWVBtD3aaiB7zpszrW2lrJPlUGWAXYJNk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tFh2XMpZBBVQfnwhuAwKDsnDbp8gy95H9eEk9cih8VsCD+4pYXSnH1aClS2/5p6ng
-         Yn2X9JpKS8DdRQJCUnyAG7Vwy+US66Q+BeExOoKoIPZrahCZM63lobVJYDuD6zfDNS
-         IqN/EI2OKP/0AKav99/1eTM+wqljTi/r2d6TVWxY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 2/3] serial: s3c: Update path of Samsung S3C machine file
-Date:   Fri, 11 Sep 2020 16:33:42 +0200
-Message-Id: <20200911143343.498-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911143343.498-1-krzk@kernel.org>
-References: <20200911143343.498-1-krzk@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id E6D4522266;
+        Fri, 11 Sep 2020 14:40:34 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 15:40:32 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     will@kernel.org, sudeep.holla@arm.com, morten.rasmussen@arm.com,
+        valentin.schneider@arm.com, souvik.chakravarty@arm.com,
+        viresh.kumar@linaro.org, dietmar.eggemann@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] arm64: implement CPPC FFH support using AMUs
+Message-ID: <20200911144032.GC12835@gaia>
+References: <20200826130309.28027-1-ionela.voinescu@arm.com>
+ <20200826130309.28027-5-ionela.voinescu@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826130309.28027-5-ionela.voinescu@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct the path to Samsung S3C24xx machine file, mentioned in
-documentation.
+On Wed, Aug 26, 2020 at 02:03:09PM +0100, Ionela Voinescu wrote:
+> +/*
+> + * Refer to drivers/acpi/cppc_acpi.c for the description of the functions
+> + * below.
+> + */
+> +bool cpc_ffh_supported(void)
+> +{
+> +	const struct cpumask *cnt_cpu_mask = cpus_with_amu_counters();
+> +	int cpu = nr_cpu_ids;
+> +
+> +	if (cnt_cpu_mask)
+> +		cpu = cpumask_any_and(cnt_cpu_mask, cpu_present_mask);
+> +
+> +	if ((cpu >= nr_cpu_ids) || !freq_counters_valid(cpu))
+> +		return false;
+> +
+> +	return true;
+> +}
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- include/linux/serial_s3c.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+IIUC, the only need for the cpumask is this function, the others would
+have worked just fine with the existing cpu_has_amu_feat(). So you have
+a lot more !cnt_cpu_mask checks now.
 
-diff --git a/include/linux/serial_s3c.h b/include/linux/serial_s3c.h
-index 463ed28d2b27..ca2c5393dc6b 100644
---- a/include/linux/serial_s3c.h
-+++ b/include/linux/serial_s3c.h
-@@ -254,7 +254,7 @@
-  * serial port
-  *
-  * the pointer is setup by the machine specific initialisation from the
-- * arch/arm/mach-s3c2410/ directory.
-+ * arch/arm/mach-s3c/ directory.
- */
- 
- struct s3c2410_uartcfg {
+I wonder whether instead you could add a new function near
+cpu_has_amu_feat(), something like get_cpu_with_amu_feat() and do the
+cpumask_any_and() in there.
+
 -- 
-2.17.1
-
+Catalin
