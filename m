@@ -2,134 +2,86 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4B6C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B58221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F1E22204
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="s7+XJKuz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="iuePkO9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbgIKQh2 (ORCPT
+        id S1726442AbgIKQhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59516 "EHLO
+        Fri, 11 Sep 2020 12:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgIKPM6 (ORCPT
+        with ESMTP id S1726429AbgIKPM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:12:58 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE1FC06136D
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 07:31:32 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w1so10206335edr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 07:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=b0QD34+bxOAz0p5Ruf1S0pwezgoC99GUrOiFTRHr1WU=;
-        b=s7+XJKuz3oEy3pnN/elhmjMP3fwttIcgzseKr38icNThXbOY0LirJo1to8ih0eNwQA
-         1KVmgArwT9O0ardNtiHkXQr8ohGLQ3earWaQz2bNkJyavHpjUOfqH+Rutql5evnZd+Wh
-         ElzqI1mWKCmB58u26vkRGzBC30VJZaPuMrtCYlhX61qRdr1KXozuXbPHYa6PCfyjzIaD
-         fvfOOfdUXUj4+OUuH2PQ2U1nJ34ARaYMY27CZuB+H1DB8Dwubq3h+SEl5oAvEQ3z2Pde
-         LMYbLS+kf5N+T2N3Psx1V3ZEDhgWCrTGE48hCzhGy1NvpqiM/I1E80W0/usazP+4Lz07
-         5TWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=b0QD34+bxOAz0p5Ruf1S0pwezgoC99GUrOiFTRHr1WU=;
-        b=QVWyasIyxej2UCapLXELwJv5o7h8TERqIOKelwd460cXgkmtiCuZNPNc92e4O2Y40+
-         C9aLP+G//HpcDc0lpXh0WV1DwP0tyPAEw2y+PZr/hCi2RUpOWxfWi3lzZk9381Qlv1Dg
-         OUc9e4qIxmfvEbY+QRV75QsVbz1VqCUjQCkcoAtYeZtovhC7QxX9QzyrwkQ03w6EDvqH
-         CMh7WGt5fattuQBIkTfZtEbu4gP+5fK71s7gLwLDVH81egNQ+QnWWBQ0/Kt9jHOuisfb
-         NE+le1VS3j/B7Vn+bHWdJpK3pkAxyylSAdrhlVZEin8EhPwuEo7RID4HexJfW8NLr/3z
-         fg2Q==
-X-Gm-Message-State: AOAM530u0IIh9gAWTFlZpsIMV+3L3FLGv7Sbdroa83pZhn9Y/FNDztLP
-        E9Kv3mgdFcn4TjEKb6j3PARuHw==
-X-Google-Smtp-Source: ABdhPJyNl/jj9IvK4T0bkJprq/8BXcKllYou73+Al1l1qxTjRLji8C3rkP9NSSxO0s2oL8lobF2CFA==
-X-Received: by 2002:a05:6402:1710:: with SMTP id y16mr2416437edu.197.1599834691462;
-        Fri, 11 Sep 2020 07:31:31 -0700 (PDT)
-Received: from localhost.localdomain ([87.66.33.240])
-        by smtp.gmail.com with ESMTPSA id y21sm1716261eju.46.2020.09.11.07.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 07:31:30 -0700 (PDT)
-From:   Nicolas Rybowski <nicolas.rybowski@tessares.net>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     Nicolas Rybowski <nicolas.rybowski@tessares.net>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, mptcp@lists.01.org,
-        netdev@vger.kernel.org
-Subject: [PATCH bpf-next v2 0/5] bpf: add MPTCP subflow support
-Date:   Fri, 11 Sep 2020 16:30:21 +0200
-Message-Id: <20200911143022.414783-6-nicolas.rybowski@tessares.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911143022.414783-1-nicolas.rybowski@tessares.net>
-References: <20200911143022.414783-1-nicolas.rybowski@tessares.net>
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4351C061358;
+        Fri, 11 Sep 2020 07:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Mqkz/TWdkaK1QSCbkP0AJS8OkxokSpm+JnM6y2Dzk1U=; b=iuePkO9Gkom/odDxD1jBzDR2t6
+        xtNgBI1jkys2M3Dufsm1WU4nOmnsz8hVTMzk9DfnLsHRW/TrlMWYbM3tu8WyJ+Th7lkrxGguMhiWx
+        hOpme4zgCM/XcytmhnbjAlZtiPoXaUXYVgtvuCgQjucNNi9YLQk4ieFPB9A+CotJ5Pdc=;
+Received: from p200300ccff0ce9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:e900:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kGk1B-0001LS-Kb; Fri, 11 Sep 2020 16:27:32 +0200
+Date:   Fri, 11 Sep 2020 16:27:12 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     khilman@kernel.org, linux@armlinux.org.uk,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Subject: Re: [PATCH] omap3: enable off mode automatically
+Message-ID: <20200911162712.740d96ec@aktux>
+In-Reply-To: <20200911103337.GH7101@atomide.com>
+References: <20200911064924.26281-1-andreas@kemnade.info>
+        <20200911103337.GH7101@atomide.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously it was not possible to make a distinction between plain TCP
-sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
+On Fri, 11 Sep 2020 13:33:37 +0300
+Tony Lindgren <tony@atomide.com> wrote:
 
-This patch series now enables a fine control of subflow sockets. In its
-current state, it allows to put different sockopt on each subflow from a
-same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
-BPF programs.
+> * Andreas Kemnade <andreas@kemnade.info> [200911 09:50]:
+> > --- a/arch/arm/mach-omap2/pm.h
+> > +++ b/arch/arm/mach-omap2/pm.h
+> > @@ -49,11 +49,7 @@ static inline int omap4_opp_init(void)
+> >  extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
+> >  extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
+> >  
+> > -#ifdef CONFIG_PM_DEBUG
+> >  extern u32 enable_off_mode;
+> > -#else
+> > -#define enable_off_mode 0
+> > -#endif  
+> 
+> Hmm isn't the above still needed for the other SoCs? Or is omap3 the only
+> user?
+> 
+well, the linker moans about undefined symbols if
+CONFIG_ARCH_OMAP3 is not enabled.
+I will send a v2.
 
-It should also be the basis of exposing MPTCP-specific fields through BPF.
-
-v1 -> v2:
-- add basic mandatory selftests for the new helper and is_mptcp field (Alexei)
-- rebase on latest bpf-next
-
-Nicolas Rybowski (5):
-  bpf: expose is_mptcp flag to bpf_tcp_sock
-  mptcp: attach subflow socket to parent cgroup
-  bpf: add 'bpf_mptcp_sock' structure and helper
-  bpf: selftests: add MPTCP test base
-  bpf: selftests: add bpf_mptcp_sock() verifier tests
-
- include/linux/bpf.h                           |  33 +++++
- include/uapi/linux/bpf.h                      |  15 +++
- kernel/bpf/verifier.c                         |  30 +++++
- net/core/filter.c                             |  13 +-
- net/mptcp/Makefile                            |   2 +
- net/mptcp/bpf.c                               |  72 +++++++++++
- net/mptcp/subflow.c                           |  27 ++++
- scripts/bpf_helpers_doc.py                    |   2 +
- tools/include/uapi/linux/bpf.h                |  15 +++
- tools/testing/selftests/bpf/config            |   1 +
- tools/testing/selftests/bpf/network_helpers.c |  37 +++++-
- tools/testing/selftests/bpf/network_helpers.h |   3 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 119 ++++++++++++++++++
- tools/testing/selftests/bpf/progs/mptcp.c     |  48 +++++++
- tools/testing/selftests/bpf/verifier/sock.c   |  63 ++++++++++
- 15 files changed, 474 insertions(+), 6 deletions(-)
- create mode 100644 net/mptcp/bpf.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/mptcp.c
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp.c
-
--- 
-2.28.0
-
+Regards,
+Andreas
