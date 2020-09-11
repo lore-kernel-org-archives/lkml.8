@@ -2,224 +2,163 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49092C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC9BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE392075A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1732075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="JniAzZ3x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGVNHZ+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgIKPt2 (ORCPT
+        id S1726406AbgIKPuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
+        Fri, 11 Sep 2020 11:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgIKPs0 (ORCPT
+        with ESMTP id S1725780AbgIKPs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:48:26 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16464C0613ED
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:47:56 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o68so7791321pfg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:47:56 -0700 (PDT)
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26833C061786;
+        Fri, 11 Sep 2020 08:48:13 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gr14so14468050ejb.1;
+        Fri, 11 Sep 2020 08:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/FxP5cNAkpu9V91Tg3DKH/Ny09wUejGvsK8pL9rWrkk=;
-        b=JniAzZ3xST4x7XGSyxnitWxVX3bZfGnuePIGwoojCFb46nGadnsTtmipUi/taEv3MZ
-         8zvchl4SSbsvH1ewN5k6YLLaoCxKoT2ohERbw8u/Iyh4b8xrTSrTAYGJrPFCFHkN2bHi
-         /xneXJVPG2IslDGdD76+kwU4WeWb/kq3bcMEEdW5ctkloTqq3o47htr+U5VQ77rOoQik
-         9kHa4Yo6LP/+QnWj1qMZTBUYnehDmJkPbhY5waq1K7lw70HJ0Xr7u3K4xb/fr/H+Opcn
-         drvtiAnFgsStlY6yvGVpTO0v4/Tbdh3VNBjwvpCbOanenPw0kl4oLdu3juldltMPRbQN
-         6WRQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yfq8mhLzBQ1KFwMRJwpAyIxVLnM24Bwo6yRLbuTpTrg=;
+        b=eGVNHZ+xZIxSU88fSYKg0SMen0jp9gNJxpoTd3XJqL3iM6MCx/mXDnrCtEeASAlQry
+         xg50hVEzbbZH4OAvRvC8cGhMjzAh6dSoft/ckUQQhe7O5IsD9tpRWALIGjSXy0HEJu+e
+         z0n7HRbl6DFJt+ICoVF3/USrvQ2tgEfrRDNz/CZ2ewIj7BmejnyYO9Y95PjnTv0MdeBw
+         3X/UgpLJSCvz+qm01G9JHBSCSCD+xgkN9OEpevc2t5TKm7fFdce0TKpr+0HkhwTDuFh0
+         HMA/lwX70s43ZXLuBYMPCq1Y3OAWw5gJxA8gKjKBNtBKC4HAVSX3iP4TNtb3KPM0+Rqi
+         B3SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FxP5cNAkpu9V91Tg3DKH/Ny09wUejGvsK8pL9rWrkk=;
-        b=Ljur0MeGkqIcf6hmW4kMuWTuQLkrvwHG7NG8ozATuvFl3i+UW6TmM0qKsXKBZi09uF
-         MjTXoAbV2W2xmk3whlcUYSo9KklMTV0sxFpNpwYnh2ocGgXvLaBUJD49hLgfRZ3Da+Tv
-         +jI5axQ1zwU550soJ7rSf2lmLdFEBUOsK1BpSO40NfduZjI6+pksTeSFyy0m9dcHvoPa
-         EXW1Zy+hPEZaHTzxiifRs8Wyu/W8frykFliUBwVcBaWikOErfhkBkfRceUMEq4kD8m4k
-         y4rvV35Vy/R+JxhN+OLP3pat//VsYpQarloqr14QxYVoxQMinYCrKah2jKuDADPuH0/m
-         5phw==
-X-Gm-Message-State: AOAM533GJN2nO7bX9V2w891QvjfrkRL/9B/SnZbfijiXTAnUBWIsGhf3
-        GfQG6mrGQjXfGr+ClF1+uNc+ZDIhSuhhVxL+rjbiMg==
-X-Google-Smtp-Source: ABdhPJxbIsZtozG0G42NrF8x3zqNun6QflXpXiIIl35qSaaCxDs5WOfSPTNN7HAstJIk+HPY/FxyJlS0/gRmPkydrOE=
-X-Received: by 2002:a17:902:a70e:b029:d1:9be4:b49c with SMTP id
- w14-20020a170902a70eb02900d19be4b49cmr3056458plq.20.1599839275489; Fri, 11
- Sep 2020 08:47:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yfq8mhLzBQ1KFwMRJwpAyIxVLnM24Bwo6yRLbuTpTrg=;
+        b=EGhEkJEf+lRGl90XsBsp+CE7DgKjpS2mebpbiGAsTsCoBl4dWCQlvMXUstSnnfN//6
+         aJUKR0hzkIR7XB9gdBtVn3O50uM4PAN+oqXg57k9Uylsb63ajoucPEy7N7wkuUc1l3wj
+         Dn7tI4/S7ivntx7DgI42zEeJQvt6Hhhe4C88SHRVr1KJTiGn8MCTmsFz1op/26e1v+WO
+         c3p5GAzz1epXFiWeY2Qrp8nqLPkUCunzpHbt1dIjNJ6I6QP37Nt04KhXg9nu9X3QtT0Q
+         UPRXDlC4KWibJY7rSz9JfAI2UzuwfhdG5RRreJSuJUG4qy8FCuGxXJFUJWLCe2oGOQ5M
+         O/cw==
+X-Gm-Message-State: AOAM532pQ18Ayqg0rbEmoYELTHFzL1ISm+Zd/DHhEdj5PasaaWxxH6oS
+        ZNqFEoneHqkhIBJDIJm1tO4=
+X-Google-Smtp-Source: ABdhPJxhZJs5pB8DvTPdxmDxp9Oe1cHmS5A8p5N3ibhqe1zeGh7gcP9CjNMYo6J6v6LNjAUktkVszA==
+X-Received: by 2002:a17:906:bc52:: with SMTP id s18mr2505209ejv.398.1599839291789;
+        Fri, 11 Sep 2020 08:48:11 -0700 (PDT)
+Received: from skbuf ([188.25.217.212])
+        by smtp.gmail.com with ESMTPSA id a15sm1801209ejy.118.2020.09.11.08.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 08:48:11 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 18:48:09 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] net: dsa: b53: Configure VLANs while not
+ filtering
+Message-ID: <20200911154809.jc72jesrctvmiqtr@skbuf>
+References: <20200911041905.58191-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <20200910084258.22293-1-songmuchun@bytedance.com>
- <CALvZod5JQWGHUAPnj9S0pKFQreLPST441mZnp+h=fue_nnh1yQ@mail.gmail.com>
- <CAMZfGtUncFZZe2RDb54ALMt1DAVqBxAD1TQrpjei1H5nRbH6jg@mail.gmail.com> <CALvZod5_1nGJ2-QfSnYm4rCB+qvMEKAuVJrCeCyv_vQs7EoYfw@mail.gmail.com>
-In-Reply-To: <CALvZod5_1nGJ2-QfSnYm4rCB+qvMEKAuVJrCeCyv_vQs7EoYfw@mail.gmail.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Fri, 11 Sep 2020 23:47:16 +0800
-Message-ID: <CAMZfGtX7UF7VSNbcutibLu7ZO-cn6jFYHURHG9ycEmkmnjB08Q@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm: memcontrol: Add the missing numa stat
- of anon and file for cgroup v2
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911041905.58191-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 10:55 PM Shakeel Butt <shakeelb@google.com> wrote:
+On Thu, Sep 10, 2020 at 09:19:05PM -0700, Florian Fainelli wrote:
+> Update the B53 driver to support VLANs while not filtering. This
+> requires us to enable VLAN globally within the switch upon driver
+> initial configuration (dev->vlan_enabled).
 >
-> On Thu, Sep 10, 2020 at 8:52 PM Muchun Song <songmuchun@bytedance.com> wrote:
-> >
-> > On Fri, Sep 11, 2020 at 12:02 AM Shakeel Butt <shakeelb@google.com> wrote:
-> > >
-> > > On Thu, Sep 10, 2020 at 1:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
-> > > >
-> > > > In the cgroup v1, we have a numa_stat interface. This is useful for
-> > > > providing visibility into the numa locality information within an
-> > > > memcg since the pages are allowed to be allocated from any physical
-> > > > node. One of the use cases is evaluating application performance by
-> > > > combining this information with the application's CPU allocation.
-> > > > But the cgroup v2 does not. So this patch adds the missing information.
-> > > >
-> > > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > > > ---
-> > >
-> > > I am actually working on exposing this info on v2 as well.
-> > >
-> > > >  mm/memcontrol.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
-> > > >  1 file changed, 44 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > > index 75cd1a1e66c8..c779673f29b2 100644
-> > > > --- a/mm/memcontrol.c
-> > > > +++ b/mm/memcontrol.c
-> > > > @@ -1492,10 +1492,34 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
-> > > >         return false;
-> > > >  }
-> > > >
-> > > > +#ifdef CONFIG_NUMA
-> > > > +static unsigned long memcg_node_page_state(struct mem_cgroup *memcg,
-> > > > +                                          unsigned int nid,
-> > > > +                                          enum node_stat_item idx)
-> > > > +{
-> > > > +       long x;
-> > > > +       struct mem_cgroup_per_node *pn;
-> > > > +       struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
-> > > > +
-> > > > +       VM_BUG_ON(nid >= nr_node_ids);
-> > > > +
-> > > > +       pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> > > > +       x = atomic_long_read(&pn->lruvec_stat[idx]);
-> > > > +#ifdef CONFIG_SMP
-> > > > +       if (x < 0)
-> > > > +               x = 0;
-> > > > +#endif
-> > > > +       return x;
-> > > > +}
-> > > > +#endif
-> > > > +
-> > > >  static char *memory_stat_format(struct mem_cgroup *memcg)
-> > > >  {
-> > > >         struct seq_buf s;
-> > > >         int i;
-> > > > +#ifdef CONFIG_NUMA
-> > > > +       int nid;
-> > > > +#endif
-> > > >
-> > > >         seq_buf_init(&s, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
-> > > >         if (!s.buffer)
-> > > > @@ -1512,12 +1536,30 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
-> > > >          * Current memory state:
-> > > >          */
-> > > >
-> > >
-> > > Let's not break the parsers of memory.stat. I would prefer a separate
-> > > interface like v1 i.e. memory.numa_stat.
-> >
-> > It is also a good idea to expose a new interface like memory.numa_stat.
-> >
-> > >
-> > > > -       seq_buf_printf(&s, "anon %llu\n",
-> > > > +       seq_buf_printf(&s, "anon %llu",
-> > > >                        (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
-> > > >                        PAGE_SIZE);
-> > > > -       seq_buf_printf(&s, "file %llu\n",
-> > > > +#ifdef CONFIG_NUMA
-> > > > +       for_each_node_state(nid, N_MEMORY)
-> > > > +               seq_buf_printf(&s, " N%d=%llu", nid,
-> > > > +                              (u64)memcg_node_page_state(memcg, nid,
-> > > > +                                                         NR_ANON_MAPPED) *
-> > > > +                              PAGE_SIZE);
-> > > > +#endif
-> > > > +       seq_buf_putc(&s, '\n');
-> > > > +
-> > > > +       seq_buf_printf(&s, "file %llu",
-> > > >                        (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
-> > > >                        PAGE_SIZE);
-> > > > +#ifdef CONFIG_NUMA
-> > > > +       for_each_node_state(nid, N_MEMORY)
-> > > > +               seq_buf_printf(&s, " N%d=%llu", nid,
-> > > > +                              (u64)memcg_node_page_state(memcg, nid,
-> > > > +                                                         NR_FILE_PAGES) *
-> > > > +                              PAGE_SIZE);
-> > > > +#endif
-> > > > +       seq_buf_putc(&s, '\n');
-> > > > +
-> > >
-> > > The v1's numa_stat exposes the LRUs, why NR_ANON_MAPPED and NR_FILE_PAGES?
-> >
-> > If we want to expose the anon per node, we need to add inactive anon and
-> > active anon together. Why not use NR_ANON_MAPPED directly?
-> >
+> We also need to remove the code that dealt with PVID re-configuration in
+> b53_vlan_filtering() since that function worked under the assumption
+> that it would only be called to make a bridge VLAN filtering, or not
+> filtering, and we would attempt to move the port's PVID accordingly.
 >
-> Active anon plus inactive anon is not equal to NR_ANON_MAPPED. The
-> shmem related memory is on anon LRUs but not accounted in
-> NR_ANON_MAPPED.
+> Now that VLANs are programmed all the time, even in the case of a
+> non-VLAN filtering bridge, we would be programming a default_pvid for
+> the bridged switch ports.
 >
-> Similarly file LRU can contain MADV_FREE pages which are not accounted
-> in NR_FILE_PAGES.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
 
-I got it, thanks. Because the "state" interface exposes the anon and
-file information. So I think that we also should expose the anon and
-file for "numa_stat" per node instead of the lru statistics. Maybe it is
-better that we expose both of all the information.
+Not sure it's worth a lot, but:
 
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
+
+>  drivers/net/dsa/b53/b53_common.c | 23 ++++-------------------
+>  1 file changed, 4 insertions(+), 19 deletions(-)
 >
-> > >
-> > > Also I think exposing slab_[un]reclaimable per node would be beneficial as well.
-> >
-> > Yeah, I agree with you. Maybe kernel_stack and percpu also should
-> > be exposed.
-> >
-> > >
-> > > >         seq_buf_printf(&s, "kernel_stack %llu\n",
-> > > >                        (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
-> > > >                        1024);
-> > > > --
-> > > > 2.20.1
-> > > >
-> >
-> >
-> >
-> > --
-> > Yours,
-> > Muchun
-
-
-
--- 
-Yours,
-Muchun
+> diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+> index 6a5796c32721..46ac8875f870 100644
+> --- a/drivers/net/dsa/b53/b53_common.c
+> +++ b/drivers/net/dsa/b53/b53_common.c
+> @@ -1377,23 +1377,6 @@ EXPORT_SYMBOL(b53_phylink_mac_link_up);
+>  int b53_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
+>  {
+>  	struct b53_device *dev = ds->priv;
+> -	u16 pvid, new_pvid;
+> -
+> -	b53_read16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port), &pvid);
+> -	if (!vlan_filtering) {
+> -		/* Filtering is currently enabled, use the default PVID since
+> -		 * the bridge does not expect tagging anymore
+> -		 */
+> -		dev->ports[port].pvid = pvid;
+> -		new_pvid = b53_default_pvid(dev);
+> -	} else {
+> -		/* Filtering is currently disabled, restore the previous PVID */
+> -		new_pvid = dev->ports[port].pvid;
+> -	}
+> -
+> -	if (pvid != new_pvid)
+> -		b53_write16(dev, B53_VLAN_PAGE, B53_VLAN_PORT_DEF_TAG(port),
+> -			    new_pvid);
+>
+>  	b53_enable_vlan(dev, dev->vlan_enabled, vlan_filtering);
+>
+> @@ -1444,7 +1427,7 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
+>  			untagged = true;
+>
+>  		vl->members |= BIT(port);
+> -		if (untagged && !dsa_is_cpu_port(ds, port))
+> +		if (untagged)
+>  			vl->untag |= BIT(port);
+>  		else
+>  			vl->untag &= ~BIT(port);
+> @@ -1482,7 +1465,7 @@ int b53_vlan_del(struct dsa_switch *ds, int port,
+>  		if (pvid == vid)
+>  			pvid = b53_default_pvid(dev);
+>
+> -		if (untagged && !dsa_is_cpu_port(ds, port))
+> +		if (untagged)
+>  			vl->untag &= ~(BIT(port));
+>
+>  		b53_set_vlan_entry(dev, vid, vl);
+> @@ -2619,6 +2602,8 @@ struct b53_device *b53_switch_alloc(struct device *base,
+>  	dev->priv = priv;
+>  	dev->ops = ops;
+>  	ds->ops = &b53_switch_ops;
+> +	ds->configure_vlan_while_not_filtering = true;
+> +	dev->vlan_enabled = ds->configure_vlan_while_not_filtering;
+>  	mutex_init(&dev->reg_mutex);
+>  	mutex_init(&dev->stats_mutex);
+>
+> --
+> 2.25.1
+>
