@@ -2,71 +2,171 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A66C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B02C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4557E206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750A3206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Skfsz4zz";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Dx0JeaT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725784AbgIKIZw (ORCPT
+        id S1725832AbgIKIZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgIKIZm (ORCPT
+        Fri, 11 Sep 2020 04:25:56 -0400
+Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:51770
+        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725798AbgIKIZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:25:42 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBD1C061786
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:25:38 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kGeNB-0002LG-Fw; Fri, 11 Sep 2020 10:25:33 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kGeN7-00074R-NS; Fri, 11 Sep 2020 10:25:29 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/2] ag71xx: add ethtool and flow control support 
-Date:   Fri, 11 Sep 2020 10:25:26 +0200
-Message-Id: <20200911082528.27121-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.28.0
+        Fri, 11 Sep 2020 04:25:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812746;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=yX4fvAPceX5+/piaZQeXdCCWrW97OFOzIlS8MV7usjE=;
+        b=Skfsz4zzk8lxCh+e4DpGXxDOwvY5knhVZZcafi0GlqaPgDliHuhr0LVOHauU2vWi
+        6OD5MnXshbEcjeuVU57OJRvBwsreKDILbSPPmTWbZuMqA7SE8F4xm91lZzSC6phRTOA
+        Y5yi2C2aTibGP7eEkiTjy676JErpwyX1Tgo0pGzI=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812746;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=yX4fvAPceX5+/piaZQeXdCCWrW97OFOzIlS8MV7usjE=;
+        b=Dx0JeaT7BoVECxLHCh0iWtpzBADGHpgeXjvZtaXVS/vQ0sNBc6p6MDPMKjOmKNPi
+        AaieeJ81qwMKmPvw+wjqndsZvUaJU6MxaR4IIEjWPz//yNrZr6kkT3At+UBur0qZh4g
+        MVtQiB7YtfByj4NIlGQT9AzeyjEiDXoDS2HtMNq0=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 11 Sep 2020 08:25:46 +0000
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 4/8] iommu/arm-smmu-qcom: Emulate bypass by using
+ context banks
+In-Reply-To: <20200904155513.282067-5-bjorn.andersson@linaro.org>
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+ <20200904155513.282067-5-bjorn.andersson@linaro.org>
+Message-ID: <010101747c453de8-892b662e-2836-4c7e-a61d-07b0542e8111-000000@us-west-2.amazonses.com>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.11-54.240.27.56
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The main target of this patches is to provide flow control support
-for ag71xx driver. To be able to validate this functionality, I also
-added ethtool support with HW counters. So, this patches was validated
-with iperf3 and counters showing Pause frames send or received by this
-NIC.
+On 2020-09-04 21:25, Bjorn Andersson wrote:
+> Some firmware found on various Qualcomm platforms traps writes to S2CR
+> of type BYPASS and writes FAULT into the register. In particular, this
+> prevents us from marking the streams for the display controller as
+> BYPASS to allow continued scanout of the screen through the
+> initialization of the ARM SMMU.
+> 
+> This adds a Qualcomm specific cfg_probe function, which probes for the
+> broken behavior of the S2CR registers and implements a custom
+> alloc_context_bank() that when necessary allocates a context bank
+> (without translation) for these domains as well.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Move quirk from arm_smmudevice to qcom_smmu, as we localize the quirk
+>   handling to the Qualcomm specific implemntation.
+> 
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> index 229fc8ff8cea..284761a1cd8e 100644
+> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+> @@ -11,8 +11,14 @@
+> 
+>  struct qcom_smmu {
+>  	struct arm_smmu_device smmu;
+> +	bool bypass_broken;
+>  };
+> 
+> +static struct qcom_smmu *to_qcom_smmu(struct arm_smmu_device *smmu)
+> +{
+> +	return container_of(smmu, struct qcom_smmu, smmu);
+> +}
+> +
+>  #define QCOM_ADRENO_SMMU_GPU_SID 0
+> 
+>  static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
+> @@ -162,6 +168,50 @@ static const struct of_device_id
+> qcom_smmu_client_of_match[] __maybe_unused = {
+>  	{ }
+>  };
+> 
+> +static int qcom_smmu_alloc_context_bank(struct arm_smmu_domain 
+> *smmu_domain,
+> +					struct arm_smmu_device *smmu,
+> +					struct device *dev, int start)
+> +{
+> +	struct iommu_domain *domain = &smmu_domain->domain;
+> +	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
+> +
+> +	/* Keep identity domains as bypass, unless bypass is broken */
+> +	if (domain->type == IOMMU_DOMAIN_IDENTITY && !qsmmu->bypass_broken)
+> +		return ARM_SMMU_CBNDX_BYPASS;
+> +
+> +	/*
+> +	 * The identity domain to emulate bypass is the only domain without a
+> +	 * dev, use the last context bank for this to avoid collisions with
+> +	 * active contexts during initialization.
+> +	 */
+> +	if (!dev)
+> +		start = smmu->num_context_banks - 1;
+> +
+> +	return __arm_smmu_alloc_bitmap(smmu->context_map, start,
+> smmu->num_context_banks);
+> +}
+> +
+> +static int qcom_smmu_cfg_probe(struct arm_smmu_device *smmu)
+> +{
+> +	unsigned int last_s2cr = ARM_SMMU_GR0_S2CR(smmu->num_mapping_groups - 
+> 1);
+> +	struct qcom_smmu *qsmmu = to_qcom_smmu(smmu);
+> +	u32 reg;
+> +
+> +	/*
+> +	 * With some firmware writes to S2CR of type FAULT are ignored, and
+> +	 * writing BYPASS will end up as FAULT in the register. Perform a 
+> write
+> +	 * to S2CR to detect if this is the case with the current firmware.
+> +	 */
+> +	reg = FIELD_PREP(ARM_SMMU_S2CR_TYPE, S2CR_TYPE_BYPASS) |
+> +	      FIELD_PREP(ARM_SMMU_S2CR_CBNDX, 0xff) |
+> +	      FIELD_PREP(ARM_SMMU_S2CR_PRIVCFG, S2CR_PRIVCFG_DEFAULT);
+> +	arm_smmu_gr0_write(smmu, last_s2cr, reg);
+> +	reg = arm_smmu_gr0_read(smmu, last_s2cr);
+> +	if (FIELD_GET(ARM_SMMU_S2CR_TYPE, reg) != S2CR_TYPE_BYPASS)
+> +		qsmmu->bypass_broken = true;
+> +
 
-Oleksij Rempel (2):
-  net: ag71xx: add ethtool support
-  net: ag71xx: add flow control support
+Clever :)
 
- drivers/net/ethernet/atheros/ag71xx.c | 160 +++++++++++++++++++++++++-
- 1 file changed, 159 insertions(+), 1 deletion(-)
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
 -- 
-2.28.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
