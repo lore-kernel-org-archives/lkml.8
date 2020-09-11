@@ -2,138 +2,131 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA3C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01596C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95AD522207
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599838213;
-	bh=QV0sfvbwCfESZtYBZ+Zp5DwnEUH8bq3nh4G+4hWU03A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dB7D7fVhX+DXS7MuaBWE0BtNIRY1FXvAqLPjctNJnOfHcFAQERAu6miVf+wtkLO7T
-	 2qcDKxSs/zropUnG9huxRaMJpHiPnm4EpMF0mdneU+XcaVTd9FMNu38s0Iltq0Gl2a
-	 5KVm3qxlVG/6+l9sk4q/fajUdP+lvL9QrvXJQ/5A=
+	by mail.kernel.org (Postfix) with ESMTP id B5BE8206E9
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kYXBwAYa";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YgqZTcpZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgIKPaA (ORCPT
+        id S1726400AbgIKPbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgIKPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:25:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8E4422209;
-        Fri, 11 Sep 2020 12:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829120;
-        bh=QV0sfvbwCfESZtYBZ+Zp5DwnEUH8bq3nh4G+4hWU03A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wPIuovvFc/hezj6zKMBdYesDPmLzucIHSkhYZfoONSffLwnx/KT03WDE0vXIrwFF6
-         UWQzFsXUy144/CwaQtOxq97g9usSBYb1ipR4BmDedFxSgqeHdB8Kg+BYiZtrGhWPft
-         Rlmq+wALcu3xB9ptNKAiUufkdApb8l+d1s1lxXgo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 67/71] bnxt: dont enable NAPI until rings are ready
-Date:   Fri, 11 Sep 2020 14:46:51 +0200
-Message-Id: <20200911122508.289139691@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
-References: <20200911122504.928931589@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 11 Sep 2020 11:31:02 -0400
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:56908
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726378AbgIKP1G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:27:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gbvhytky6xpx7itkhb67ktsxbiwpnxix; d=codeaurora.org; t=1599834457;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=5tZsB/wJn1cwAYaUlKplKeAwB+VSLVJQXUcWnRzqmpA=;
+        b=kYXBwAYa4zGGomoglLkcXFpNWTvuBi2ptPv+mrkC7sAVSvjziYxITXoCczXtz9es
+        tK2Yvf1lTUOpo65TMbdXEQT03B6QHx59C+zRmumovJ6b4oZPlp3xF1t5c9828/UjHwK
+        vLDObo8ZX3fzEqT25ihpYTC7i9MWDxuqNEvAwxAE=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599834457;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=5tZsB/wJn1cwAYaUlKplKeAwB+VSLVJQXUcWnRzqmpA=;
+        b=YgqZTcpZwcADidyNcNTZrZ4o4YtdOw0ssihG1ddi4kV6jS6ea/f4uonJEyjyGxAS
+        cNEm5cIjtxPEQhXK/rH3wDnP9rNcUYqnuXAoxhouYt1oyPMqK9j3XiOApHYA+/drG11
+        xnHd4M0S6N8s0SJQ6rv01D5cBUriCXq5Q0obXytQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A1F0C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        dri-devel@lists.freedesktop.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv4 0/6] System Cache support for GPU and required SMMU support
+Date:   Fri, 11 Sep 2020 14:27:37 +0000
+Message-ID: <010101747d908304-dc01ef4a-72b7-4163-8405-4fa82465ac84-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2020.09.11-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+Some hardware variants contain a system cache or the last level
+cache(llc). This cache is typically a large block which is shared
+by multiple clients on the SOC. GPU uses the system cache to cache
+both the GPU data buffers(like textures) as well the SMMU pagetables.
+This helps with improved render performance as well as lower power
+consumption by reducing the bus traffic to the system memory.
 
-commit 96ecdcc992eb7f468b2cf829b0f5408a1fad4668 upstream.
+The system cache architecture allows the cache to be split into slices
+which then be used by multiple SOC clients. This patch series is an
+effort to enable and use two of those slices perallocated for the GPU,
+one for the GPU data buffers and another for the GPU SMMU hardware
+pagetables.
 
-Netpoll can try to poll napi as soon as napi_enable() is called.
-It crashes trying to access a doorbell which is still NULL:
+Patch 1 - Patch 4 adds system cache support in SMMU and GPU driver.
+Patch 5 and 6 are minor cleanups for arm-smmu impl.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- CPU: 59 PID: 6039 Comm: ethtool Kdump: loaded Tainted: G S                5.9.0-rc1-00469-g5fd99b5d9950-dirty #26
- RIP: 0010:bnxt_poll+0x121/0x1c0
- Code: c4 20 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 41 8b 86 a0 01 00 00 41 23 85 18 01 00 00 49 8b 96 a8 01 00 00 0d 00 00 00 24 <89> 02
-41 f6 45 77 02 74 cb 49 8b ae d8 01 00 00 31 c0 c7 44 24 1a
-  netpoll_poll_dev+0xbd/0x1a0
-  __netpoll_send_skb+0x1b2/0x210
-  netpoll_send_udp+0x2c9/0x406
-  write_ext_msg+0x1d7/0x1f0
-  console_unlock+0x23c/0x520
-  vprintk_emit+0xe0/0x1d0
-  printk+0x58/0x6f
-  x86_vector_activate.cold+0xf/0x46
-  __irq_domain_activate_irq+0x50/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  irq_domain_activate_irq+0x25/0x40
-  __setup_irq+0x2d2/0x700
-  request_threaded_irq+0xfb/0x160
-  __bnxt_open_nic+0x3b1/0x750
-  bnxt_open_nic+0x19/0x30
-  ethtool_set_channels+0x1ac/0x220
-  dev_ethtool+0x11ba/0x2240
-  dev_ioctl+0x1cf/0x390
-  sock_do_ioctl+0x95/0x130
+The series is based on top of https://gitlab.freedesktop.org/drm/msm/-/tree/msm-next-pgtables
 
-Reported-by: Rob Sherwood <rsher@fb.com>
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changes in v4:
+ * Drop IOMMU_SYS_CACHE prot flag
+ * Rebase on top of https://gitlab.freedesktop.org/drm/msm/-/tree/msm-next-pgtables
 
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Changes in v3:
+ * Fix domain attribute setting to before iommu_attach_device()
+ * Fix few code style and checkpatch warnings
+ * Rebase on top of Jordan's latest split pagetables and per-instance
+   pagetables support
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -5589,14 +5589,14 @@ static int __bnxt_open_nic(struct bnxt *
- 		}
- 	}
- 
--	bnxt_enable_napi(bp);
--
- 	rc = bnxt_init_nic(bp, irq_re_init);
- 	if (rc) {
- 		netdev_err(bp->dev, "bnxt_init_nic err: %x\n", rc);
--		goto open_err;
-+		goto open_err_irq;
- 	}
- 
-+	bnxt_enable_napi(bp);
-+
- 	if (link_re_init) {
- 		mutex_lock(&bp->link_lock);
- 		rc = bnxt_update_phy_setting(bp);
-@@ -5618,9 +5618,6 @@ static int __bnxt_open_nic(struct bnxt *
- 
- 	return 0;
- 
--open_err:
--	bnxt_disable_napi(bp);
--
- open_err_irq:
- 	bnxt_del_napi(bp);
- 
+Changes in v2:
+ * Addressed review comments and rebased on top of Jordan's split
+   pagetables series
 
+Sai Prakash Ranjan (4):
+  iommu/io-pgtable-arm: Add support to use system cache
+  iommu/arm-smmu: Add domain attribute for system cache
+  iommu: arm-smmu-impl: Use table to list QCOM implementations
+  iommu: arm-smmu-impl: Remove unwanted extra blank lines
+
+Sharat Masetty (2):
+  drm/msm: rearrange the gpu_rmw() function
+  drm/msm/a6xx: Add support for using system cache(LLC)
+
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 83 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h      |  4 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c    | 21 +++++-
+ drivers/gpu/drm/msm/msm_drv.c              |  8 +++
+ drivers/gpu/drm/msm/msm_drv.h              |  1 +
+ drivers/gpu/drm/msm/msm_gpu.h              |  5 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c | 17 ++---
+ drivers/iommu/arm/arm-smmu/arm-smmu.c      | 17 +++++
+ drivers/iommu/arm/arm-smmu/arm-smmu.h      |  1 +
+ drivers/iommu/io-pgtable-arm.c             |  7 +-
+ include/linux/io-pgtable.h                 |  4 ++
+ include/linux/iommu.h                      |  1 +
+ 12 files changed, 155 insertions(+), 14 deletions(-)
+
+
+base-commit: 11e579ab6a3c2003efa2cfd1f0b3b4395f041618
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
