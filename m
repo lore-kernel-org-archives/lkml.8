@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C48C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC2EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FDE221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACFB221EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="STYnBBHD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bo6c7zoh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qXnUgR55";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pXUz3l9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgIKHDy (ORCPT
+        id S1725837AbgIKHEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:03:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgIKHCf (ORCPT
+        Fri, 11 Sep 2020 03:04:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45114 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbgIKHCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:02:35 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6E9C0613ED;
-        Fri, 11 Sep 2020 00:02:34 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 07:02:26 -0000
+        Fri, 11 Sep 2020 03:02:33 -0400
+Date:   Fri, 11 Sep 2020 07:02:29 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599807752;
+        s=2020; t=1599807750;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1bIk+bdhcIVFBDR/zooKSR6qXtAQ2vQRf6634nE/STs=;
-        b=STYnBBHDT7ACGCThP+PiBAzmDVNDYvdJ1ku4mz9u/XpVq/IKnSiClho8Pr5i/ZyN6Cud9T
-        B3/azSBchIv+j4w1CFInlf1FvC3NaqaX8n1RBCkNojJRUYP7Y1Y68Uz5sPLTV7x4u8ezJR
-        igg0AuRVBVPUXK3ten9mjgPc4RGPQSqxZBGPWxNl9EB+TGeU7/Y5uBpCYY7srKjNaYy16K
-        +b4KSSPahINboh1Qc69I2Q6nM9IY/xuTy+RW1FjJeuEmjR1y4YZGKQTc4yCI3CmQQP0J4n
-        9fzP4B3UqfCzHyNQKXJfZoE2hcNwx6j7jAwIuGsKLCFdHln5UXGh6SSqf4hBpA==
+        bh=x9xhOXO6hC2oi3qDXk3xOR2+jCWyVeHscYRW0pSrS18=;
+        b=qXnUgR55PKquX5MOpORWwrtE6LSM0nAdHuDG/jLVGNKwltW9HL0x//91wj0qGr8Zzt8Obz
+        K1935/mXN6sCVthTJB0EoIYfCbNY1BLx7a0lP9e6SOpJAOd2SXPkiqF1WBt1mkGQ+k8saR
+        JpeggvKISpgHWI3AdDNza1+dFfAoS9BY5d7gg9ZgdVOlDmjcHtqSj9834K+mzOam+FIrxK
+        ZWy15Wbj6z/uwgGZm4GTmJVm0j3I7c2XamBZo73jrbUs3v0wg98Zq1zmIFj7BGstP7Og8p
+        BQbXh1bZ681LNEQoErlyAmS0+Ka534CO/kQMc8f6DEh9yQbILjXXkra0/xCJDQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599807752;
+        s=2020e; t=1599807750;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1bIk+bdhcIVFBDR/zooKSR6qXtAQ2vQRf6634nE/STs=;
-        b=Bo6c7zohV2MPWCCWpq04jflAhqO76maFmkYMIGBTXai5REXl3ByKZ/rZ9I+fgd0ZnCKykh
-        VzmgBIArBmkAKrBw==
-From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
+        bh=x9xhOXO6hC2oi3qDXk3xOR2+jCWyVeHscYRW0pSrS18=;
+        b=pXUz3l9IpjjK2VUp5k1sV8wZCtT4rwnb81pQ+IvVQ6tC7DTO0MILrW7J7Xcy3AY1YQZqK2
+        gZh0DRKiyswdjQBw==
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/amd/ibs: Support 27-bit extended Op/cycle counter
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200908214740.18097-7-kim.phillips@amd.com>
-References: <20200908214740.18097-7-kim.phillips@amd.com>
+Subject: [tip: perf/core] perf/core: Pull pmu::sched_task() into
+ perf_event_context_sched_in()
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821195754.20159-1-kan.liang@linux.intel.com>
+References: <20200821195754.20159-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159980774689.20229.8560566905019815809.tip-bot2@tip-bot2>
+Message-ID: <159980774960.20229.6421010341102339837.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,144 +71,142 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     8b0bed7d410f48499d72af2e2bcd890daad94e0d
-Gitweb:        https://git.kernel.org/tip/8b0bed7d410f48499d72af2e2bcd890daad94e0d
-Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Tue, 08 Sep 2020 16:47:39 -05:00
+Commit-ID:     556cccad389717d6eb4f5a24b45ff41cad3aaabf
+Gitweb:        https://git.kernel.org/tip/556cccad389717d6eb4f5a24b45ff41cad3aaabf
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 21 Aug 2020 12:57:52 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 10 Sep 2020 11:19:36 +02:00
+CommitterDate: Thu, 10 Sep 2020 11:19:34 +02:00
 
-perf/x86/amd/ibs: Support 27-bit extended Op/cycle counter
+perf/core: Pull pmu::sched_task() into perf_event_context_sched_in()
 
-IBS hardware with the OpCntExt feature gets a 7-bit wider internal
-counter.  Both the maximum and current count bitfields in the
-IBS_OP_CTL register are extended to support reading and writing it.
+The pmu::sched_task() is a context switch callback. It passes the
+cpuctx->task_ctx as a parameter to the lower code. To find the
+cpuctx->task_ctx, the current code iterates a cpuctx list.
 
-No changes are necessary to the driver for handling the extra
-contiguous current count bits (IbsOpCurCnt), as the driver already
-passes through 32 bits of that field.  However, the driver has to do
-some extra bit manipulation when converting from a period to the
-non-contiguous (although conveniently aligned) extra bits in the
-IbsOpMaxCnt bitfield.
+The same context was just iterated in perf_event_context_sched_in(),
+which is invoked right before the pmu::sched_task().
 
-This decreases IBS Op interrupt overhead when the period is over
-1,048,560 (0xffff0), which would previously activate the driver's
-software counter.  That threshold is now 134,217,712 (0x7fffff0).
+Reuse the cpuctx->task_ctx from perf_event_context_sched_in() can avoid
+the unnecessary iteration of the cpuctx list.
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Both pmu::sched_task and perf_event_context_sched_in() have to disable
+PMU. Pull the pmu::sched_task into perf_event_context_sched_in() can
+also save the overhead from the PMU disable and reenable.
+
+The new and old tasks may have equivalent contexts. The current code
+optimize this case by swapping the context, which avoids the scheduling.
+For this case, pmu::sched_task() is still required, e.g., restore the
+LBR content.
+
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200908214740.18097-7-kim.phillips@amd.com
+Link: https://lkml.kernel.org/r/20200821195754.20159-1-kan.liang@linux.intel.com
 ---
- arch/x86/events/amd/ibs.c         | 42 ++++++++++++++++++++++--------
- arch/x86/include/asm/perf_event.h |  1 +-
- 2 files changed, 32 insertions(+), 11 deletions(-)
+ kernel/events/core.c | 51 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index cfbd020..ea323dc 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -339,10 +339,13 @@ static u64 get_ibs_op_count(u64 config)
- 	 * and the lower 7 bits of CurCnt are randomized.
- 	 * Otherwise CurCnt has the full 27-bit current counter value.
- 	 */
--	if (config & IBS_OP_VAL)
-+	if (config & IBS_OP_VAL) {
- 		count = (config & IBS_OP_MAX_CNT) << 4;
--	else if (ibs_caps & IBS_CAPS_RDWROPCNT)
-+		if (ibs_caps & IBS_CAPS_OPCNTEXT)
-+			count += config & IBS_OP_MAX_CNT_EXT_MASK;
-+	} else if (ibs_caps & IBS_CAPS_RDWROPCNT) {
- 		count = (config & IBS_OP_CUR_CNT) >> 32;
-+	}
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 57efe3b..3f5fec4 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3491,30 +3491,36 @@ void perf_sched_cb_inc(struct pmu *pmu)
+  * PEBS requires this to provide PID/TID information. This requires we flush
+  * all queued PEBS records before we context switch to a new task.
+  */
++static void __perf_pmu_sched_task(struct perf_cpu_context *cpuctx, bool sched_in)
++{
++	struct pmu *pmu;
++
++	pmu = cpuctx->ctx.pmu; /* software PMUs will not have sched_task */
++
++	if (WARN_ON_ONCE(!pmu->sched_task))
++		return;
++
++	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
++	perf_pmu_disable(pmu);
++
++	pmu->sched_task(cpuctx->task_ctx, sched_in);
++
++	perf_pmu_enable(pmu);
++	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
++}
++
+ static void perf_pmu_sched_task(struct task_struct *prev,
+ 				struct task_struct *next,
+ 				bool sched_in)
+ {
+ 	struct perf_cpu_context *cpuctx;
+-	struct pmu *pmu;
  
- 	return count;
- }
-@@ -398,7 +401,7 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_ibs *perf_ibs = container_of(event->pmu, struct perf_ibs, pmu);
- 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
--	u64 period;
-+	u64 period, config = 0;
- 
- 	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+ 	if (prev == next)
  		return;
-@@ -407,13 +410,19 @@ static void perf_ibs_start(struct perf_event *event, int flags)
- 	hwc->state = 0;
  
- 	perf_ibs_set_period(perf_ibs, hwc, &period);
-+	if (perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_OPCNTEXT)) {
-+		config |= period & IBS_OP_MAX_CNT_EXT_MASK;
-+		period &= ~IBS_OP_MAX_CNT_EXT_MASK;
-+	}
-+	config |= period >> 4;
-+
- 	/*
- 	 * Set STARTED before enabling the hardware, such that a subsequent NMI
- 	 * must observe it.
- 	 */
- 	set_bit(IBS_STARTED,    pcpu->state);
- 	clear_bit(IBS_STOPPING, pcpu->state);
--	perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-+	perf_ibs_enable_event(perf_ibs, hwc, config);
- 
- 	perf_event_update_userpage(event);
- }
-@@ -581,7 +590,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	struct perf_ibs_data ibs_data;
- 	int offset, size, check_rip, offset_max, throttle = 0;
- 	unsigned int msr;
--	u64 *buf, *config, period;
-+	u64 *buf, *config, period, new_config = 0;
- 
- 	if (!test_bit(IBS_STARTED, pcpu->state)) {
- fail:
-@@ -676,13 +685,17 @@ out:
- 	if (throttle) {
- 		perf_ibs_stop(event, 0);
- 	} else {
--		period >>= 4;
+-	list_for_each_entry(cpuctx, this_cpu_ptr(&sched_cb_list), sched_cb_entry) {
+-		pmu = cpuctx->ctx.pmu; /* software PMUs will not have sched_task */
 -
--		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
--		    (*config & IBS_OP_CNT_CTL))
--			period |= *config & IBS_OP_CUR_CNT_RAND;
-+		if (perf_ibs == &perf_ibs_op) {
-+			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
-+				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
-+				period &= ~IBS_OP_MAX_CNT_EXT_MASK;
-+			}
-+			if ((ibs_caps & IBS_CAPS_RDWROPCNT) && (*config & IBS_OP_CNT_CTL))
-+				new_config |= *config & IBS_OP_CUR_CNT_RAND;
-+		}
-+		new_config |= period >> 4;
+-		if (WARN_ON_ONCE(!pmu->sched_task))
+-			continue;
+-
+-		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+-		perf_pmu_disable(pmu);
+-
+-		pmu->sched_task(cpuctx->task_ctx, sched_in);
++	list_for_each_entry(cpuctx, this_cpu_ptr(&sched_cb_list), sched_cb_entry)
++		__perf_pmu_sched_task(cpuctx, sched_in);
  
--		perf_ibs_enable_event(perf_ibs, hwc, period);
-+		perf_ibs_enable_event(perf_ibs, hwc, new_config);
- 	}
+-		perf_pmu_enable(pmu);
+-		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+-	}
+ }
  
- 	perf_event_update_userpage(event);
-@@ -749,6 +762,13 @@ static __init void perf_event_ibs_init(void)
- 		perf_ibs_op.config_mask |= IBS_OP_CNT_CTL;
- 		*attr++ = &format_attr_cnt_ctl.attr;
- 	}
-+
-+	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
-+		perf_ibs_op.max_period  |= IBS_OP_MAX_CNT_EXT_MASK;
-+		perf_ibs_op.config_mask	|= IBS_OP_MAX_CNT_EXT_MASK;
-+		perf_ibs_op.cnt_mask    |= IBS_OP_MAX_CNT_EXT_MASK;
+ static void perf_event_switch(struct task_struct *task,
+@@ -3773,10 +3779,14 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
+ 					struct task_struct *task)
+ {
+ 	struct perf_cpu_context *cpuctx;
++	struct pmu *pmu = ctx->pmu;
+ 
+ 	cpuctx = __get_cpu_context(ctx);
+-	if (cpuctx->task_ctx == ctx)
++	if (cpuctx->task_ctx == ctx) {
++		if (cpuctx->sched_cb_usage)
++			__perf_pmu_sched_task(cpuctx, true);
+ 		return;
 +	}
+ 
+ 	perf_ctx_lock(cpuctx, ctx);
+ 	/*
+@@ -3786,7 +3796,7 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
+ 	if (!ctx->nr_events)
+ 		goto unlock;
+ 
+-	perf_pmu_disable(ctx->pmu);
++	perf_pmu_disable(pmu);
+ 	/*
+ 	 * We want to keep the following priority order:
+ 	 * cpu pinned (that don't need to move), task pinned,
+@@ -3798,7 +3808,11 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
+ 	if (!RB_EMPTY_ROOT(&ctx->pinned_groups.tree))
+ 		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
+ 	perf_event_sched_in(cpuctx, ctx, task);
+-	perf_pmu_enable(ctx->pmu);
 +
- 	perf_ibs_pmu_init(&perf_ibs_op, "ibs_op");
++	if (cpuctx->sched_cb_usage && pmu->sched_task)
++		pmu->sched_task(cpuctx->task_ctx, true);
++
++	perf_pmu_enable(pmu);
  
- 	register_nmi_handler(NMI_LOCAL, perf_ibs_nmi_handler, 0, "perf_ibs");
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index e20aa58..6960cd6 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -405,6 +405,7 @@ struct pebs_xmm {
- #define IBS_OP_ENABLE		(1ULL<<17)
- #define IBS_OP_MAX_CNT		0x0000FFFFULL
- #define IBS_OP_MAX_CNT_EXT	0x007FFFFFULL	/* not a register bit mask */
-+#define IBS_OP_MAX_CNT_EXT_MASK	(0x7FULL<<20)	/* separate upper 7 bits */
- #define IBS_RIP_INVALID		(1ULL<<38)
+ unlock:
+ 	perf_ctx_unlock(cpuctx, ctx);
+@@ -3841,9 +3855,6 @@ void __perf_event_task_sched_in(struct task_struct *prev,
  
- #ifdef CONFIG_X86_LOCAL_APIC
+ 	if (atomic_read(&nr_switch_events))
+ 		perf_event_switch(task, prev, true);
+-
+-	if (__this_cpu_read(perf_sched_cb_usages))
+-		perf_pmu_sched_task(prev, task, true);
+ }
+ 
+ static u64 perf_calculate_period(struct perf_event *event, u64 nsec, u64 count)
