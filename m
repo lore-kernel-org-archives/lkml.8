@@ -2,80 +2,120 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59226C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EBEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0639E2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E322078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U0RZCo8P";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="TVTlS3B/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW/v/Skb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbgIKJ7c (ORCPT
+        id S1725880AbgIKKAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:59:32 -0400
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:47052
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbgIKJ7T (ORCPT
+        Fri, 11 Sep 2020 06:00:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgIKJ7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:59:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599818359;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
-        bh=U0meEUz4aGuUw+kGbyj6MMa66pIP6tpJxlVsPbQ3jvQ=;
-        b=U0RZCo8PH2fWGCET0rglrRu/nrGrud8rNNfjVqY4l7ZDUNBsZ7kJ2DUzFYRVbwJQ
-        GMVk7qdmW84hIzFCl7/MWDdgxLX0RyIJzGs0g86PPgVhoetO/myQJh5s1ocL/dzUBeJ
-        UNpOS0YKRwnnX298DFHh6S0WFyGA/+y0uuX/bzcE=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599818359;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
-        bh=U0meEUz4aGuUw+kGbyj6MMa66pIP6tpJxlVsPbQ3jvQ=;
-        b=TVTlS3B/xbNZw1CwU8+fsf/P3djUnJkgdxREWK7Tpg7dFwgroPIkGHIEYTFactBr
-        y0mbqACnqJU2N0dxXNm0Y63gRF+op1lLBZslGnpi6QwZ7bdDY/4OMVKRtUUaoSZZpM4
-        utM6WOxd3+EFS6jYTkJa/F/qbh2Pql7jZnb5o40I=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5867BC433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Fri, 11 Sep 2020 05:59:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4AEC061573;
+        Fri, 11 Sep 2020 02:59:20 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id b79so4176422wmb.4;
+        Fri, 11 Sep 2020 02:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=38aZsz59xvLtmdIjzfxB1EkwG+OjFx2kIIc5EQe6fJs=;
+        b=OW/v/SkbLGJh7zNSa8ionJNhI0iUB3hGCWvhahcJmgYfehSWrtEFFjlkay3gMO5461
+         2NbBov5GNNo9EpP98fxq9HnfI4fgi8HEtr76VHtnavR8GdJf0/94ZF9EDK+ctnveQ4A2
+         lWQhsqlM2Ua1uHzVS0qDg090ynwFLSdUAfhZf8+D+ztKDiEaEME2sBMxGDieMgLaWaKO
+         esD0VVoC1oKiNTOY6jgJ33x0DBOAdZoER7B4sx1haiJURnDPXwgHnYBJvVYyLgr2PPUQ
+         3F+vCPqTklDlO1RwA/zhWJ7jrb3ypKI9P2nK844+vw615Vk3lUf5oekuNDzj8RMEe8XM
+         9INg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=38aZsz59xvLtmdIjzfxB1EkwG+OjFx2kIIc5EQe6fJs=;
+        b=R3zXFyy6xJyppV5Awq+ucum/YlV7XQdfRE6qVWcP34AXaoNBzlvleNIl477PTCZWeD
+         UC5dLAumFXSrQ0tIrNAGr3VeiZIpmu+/gTogQE3CkpOiQ3OKeWQiDDBZkA6eHdQk4X3B
+         nVDTgxy4v1ZWY9LEry4+JFR6Sg4ENPvsKIzTHeTyW929ILWNJcEQpdENwFTmQ7znwx+H
+         9As7wDuNzLGoREoHhZDXtBLja1EvFo8KwtIwQ331BeRT/1E8EtkJ4elPaL88EIjW9EJW
+         I9lCSasPF5T4xwxd6h/NNPUDYpWJCCRSauXN9Ti9vURsvczLO+rO418AazkciCtGVEv6
+         6/jg==
+X-Gm-Message-State: AOAM531u4Zu1MOZznhm4b2dzPgU3/UNGtQGwNNoggvrnte6Ko/z6AJ3y
+        ULDi60IzeFDCWj0Ki5JhN8M0v8kg1H8=
+X-Google-Smtp-Source: ABdhPJzYDuq8h7Ust8YsgfBSh3gzW+xSBYKs2O/AL900uRJt1k+VZmabVJtpO5SgSnMretdz8PIx1g==
+X-Received: by 2002:a1c:7911:: with SMTP id l17mr1360710wme.179.1599818358647;
+        Fri, 11 Sep 2020 02:59:18 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id 97sm3606122wrm.15.2020.09.11.02.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 02:59:18 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/24] inet_net_pton.3: Use 'PRIx32' rather than "%x" when
+ printing 'uint32_t' values
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-2-colomar.6.4.3@gmail.com>
+ <928d25b7-7f97-f9b9-80ce-0550c18131c2@gmail.com>
+ <050c5399-8f08-5ae6-2546-0cafd055780a@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <04da2934-1a38-2f3f-d2ed-475a0531a1c8@gmail.com>
+Date:   Fri, 11 Sep 2020 11:59:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <050c5399-8f08-5ae6-2546-0cafd055780a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Remove unused macro ATH10K_ROC_TIMEOUT_HZ
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200909135834.38448-1-yuehaibing@huawei.com>
-References: <20200909135834.38448-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-ID: <010101747c9ae0e8-fd3a6153-8f8f-4b94-9368-96729d6a71a6-000000@us-west-2.amazonses.com>
-Date:   Fri, 11 Sep 2020 09:59:19 +0000
-X-SES-Outgoing: 2020.09.11-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
+Hi Alex,
 
-> There is no caller in tree, so can remove it.
+On 9/11/20 11:39 AM, Alejandro Colomar wrote:
+> Hi Michael,
+
+[...]
+
+
+>> So, I'm in a little bit of doubt about patches 01 and 02. Does
+>> this really win us anything? On the one hand, %"PRIx32" is more
+>> difficult to read than %x. On the other, does it win us anything
+>> in terms of portability? At first glance, the answers seems to me
+>> to be "no". Your thoughts?
+>>
+>> Thanks,
+>>
+>> Michael
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> On 16-bit systems 'unsigned int' might be shorter than 'uint32_t'.
+> There it would make a difference, I guess.
 
-Patch applied to ath-next branch of ath.git, thanks.
+I guess. But even un the 80s, when (I think) htonl() appeared,
+I kind of doubt that there were many such systems. I think 
+I'll skip these patches.
 
-42a08ff79ff5 ath10k: Remove unused macro ATH10K_ROC_TIMEOUT_HZ
+Thanks,
+
+Michael
+
 
 -- 
-https://patchwork.kernel.org/patch/11765703/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
