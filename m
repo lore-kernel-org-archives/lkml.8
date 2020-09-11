@@ -2,54 +2,54 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A30C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB62C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C573F207EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8A822273
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599831354;
-	bh=9uwE+ITSYJUhaz4LYB9tyUx6FK+SJeFumGR2VZPPQSc=;
+	s=default; t=1599831379;
+	bh=GcPcT6ETLYMF7heGJRJWA/mT7h2gNr1A77XOoaOPukc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgcDLSE9GnhBkGwyKyOlQrSRQeeQpf0zOaFG1N1wVuKuOTdvYMDrDSXl+Fa92RoN4
-	 wNYElLZnaIk5xE/Rt7FLWhzwsBiU33mwMBzYM3OnW+symBWivCt8rSWNBCAZfTyXQq
-	 WI9nTkfVhc9puF4W3BvTffTUPZUCW6z4bu2LzSJE=
+	b=Ev7ippy0h5oxDKtuP91+gEXjCG5+DY8ZI/fTz2gcAqz4yWz12hXfB5Z0W2IxtQ4Zy
+	 ZGhCGRCXpYRDDo/ePsBdUUhv9dff7MatGIliHPLKFiWA7jKA7aoUXIrq2mllTxzaq7
+	 bVAQhDMxjIt6yWd1UNaV8SUfBwkKhd0dVBTMgW88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725837AbgIKNeh (ORCPT
+        id S1726149AbgIKNgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726211AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AFB0221E3;
-        Fri, 11 Sep 2020 12:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D471C22227;
+        Fri, 11 Sep 2020 12:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829082;
-        bh=9uwE+ITSYJUhaz4LYB9tyUx6FK+SJeFumGR2VZPPQSc=;
+        s=default; t=1599829092;
+        bh=GcPcT6ETLYMF7heGJRJWA/mT7h2gNr1A77XOoaOPukc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eKqb5AemMh1gTh+r5FfZEXIvSDR5D+KWXOo3yUrCyTvQpXDjcpObP4qC9NqQZwzZX
-         m9qqIFiKmrW+lgdqb1wVr79jtfbT7GNlFMxCrdSMS/x6lh2JDYC8tsxEuQN/inw0pN
-         4ZeJN0tkP5AY72Wnuma2CK0xdhbFNidNxhR5f/wI=
+        b=R9ptLvq5yYijeW301GE9A/H9IhUcVAKebkI1l9UK+y2PZE8AahsNooj+jcR6AiYJz
+         vchCqonEKiWi5oCvWX9Zo2seufmExIzRXCG/+72qA53vRpGh8M3D9AuH/QO5t8Mr2v
+         55C34kIvuDpTMyBoWDrMZXLeMzxV0vU3IoZH4xUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mrinal Pandey <mrinalmni@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 59/71] checkpatch: fix the usage of capture group ( ... )
-Date:   Fri, 11 Sep 2020 14:46:43 +0200
-Message-Id: <20200911122507.856174623@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 34/71] uaccess: Add non-pagefault user-space write function
+Date:   Fri, 11 Sep 2020 14:46:18 +0200
+Message-Id: <20200911122506.630411755@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -62,58 +62,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mrinal Pandey <mrinalmni@gmail.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 13e45417cedbfc44b1926124b1846f5ee8c6ba4a upstream.
+[ Upstream commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc ]
 
-The usage of "capture group (...)" in the immediate condition after `&&`
-results in `$1` being uninitialized.  This issues a warning "Use of
-uninitialized value $1 in regexp compilation at ./scripts/checkpatch.pl
-line 2638".
+Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
+missed to add probe write function, therefore factor out a probe_write_common()
+helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
+add a new probe_user_write() helper so it can be used from BPF side.
 
-I noticed this bug while running checkpatch on the set of commits from
-v5.7 to v5.8-rc1 of the kernel on the commits with a diff content in
-their commit message.
+Again, on some archs, the user address space and kernel address space can
+co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
+that the given address is treated as being in kernel address space.
 
-This bug was introduced in the script by commit e518e9a59ec3
-("checkpatch: emit an error when there's a diff in a changelog").  It
-has been in the script since then.
-
-The author intended to store the match made by capture group in variable
-`$1`.  This should have contained the name of the file as `[\w/]+`
-matched.  However, this couldn't be accomplished due to usage of capture
-group and `$1` in the same regular expression.
-
-Fix this by placing the capture group in the condition before `&&`.
-Thus, `$1` can be initialized to the text that capture group matches
-thereby setting it to the desired and required value.
-
-Fixes: e518e9a59ec3 ("checkpatch: emit an error when there's a diff in a changelog")
-Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Joe Perches <joe@perches.com>
-Link: https://lkml.kernel.org/r/20200714032352.f476hanaj2dlmiot@mrinalpandey
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkpatch.pl |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/uaccess.h | 12 +++++++++++
+ mm/maccess.c            | 45 +++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2375,8 +2375,8 @@ sub process {
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 6d27d58ca4e04..cc5ba47062e87 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -113,6 +113,18 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
+ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
  
- # Check if the commit log has what seems like a diff which can confuse patch
- 		if ($in_commit_log && !$commit_log_has_diff &&
--		    (($line =~ m@^\s+diff\b.*a/[\w/]+@ &&
--		      $line =~ m@^\s+diff\b.*a/([\w/]+)\s+b/$1\b@) ||
-+		    (($line =~ m@^\s+diff\b.*a/([\w/]+)@ &&
-+		      $line =~ m@^\s+diff\b.*a/[\w/]+\s+b/$1\b@) ||
- 		     $line =~ m@^\s*(?:\-\-\-\s+a/|\+\+\+\s+b/)@ ||
- 		     $line =~ m/^\s*\@\@ \-\d+,\d+ \+\d+,\d+ \@\@/)) {
- 			ERROR("DIFF_IN_COMMIT_MSG",
++/*
++ * probe_user_write(): safely attempt to write to a location in user space
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
++extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
++
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+ 				     long count);
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 5ebf9a3ca3674..03ea550f5a743 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -17,6 +17,18 @@ probe_read_common(void *dst, const void __user *src, size_t size)
+ 	return ret ? -EFAULT : 0;
+ }
+ 
++static __always_inline long
++probe_write_common(void __user *dst, const void *src, size_t size)
++{
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_to_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
++}
++
+ /**
+  * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+@@ -84,6 +96,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
++
+ long __weak probe_kernel_write(void *dst, const void *src, size_t size)
+     __attribute__((alias("__probe_kernel_write")));
+ 
+@@ -93,15 +106,39 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+ 	mm_segment_t old_fs = get_fs();
+ 
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
+-	pagefault_enable();
++	ret = probe_write_common((__force void __user *)dst, src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++/**
++ * probe_user_write(): safely attempt to write to a user-space location
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++
++long __weak probe_user_write(void __user *dst, const void *src, size_t size)
++    __attribute__((alias("__probe_user_write")));
++
++long __probe_user_write(void __user *dst, const void *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(USER_DS);
++	if (access_ok(VERIFY_WRITE, dst, size))
++		ret = probe_write_common(dst, src, size);
++	set_fs(old_fs);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_write);
+ 
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
+-- 
+2.25.1
+
 
 
