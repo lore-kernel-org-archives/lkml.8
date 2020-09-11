@@ -2,51 +2,53 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A7C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC7A222B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB7E22273
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599831579;
-	bh=u1Zx9jpPbW0K5uo9rDG3f74pkx85q+fnLgYX+EDiMTo=;
+	s=default; t=1599831663;
+	bh=+tHV20BvpUzQdYacgvOdHirfZ8CvoBIIsWY9nRJ+C3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/oy2Q0Nexso3hSNIXI6XjlUlVYzj6pAEqyuUpU75DzzoJoZMoEgVz/9rgZTEYJIQ
-	 2Ca1rCxMONsYM8ue/xYQnW+FmYzW8yQ7l00N+Swq9ZC4cZ9o7qlh/9lX8VeUCeMIrt
-	 Z9cvY5mlQ6LkMJdzxjiFKtBGCFO2M7SFA1axJ0Tw=
+	b=vWrwTACJcOPL7MaIhEbBeWinYGpbreFc0Prf4cdU9rJvXEutWkql0N827hCOtVKbI
+	 B5VJYmUMLgtEHhyw54phN8xC36Eo3ctoW9zCvNE4Hu5Dy2t7Y4Ad93jFNiT2PnutVv
+	 4mNNM27HbSNfU8F+o/Tm3bJgvRpwLKCNlK5lYAmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgIKNjA (ORCPT
+        id S1726074AbgIKNkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726212AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FB78222E9;
-        Fri, 11 Sep 2020 12:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA3F22240;
+        Fri, 11 Sep 2020 12:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829079;
-        bh=u1Zx9jpPbW0K5uo9rDG3f74pkx85q+fnLgYX+EDiMTo=;
+        s=default; t=1599829097;
+        bh=+tHV20BvpUzQdYacgvOdHirfZ8CvoBIIsWY9nRJ+C3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UPEVd0iqYj+m1h+Ry2dF6p3J/UrMv2X+obIbuvx9auo8bxXzz0VI2Z0AFL9qWaKKn
-         NvbpdTEZiETuh0yyeVpBVFYWPziIqHNb7Z+1YMke3mSwRG2UOgZRX7+Y3Q8ER1FYne
-         X2wAz8yJZ6k3qzbwUE2OFVXcdDfE0VbxPVT+kI60=
+        b=IwaCHEyohhZXi0srRJeDzh36vz6KhgkSkhxIdUJTN0mHOkjmy3oCjH64HOkpv43OX
+         gnr7NYmCxaMLZltAu14DuP2qtYPbbkQgD+YUIUlfCfG2Rn+qaPMH/8I00GUkvkkUEk
+         M6nO+KYv2hX/9Skp1e7JlQjk8rMxh1lqiI2rWEYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 4.9 58/71] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-Date:   Fri, 11 Sep 2020 14:46:42 +0200
-Message-Id: <20200911122507.805999939@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 36/71] net: usb: qmi_wwan: add Telit 0x1050 composition
+Date:   Fri, 11 Sep 2020 14:46:20 +0200
+Message-Id: <20200911122506.729278118@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -59,62 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21 upstream.
+[ Upstream commit e0ae2c578d3909e60e9448207f5d83f785f1129f ]
 
-SR-IOV VFs do not implement the memory enable bit of the command
-register, therefore this bit is not set in config space after
-pci_enable_device().  This leads to an unintended difference
-between PF and VF in hand-off state to the user.  We can correct
-this by setting the initial value of the memory enable bit in our
-virtualized config space.  There's really no need however to
-ever fault a user on a VF though as this would only indicate an
-error in the user's management of the enable bit, versus a PF
-where the same access could trigger hardware faults.
+This patch adds support for Telit FN980 0x1050 composition
 
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+0x1050: tty, adb, rmnet, tty, tty, tty, tty
 
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -403,9 +403,15 @@ static inline void p_setd(struct perm_bi
- /* Caller should hold memory_lock semaphore */
- bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- {
-+	struct pci_dev *pdev = vdev->pdev;
- 	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
- 
--	return cmd & PCI_COMMAND_MEMORY;
-+	/*
-+	 * SR-IOV VF memory enable is handled by the MSE bit in the
-+	 * PF SR-IOV capability, there's therefore no need to trigger
-+	 * faults based on the virtual value.
-+	 */
-+	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-@@ -1729,6 +1735,15 @@ int vfio_config_init(struct vfio_pci_dev
- 				 vconfig[PCI_INTERRUPT_PIN]);
- 
- 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-+
-+		/*
-+		 * VFs do no implement the memory enable bit of the COMMAND
-+		 * register therefore we'll not have it set in our initial
-+		 * copy of config space after pci_enable_device().  For
-+		 * consistency with PFs, set the virtual enable bit here.
-+		 */
-+		*(__le16 *)&vconfig[PCI_COMMAND] |=
-+					cpu_to_le16(PCI_COMMAND_MEMORY);
- 	}
- 
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 254a27295f41d..97a83d351a100 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -923,6 +923,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
+-- 
+2.25.1
+
 
 
