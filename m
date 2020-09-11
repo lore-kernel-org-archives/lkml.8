@@ -2,163 +2,295 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC20C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A06C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9608B221F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56435221F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c7kD188Z"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X1KFI54L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgIKMge (ORCPT
+        id S1725889AbgIKMhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:36:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725898AbgIKMVF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:21:05 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08BCD1YB165620;
-        Fri, 11 Sep 2020 08:20:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=zdacK9mbo5spNdP46BQjABMYJwrXCJIDnRxfJoMcJ0g=;
- b=c7kD188Z/Z4gvIPcxs2/53B0y6s1z7VhRaAT0ErwVdvd138i/8bz0A8lemIpkNrMfEs3
- q5jr6rOT4C4c10eReNFGsDMU2GXrMcRpJcaXQlf4B6cejax3Gmr2BXysGWGgCzYA/3VO
- MBIpQtcXLb+e+HOhOUFJ9AdIH4DB033b/w9FMF/vIWMkQ6GBhu3vs7uxNNdh0mRAFIKq
- myJOwb6CaKZlbztnlr2vxb0VWmYVFXUfiMTdjOupJLJTHIgNHqqDRpPpTJeAZOAcVpyN
- 1bsjZXy0k97mfdz3cF+vsikucIjnhDCMIRd7Ev+khJpbI0j+zQCR+ordHQRlxjq6msW3 mg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33g91v073v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 08:20:05 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08BCET1B169362;
-        Fri, 11 Sep 2020 08:20:05 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33g91v072d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 08:20:04 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08BCCx1R020959;
-        Fri, 11 Sep 2020 12:20:02 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 33f3yrh5sp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Sep 2020 12:20:02 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08BCJxKU21627358
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 12:19:59 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4811F52051;
-        Fri, 11 Sep 2020 12:19:59 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.1.245])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id A66A45204E;
-        Fri, 11 Sep 2020 12:19:57 +0000 (GMT)
-Date:   Fri, 11 Sep 2020 14:19:56 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200911121955.GA10250@oc3871087118.ibm.com>
-References: <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad>
- <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com>
- <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
- <20200910181319.GO87483@ziepe.ca>
- <0c9bcb54-914b-e582-dd6d-3861267b6c94@nvidia.com>
- <20200910221116.GQ87483@ziepe.ca>
+        Fri, 11 Sep 2020 08:37:33 -0400
+Received: from mail-am6eur05on2075.outbound.protection.outlook.com ([40.107.22.75]:64929
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbgIKM26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:28:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iGrcYQPlc1fT4ezz6yh7zXeepY9MyL2sk0rg/KeNsrbOm0e9Igd8vn8gc8TuX4T+58SYAfe8wSU4nJrbX0YhNKzWDl8njHmXLOx2GU9LBIxdFUmbBqNSVnlNATl/AHHXIKGfpWgtEOr7uj7Z0dLSHnwHmYO2lGX4riVCR6+nGyipODPXSEpp7+hGKWz+0CVyvCnd3t34hsn+afqRvjHSgAL5FhCpcDDwLiEPtD11vJrbtrOW8e6+7lcPUTYApL2CeXxSUeR7BDg+BiG189QFGYtS9Pc+yNh/JwUFj7+RV/eA0ft9FfGE1/47c7m1TVoAFrrdQwORi/z+TcBvhgSyMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jsB+mYQdx/O9EeJvRrQKXBulL4/8g97u0p9xLJZzaPU=;
+ b=Nbru3lgYI9sb5DM/4hZj9WqL57aGmmcSRJLStgH6M9Jc+kpRhJ8XD7EyHy1/NWytarN7tfHNPv5fz5r/UoIgvT+cx2EDQp17dKUSkY8ONnktOO9b6JkEzS8DkrUzjWbSm58myeXinsVpP0G9azxqbQkTl3CfW+Xp/lDlQ9NfNUlDfk0YO5gaQT3YuMlgJVldM9GzYCUQ2jtj6bi6jvJ3neW0PFzAGz069NTq6Ty5Yai3e6TrlDHB2FAnGmf3nzq+IrJ8BPRWsYYHiNSR+QKNx+Q5QPtnyq0vHoccdom3UMEY13xMyQueGyNXwoaimMQg/0vl+LeOcBeGT41y3H2xSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jsB+mYQdx/O9EeJvRrQKXBulL4/8g97u0p9xLJZzaPU=;
+ b=X1KFI54LD3Dk1I/G+tter1AQa5SIITHoeuLiW7sYqicdxTxb79zIH+N90FIdweUXyUlKmZoX08vw0X0CyARiQkIktkyIBXnnCVCmsGrryQqLkIbWqJKIYC8odzgUEYVj+MxeJuEbBYXZY6m7zhUAOXY/Z2O5GH3sYCNkYFyBtOU=
+Received: from HE1PR04MB3196.eurprd04.prod.outlook.com (2603:10a6:7:21::31) by
+ HE1PR0402MB3420.eurprd04.prod.outlook.com (2603:10a6:7:87::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3348.19; Fri, 11 Sep 2020 12:28:48 +0000
+Received: from HE1PR04MB3196.eurprd04.prod.outlook.com
+ ([fe80::d899:49cb:a131:dd62]) by HE1PR04MB3196.eurprd04.prod.outlook.com
+ ([fe80::d899:49cb:a131:dd62%5]) with mapi id 15.20.3348.019; Fri, 11 Sep 2020
+ 12:28:47 +0000
+From:   Ashish Kumar <ashish.kumar@nxp.com>
+To:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Varun Sethi <V.Sethi@nxp.com>, Arokia Samy <arokia.samy@nxp.com>,
+        Ard Biesheuvel <Ard.Biesheuvel@arm.com>,
+        Samer El-Haj-Mahmoud <Samer.El-Haj-Mahmoud@arm.com>,
+        Paul Yang <Paul.Yang@arm.com>,
+        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+Subject: RE: [EXT] [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+Thread-Topic: [EXT] [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+Thread-Index: AQHWiBWF1RqTTjTNrkyBYYIswnJLQqljXbCA
+Date:   Fri, 11 Sep 2020 12:28:47 +0000
+Message-ID: <HE1PR04MB31962FC006C6EB964AC2DAE895240@HE1PR04MB3196.eurprd04.prod.outlook.com>
+References: <20200911082806.115-1-kuldip.dwivedi@puresoftware.com>
+In-Reply-To: <20200911082806.115-1-kuldip.dwivedi@puresoftware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: puresoftware.com; dkim=none (message not signed)
+ header.d=none;puresoftware.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [182.69.197.26]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cfd46541-862b-42bc-4365-08d8564e3b93
+x-ms-traffictypediagnostic: HE1PR0402MB3420:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR0402MB3420E596D28E972C9E11746395240@HE1PR0402MB3420.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6+u6CF425Jp5HEAPRRK92+6Vt4WQ183raCPCUrdaSJbXi8rSsgfTvl1nDsj9SgSIQN+rHm9psyEdiLs4SI9vKnuDDradb6zBS3lpeXANCER8lEuzDdG3wJk+UrXu9WJLHGVjYxOp0hEwUPMuFkUpDqSnVEpK+iDkX4gviQr3GGV70vtPb9CLcN4+e67kwioONYO+AJnrAAYUsOzLYkZYwviRUEa+Iur93LRW6pZs8QMZtE779S2Nx9O+wwaPP7tY3QZgEkEqQ9wo37CO4yaS4CFviZDPM4dLhv5SZ8AI2OEVP9izbRBUzJvwB7oy1h4oCLl2rr15T9cDXX2+BDLTXw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR04MB3196.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(396003)(376002)(366004)(83380400001)(66946007)(9686003)(33656002)(86362001)(55016002)(52536014)(66556008)(76116006)(66476007)(5660300002)(66446008)(64756008)(110136005)(54906003)(26005)(7696005)(186003)(478600001)(4326008)(71200400001)(6506007)(53546011)(2906002)(316002)(8676002)(8936002)(44832011);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: TRBn/9Tpr3NHXeI1kC2UUvRqBRQsPbTAZy2cL8qhsAFgZZOaXe8MRlUAzijqB4sl8wo5VASnGAFzTkf039UFGG43YcAE/6yeFyxJjMOD9W3ZukufuoWWL26ws8FjnS6456QkK9LTcE9hdpf9AVjusNQ34MhNpWiJdESy2dVaiRzviyNDyWNhcibW1PUvUckBr7PImlM9g7NaNeouaqwQEw+jwrtdj+RCxf0i5v+5r0sDTifTZGYfaHSZxvuEHJCf/FjS+rEnNtTzHRy6fyScm5HXe3yzfu3m4PZYP/UIhRLsyIVF0YJPZACm9WnjNZJsVSXXUf57jKFf7ebwK2wiwl70dCnVIXU3u2KLjQky6eJ53Y1Alp/Iqwr78rUk3EzmFvHKX75/fAQ+EcakMXFOD2F/9mgXUePOdjNprlDIFNq4M6xQ8gTqsb7ff6V50leo6MCRHHK0y4roQhu1iepDWgk+OOMzGR0il5hDpBuZkJWU3c9gm/85lgcIknQcvYjX0lslRc71wueuaDFnlHCGjkmOEY7JiN01llzZptpJxX+8aoBeHs2OyGEwpILWySlcwzjtVH4INnI6xJebKvY1kC7CEMrK03fwvcZ76vVyK1X1TOrSTeOLbwvzS9PQXxQTaRRjzOx4VPtWUyB6sUHVtw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910221116.GQ87483@ziepe.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-11_04:2020-09-10,2020-09-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 priorityscore=1501 adultscore=0 spamscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009110095
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR04MB3196.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfd46541-862b-42bc-4365-08d8564e3b93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2020 12:28:47.8580
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fpYnrblWcJVXl9Hb6BAZZR0KOe4u6BvUO0szplDouy2VmPcAsYYmLJh9x4gDp3SSOO1cI6DRfD1A2w7cqaoh3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3420
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 07:11:16PM -0300, Jason Gunthorpe wrote:
-> On Thu, Sep 10, 2020 at 02:22:37PM -0700, John Hubbard wrote:
-> 
-> > Or am I way off here, and it really is possible (aside from the current
-> > s390 situation) to observe something that "is no longer a page table"?
-> 
-> Yes, that is the issue. Remember there is no locking for GUP
-> fast. While a page table cannot be freed there is nothing preventing
-> the page table entry from being concurrently modified.
-> 
-> Without the stack variable it looks like this:
-> 
->        pud_t pud = READ_ONCE(*pudp);
->        if (!pud_present(pud))
->             return
->        pmd_offset(pudp, address);
-> 
-> And pmd_offset() expands to
-> 
->     return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
-> 
-> Between the READ_ONCE(*pudp) and (*pud) inside pmd_offset() the value
-> of *pud can change, eg to !pud_present.
-> 
-> Then pud_page_vaddr(*pud) will crash. It is not use after free, it
-> is using data that has not been validated.
+Hi Kuldeep,
 
-One thing I ask myself and it is probably a good moment to wonder.
+> -----Original Message-----
+> From: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> Sent: Friday, September 11, 2020 1:58 PM
+> To: Ashish Kumar <ashish.kumar@nxp.com>; Yogesh Gaur
+> <yogeshgaur.83@gmail.com>; Mark Brown <broonie@kernel.org>; linux-
+> spi@vger.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Varun Sethi <V.Sethi@nxp.com>; Arokia Samy <arokia.samy@nxp.com>;
+> Ard Biesheuvel <Ard.Biesheuvel@arm.com>; Samer El-Haj-Mahmoud
+> <Samer.El-Haj-Mahmoud@arm.com>; Paul Yang <Paul.Yang@arm.com>;
+> kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> Subject: [EXT] [PATCH v2] spi: spi-nxp-fspi: Add ACPI support
+>=20
+> Caution: EXT Email
+>=20
+> Currently NXP fspi  driver has support of DT only. Adding ACPI
+> support to the driver so that it can be used by UEFI firmware
+> booting in ACPI mode. This driver will be probed if any firmware
+> will expose HID "NXP0009" in DSDT table.
+>=20
+> Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> ---
+Please capture version change summary.
 
-What if the entry is still pud_present, but got remapped after
-READ_ONCE(*pudp)? IOW, it is still valid, but points elsewhere?
+Regards
+Ashish=20
+>=20
+> Notes:
+>     1. Add ACPI match table, NXP members are added to confirm HID for FSP=
+I
+>     2. Change the DT specific APIs to device property APIs
+>            so that same API can be used in DT and ACPi mode.
+>     3. Omit clock configuration part - in ACPI world, the firmware
+>            is responsible for clock maintenance.
+>     4. This patch is tested on LX2160A platform
+>=20
+>  drivers/spi/spi-nxp-fspi.c | 61 +++++++++++++++++++++++++++-----------
+>  1 file changed, 44 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+> index 1ccda82da206..9e3991ec0dd2 100644
+> --- a/drivers/spi/spi-nxp-fspi.c
+> +++ b/drivers/spi/spi-nxp-fspi.c
+> @@ -3,7 +3,8 @@
+>  /*
+>   * NXP FlexSPI(FSPI) controller driver.
+>   *
+> - * Copyright 2019 NXP.
+> + * Copyright 2019-2020 NXP
+> + * Copyright 2020 Puresoftware Ltd.
+>   *
+>   * FlexSPI is a flexsible SPI host controller which supports two SPI
+>   * channels and up to 4 external devices. Each channel supports
+> @@ -30,6 +31,7 @@
+>   *     Frieder Schrempf <frieder.schrempf@kontron.de>
+>   */
+>=20
+> +#include <linux/acpi.h>
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+>  #include <linux/completion.h>
+> @@ -563,6 +565,9 @@ static int nxp_fspi_clk_prep_enable(struct nxp_fspi
+> *f)
+>  {
+>         int ret;
+>=20
+> +       if (is_acpi_node(f->dev->fwnode))
+> +               return 0;
+> +
+>         ret =3D clk_prepare_enable(f->clk_en);
+>         if (ret)
+>                 return ret;
+> @@ -576,10 +581,15 @@ static int nxp_fspi_clk_prep_enable(struct
+> nxp_fspi *f)
+>         return 0;
+>  }
+>=20
+> -static void nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
+> +static int nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
+>  {
+> +       if (is_acpi_node(f->dev->fwnode))
+> +               return 0;
+> +
+>         clk_disable_unprepare(f->clk);
+>         clk_disable_unprepare(f->clk_en);
+> +
+> +       return 0;
+>  }
+>=20
+>  /*
+> @@ -1001,7 +1011,7 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>=20
+>         f =3D spi_controller_get_devdata(ctlr);
+>         f->dev =3D dev;
+> -       f->devtype_data =3D of_device_get_match_data(dev);
+> +       f->devtype_data =3D device_get_match_data(dev);
+>         if (!f->devtype_data) {
+>                 ret =3D -ENODEV;
+>                 goto err_put_ctrl;
+> @@ -1011,6 +1021,9 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>=20
+>         /* find the resources - configuration register address space */
+>         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "fspi_base");
+> +#ifdef CONFIG_ACPI
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +#endif
+>         f->iobase =3D devm_ioremap_resource(dev, res);
+>         if (IS_ERR(f->iobase)) {
+>                 ret =3D PTR_ERR(f->iobase);
+> @@ -1019,6 +1032,9 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>=20
+>         /* find the resources - controller memory mapped space */
+>         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "fspi_mmap");
+> +#ifdef CONFIG_ACPI
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +#endif
+>         if (!res) {
+>                 ret =3D -ENODEV;
+>                 goto err_put_ctrl;
+> @@ -1029,22 +1045,24 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>         f->memmap_phy_size =3D resource_size(res);
+>=20
+>         /* find the clocks */
+> -       f->clk_en =3D devm_clk_get(dev, "fspi_en");
+> -       if (IS_ERR(f->clk_en)) {
+> -               ret =3D PTR_ERR(f->clk_en);
+> -               goto err_put_ctrl;
+> -       }
+> +       if (dev_of_node(&pdev->dev)) {
+> +               f->clk_en =3D devm_clk_get(dev, "fspi_en");
+> +               if (IS_ERR(f->clk_en)) {
+> +                       ret =3D PTR_ERR(f->clk_en);
+> +                       goto err_put_ctrl;
+> +               }
+>=20
+> -       f->clk =3D devm_clk_get(dev, "fspi");
+> -       if (IS_ERR(f->clk)) {
+> -               ret =3D PTR_ERR(f->clk);
+> -               goto err_put_ctrl;
+> -       }
+> +               f->clk =3D devm_clk_get(dev, "fspi");
+> +               if (IS_ERR(f->clk)) {
+> +                       ret =3D PTR_ERR(f->clk);
+> +                       goto err_put_ctrl;
+> +               }
+>=20
+> -       ret =3D nxp_fspi_clk_prep_enable(f);
+> -       if (ret) {
+> -               dev_err(dev, "can not enable the clock\n");
+> -               goto err_put_ctrl;
+> +               ret =3D nxp_fspi_clk_prep_enable(f);
+> +               if (ret) {
+> +                       dev_err(dev, "can not enable the clock\n");
+> +                       goto err_put_ctrl;
+> +               }
+>         }
+>=20
+>         /* find the irq */
+> @@ -1127,6 +1145,14 @@ static const struct of_device_id nxp_fspi_dt_ids[]
+> =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+>=20
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id nxp_fspi_acpi_ids[] =3D {
+> +       { "NXP0009", .driver_data =3D (kernel_ulong_t)&lx2160a_data, },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, nxp_fspi_acpi_ids);
+> +#endif
+> +
+>  static const struct dev_pm_ops nxp_fspi_pm_ops =3D {
+>         .suspend        =3D nxp_fspi_suspend,
+>         .resume         =3D nxp_fspi_resume,
+> @@ -1136,6 +1162,7 @@ static struct platform_driver nxp_fspi_driver =3D {
+>         .driver =3D {
+>                 .name   =3D "nxp-fspi",
+>                 .of_match_table =3D nxp_fspi_dt_ids,
+> +               .acpi_match_table =3D ACPI_PTR(nxp_fspi_acpi_ids),
+>                 .pm =3D   &nxp_fspi_pm_ops,
+>         },
+>         .probe          =3D nxp_fspi_probe,
+> --
+> 2.17.1
 
-> Jason
