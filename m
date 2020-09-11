@@ -2,165 +2,104 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9D3C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55B9208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rqyi/pPD"
+	by mail.kernel.org (Postfix) with ESMTP id B5A4F20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbgIKIF7 (ORCPT
+        id S1725896AbgIKIGL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgIKIFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:05:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AB9C061573;
-        Fri, 11 Sep 2020 01:05:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id s13so3542427wmh.4;
-        Fri, 11 Sep 2020 01:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p7ZEqYEXNNDQfZTyyRtEq4ezyf6jRAc/A0d3cWdelG8=;
-        b=Rqyi/pPDFnO111d2wHVM9Tc2uqcMysHCnWXUvkE6Vmna5G8Ok7ekCImU0bFlpVZOXM
-         uW/K98RdI7k26X1gg0pyDNU4luS1UmOvQpTN/1kv9w21xpqK9tgyg/RgF9C9yxwpZ+q4
-         Wgni6Qw1aUaNdEAcu+4grqxdZLZvJpKWZaZNqa0KMjAbFqm/Z7aKg0idCOrEyPnTKTWg
-         5H3kBiT5m+KCmQ0+N09280E1TRBrR2VhgkPZQbGtaKcxN6mi10Ap7XyA4gdNqv7oY7G+
-         4yGt8qMGfM3/8LL+kYay2VDblqSu4o5BCwowidkOuH72ppxrDjvbftLvjtJwLHXZvlzD
-         /1vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p7ZEqYEXNNDQfZTyyRtEq4ezyf6jRAc/A0d3cWdelG8=;
-        b=rbl4liZmVHn0jWJJj9x8mfM3u2Bf/hIVz0GFV2YabobusPhXDt6pbn/+vppohUzUli
-         Lx7GHx+LsIv8MrphAXQJxcVF2MwOEvk7qvsZYh76kcIECM/fuoRVG+jaBuaLEBD4h1iB
-         IwKIHGWe1cu8G2fJgeDg3iO7cv08URkmy5v8AXtdCb6YrK/dqR0Ae3azsGVtkfIUnU8f
-         KP1CWXSyu036W2CTfCcFLYOpPzEW2e6zk6v7o709+JERgXPjqxqEi0g7eX8tctzLE4Hd
-         UrO7gjhQIhcViXFFgh2OHi7E/jZNtE+aHzja/uVqlVi4PpMS37sRKPurMIsdYL1LfG8n
-         0jYw==
-X-Gm-Message-State: AOAM530v3g2Ju7ll10isQGnlOOsbGDBHReWeZ95puRJZq7Z/j6zFLiI8
-        wvIcMa0ewNDzHQUtagW6e9xzDU9mKHs=
-X-Google-Smtp-Source: ABdhPJw1ujdf1sble0/tg5PgTp8ivyNx++2Lik1eKyetzOqWWiCy5wyvWrE0NHaScbVWk2fQtGnUXw==
-X-Received: by 2002:a7b:cf30:: with SMTP id m16mr957729wmg.0.1599811549027;
-        Fri, 11 Sep 2020 01:05:49 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id d190sm2596254wmd.23.2020.09.11.01.05.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 01:05:48 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/24] unix.7: Use sizeof() to get buffer size (instead of
- hardcoding macro name)
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-16-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <5629c8df-7ed7-d825-01d9-7b2ed7fbd042@gmail.com>
-Date:   Fri, 11 Sep 2020 10:05:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 04:06:11 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:40184 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgIKIGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:06:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 448AE20082;
+        Fri, 11 Sep 2020 10:06:03 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YDxr-tDcqUn9; Fri, 11 Sep 2020 10:06:02 +0200 (CEST)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 0C69D20512;
+        Fri, 11 Sep 2020 10:06:02 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Fri, 11 Sep 2020 10:06:01 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Fri, 11 Sep
+ 2020 10:06:01 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 5B18C3184344;
+ Fri, 11 Sep 2020 10:06:01 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 10:06:01 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        syzbot <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com>,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Alexey Kuznetsov" <kuznet@ms2.inr.ac.ru>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Subject: Re: KASAN: use-after-free Read in __xfrm6_tunnel_spi_lookup
+Message-ID: <20200911080601.GQ20687@gauss3.secunet.de>
+References: <000000000000059b7205aa7f906f@google.com>
+ <00000000000026751605aa857914@google.com>
+ <CACT4Y+bUK4icp1TMfhWOj=vEXULbiUQ84RXYaKnB=3J_N3wZCQ@mail.gmail.com>
+ <CAAhDqq0qcnMKdaoRnaGM6G8H1U7SAmTvX=hgEoor1=_eJff-Vw@mail.gmail.com>
+ <CACT4Y+ZktT1S1oi5t+s7rrSH_dLEhyzygXdNUs7pkVPuanPXYg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-16-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CACT4Y+ZktT1S1oi5t+s7rrSH_dLEhyzygXdNUs7pkVPuanPXYg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-
-Thanks, Alex. Patch Applied.
-
-Cheers,
-
-Michael
-
-
-> ---
->  man7/unix.7 | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+On Thu, Sep 10, 2020 at 10:09:50AM +0200, Dmitry Vyukov wrote:
+> On Thu, Sep 10, 2020 at 10:08 AM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
+> >
+> > On Thu, Sep 10, 2020 at 1:32 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Thu, Sep 10, 2020 at 9:20 AM Anant Thazhemadam
+> > > <anant.thazhemadam@gmail.com> wrote:
+> > > > Looks like this bug is no longer valid. I'm not sure which commit seems to have fixed it. Can this be marked as invalid or closed yet?
+> > >
+> > > You can see on the dashboard (or in mailing list archives) that B K
+> > > Karthik tested a patch for this bug in July:
+> > > https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
+> > >
+> > > So perhaps that patch fixes it? Karthik, did you send it? Was it
+> > > merged? Did the commit include the syzbot Reported-by tag?
+> > >
+> >
+> > I did send it. I was taking a u32 spi value and casting it to a
+> > pointer to an IP address. Steffen Klassert
+> > <steffen.klassert@secunet.com> pointed out to me that the approach i
+> > was looking at was completely wrong.
+> > https://lkml.org/lkml/2020/7/27/361 is the conversation. hope this
+> > helps.
 > 
-> diff --git a/man7/unix.7 b/man7/unix.7
-> index f61b51424..50828a5bc 100644
-> --- a/man7/unix.7
-> +++ b/man7/unix.7
-> @@ -991,7 +991,7 @@ main(int argc, char *argv[])
->  
->              /* Wait for next data packet. */
->  
-> -            ret = read(data_socket, buffer, BUFFER_SIZE);
-> +            ret = read(data_socket, buffer, sizeof(buffer));
->              if (ret == \-1) {
->                  perror("read");
->                  exit(EXIT_FAILURE);
-> @@ -999,16 +999,16 @@ main(int argc, char *argv[])
->  
->              /* Ensure buffer is 0\-terminated. */
->  
-> -            buffer[BUFFER_SIZE \- 1] = 0;
-> +            buffer[sizeof(buffer) \- 1] = 0;
->  
->              /* Handle commands. */
->  
-> -            if (!strncmp(buffer, "DOWN", BUFFER_SIZE)) {
-> +            if (!strncmp(buffer, "DOWN", sizeof(buffer))) {
->                  down_flag = 1;
->                  break;
->              }
->  
-> -            if (!strncmp(buffer, "END", BUFFER_SIZE)) {
-> +            if (!strncmp(buffer, "END", sizeof(buffer))) {
->                  break;
->              }
->  
-> @@ -1020,7 +1020,7 @@ main(int argc, char *argv[])
->          /* Send result. */
->  
->          sprintf(buffer, "%d", result);
-> -        ret = write(data_socket, buffer, BUFFER_SIZE);
-> +        ret = write(data_socket, buffer, sizeof(buffer));
->          if (ret == \-1) {
->              perror("write");
->              exit(EXIT_FAILURE);
-> @@ -1116,7 +1116,7 @@ main(int argc, char *argv[])
->  
->      /* Receive result. */
->  
-> -    ret = read(data_socket, buffer, BUFFER_SIZE);
-> +    ret = read(data_socket, buffer, sizeof(buffer));
->      if (ret == \-1) {
->          perror("read");
->          exit(EXIT_FAILURE);
-> @@ -1124,7 +1124,7 @@ main(int argc, char *argv[])
->  
->      /* Ensure buffer is 0\-terminated. */
->  
-> -    buffer[BUFFER_SIZE \- 1] = 0;
-> +    buffer[sizeof(buffer) \- 1] = 0;
->  
->      printf("Result = %s\en", buffer);
->  
-> 
+> +Steffen, was there any other fix merged for this?
 
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+I think that was already fixed before the sysbot report came in by
+commit 8b404f46dd6a ("xfrm: interface: not xfrmi_ipv6/ipip_handler twice")
