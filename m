@@ -2,54 +2,51 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB62C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474A7C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8A822273
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC7A222B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599831379;
-	bh=GcPcT6ETLYMF7heGJRJWA/mT7h2gNr1A77XOoaOPukc=;
+	s=default; t=1599831579;
+	bh=u1Zx9jpPbW0K5uo9rDG3f74pkx85q+fnLgYX+EDiMTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ev7ippy0h5oxDKtuP91+gEXjCG5+DY8ZI/fTz2gcAqz4yWz12hXfB5Z0W2IxtQ4Zy
-	 ZGhCGRCXpYRDDo/ePsBdUUhv9dff7MatGIliHPLKFiWA7jKA7aoUXIrq2mllTxzaq7
-	 bVAQhDMxjIt6yWd1UNaV8SUfBwkKhd0dVBTMgW88=
+	b=G/oy2Q0Nexso3hSNIXI6XjlUlVYzj6pAEqyuUpU75DzzoJoZMoEgVz/9rgZTEYJIQ
+	 2Ca1rCxMONsYM8ue/xYQnW+FmYzW8yQ7l00N+Swq9ZC4cZ9o7qlh/9lX8VeUCeMIrt
+	 Z9cvY5mlQ6LkMJdzxjiFKtBGCFO2M7SFA1axJ0Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgIKNgM (ORCPT
+        id S1725832AbgIKNjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:39:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726203AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D471C22227;
-        Fri, 11 Sep 2020 12:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FB78222E9;
+        Fri, 11 Sep 2020 12:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829092;
-        bh=GcPcT6ETLYMF7heGJRJWA/mT7h2gNr1A77XOoaOPukc=;
+        s=default; t=1599829079;
+        bh=u1Zx9jpPbW0K5uo9rDG3f74pkx85q+fnLgYX+EDiMTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9ptLvq5yYijeW301GE9A/H9IhUcVAKebkI1l9UK+y2PZE8AahsNooj+jcR6AiYJz
-         vchCqonEKiWi5oCvWX9Zo2seufmExIzRXCG/+72qA53vRpGh8M3D9AuH/QO5t8Mr2v
-         55C34kIvuDpTMyBoWDrMZXLeMzxV0vU3IoZH4xUM=
+        b=UPEVd0iqYj+m1h+Ry2dF6p3J/UrMv2X+obIbuvx9auo8bxXzz0VI2Z0AFL9qWaKKn
+         NvbpdTEZiETuh0yyeVpBVFYWPziIqHNb7Z+1YMke3mSwRG2UOgZRX7+Y3Q8ER1FYne
+         X2wAz8yJZ6k3qzbwUE2OFVXcdDfE0VbxPVT+kI60=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 34/71] uaccess: Add non-pagefault user-space write function
-Date:   Fri, 11 Sep 2020 14:46:18 +0200
-Message-Id: <20200911122506.630411755@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.9 58/71] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
+Date:   Fri, 11 Sep 2020 14:46:42 +0200
+Message-Id: <20200911122507.805999939@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -62,130 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc ]
+commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21 upstream.
 
-Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
-missed to add probe write function, therefore factor out a probe_write_common()
-helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
-add a new probe_user_write() helper so it can be used from BPF side.
+SR-IOV VFs do not implement the memory enable bit of the command
+register, therefore this bit is not set in config space after
+pci_enable_device().  This leads to an unintended difference
+between PF and VF in hand-off state to the user.  We can correct
+this by setting the initial value of the memory enable bit in our
+virtualized config space.  There's really no need however to
+ever fault a user on a VF though as this would only indicate an
+error in the user's management of the enable bit, versus a PF
+where the same access could trigger hardware faults.
 
-Again, on some archs, the user address space and kernel address space can
-co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
-that the given address is treated as being in kernel address space.
+Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/uaccess.h | 12 +++++++++++
- mm/maccess.c            | 45 +++++++++++++++++++++++++++++++++++++----
- 2 files changed, 53 insertions(+), 4 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 6d27d58ca4e04..cc5ba47062e87 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -113,6 +113,18 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
- extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
- extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -403,9 +403,15 @@ static inline void p_setd(struct perm_bi
+ /* Caller should hold memory_lock semaphore */
+ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+ {
++	struct pci_dev *pdev = vdev->pdev;
+ 	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
  
-+/*
-+ * probe_user_write(): safely attempt to write to a location in user space
-+ * @dst: address to write to
-+ * @src: pointer to the data that shall be written
-+ * @size: size of the data chunk
-+ *
-+ * Safely write to address @dst from the buffer at @src.  If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
-+extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
-+extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
-+
- extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
- extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
- 				     long count);
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 5ebf9a3ca3674..03ea550f5a743 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -17,6 +17,18 @@ probe_read_common(void *dst, const void __user *src, size_t size)
- 	return ret ? -EFAULT : 0;
+-	return cmd & PCI_COMMAND_MEMORY;
++	/*
++	 * SR-IOV VF memory enable is handled by the MSE bit in the
++	 * PF SR-IOV capability, there's therefore no need to trigger
++	 * faults based on the virtual value.
++	 */
++	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
  }
  
-+static __always_inline long
-+probe_write_common(void __user *dst, const void *src, size_t size)
-+{
-+	long ret;
-+
-+	pagefault_disable();
-+	ret = __copy_to_user_inatomic(dst, src, size);
-+	pagefault_enable();
-+
-+	return ret ? -EFAULT : 0;
-+}
-+
- /**
-  * probe_kernel_read(): safely attempt to read from a kernel-space location
-  * @dst: pointer to the buffer that shall take the data
-@@ -84,6 +96,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
-  * Safely write to address @dst from the buffer at @src.  If a kernel fault
-  * happens, handle that and return -EFAULT.
-  */
-+
- long __weak probe_kernel_write(void *dst, const void *src, size_t size)
-     __attribute__((alias("__probe_kernel_write")));
+ /*
+@@ -1729,6 +1735,15 @@ int vfio_config_init(struct vfio_pci_dev
+ 				 vconfig[PCI_INTERRUPT_PIN]);
  
-@@ -93,15 +106,39 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
- 	mm_segment_t old_fs = get_fs();
- 
- 	set_fs(KERNEL_DS);
--	pagefault_disable();
--	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
--	pagefault_enable();
-+	ret = probe_write_common((__force void __user *)dst, src, size);
- 	set_fs(old_fs);
- 
--	return ret ? -EFAULT : 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(probe_kernel_write);
- 
-+/**
-+ * probe_user_write(): safely attempt to write to a user-space location
-+ * @dst: address to write to
-+ * @src: pointer to the data that shall be written
-+ * @size: size of the data chunk
-+ *
-+ * Safely write to address @dst from the buffer at @src.  If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
+ 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
 +
-+long __weak probe_user_write(void __user *dst, const void *src, size_t size)
-+    __attribute__((alias("__probe_user_write")));
-+
-+long __probe_user_write(void __user *dst, const void *src, size_t size)
-+{
-+	long ret = -EFAULT;
-+	mm_segment_t old_fs = get_fs();
-+
-+	set_fs(USER_DS);
-+	if (access_ok(VERIFY_WRITE, dst, size))
-+		ret = probe_write_common(dst, src, size);
-+	set_fs(old_fs);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(probe_user_write);
++		/*
++		 * VFs do no implement the memory enable bit of the COMMAND
++		 * register therefore we'll not have it set in our initial
++		 * copy of config space after pci_enable_device().  For
++		 * consistency with PFs, set the virtual enable bit here.
++		 */
++		*(__le16 *)&vconfig[PCI_COMMAND] |=
++					cpu_to_le16(PCI_COMMAND_MEMORY);
+ 	}
  
- /**
-  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
--- 
-2.25.1
-
+ 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
 
 
