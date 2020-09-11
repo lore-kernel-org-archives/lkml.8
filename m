@@ -2,55 +2,55 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CF2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C219C2226A
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B21B22276
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599833622;
-	bh=5ToNezgLUBxLcrsBDV5dgU/kDvQolCTOt3BXAC3iIas=;
+	s=default; t=1599833696;
+	bh=UAs3Q/Zz9F5+9bZ42uUtir1voEsU5TfKbTq5cMt4HEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqGzHdShEw+xCDSTevHzOypTT5+7idxdcXOZg3thWW8nX6ZhnSmXpD5vFmw3bpTMy
-	 w38eBTU+y9I4apOIPP+f3UvikSGbLgFiGG1094Yq/LS1P8TwgsWn91NlbLunCb8Qbp
-	 un/IZ5qTCfyUnAirNbOTl71i6wIyfn3GFCHhkFko=
+	b=O22uww+C1D4obv+VBWOBWCuWmDKXt/DhIdOZLnJiQ6wq8x2PAH6eT2MQIkcs1T1qH
+	 FgU5PCnRxHlu4ZrL2f9WWJvBYMOev+EYTvJB0jnrbcQ4y7cHyj4/oG9ynA4rhlfi26
+	 FYXfhDZfxPJMU3tsnaoTu6bCDQvYTQoIkJZ00MmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgIKONj (ORCPT
+        id S1726241AbgIKOOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32770 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:14:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgIKNVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:21:31 -0400
+        id S1726108AbgIKNVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:21:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB4B223C7;
-        Fri, 11 Sep 2020 12:58:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 139CA223EA;
+        Fri, 11 Sep 2020 12:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829115;
-        bh=5ToNezgLUBxLcrsBDV5dgU/kDvQolCTOt3BXAC3iIas=;
+        s=default; t=1599829142;
+        bh=UAs3Q/Zz9F5+9bZ42uUtir1voEsU5TfKbTq5cMt4HEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFM26pveF0BTCcci4QHRhvWXnnfYMejhvIIKK+B/mWW2R4SzxRYoytWWDXm2RwF1E
-         eqmGaR+yHLNvpn8hvK7kxzDtidQhz2A//mArfeONp1R2PyBM0rlVYHJsB5VLZ2zg2g
-         oE9n1VtEuAxqljpD6RCGRSEaKtKnGYskzEM1lGp8=
+        b=tZz12LH5l7veTMDSJjDe3roefZRkQpr+qBcPF+3wWb4Ao4pZRsFdm3WS9oW7nypoW
+         wiJpJU2wE/68XTJivVsTOz+jDtLMEGsdp6/x44JdgGquTKpLqncZu2Fh3WSTBas3bK
+         1TnE8+Fu0fAtoVKl/e1SeKXK7dqMvAjJlsxUrKyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Staudt <max@enpas.org>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 65/71] affs: fix basic permission bits to actually work
-Date:   Fri, 11 Sep 2020 14:46:49 +0200
-Message-Id: <20200911122508.151910380@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 12/12] net: disable netpoll on fresh napis
+Date:   Fri, 11 Sep 2020 14:47:06 +0200
+Message-Id: <20200911122459.015758062@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
-References: <20200911122504.928931589@linuxfoundation.org>
+In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
+References: <20200911122458.413137406@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,179 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Staudt <max@enpas.org>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2 ]
+[ Upstream commit 96e97bc07e90f175a8980a22827faf702ca4cb30 ]
 
-The basic permission bits (protection bits in AmigaOS) have been broken
-in Linux' AFFS - it would only set bits, but never delete them.
-Also, contrary to the documentation, the Archived bit was not handled.
+napi_disable() makes sure to set the NAPI_STATE_NPSVC bit to prevent
+netpoll from accessing rings before init is complete. However, the
+same is not done for fresh napi instances in netif_napi_add(),
+even though we expect NAPI instances to be added as disabled.
 
-Let's fix this for good, and set the bits such that Linux and classic
-AmigaOS can coexist in the most peaceful manner.
+This causes crashes during driver reconfiguration (enabling XDP,
+changing the channel count) - if there is any printk() after
+netif_napi_add() but before napi_enable().
 
-Also, update the documentation to represent the current state of things.
+To ensure memory ordering is correct we need to use RCU accessors.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Staudt <max@enpas.org>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Rob Sherwood <rsher@fb.com>
+Fixes: 2d8bff12699a ("netpoll: Close race condition between poll_one_napi and napi_disable")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/filesystems/affs.txt | 16 ++++++++++------
- fs/affs/amigaffs.c                 | 27 +++++++++++++++++++++++++++
- fs/affs/file.c                     | 26 +++++++++++++++++++++++++-
- 3 files changed, 62 insertions(+), 7 deletions(-)
+ net/core/dev.c     |    3 ++-
+ net/core/netpoll.c |    2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/filesystems/affs.txt b/Documentation/filesystems/affs.txt
-index 71b63c2b98410..a8f1a58e36922 100644
---- a/Documentation/filesystems/affs.txt
-+++ b/Documentation/filesystems/affs.txt
-@@ -93,13 +93,15 @@ The Amiga protection flags RWEDRWEDHSPARWED are handled as follows:
- 
-   - R maps to r for user, group and others. On directories, R implies x.
- 
--  - If both W and D are allowed, w will be set.
-+  - W maps to w.
- 
-   - E maps to x.
- 
--  - H and P are always retained and ignored under Linux.
-+  - D is ignored.
- 
--  - A is always reset when a file is written to.
-+  - H, S and P are always retained and ignored under Linux.
-+
-+  - A is cleared when a file is written to.
- 
- User id and group id will be used unless set[gu]id are given as mount
- options. Since most of the Amiga file systems are single user systems
-@@ -111,11 +113,13 @@ Linux -> Amiga:
- 
- The Linux rwxrwxrwx file mode is handled as follows:
- 
--  - r permission will set R for user, group and others.
-+  - r permission will allow R for user, group and others.
-+
-+  - w permission will allow W for user, group and others.
- 
--  - w permission will set W and D for user, group and others.
-+  - x permission of the user will allow E for plain files.
- 
--  - x permission of the user will set E for plain files.
-+  - D will be allowed for user, group and others.
- 
-   - All other flags (suid, sgid, ...) are ignored and will
-     not be retained.
-diff --git a/fs/affs/amigaffs.c b/fs/affs/amigaffs.c
-index fd7a7542956d9..e57f12317ab62 100644
---- a/fs/affs/amigaffs.c
-+++ b/fs/affs/amigaffs.c
-@@ -418,24 +418,51 @@ mode_to_prot(struct inode *inode)
- 	u32 prot = AFFS_I(inode)->i_protect;
- 	umode_t mode = inode->i_mode;
- 
-+	/*
-+	 * First, clear all RWED bits for owner, group, other.
-+	 * Then, recalculate them afresh.
-+	 *
-+	 * We'll always clear the delete-inhibit bit for the owner, as that is
-+	 * the classic single-user mode AmigaOS protection bit and we need to
-+	 * stay compatible with all scenarios.
-+	 *
-+	 * Since multi-user AmigaOS is an extension, we'll only set the
-+	 * delete-allow bit if any of the other bits in the same user class
-+	 * (group/other) are used.
-+	 */
-+	prot &= ~(FIBF_NOEXECUTE | FIBF_NOREAD
-+		  | FIBF_NOWRITE | FIBF_NODELETE
-+		  | FIBF_GRP_EXECUTE | FIBF_GRP_READ
-+		  | FIBF_GRP_WRITE   | FIBF_GRP_DELETE
-+		  | FIBF_OTR_EXECUTE | FIBF_OTR_READ
-+		  | FIBF_OTR_WRITE   | FIBF_OTR_DELETE);
-+
-+	/* Classic single-user AmigaOS flags. These are inverted. */
- 	if (!(mode & 0100))
- 		prot |= FIBF_NOEXECUTE;
- 	if (!(mode & 0400))
- 		prot |= FIBF_NOREAD;
- 	if (!(mode & 0200))
- 		prot |= FIBF_NOWRITE;
-+
-+	/* Multi-user extended flags. Not inverted. */
- 	if (mode & 0010)
- 		prot |= FIBF_GRP_EXECUTE;
- 	if (mode & 0040)
- 		prot |= FIBF_GRP_READ;
- 	if (mode & 0020)
- 		prot |= FIBF_GRP_WRITE;
-+	if (mode & 0070)
-+		prot |= FIBF_GRP_DELETE;
-+
- 	if (mode & 0001)
- 		prot |= FIBF_OTR_EXECUTE;
- 	if (mode & 0004)
- 		prot |= FIBF_OTR_READ;
- 	if (mode & 0002)
- 		prot |= FIBF_OTR_WRITE;
-+	if (mode & 0007)
-+		prot |= FIBF_OTR_DELETE;
- 
- 	AFFS_I(inode)->i_protect = prot;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5532,12 +5532,13 @@ void netif_napi_add(struct net_device *d
+ 		pr_err_once("netif_napi_add() called with weight %d on device %s\n",
+ 			    weight, dev->name);
+ 	napi->weight = weight;
+-	list_add(&napi->dev_list, &dev->napi_list);
+ 	napi->dev = dev;
+ #ifdef CONFIG_NETPOLL
+ 	napi->poll_owner = -1;
+ #endif
+ 	set_bit(NAPI_STATE_SCHED, &napi->state);
++	set_bit(NAPI_STATE_NPSVC, &napi->state);
++	list_add_rcu(&napi->dev_list, &dev->napi_list);
+ 	napi_hash_add(napi);
  }
-diff --git a/fs/affs/file.c b/fs/affs/file.c
-index 0deec9cc2362c..0daca9d00cd8b 100644
---- a/fs/affs/file.c
-+++ b/fs/affs/file.c
-@@ -427,6 +427,24 @@ static int affs_write_begin(struct file *file, struct address_space *mapping,
- 	return ret;
- }
+ EXPORT_SYMBOL(netif_napi_add);
+--- a/net/core/netpoll.c
++++ b/net/core/netpoll.c
+@@ -179,7 +179,7 @@ static void poll_napi(struct net_device
+ 	struct napi_struct *napi;
+ 	int cpu = smp_processor_id();
  
-+static int affs_write_end(struct file *file, struct address_space *mapping,
-+			  loff_t pos, unsigned int len, unsigned int copied,
-+			  struct page *page, void *fsdata)
-+{
-+	struct inode *inode = mapping->host;
-+	int ret;
-+
-+	ret = generic_write_end(file, mapping, pos, len, copied, page, fsdata);
-+
-+	/* Clear Archived bit on file writes, as AmigaOS would do */
-+	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
-+		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
-+		mark_inode_dirty(inode);
-+	}
-+
-+	return ret;
-+}
-+
- static sector_t _affs_bmap(struct address_space *mapping, sector_t block)
- {
- 	return generic_block_bmap(mapping,block,affs_get_block);
-@@ -436,7 +454,7 @@ const struct address_space_operations affs_aops = {
- 	.readpage = affs_readpage,
- 	.writepage = affs_writepage,
- 	.write_begin = affs_write_begin,
--	.write_end = generic_write_end,
-+	.write_end = affs_write_end,
- 	.direct_IO = affs_direct_IO,
- 	.bmap = _affs_bmap
- };
-@@ -793,6 +811,12 @@ done:
- 	if (tmp > inode->i_size)
- 		inode->i_size = AFFS_I(inode)->mmu_private = tmp;
- 
-+	/* Clear Archived bit on file writes, as AmigaOS would do */
-+	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
-+		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
-+		mark_inode_dirty(inode);
-+	}
-+
- err_first_bh:
- 	unlock_page(page);
- 	put_page(page);
--- 
-2.25.1
-
+-	list_for_each_entry(napi, &dev->napi_list, dev_list) {
++	list_for_each_entry_rcu(napi, &dev->napi_list, dev_list) {
+ 		if (cmpxchg(&napi->poll_owner, -1, cpu) == -1) {
+ 			poll_one_napi(napi);
+ 			smp_store_release(&napi->poll_owner, -1);
 
 
