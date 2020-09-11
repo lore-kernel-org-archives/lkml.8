@@ -2,133 +2,161 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1610C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F96C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F53A221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2B421D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJTZLEjJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8EdYaLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgIKH5o (ORCPT
+        id S1725810AbgIKH6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:57:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        Fri, 11 Sep 2020 03:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgIKH5f (ORCPT
+        with ESMTP id S1725786AbgIKH6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:57:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0E4C061756
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q4so1319646pjh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
+        Fri, 11 Sep 2020 03:58:08 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70919C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:58:08 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a9so3854322wmm.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:58:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=D68YRpGe41uJ8+gFVfMwX0RCIFPEEX/t0OhKoAuLKXc=;
-        b=lJTZLEjJEy0HzJ0cIARU4N8+44CV3NNjEz0dKZlMU89mCjRyRRq51QF8nmrKTchrPi
-         pTt8dD+SDsn7OUoRlL1Rr0S1Qq6nPCSpemStoTw3aGTR6Eu2BRbiZUVb+yAJLbTIbqng
-         jj3Qds88FIyOJBmxN+5hh2Fg6vjJpwkd4glIp4G7P9fed5lbJf0bwazJ+NkZRuEDe9Y0
-         UUu5Ja9YVkKAjkNBP4pDmBqoDt5cPW7uSE3yri2/19xLmIylukiUWHukXaaFb5k/PKbZ
-         EPULBUiiFi1SoqUqdnUslSw01ZEhG/DXqV4Z7gaD/NADBFBWtDLGVv0Lcx3TfxDMKKet
-         k1jg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1IUSu/d3w6Wkl/EvaZBQs8+EfTzsdofYI5H0K7F7L1o=;
+        b=G8EdYaLJeEp/GI1N1GuZ1b6OOHrLRNIm7B4ikRMq59wmBHu+2vXE0NCCGTbKaI0cDY
+         i5rmWNN/1W1pgiRv91f7fwtLZ5IFfsG+QAZlx0iFPFKz/2hPlPsZ45vmCzjdIkkMpTqJ
+         NoIyfmZIGHoRe3/GiYdqSpTV3WBNS9cJ0AGCMY/besJr2+jj8/RUnyBXhPOv/urktqvT
+         REJN8+U/97Lt7BmQeF2SD8v63wLxGu6X2bZObIpqpcgx2OVE4EppIo6ac0nVmnJ1M6tm
+         cD2lfKQ5oelMZAKuX0ksH9ci/b7GXigp1ojqJSldTdfvDvdjgtkFQFpAp6IpRr6sOsPt
+         KYNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=D68YRpGe41uJ8+gFVfMwX0RCIFPEEX/t0OhKoAuLKXc=;
-        b=qNm2rTiDPaRhD00dTcHbl2+IdQnVQPUhDHpj0swHrwEgczkkBn3kKh79qj9lDo4p5D
-         dLKvclXWYUmRO0uD8KH7acSxEzZgRynaJUqvPDm+RTc/aT1kihaiaVzmM0Y2+hPQTkwz
-         qUMm7mknz2cjhXPrgRRU+GSF3ZyH5hG6N3gEEFep7pOWdhJUP65hqRJrnuqgKeqJlevL
-         MkUdLobaG1+bBzu1GgUrYhZdUTYgc0X4pNFaYNjTb1PIj5efu3XrwwaF/DZsf7Ii4e9c
-         iqBKKxPCeS2KG7X2uF1QwnvZvriOVbfsGU+scQlkgLX7lg4MZkd2f3K3faXhhL7Je6XK
-         jK6A==
-X-Gm-Message-State: AOAM533A0GmAnlDp0U4siPMhXY5CSNkOhR7nr5ewZyZjRfhgKPtLxuyq
-        7gvVjc+SzXwO3S/gpxivZeYmLA==
-X-Google-Smtp-Source: ABdhPJw2e/NDEf8sEec/hL+0GhrxGhLwxTY+Q3W8tV8tDAOo79Alu00023BhM4cVcfk+4/R9Yw+60g==
-X-Received: by 2002:a17:90a:f992:: with SMTP id cq18mr1124575pjb.172.1599811054028;
-        Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id m5sm1190506pjn.19.2020.09.11.00.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 00:57:33 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 00:57:32 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-cc:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kvm@vger.kernel.org
-Subject: Re: [patch] KVM: SVM: Periodically schedule when unregistering
- regions on destroy
-In-Reply-To: <alpine.DEB.2.23.453.2008251255240.2987727@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.23.453.2009110057300.3797679@chino.kir.corp.google.com>
-References: <alpine.DEB.2.23.453.2008251255240.2987727@chino.kir.corp.google.com>
-User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1IUSu/d3w6Wkl/EvaZBQs8+EfTzsdofYI5H0K7F7L1o=;
+        b=O1NTbO331nHyDCYabDRf82I2qXhKNPaYwXd6bTu4JiNvuTWg2JoG5AsuuXrQEX/PE6
+         CFz7Qf6/2KlR71iH4H/JJV/FUN6XyXGg88uWDKPnKTx3HYKopfafnCktR+knCbZXldKB
+         PjeWsBFQ4B5O50hab/ytzBaiJ/pWKS8sc4GTf4NuCCTT+qPNjUsMq734kXJdmj0gtcmA
+         MhWJX/rKOFh/Xi6F5BFm0UmLw8pzU9bs6WJNue2kJnWFFnWICkxDGtEl8578MxxoOJt5
+         oHclVKmwEI1zYQUfeJthTwIoGE7nsdmcwEOoGd71J60omzAIvFT7Fk5sBooOUxA5KmrH
+         mMqQ==
+X-Gm-Message-State: AOAM531BTVfDYGN5VWMlp9XaFjxLQXS6pcFYV2mnh/MlR+i7LESAHc7+
+        cY4lZWKhdsIaYJ8ZQvW7fFqJUQ==
+X-Google-Smtp-Source: ABdhPJw/Gu3pU0oETNVFOVI21iaEBCzb7k6eX911WqCSdEToMWwhB+YQcOHFra5+8PgT6gg0FDX0KA==
+X-Received: by 2002:a7b:cb82:: with SMTP id m2mr799532wmi.56.1599811085439;
+        Fri, 11 Sep 2020 00:58:05 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:d5d9:c908:efdc:8b45? ([2a01:e34:ed2f:f020:d5d9:c908:efdc:8b45])
+        by smtp.googlemail.com with ESMTPSA id a85sm2831561wmd.26.2020.09.11.00.58.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 00:58:04 -0700 (PDT)
+Subject: Re: [PATCH RFC] powercap/drivers/energy_model: protocode: Add
+ powercap energy model based
+To:     Amit Kucheria <amitk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20200707171457.31540-1-daniel.lezcano@linaro.org>
+ <CAHLCerPq_f3t=cgS0MXvWuRvPaBrAs2dZEyeNSOyZ3OXHgHNeg@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <d8338e31-3d9b-a0b4-bf0f-6e74a7ae4fbf@linaro.org>
+Date:   Fri, 11 Sep 2020 09:58:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHLCerPq_f3t=cgS0MXvWuRvPaBrAs2dZEyeNSOyZ3OXHgHNeg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo, ping?
 
-On Tue, 25 Aug 2020, David Rientjes wrote:
+Hi Amit,
 
-> There may be many encrypted regions that need to be unregistered when a
-> SEV VM is destroyed.  This can lead to soft lockups.  For example, on a
-> host running 4.15:
+thanks for taking the time to review the series and read this long
+description.
+
+On 10/09/2020 11:48, Amit Kucheria wrote:
+
+[ ... ]
+
+>> +
+>> +config POWERCAP_EM
+>> +        bool "Energy model based power capping"
+>> +       depends on ENERGY_MODEL
+>> +       default y
 > 
-> watchdog: BUG: soft lockup - CPU#206 stuck for 11s! [t_virtual_machi:194348]
-> CPU: 206 PID: 194348 Comm: t_virtual_machi
-> RIP: 0010:free_unref_page_list+0x105/0x170
-> ...
-> Call Trace:
->  [<0>] release_pages+0x159/0x3d0
->  [<0>] sev_unpin_memory+0x2c/0x50 [kvm_amd]
->  [<0>] __unregister_enc_region_locked+0x2f/0x70 [kvm_amd]
->  [<0>] svm_vm_destroy+0xa9/0x200 [kvm_amd]
->  [<0>] kvm_arch_destroy_vm+0x47/0x200
->  [<0>] kvm_put_kvm+0x1a8/0x2f0
->  [<0>] kvm_vm_release+0x25/0x30
->  [<0>] do_exit+0x335/0xc10
->  [<0>] do_group_exit+0x3f/0xa0
->  [<0>] get_signal+0x1bc/0x670
->  [<0>] do_signal+0x31/0x130
+> Don't make it default ;-)
+
+Thanks for pointing this out :D
+
+[ ... ]
+
+>> +       pc_package = powercap_em_register(pct, "package", pc_soc,
+>> +                                         &zone_ops, 1, &constraint_ops);
 > 
-> Although the CLFLUSH is no longer issued on every encrypted region to be
-> unregistered, there are no other changes that can prevent soft lockups for
-> very large SEV VMs in the latest kernel.
-> 
-> Periodically schedule if necessary.  This still holds kvm->lock across the
-> resched, but since this only happens when the VM is destroyed this is
-> assumed to be acceptable.
-> 
-> Signed-off-by: David Rientjes <rientjes@google.com>
-> ---
->  arch/x86/kvm/svm/sev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -1106,6 +1106,7 @@ void sev_vm_destroy(struct kvm *kvm)
->  		list_for_each_safe(pos, q, head) {
->  			__unregister_enc_region_locked(kvm,
->  				list_entry(pos, struct enc_region, list));
-> +			cond_resched();
->  		}
->  	}
->  
-> 
+> Will the soc and package hierarchy eventually be dynamically read from
+> devicetree or similar and these hardcoded registration removed?
+
+Yes, that's correct.
+
+> For the rest of the devices, IMO, it makes sense to use the genpd
+> hierarchy to reflect the powercap hierarchy. I whipped up the
+> following patch to show how it might be achieved. What needs to be
+> done is to now reflect the parent-child/sibling relationships of genpd
+> into powercap. Initially I thought we'd need to additional DT
+> properties in the genpd bindings but I think we might be able to read
+> the device-specific energy model data directly to populate the
+> powercap constraints.
+
+We need a way to describe the power constraints relationship of the
+domains to populate the hierarchy of the powercap directories.
+
+In the DT it may look like that (very roughly):
+
+power-constraints {
+	power-constraint: package {
+		compatible = "power-constraint,virtual";
+	};
+
+	power-constraint: perfdomain0 {
+		compatible = "power-constraint,cpu";
+		device = <&cpu_l0>;
+		parent = <&package>;
+	};
+
+	power-constraint: perfdomain1 {
+		compatible = "power-constraint,cpu";
+		device = <&cpu_b0>;
+		parent = <&package>;
+	};
+
+	power-constraint: gpu {
+		compatible = "power-constraint,gpu";
+		parent = <&package>
+	};
+};
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
