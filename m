@@ -2,109 +2,130 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA289C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF4D208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0B7221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffwNWujj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbgIKIEh (ORCPT
+        id S1725869AbgIKIFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:04:37 -0400
-Received: from mga06.intel.com ([134.134.136.31]:7265 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbgIKIEa (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:04:30 -0400
-IronPort-SDR: rKInKPeulxDphW+mS3X1pybJ3Um6UqMRpuBtXHPtFShD2F6CO+2V/5rihZ01u7jEzoboNtPOR8
- qNSidFA7q00w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="220268197"
-X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
-   d="scan'208";a="220268197"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 01:04:29 -0700
-IronPort-SDR: 2BUfJJamDDk0+68Z2ElGS2Jd+Sd3l/wY+eCFKxl8XzJeBye0EFiNpFInWbH6NiXzTsBvQ/Ufox
- 0FuqoNkZtNfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
-   d="scan'208";a="342224817"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.55])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 Sep 2020 01:04:27 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v6 2/7] perf util: Get the evsel_streams by evsel_idx
-Date:   Fri, 11 Sep 2020 16:03:48 +0800
-Message-Id: <20200911080353.13359-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911080353.13359-1-yao.jin@linux.intel.com>
-References: <20200911080353.13359-1-yao.jin@linux.intel.com>
+        Fri, 11 Sep 2020 04:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbgIKIEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:04:31 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E265DC061573;
+        Fri, 11 Sep 2020 01:04:30 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g4so10533446wrs.5;
+        Fri, 11 Sep 2020 01:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I4evR+fxuTX9qBk4XdboFDlhUTgd6HdvS5/sAKWnM6I=;
+        b=ffwNWujjP+BbTM7+3WMpB1ouoVJyrqeyeYmXGyk6AVAyj0bKcNcLy49/elz5gntPsj
+         WpvrQBWUAC21U/RlzdK6DBFCIdeEiLmGflHV+NLsklykgaZpYc51GyzCoDqi4zTKOLSM
+         Hif6r4cGMx2JD3QIVHhrX8AZ9yCvQSJE82fwyVuTQzPxG8LyTpc53fkTDK4FuD7Q5+aG
+         2fchPhgptxN3AXJxqbzBPI3eeDpBYHXZ7rz44lPJL0XEi7/+dGsG6w+dblmRL/EjoCqa
+         YJCFnDzyr8xqM+lXfYzJSwnZy78EaOv6ChOB7r3tmKxL8bCb2hDg5l4JzdSfxxHhTGqQ
+         Zf6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I4evR+fxuTX9qBk4XdboFDlhUTgd6HdvS5/sAKWnM6I=;
+        b=jc9a32A/DzZUYsS/dShj4Ap+WutaR+tk0HRh3G1Rp6bH4feqB1gd0jYP+7/QhvWyMf
+         8RTVxWijGGl0wzB7J4pYb3frzELrqozl7ZAq5CFePMwWU4lqHezub17bIBYmJLM4kHbY
+         Fh2q8fTPH9SzUvxRtN65AL+FmCvl6is15sgH7v7RVgYHirS53AYxzSj3umfgUWGC2XoF
+         3yH4EVW0cB9nZ9fZOlJt2zRGfWEue0ll3bx/0zJfu2uMB43uC137XsVR10rhjnMeR0Eh
+         Lw0OEEYfIQNBB6cuGCfvgavPbrpJqyNJ3sSrbFBafkPN8MQSZKqNhO1+rSFVVRPogX6I
+         RW/w==
+X-Gm-Message-State: AOAM5339eEIM3yav2zXwFyfNtMbkrP2X+J/F+fTrA57V5JWdNlk12AZk
+        hhierHP/IceCpWtxPkvM4u3etOh6aMg=
+X-Google-Smtp-Source: ABdhPJw/+KrJd8041BOmgdspQYSwqkLCb6HF5HEf9/SXIgzyKLgFfQ14AFxE5aGxm6T0lp9Bg4ljuQ==
+X-Received: by 2002:adf:f903:: with SMTP id b3mr823030wrr.142.1599811469225;
+        Fri, 11 Sep 2020 01:04:29 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id t188sm2798299wmf.41.2020.09.11.01.04.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 01:04:28 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/24] fread.3: Move ARRAY_SIZE logic into macro
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-15-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <b6b76d67-6ece-1677-6006-2b7495db94fe@gmail.com>
+Date:   Fri, 11 Sep 2020 10:04:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200910211344.3562-15-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous patch, we have created evsel_streams array
+Hi Alex,
 
-This patch returns the specified evsel_streams according to the
-evsel_idx.
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- v6:
-   - Rebase to perf/core
+I don't have strong feelings for or against this patch. I guess
+it does make the code more expressive, which is good. Patch applied.
 
- v5:
-   - Rebase to perf/core
+Thanks,
 
- v4:
-   - Rename the patch from 'perf util: Return per-event callchain
-     streams' to 'perf util: Get the evsel_streams by evsel_idx'
+Michael
 
- tools/perf/util/stream.c | 11 +++++++++++
- tools/perf/util/stream.h |  3 +++
- 2 files changed, 14 insertions(+)
+> ---
+>  man3/fread.3 | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/man3/fread.3 b/man3/fread.3
+> index 4c5dc3dbc..8e71e620e 100644
+> --- a/man3/fread.3
+> +++ b/man3/fread.3
+> @@ -136,6 +136,8 @@ Class: 0x02
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  
+> +#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+> +
+>  int
+>  main(void)
+>  {
+> @@ -147,9 +149,7 @@ main(void)
+>  
+>      unsigned char buffer[4];
+>  
+> -    size_t ret =
+> -        fread(buffer, sizeof(buffer) / sizeof(*buffer), sizeof(*buffer),
+> -              fp);
+> +    size_t ret = fread(buffer, ARRAY_SIZE(buffer), sizeof(*buffer), fp);
+>      if (ret != sizeof(*buffer)) {
+>          fprintf(stderr, "fread() failed: %zu\en", ret);
+>          exit(EXIT_FAILURE);
+> 
 
-diff --git a/tools/perf/util/stream.c b/tools/perf/util/stream.c
-index 015c1d07ce3a..7882a7f05d97 100644
---- a/tools/perf/util/stream.c
-+++ b/tools/perf/util/stream.c
-@@ -146,3 +146,14 @@ struct evsel_streams *perf_evlist__create_streams(struct evlist *evlist,
- 
- 	return es;
- }
-+
-+struct evsel_streams *evsel_streams_get(struct evsel_streams *es,
-+					int nr_evsel, int evsel_idx)
-+{
-+	for (int i = 0; i < nr_evsel; i++) {
-+		if (es[i].evsel_idx == evsel_idx)
-+			return &es[i];
-+	}
-+
-+	return NULL;
-+}
-diff --git a/tools/perf/util/stream.h b/tools/perf/util/stream.h
-index c6844c5787cb..66f61d954eef 100644
---- a/tools/perf/util/stream.h
-+++ b/tools/perf/util/stream.h
-@@ -20,4 +20,7 @@ struct evlist;
- struct evsel_streams *perf_evlist__create_streams(struct evlist *evlist,
- 						  int nr_streams_max);
- 
-+struct evsel_streams *evsel_streams_get(struct evsel_streams *es,
-+					int nr_evsel, int evsel_idx);
-+
- #endif /* __PERF_STREAM_H */
+
 -- 
-2.17.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
