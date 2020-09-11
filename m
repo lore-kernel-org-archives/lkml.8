@@ -2,53 +2,52 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EFDC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095E3C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECA3222EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF5D222EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599835729;
-	bh=ty1rpdf5mIVix/EDaUxIt/F+ojO7VRViFR9tegXU4h8=;
+	s=default; t=1599835793;
+	bh=iLOOVfghMdz+HjBlYtn1WLMQivxIiIsjgDaBTdNxMNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NGa1SmMwi/oosuiyukaw6gd/7nl39KmpIc7J/GJzTkR2YlLCf66mM6M/BvUTO9JsC
-	 Pj0NQB4iBT6n8jXZJ9Yym2uV2G04tuq3+90aGd12pFHyXgXIDWMjiW3k8Sa1vL/gcq
-	 E15WC5bPPhOJZ3vgDw59BpRtuAOWeyb4O6Yy8lMQ=
+	b=xsL332XCm1Nmdmq4emdms0ITNHRqnHw0o4EV+lGcFtKfkJM1HnX7TuTJJd0kPE4Tq
+	 jPhRMUWprcaLWBfbH+CjvLQyU0z5nQ1pjiQgNyWW+QIBOo69oJzmLIEwEMExIxrb8s
+	 HnWWWUN5o61kipqWvTL6g6I10tZt0OOtKUkA9kf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIKOsS (ORCPT
+        id S1726266AbgIKOtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53946 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbgIKNDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726161AbgIKNDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:03:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8E0222C3;
-        Fri, 11 Sep 2020 12:57:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6589222C4;
+        Fri, 11 Sep 2020 12:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829057;
-        bh=ty1rpdf5mIVix/EDaUxIt/F+ojO7VRViFR9tegXU4h8=;
+        s=default; t=1599829055;
+        bh=iLOOVfghMdz+HjBlYtn1WLMQivxIiIsjgDaBTdNxMNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KsmlCk58K/SgOpcWxDfXpnaP10OQ1R0EbeHttraYIOYekU6nRA+w5yBNC6tDD+Iyv
-         gsFNenOEQw89677wWrrTf6n5MJylNfjIJgnqubNeU3dk88UvqHre9Q6TnSB12FMMX0
-         ymj4aBEVdnReYru5QQXzts1uM2gSrbFztZnlHShc=
+        b=j2Pid8HSUmJ6uKSbwyZ0TIWYLLxEWfpcvTHF1ia7xZk9iqmRG0Spe25/Wz/rgCYR/
+         BIY3k5VP/TNu71sJGazoPvuxT4U40e5wIvhWIrLmSusY6FWFmrPH/eg6vGxR7nDjsF
+         Bm+X8Fg5cOIGPIS4hvNDATGDX+Kg0KrJiEvfS3DA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 32/71] btrfs: set the lockdep class for log tree extent buffers
-Date:   Fri, 11 Sep 2020 14:46:16 +0200
-Message-Id: <20200911122506.532785298@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 4.9 49/71] vfio/type1: Support faulting PFNMAP vmas
+Date:   Fri, 11 Sep 2020 14:46:33 +0200
+Message-Id: <20200911122507.364735199@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -61,59 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit d3beaa253fd6fa40b8b18a216398e6e5376a9d21 ]
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-These are special extent buffers that get rewound in order to lookup
-the state of the tree at a specific point in time.  As such they do not
-go through the normal initialization paths that set their lockdep class,
-so handle them appropriately when they are created and before they are
-locked.
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.9]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/btrfs/ctree.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_type1.c |   36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index 406ae49baa076..65689cbc362db 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1360,6 +1360,8 @@ tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct btrfs_path *path,
- 	btrfs_tree_read_unlock_blocking(eb);
- 	free_extent_buffer(eb);
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -213,6 +213,32 @@ static int put_pfn(unsigned long pfn, in
+ 	return 0;
+ }
  
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb_rewin),
-+				       eb_rewin, btrfs_header_level(eb_rewin));
- 	btrfs_tree_read_lock(eb_rewin);
- 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
- 	WARN_ON(btrfs_header_nritems(eb_rewin) >
-@@ -1429,7 +1431,6 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
+ {
+ 	struct page *page[1];
+@@ -226,12 +252,16 @@ static int vaddr_get_pfn(unsigned long v
  
- 	if (!eb)
- 		return NULL;
--	btrfs_tree_read_lock(eb);
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
- 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
-@@ -1437,6 +1438,9 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
- 		btrfs_set_header_level(eb, old_root->level);
- 		btrfs_set_header_generation(eb, old_generation);
+ 	down_read(&current->mm->mmap_sem);
+ 
++retry:
+ 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, current->mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
  	}
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb), eb,
-+				       btrfs_header_level(eb));
-+	btrfs_tree_read_lock(eb);
- 	if (tm)
- 		__tree_mod_log_rewind(root->fs_info, eb, time_seq, tm);
- 	else
--- 
-2.25.1
-
+ 
+ 	up_read(&current->mm->mmap_sem);
 
 
