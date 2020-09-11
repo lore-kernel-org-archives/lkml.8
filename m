@@ -2,160 +2,110 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F938C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859B9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E81B4221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599825517;
-	bh=o9cW/liLO9LiEgJpuDhrXaYdblbkJJYZhvq0jGAF6AU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VAIOQL4hxA9lnD5OaF0cokMVJKkxucVzrzXtVfCw/DmqnriD3whSTgLBpO5HKOn+V
-	 Peq6SIhqJX5Tkrhqjl9B1CttJWSNrFEmYebKRKVhatoxy1dT9eTA8Ly9x7x6dWUZYg
-	 mGC4VlKufMfcjd3/bGx97uRQXDQ3EQcYguPAbCno=
+	by mail.kernel.org (Postfix) with ESMTP id 431C6221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KbFmmhJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725833AbgIKL6e (ORCPT
+        id S1725845AbgIKL6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:58:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKL6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:58:11 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5B3221EB;
-        Fri, 11 Sep 2020 11:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599825490;
-        bh=o9cW/liLO9LiEgJpuDhrXaYdblbkJJYZhvq0jGAF6AU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kq6gJBba1Hy+SzRy3ssBaQfXoE3PFA66PcRd7lYj4u8wdZj18gEXRz713cQZroGyT
-         4eG2FSlV9yKN2bVvxPA98WTKcri4vs2pFWN952guAhHPMHjoUGxUuvnQTKhSEbqQHu
-         s0MSLmTl+MaXLJlDrIog0mYpmD/RUiVw8YNfAakM=
-Date:   Fri, 11 Sep 2020 13:58:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Salvatore Bonaccorso <carnil@debian.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, Daniel.Craig@csiro.au,
-        Nicolas Courtel <courtel@cena.fr>
-Subject: Re: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail
- lists
-Message-ID: <20200911115816.GB3717176@kroah.com>
-References: <20200623195316.864547658@linuxfoundation.org>
- <20200623195323.968867013@linuxfoundation.org>
- <20200910194319.GA131386@eldamar.local>
+        Fri, 11 Sep 2020 07:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgIKL5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:57:53 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709E7C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 04:57:53 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id k25so7596044qtu.4
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 04:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fVxL2Y50MVOO4knYF5mqQ6ef6UPNQDX5s7q5Jl6nhJo=;
+        b=KbFmmhJ6RCzAdEoHpDtOso5YYL9i7QnUvcwQ9u5sx140O0Xuh1oroDgXwXueRBEvyp
+         lXNt3o78Lrbo9HZPm+S8aFORSeMO5ytEgLuF40cYw6+99T9WCWTuUTN695dHmGV0571B
+         FRxse8+/5MQ1gG2xVHQYE0rjmlfz1yK+iaPGYK6WMjIfVwa4RlISn5/+UIqVqhrZuLia
+         kiLmCoV8su62eA93USPIcsocm41az14H/Mf1I3vAXLcB7pXDzHaAu5z9NYLDBOqLZtXN
+         cMdQY3L7p6+227ebo8KlM/Od7L2SMbvZ2IbRdgCXHvutrYJc04jg3nY312pno8cAMxjd
+         mfCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fVxL2Y50MVOO4knYF5mqQ6ef6UPNQDX5s7q5Jl6nhJo=;
+        b=rO4Cj7MKaYISygUOnjWQuMIU22hFYCrmVTdvcbe1/K3Lsrc3Bpkr8lV601hFK8x6Gn
+         YVHblM2sFbsKKoNFKyarx20xv8FigAjFuHi82Sou9rKnNy75zEo7x7zUXuc5xNNkoudw
+         YUkQK0+1dw2YXoc6oQmKzaTgHw/YiV08pqFFU9d+V8lxp8lWtEnFt6OOILNrf0mOarSD
+         UBHVZp1kTTEM6oQUTGfqj/3gioM6lUJBNeouZeNrqZwwycZp6xQC1+34TkBWDpGNC1IY
+         dRuAngQ9q+JUcOPs33Xpzqy3kSr2DgPmn/F01xLztPY/9Gd7Gi8S6QJQD1fgMFnhy7/1
+         48lg==
+X-Gm-Message-State: AOAM5326B+XG0ZmsmSOP9uEB7B+k+OVPbBYgrTe5lo3z8JeADu7hRrzX
+        VHoZghNYLJnBoaZ06RZ37ikAZg==
+X-Google-Smtp-Source: ABdhPJx+Y8ANg5LRJ4dJPAqarA+pYSzoOrh1bfASUIo86ILsr/Gx+4AHcDdZ0DEQ4x7p1bSVqN4CEA==
+X-Received: by 2002:aed:3584:: with SMTP id c4mr1413234qte.84.1599825472485;
+        Fri, 11 Sep 2020 04:57:52 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id d5sm2405622qtm.36.2020.09.11.04.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 04:57:51 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kGhgc-004m3a-JY; Fri, 11 Sep 2020 08:57:50 -0300
+Date:   Fri, 11 Sep 2020 08:57:50 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+cc6fc752b3819e082d0c@syzkaller.appspotmail.com>,
+        dledford@redhat.com, leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in ucma_close (2)
+Message-ID: <20200911115750.GA1137957@ziepe.ca>
+References: <0000000000008e7c8f05aef61d8d@google.com>
+ <20200911041640.20652-1-hdanton@sina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910194319.GA131386@eldamar.local>
+In-Reply-To: <20200911041640.20652-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 09:43:19PM +0200, Salvatore Bonaccorso wrote:
-> Hi,
+On Fri, Sep 11, 2020 at 12:16:40PM +0800, Hillf Danton wrote:
+> Detect race destroying ctx in order to avoid UAF.
 > 
-> On Tue, Jun 23, 2020 at 09:57:50PM +0200, Greg Kroah-Hartman wrote:
-> > From: Bob Peterson <rpeterso@redhat.com>
-> > 
-> > [ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
-> > 
-> > Before this patch, transactions could be merged into the system
-> > transaction by function gfs2_merge_trans(), but the transaction ail
-> > lists were never merged. Because the ail flushing mechanism can run
-> > separately, bd elements can be attached to the transaction's buffer
-> > list during the transaction (trans_add_meta, etc) but quickly moved
-> > to its ail lists. Later, in function gfs2_trans_end, the transaction
-> > can be freed (by gfs2_trans_end) while it still has bd elements
-> > queued to its ail lists, which can cause it to either lose track of
-> > the bd elements altogether (memory leak) or worse, reference the bd
-> > elements after the parent transaction has been freed.
-> > 
-> > Although I've not seen any serious consequences, the problem becomes
-> > apparent with the previous patch's addition of:
-> > 
-> > 	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
-> > 
-> > to function gfs2_trans_free().
-> > 
-> > This patch adds logic into gfs2_merge_trans() to move the merged
-> > transaction's ail lists to the sdp transaction. This prevents the
-> > use-after-free. To do this properly, we need to hold the ail lock,
-> > so we pass sdp into the function instead of the transaction itself.
-> > 
-> > Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-> > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  fs/gfs2/log.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-> > index d3f0612e33471..06752db213d21 100644
-> > --- a/fs/gfs2/log.c
-> > +++ b/fs/gfs2/log.c
-> > @@ -877,8 +877,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
-> >   * @new: New transaction to be merged
-> >   */
-> >  
-> > -static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
-> > +static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
-> >  {
-> > +	struct gfs2_trans *old = sdp->sd_log_tr;
-> > +
-> >  	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
-> >  
-> >  	old->tr_num_buf_new	+= new->tr_num_buf_new;
-> > @@ -890,6 +892,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
-> >  
-> >  	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
-> >  	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
-> > +
-> > +	spin_lock(&sdp->sd_ail_lock);
-> > +	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
-> > +	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
-> > +	spin_unlock(&sdp->sd_ail_lock);
-> >  }
-> >  
-> >  static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
-> > @@ -901,7 +908,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
-> >  	gfs2_log_lock(sdp);
-> >  
-> >  	if (sdp->sd_log_tr) {
-> > -		gfs2_merge_trans(sdp->sd_log_tr, tr);
-> > +		gfs2_merge_trans(sdp, tr);
-> >  	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
-> >  		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
-> >  		sdp->sd_log_tr = tr;
-> > -- 
-> > 2.25.1
-> 
-> In Debian two user confirmed issues on writing on a GFS2 partition
-> with this commit applied. The initial Debian report is at
-> https://bugs.debian.org/968567 and Daniel Craig reported it into
-> Bugzilla at https://bugzilla.kernel.org/show_bug.cgi?id=209217 .
-> 
-> Writing to a gfs2 filesystem fails and results in a soft lookup of the
-> machine for kernels with that commit applied. I cannot reporduce the
-> issue myself due not having a respective setup available, but Daniel
-> described a minimal serieos of steps to reproduce the issue.
-> 
-> This might affect as well other stable series where this commit was
-> applied, as there was a similar report for someone running 5.4.58 in
-> https://www.redhat.com/archives/linux-cluster/2020-August/msg00000.html
+> +++ b/drivers/infiniband/core/ucma.c
+> @@ -625,6 +625,10 @@ static ssize_t ucma_destroy_id(struct uc
+>  		return PTR_ERR(ctx);
+>  
+>  	mutex_lock(&ctx->file->mut);
+> +	if (ctx->destroying == 1) {
+> +		mutex_unlock(&ctx->file->mut);
+> +		return -ENXIO;
+> +	}
+>  	ctx->destroying = 1;
+>  	mutex_unlock(&ctx->file->mut);
+>  
+> @@ -1826,6 +1830,8 @@ static int ucma_close(struct inode *inod
+>  
+>  	mutex_lock(&file->mut);
+>  	list_for_each_entry_safe(ctx, tmp, &file->ctx_list, list) {
+> +		if (ctx->destroying == 1)
+> +			continue;
+>  		ctx->destroying = 1;
+>  		mutex_unlock(&file->mut);
+>  
 
-Can you report this to the gfs2 developers?
+ucma_destroy_id() is called from write() and ucma_close is release(),
+so there is no way these can race?
 
-thanks,
-
-greg k-h
+Jason
