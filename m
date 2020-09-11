@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74001C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC34C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3803A222D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C92222D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599835221;
-	bh=4Huu70dJ+HjD8QlR9LohnstfTGmLMG6oxi13lowcang=;
+	s=default; t=1599835395;
+	bh=FzPvzivwk8yCso4jzaWOBh8EDYpZujychJO08HnB3fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFh9vJxM0/btzPpyFY/tNZLoO744id4tqD3sFB/o+AsbCigj0xLeI3sGhDQAl8IpU
-	 mj5H3sMLP3niuxouXNc2/FRrMo5wro2tfU69o6Op2IFGNH5JskKNwSnkl4fnRYDlTl
-	 j99e6w8fjHjk/RzaTzAmKl0bccQvQ23SZSqFZD8w=
+	b=QJCQSznA1RZFF+z/0zYT716wvlGFgq6Y6FKC6iqU3SRCpqX0WSbxuDUlLNzQl9XiF
+	 iC+3xyUYF8ARhBssIcPBXn5YFtNLofbZHfL2lNqpqHkobWEzTE1rO9Q+EvPKSOzCxl
+	 vOW3+FmnZ6YokanQXFhbEz2/8cqFVfvxIdRJJfqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgIKOkK (ORCPT
+        id S1726158AbgIKOm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726157AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:12:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAD7322475;
-        Fri, 11 Sep 2020 13:00:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31862224E;
+        Fri, 11 Sep 2020 13:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829254;
-        bh=4Huu70dJ+HjD8QlR9LohnstfTGmLMG6oxi13lowcang=;
+        s=default; t=1599829228;
+        bh=FzPvzivwk8yCso4jzaWOBh8EDYpZujychJO08HnB3fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vbhglolyzEBItOTzJAT4/vUIkm3izDju9qkvsUxArYblkNzGpkKL/mXAeEIXAp5V
-         aD7cMe/H7Auj05wcFyAXl2yqN4pJm3+OjEGRW8pEMLbcHkBG1bmmxbRElv76u0YMTs
-         r8BVagdextxHYfNWja/Z2zIO9wlrCmwbxwYy9EHg=
+        b=H/Idddv7k7c0m2Pqr7l4E326yRWJ/CySPWADhWWDEdX81TLap6wi+k9I0o4kjUeMb
+         Q0UsR1g1CBzJaCI9c8W26cJJpOeURdbguODiOdxMkKTMXz+iAxR1/NNRha2JZIe6Gi
+         mbWq5wH3dDsrMAOP0WxvvWvNC/yVRpWFn1vrPuj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 8/8] net/mlx5e: Dont support phys switch id if not in switchdev mode
-Date:   Fri, 11 Sep 2020 14:54:55 +0200
-Message-Id: <20200911125422.103702175@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 7/8] tipc: fix shutdown() of connectionless socket
+Date:   Fri, 11 Sep 2020 14:54:45 +0200
+Message-Id: <20200911125420.922380337@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911125421.695645838@linuxfoundation.org>
-References: <20200911125421.695645838@linuxfoundation.org>
+In-Reply-To: <20200911125420.580564179@linuxfoundation.org>
+References: <20200911125420.580564179@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-Support for phys switch id ndo added for representors and if
-we do not have representors there is no need to support it.
-Since each port return different switch id supporting this
-block support for creating bond over PFs and attaching to bridge
-in legacy mode.
+[ Upstream commit 2a63866c8b51a3f72cea388dfac259d0e14c4ba6 ]
 
-This bug doesn't exist upstream as the code got refactored and the
-netdev api is totally different.
+syzbot is reporting hung task at nbd_ioctl() [1], for there are two
+problems regarding TIPC's connectionless socket's shutdown() operation.
 
-Fixes: cb67b832921c ("net/mlx5e: Introduce SRIOV VF representors")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+----------
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <linux/nbd.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[])
+{
+        const int fd = open("/dev/nbd0", 3);
+        alarm(5);
+        ioctl(fd, NBD_SET_SOCK, socket(PF_TIPC, SOCK_DGRAM, 0));
+        ioctl(fd, NBD_DO_IT, 0); /* To be interrupted by SIGALRM. */
+        return 0;
+}
+----------
+
+One problem is that wait_for_completion() from flush_workqueue() from
+nbd_start_device_ioctl() from nbd_ioctl() cannot be completed when
+nbd_start_device_ioctl() received a signal at wait_event_interruptible(),
+for tipc_shutdown() from kernel_sock_shutdown(SHUT_RDWR) from
+nbd_mark_nsock_dead() from sock_shutdown() from nbd_start_device_ioctl()
+is failing to wake up a WQ thread sleeping at wait_woken() from
+tipc_wait_for_rcvmsg() from sock_recvmsg() from sock_xmit() from
+nbd_read_stat() from recv_work() scheduled by nbd_start_device() from
+nbd_start_device_ioctl(). Fix this problem by always invoking
+sk->sk_state_change() (like inet_shutdown() does) when tipc_shutdown() is
+called.
+
+The other problem is that tipc_wait_for_rcvmsg() cannot return when
+tipc_shutdown() is called, for tipc_shutdown() sets sk->sk_shutdown to
+SEND_SHUTDOWN (despite "how" is SHUT_RDWR) while tipc_wait_for_rcvmsg()
+needs sk->sk_shutdown set to RCV_SHUTDOWN or SHUTDOWN_MASK. Fix this
+problem by setting sk->sk_shutdown to SHUTDOWN_MASK (like inet_shutdown()
+does) when the socket is connectionless.
+
+[1] https://syzkaller.appspot.com/bug?id=3fe51d307c1f0a845485cf1798aa059d12bf18b2
+
+Reported-by: syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tipc/socket.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -198,7 +198,7 @@ int mlx5e_attr_get(struct net_device *de
- 	struct mlx5_eswitch_rep *rep = rpriv->rep;
- 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -2616,18 +2616,21 @@ static int tipc_shutdown(struct socket *
  
--	if (esw->mode == SRIOV_NONE)
-+	if (esw->mode != SRIOV_OFFLOADS)
- 		return -EOPNOTSUPP;
+ 	trace_tipc_sk_shutdown(sk, NULL, TIPC_DUMP_ALL, " ");
+ 	__tipc_shutdown(sock, TIPC_CONN_SHUTDOWN);
+-	sk->sk_shutdown = SEND_SHUTDOWN;
++	if (tipc_sk_type_connectionless(sk))
++		sk->sk_shutdown = SHUTDOWN_MASK;
++	else
++		sk->sk_shutdown = SEND_SHUTDOWN;
  
- 	switch (attr->id) {
+ 	if (sk->sk_state == TIPC_DISCONNECTING) {
+ 		/* Discard any unreceived messages */
+ 		__skb_queue_purge(&sk->sk_receive_queue);
+ 
+-		/* Wake up anyone sleeping in poll */
+-		sk->sk_state_change(sk);
+ 		res = 0;
+ 	} else {
+ 		res = -ENOTCONN;
+ 	}
++	/* Wake up anyone sleeping in poll. */
++	sk->sk_state_change(sk);
+ 
+ 	release_sock(sk);
+ 	return res;
 
 
