@@ -2,193 +2,182 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DCBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8E0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F239F22249
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56BA2222B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="xzKaYk8B"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="NhAveaOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725871AbgIKMyr (ORCPT
+        id S1726072AbgIKMzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
+        Fri, 11 Sep 2020 08:55:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgIKMwR (ORCPT
+        with ESMTP id S1726011AbgIKMwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 08:52:17 -0400
-Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316C4C061756;
-        Fri, 11 Sep 2020 05:52:15 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTPSA id 16469140854;
-        Fri, 11 Sep 2020 14:52:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1599828732; bh=FQBrLZyjtqOWsYrOkoBZhbIGm6CcKwNST13WWl6Abic=;
-        h=Date:From:To;
-        b=xzKaYk8B+ogEJa3dLTY0z2qVUOhw/JO4fnzug+rzs2yfm0mNkvc+yDY9WZDdyu7/4
-         S0DvbTsSvc/U6qPT3PeGjxcEAw5lnYnmGpo6IFjF0uwdJVA10cHCzyGeMBnoYurSCY
-         2CLx5hMeVePD6dbE22AYRpHH8KKV1sFCh0rt2HlM=
-Date:   Fri, 11 Sep 2020 14:52:11 +0200
-From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
- for LEDs controlled by Marvell PHYs
-Message-ID: <20200911145211.0bc3942b@dellmb.labs.office.nic.cz>
-In-Reply-To: <3d4dd05f2597c66fb429580095eed91c2b3be76a.camel@ew.tq-group.com>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
-        <20200909162552.11032-7-marek.behun@nic.cz>
-        <20200910122341.GC7907@duo.ucw.cz>
-        <20200910131541.GD3316362@lunn.ch>
-        <20200910161522.3cf3ad63@dellmb.labs.office.nic.cz>
-        <20200910150040.GB3354160@lunn.ch>
-        <3d4dd05f2597c66fb429580095eed91c2b3be76a.camel@ew.tq-group.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7918CC0613ED
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:52:17 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jw11so1666457pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sslab.ics.keio.ac.jp; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JBjfpNNCcSR2lMWRcTwj2x61e5MJUnNyTU2oRJeCo1g=;
+        b=NhAveaOXGgERFl5ZKAud73NbmDI+dThozoPKNkxWvHQ5bB9w4oQAsCV7WHF56spxyM
+         r3yo0OOfZZUURq8/cDZCSBXjtQ3F4SxJhmLHkGyyKTrZWw+GNFPKr3XJuxFS/PGI6o0U
+         iBPVkclSUf3GeXFWPTRuc8PE8xvyULPLxbrYk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JBjfpNNCcSR2lMWRcTwj2x61e5MJUnNyTU2oRJeCo1g=;
+        b=GQDRc7Eguw2iq/kP+Hx4rdmteXDIwwBPW5dV5WF9VWl9/Cm4I0Betv72mKvjtqHQMN
+         /yvE4Uf8XIbRow5ev4TCQWXddXJqgD/yyy1MMs4iS7hK23KAihj4ZAfGuuttVe9pkzer
+         2Rzi+ghlyWmw2qTddNOmoptNAF/ZGEd3lisA0z+DQ+K48UvMtG1io70kjKZ8XZwm4Rp5
+         09EA0ap0UDRlY8KGLWJZp/rgCLj23zZXFYE5R/ucmE+n6Bmk0dkL+1OXE9WQpKaBqK8m
+         dypRduzQcNEk9NHpEY0ZTZ0Or/PUoldnZ9FwbrM6qF4xABmCfq3QIOoWoAxhEWPjwJVv
+         y9yg==
+X-Gm-Message-State: AOAM530VD2XQTwo9db1XKo+meeBbEuDrFUH7y9AP4rY26fH7JXdlWglg
+        IocoAaBDHVdtXBOjPIKic+SN9vPAGUolQqRQpks=
+X-Google-Smtp-Source: ABdhPJyxE06IXjEiMlIdvqyFhkPPd6AGf7OYQAxMt+Shm1MLO4D2RnAX3Pg5Tyn7r0RrhY1jVdobag==
+X-Received: by 2002:a17:90b:d90:: with SMTP id bg16mr2084477pjb.199.1599828736809;
+        Fri, 11 Sep 2020 05:52:16 -0700 (PDT)
+Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
+        by smtp.googlemail.com with ESMTPSA id gg13sm1239543pjb.3.2020.09.11.05.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 05:52:16 -0700 (PDT)
+From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
+        takafumi@sslab.ics.keio.ac.jp,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Yuval Bason <yuval.bason@cavium.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] qedr: fix resource leak in qedr_create_qp
+Date:   Fri, 11 Sep 2020 12:51:59 +0000
+Message-Id: <20200911125159.4577-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <AEYrHjmsd4Sp2R54y55pVL3CXr1KXedoBnTEczCBkpE9+SsFNg@mail.gmail.com>
+References: <AEYrHjmsd4Sp2R54y55pVL3CXr1KXedoBnTEczCBkpE9+SsFNg@mail.gmail.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 09:12:01 +0200
-Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
+When xa_insert() fails, the acquired resource in qedr_create_qp should
+also be freed. However, current implementation does not handle the
+error.
 
-> On Thu, 2020-09-10 at 17:00 +0200, Andrew Lunn wrote:
-> > > I propose that at least these HW modes should be available (and
-> > > documented) for ethernet PHY controlled LEDs:
-> > >   mode to determine link on:
-> > >     - `link`
-> > >   mode for activity (these should blink):
-> > >     - `activity` (both rx and tx), `rx`, `tx`
-> > >   mode for link (on) and activity (blink)
-> > >     - `link/activity`, maybe `link/rx` and `link/tx`
-> > >   mode for every supported speed:
-> > >     - `1Gbps`, `100Mbps`, `10Mbps`, ...
-> > >   mode for every supported cable type:
-> > >     - `copper`, `fiber`, ... (are there others?)  
-> > 
-> > In theory, there is AUI and BNC, but no modern device will have
-> > these.
-> >   
-> > >   mode that allows the user to determine link speed
-> > >     - `speed` (or maybe `linkspeed` ?)
-> > >     - on some Marvell PHYs the speed can be determined by how fast
-> > >       the LED is blinking (ie. 1Gbps blinks with default blinking
-> > >       frequency, 100Mbps with half blinking frequeny of 1Gbps,
-> > > 10Mbps
-> > >       of half blinking frequency of 100Mbps)
-> > >     - on other Marvell PHYs this is instead:
-> > >       1Gpbs blinks 3 times, pause, 3 times, pause, ...
-> > >       100Mpbs blinks 2 times, pause, 2 times, pause, ...
-> > >       10Mpbs blinks 1 time, pause, 1 time, pause, ...
-> > >     - we don't need to differentiate these modes with different
-> > > names,
-> > >       because the important thing is just that this mode allows
-> > > the user to determine the speed from how the LED blinks
-> > >   mode to just force blinking
-> > >     - `blink`
-> > > The nice thing is that all this can be documented and done in
-> > > software
-> > > as well.  
-> > 
-> > Have you checked include/dt-bindings/net/microchip-lan78xx.h and
-> > mscc-phy-vsc8531.h ? If you are defining something generic, we need
-> > to
-> > make sure the majority of PHYs can actually do it. There is no
-> > standardization in this area. I'm sure there is some similarity,
-> > there
-> > is only so many ways you can blink an LED, but i suspect we need a
-> > mixture of standardized modes which we hope most PHYs implement, and
-> > the option to support hardware specific modes.
-> > 
-> >     Andrew  
-> 
-> 
-> FWIW, these are the LED HW trigger modes supported by the TI DP83867
-> PHY:
-> 
-> - Receive Error
-> - Receive Error or Transmit Error
+Fix this by adding a new goto label that calls qedr_free_qp_resources.
 
-Does somebody use this? I would just omit these.
+Fixes: 1212767e23bb ("qedr: Add wrapping generic structure for qpidr and adjust idr routines.")
+Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+---
+changelog(v3): Fix linebreak of the fix tag
+changelog(v2): Change numbered labels to descriptive labels
 
-> - Link established, blink for transmit or receive activity
+ drivers/infiniband/hw/qedr/verbs.c | 52 ++++++++++++++++--------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-`link/activity`
-
-> - Full duplex
-
-Not needed for now, I think.
-
-> - 100/1000BT link established
-> - 10/100BT link established
-
-Disjunctive modes can go f*** themselves :)
-
-> - 10BT link established
-> - 100BT link established
-> - 1000BT link established
-
-`10Mbps`, `100Mbps`, `1Gbps`
-
-> - Collision detected
-
-Not needed for now.
-
-> - Receive activity
-> - Transmit activity
-
-`rx/tx`
-
-> - Receive or Transmit activity
-
-`activity`
-
-> - Link established
-
-`link`
-
-> 
-> AFAIK, the "Link established, blink for transmit or receive activity"
-> is the only trigger that involves blinking; all other modes simply
-> make the LED light up when the condition is met. Setting the output
-> level in software is also possible.
-> 
-> Regarding the option to emulate unsupported HW triggers in software,
-> two questions come to my mind:
-> 
-> - Do all PHYs support manual setting of the LED level, or are the PHYs
-> that can only work with HW triggers?
-> - Is setting PHY registers always efficiently possible, or should SW
-> triggers be avoided in certain cases? I'm thinking about setups like
-> mdio-gpio. I guess this can only become an issue for triggers that
-> blink.
-
-The software trigger do not have to work with the LED connected to the
-PHY. Any other LED on the system can be used. Only the information
-about link and speed must come from the PHY, and kernel does have this
-information already, either by polling or from interrupt.
-
-> 
-> 
-> Kind regards,
-> Matthias
-> 
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index b49bef94637e..3b4c84f67023 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -2112,6 +2112,28 @@ static int qedr_create_kernel_qp(struct qedr_dev *dev,
+ 	return rc;
+ }
+ 
++static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
++				  struct ib_udata *udata)
++{
++	struct qedr_ucontext *ctx =
++		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
++					  ibucontext);
++	int rc;
++
++	if (qp->qp_type != IB_QPT_GSI) {
++		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
++		if (rc)
++			return rc;
++	}
++
++	if (qp->create_type == QEDR_QP_CREATE_USER)
++		qedr_cleanup_user(dev, ctx, qp);
++	else
++		qedr_cleanup_kernel(dev, qp);
++
++	return 0;
++}
++
+ struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
+ 			     struct ib_qp_init_attr *attrs,
+ 			     struct ib_udata *udata)
+@@ -2158,19 +2180,21 @@ struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
+ 		rc = qedr_create_kernel_qp(dev, qp, ibpd, attrs);
+ 
+ 	if (rc)
+-		goto err;
++		goto out_free_qp;
+ 
+ 	qp->ibqp.qp_num = qp->qp_id;
+ 
+ 	if (rdma_protocol_iwarp(&dev->ibdev, 1)) {
+ 		rc = xa_insert(&dev->qps, qp->qp_id, qp, GFP_KERNEL);
+ 		if (rc)
+-			goto err;
++			goto out_free_qp_resources;
+ 	}
+ 
+ 	return &qp->ibqp;
+ 
+-err:
++out_free_qp_resources:
++	qedr_free_qp_resources(dev, qp, udata);
++out_free_qp:
+ 	kfree(qp);
+ 
+ 	return ERR_PTR(-EFAULT);
+@@ -2671,28 +2695,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
+ 	return rc;
+ }
+ 
+-static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
+-				  struct ib_udata *udata)
+-{
+-	struct qedr_ucontext *ctx =
+-		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
+-					  ibucontext);
+-	int rc;
+-
+-	if (qp->qp_type != IB_QPT_GSI) {
+-		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
+-		if (rc)
+-			return rc;
+-	}
+-
+-	if (qp->create_type == QEDR_QP_CREATE_USER)
+-		qedr_cleanup_user(dev, ctx, qp);
+-	else
+-		qedr_cleanup_kernel(dev, qp);
+-
+-	return 0;
+-}
+-
+ int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
+ {
+ 	struct qedr_qp *qp = get_qedr_qp(ibqp);
+-- 
+2.17.1
 
