@@ -2,167 +2,125 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580CEC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB4EF21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="My6Po2Fp"
+	by mail.kernel.org (Postfix) with ESMTP id 30FD420719
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 05:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbgIKFEL (ORCPT
+        id S1725786AbgIKFFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 01:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgIKFEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 01:04:09 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F36AC061573;
-        Thu, 10 Sep 2020 22:04:09 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md22so2126678pjb.0;
-        Thu, 10 Sep 2020 22:04:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yx/Fke02HsLsqjZq568nqGFfeg9NCMSeHqBf+5WYna4=;
-        b=My6Po2Fp0H3kk+XIwNPn/IeW7vpf1VjXcZbND/d8ERdJMluqOgvpZTX/+gmA/hPqSE
-         DO3qYso7L6vS4LuRhEaIJP08uvT6sVon3LI92FfYQIiHfWj3waTggE0B2MzFmoc95kk7
-         P+PdufSwcp69b7JSGVJJsjBdxMiD4V6we9D54khIJm2B4wAEl8HxkScUDygZJLi7tYrc
-         +Ivg1i6eK9ECGXM7zYgXInGTQs2AtbbA4gNdRGd60bfuVXFVTn1zDWOqoZScmwdRXTS2
-         /idRqhh/cHj3tTlZNQ1j8hnxaAM0Wes6ho7zISxL3ZyGP8pXgnUo1IamKOf5t7yPoWB+
-         WrJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yx/Fke02HsLsqjZq568nqGFfeg9NCMSeHqBf+5WYna4=;
-        b=Kg5IyEAe+b+s+PUShREKmq2d88brPYYQoukw7s43voXT2ed2CPtq2PX9iKQ7ZkD3mY
-         EUcQQF16NHk7f0QsSiuPzkK1zAfZWgrl09AnSoaCoN+5SSCgQ/fW+EKOYpVNjlgMVuV2
-         a1dketw1p6A+MyvDZqJ8JTCmssOUTHu2WBEagSxRKVgMskShavzUbbsIAaQGMmDaSswB
-         H5FnaBk5oBfQgXLdqyty3zYzNp21JN83m5UgoCr5JbaSjTCQKQur/gQwbdJ6WaMAK5Vx
-         sxLGcxeuB2rVePMxV/3H6mkLodVaxuJ5HO7h2To7EUPTDWhoScVvTFSjnJnbNAPsfY+a
-         6nug==
-X-Gm-Message-State: AOAM533zNgPCvvfs64W1uFsH4sacjrfNFvzCPBrMzmTX66LrYP39KF8E
-        HJN2Hmf8eRndbw+34QDNJ9s=
-X-Google-Smtp-Source: ABdhPJzgF5vQKW9CktsXhzHxqL5P0NdJS/EhTQeiHwrB2+59n/ANj/ImRscuKpFQ1IFs7X2xt2haZg==
-X-Received: by 2002:a17:90a:67cb:: with SMTP id g11mr638142pjm.56.1599800647227;
-        Thu, 10 Sep 2020 22:04:07 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8800:1c00:54b8:5e43:7f25:9207])
-        by smtp.gmail.com with ESMTPSA id x140sm756153pfc.211.2020.09.10.22.04.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 22:04:06 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH net-next] net/packet: Fix a comment about hard_header_len and add a warning for it
-Date:   Thu, 10 Sep 2020 22:03:59 -0700
-Message-Id: <20200911050359.25042-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 11 Sep 2020 01:05:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32062 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbgIKFFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 01:05:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BnkGq5Rzbz9tynY;
+        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dI0xBi-CVjY0; Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BnkGq2Bbrz9tynX;
+        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DBFAF8B832;
+        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ZU5cwRNYUVST; Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 413958B75E;
+        Fri, 11 Sep 2020 07:05:39 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 0D0E265728; Fri, 11 Sep 2020 05:05:38 +0000 (UTC)
+Message-Id: <8ae4554357da4882612644a74387ae05525b2aaa.1599800716.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc/kasan: Fix CONFIG_KASAN_VMALLOC for 8xx
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 11 Sep 2020 05:05:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch tries to clarify the difference between hard_header_len and
-needed_headroom by fixing an outdated comment and adding a WARN_ON_ONCE
-warning for hard_header_len.
+Before the commit identified below, pages tables allocation was
+performed after the allocation of final shadow area for linear memory.
+But that commit switched the order, leading to page tables being
+already allocated at the time 8xx kasan_init_shadow_8M() is called.
+Due to this, kasan_init_shadow_8M() doesn't map the needed
+shadow entries because there are already page tables.
 
-The difference between hard_header_len and needed_headroom as understood
-by this patch is based on the following reasons:
+kasan_init_shadow_8M() installs huge PMD entries instead of page
+tables. We could at that time free the page tables, but there is no
+point in creating page tables that get freed before being used.
 
-1.
+Only book3s/32 hash needs early allocation of page tables. For other
+variants, we can keep the initial order and create remaining page
+tables after the allocation of final shadow memory for linear mem.
 
-In af_packet.c, the function packet_snd first reserves a headroom of
-length (dev->hard_header_len + dev->needed_headroom).
-Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-which calls dev->header_ops->create, to create the link layer header.
-If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-length (dev->hard_header_len), and checks if the user has provided a
-header sized between (dev->min_header_len) and (dev->hard_header_len)
-(in dev_validate_header).
-This shows the developers of af_packet.c expect hard_header_len to
-be consistent with header_ops.
+Move back the allocation of shadow page tables for
+CONFIG_KASAN_VMALLOC into kasan_init() after the loop which creates
+final shadow memory for linear mem.
 
-2.
-
-In af_packet.c, the function packet_sendmsg_spkt has a FIXME comment.
-That comment states that prepending an LL header internally in a driver
-is considered a bug. I believe this bug can be fixed by setting
-hard_header_len to 0, making the internal header completely invisible
-to af_packet.c (and requesting the headroom in needed_headroom instead).
-
-3.
-
-There is a commit for a WiFi driver:
-commit 9454f7a895b8 ("mwifiex: set needed_headroom, not hard_header_len")
-According to the discussion about it at:
-  https://patchwork.kernel.org/patch/11407493/
-The author tried to set the WiFi driver's hard_header_len to the Ethernet
-header length, and request additional header space internally needed by
-setting needed_headroom.
-This means this usage is already adopted by driver developers.
-
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Fixes: 41ea93cf7ba4 ("powerpc/kasan: Fix shadow pages allocation failure")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- net/packet/af_packet.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/powerpc/mm/kasan/kasan_init_32.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index af6c93ed9fa0..93c89d3b2511 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -93,12 +93,15 @@
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index fb294046e00e..929716ea21e9 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -127,8 +127,7 @@ void __init kasan_mmu_init(void)
+ {
+ 	int ret;
  
- /*
-    Assumptions:
--   - if device has no dev->hard_header routine, it adds and removes ll header
--     inside itself. In this case ll header is invisible outside of device,
--     but higher levels still should reserve dev->hard_header_len.
--     Some devices are enough clever to reallocate skb, when header
--     will not fit to reserved space (tunnel), another ones are silly
--     (PPP).
-+   - If the device has no dev->header_ops, there is no LL header visible
-+     above the device. In this case, its hard_header_len should be 0.
-+     The device may prepend its own header internally. In this case, its
-+     needed_headroom should be set to the space needed for it to add its
-+     internal header.
-+     For example, a WiFi driver pretending to be an Ethernet driver should
-+     set its hard_header_len to be the Ethernet header length, and set its
-+     needed_headroom to be (the real WiFi header length - the fake Ethernet
-+     header length).
-    - packet socket receives packets with pulled ll header,
-      so that SOCK_RAW should push it back.
+-	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE) ||
+-	    IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
++	if (early_mmu_has_feature(MMU_FTR_HPTE_TABLE)) {
+ 		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
  
-@@ -2936,6 +2939,8 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
- 	skb_reset_network_header(skb);
+ 		if (ret)
+@@ -139,11 +138,11 @@ void __init kasan_mmu_init(void)
+ void __init kasan_init(void)
+ {
+ 	struct memblock_region *reg;
++	int ret;
  
- 	err = -EINVAL;
-+	if (!dev->header_ops)
-+		WARN_ON_ONCE(dev->hard_header_len != 0);
- 	if (sock->type == SOCK_DGRAM) {
- 		offset = dev_hard_header(skb, dev, ntohs(proto), addr, NULL, len);
- 		if (unlikely(offset < 0))
+ 	for_each_memblock(memory, reg) {
+ 		phys_addr_t base = reg->base;
+ 		phys_addr_t top = min(base + reg->size, total_lowmem);
+-		int ret;
+ 
+ 		if (base >= top)
+ 			continue;
+@@ -153,6 +152,13 @@ void __init kasan_init(void)
+ 			panic("kasan: kasan_init_region() failed");
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_KASAN_VMALLOC)) {
++		ret = kasan_init_shadow_page_tables(KASAN_SHADOW_START, KASAN_SHADOW_END);
++
++		if (ret)
++			panic("kasan: kasan_init_shadow_page_tables() failed");
++	}
++
+ 	kasan_remap_early_shadow_ro();
+ 
+ 	clear_page(kasan_early_shadow_page);
 -- 
-2.25.1
+2.25.0
 
