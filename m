@@ -2,140 +2,120 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B912C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46F42087C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmK/pO17"
+	by mail.kernel.org (Postfix) with ESMTP id D415C2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbgIKJMk (ORCPT
+        id S1725818AbgIKJNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgIKJMh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:12:37 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA75DC061573;
-        Fri, 11 Sep 2020 02:12:36 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q9so3729329wmj.2;
-        Fri, 11 Sep 2020 02:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iVuZbTVcQSrrVEPpwKsg24X5Ol39bwWfizZYHRTRwPE=;
-        b=GmK/pO173Z7r1u4+xT3311cYlKHzLPAiztBWYn5MYKwfwG0bz/LvKT88CQ/Gh7xb4O
-         IpBKgdHzLrkwpf9kQRsMY1W/Xyl4NF7o5OBZxOx5Tb811QphL1xcxgI2iYkScbk+rgCI
-         Eoxvn2Db6tb7dytYTIlUUpDVu7xxU9DJVeBX3fR2QL3D3bvT88cZQ4Sj+F5y/tH4dtVJ
-         W+1NwmRsa9bLvM9OyoIIElKUmBc+F88awwiIWreR6oTm4y5T6MeIkgheBkwU8KYqdtUY
-         +9pOX4wV7SrpCy/sTJW1fmznzt1vKJii9TKLmV9qAxYZy/WWS6ZfjShGnMC79N08exGt
-         A6yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iVuZbTVcQSrrVEPpwKsg24X5Ol39bwWfizZYHRTRwPE=;
-        b=mfZrH55W7LwobMmpvwDBl47DMJoVnNvb852yJ3wMvELyg4HuxoSZllFZNbpKF/5KRL
-         ae238QF+iHklyVPKd+4VkVGHOzmggsmjE32v5l2ht4f/agHmwp3sAUvAsgz+piYwoY3i
-         HqJEfp/Gf+v0C2a6LEipRkd9f47aAcbfWwDmUSSvxOCa9wMvIbTxHNE2CvcEhRVMfJNC
-         qJ01fLOuP45rFBSGZxaCSI0AgAah+btfF8W62a/uTnwK6kYccVLAs2cgjfiItqi4HnU1
-         LPt2UM30JMmn8IWaHs9cT8i/fSxRtA6VbBEAHwl4AtQpc7hK1Cw5EqvbWToEFN1lSJ64
-         bFUg==
-X-Gm-Message-State: AOAM530mPOktggTeW4eK8obGwrkDVMpbVGXHU0NyM3zuHnJ9DYWlXSfl
-        0WL+SnqxV5bezMQpTaYFiqrkAX4BuAk=
-X-Google-Smtp-Source: ABdhPJx8kfDW9s3wW6bRWmuOFhIdsaM5hLLM9wNa7SZ8j/C8DbkXiAKxqBNiH5lveHMZq6ai7xMY8Q==
-X-Received: by 2002:a1c:2983:: with SMTP id p125mr1201608wmp.21.1599815555072;
-        Fri, 11 Sep 2020 02:12:35 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id i3sm3307338wrs.4.2020.09.11.02.12.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 02:12:34 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 24/24] bpf.2: Add missing headers
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-25-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <eb985a52-1f4e-0c48-9bb0-3ad91646ad2c@gmail.com>
-Date:   Fri, 11 Sep 2020 11:12:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 05:13:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39940 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgIKJMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:12:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 85D8DABEA;
+        Fri, 11 Sep 2020 09:13:08 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 11:12:52 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jan =?iso-8859-1?Q?H=F6ppner?= <hoeppner@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device
+ ?
+Message-ID: <20200911091252.GD7986@dhcp22.suse.cz>
+References: <f14f7f00-0501-bb93-88cc-780ae4fbaad3@intel.com>
+ <3E00A442-7107-48DA-8172-EED95F6E1663@redhat.com>
+ <20200911072035.GC7986@dhcp22.suse.cz>
+ <02cdbf90-b29f-a9ec-c83d-49f2548e3e91@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-25-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02cdbf90-b29f-a9ec-c83d-49f2548e3e91@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> I added some headers to reduce the number of warnings.
-> I found the needed headers by using grep, but maybe some of them
-> shouldn't be included directly.
+On Fri 11-09-20 10:09:07, David Hildenbrand wrote:
+[...]
+> Consider two cases:
 > 
-> The example still has many problems to compile.
+> 1. Hot(un)plugging huge DIMMs: many (not all!) use cases want to
+> online/offline the whole thing. HW can effectively only plug/unplug the
+> whole thing. It makes sense in some (most?) setups to represent one DIMM
+> as one memory block device.
 
-Yes, there are so many problems there, I'm not sure it's really worth
-adding the header files. It increases the impression that this is
-somehow a complete program,  when it's not. I agree this is a bit of
-a mess, but I think it's probably best to leave the example as is.
-As the manual page  says:
+Yes, for the physical hotplug it doesn't really make much sense to me to
+offline portions that the HW cannot hotremove.
 
-       Some  complete working code can be found in the samples/bpf direc‐
-       tory in the kernel source tree.
+> 2. Hot(un)plugging small memory increments. This is mostly the case in
+> virtualized environments - especially hyper-v balloon, xen balloon,
+> virtio-mem and (drumroll) ppc dlpar and s390x standby memory. On PPC,
+> you want at least all (16MB!) memory block devices that can get
+> unplugged again individually ("LMBs") as separate memory blocks. Same on
+> s390x on memory increment size (currently effectively the memory block
+> size).
 
-Thanks,
+Yes I do recognize those usecase even though I will not pretend I
+consider it quesitonable. E.g. any hotplug with a smaller granularity
+than the memory model in Linus allows is just dubious. We simply cannot
+implement that without a lot of wasting and then the question is what is
+the real point.
 
-Michael
+> In summary, larger memory block devices mostly only make sense with
+> DIMMs (and for boot memory in some cases). We will still end up with
+> many memory block devices in other configurations.
+
+And that is fine because the boot time memory is still likely the
+primary source of memory. And reducing memory devices for those is a
+huge improvement already (just think of a multi TB system with
+gazillions pointless memory devices). 
+
+> I do agree that a "disable sysfs" option is interesting - even with
+> memory hotplug (we mostly need a way to configure it and a way to notify
+> kexec-tools about memory hot(un)plug events). I am currently (once
+> again) looking into improving auto-onlining support in the kernel.
 > 
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
-> ---
->  man2/bpf.2 | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/man2/bpf.2 b/man2/bpf.2
-> index b45acde76..d26d6a43d 100644
-> --- a/man2/bpf.2
-> +++ b/man2/bpf.2
-> @@ -981,6 +981,18 @@ ioctl(event_fd, PERF_EVENT_IOC_SET_BPF, prog_fd);
->   * 3. attach prog_fd to raw socket via setsockopt()
->   * 4. print number of received TCP/UDP packets every second
->   */
-> +#include <assert.h>
-> +#include <errno.h>
-> +#include <stddef.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <sys/socket.h>
-> +#include <unistd.h>
-> +#include <linux/bpf.h>
-> +#include <linux/if_ether.h>
-> +#include <linux/in.h>
-> +#include <linux/ip.h>
-> +
->  int
->  main(int argc, char **argv)
->  {
-> 
+> Having that said, I much rather want to see smaller improvements (that
+> can be fine-tuned individually - like allowing variable-sized memory
+> blocks) than doing a switch to "new shiny" and figuring out after a
+> while that we need "new shiny2".
 
+There is only one certainty. Providing a long term interface with ever
+growing (ab)users is a hard target. And shinyN might be needed in the
+end. Who knows. My main point is that the existing interface is hitting
+a wall on usecases which _do_not_care_ about memory hotplug. And that is
+something we should be looking at.
 
+> I consider removing "phys_device" as one of these tunables. The question
+> would be how to make such sysfs changes easy to configure
+> ("-phys_device", "+variable_sized_blocks" ...)
+
+I am with you on that. There are more candidates in memory block
+directories which have dubious value. Deprecation process is a PITA and
+that's why I thought that it would make sense to focus on something that
+we can mis^Wdesign with exising and forming usecases in mind that would
+get rid of all the cruft that we know it doesn't work (removable would
+be another one.
+
+I am definitely not going to insist and I appreciate you are trying to
+clean this up. That is highly appreciated of course.
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Michal Hocko
+SUSE Labs
