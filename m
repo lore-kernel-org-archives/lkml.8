@@ -2,154 +2,178 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C74C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B6C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D48B222276
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AFB222B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Mymmm7eY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EarytBvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725860AbgIKOTL (ORCPT
+        id S1725959AbgIKOVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:19:11 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:9457 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgIKNSx (ORCPT
+        Fri, 11 Sep 2020 10:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgIKNSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:18:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1599830332; x=1631366332;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=JQDnu/cuqWy8rA4yBHOvQdV8XzXS1x+7uiyMAqpaxeU=;
-  b=Mymmm7eYQZvxbnX3oxsCVtkGVMkAcG/ug5j7PZU+K3koU2s7bE0cV4lB
-   arqd+ZLjk+aUojEU7hnB0LSBt8Yc/S5KSm9nkIotnYX9TAH2TY00vW8Q7
-   PVWwyz/TmNRuvvCx5EAfzMRf32NRQmRFvTNxUSb1TmdtY5lL34cWs1C3y
-   sUa0QUXh7ldvZ2waDxSngi6QqiNhPbl3CkUDclN1ursP+nGn8q+c0dC+l
-   khPt4JYJP5i3hYOP8tmBys+S+vRauEcBMV7l4Njb4E0xlE40lcyx+NVNC
-   p/g3eTRuKrc2jluU7ntB0+vOn6Qhy4GV+Dm2DLZifGkEuLalBD48H1/A6
-   Q==;
-IronPort-SDR: 69u4SKX5JGjKmVcsUQsAVXQLFrI69qNKRckhU6eCDPYWGPlNRTU5XDo1QFEuHYP00aQGY6aevZ
- L8DLMur+wXtmEi5uV5FIC9MY1yRXOFdnLJAVbNru1MkcFLHouEEGKoJXIE3Ru/zGP2h0eC2Vam
- gdjMw+PUzV3Ee5aocY4ZegyKkzE/Zx6RByia7ubnnUDo4tlSbeHRRL4S2nwFRc8KM2FjECXR1d
- hsyPIbJVTyzd3Lp51EBYFxIF3ZLmjZuHb4vlG5uQUMorx1HKKpbChl1MihR0UhmWZ9CU2UxDyy
- 1UY=
-X-IronPort-AV: E=Sophos;i="5.76,415,1592895600"; 
-   d="scan'208";a="88733632"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Sep 2020 06:18:50 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 11 Sep 2020 06:18:07 -0700
-Received: from training-HP-280-G1-MT-PC.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 11 Sep 2020 06:18:44 -0700
-From:   Divya Koppera <Divya.Koppera@microchip.com>
-To:     <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <marex@denx.de>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <UNGLinuxDriver@microchip.com>
-Subject: [PATCH v3 net-next] net: phy: mchp: Add support for LAN8814 QUAD PHY
-Date:   Fri, 11 Sep 2020 18:48:44 +0530
-Message-ID: <20200911131844.24371-1-Divya.Koppera@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911061020.22413-1-Divya.Koppera@microchip.com>
-References: <20200911061020.22413-1-Divya.Koppera@microchip.com>
+        Fri, 11 Sep 2020 09:18:15 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABE7C061795
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:07:15 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l17so9834988edq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
+        b=EarytBvwoQep7qd57VxmLST9JhvldbG08X3Nhqjheaj8MGEJpUXQbQdXO9VsM17+03
+         b1qLL2NsHvu9J9xBXIZvZarcrQoDu0q+HllUQxkpUyTsxMId3oXHB1Tn07+fRJ1jFTf8
+         +5jh35x6TyiSpnx7oUljGT0afOX2lXuVBSl4XpEijxq/NGNs1cimpkYYG6C3EEeqHK2G
+         y6OQEZE4nTNaqwyc45DYEJUC/gCELLHgmGL9F+MQmMIvSuaK/TtZRT6Z5yGjJyxMUBTu
+         2w+2PLGV+qbr3yjE73O+TjHkWTlvHPSQrDWJ0TiBY9Z+RJc/v+2HUd2d/hD2asyZCEaS
+         6mpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TgQoed0GxIerQ44x+71MWXYhJbzdbOqc1n5qsFlaJSg=;
+        b=Uo6LnrQp48uw2RuWr2VXWzEfbv1mWhP6NtF+PQC9M/DYCov3f5ilXA1vOO/bK+cRr5
+         ACuxdSUvgmSqxz+YQBh4wThL8NG1oZDQa75I4msCX9j4DuIVXvXc3Uwx3VPiWMtrONzk
+         zK7ayY7iA7d0xuzZelC9s4V/xLooBbBLiaIrBTg/Syl9NaYsWc1biU2+JBc/sRSdz+OJ
+         bpQpJOIV3mZvN9dSlBtwpOqJlzAOt/17N8TCcKM2i8Qjh5YZQdp1e8rKBVGAFfHisK26
+         htZvJLH6C7uI+fSEzDIz/5SAcOXa6M3GPCnqNgfsOpjQZgKnkV7ziZfeUM7lMMN0EirG
+         1+UQ==
+X-Gm-Message-State: AOAM533Uy/L4mPnFOxb/DtLvLhABdYIaJWSiNsFJQVM9hez7MZ/9g+06
+        xJokyMT9kI42aNPxrnXNcozKJUBmExub76kLtdKVlw==
+X-Google-Smtp-Source: ABdhPJy+rDUfCaOK6p6Va0hZoFOBHdUKP5x0jZI7yOtovb7mUCA9QlmaUYaRaxfvgu4qMN52cQ6UDcW0sSJC9puhE3Q=
+X-Received: by 2002:a50:f687:: with SMTP id d7mr1944285edn.353.1599829633051;
+ Fri, 11 Sep 2020 06:07:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+ <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+ <20200907122238.GA1849893@kroah.com> <CAMRc=MexhEbnxCN3aN57k4V-mO-vQL=+8z9QFEzOCPkmn16-XQ@mail.gmail.com>
+ <20200911125625.GF3758477@kroah.com>
+In-Reply-To: <20200911125625.GF3758477@kroah.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 11 Sep 2020 15:07:02 +0200
+Message-ID: <CAMpxmJUd-ALoBi4aC1nsJ7JmEsANe_gZfBegCiZtP6BwPpC52g@mail.gmail.com>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LAN8814 is a low-power, quad-port triple-speed (10BASE-T/100BASETX/1000BASE-T)
-Ethernet physical layer transceiver (PHY). It supports transmission and
-reception of data on standard CAT-5, as well as CAT-5e and CAT-6, unshielded
-twisted pair (UTP) cables.
+On Fri, Sep 11, 2020 at 3:01 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Sep 08, 2020 at 07:03:30PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+> > > > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
+> > > > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > > > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > > > +GPIO Testing Driver
+> > > > > > > > > +===================
+> > > > > > > > > +
+> > > > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > > > > > > > +by the module. The lines can be accessed using the standard GPIO character
+> > > > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > > > > > > > +structure.
+> > > > > > > >
+> > > > > > > > Could configfs be used for this instead of debugfs?
+> > > > > > > > debugfs is ad hoc.
+> > > > > > >
+> > > > > > > Actually sounds like a good idea.
+> > > > > > >
+> > > > > >
+> > > > > > Well, then we can go on and write an entirely new mockup driver
+> > > > > > (ditching module params and dropping any backwards compatibility)
+> > > > > > because we're already using debugfs for line values.
+> > > > > >
+> > > > > > How would we pass the device properties to configfs created GPIO chips
+> > > > > > anyway? Devices seem to only be created using mkdir. Am I missing
+> > > > > > something?
+> > > > >
+> > > > > Same way how USB composite works, no?
+> > > > >
+> > > >
+> > > > OK, so create a new chip directory in configfs, configure it using
+> > > > some defined configfs attributes and then finally instantiate it from
+> > > > sysfs?
+> > > >
+> > > > Makes sense and is probably the right way to go. Now the question is:
+> > > > is it fine to just entirely remove the previous gpio-mockup? Should we
+> > > > keep some backwards compatibility? Should we introduce an entirely new
+> > > > module and have a transition period before removing previous
+> > > > gpio-mockup?
+> > > >
+> > > > Also: this is a testing module so to me debugfs is just fine. Is
+> > > > configfs considered stable ABI like sysfs?
+> > >
+> > > Yes it is.  Or at least until you fix all existing users so that if you
+> > > do change it, no one notices it happening :)
+> > >
+> >
+> > Got it. One more question: the current debugfs interface we're using
+> > in gpio-mockup exists to allow to read current values of GPIO lines in
+> > output mode (check how the user drives dummy lines) and to set their
+> > simulated pull-up/pull-down resistors (what values the user reads in
+> > input mode).
+> >
+> > This works like this: in /sys/kernel/debug/gpio-mockup every dummy
+> > chip creates its own directory (e.g.
+> > /sys/kernel/debug/gpio-mockup/gpiochip0) and inside this directory
+> > there's an attribute per line named after the line's offset (e.g.
+> > /sys/kernel/debug/gpio-mockup/gpiochip0/4). Writing 0 or 1 to this
+> > attribute sets the pull resistor. Reading from it yields the current
+> > value (0 or 1 as well).
+> >
+> > This is pretty non-standard so I proposed to put it in debugfs. If we
+> > were to use configfs - is this where something like this should go? Or
+> > rather sysfs? Is it even suitable/acceptable for sysfs?
+>
+> That sounds like it would work in sysfs just fine as-is, why don't you
+> all want to use that?  configfs is good for "set a bunch of attributes
+> to different values and then do a 'create/go/work'" type action.
+>
 
-LAN8814 supports industry-standard QSGMII (Quad Serial Gigabit Media
-Independent Interface) and Q-USGMII (Quad Universal Serial Gigabit Media
-Independent Interface) providing chip-to-chip connection to four Gigabit
-Ethernet MACs using a single serialized link (differential pair) in each
-direction.
+I've started looking into it. I need to first implement committable
+items for configfs because mockup GPIO chips need to be configured
+before they're instantiated. It'll be configfs to configure and
+instantiate each chip and a set of sysfs attributes to manipulate
+existing chips.
 
-The LAN8814 SKU supports high-accuracy timestamping functions to
-support IEEE-1588 solutions using Microchip Ethernet switches, as well as
-customer solutions based on SoCs and FPGAs.
-
-The LAN8804 SKU has same features as that of LAN8814 SKU except that it does
-not support 1588, SyncE, or Q-USGMII with PCH/MCH.
-
-This adds support for 10BASE-T, 100BASE-TX, and 1000BASE-T,
-QSGMII link with the MAC.
-
-Signed-off-by: Divya Koppera<divya.koppera@microchip.com>
----
-v1 -> v2:
-* Removing get_features and config_init as the Errata mentioned and other
-  functionality related things are not applicable for this phy.
-  Addressed review comments.
----
-v2 -> v3:
-* As v2 contains only diff of v1 and v2, correcting mistake and sending
-  whole patch with addressed comments in v2.
----
- drivers/net/phy/micrel.c   | 14 ++++++++++++++
- include/linux/micrel_phy.h |  1 +
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 3fe552675dd2..a7f74b3b97af 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1314,6 +1314,19 @@ static struct phy_driver ksphy_driver[] = {
- 	.get_stats	= kszphy_get_stats,
- 	.suspend	= genphy_suspend,
- 	.resume		= kszphy_resume,
-+}, {
-+	.phy_id		= PHY_ID_LAN8814,
-+	.phy_id_mask	= MICREL_PHY_ID_MASK,
-+	.name		= "Microchip INDY Gigabit Quad PHY",
-+	.driver_data	= &ksz9021_type,
-+	.probe		= kszphy_probe,
-+	.soft_reset	= genphy_soft_reset,
-+	.read_status	= ksz9031_read_status,
-+	.get_sset_count	= kszphy_get_sset_count,
-+	.get_strings	= kszphy_get_strings,
-+	.get_stats	= kszphy_get_stats,
-+	.suspend	= genphy_suspend,
-+	.resume		= kszphy_resume,
- }, {
- 	.phy_id		= PHY_ID_KSZ9131,
- 	.phy_id_mask	= MICREL_PHY_ID_MASK,
-@@ -1387,6 +1400,7 @@ static struct mdio_device_id __maybe_unused micrel_tbl[] = {
- 	{ PHY_ID_KSZ8081, MICREL_PHY_ID_MASK },
- 	{ PHY_ID_KSZ8873MLL, MICREL_PHY_ID_MASK },
- 	{ PHY_ID_KSZ886X, MICREL_PHY_ID_MASK },
-+	{ PHY_ID_LAN8814, MICREL_PHY_ID_MASK },
- 	{ }
- };
- 
-diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
-index 75f880c25bb8..416ee6dd2574 100644
---- a/include/linux/micrel_phy.h
-+++ b/include/linux/micrel_phy.h
-@@ -27,6 +27,7 @@
- #define PHY_ID_KSZ8061		0x00221570
- #define PHY_ID_KSZ9031		0x00221620
- #define PHY_ID_KSZ9131		0x00221640
-+#define PHY_ID_LAN8814		0x00221660
- 
- #define PHY_ID_KSZ886X		0x00221430
- #define PHY_ID_KSZ8863		0x00221435
--- 
-2.17.1
-
+Bartosz
