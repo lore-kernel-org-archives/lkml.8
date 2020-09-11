@@ -2,73 +2,83 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C63C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD56C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B87F2221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EEF221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841604;
-	bh=KF+SM6aIBn3OyO0eNQnwwx03nzA7TACIYZpv2J3yp9U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=t77T6md9zNAdqkM1QvzoA+wmFvaxxPfu68Bhfk2YmEnYAkuC4je2b0Hcp7FMoaN/J
-	 6QQ3n5Q0j7Knb3FNAcTltADbLb6VQwDVffEYAp6gs2u7v4sX8wlEWNBG/8t30Hf9S5
-	 66QGzJBpOQjCvOnvjy0IP7AN2OAnsBVtpIRI08nY=
+	s=default; t=1599841610;
+	bh=BKLdy4IRivTz8mf+Py2iEA2QbIQ46WCjrnO5DWhj2/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jMPfhRSWb1dl+p4ltn5SAAESr7gLG/2yxNSbxJdlfOgx4kOmz5UNuLwPrfIwxxIgu
+	 Y/RfS5qmo2kEHZl6xfBikDlJxWWCmGOuL6WATh6ConVYAWMJhR+UZn2DICKSi+6QDd
+	 84pctK1ynRlHbfaxY70r3QxoicY3xCBfIbOf2Ngo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgIKQ0h (ORCPT
+        id S1726214AbgIKQ0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgIKPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:22:38 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        id S1726465AbgIKPWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:22:31 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9045207FB;
-        Fri, 11 Sep 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208ED2076C;
+        Fri, 11 Sep 2020 15:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599837758;
-        bh=KF+SM6aIBn3OyO0eNQnwwx03nzA7TACIYZpv2J3yp9U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hL7tU/I7nOYzJMA3X+i0rXaLApWXobE3+fvOXtf3FWFs6x5uOh1ldSI2Nn3622sqO
-         qbeRDbQxp0x5TTrJlufODjVjBx/z3ROjAU5LyPyg6emXJms11cAxZNOHgrm1520xiM
-         vZEIm5Pmnpkw3KeaX9FCl3fKGAEmxbXcm4TLbx+s=
-Date:   Fri, 11 Sep 2020 08:22:36 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        David Miller <davem@davemloft.net>, andrew@lunn.ch,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net-next] net: mvpp2: Initialize link in
- mvpp2_isr_handle_{xlg,gmac_internal}
-Message-ID: <20200911082236.7dfb7937@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200911111158.GF1551@shell.armlinux.org.uk>
-References: <20200910174826.511423-1-natechancellor@gmail.com>
-        <20200910.152811.210183159970625640.davem@davemloft.net>
-        <20200911003142.GA2469103@ubuntu-n2-xlarge-x86>
-        <20200911111158.GF1551@shell.armlinux.org.uk>
+        s=default; t=1599837751;
+        bh=BKLdy4IRivTz8mf+Py2iEA2QbIQ46WCjrnO5DWhj2/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZaScDjksZQfTvPPFWBLq3BHa2J7z1whP1167eiKIIuOZMaV0yYLKTKe7aKsaLt1Nw
+         qhddBbhj3e4ZqsKizZZtgyq0I+ERl0AY6xVuYBvOX3ElN3S8vJuWRBnrBgih8Jf7p9
+         AAoowWlIZ+c9KM+5aJ8eie4bNrKHofd2gmiLhLZs=
+Date:   Fri, 11 Sep 2020 16:22:25 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        clang-built-linux@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] kbuild: remove cc-option test of -fno-strict-overflow
+Message-ID: <20200911152225.GB20374@willie-the-truck>
+References: <20200910135120.3527468-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910135120.3527468-1-masahiroy@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 12:11:58 +0100 Russell King - ARM Linux admin wrote:
-> On Thu, Sep 10, 2020 at 05:31:42PM -0700, Nathan Chancellor wrote:
-> > Ah great, that is indeed cleaner, thank you for letting me know!  
+On Thu, Sep 10, 2020 at 10:51:17PM +0900, Masahiro Yamada wrote:
+> The minimal compiler versions, GCC 4.9 and Clang 10 support this flag.
 > 
-> Hmm, I'm not sure why gcc didn't find that. Strangely, the 0-day bot
-> seems to have only picked up on it with clang, not gcc.
+> Here is the godbolt:
+> https://godbolt.org/z/odq8h9
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Makefile                          | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-May be similar to: https://lkml.org/lkml/2019/2/25/1092
+This, and the other patch (4/4 -- I didn't see 2 or 3), look good to me.
+Are you taking them via the kbuild tree, or shall I queue them in the arm64
+tree? Please just let me know what you prefer.
 
-Recent GCC is so bad at catching uninitialized vars I was considering
-build testing with GCC8 :/
+Will
