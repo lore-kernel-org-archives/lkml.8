@@ -4,146 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68D0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A631C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9863B2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7AF207EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pSCpWroG"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="jmffmps7";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UiNFEODb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgIKHpb (ORCPT
+        id S1725791AbgIKHpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:45:31 -0400
-Received: from mail-eopbgr80089.outbound.protection.outlook.com ([40.107.8.89]:51684
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725535AbgIKHpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:45:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CdeBdlarMKYzcATVklsxUdfnKzjW835pQk8yLbMs038HXr0qeHnwVpVUO4UQAblhGupBQB4czS5T5JHZ3YlT2E+JOeIL+TZmvpu+0kIqPK6wIebG7zonOhIejDZIPzRGZRjQ2INuINqjUg21UCmZqAydiVgeTi8zChWaZSf+rYvbwycayPxkete8qEv+Cj11YriKljPH3z3pM2w8oVDvhpwRSsfCH8Oga+rpHNGHn22MsdWRjIyZibVWJrmppsJpJ9gAizD9yU/v4Q++DyaUs5T7imU/R8pL6JFV+O0CqyKb98GS7JKLpY6Kpk0yG8w1T+QXcFZ3dYlTRpcwcvFcUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VrzzF3d+naNcoCH+2mA4QgpgFoHst4/YYWYJKkPK12Y=;
- b=BFyFdFEZINdhaYxi1H6UDQNtftb+IpXZqXVGKsxj42VchCBfbXhhFUZo/mlzfSQnEZyNvx4CuQCKa9ViLjcfVHXz+1pv4m9M3X2pGGwtwyaBoKffDTEAP6GJujERnJgyR3ZJ0xanxkwDkOg5fulX5q7WiPCyN5zPGZsVl/3nU6OohC0l3P8ifsDhMfqb1DfwbxlzoeVQ9JJ79gqPBOGymxp3ilivfRlTpGuyBq5pAcT8yVkUFHEKoB9c9Xm0fpoUNgk91u+msMW44fXS+cQe5dxApvCc8309SouVO1OU7fsH+Q8SaTVNM3W2uhEUQbN7FPX7fYmQnYPeUcedIoe92g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VrzzF3d+naNcoCH+2mA4QgpgFoHst4/YYWYJKkPK12Y=;
- b=pSCpWroGZUiVeSQKygQO5VwNgO2XBgWY+QUuJvcHdHUiTLtNlBkQ1hoALlTpBXZAkp3juVx3OYZvyd+30TSnnUnN4nMhnk3SmYS+bQvG7OebqQPYqR7eQlcHxlVTV58gMpTfVdlfcL3W3Wr9OgkTRYR8mOqU/aeW+n6K4at1gEM=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB7PR04MB5081.eurprd04.prod.outlook.com (2603:10a6:10:23::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Fri, 11 Sep
- 2020 07:45:20 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3348.019; Fri, 11 Sep
- 2020 07:45:20 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Topic: [PATCH 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Thread-Index: AQHWh+zixFG3ZA2vEE+pWR2QJLTxVqljCBCAgAAGg4A=
-Date:   Fri, 11 Sep 2020 07:45:20 +0000
-Message-ID: <DB6PR0402MB276056780BC661041A5D604C88240@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1599795053-5091-1-git-send-email-peng.fan@nxp.com>
- <1599795053-5091-2-git-send-email-peng.fan@nxp.com>
- <AM6PR04MB49661958310D649508AB698B80240@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB49661958310D649508AB698B80240@AM6PR04MB4966.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [58.208.208.184]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4f53e0e8-5b38-473a-ae70-08d85626a256
-x-ms-traffictypediagnostic: DB7PR04MB5081:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5081CD1CB4DB63FB2D81016588240@DB7PR04MB5081.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0x3MkZYE4xd4vfFoKSdK01d6LPSM3FYLzwUQW8zE9xZkTv6TEjz+vmXnHqnZW8M1FrJ2NENaCKJrYkm9OTNquEWFIDSahqSFzauhJ1JzTXk2I0HKl5Vk3AaWcG08NaU+Dyt/cG0728dkgjNmJbnZEMh59gsNPPLhyEZqF4PajRInY+ob7kdndCOFRWz6oFMBuTC6VGj9FhWjFnDAutkkA6vhFBvlfmd+9oesrV8swFp+C2revDb9wTEd3PbDe+NTTk5xqWYlThE3Z0qFu2JulyiEOZKzBNLFT3NyLbHeOfT0Lt1Izj3FZwYCwwzK9gQ5gmYRDfTWQ9jPNeXDJLyKH08r2np88/uDWB14BmZ+Rxhuefr3mWUHyrngBJKzpEWxoHvgAdpNKoXrq7Wv0EHgLg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(5660300002)(110136005)(8676002)(6506007)(8936002)(55016002)(71200400001)(9686003)(2906002)(316002)(478600001)(52536014)(54906003)(4326008)(966005)(86362001)(66946007)(44832011)(7696005)(76116006)(66556008)(64756008)(33656002)(66476007)(186003)(26005)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: M4pHqmbqdqDj0ybLJpX8lyJWjJIFQEVxuBO0KuSS3H2nvBbPRuBhdeKPd1y8TVvzmQpIiAQcWfWZGrL5gcvx9hNdJaGg+qg+omGM1DJ1RCb+mnB0lwYLFmsylAIE4og/31MTYVPIi8aZzY5LExWzR07QdKdt116bFUuIIsBNlq2lVcgJ+V5onOose94SYsGo3lpHqT/m5VTj/g8OQcWCtsN0/1UFZhCsTTcNMJlFbatqEAMW/YPCYf3DRRnZqLP+fXy7SavXKnBpZuaRoCiuCuV10z7He92GUSy2ChjGCXutkXeP/e4RSKxqCzAxvQxZ3gi9cuY8pzat2d2eQ77l2j4PtkmNJE9YH2lfB4rH+96p6gZBiOf++H7eOlmSIKmSlQqhdSn0ZAefJvCbFVl0Myzb2o6Rm5Zl8h5/VxSbiUeljvwW3PItF7HgGjpKDFY0AX59JHlgDxBniPAax/3zTn2ih8IlStTaJmldQF+Wtk8TXuBf5BttID6cb/qbviU1ZdYW7HWOxfvvwv4KqdD9mvL9QLLaVYR/F2dBR+KjJTBVmk26hRFTCVUKnkC8Q7C1tJdd5ZJ0Df8WBMz6Uask/pBTuaxPHBFIypL2EkXIj76bE4J4pCICTgrlKW+UsID1zmP9PkwC1mH+2fWB9ftJew==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 11 Sep 2020 03:45:41 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:60023 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725770AbgIKHpc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:45:32 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 6DA1DBC0;
+        Fri, 11 Sep 2020 03:45:30 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Fri, 11 Sep 2020 03:45:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=SE+c5Ec9tZ0o7WH4oDqfgPX1fR
+        ZYUDQNxW5WDSo9INY=; b=jmffmps7wsSVCCG8FL+UdZ9lEAtqfDVctpedmD+9Ap
+        xkbk9ZdA5tuBxIoHRnB6NmX3trLOEk3CR5KGsbvPLRqHLvRipGcTcSMxIuRCdoKG
+        hULFWZr8nyVN178yE20z2fWzxU20nGdCLQ8peAVZ8hZrvnWXeFzLz3fuxpPialz3
+        ttlHf6ogbr9ZU6yCjnaH0BHQgw2iFTL719+lTPrA5wf9OOnUy1RVEMEigzg4BJmc
+        fcKm58kkP30+NsH1vrvoHT94lAhEMaVrvIDFrFh34TdukYm66jGRA5iF1o/RDzlC
+        g/pYO4FGo3xgU8KnIz235x0oec9v548j6rSnrSfdT/vg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=SE+c5Ec9tZ0o7WH4o
+        DqfgPX1fRZYUDQNxW5WDSo9INY=; b=UiNFEODbff4YEHfYKixcS7vIcDNtGEArp
+        M198mrzrKtceR7vl/vK0/BjS/9Sva9mmlKWCdVttqvgLlNxJf5ru3ryHNyXxmnYV
+        1S8Hp9w8RIDfk3UVycUhoWfUsvcOpXiu9wkh44reHmrm2Dpsz4LXA4tr3RUoP5uj
+        Cy9MtjzASgGogcUoz+ZEKHTMM2jC/mE1FM40Jns0Loy7GT9SS+1lnLcBQXTLJLOO
+        e7D5+skNUfLqAOeK4OMZFyzWxQsFmvaUIQT6aDRIp8UsrDanrayr5lhQqhaeQy12
+        uFfyqgfcTp02gXO82LLnzedrl674uua5cr/WsEEmSdY6MbDj/XeoA==
+X-ME-Sender: <xms:GCtbX__OrXUKKiRSF-DRk30q2IUQj2d45A_OsYg59tmKrDKUuA6OdQ>
+    <xme:GCtbX7tYBIDaH6kxug4FZdpvwScwcQE8WlbMWbWRIR8E7YVh0flxO3M6eFbEYEmQb
+    mSK5RerOImPHDZ6RA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
+    rdhiugdrrghuqeenucggtffrrghtthgvrhhnpeeiteehudevlefhvddvjeeluefhleetve
+    ehfffgiedtfeegkeejfeeivefgheehgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhg
+    necukfhppedugedrvddruddtledrkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:GCtbX9AhVlcMvLyuRXIAR8qY933DluGxDzLcTjwqHCXDhEO1O5JOLw>
+    <xmx:GCtbX7exsGLjATbuPwVi6weoKKWmFbLY-Mbpy-2uFqqugaEacLeUHg>
+    <xmx:GCtbX0PZ3Yd_rS6_AnnCnKce8PfUgnZNtQNCK5nqr6gJ6rlGfGDp-g>
+    <xmx:GitbXxrod3ANFoj_2jH4Mty0nKjwTig8OFaAIDULCLNAmgSUzYPVJw>
+Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 34ED83064682;
+        Fri, 11 Sep 2020 03:45:25 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-mmc@vger.kernel.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] mmc: sdhci-of-aspeed: Expose phase delay tuning
+Date:   Fri, 11 Sep 2020 17:14:49 +0930
+Message-Id: <20200911074452.3148259-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f53e0e8-5b38-473a-ae70-08d85626a256
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2020 07:45:20.3821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IJX/tWHkApqWC1Ktqo59TQnK9ZwRxW2zCCPf2ONK8Z4kbNSrRvT+jfYds6Q4SXz01PzaYW6RCHkYvwYWznuIBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5081
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSRTogW1BBVENIIDEvNF0gZHQtYmluZGluZ3M6IGZzbDogYWRkIGkuTVg3VUxQ
-IFBNQyBiaW5kaW5nIGRvYw0KPiANCj4gPiBGcm9tOiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNv
-bT4NCj4gPiBTZW50OiBGcmlkYXksIFNlcHRlbWJlciAxMSwgMjAyMCAxMTozMSBBTQ0KPiA+DQo+
-ID4gQWRkIGkuTVg3VUxQIFBvd2VyIE1hbmFnZW1lbnQgQ29udHJvbGxlciBiaW5kaW5nIGRvYw0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4g
-LS0tDQo+ID4gIC4uLi9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2lteDd1bHAtcG1jLnlhbWwgICB8
-IDMzDQo+ICsrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMzIGluc2Vy
-dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUvaW14N3VscC1wbWMueWFtbA0KPiANCj4gSSB3
-b25kZXIgaWYgd2UgY2FuIG1lcmdlIGl0IGludG8gdGhlIGV4aXN0IGlteDd1bHAgcG0gYmluZGlu
-ZyBkb2MuDQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
-L2ZzbCxpbXg3dWxwLXBtLnlhbWwNCg0KTm90IHN1cmUgYWJvdXQgdGhpcy4NCg0KPiANCj4gPg0K
-PiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vZnJlZXNjYWxlL2lteDd1bHAtcG1jLnlhbWwNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2lteDd1bHAtcG1jLnlhbWwNCj4gPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMzNhMzFkODdkZDYyDQo+ID4g
-LS0tIC9kZXYvbnVsbA0KPiA+ICsrKw0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9hcm0vZnJlZXNjYWxlL2lteDd1bHAtcG1jLnlhbWwNCj4gPiBAQCAtMCwwICsxLDMzIEBA
-DQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArJVlBTUwgMS4y
-DQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2FybS9m
-cmVlc2NhbGUvaW14N3VscC1wbWMueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2RldmljZXRy
-ZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogaS5NWDdV
-TFAgUG93ZXIgTWFuYWdlbWVudCBDb250cm9sbGVyKFBNQykgRGV2aWNlIFRyZWUgQmluZGluZ3MN
-Cj4gPiArDQo+ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gUGVuZyBGYW4gPHBlbmcuZmFuQG54
-cC5jb20+DQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6DQo+ID4g
-KyAgICBpdGVtczoNCj4gPiArICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgLSBmc2wsaW14
-N3VscC1wbWMtbTQNCj4gPiArICAgICAgICAgIC0gZnNsLGlteDd1bHAtcG1jLWE3DQo+IA0KPiBD
-YW4gd2UgY2hhbmdlIHRvIHRoZSBleGlzdCBuYW1pbmcgcGF0dGVybiB3aGljaCBhbHNvIGFsaWdu
-IHdpdGggSFcNCj4gcmVmZXJlbmNlIG1hbnVhbD8NCj4gZS5nLg0KPiBmc2wsaW14N3VscC1wbWMw
-DQo+IGZzbCxpbXg3dWxwLXBtYzENCg0KVGhpcyB3YXMgcmVqZWN0ZWQgYnkgU2hhd24gYmVmb3Jl
-Lg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTM5MDU5MS8NCg0KVGhhbmtz
-LA0KUGVuZy4NCg0KPiANCj4gQWxpZ25lZCB3aXRoOg0KPiBmc2wsaW14N3VscC1zbWMxDQo+IGZz
-bCxpbXg3dWxwLXBjYzINCj4gZnNsLGlteDd1bHAtc2NnMQ0KPiANCj4gUmVnYXJkcw0KPiBBaXNo
-ZW5nDQo+IA0KPiA+ICsNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsN
-Cj4gPiArcmVxdWlyZWQ6DQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiAr
-DQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6
-DQo+ID4gKyAgLSB8DQo+ID4gKyAgICBwbWMwOiBwbWMtbTRANDEwYTEwMDAgew0KPiA+ICsgICAg
-ICAgIGNvbXBhdGlibGUgPSAiZnNsLGlteDd1bHAtcG1jLW00IjsNCj4gPiArICAgICAgICByZWcg
-PSA8MHg0MTBhMTAwMCAweDEwMDA+Ow0KPiA+ICsgICAgfTsNCj4gPiAtLQ0KPiA+IDIuMjguMA0K
-DQo=
+Hello,
+
+This series exposes some devicetree properties for tuning phase delay in the
+Aspeed SD/eMMC controllers. The relevant register was introduced on the AST2600
+and is present for both the SD/MMC controller and the dedicated eMMC
+controller.
+
+v2 addresses comments from Joel.
+
+v1 can be found here:
+
+https://lore.kernel.org/linux-arm-kernel/20200910105440.3087723-1-andrew@aj.id.au/T/
+
+Please review!
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (3):
+  dt: bindings: mmc: Add phase control properties for the Aspeed SDHCI
+  mmc: sdhci-of-aspeed: Expose data sample phase delay tuning
+  ARM: dts: tacoma: Add data sample phase delay for eMMC
+
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml |   8 ++
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts   |   2 +
+ drivers/mmc/host/sdhci-of-aspeed.c            | 126 +++++++++++++++++-
+ 3 files changed, 131 insertions(+), 5 deletions(-)
+
+-- 
+2.25.1
+
