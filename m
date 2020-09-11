@@ -2,110 +2,92 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC19C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B132078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3331B2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iGvEp914"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EWe/07fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725824AbgIKJzl (ORCPT
+        id S1725833AbgIKJ43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:55:41 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:46380 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKJzj (ORCPT
+        Fri, 11 Sep 2020 05:56:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31114 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725780AbgIKJ4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:55:39 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08B9taOF078280;
-        Fri, 11 Sep 2020 04:55:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599818136;
-        bh=EL/ugUURzoqjPlTdtI85LUJCZ1gCXjj2E4KpF58WNMQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iGvEp914lBXMTuuLMvZ3c25Q4zypC6hJCm+SZERu/iSt4bjSkFH5VJ6pyHQtRM1c2
-         9AFEoRRBUWlJtOgH1CjJ/l12s04lYzZqetiVaWeQfwqmYiw3S5NIc7Vh0Ww9GEcTMo
-         MVoiHCCC2KZbBSNP1idOyvp55VIkBhssUFK+wcK4=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08B9ta1Z024865
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Sep 2020 04:55:36 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 11
- Sep 2020 04:55:35 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 11 Sep 2020 04:55:35 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08B9tXbp111244;
-        Fri, 11 Sep 2020 04:55:34 -0500
-Subject: Re: [PATCH next 0/3] ARM: dts: am437x: switch to new cpsw switch drv
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-References: <20200910222508.32417-1-grygorii.strashko@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <c0417a06-4e81-b795-b7c0-9b4bfc046e6d@ti.com>
-Date:   Fri, 11 Sep 2020 12:55:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 05:56:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599818184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NfohgZAXCNl+PKanfBorLKxCJJnZ1k32hZXabUGOmhw=;
+        b=EWe/07for5I4ZXh55uiUXxsgLoKO8iuu51okJF83gBQW0GBTyXG+P3cCCt7iLwDvc/wmSa
+        oVdDuV8FSITh5Dq5Dlqe7EByhSOtL3MLjzLgCjQ+T8cYswTa6JKmu3P39Eb47mIMLAXmku
+        01AksNeL6lmc/iND5pRgg6VsW2uS4pE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-mpMRDpoCN86U_l1UVexmDA-1; Fri, 11 Sep 2020 05:56:22 -0400
+X-MC-Unique: mpMRDpoCN86U_l1UVexmDA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E119D81E20C;
+        Fri, 11 Sep 2020 09:56:20 +0000 (UTC)
+Received: from gondolin (ovpn-112-170.ams2.redhat.com [10.36.112.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B52135DA74;
+        Fri, 11 Sep 2020 09:55:48 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 11:55:45 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex.williamson@redhat.com>, <kwankhede@nvidia.com>,
+        <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH] vfio: Fix typo of the device_state
+Message-ID: <20200911115545.5161fa46.cohuck@redhat.com>
+In-Reply-To: <20200910122508.705-1-yuzenghui@huawei.com>
+References: <20200910122508.705-1-yuzenghui@huawei.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200910222508.32417-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 10 Sep 2020 20:25:08 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
 
+> A typo fix ("_RUNNNG" => "_RUNNING") in comment block of the uapi header.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  include/uapi/linux/vfio.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 920470502329..d4bd39e124bf 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -462,7 +462,7 @@ struct vfio_region_gfx_edid {
+>   * 5. Resumed
+>   *                  |--------->|
+>   *
+> - * 0. Default state of VFIO device is _RUNNNG when the user application starts.
+> + * 0. Default state of VFIO device is _RUNNING when the user application starts.
+>   * 1. During normal shutdown of the user application, the user application may
+>   *    optionally change the VFIO device state from _RUNNING to _STOP. This
+>   *    transition is optional. The vendor driver must support this transition but
 
-On 11/09/2020 01:25, Grygorii Strashko wrote:
-> Hi Tony,
-> 
-> Since Kernel v5.5 commits:
->   111cf1ab4da3 ("net: ethernet: ti: introduce cpsw switchdev based driver part 2 - switch")
->   ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-> the new CPSW driver with switchdev support has been introduced and one
-> am571x-idk board was converted to use it. And since that time (Nov 2019) no
-> significant issues were reported for the new CPSW driver.
-> 
-> Therefore it's time to switch all am437x boards to use new cpsw switch
-> driver. Those boards have 1 or 2 Ext. ports wired and configured in dual_mac mode
-> by default. The dual_mac mode has been preserved the same way between
-> legacy and new driver, and one port devices works the same as 1 dual_mac port,
-> so it's safe to switch drivers.
-> 
-> Grygorii Strashko (3):
->    ARM: dts: am437x-l4: add dt node for new cpsw switchdev driver
->    ARM: dts: am437x: switch to new cpsw switch drv
->    ARM: dts: am437x-l4: drop legacy cpsw dt node
-> 
->   arch/arm/boot/dts/am4372.dtsi        |  4 +-
->   arch/arm/boot/dts/am437x-cm-t43.dts  | 14 +++--
->   arch/arm/boot/dts/am437x-gp-evm.dts  | 13 +++--
->   arch/arm/boot/dts/am437x-idk-evm.dts | 13 +++--
->   arch/arm/boot/dts/am437x-l4.dtsi     | 77 +++++++++++++++-------------
->   arch/arm/boot/dts/am437x-sk-evm.dts  | 14 +++--
->   arch/arm/boot/dts/am43x-epos-evm.dts | 13 +++--
->   7 files changed, 78 insertions(+), 70 deletions(-)
-> 
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-Pls, ignore this mail - double send.
-
--- 
-Best regards,
-grygorii
