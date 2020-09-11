@@ -2,248 +2,206 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B63EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E1620731
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:47:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oMdmCnlt"
+	by mail.kernel.org (Postfix) with ESMTP id B965F22275
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599832134;
+	bh=UoDf2Uwl0Yq8QLtFZRUy0JZ7qxXffEpxG3NsTmdAtDo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nPvekuLy7yoOiSGY4Yp9y5DEjwwlimPkRTygjayEpbVFY2ZwInv4AuDMRTx1mfzAm
+	 sH+GoVA8VzIfHyqwE/My6HMGgh/hQ2GBPWHDWv5MGouhJWZHsX3ShdvayknDE6NcWo
+	 AXyL+gBJ+L0A4vaDdbN9SbDZnYC6bt15CNi2IfO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgIKNr1 (ORCPT
+        id S1726202AbgIKNsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgIKNRk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:17:40 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB992C06179B
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:10:00 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id t20so7732651qtr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cdR3w46F1Dqn8ODmMx+KwCNXsWHRoDripL6i3lIvacY=;
-        b=oMdmCnlt8lmmyeZ8HZF4hvSetFh4a/FGX7F9pYyQ0c4gKFLo18nZDhm0+bAqRxIM/6
-         ac3TUcHIJpWRenNDkVebVbxd7/wFZsrFNWOS1zZfVrCySAP+MPwpWFnU6qkiWjnmvnmZ
-         4DYq3smX4xOVQXyPeDAi0/RHf1rMdmIYSslwPh4QlJV4tPfzaxn1ikgXolTzHS615PIo
-         Q7BQwm4rQwR4v5WTkQ5bARgzbATuOOolcVe9PLwyjJImInoD6yBMqNA9dm2Ez4yistRa
-         znZGesjvYnDJlsP9GCJr5FXeEJ+PMIuTEs/KE7/bKs6hW9SU+uRwXtBXuVMYVJ7dayPA
-         tK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cdR3w46F1Dqn8ODmMx+KwCNXsWHRoDripL6i3lIvacY=;
-        b=o90NdL6FyYFY3zX5scTRthTTrr7TCpTwYdeqpMxsRDNHn4wdSQOOFxISCjUY1TYk/A
-         p7jq29rIJV2QJZo/uDhAnh8VYMycDWb+pqeYc5IVCFOaIGeAtSCG/lMQR/jKifRFrjle
-         5uOWgwumi1sDRXGYCHvBfIQhYBUj67rwTURXGnFlbzQkGAJKQ1fLiJbXMnhUxQJPLpz8
-         oYEXfoQBc7LZY8i5hdY8reHoCOds13O8I5IkD3BA27hA566Ie3tj2fBNmOMn34y82oR8
-         XWF1iZXcpM3Ip3H2CbL/elXFPlFIu2cLrQXV6Yxx+hdGAi61MjFyoWigPTr7gB5Yg8+J
-         lPjg==
-X-Gm-Message-State: AOAM530AtWVBY7v4o5CSVJzN/nDI7e5MRNWvWr9NBds4aiaWTaSq+PSD
-        FfLUr9eXPZX5w62F91dwDtjchizIDBdZBXjoQWCxag==
-X-Google-Smtp-Source: ABdhPJxtOrWFRpjyjE/AeKgto6iqAU7H82BpLpwF7xdyPcMTjz46Ebj3ahrxr+pLczwcS2UqKMm4LiADeFKJGyPRvcQ=
-X-Received: by 2002:ac8:4658:: with SMTP id f24mr1770470qto.158.1599829799395;
- Fri, 11 Sep 2020 06:09:59 -0700 (PDT)
+        Fri, 11 Sep 2020 09:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgIKNYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:24:48 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D239622403;
+        Fri, 11 Sep 2020 12:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599829150;
+        bh=UoDf2Uwl0Yq8QLtFZRUy0JZ7qxXffEpxG3NsTmdAtDo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nSU5ge54SG1KJ3couPPLdM8Tk+UWUa2wrEmqwWOR4sH2Ki2jAxazGowAa47bkZI0B
+         +uVoc4xTAuHDyc6YuF7Ee7R3kIM0JDFv4O8IshUQrp59XmEOsqws5KVmnIOMfdMr3M
+         I8CxE+1EIneWsrIqCu9kIDtLwQQpqyMIpSdauf3U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH 4.14 04/12] vfio-pci: Fault mmaps to enable vma tracking
+Date:   Fri, 11 Sep 2020 14:46:58 +0200
+Message-Id: <20200911122458.637277425@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122458.413137406@linuxfoundation.org>
+References: <20200911122458.413137406@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com> <e399d8d5-03c2-3c13-2a43-3bb8e842c55a@intel.com>
- <20200908153102.GB61807@elver.google.com> <feb73053-17a6-8b43-5b2b-51a813e81622@suse.cz>
- <20200908155631.GC61807@elver.google.com> <CACT4Y+YZqj0CJTumpHr-g9HcRgs+JHwWP5eg1nYHP0E-Zw25DQ@mail.gmail.com>
- <CANpmjNO7XwhefA+NKszVkNqj8a60QY45n-=EUtGns+ysNYV9mQ@mail.gmail.com>
-In-Reply-To: <CANpmjNO7XwhefA+NKszVkNqj8a60QY45n-=EUtGns+ysNYV9mQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 11 Sep 2020 15:09:48 +0200
-Message-ID: <CACT4Y+YSQDjEh6+XMXiHvMaKAT8bA=JkC8xY3AXfcSk+f9yR+g@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/10] KFENCE: A low-overhead sampling-based memory
- safety error detector
-To:     Marco Elver <elver@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 2:03 PM Marco Elver <elver@google.com> wrote:
->
-> On Fri, 11 Sep 2020 at 09:36, Dmitry Vyukov <dvyukov@google.com> wrote:
-> > On Tue, Sep 8, 2020 at 5:56 PM Marco Elver <elver@google.com> wrote:
-> > > On Tue, Sep 08, 2020 at 05:36PM +0200, Vlastimil Babka wrote:
-> [...]
-> > > > Hmm did you observe that with this limit, a long-running system would eventually
-> > > > converge to KFENCE memory pool being filled with long-aged objects, so there
-> > > > would be no space to sample new ones?
-> > >
-> > > Sure, that's a possibility. But remember that we're not trying to
-> > > deterministically detect bugs on 1 system (if you wanted that, you
-> > > should use KASAN), but a fleet of machines! The non-determinism of which
-> > > allocations will end up in KFENCE, will ensure we won't end up with a
-> > > fleet of machines of identical allocations. That's exactly what we're
-> > > after. Even if we eventually exhaust the pool, you'll still detect bugs
-> > > if there are any.
-> > >
-> > > If you are overly worried, either the sample interval or number of
-> > > available objects needs to be tweaked to be larger. The default of 255
-> > > is quite conservative, and even using something larger on a modern
-> > > system is hardly noticeable. Choosing a sample interval & number of
-> > > objects should also factor in how many machines you plan to deploy this
-> > > on. Monitoring /sys/kernel/debug/kfence/stats can help you here.
-> >
-> > Hi Marco,
-> >
-> > I reviewed patches and they look good to me (minus some local comments
-> > that I've left).
->
-> Thank you.
->
-> > The main question/concern I have is what Vlastimil mentioned re
-> > long-aged objects.
-> > Is the default sample interval values reasonable for typical
-> > workloads? Do we have any guidelines on choosing the sample interval?
-> > Should it depend on workload/use pattern?
->
-> As I hinted at before, the sample interval & number of objects needs
-> to depend on:
-> - number of machines,
-> - workload,
-> - acceptable overhead (performance, memory).
->
-> However, workload can vary greatly, and something more dynamic may be
-> needed. We do have the option to monitor
-> /sys/kernel/debug/kfence/stats and even change the sample interval at
-> runtime, e.g. from a user space tool that checks the currently used
-> objects, and as the pool is closer to exhausted, starts increasing
-> /sys/module/kfence/parameters/sample_interval.
->
-> Of course, if we figure out the best dynamic policy, we can add this
-> policy into the kernel. But I don't think it makes sense to hard-code
-> such a policy right now.
->
-> > By "reasonable" I mean if the pool will last long enough to still
-> > sample something after hours/days? Have you tried any experiments with
-> > some workload (both short-lived processes and long-lived
-> > processes/namespaces) capturing state of the pool? It can make sense
-> > to do to better understand dynamics. I suspect that the rate may need
-> > to be orders of magnitude lower.
->
-> Yes, the current default sample interval is a lower bound, and is also
-> a reasonable default for testing. I expect real deployments to use
-> much higher sample intervals (lower rate).
->
-> So here's some data (with CONFIG_KFENCE_NUM_OBJECTS=1000, so that
-> allocated KFENCE objects isn't artificially capped):
->
-> -- With a mostly vanilla config + KFENCE (sample interval 100 ms),
-> after ~40 min uptime (only boot, then idle) I see ~60 KFENCE objects
-> (total allocations >600). Those aren't always the same objects, with
-> roughly ~2 allocations/frees per second.
->
-> -- Then running sysbench I/O benchmark, KFENCE objects allocated peak
-> at 82. During the benchmark, allocations/frees per second are closer
-> to 10-15. After the benchmark, the KFENCE objects allocated remain at
-> 82, and allocations/frees per second fall back to ~2.
->
-> -- For the same system, changing the sample interval to 1 ms (echo 1 >
-> /sys/module/kfence/parameters/sample_interval), and re-running the
-> benchmark gives me: KFENCE objects allocated peak at exactly 500, with
-> ~500 allocations/frees per second. After that, allocated KFENCE
-> objects dropped a little to 496, and allocations/frees per second fell
-> back to ~2.
->
-> -- The long-lived objects are due to caches, and just running 'echo 1
-> > /proc/sys/vm/drop_caches' reduced allocated KFENCE objects back to
-> 45.
+From: Alex Williamson <alex.williamson@redhat.com>
 
-Interesting. What type of caches is this? If there is some type of
-cache that caches particularly lots of sampled objects, we could
-potentially change the cache to release sampled objects eagerly.
+commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
 
-> > Also I am wondering about the boot process (both kernel and init).
-> > It's both inherently almost the same for the whole population of
-> > machines and inherently produces persistent objects. Should we lower
-> > the rate for the first minute of uptime? Or maybe make it proportional
-> > to uptime?
->
-> It should depend on current usage, which is dependent on the workload.
-> I don't think uptime helps much, as seen above. If we imagine a user
-> space tool that tweaks this for us, we can initialize KFENCE with a
-> very large sample interval, and once booted, this user space
-> tool/script adjusts /sys/module/kfence/parameters/sample_interval.
->
-> At the very least, I think I'll just make
-> /sys/module/kfence/parameters/sample_interval root-writable
-> unconditionally, so that we can experiment with such a tool.
->
-> Lowering the rate for the first minute of uptime might also be an
-> option, although if we do that, we can also just move kfence_init() to
-> the end of start_kernel(). IMHO, I think it still makes sense to
-> sample normally during boot, because who knows how those allocations
-> are used with different workloads once the kernel is live. With a
-> sample interval of 1000 ms (which is closer to what we probably want
-> in production), I see no more than 20 KFENCE objects allocated after
-> boot. I think we can live with that.
->
-> > I feel it's quite an important aspect. We can have this awesome idea
-> > and implementation, but radically lower its utility by using bad
-> > sampling value (which will have silent "failure mode" -- no bugs
-> > detected).
->
-> As a first step, I think monitoring the entire fleet here is key here
-> (collect /sys/kernel/debug/kfence/stats). Essentially, as long as
-> allocations/frees per second remains >0, we're probably fine, even if
-> we always run at max. KFENCE objects allocated.
->
-> An improvement over allocations/frees per second >0 would be
-> dynamically tweaking sample_interval based on how close we get to max
-> KFENCE objects allocated.
->
-> Yet another option is to skip KFENCE allocations based on the memcache
-> name, e.g. for those caches dedicated to long-lived allocations.
->
-> > But to make it clear: all of this does not conflict with the merge of
-> > the first version. Just having tunable sampling interval is good
-> > enough. We will get the ultimate understanding only when we start
-> > using it widely anyway.
->
-> Thanks,
-> -- Marco
+Rather than calling remap_pfn_range() when a region is mmap'd, setup
+a vm_ops handler to support dynamic faulting of the range on access.
+This allows us to manage a list of vmas actively mapping the area that
+we can later use to invalidate those mappings.  The open callback
+invalidates the vma range so that all tracking is inserted in the
+fault handler and removed in the close handler.
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.14]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/vfio/pci/vfio_pci.c         |   76 +++++++++++++++++++++++++++++++++++-
+ drivers/vfio/pci/vfio_pci_private.h |    7 +++
+ 2 files changed, 81 insertions(+), 2 deletions(-)
+
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1120,6 +1120,70 @@ static ssize_t vfio_pci_write(void *devi
+ 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
+ }
+ 
++static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
++			    struct vm_area_struct *vma)
++{
++	struct vfio_pci_mmap_vma *mmap_vma;
++
++	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
++	if (!mmap_vma)
++		return -ENOMEM;
++
++	mmap_vma->vma = vma;
++
++	mutex_lock(&vdev->vma_lock);
++	list_add(&mmap_vma->vma_next, &vdev->vma_list);
++	mutex_unlock(&vdev->vma_lock);
++
++	return 0;
++}
++
++/*
++ * Zap mmaps on open so that we can fault them in on access and therefore
++ * our vma_list only tracks mappings accessed since last zap.
++ */
++static void vfio_pci_mmap_open(struct vm_area_struct *vma)
++{
++	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
++}
++
++static void vfio_pci_mmap_close(struct vm_area_struct *vma)
++{
++	struct vfio_pci_device *vdev = vma->vm_private_data;
++	struct vfio_pci_mmap_vma *mmap_vma;
++
++	mutex_lock(&vdev->vma_lock);
++	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
++		if (mmap_vma->vma == vma) {
++			list_del(&mmap_vma->vma_next);
++			kfree(mmap_vma);
++			break;
++		}
++	}
++	mutex_unlock(&vdev->vma_lock);
++}
++
++static int vfio_pci_mmap_fault(struct vm_fault *vmf)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	struct vfio_pci_device *vdev = vma->vm_private_data;
++
++	if (vfio_pci_add_vma(vdev, vma))
++		return VM_FAULT_OOM;
++
++	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
++			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
++		return VM_FAULT_SIGBUS;
++
++	return VM_FAULT_NOPAGE;
++}
++
++static const struct vm_operations_struct vfio_pci_mmap_ops = {
++	.open = vfio_pci_mmap_open,
++	.close = vfio_pci_mmap_close,
++	.fault = vfio_pci_mmap_fault,
++};
++
+ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+ {
+ 	struct vfio_pci_device *vdev = device_data;
+@@ -1185,8 +1249,14 @@ static int vfio_pci_mmap(void *device_da
+ 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+ 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
+ 
+-	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+-			       req_len, vma->vm_page_prot);
++	/*
++	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
++	 * change vm_flags within the fault handler.  Set them now.
++	 */
++	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
++	vma->vm_ops = &vfio_pci_mmap_ops;
++
++	return 0;
+ }
+ 
+ static void vfio_pci_request(void *device_data, unsigned int count)
+@@ -1243,6 +1313,8 @@ static int vfio_pci_probe(struct pci_dev
+ 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
+ 	mutex_init(&vdev->igate);
+ 	spin_lock_init(&vdev->irqlock);
++	mutex_init(&vdev->vma_lock);
++	INIT_LIST_HEAD(&vdev->vma_list);
+ 
+ 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
+ 	if (ret) {
+--- a/drivers/vfio/pci/vfio_pci_private.h
++++ b/drivers/vfio/pci/vfio_pci_private.h
+@@ -63,6 +63,11 @@ struct vfio_pci_dummy_resource {
+ 	struct list_head	res_next;
+ };
+ 
++struct vfio_pci_mmap_vma {
++	struct vm_area_struct	*vma;
++	struct list_head	vma_next;
++};
++
+ struct vfio_pci_device {
+ 	struct pci_dev		*pdev;
+ 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
+@@ -95,6 +100,8 @@ struct vfio_pci_device {
+ 	struct eventfd_ctx	*err_trigger;
+ 	struct eventfd_ctx	*req_trigger;
+ 	struct list_head	dummy_resources_list;
++	struct mutex		vma_lock;
++	struct list_head	vma_list;
+ };
+ 
+ #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
+
+
