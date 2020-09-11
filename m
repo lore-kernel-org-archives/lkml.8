@@ -2,52 +2,52 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD6AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 505FB222EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59EA5221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599836116;
-	bh=Rd1MFRgUDEkTx/wiIJII+ZUZaJaafXMLUlnBw2t2XPs=;
+	s=default; t=1599836139;
+	bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/niOwxmH0brEDWZh+OvehdHmsT2YbO0qhLzY1O4chm2BwGgLPIB3YeuDup/l/r+7
-	 +FiFjja536HiqxCSO9+v+5WHJ8L/rsL8s56UINY68ORg9BP4YcyQWRtytL6xY8ClTV
-	 64XYMi4D9e2B5B6aPnjSh9EKkLLDy9RyhyIrSdnA=
+	b=O5gRn0RPnA2BA665RTQ23/yMm5jMiVeBBni9jTD7mABxEISy2dDAPz2r+sq1bjnhP
+	 gO5FRLYQjpoIRF1uuo8AedlB0SSqZ8zbn5D2w7PTNxI+VKLBMrYHDInAms0YaLs28i
+	 ki+0Mohg4l+dK3HRnGS/0mCKyWN8+tGtlzdSwhIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgIKOy2 (ORCPT
+        id S1726200AbgIKOzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbgIKNCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:02:21 -0400
+        id S1726171AbgIKNCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:02:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945EB22287;
-        Fri, 11 Sep 2020 12:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A24C6222B9;
+        Fri, 11 Sep 2020 12:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829020;
-        bh=Rd1MFRgUDEkTx/wiIJII+ZUZaJaafXMLUlnBw2t2XPs=;
+        s=default; t=1599829038;
+        bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nPlkZFJBxSIkWT1/wUQY/Q3mLERZlWRoHCEf5kCnpNJU0HTnfTquv4n8SjWWqJoVE
-         unyC2DihD0X4iOr4beCrrD6amkjmBL2DNeQYqrt9Mw76WtcIeWKb5PESzwTqOkB51j
-         zkkAte+K7TvXkxwKnBGgKnBZgll9YYNfnhU6mdB4=
+        b=S06Wbh7Qr/ORPF9iPxdWv1+/zjYvVRGozfUmz0NVBkM99T4LcHvBHnwQ0NYLgMz1k
+         59zVD45HZ3e4PCALvb532dADNeiQK8qmxMuyDG4aXD0BsL2739EPXHRFygH2S89jZO
+         5t/mY6/jqSOJCDuM6oQrcx51CgMr7rA6gPymhJ+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/71] s390: dont trace preemption in percpu macros
-Date:   Fri, 11 Sep 2020 14:45:51 +0200
-Message-Id: <20200911122505.306213989@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 42/71] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
+Date:   Fri, 11 Sep 2020 14:46:26 +0200
+Message-Id: <20200911122507.025583675@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -60,139 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 1196f12a2c960951d02262af25af0bb1775ebcc2 ]
+commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
 
-Since commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context}
-to per-cpu variables") the lockdep code itself uses percpu variables. This
-leads to recursions because the percpu macros are calling preempt_enable()
-which might call trace_preempt_on().
+Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
+However, as long as he investigated, the design of this model is hardly
+similar to the one of Digi 00x family. It's better to exclude the model
+from modalias of ALSA firewire-digi00x driver.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This commit changes device entries so that the model is excluded.
+
+$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
+404  31333934  bus_name "1394"
+408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
+40c  00a07e01  company_id 00a07e     |
+410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               root directory
+               -----------------------------------------------------------------
+414  0005d08c  directory_length 5, crc 53388
+418  0300a07e  vendor
+41c  8100000c  --> descriptor leaf at 44c
+420  0c008380  node capabilities
+424  8d000002  --> eui-64 leaf at 42c
+428  d1000004  --> unit directory at 438
+
+               eui-64 leaf at 42c
+               -----------------------------------------------------------------
+42c  0002410f  leaf_length 2, crc 16655
+430  00a07e01  company_id 00a07e     |
+434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               unit directory at 438
+               -----------------------------------------------------------------
+438  0004d6c9  directory_length 4, crc 54985
+43c  1200a02d  specifier id: 1394 TA
+440  13014001  version: Vender Unique and AV/C
+444  17000001  model
+448  81000009  --> descriptor leaf at 46c
+
+               descriptor leaf at 44c
+               -----------------------------------------------------------------
+44c  00077205  leaf_length 7, crc 29189
+450  00000000  textual descriptor
+454  00000000  minimal ASCII
+458  41766964  "Avid"
+45c  20546563  " Tec"
+460  686e6f6c  "hnol"
+464  6f677900  "ogy"
+468  00000000
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  000599a5  leaf_length 5, crc 39333
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  41647265  "Adre"
+47c  6e616c69  "nali"
+480  6e650000  "ne"
+
+Reported-by: Simon Wood <simon@mungewell.org>
+Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ sound/firewire/digi00x/digi00x.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 90240dfef76a1..5889c1ed84c46 100644
---- a/arch/s390/include/asm/percpu.h
-+++ b/arch/s390/include/asm/percpu.h
-@@ -28,7 +28,7 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ old__, new__, prev__;				\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	prev__ = *ptr__;						\
- 	do {								\
-@@ -36,7 +36,7 @@
- 		new__ = old__ op (val);					\
- 		prev__ = cmpxchg(ptr__, old__, new__);			\
- 	} while (prev__ != old__);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	new__;								\
- })
+--- a/sound/firewire/digi00x/digi00x.c
++++ b/sound/firewire/digi00x/digi00x.c
+@@ -15,6 +15,7 @@ MODULE_LICENSE("GPL v2");
+ #define VENDOR_DIGIDESIGN	0x00a07e
+ #define MODEL_CONSOLE		0x000001
+ #define MODEL_RACK		0x000002
++#define SPEC_VERSION		0x000001
  
-@@ -67,7 +67,7 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
- 	if (__builtin_constant_p(val__) &&				\
- 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
-@@ -83,7 +83,7 @@
- 			: [val__] "d" (val__)				\
- 			: "cc");					\
- 	}								\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- }
- 
- #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
-@@ -94,14 +94,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();						\
- 	old__ + val__;							\
- })
- 
-@@ -113,14 +113,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- }
- 
- #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
-@@ -135,10 +135,10 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ ret__;						\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = cmpxchg(ptr__, oval, nval);				\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -151,10 +151,10 @@
- ({									\
- 	typeof(pcp) *ptr__;						\
- 	typeof(pcp) ret__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = xchg(ptr__, nval);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -170,11 +170,11 @@
- 	typeof(pcp1) *p1__;						\
- 	typeof(pcp2) *p2__;						\
- 	int ret__;							\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	p1__ = raw_cpu_ptr(&(pcp1));					\
- 	p2__ = raw_cpu_ptr(&(pcp2));					\
- 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
--- 
-2.25.1
-
+ static int name_card(struct snd_dg00x *dg00x)
+ {
+@@ -185,14 +186,18 @@ static const struct ieee1394_device_id s
+ 	/* Both of 002/003 use the same ID. */
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_CONSOLE,
+ 	},
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_RACK,
+ 	},
+ 	{}
 
 
