@@ -2,105 +2,129 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C59BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF22C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2548F221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7DA221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoQ3W5yI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKX/tDck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbgIKKM5 (ORCPT
+        id S1725845AbgIKKNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
+        Fri, 11 Sep 2020 06:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKKMv (ORCPT
+        with ESMTP id S1725781AbgIKKNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:12:51 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAF53C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:12:50 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id p9so13052978ejf.6
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:12:50 -0700 (PDT)
+        Fri, 11 Sep 2020 06:13:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451C1C061573;
+        Fri, 11 Sep 2020 03:13:35 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e16so10941336wrm.2;
+        Fri, 11 Sep 2020 03:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=IXsZZvpxC3Iw+tC6jnLuPh79RFUv3V9xAF5t6zWzAOg=;
-        b=OoQ3W5yI+cDCOsdiS14DqDREtdwPDcCIfsTCV48IZAq+GQHCb1X7M6BFss9tC1mbzo
-         24lpHSsA8AqLn/YlG+ZYMAKhrY3aRO+v5sI6Win2/yx6phLSNPnQMdli/Czw3pP4Q4Op
-         dK/zpEaQIzZkNe4yGU5Mxb+RC5Laj6CbZyfoYuYgb9ShN7pAV+AOMA1UGbrY66FWj1pv
-         ZP7w6FM6dRn+wxMReKrnPSJ8ZYndzZUNL3CEH8rd1Io8kTmIp/G2iN1j0G3wS42osEhz
-         yQw8rOuBZZovcc2SI33iLRL6iL6I0BhcHzthdUqHB2HbmUiH5SE7vv/NpNIx28UkPEkh
-         u92w==
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Gwozpa300aA/BimLNF0pTAIrHFmBGruEELOH7rZVOo8=;
+        b=aKX/tDckdOrqKC1LLyeSaUSbUQUz8Rw79jEb3BnPi8mV+lFwAkbx3F8Iuh1XOKdJpB
+         mSnWHW1/PCO+5XQcl1YErrYtvcVGf2LFEwQsFW8fUF6YJl1j0iHdJ7qtZz2MHn7kuAFf
+         SoQPX7OhYkQbIazoXRKee5rUJrmS+Qsvd1FPduMIPh4pvYt3E+NulabHIIJTi3BcOsF6
+         dp5e5P0JCLe2sOpLdQifORbLcm2HfjXYrpkWx9zswSDu2X5mrO9OdySQ0JZMRLix2IQk
+         SWjATBAsop544clN+Lr7JD5UbtQUFV9XOdV1SOjy8U99J9XjZmT3bAuyV/1XACEA2ZFe
+         kwsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=IXsZZvpxC3Iw+tC6jnLuPh79RFUv3V9xAF5t6zWzAOg=;
-        b=kuCgl1rSTauAtq9QpAkuEkPq7KxSTYDW3mGSxTfzf/QjaIaCDwqdI7HL1qMYDlXQRu
-         2X/lc3pX9zKpJOE7GHQfHF4oGuWEwkgo2rH4LQnyGvclTnx0UjYyLnL0bF0Zj7CWNgll
-         v9Cx6jue07tOV06/IcdVxB/FAHt14kSnExAmXzX+dXKAhqI2roMEE3f8Tsu8OoLOAsV2
-         fj9zx8pM7WNTxGU6noar1qD9F0BnM09hnCavJIrOleV3Lbg0JzVvgsnWJ2/0KRivH950
-         WyHslzWoRWEJwW0gnDgK/ojmStDWo9Hk/9/podS/Sj4RLgc4778KreW9BfSrkL5l2UUe
-         SMWg==
-X-Gm-Message-State: AOAM530xLPqO6mmx8YkTbTKj0zqv0UoN5wsD6mDAMkaRN+hR5FpdFovE
-        9/UbgqUurJvbKLVyl77FGxk=
-X-Google-Smtp-Source: ABdhPJwCcQslkt8qwuJRF2M7tnbJpACj1itr3BA1247tseaj1i83uITOeaEcPZMrg1hyjPv00uG7XA==
-X-Received: by 2002:a17:906:4819:: with SMTP id w25mr1313314ejq.300.1599819167936;
-        Fri, 11 Sep 2020 03:12:47 -0700 (PDT)
-Received: from felia ([2001:16b8:2dfa:1900:b0c3:335:87f7:d616])
-        by smtp.gmail.com with ESMTPSA id q13sm1281850edr.27.2020.09.11.03.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 03:12:47 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Fri, 11 Sep 2020 12:12:41 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Christoph Hellwig <hch@infradead.org>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: MAINTAINERS: Marking internal distribution lists
-In-Reply-To: <20200911094627.GA14158@infradead.org>
-Message-ID: <alpine.DEB.2.21.2009111154500.16254@felia>
-References: <alpine.DEB.2.21.2009110811520.9220@felia> <20200911094627.GA14158@infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Gwozpa300aA/BimLNF0pTAIrHFmBGruEELOH7rZVOo8=;
+        b=IqjFF+hKO2V94PyZnwtXyzZ2iXj8fiIaIxZqKcHfe2y2K5gjdlXjWWRQpRu7g0F33j
+         Fl3U7/Ls7wOtUJaccEWlFqIaB3EyXOvZc1wR/c7qBbKSNvWvSPzJaEKdOQMt7ppp0sAA
+         8mmOuq3k7hE6RnQlPyTDTr+s+9UnPM5PeQ1dTq3k0fGJbG2nIM4g4YWWj6LkDLvTpldF
+         gucpZRKLu3Dc8uzIJzaKZctE8MsU2jQiGzoo/Bdo0innzgEUqz5l16XO52Rot3qTQMIp
+         SOS23qVyr7rJdCcfDZrdUvFnAT14ymuWvSSkX/vqa5U87S4He7x4a3oTGADW6FpDO+m9
+         84dQ==
+X-Gm-Message-State: AOAM531epYOwazWwkUC0QpROsb0t1VEwdIEUdTV8mOIeeSvQXbVRCU16
+        MsQThej3MZXQmxWVsZ3RwdNMGkKB2wM=
+X-Google-Smtp-Source: ABdhPJwuXUQcDNkdgPISaGuQ8LNkw2ozL/HadDDFMw5ILi/7UgZ5zSpM6+KOOBTGpAoI2eOVwh73Jw==
+X-Received: by 2002:adf:dc47:: with SMTP id m7mr1320338wrj.100.1599819213768;
+        Fri, 11 Sep 2020 03:13:33 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id p3sm3133116wmm.40.2020.09.11.03.13.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 03:13:33 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/24] endian.3: Use 'PRIx32' rather than "%x" when
+ printing 'uint32_t' values
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-3-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <99b8d630-131e-b8f7-eb81-d8bb1727da59@gmail.com>
+Date:   Fri, 11 Sep 2020 12:13:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200910211344.3562-3-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 
+Just noting here for completeness: see the discussion in patch 01.
 
-On Fri, 11 Sep 2020, Christoph Hellwig wrote:
+Thanks,
 
-> On Fri, Sep 11, 2020 at 08:37:54AM +0200, Lukas Bulwahn wrote:
-> >   - ocfs2-devel.oss.oracle.com
+Michael
+
+> ---
+>  man3/endian.3 | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> This is a normal mailing list, and I subscribed to it normally.  It
-> might howerever be brken in various ways as oss.oracle.com seems
-> pretty much unmaintained.
+> diff --git a/man3/endian.3 b/man3/endian.3
+> index bdf1efd7e..3a898bb02 100644
+> --- a/man3/endian.3
+> +++ b/man3/endian.3
+> @@ -147,6 +147,7 @@ htobe32(x.u32) = 0x11223344
+>  \&
+>  .EX
+>  #include <endian.h>
+> +#include <inttypes.h>
+>  #include <stdint.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> @@ -164,9 +165,9 @@ main(int argc, char *argv[])
+>      x.arr[2] = 0x33;
+>      x.arr[3] = 0x44;	/* Highest-address byte */
+>  
+> -    printf("x.u32 = 0x%x\en", x.u32);
+> -    printf("htole32(x.u32) = 0x%x\en", htole32(x.u32));
+> -    printf("htobe32(x.u32) = 0x%x\en", htobe32(x.u32));
+> +    printf("x.u32 = 0x%"PRIx32"\en", x.u32);
+> +    printf("htole32(x.u32) = 0x%"PRIx32"\en", htole32(x.u32));
+> +    printf("htobe32(x.u32) = 0x%"PRIx32"\en", htobe32(x.u32));
+>  
+>      exit(EXIT_SUCCESS);
+>  }
 > 
-> >   - rds-devel.oss.oracle.com
-> 
-> The same probably applies here.
->
 
-Thanks, Christoph; it seems that I miscategorized those two email 
-addresses in my first attempt going through the data.
 
-I found the URLs how to subscribe to those mailing lists, so no help from 
-Martin is required here.
-
-Lukas
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
