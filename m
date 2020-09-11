@@ -2,110 +2,73 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBEFC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E218EC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6C721D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T8vrlsUA"
+	by mail.kernel.org (Postfix) with ESMTP id AC3F721D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbgIKD0f (ORCPT
+        id S1725875AbgIKD0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgIKD0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:26:31 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4905DC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:26:31 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id z12so2673333uam.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 20:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FvQeieKv5rbJ5/s4eJT2O+IOF1Saic+Crp4J5iKZQf4=;
-        b=T8vrlsUAjemV8EhbZG0kArfreNIjgn3IeAZ9umv25OXXKgdAG3mJcTUQXK+AvrXY13
-         BAI+4GjON0vIeGj0QPlOIe/Qlb74NnKfR2ocY5plpnUUgw7BwrDWNJRggjmMvQbn3T8Q
-         aXC3dFk102DstFA3OZdzhxqeyaAstAE0NfHaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FvQeieKv5rbJ5/s4eJT2O+IOF1Saic+Crp4J5iKZQf4=;
-        b=tYyPmF3SbOXLntpKznIDrVJDuYellDkQzF8665IT7rR/GTH2AyAdc4KgcH7fRdTX4B
-         TTlVE6Ap9Ah6BzU9r5Xu6kWCVhT5PyRCIYTUDhJJujJjWbaIPgVIotEdNWfYod0gdPX+
-         6ytSB2in+OyPtjgVxXPVnO3t3yvdEUihMkFp21Zrpti3bBLJqsNjnrERIQC4ZpnulSTm
-         y+WMVjupIcL3SfnBILa+erWY8x8c4aQ7sTFLKLBTu8jQdlBI35FwBsVF8h4g6FdVLgrg
-         JKVLXlY2Mj0aZ3RxUV1T6yr8h00KacgvqicvNhdrw7d7Nnsxpw1QhT2ovdzqY6gCHDj8
-         lqfA==
-X-Gm-Message-State: AOAM532imSFlTAfmphTkEpYlx25cx6wu+fE2vri9m6cZrwdtFsxe+ga8
-        LSX6LDsYWqkPkM9LVzwsxylhOWRH4CWZ2+38dFQxNA==
-X-Google-Smtp-Source: ABdhPJwxVrNhrniN5woxKGWcan1oHwHrjdiscQz8zYmgZM3N/r1SrH7wmqgMzlo7PmXudZk/YFVEzcQkn29JMBnylaw=
-X-Received: by 2002:ab0:1450:: with SMTP id c16mr523uae.27.1599794789775; Thu,
- 10 Sep 2020 20:26:29 -0700 (PDT)
+        Thu, 10 Sep 2020 23:26:48 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58406 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgIKD0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 23:26:46 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kGZhP-0005PW-Tx; Fri, 11 Sep 2020 13:26:09 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 11 Sep 2020 13:26:07 +1000
+Date:   Fri, 11 Sep 2020 13:26:07 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Xiaoliang Pang <dawning.pang@gmail.com>
+Cc:     davem@davemloft.net, matthias.bgg@gmail.com, swboyd@chromium.org,
+        yuehaibing@huawei.com, tianjia.zhang@linux.alibaba.com,
+        ryder.lee@mediatek.com, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cypto: mediatek - fix leaks in mtk_desc_ring_alloc
+Message-ID: <20200911032607.GA5096@gondor.apana.org.au>
+References: <20200911013619.9809-1-dawning.pang@gmail.com>
 MIME-Version: 1.0
-References: <20200803071501.30634-1-crystal.guo@mediatek.com>
-In-Reply-To: <20200803071501.30634-1-crystal.guo@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 11 Sep 2020 11:26:20 +0800
-Message-ID: <CANMq1KA=t8srKfC4XUqk2V2N6Jm0=-P4rQSh9Mqbo2tFFKgTEA@mail.gmail.com>
-Subject: Re: [v4,0/5] watchdog: mt8192: add wdt support
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, seiya.wang@mediatek.com,
-        Crystal Guo <crystal.guo@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911013619.9809-1-dawning.pang@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthias, Guenter,
+On Fri, Sep 11, 2020 at 09:36:19AM +0800, Xiaoliang Pang wrote:
+>
+> diff --git a/drivers/crypto/mediatek/mtk-platform.c b/drivers/crypto/mediatek/mtk-platform.c
+> index 7e3ad085b5bd..ebb3bdef0dbe 100644
+> --- a/drivers/crypto/mediatek/mtk-platform.c
+> +++ b/drivers/crypto/mediatek/mtk-platform.c
+> @@ -469,13 +469,13 @@ static int mtk_desc_ring_alloc(struct mtk_cryp *cryp)
+>  	return 0;
+>  
+>  err_cleanup:
+> -	for (; i--; ) {
+> +	do {
+>  		dma_free_coherent(cryp->dev, MTK_DESC_RING_SZ,
+>  				  ring[i]->res_base, ring[i]->res_dma);
+>  		dma_free_coherent(cryp->dev, MTK_DESC_RING_SZ,
+>  				  ring[i]->cmd_base, ring[i]->cmd_dma);
+>  		kfree(ring[i]);
+> -	}
+> +	}while(i--);
 
-These patches have all been reviewed (apart from fairly trivial 2/5),
-which maintainer should be picking those up?
+Please add spaces before and after while.
 
-Thanks!
-
-On Mon, Aug 3, 2020 at 3:15 PM Crystal Guo <crystal.guo@mediatek.com> wrote:
->
-> v4 changes:
-> revise commit messages.
->
-> v3 changes:
-> https://patchwork.kernel.org/patch/11692731/
-> https://patchwork.kernel.org/patch/11692767/
-> https://patchwork.kernel.org/patch/11692729/
-> https://patchwork.kernel.org/patch/11692771/
-> https://patchwork.kernel.org/patch/11692733/
->
-> Crystal Guo (5):
->   dt-binding: mediatek: watchdog: fix the description of compatible
->   arm64: dts: mt8183: update watchdog device node
->   dt-binding: mediatek: mt8192: update mtk-wdt document
->   dt-binding: mt8192: add toprgu reset-controller head file
->   watchdog: mt8192: add wdt support
->
->  .../devicetree/bindings/watchdog/mtk-wdt.txt  |  5 ++--
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  3 +-
->  drivers/watchdog/mtk_wdt.c                    |  6 ++++
->  .../reset-controller/mt8192-resets.h          | 30 +++++++++++++++++++
->  4 files changed, 40 insertions(+), 4 deletions(-)
->  create mode 100644 include/dt-bindings/reset-controller/mt8192-resets.h
->
->
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
