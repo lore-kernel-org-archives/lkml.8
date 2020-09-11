@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F6AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818EE2076C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE15F20770
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599837889;
-	bh=ybDPXSWX6t6Yrp5Uds0fPcMTpwzBemoFk3ybMUuZEyY=;
+	s=default; t=1599837933;
+	bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZZ90CqIXMpPnmPa47AZv8LgPg9e5fyZAMpdVU8F3veLQQGJa7iW6nVtdnC1qaECC
-	 6E7gmTH5THhrzNulhF/4hzyZW6oYR9qaJvJ5u/qVcmaZ5liBKd6kFNUdxIjj4134DR
-	 T5XTqU4t2K0PZDaOB4ktxsqOE34N1aRwwTjC5fZA=
+	b=OiJaCab9llbqPMtStnpXg4Hq6QJAtFoBQzGcp4EtyF5cy53GQOG5fS0aT+K7ZzvOr
+	 5Qe9FfcXDl4C099nZLHkLZw1EC4f0Lk6utgJ9ZCGz+2u3IRe/UAPN9xDQdvNZJ4tIw
+	 FfgeFGg/1Qb8oYKqZfZfcByi9RH8FHRS7OsXMkmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgIKPYn (ORCPT
+        id S1725927AbgIKPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53392 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 11:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgIKPRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:17:38 -0400
+        id S1726469AbgIKPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:19:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D03122456;
-        Fri, 11 Sep 2020 12:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CE922453;
+        Fri, 11 Sep 2020 12:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829181;
-        bh=ybDPXSWX6t6Yrp5Uds0fPcMTpwzBemoFk3ybMUuZEyY=;
+        s=default; t=1599829170;
+        bh=EHkMk8FZTwQ6Tit8Vxcyh+qja6txSu8AoOFPongUJ5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1M/FByuPrgNq1JusDVuk1YhRm/doUstz9Ea9u/uS4/HHmulwV7a7t78H2gKn3SS4e
-         IiSqSKDY8PuiAkh43pW8Ea6+ZwGX8hF6zSnP2ICrRynkgC8wrzBSdZhhZ7fa1nS3U1
-         oGplK8zKCSVpBZ/UfsUuR/vN95PGSdnB/cGyZDJw=
+        b=dnxFJzoFTlPB1UuquQ2lXPHvDE6VFjHdkBsNH/hwC8t/nu2FdUla58kzdZnWGHy6l
+         atn5pdRyq4JVLKf8D5OTS0+0xKYHyzMSEx7PIRJLyiFhRl6vQu7KCMc4r2uMtVPWJ/
+         ddGCAHiafSpFioeeB0T4lDVavQBV85n7f/GUE8x8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        stable@vger.kernel.org, Kamil Lorenc <kamil@re-ws.pl>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 14/16] tipc: fix using smp_processor_id() in preemptible
-Date:   Fri, 11 Sep 2020 14:47:31 +0200
-Message-Id: <20200911122500.284435224@linuxfoundation.org>
+Subject: [PATCH 5.8 10/16] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+Date:   Fri, 11 Sep 2020 14:47:27 +0200
+Message-Id: <20200911122500.086945782@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
 References: <20200911122459.585735377@linuxfoundation.org>
@@ -60,56 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: Kamil Lorenc <kamil@re-ws.pl>
 
-[ Upstream commit bb8872a1e6bc911869a729240781076ed950764b ]
+[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
 
-The 'this_cpu_ptr()' is used to obtain the AEAD key' TFM on the current
-CPU for encryption, however the execution can be preemptible since it's
-actually user-space context, so the 'using smp_processor_id() in
-preemptible' has been observed.
+Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
 
-We fix the issue by using the 'get/put_cpu_ptr()' API which consists of
-a 'preempt_disable()' instead.
-
-Fixes: fc1b6d6de220 ("tipc: introduce TIPC encryption & authentication")
-Acked-by: Jon Maloy <jmaloy@redhat.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/crypto.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/usb/dm9601.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -326,7 +326,8 @@ static void tipc_aead_free(struct rcu_he
- 	if (aead->cloned) {
- 		tipc_aead_put(aead->cloned);
- 	} else {
--		head = *this_cpu_ptr(aead->tfm_entry);
-+		head = *get_cpu_ptr(aead->tfm_entry);
-+		put_cpu_ptr(aead->tfm_entry);
- 		list_for_each_entry_safe(tfm_entry, tmp, &head->list, list) {
- 			crypto_free_aead(tfm_entry->tfm);
- 			list_del(&tfm_entry->list);
-@@ -399,10 +400,15 @@ static void tipc_aead_users_set(struct t
-  */
- static struct crypto_aead *tipc_aead_tfm_next(struct tipc_aead *aead)
- {
--	struct tipc_tfm **tfm_entry = this_cpu_ptr(aead->tfm_entry);
-+	struct tipc_tfm **tfm_entry;
-+	struct crypto_aead *tfm;
+--- a/drivers/net/usb/dm9601.c
++++ b/drivers/net/usb/dm9601.c
+@@ -625,6 +625,10 @@ static const struct usb_device_id produc
+ 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
+ 	 .driver_info = (unsigned long)&dm9601_info,
+ 	},
++	{
++	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
++	 .driver_info = (unsigned long)&dm9601_info,
++	},
+ 	{},			// END
+ };
  
-+	tfm_entry = get_cpu_ptr(aead->tfm_entry);
- 	*tfm_entry = list_next_entry(*tfm_entry, list);
--	return (*tfm_entry)->tfm;
-+	tfm = (*tfm_entry)->tfm;
-+	put_cpu_ptr(tfm_entry);
-+
-+	return tfm;
- }
- 
- /**
 
 
