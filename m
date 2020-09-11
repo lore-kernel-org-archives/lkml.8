@@ -2,140 +2,145 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C13C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D08FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A60B2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA282073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCg1Rxdg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3LKLf2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725550AbgIKHYy (ORCPT
+        id S1725814AbgIKHY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43860 "EHLO
+        Fri, 11 Sep 2020 03:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgIKHYq (ORCPT
+        with ESMTP id S1725792AbgIKHYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:24:46 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C89C061573;
-        Fri, 11 Sep 2020 00:24:45 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id u20so8162737ilk.6;
-        Fri, 11 Sep 2020 00:24:45 -0700 (PDT)
+        Fri, 11 Sep 2020 03:24:49 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E50C061573;
+        Fri, 11 Sep 2020 00:24:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a17so10413805wrn.6;
+        Fri, 11 Sep 2020 00:24:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yDDPYjQ6DUX6xXLMzgBfV6buP3oYPEgo+EN2kc6eWTY=;
-        b=VCg1Rxdg/5MOXY5w9Loq/ArIKnhcyC7pdwtI0PJCD0vVfIdVBX+RvdOd1Q5EE/A53w
-         HWGWf0JGtxHP61Zr4h8gH4j26j5SNSoxD3vtLuGw3a0z0WxP89DkWfDwDzZcnX1R76Ic
-         jXruVD3rEZ4UXYCNvS2a7SCyOmZW8U+yp5ao+bAfosxKLd2YKefNhRYzjaJSwazSk08G
-         v654syyecqb4nuwrs7j4hZIwCdFoj/l0Ei56xgFfWkIAn4dksivJxtmTJHXaJn+CYlHl
-         YLMUqkbMZRmVZbV0VPKguJqZFYMyTDpGNyYxSUjXRJrxYEL6h6Dj3bXA5NYbLYpMKZqk
-         ClfQ==
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NmBNH8hRQYjTI1ofR4EhVv+sfyRMCuK+r0fsinWUPrc=;
+        b=P3LKLf2u5BwvfB3TeHEkau8iFL8hxkHQKfbu0orIo5R9Dz6S4hETvgODwe7mJXGMUT
+         ZtufnGS/ZG1Y8aoj/1t5JnbOgdvb7oczi10/EXDNtqVRcNKL1ta2zD+kF7jMDl6lfUm7
+         6Cw9nuc59Z/5LUYbiQupCKjsj3M+yJNhScRGPBg6tJDhVsGuJwcYGeaEdWfqNO9NBKZb
+         mdgiTpNKh1S470qEarBwJdC+j0rEbnjxGlbIG0nQ+nRIxUR1I7GPlEI7rWC+2DDM0kb4
+         bX0yNqXi5J8cKkmLo3xSAbT45QbhbfGYTWwg6nIclcVZM0HWTQsW5LEkt4ltTzMk938n
+         8+FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yDDPYjQ6DUX6xXLMzgBfV6buP3oYPEgo+EN2kc6eWTY=;
-        b=RVJNr63JskiF1nzWeNemM12GGz8sZdEXjX/imBTGpV6I2pAjKqzhoXovUfvKTbQoug
-         eD1vxldOAxSy8JPmWl3QvzLtH8XL1zmdr5cTsl4fbsObTsOnWWM2Wm4FnoJi9yK/8Cig
-         d9X3WR9KKTa2i1x1pjw0cMx5zhDfDlbo0QUjiJ/S3Tl9a3NLYIbSVt/pKiCFmYD+tpfG
-         xIE0/KfrS1f6pQ9QromsxXlZH/bqGQTVC2yrfv2EHAvCjkO5t0NE0jmx3hPA+ZuJ7H8e
-         zOV4LLA85fmSLesqqlOn0WPWDeH3rbIVUYd0Yo0samsxygNx5U/unEKFtPeb4NuKtfmF
-         iweg==
-X-Gm-Message-State: AOAM531s2oQbAggfVFLYaSm0UEWKtvRBFNwem3VviHcGnTxmkEmPq7x1
-        CWcLT1QQaQrwOS8UEuUciHI5Qazyr7SuGDFHQY/CAfNT3aM=
-X-Google-Smtp-Source: ABdhPJzhSZZfBvon++gRijFHc6uMrRA3K01c6hT3xUWA9CJkZCyxj2DMSIaOlblADANdWJCoh65AMYrunuU/yZTx3G4=
-X-Received: by 2002:a92:d1d1:: with SMTP id u17mr699311ilg.127.1599809083413;
- Fri, 11 Sep 2020 00:24:43 -0700 (PDT)
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NmBNH8hRQYjTI1ofR4EhVv+sfyRMCuK+r0fsinWUPrc=;
+        b=q2T8HuomUdiWY+bddrOETHaIRQgS2vs7TxshA7ijaOpXOLi97HC1tT68tHptekh2xM
+         Vti4uQFvJicy8j9SapmYXPbOI03VdEMJDfc7NSZRqD+7ZYRp2K1Z+YtrWtgmbTUdDWE/
+         JEDv/zRi3oFa+eq7OeZLtOoWRwosmTL5cjnE4DW6aECXLwrCx9dN9WC3F8MBbfLy95oz
+         EKLZCEbH1xfyprp/X0TfR1W4nKQlyb0sRVMGmo9Sp9Gsn2xCrm35PW72BzjbkksVzoYX
+         YeUCr7k8MtRaPnEhDSJ9Bcjh6y/LIxiqaT0OShvVktsYhctLR9jQgtBZh/2FLQzlr281
+         Ua8Q==
+X-Gm-Message-State: AOAM5325E4ZGV7qFWmq9bXfmtdhB7EZhGdFJ0NRyrO7o5babstbAjSx2
+        MMU5/xY7I5myWHB1/eYBtbpN4Yd7RxE=
+X-Google-Smtp-Source: ABdhPJzKcdm36ey/cD6DfXFnyFTjQHYzOfuECC6gWNXRVn3He0gmZX/NtgpVYPOe/gxOcaL+FXwOqg==
+X-Received: by 2002:a5d:4a0c:: with SMTP id m12mr620992wrq.83.1599809087859;
+        Fri, 11 Sep 2020 00:24:47 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id h204sm2469147wmf.35.2020.09.11.00.24.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 00:24:47 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/24] ioctl_ns.2: Remove unneeded cast
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-11-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <e17f617a-4ba2-8788-20fa-7c2596d67ec6@gmail.com>
+Date:   Fri, 11 Sep 2020 09:24:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
- <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
- <559a568e-3a2e-33c6-43aa-547a18f8e26b@gmail.com> <20200911070503.GA9818@amd>
-In-Reply-To: <20200911070503.GA9818@amd>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Fri, 11 Sep 2020 07:24:31 +0800
-Message-ID: <CAE+NS34aKmu0tjnCPg3nF_vB0ELKsKwZSOeEXsm5V9aPAqqSbQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200910211344.3562-11-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel Machek <pavel@ucw.cz> =E6=96=BC 2020=E5=B9=B49=E6=9C=8811=E6=97=A5 =
-=E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=883:05=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi!
->
-> > >+{
-> > >+    struct mt6360_led *led =3D container_of(lcdev, struct mt6360_led,=
- flash.led_cdev);
-> > >+    struct mt6360_priv *priv =3D led->priv;
-> > >+    u32 enable_mask =3D MT6360_TORCHEN_MASK | MT6360_FLCSEN_MASK(led-=
->led_no);
-> > >+    u32 val =3D (level) ? MT6360_FLCSEN_MASK(led->led_no) : 0;
-> > >+    u32 prev =3D priv->fled_torch_used, curr;
-> > >+    int ret;
-> > >+
-> > >+    dev_dbg(lcdev->dev, "[%d] brightness %d\n", led->led_no, level);
-> > >+    if (priv->fled_strobe_used) {
-> > >+            dev_warn(lcdev->dev, "Please disable strobe first [%d]\n"=
-, priv->fled_strobe_used);
-> >
-> > Doesn't hardware handle that? IOW, what happens when you have enabled
-> > both torch and flash? If flash just overrides torch mode, than you
-> > should not prevent enabling torch in this case.
->
-> Yep, this is strange/confusing... and was reason why I asked for not
-> supporting strobe from sysfs.
->
-> Could I get you to remove code you are not commenting at when
-> reviewing?
->
+Hi Alex,
 
-MT6360 FLED register define is STROBE_EN/TORCH_EN/CS1/CS2 (current
-source) 4 bits.
-The STROBE_EN/TORCH_EN is shared by FLED1 and FLED2.
-If I want to enable FLED1 torch mode, I set TORCH_EN and CS1
-If I want to enable FLED2 strobe mode, I set STROBE_EN and CS2
-For example I set FLED1 torch, then I set FLED2 strobe.
-When I set FLED2 strobe, I will see the strobe current is FLED2 add
-FLED1 current which is not I want.
-So I need disable FLED1 torch first.
-Considering every circumstances is complicated when share same H/W
-logic control.
-And the other problem is torch mode switch to strobe mode needs ramp
-time because strobe and torch mode can't be co-exist.
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Both major(3) and minor(3) return an 'unsigned int',
+> so there is no need to use a 'long' for printing.
+> Moreover, it should have been 'unsigned long',
+> as "%lx" expects an unsigned type.
 
-> > >+MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
-> > >+MODULE_DESCRIPTION("MT6360 Led Driver");
->
-> Led -> LED.
->
+This may be true on Linux, but is not true on other systems.
+For example, on HP-UX, according to one header file I'm 
+looking at, the return value is 'long'.
 
-ACK
+These kinds of casts are intended to improve code portability
+across UNIX implementations, so I think they should stay
+(although, I do wonder if they would be even better as casts 
+to 'unsigned long')
 
->                                                                         P=
-avel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
-log.html
+Thanks,
+
+Michael
+
+
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+> ---
+>  man2/ioctl_ns.2 | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/man2/ioctl_ns.2 b/man2/ioctl_ns.2
+> index 818dde32c..bf832a2c7 100644
+> --- a/man2/ioctl_ns.2
+> +++ b/man2/ioctl_ns.2
+> @@ -316,9 +316,8 @@ main(int argc, char *argv[])
+>              exit(EXIT_FAILURE);
+>          }
+>          printf("Device/Inode of owning user namespace is: "
+> -                "[%lx,%lx] / %ld\en",
+> -                (long) major(sb.st_dev), (long) minor(sb.st_dev),
+> -                (long) sb.st_ino);
+> +                "[%x,%x] / %ld\en",
+> +                major(sb.st_dev), minor(sb.st_dev), (long) sb.st_ino);
+>  
+>          close(userns_fd);
+>      }
+> @@ -345,9 +344,8 @@ main(int argc, char *argv[])
+>              perror("fstat\-parentns");
+>              exit(EXIT_FAILURE);
+>          }
+> -        printf("Device/Inode of parent namespace is: [%lx,%lx] / %ld\en",
+> -                (long) major(sb.st_dev), (long) minor(sb.st_dev),
+> -                (long) sb.st_ino);
+> +        printf("Device/Inode of parent namespace is: [%x,%x] / %ld\en",
+> +                major(sb.st_dev), minor(sb.st_dev), (long) sb.st_ino);
+>  
+>          close(parent_fd);
+>      }
+> 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
