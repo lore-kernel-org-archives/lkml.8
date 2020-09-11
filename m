@@ -2,86 +2,102 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAC1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F1E22204
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F4A221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="iuePkO9G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxWNVc+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgIKQhg (ORCPT
+        id S1726184AbgIKQhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59726 "EHLO
+        Fri, 11 Sep 2020 12:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbgIKPM6 (ORCPT
+        with ESMTP id S1726424AbgIKPM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:12:58 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4351C061358;
-        Fri, 11 Sep 2020 07:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Mqkz/TWdkaK1QSCbkP0AJS8OkxokSpm+JnM6y2Dzk1U=; b=iuePkO9Gkom/odDxD1jBzDR2t6
-        xtNgBI1jkys2M3Dufsm1WU4nOmnsz8hVTMzk9DfnLsHRW/TrlMWYbM3tu8WyJ+Th7lkrxGguMhiWx
-        hOpme4zgCM/XcytmhnbjAlZtiPoXaUXYVgtvuCgQjucNNi9YLQk4ieFPB9A+CotJ5Pdc=;
-Received: from p200300ccff0ce9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:e900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGk1B-0001LS-Kb; Fri, 11 Sep 2020 16:27:32 +0200
-Date:   Fri, 11 Sep 2020 16:27:12 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     khilman@kernel.org, linux@armlinux.org.uk,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Subject: Re: [PATCH] omap3: enable off mode automatically
-Message-ID: <20200911162712.740d96ec@aktux>
-In-Reply-To: <20200911103337.GH7101@atomide.com>
-References: <20200911064924.26281-1-andreas@kemnade.info>
-        <20200911103337.GH7101@atomide.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F129C0612EF;
+        Fri, 11 Sep 2020 07:48:16 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id d190so11315220iof.3;
+        Fri, 11 Sep 2020 07:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IRHtAxZizOydZ9DBGosyH446zFOSQHExSwdB0MTaW5A=;
+        b=hxWNVc+ME2BuN4ZdQ1wDo5wApR+q/VTnX/Wlj2bRhmFGltA3RcpiTwiGxJvgMQVn7K
+         7rlwk0/fZ/kRb8QqUKi7h9+kMivuD65HNIZ+OTsUDw5fyF2SoV8n8B6loIuD5cimIw3L
+         CQrv3tR7OrFPXWmTs81563WAcmVSXod+xK32G+4hxVqWRWeR6tv/YMGE64YVXK67/jRd
+         UVIoRR0zx0nLbKaARLYxR7IxIPbesqPxIcy+YG1cNI9jVdb9m8RL+Cp7VmjcqSdL3gF5
+         rvtqRZ6u98yQnPNh2YWTrFXRY4hXHjYbJE3znKdiwNVY23kA0HY/btJAgVabT2/BJjmg
+         DZWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IRHtAxZizOydZ9DBGosyH446zFOSQHExSwdB0MTaW5A=;
+        b=WSOLnSN/krDmTcZ5Gjm2ul5zYlJIKfTLBBw8KGMR437bxtZ+x0H86aKG7m2mv5RzxO
+         E9mwCKxphegTiwtj8teR0baf2lRaruoqqKeudCHBUP3zDm3NFHxoySil3FCkazi8/Khi
+         uGjkPETpMWBu375JXPzW7TkWYYXG3a0RYe547l3cgqx7GKjnySyFTi0W49sloQ/bo2Ac
+         js82EkLWpI00f2IMcudWROnfe1VgCQ6ay6A8FB3LKzQw3dQcU/oVOkHEPNwp9vKq6HxF
+         vm6DSIxZ3OKaiEsC+pN52Aqj3/8Psd22dWfLPbMSft+/UUB4oF0kqHOi34tkAxm45g97
+         MuLA==
+X-Gm-Message-State: AOAM5307w6MCMHYRaTLN1D9+54aehFqiidKeK5Anb6QgOx6pBzh88AwB
+        X1ylyup4Rg0SbHE1Px9lsAJPGS01/dsH/w==
+X-Google-Smtp-Source: ABdhPJzQq9t7YiA8qCNRdeo3jUS+beivCnAe93THebMKuxyDgl1FX09/VllsRsLrX+A+PlMTy5Vylw==
+X-Received: by 2002:a02:6623:: with SMTP id k35mr2282719jac.105.1599835694446;
+        Fri, 11 Sep 2020 07:48:14 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:9823:5439:510e:c509])
+        by smtp.googlemail.com with ESMTPSA id s2sm1394768ili.49.2020.09.11.07.48.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 07:48:13 -0700 (PDT)
+Subject: Re: [PATCH] ipv6: remove redundant assignment to variable err
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200911103509.22907-1-colin.king@canonical.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a243b2e5-8d6e-dddf-3e3d-a89949f5ccb6@gmail.com>
+Date:   Fri, 11 Sep 2020 08:48:12 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200911103509.22907-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 11 Sep 2020 13:33:37 +0300
-Tony Lindgren <tony@atomide.com> wrote:
-
-> * Andreas Kemnade <andreas@kemnade.info> [200911 09:50]:
-> > --- a/arch/arm/mach-omap2/pm.h
-> > +++ b/arch/arm/mach-omap2/pm.h
-> > @@ -49,11 +49,7 @@ static inline int omap4_opp_init(void)
-> >  extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
-> >  extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
-> >  
-> > -#ifdef CONFIG_PM_DEBUG
-> >  extern u32 enable_off_mode;
-> > -#else
-> > -#define enable_off_mode 0
-> > -#endif  
+On 9/11/20 4:35 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Hmm isn't the above still needed for the other SoCs? Or is omap3 the only
-> user?
+> The variable err is being initialized with a value that is never read and
+> it is being updated later with a new value. The initialization is redundant
+> and can be removed.  Also re-order variable declarations in reverse
+> Christmas tree ordering.
 > 
-well, the linker moans about undefined symbols if
-CONFIG_ARCH_OMAP3 is not enabled.
-I will send a v2.
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/ipv6/route.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Regards,
-Andreas
+Reviewed-by: David Ahern <dsahern@gmail.com>
+
