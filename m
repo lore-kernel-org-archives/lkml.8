@@ -2,128 +2,133 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD2CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1610C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1903C21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F53A221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVI0R/bO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJTZLEjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725730AbgIKH5h (ORCPT
+        id S1725803AbgIKH5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48870 "EHLO
+        Fri, 11 Sep 2020 03:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgIKH5W (ORCPT
+        with ESMTP id S1725787AbgIKH5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:57:22 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E58C061573;
-        Fri, 11 Sep 2020 00:57:21 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t10so10522792wrv.1;
-        Fri, 11 Sep 2020 00:57:21 -0700 (PDT)
+        Fri, 11 Sep 2020 03:57:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0E4C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q4so1319646pjh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wk2q5AGOwAwjutqqbOwBXvu26ifImkLbzfUxSzk8coo=;
-        b=LVI0R/bOCNMS1R2UQ1bSJCr5koKXf6TL+0jsAxqboOky3dB4Uj8BwuZ4j1cDyUhgWO
-         NaVtNM3ppkAfCIAud9f+rH3M5o69G0wHvYswCYwS0PFfC1J7JAjLnlw9ha6wT3KMRgGY
-         bT9Uj44rkjw1CUAEw2yhBpXTEt7fEORvImuXfhqSmezhQJP3o+xwf5J9ZalfDHjt5tjY
-         4x3VJJzuoKz9HdG02n/UxT8WV2y5h4MNNNDF+eG7bWRfUqkmfQFLMoTa5wmmPv481jSC
-         RdtHZ6n7V9fwrdjubp4K144O7wak6KF98SZNL6rE9xt5YYEzzFQ78mR2dgBz5pTW1d4k
-         37Ow==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=D68YRpGe41uJ8+gFVfMwX0RCIFPEEX/t0OhKoAuLKXc=;
+        b=lJTZLEjJEy0HzJ0cIARU4N8+44CV3NNjEz0dKZlMU89mCjRyRRq51QF8nmrKTchrPi
+         pTt8dD+SDsn7OUoRlL1Rr0S1Qq6nPCSpemStoTw3aGTR6Eu2BRbiZUVb+yAJLbTIbqng
+         jj3Qds88FIyOJBmxN+5hh2Fg6vjJpwkd4glIp4G7P9fed5lbJf0bwazJ+NkZRuEDe9Y0
+         UUu5Ja9YVkKAjkNBP4pDmBqoDt5cPW7uSE3yri2/19xLmIylukiUWHukXaaFb5k/PKbZ
+         EPULBUiiFi1SoqUqdnUslSw01ZEhG/DXqV4Z7gaD/NADBFBWtDLGVv0Lcx3TfxDMKKet
+         k1jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wk2q5AGOwAwjutqqbOwBXvu26ifImkLbzfUxSzk8coo=;
-        b=Gqtg/NudeSSMRqoeqbzLB1TKl6+lpO8znjFYck6eGa3Ide4rfOqGMVWCgV0u8S9/93
-         Jqb1X1cmsHHc0FU2aIjxjf/oXfifvvankocrmj0mdx63ijVsVWQ219q0AzIhwFfxG6Ld
-         wb0q/wXN9qxvG8NYVbGXWoHjwbnETRfTcEUo5SNOcwJUPHTEUTqCHU8iN9zyUSv96BJd
-         gE8asqzeVZFaX+kdvLO0FFOqKJ9P4r/2X9rBTwFnHMZP5qgCVbC3hSWgasYhTp9p7BT+
-         4E3aS0HytnHtYX4RvpRC9O9XSNwvSkTAtltlVvljTKGtycyil3Ya7q1/12tugpyOGvdz
-         t07A==
-X-Gm-Message-State: AOAM530bsJSKRq9Nig/XG9qHZAZwV6vdpc9y9+d2UTls0qYSVqh/wPHS
-        FxXtXCJbQ3d7RfXPnV5+fuD/LsA5f8M=
-X-Google-Smtp-Source: ABdhPJxoshTKFkDIJMcaAT6c7PFP8bxmJd19E/Es3JR/hfSovZZhA3uJLxCrqpPFrjZYiLkfWOyHpA==
-X-Received: by 2002:a5d:5404:: with SMTP id g4mr733197wrv.134.1599811040290;
-        Fri, 11 Sep 2020 00:57:20 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id g8sm2606822wmd.12.2020.09.11.00.57.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 00:57:19 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/24] timer_create.2: Cast to 'unsigned long' rathen than
- 'long' when printing with "%lx"
-To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
- <20200910211344.3562-7-colomar.6.4.3@gmail.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <9d60a974-734e-d14a-fa3f-ceab43d2dc0f@gmail.com>
-Date:   Fri, 11 Sep 2020 09:57:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=D68YRpGe41uJ8+gFVfMwX0RCIFPEEX/t0OhKoAuLKXc=;
+        b=qNm2rTiDPaRhD00dTcHbl2+IdQnVQPUhDHpj0swHrwEgczkkBn3kKh79qj9lDo4p5D
+         dLKvclXWYUmRO0uD8KH7acSxEzZgRynaJUqvPDm+RTc/aT1kihaiaVzmM0Y2+hPQTkwz
+         qUMm7mknz2cjhXPrgRRU+GSF3ZyH5hG6N3gEEFep7pOWdhJUP65hqRJrnuqgKeqJlevL
+         MkUdLobaG1+bBzu1GgUrYhZdUTYgc0X4pNFaYNjTb1PIj5efu3XrwwaF/DZsf7Ii4e9c
+         iqBKKxPCeS2KG7X2uF1QwnvZvriOVbfsGU+scQlkgLX7lg4MZkd2f3K3faXhhL7Je6XK
+         jK6A==
+X-Gm-Message-State: AOAM533A0GmAnlDp0U4siPMhXY5CSNkOhR7nr5ewZyZjRfhgKPtLxuyq
+        7gvVjc+SzXwO3S/gpxivZeYmLA==
+X-Google-Smtp-Source: ABdhPJw2e/NDEf8sEec/hL+0GhrxGhLwxTY+Q3W8tV8tDAOo79Alu00023BhM4cVcfk+4/R9Yw+60g==
+X-Received: by 2002:a17:90a:f992:: with SMTP id cq18mr1124575pjb.172.1599811054028;
+        Fri, 11 Sep 2020 00:57:34 -0700 (PDT)
+Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
+        by smtp.gmail.com with ESMTPSA id m5sm1190506pjn.19.2020.09.11.00.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 00:57:33 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 00:57:32 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+cc:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kvm@vger.kernel.org
+Subject: Re: [patch] KVM: SVM: Periodically schedule when unregistering
+ regions on destroy
+In-Reply-To: <alpine.DEB.2.23.453.2008251255240.2987727@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.23.453.2009110057300.3797679@chino.kir.corp.google.com>
+References: <alpine.DEB.2.23.453.2008251255240.2987727@chino.kir.corp.google.com>
+User-Agent: Alpine 2.23 (DEB 453 2020-06-18)
 MIME-Version: 1.0
-In-Reply-To: <20200910211344.3562-7-colomar.6.4.3@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 PM, Alejandro Colomar wrote:
-> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Paolo, ping?
 
+On Tue, 25 Aug 2020, David Rientjes wrote:
 
-Thanks, Alex. Patch Applied.
-
-Cheers,
-
-Michael
-
-
+> There may be many encrypted regions that need to be unregistered when a
+> SEV VM is destroyed.  This can lead to soft lockups.  For example, on a
+> host running 4.15:
+> 
+> watchdog: BUG: soft lockup - CPU#206 stuck for 11s! [t_virtual_machi:194348]
+> CPU: 206 PID: 194348 Comm: t_virtual_machi
+> RIP: 0010:free_unref_page_list+0x105/0x170
+> ...
+> Call Trace:
+>  [<0>] release_pages+0x159/0x3d0
+>  [<0>] sev_unpin_memory+0x2c/0x50 [kvm_amd]
+>  [<0>] __unregister_enc_region_locked+0x2f/0x70 [kvm_amd]
+>  [<0>] svm_vm_destroy+0xa9/0x200 [kvm_amd]
+>  [<0>] kvm_arch_destroy_vm+0x47/0x200
+>  [<0>] kvm_put_kvm+0x1a8/0x2f0
+>  [<0>] kvm_vm_release+0x25/0x30
+>  [<0>] do_exit+0x335/0xc10
+>  [<0>] do_group_exit+0x3f/0xa0
+>  [<0>] get_signal+0x1bc/0x670
+>  [<0>] do_signal+0x31/0x130
+> 
+> Although the CLFLUSH is no longer issued on every encrypted region to be
+> unregistered, there are no other changes that can prevent soft lockups for
+> very large SEV VMs in the latest kernel.
+> 
+> Periodically schedule if necessary.  This still holds kvm->lock across the
+> resched, but since this only happens when the VM is destroyed this is
+> assumed to be acceptable.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
->  man2/timer_create.2 | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/x86/kvm/svm/sev.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/man2/timer_create.2 b/man2/timer_create.2
-> index e9a8b8503..9c9907739 100644
-> --- a/man2/timer_create.2
-> +++ b/man2/timer_create.2
-> @@ -390,7 +390,7 @@ print_siginfo(siginfo_t *si)
->      tidp = si\->si_value.sival_ptr;
->  
->      printf("    sival_ptr = %p; ", si\->si_value.sival_ptr);
-> -    printf("    *sival_ptr = 0x%lx\en", (long) *tidp);
-> +    printf("    *sival_ptr = 0x%lx\en", (unsigned long) *tidp);
->  
->      or = timer_getoverrun(*tidp);
->      if (or == \-1)
-> @@ -454,7 +454,7 @@ main(int argc, char *argv[])
->      if (timer_create(CLOCKID, &sev, &timerid) == \-1)
->          errExit("timer_create");
->  
-> -    printf("timer ID is 0x%lx\en", (long) timerid);
-> +    printf("timer ID is 0x%lx\en", (unsigned long) timerid);
->  
->      /* Start the timer */
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -1106,6 +1106,7 @@ void sev_vm_destroy(struct kvm *kvm)
+>  		list_for_each_safe(pos, q, head) {
+>  			__unregister_enc_region_locked(kvm,
+>  				list_entry(pos, struct enc_region, list));
+> +			cond_resched();
+>  		}
+>  	}
 >  
 > 
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
