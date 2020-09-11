@@ -2,54 +2,53 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AF0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FD8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580BE221E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F15022224
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599830842;
-	bh=wbfMpO1CvzPj98oV+GB0cklZ4KO/EvDvcqxWWtPeAu0=;
+	s=default; t=1599830887;
+	bh=2wn3+MVWYVhrkVI5UFiMwxsu1LHFfO7P/0T5S5FBz8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWLBJV9tjr1Zrg34Cxadc1PJYwjVmrwV650uTkjuPc955UBhNxowtzIdubWfqrWMb
-	 eD4a4HrYgltOQdm64a2OykgAsL8+JBwB6SGfa8yis2+xu1Q02gMfahX2Wsx2v9HKxc
-	 A+5JZ7tGGywZUxFEPUz8O/RgY8qYi1MaRzTdRPeY=
+	b=JzE/UvE3Sb0ynXXzXe1XiMGm2Ic/Z8qcsxZuyOPpsC6KR+RhgwdoWx5PLqEIk83T3
+	 L0yygY6CTDFtrO3+PzmfWAyaRddQ/XLhGpdLf2AWFgxTvdS7fA4z/r1CWuiSta+KWI
+	 H5XmrRwPjN6a9HgX4w1BBWt101bAVLN5vDgF4r+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgIKN0o (ORCPT
+        id S1725927AbgIKN15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726074AbgIKNFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:05:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0699322248;
-        Fri, 11 Sep 2020 12:58:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E04222EA;
+        Fri, 11 Sep 2020 12:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829102;
-        bh=wbfMpO1CvzPj98oV+GB0cklZ4KO/EvDvcqxWWtPeAu0=;
+        s=default; t=1599829074;
+        bh=2wn3+MVWYVhrkVI5UFiMwxsu1LHFfO7P/0T5S5FBz8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HoP6Yba63VhlowSyhDafCvgek1QrdcV18Pa5sDVRqfh+HOvDPnSSwlA7mt4nSvnC+
-         edEGBIj4cp6q0wZegQsVIXJu9fXQt6miDatMLtqqp5Kzie815f7ej7YaysBwQ8mbcr
-         RN/5URWhRMDo/gZPtvxvnxvUItANu/z1cd90W7tQ=
+        b=AICqbga5RidKLb/WuoNtluIoLrW5rEvfTvkQUPYLWHZ+kdB33Upu6R8Q4fJGhihoE
+         fvIK8Snu1d7hB50B4OPnkbWMXMJiCXLMbHBuORV1IogDjoYjCOdZQxe8jjMUbKnSrM
+         2xSQKzTxOt2E5uB9YXXsxvsU+YfJ3e6IJMdb/r9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Kloc <petr_kloc@yahoo.com>,
-        Teemu Likonen <tlikonen@iki.fi>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 38/71] qmi_wwan: new Telewell and Sierra device IDs
-Date:   Fri, 11 Sep 2020 14:46:22 +0200
-Message-Id: <20200911122506.828242015@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 56/71] net: refactor bind_bucket fastreuse into helper
+Date:   Fri, 11 Sep 2020 14:46:40 +0200
+Message-Id: <20200911122507.706847136@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
 References: <20200911122504.928931589@linuxfoundation.org>
@@ -62,47 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-[ Upstream commit 60cfe1eaccb8af598ebe1bdc44e157ea30fcdd81 ]
+commit 62ffc589abb176821662efc4525ee4ac0b9c3894 upstream.
 
-A new Sierra Wireless EM7305 device ID used in a Toshiba laptop,
-and two Longcheer device IDs entries used by Telewell TW-3G HSPA+
-branded modems.
+Refactor the fastreuse update code in inet_csk_get_port into a small
+helper function that can be called from other places.
 
-Reported-by: Petr Kloc <petr_kloc@yahoo.com>
-Reported-by: Teemu Likonen <tlikonen@iki.fi>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/net/inet_connection_sock.h |    4 ++++
+ net/ipv4/inet_connection_sock.c    |   37 +++++++++++++++++++++++++------------
+ 2 files changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 6104500314d18..d812335600212 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -910,6 +910,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x1199, 0x9056, 8)},	/* Sierra Wireless Modem */
- 	{QMI_FIXED_INTF(0x1199, 0x9057, 8)},
- 	{QMI_FIXED_INTF(0x1199, 0x9061, 8)},	/* Sierra Wireless Modem */
-+	{QMI_FIXED_INTF(0x1199, 0x9063, 8)},	/* Sierra Wireless EM7305 */
-+	{QMI_FIXED_INTF(0x1199, 0x9063, 10)},	/* Sierra Wireless EM7305 */
- 	{QMI_FIXED_INTF(0x1199, 0x9071, 8)},	/* Sierra Wireless MC74xx */
- 	{QMI_FIXED_INTF(0x1199, 0x9071, 10)},	/* Sierra Wireless MC74xx */
- 	{QMI_FIXED_INTF(0x1199, 0x9079, 8)},	/* Sierra Wireless EM74xx */
-@@ -928,6 +930,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
- 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1201, 2)},	/* Telit LE920, LE920A4 */
-+	{QMI_FIXED_INTF(0x1c9e, 0x9801, 3)},	/* Telewell TW-3G HSPA+ */
-+	{QMI_FIXED_INTF(0x1c9e, 0x9803, 4)},	/* Telewell TW-3G HSPA+ */
- 	{QMI_FIXED_INTF(0x1c9e, 0x9b01, 3)},	/* XS Stick W100-2 from 4G Systems */
- 	{QMI_FIXED_INTF(0x0b3c, 0xc000, 4)},	/* Olivetti Olicard 100 */
- 	{QMI_FIXED_INTF(0x0b3c, 0xc001, 4)},	/* Olivetti Olicard 120 */
--- 
-2.25.1
-
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -319,5 +319,9 @@ int inet_csk_compat_getsockopt(struct so
+ int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
+ 			       char __user *optval, unsigned int optlen);
+ 
++/* update the fast reuse flag when adding a socket */
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk);
++
+ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
+ #endif /* _INET_CONNECTION_SOCK_H */
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -89,6 +89,28 @@ int inet_csk_bind_conflict(const struct
+ }
+ EXPORT_SYMBOL_GPL(inet_csk_bind_conflict);
+ 
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk)
++{
++	kuid_t uid = sock_i_uid(sk);
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
++
++	if (!hlist_empty(&tb->owners)) {
++		if (!reuse)
++			tb->fastreuse = 0;
++		if (!sk->sk_reuseport || !uid_eq(tb->fastuid, uid))
++			tb->fastreuseport = 0;
++	} else {
++		tb->fastreuse = reuse;
++		if (sk->sk_reuseport) {
++			tb->fastreuseport = 1;
++			tb->fastuid = uid;
++		} else {
++			tb->fastreuseport = 0;
++		}
++	}
++}
++
+ /* Obtain a reference to a local port for the given sock,
+  * if snum is zero it means select any available local port.
+  * We try to allocate an odd port (and leave even ports for connect())
+@@ -218,19 +240,10 @@ tb_found:
+ 			}
+ 			goto fail_unlock;
+ 		}
+-		if (!reuse)
+-			tb->fastreuse = 0;
+-		if (!sk->sk_reuseport || !uid_eq(tb->fastuid, uid))
+-			tb->fastreuseport = 0;
+-	} else {
+-		tb->fastreuse = reuse;
+-		if (sk->sk_reuseport) {
+-			tb->fastreuseport = 1;
+-			tb->fastuid = uid;
+-		} else {
+-			tb->fastreuseport = 0;
+-		}
+ 	}
++
++	inet_csk_update_fastreuse(tb, sk);
++
+ success:
+ 	if (!inet_csk(sk)->icsk_bind_hash)
+ 		inet_bind_hash(sk, tb, port);
 
 
