@@ -2,158 +2,53 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E6EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4292C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EACD21D81
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyOwSiaf"
+	by mail.kernel.org (Postfix) with ESMTP id 751E821D81
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 07:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbgIKHOn (ORCPT
+        id S1725812AbgIKHPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 03:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgIKHOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:14:42 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C71EC061573;
-        Fri, 11 Sep 2020 00:14:42 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id t20so7076159qtr.8;
-        Fri, 11 Sep 2020 00:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WIC+w8cci/CjHq4Rlp9g5LGl+w5+e9ru3XkhCS9HFuc=;
-        b=TyOwSiafxbsI2YHXi9yv1z2Iv9zTCW2mQrrVv67q0USjGc0/aIA5yaVO6yFHRcGbtg
-         S/mCZQ1rCoIIEIoHf6E/e6gp/3q7NDHHhvmXdmtn+lJaG7N/A5aisZALfZMR/hlaWkik
-         Lk6bTOTF0+qwmYrUTeT8lxTQkpS6fiDp8CT7cah5XyLqWPu8I63F4U5a30lF8JHf5ZuV
-         sEvl/KCU28qNtkR4QFnTPP1aOFQSlhXjGdsbHy/HZgydkIy0pAT1+yhSTRgd3YBSRgGu
-         3V7DF3OYCxpnTEfZwW0BGTFlMiLbRKZJZug0Pn88RJRWX4eFjoVueGXn2bOdSpjttnM+
-         EBeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WIC+w8cci/CjHq4Rlp9g5LGl+w5+e9ru3XkhCS9HFuc=;
-        b=ejRfa7FMq4mpqWGuNSWZNTudCo6Dn53+VVmaQ7mwDrJJNrrdtmFchBetgZTVtbDk9o
-         Vya/eehorGn+zPh/LdS6PREm82M40U5bU6v3OSmYX1e0ti9aI/TSx+gM2GZK4EvfCdzb
-         IwddBOfyfmlQ8jpKuDFk9EpNheOFbfxyXkPP84fXOD96x4ZJL2lP5aDVkd9AV/Ug2xoy
-         EKtZAGupSOUVpuXX7F362WS470yfKQWxRWsb6hVhdNKZfaFvxTnbAVl4uULTQopbJcBn
-         YCIft5f1z8SxlW+b3sqGT1cUuH/88UYb17wsksYvSbfRuvLJoBXv4GVNXtzmL8+F198B
-         Qn1w==
-X-Gm-Message-State: AOAM530zY0ad/hnsUY6inHDY7sA5vAGtwgsXUEdz/zG7lsboqhVmUxAo
-        0GwUJLYL/YMAoBVri/uwNeM=
-X-Google-Smtp-Source: ABdhPJzldrodFvp6XswLy0oZ4aLaQXxfe+q4ZM5piA/s39ouMgvrlkl9hJI+ZoTIBaBL2IlulsOfBA==
-X-Received: by 2002:ac8:178d:: with SMTP id o13mr656506qtj.103.1599808481565;
-        Fri, 11 Sep 2020 00:14:41 -0700 (PDT)
-Received: from seraph.myfiosgateway.com (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
-        by smtp.gmail.com with ESMTPSA id l19sm1572318qtu.16.2020.09.11.00.14.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 00:14:41 -0700 (PDT)
-From:   Brooke Basile <brookebasile@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ath9k-devel@qca.qualcomm.com,
-        syzkaller-bugs@googlegroups.com,
-        Brooke Basile <brookebasile@gmail.com>,
-        syzbot+89bd486af9427a9fc605@syzkaller.appspotmail.com
-Subject: [PATCH] wireless: ath9k: hif_usb: fix race condition between usb_get_urb() and usb_kill_anchored_urbs()
-Date:   Fri, 11 Sep 2020 03:14:27 -0400
-Message-Id: <20200911071427.32354-1-brookebasile@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 11 Sep 2020 03:15:23 -0400
+Received: from verein.lst.de ([213.95.11.211]:35813 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbgIKHPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 03:15:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 263C168BFE; Fri, 11 Sep 2020 09:15:20 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 09:15:19 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        iommu@lists.linux-foundation.org, Tomasz Figa <tfiga@chromium.org>,
+        Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 11/12] dma-mapping: move dma_common_{mmap,get_sgtable}
+ out of mapping.c
+Message-ID: <20200911071519.GF22394@lst.de>
+References: <20200908164758.3177341-1-hch@lst.de> <20200908164758.3177341-12-hch@lst.de> <88bae26e-d5f4-7a00-a88a-b69194d519a4@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88bae26e-d5f4-7a00-a88a-b69194d519a4@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calls to usb_kill_anchored_urbs() after usb_kill_urb() on multiprocessor
-systems create a race condition in which usb_kill_anchored_urbs() deallocates
-the URB before the completer callback is called in usb_kill_urb(), resulting
-in a use-after-free.
-To fix this, add proper lock protection to usb_kill_urb() calls that can
-possibly run concurrently with usb_kill_anchored_urbs().
+On Thu, Sep 10, 2020 at 02:34:18PM +0100, Robin Murphy wrote:
+> On 2020-09-08 17:47, Christoph Hellwig wrote:
+>> Add a new file that contains helpera for misc DMA ops, which is only
+>
+> The Latin plural of the singular "helperum", I guess? :P
 
-Reported-by: syzbot+89bd486af9427a9fc605@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=cabffad18eb74197f84871802fd2c5117b61febf
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
----
- drivers/net/wireless/ath/ath9k/hif_usb.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index 3f563e02d17d..2ed98aaed6fb 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -449,10 +449,19 @@ static void hif_usb_stop(void *hif_handle)
- 	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
-
- 	/* The pending URBs have to be canceled. */
-+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
- 				 &hif_dev->tx.tx_pending, list) {
-+		usb_get_urb(tx_buf->urb);
-+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
- 		usb_kill_urb(tx_buf->urb);
-+		list_del(&tx_buf->list);
-+		usb_free_urb(tx_buf->urb);
-+		kfree(tx_buf->buf);
-+		kfree(tx_buf);
-+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	}
-+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
-
- 	usb_kill_anchored_urbs(&hif_dev->mgmt_submitted);
- }
-@@ -762,27 +771,37 @@ static void ath9k_hif_usb_dealloc_tx_urbs(struct hif_device_usb *hif_dev)
- 	struct tx_buf *tx_buf = NULL, *tx_buf_tmp = NULL;
- 	unsigned long flags;
-
-+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
- 				 &hif_dev->tx.tx_buf, list) {
-+		usb_get_urb(tx_buf->urb);
-+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
- 		usb_kill_urb(tx_buf->urb);
- 		list_del(&tx_buf->list);
- 		usb_free_urb(tx_buf->urb);
- 		kfree(tx_buf->buf);
- 		kfree(tx_buf);
-+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	}
-+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
-
- 	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	hif_dev->tx.flags |= HIF_USB_TX_FLUSH;
- 	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
-
-+	spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	list_for_each_entry_safe(tx_buf, tx_buf_tmp,
- 				 &hif_dev->tx.tx_pending, list) {
-+		usb_get_urb(tx_buf->urb);
-+		spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
- 		usb_kill_urb(tx_buf->urb);
- 		list_del(&tx_buf->list);
- 		usb_free_urb(tx_buf->urb);
- 		kfree(tx_buf->buf);
- 		kfree(tx_buf);
-+		spin_lock_irqsave(&hif_dev->tx.tx_lock, flags);
- 	}
-+	spin_unlock_irqrestore(&hif_dev->tx.tx_lock, flags);
-
- 	usb_kill_anchored_urbs(&hif_dev->mgmt_submitted);
- }
---
-2.28.0
-
+I've switched it to helpers, that might be easier to understand :)
