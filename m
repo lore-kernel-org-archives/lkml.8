@@ -2,112 +2,62 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A02C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BBBC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15751221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwFZrLxE"
+	by mail.kernel.org (Postfix) with ESMTP id B3F52221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgIKQln (ORCPT
+        id S1726430AbgIKQmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgIKPKu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:10:50 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562DDC061757;
-        Fri, 11 Sep 2020 08:10:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z19so6198575lfr.4;
-        Fri, 11 Sep 2020 08:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kv9oMQQFyLAZk1SItD7ecip/eYagD8o/JxuoFQE0OoQ=;
-        b=YwFZrLxEEvRdg2NhApHcQg4xFnmm2xoIOA2btQCY2882iW09CG5O6Qztv5mU8dm9hm
-         vFOUulAFD/55SkmKDyZQlX1idzqhY211NPAROG6hpUGi7XAX4+Yjiu1Vml1XtpmpRPaG
-         KdOyHOKgW5ODx/YdV5HI8M2B1LySYpmiAD0fco7EyayBjIwfFA1nAs4arDLNZVgUAfUo
-         RtMipJ5GGEjynewXmSEnjhs05a4cUXfa8iPhgn/c/vrxGMeqOkebh4IJ4yh3m4v78Ys8
-         SYg9lI4gzAtWffjOxivLYyRSKJSSL8qziJca8GTXJz7Kzz0WA5d1yvpOxm3/Rfo2Hgix
-         hJIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kv9oMQQFyLAZk1SItD7ecip/eYagD8o/JxuoFQE0OoQ=;
-        b=KoFAKkhaEI9ySDXaZP7ktw/hM4Dj+L32lnDamCzajAvhGVoFMfanN+3z9K9kfye0J/
-         /owGONs7MW2+3osAct2x4xccel9SpRZWs/2+UOpWjpywC5zGV2VXRHQNRQVRvbmedk/x
-         SlTTj+kfeHWYEoi0sXOmQN3CQbkft+XMRJ14l4P8ObQ1fQ+yBAmm8AGqDl8jqxbCk9CV
-         wF5nqbo0UNzIvm0MsGKXksYaoAmUhNF/+ecC2LJiY9feh+cZmO2+wePZATQW82RgrAxg
-         9pXWfj6kgycfkIySsm++QZTSUx1avCNL+rC9g51jWlsMrBZ/vj9NSPTigx2+G8lz2RuX
-         OMSg==
-X-Gm-Message-State: AOAM533lSoDqoeIngFzW/mRFe13JCyZ0/rnkq2RVDr30/D1rm0HlXD3z
-        YNwQ16/i8PpC0NsgAraIEyE=
-X-Google-Smtp-Source: ABdhPJzccNXoF0TS9Rv7GinnsHNZqtZT9JD1LRXkodmJIUt3mQ92dWXjPb+iQwBcJBhilh9HIiggqw==
-X-Received: by 2002:a19:ad46:: with SMTP id s6mr457284lfd.576.1599837038689;
-        Fri, 11 Sep 2020 08:10:38 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id a3sm557263ljk.6.2020.09.11.08.10.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 08:10:38 -0700 (PDT)
-Subject: Re: [PATCH v3 1/1] Input: atmel_mxt_ts - implement I2C retries
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew_Gabbasov@mentor.com, erosca@de.adit-jv.com
-References: <20200908151617.12199-1-jiada_wang@mentor.com>
- <6041c677-592b-388e-2eb6-3287a3d92e4b@gmail.com>
- <ec77e42c-ea72-bbae-e1b8-1e11cca17f87@gmail.com>
-Message-ID: <0cd9055e-3ad5-f573-be39-3f999d9d461c@gmail.com>
-Date:   Fri, 11 Sep 2020 18:10:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 12:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726398AbgIKPKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:10:04 -0400
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF9A20770;
+        Fri, 11 Sep 2020 15:06:28 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 16:06:26 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Saravana Kannan <saravanak@google.com>, kernel-team@android.com
+Subject: Re: [PATCH v3 14/16] arm64: Remove custom IRQ stat accounting
+Message-ID: <20200911150626.GF12835@gaia>
+References: <20200901144324.1071694-1-maz@kernel.org>
+ <20200901144324.1071694-15-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ec77e42c-ea72-bbae-e1b8-1e11cca17f87@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901144324.1071694-15-maz@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.09.2020 18:05, Dmitry Osipenko пишет:
-> 11.09.2020 17:50, Dmitry Osipenko пишет:
-> ...
->>> @@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
->>>  	struct i2c_msg xfer[2];
->>>  	u8 buf[2];
->>>  	int ret;
->>> +	bool retry = false;
+On Tue, Sep 01, 2020 at 03:43:22PM +0100, Marc Zyngier wrote:
+> Let's switch the arm64 code to the core accounting, which already
+> does everything we need.
 > 
-> Andy suggested to write this hunk like this:
-> 
-> 	struct i2c_msg xfer[2];
-> 	bool retry = false;
-> 	u8 buf[2];
-> 	int ret;
-> 
-> This is not a mandatory request at all, but it will make this particular
-> piece of code to look a bit nicer.
-> 
-> There is also an opportunity to improve formatting of all variables by
-> sorting them by-length across the whole driver, this will improve
-> readability of the code. But of course it should be a separate patch.
-> Please note that I'm *not* saying that you should create this separate
-> patch!
-> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-I'd also recommend to rename the "retry" variable to "retried", which
-will be a more logical name (more proper English).
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
