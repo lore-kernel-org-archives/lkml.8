@@ -2,132 +2,123 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 00:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D65C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 00:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142E1214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 00:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAD3208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 00:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SijTA2JB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lETZdGhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725613AbgIKAVA (ORCPT
+        id S1725770AbgIKAbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 20:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
+        Thu, 10 Sep 2020 20:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgIKAU4 (ORCPT
+        with ESMTP id S1725280AbgIKAbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 20:20:56 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3B6C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 17:20:55 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id r7so11320329ejs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 17:20:55 -0700 (PDT)
+        Thu, 10 Sep 2020 20:31:45 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69478C061573;
+        Thu, 10 Sep 2020 17:31:45 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id cr8so4321990qvb.10;
+        Thu, 10 Sep 2020 17:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IyAAsSx7nFV/dq/SzL35IFpVJ+Yn15D4pJKs31u9n78=;
-        b=SijTA2JBh2igQyUFhnGY43n8X9KiE/1xBjEYzMfT6RvTVPBWKIf2S98WFdxu9pntLY
-         3FWTWsLcOBbZZP+uQKQQFz4ztqRQDTHyvvYDTLpZ/Yx9mHMQtmxixW2u+2Iv/F2pmzx0
-         9Shwb8Rd2BYkk5HW11A7nj4k+Z9OU+m6AuaF06ISqWp+Wo0Dxl3Ftte6cYPtPbWW1yZR
-         JLLqu2Dvol/xqraTUN3AMxutXgpUnMwIbPWTFot3PWxuMyymTw8Kv6tYWx+E0bQ1fw0S
-         kVuDX8lq+sS+iKyOplLtlkXB4ZB4Y983W8fe/h7lUU2TIMbQmGvwGw79xY/i1sapn5fC
-         JATA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9Gw9EI8PIsj4K4PQPxpv3GeZ8+OtSe8DLVQFJoM0qSk=;
+        b=lETZdGhxXnxwmeXafnd3fOgbV/mH4yUJY2NcDnwqxexZW9wBVscMchFr2IjsYeawFp
+         07xx7zTNGnHYZZWL+LmLIGzD4xkEOsg2A+K9c0KkdHUFdTkeNX1JB8GfwSksrQwaXTPb
+         0JgKVgtpeVEkoo3vLap1Yn0fm7ZUE31tEjgZzGkSKhp+emIvgoDU4OFtShfY5B6+2D8P
+         PqtJY2cKTEr+AzVHyKAhYfZr3EpQRL/iPnlqdgINQgOH1XAL1K8pA73iy1Tu7LoxGfvm
+         FbCVl74E969J1Z2rQZsXud0eHY/fz9qo3hWxAeS/Mlws22NPfhn0Vd0wDlyc/YLNzr/g
+         i9eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IyAAsSx7nFV/dq/SzL35IFpVJ+Yn15D4pJKs31u9n78=;
-        b=GIBr/eOb7T2PV3I1myVp/GA0yZM3AENgRIROxJeVruwmtmi36owf0usJXZrH/VcXoi
-         uKMwKTybMt8RF2pv6c/hfvvc58dbUoVG/oBqcdW8genIudIPv+Kom5pT1SSBWJO/mgwN
-         jgqDeIYEErMpFCQl+T1jCVa+mNAFfZv2RO1F4JIKBw5NSVNCNwppdQwUhsK+Qz3yHM8O
-         ojxE/3HZZz8EsP0fbi8e9UEkk9vovENUmQ/XXZcjg4u6l/dCZgeaXfHSbREKkinO3EG9
-         CiShmw8o475OyrMCAfBACsIHbYArTgTpqZAfdxNdvG0lhGAUAskLHz4SMt3e3K91OoEN
-         9c8g==
-X-Gm-Message-State: AOAM531sUp2FaA1o9fHlyTkVuastcsxcg63GjkKSSuJR5m9iIheOOyMl
-        pP8gMGEEcJgEtSC872Jf7UJ2r8XniBWh+zh+KEZFFg==
-X-Google-Smtp-Source: ABdhPJwL5k8zeWDPprG5Mrub7BhXpdPNFjl1twNR0wyPykMPOKHhl8JhWG8zU9BNykiHZwGZd8sG1UHbIbv8RO4puvk=
-X-Received: by 2002:a17:906:a0c2:: with SMTP id bh2mr11898964ejb.493.1599783653707;
- Thu, 10 Sep 2020 17:20:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9Gw9EI8PIsj4K4PQPxpv3GeZ8+OtSe8DLVQFJoM0qSk=;
+        b=Q5vNeJuPaJfSG57n8A8+d/vLTqN4uDpjBzN7MuyKkEd2wZYvYlGoXdT9KbxBPf9H3B
+         4ySC6ubjIH6RGLTdrNlT6A8FDGNktzrLAXC1Q3B7gC9wIcIZIGOrJn0TEWlnu+sJvwm4
+         792IeRvEou/ltGW8pq+GyLzIUlksMZhhS0kHPzg/zyh8TZMJ0dHAPR1+hzZl+u1ofVDb
+         MAPNzw6zfQZ/q21QcvsZLu5MsfGQ8oPKh/uDRFjyoFWawnHpN07LryZj1wOXjJP/m6ZG
+         uk74dy/qJ8D0tJL+bpT7+3qyNSLhHkP3K9Vp4LSoMIlsyYTNiEW/8R+ZLHnAugIALApk
+         aMdA==
+X-Gm-Message-State: AOAM532lF7/QzMrzjfCE2qp4RIx8hi8VMSkqXteTWOsWz8PCrOSAHZF6
+        nYgbeFKMlT2/0CGD+yX0nPc=
+X-Google-Smtp-Source: ABdhPJyBN4o6O0GTwjLg+fXcrrSDtsx15F/L1uwHSfTqGGpo8Fb+3+sKk1WGNH2YP2wqNmok9pWu7w==
+X-Received: by 2002:a0c:8e4c:: with SMTP id w12mr11600652qvb.3.1599784304531;
+        Thu, 10 Sep 2020 17:31:44 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id v42sm527471qth.35.2020.09.10.17.31.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 17:31:43 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 17:31:42 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, rmk+kernel@armlinux.org.uk, andrew@lunn.ch,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH net-next] net: mvpp2: Initialize link in
+ mvpp2_isr_handle_{xlg,gmac_internal}
+Message-ID: <20200911003142.GA2469103@ubuntu-n2-xlarge-x86>
+References: <20200910174826.511423-1-natechancellor@gmail.com>
+ <20200910.152811.210183159970625640.davem@davemloft.net>
 MIME-Version: 1.0
-References: <20200910202107.3799376-1-keescook@chromium.org>
- <20200910202107.3799376-7-keescook@chromium.org> <202009101649.2A0BF95@keescook>
-In-Reply-To: <202009101649.2A0BF95@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 11 Sep 2020 02:20:27 +0200
-Message-ID: <CAG48ez2=8y7jC9vWSPyYNhwASxGrQaewSBczbr02Ri2YnBJwVA@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/6] security/fbfam: Mitigate a fork brute force attack
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        John Wood <john.wood@gmx.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910.152811.210183159970625640.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 1:56 AM Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Sep 10, 2020 at 01:21:07PM -0700, Kees Cook wrote:
-> > From: John Wood <john.wood@gmx.com>
-> >
-> > In order to mitigate a fork brute force attack it is necessary to kill
-> > all the offending tasks. This tasks are all the ones that share the
-> > statistical data with the current task (the task that has crashed).
-> >
-> > Since the attack detection is done in the function fbfam_handle_attack()
-> > that is called every time a core dump is triggered, only is needed to
-> > kill the others tasks that share the same statistical data, not the
-> > current one as this is in the path to be killed.
-[...]
-> > +     for_each_process(p) {
-> > +             if (p == current || p->fbfam_stats != stats)
-> > +                     continue;
-> > +
-> > +             do_send_sig_info(SIGKILL, SEND_SIG_PRIV, p, PIDTYPE_PID);
-> > +             pr_warn("fbfam: Offending process with PID %d killed\n",
-> > +                     p->pid);
-[...]
-> > +
-> > +             killed += 1;
-> > +             if (killed >= to_kill)
-> > +                     break;
-> > +     }
-> > +
-> > +     rcu_read_unlock();
->
-> Can't newly created processes escape this RCU read lock? I think this
-> need alternate locking, or something in the task_alloc hook that will
-> block any new process from being created within the stats group.
+On Thu, Sep 10, 2020 at 03:28:11PM -0700, David Miller wrote:
+> From: Nathan Chancellor <natechancellor@gmail.com>
+> Date: Thu, 10 Sep 2020 10:48:27 -0700
+> 
+> > Clang warns (trimmed for brevity):
+> > 
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3073:7: warning:
+> > variable 'link' is used uninitialized whenever 'if' condition is false
+> > [-Wsometimes-uninitialized]
+> >                 if (val & MVPP22_XLG_STATUS_LINK_UP)
+> >                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3075:31: note:
+> > uninitialized use occurs here
+> >                 mvpp2_isr_handle_link(port, link);
+> >                                             ^~~~
+> > ...
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3090:8: warning:
+> > variable 'link' is used uninitialized whenever 'if' condition is false
+> > [-Wsometimes-uninitialized]
+> >                         if (val & MVPP2_GMAC_STATUS0_LINK_UP)
+> >                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3092:32: note:
+> > uninitialized use occurs here
+> >                         mvpp2_isr_handle_link(port, link);
+> >                                                     ^~~~
+> > 
+> > Initialize link to false like it was before the refactoring that
+> > happened around link status so that a valid valid is always passed into
+> > mvpp2_isr_handle_link.
+> > 
+> > Fixes: 36cfd3a6e52b ("net: mvpp2: restructure "link status" interrupt handling")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1151
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> This got fixed via another change, a much mode simply one in fact,
+> changing the existing assignments to be unconditional and of the
+> form "link = (bits & MASK);"
 
-Good point; the proper way to deal with this would probably be to take
-the tasklist_lock in read mode around this loop (with
-read_lock(&tasklist_lock) / read_unlock(&tasklist_lock)), which pairs
-with the write_lock_irq(&tasklist_lock) in copy_process(). Thanks to
-the fatal_signal_pending() check while holding the lock in
-copy_process(), that would be race-free - any fork() that has not yet
-inserted the new task into the global task list would wait for us to
-drop the tasklist_lock, then bail out at the fatal_signal_pending()
-check.
+Ah great, that is indeed cleaner, thank you for letting me know!
+
+Cheers,
+Nathan
