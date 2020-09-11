@@ -2,109 +2,116 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1734C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23535C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6146A20735
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3B221D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:07:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS+kYg8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725764AbgIKGDT (ORCPT
+        id S1725773AbgIKGHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
+        Fri, 11 Sep 2020 02:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKGDS (ORCPT
+        with ESMTP id S1725468AbgIKGHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:03:18 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DC9C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 23:03:17 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kGc9Q-0002KV-Qm; Fri, 11 Sep 2020 08:03:12 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1kGc9Q-0003cz-6Y; Fri, 11 Sep 2020 08:03:12 +0200
-Date:   Fri, 11 Sep 2020 08:03:12 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] ARM: dts: add Plymovent M2M board
-Message-ID: <20200911060312.amj2ly7b3aiiwvhv@pengutronix.de>
-References: <20200911050941.15013-1-o.rempel@pengutronix.de>
- <20200911050941.15013-4-o.rempel@pengutronix.de>
+        Fri, 11 Sep 2020 02:07:32 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDAF1C061573;
+        Thu, 10 Sep 2020 23:07:31 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jw11so1193628pjb.0;
+        Thu, 10 Sep 2020 23:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ICuUjpgRR8OCCPVQqNRYxX2OGwz3zcrbN36QMtJa61g=;
+        b=GS+kYg8uR36YAHr7o0VqO3QDwo3czk9b8fZ7ukBPfusDYqheAtOJfE8xVrqMpnP5l2
+         BzweIQ2kk3kQBraS/McI/VmL8iXVB2E/p9rvg01liAPQEuaq7PvKJBoiFMyrie+VP5z8
+         3xd7VDA9Unyi03Q5Li1B41SQI2IeMcmyIzxPEepWq9FmG7NqQ8sl7Bvr0i10eIge7+xx
+         89y8ShZESmNFTXlujsb72C1QvYTegSHe/owwVi070Jv8vP8l3pfAwpnMY8VIYIVCXtyg
+         6MxYzpMLDpl9P/JTAgYEHa7z8g9v/UKt14HuO2tlkMa1k2RcWBAacq5gyP1bDVJbdFLp
+         YQJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ICuUjpgRR8OCCPVQqNRYxX2OGwz3zcrbN36QMtJa61g=;
+        b=n9iQ0EqhocUa7tGbdqhlJ+xsXTA/5+9vPc40cVzTWGOu7USGIF6w35PeeKdzsgFIJq
+         rtIiY8DNM5GknrMUgkzAYBf5JzBk/b+/EPLXZO1sReKvGYtgzQeUw08AIWEzR7KTPBkp
+         0xwcAFz0+dBDr+cdKztmQOAOCtu3UA62zMShZWnYaXKT7vxrk4Ms72wB9GAQy6zlqumI
+         edWJvbL+idxHKVd5zsRFxOKysq3T5JFjuZd+wWVoc9PjwtSKhKgmjU2QJwJtkarKjP1D
+         VGh3p4P2+f6tWvb9dvCqhZ3+d+14pX7bNLhYyy12uGHxZ3hv9R+jFuAsKxZ+ZP+CkaOZ
+         ++/Q==
+X-Gm-Message-State: AOAM531EE5UbTx8wYh4Ua2LnkJG1kRlzfAL/ug9a+BhiFw2JLWimQx01
+        CEBro7yy27jw2ABn+Oyp96Y=
+X-Google-Smtp-Source: ABdhPJw43us4wEtQTNcghlOEJktE0HLOzRpWB5hBY/TwO76lu1uXMwi+73H4zh6br+Ex5ligKxgk8w==
+X-Received: by 2002:a17:90b:796:: with SMTP id l22mr781145pjz.199.1599804451347;
+        Thu, 10 Sep 2020 23:07:31 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8800:1c00:54b8:5e43:7f25:9207])
+        by smtp.gmail.com with ESMTPSA id c202sm1016792pfc.15.2020.09.10.23.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 23:07:30 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Xie He <xie.he.0141@gmail.com>
+Subject: [PATCH net-next] net/socket.c: Remove an unused header file <linux/if_frad.h>
+Date:   Thu, 10 Sep 2020 23:07:20 -0700
+Message-Id: <20200911060720.81033-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911050941.15013-4-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:59:54 up 300 days, 21:18, 302 users,  load average: 0.08, 0.06,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-09-11 07:09, Oleksij Rempel wrote:
-> Plymovent M2M is a control interface produced for the Plymovent filter
-> systems.
-> 
-> Signed-off-by: David Jander <david@protonic.nl>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/Makefile          |   1 +
->  arch/arm/boot/dts/imx6dl-plym2m.dts | 394 ++++++++++++++++++++++++++++
->  2 files changed, 395 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6dl-plym2m.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 4572db3fa5ae..3c3811fd8613 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -455,6 +455,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6dl-pico-hobbit.dtb \
->  	imx6dl-pico-nymph.dtb \
->  	imx6dl-pico-pi.dtb \
-> +	imx6dl-plym2m.dtb \
->  	imx6dl-prtrvt.dtb \
->  	imx6dl-prtvt7.dtb \
->  	imx6dl-rex-basic.dtb \
-> diff --git a/arch/arm/boot/dts/imx6dl-plym2m.dts b/arch/arm/boot/dts/imx6dl-plym2m.dts
-> new file mode 100644
-> index 000000000000..4f96e05aa03f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6dl-plym2m.dts
-> @@ -0,0 +1,394 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-> +// SPDX-FileCopyrightText: 2014 Protonic Holland
-> +// SPDX-FileCopyrightText: 2020 Oleksij Rempel <kernel@pengutronix.de>, Pengutronix
-		^
-@shawn: I saw a few patches adding these tags. Are they used in the near
-future?
+This header file is not actually used in this file. Let's remove it.
 
-Regards,
-  Marco
+Information about this header file:
+
+This header file comes from the "Frame Relay" module at
+  drivers/net/wan/dlci.c
+
+The "Frame Relay" module is used by only one hardware driver, at:
+  drivers/net/wan/sdla.c
+
+Note that the "Frame Relay" module is different from and unrelated to the
+"HDLC Frame Relay" module at:
+  drivers/net/wan/hdlc_fr.c
+
+I think maybe we can deprecate the "Frame Relay" module because we already
+have the (newer) "HDLC Frame Relay" module.
+
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+ net/socket.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/net/socket.c b/net/socket.c
+index 82262e1922f9..161dd2775e13 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -64,7 +64,6 @@
+ #include <linux/seq_file.h>
+ #include <linux/mutex.h>
+ #include <linux/if_bridge.h>
+-#include <linux/if_frad.h>
+ #include <linux/if_vlan.h>
+ #include <linux/ptp_classify.h>
+ #include <linux/init.h>
+-- 
+2.25.1
+
