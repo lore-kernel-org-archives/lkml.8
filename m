@@ -2,89 +2,127 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F1AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7612C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA18D21D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA20221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:45:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oSXLqLzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725800AbgIKLoh (ORCPT
+        id S1725825AbgIKLpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:44:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbgIKLnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:43:31 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BFDE4D7AD17869E56064;
-        Fri, 11 Sep 2020 19:43:24 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 19:43:21 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <jack@suse.com>
-CC:     <linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] ext2: Fix some kernel-doc warnings in balloc.c
-Date:   Fri, 11 Sep 2020 19:40:36 +0800
-Message-ID: <20200911114036.60616-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 11 Sep 2020 07:45:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbgIKLoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 07:44:09 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465BFC061757;
+        Fri, 11 Sep 2020 04:44:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so11164328wrx.7;
+        Fri, 11 Sep 2020 04:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Uxr7xy49Weq7pd1s1vVHMdn6nRX902qFhoxZ9UgjIY=;
+        b=oSXLqLzqLlp5KZmNeVY0rQeg2YQWiyK/CQHbZfAfzhckCkA6R2l/25b8JyRCiarCBW
+         hvshme8hDGfVvh1ji7zNlQRVNH4W1ufpY0crIE/Wf8KFPiJGfhf2uz7guen8da/aU8Xu
+         /To45Nc8IKKsge6WBiZtwMJ/s06FYTtwTk+MfdJ2ZhppqAWiB0xkMLh7E+IguiYy3Fc+
+         aKt71dFkuzb96Q+M0APNpLnEvfF5l17+Wo3ki/en1iVCfFilTry9kM/dsIb3qF3/YDH3
+         eGBSbi+KeT6BZojwDv+UMymFE/ipvNf1plpL3yciN6FbZbjWWw5rrtQYYWm+rXnI5qBZ
+         nCoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Uxr7xy49Weq7pd1s1vVHMdn6nRX902qFhoxZ9UgjIY=;
+        b=XI6yTvkD/GjeGHPrTYh2qS8kwIV3d4ghF2glkXg49isscB4I9SyW67asOjNPJ1Vwde
+         KxokUqGNcdQgpk50W1BxqAAIK+72SoN8bh0+RPr3yOgb6grAtXqv4fQfTxl2s2t5D9+M
+         d3SuASVh+UMS8Ymx1yJlN5XBoe6L/pfQQsBaMe6ZKm77ljfGL3KIezLfoPCNqRsljjYn
+         LcMyC1rHGooNKZudepG1ovuRIR6963loka7D0JcwP7ky+kHIhX9mhBxnd4Bj3YcGcntz
+         N1aZz/gHZ90o5jbfZwVTdpUIo5/LBjTgdVynuiVdufwdcQnNmhsvOtSiMo34WDxpPOPU
+         xalA==
+X-Gm-Message-State: AOAM5337qBCgzBF5/n9ep2PbKuPngsafB4kEk2xvL5UMnew9nq1OZ2Xe
+        H7fqP48vZHC63cmvnRqGBuY=
+X-Google-Smtp-Source: ABdhPJzsWtAPOH+dRmC4weQKtjF8A0Sq7DDAltrpBt83Tf2MFmx73sM9ngU2lceOV2OmN5zPwxhftA==
+X-Received: by 2002:a5d:4d49:: with SMTP id a9mr1779144wru.363.1599824646937;
+        Fri, 11 Sep 2020 04:44:06 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id g143sm3752442wme.0.2020.09.11.04.44.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 04:44:06 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] security: keys: Use kvfree_sensitive in a few places
+Date:   Fri, 11 Sep 2020 12:44:00 +0100
+Message-Id: <20200911114400.82207-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+In big_key.c, there are a few places where memzero_explicit + kvfree is
+used. It is better to use kvfree_sensitive instead, which is more
+readable and also prevents the compiler from eliding the call to
+memzero_explicit. Fix this.
 
-fs/ext2/balloc.c:203: warning: Excess function parameter 'rb_root' description in '__rsv_window_dump'
-fs/ext2/balloc.c:294: warning: Excess function parameter 'rb_root' description in 'search_reserve_window'
-fs/ext2/balloc.c:878: warning: Excess function parameter 'rsv' description in 'alloc_new_reservation'
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- fs/ext2/balloc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ security/keys/big_key.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext2/balloc.c b/fs/ext2/balloc.c
-index fa9c951d3471..1f3f4326bf3c 100644
---- a/fs/ext2/balloc.c
-+++ b/fs/ext2/balloc.c
-@@ -189,7 +189,7 @@ static void group_adjust_blocks(struct super_block *sb, int group_no,
+diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+index 691347dea3c1..d17e5f09eeb8 100644
+--- a/security/keys/big_key.c
++++ b/security/keys/big_key.c
+@@ -121,8 +121,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ 		*path = file->f_path;
+ 		path_get(path);
+ 		fput(file);
+-		memzero_explicit(buf, enclen);
+-		kvfree(buf);
++		kvfree_sensitive(buf, enclen);
+ 	} else {
+ 		/* Just store the data in a buffer */
+ 		void *data = kmalloc(datalen, GFP_KERNEL);
+@@ -140,8 +139,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ err_enckey:
+ 	kfree_sensitive(enckey);
+ error:
+-	memzero_explicit(buf, enclen);
+-	kvfree(buf);
++	kvfree_sensitive(buf, enclen);
+ 	return ret;
+ }
  
- /**
-  * __rsv_window_dump() -- Dump the filesystem block allocation reservation map
-- * @rb_root:		root of per-filesystem reservation rb tree
-+ * @root:		root of per-filesystem reservation rb tree
-  * @verbose:		verbose mode
-  * @fn:			function which wishes to dump the reservation map
-  *
-@@ -282,7 +282,7 @@ goal_in_my_reservation(struct ext2_reserve_window *rsv, ext2_grpblk_t grp_goal,
- 
- /**
-  * search_reserve_window()
-- * @rb_root:		root of reservation tree
-+ * @root:		root of reservation tree
-  * @goal:		target allocation block
-  *
-  * Find the reserved window which includes the goal, or the previous one
-@@ -859,7 +859,7 @@ static int find_next_reservable_window(
-  *
-  *	failed: we failed to find a reservation window in this group
-  *
-- *	@rsv: the reservation
-+ *	@my_rsv: the reservation
-  *
-  *	@grp_goal: The goal (group-relative).  It is where the search for a
-  *		free reservable space should start from.
+@@ -273,8 +271,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+ err_fput:
+ 		fput(file);
+ error:
+-		memzero_explicit(buf, enclen);
+-		kvfree(buf);
++		kvfree_sensitive(buf, enclen);
+ 	} else {
+ 		ret = datalen;
+ 		memcpy(buffer, key->payload.data[big_key_data], datalen);
 -- 
-2.17.1
+2.28.0
 
