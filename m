@@ -2,172 +2,78 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504F1C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F153C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008E5221E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188EF221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ep6Ra3o7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YDbZsh5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725871AbgIKKLM (ORCPT
+        id S1725879AbgIKKLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41230 "EHLO
+        Fri, 11 Sep 2020 06:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgIKKLC (ORCPT
+        with ESMTP id S1725822AbgIKKLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:11:02 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90976C061757
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:11:01 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l17so9320412edq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 03:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=34lVXXsxtskqjri1vjJe9bVZAHnv49AB0SP0UfxscAE=;
-        b=Ep6Ra3o7gNv7Sft87tKmodUvRTKK+yEtXMzzNto1Yt1KesamA6xMs/S8zhwDMqRqsy
-         cj3Xa5rWmXFkJEe7xzlnmIgOsD7z66jKkNHSMokMcCKrVVp9+1zmIDltdzx6TwFgDYrq
-         LU+HqA9msWRajaHgwLojKB8QzqVvOB8SEUGs6NiU6ZLnDPpDt6pExPXBwtY15fQilO0P
-         HcvPgWWEQQPtnWxXe2sGuxjoDQI4zzcdIoTfMUlBVsawGUYH41ceY9cjxfJdBeJypwbg
-         8M8O8Kr+y5byUjtX2u5dU92/znvOXk9SWOBv842iUW6A3ys6nEz0JhaKnJ+Bilt7QaOc
-         AaVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=34lVXXsxtskqjri1vjJe9bVZAHnv49AB0SP0UfxscAE=;
-        b=pqmGel1h5nIUX1ucsGQYUe9EZ5ACvccUzkaYHSjYGZ5VFpfYdgyVJeEA/x6w/BNZSw
-         itJ/K5VfKyfGVvwgwf6P0bDbtn5YXqjTSVXRvPjAFt7FcIwQfq2P5RteVz283pR/qKwI
-         QgRO+DxxEF/5fNKEdTQyvWG7vai5g2zqGQLzEJWRNet3Ju4aERkifitHtZbkl3HMrhQQ
-         C/Wadp45shiuhDPNiikSQdma/UgiUQCmYwf+Bhdf/O1SBMrWg6d+34qlw3CUOysDzChZ
-         cpbyl1YLK/sf6w7N8qGVr/+YtU+nny8tX2OZebnZyrjJf4JQm0TqqhEyDwnq6FAcJsN+
-         Tbww==
-X-Gm-Message-State: AOAM533/OQf6LccOo145jEsI7MF4LDxcmnn4oo/rJBIhmFVD0PfQu0jz
-        slEl6r3xZvbO8X9CPex0EWuQ4g==
-X-Google-Smtp-Source: ABdhPJwUlDEUap6H+NlyZak20h496rC1EI12mA9SUu9rpIVPvh2Z9ra+5EHTo2BjIraFgIG9zA+t2Q==
-X-Received: by 2002:a05:6402:1109:: with SMTP id u9mr1212483edv.74.1599819059554;
-        Fri, 11 Sep 2020 03:10:59 -0700 (PDT)
-Received: from [192.168.1.8] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id v2sm1227241ejh.57.2020.09.11.03.10.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 03:10:58 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] venus: core: handle race condititon for core ops
-To:     Mansur Alisha Shaik <mansur@codeaurora.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1599741856-16239-1-git-send-email-mansur@codeaurora.org>
- <1599741856-16239-2-git-send-email-mansur@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <313cf565-f69f-df84-6bff-8c9a77b9f642@linaro.org>
-Date:   Fri, 11 Sep 2020 13:10:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 06:11:39 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA6FC061573;
+        Fri, 11 Sep 2020 03:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=umcv72hVeqRy+ZfPMQNst+rARjCfIv3n0RiQnMC5nD0=; b=YDbZsh5FiUvnSSjaDUcu6mZili
+        UCeD1nwSyzW1KmXsmXKAFxoSoS59iXWZCgqZq1pYgW9eiDZ02vIba1e+8bfMz8Fn68TpziORngXTl
+        2KTTmUNrleZSmXhq1K+hXJhEbtw+oTwh7bo/CD+Jxy8sNX0Fw1Z7phN9AcLoaEASC/xeIRIuJsDzF
+        xBgF+7E3Es5YszzwePO/CMI4lpQEg+j2DZcVvj6Vj3aK35Ab6+PHksBnZ+jQZcEYWzRixUzcsGOBb
+        z0zxOgrCqMerNo4n6bj2xY7Tnqmg/4k2SMSp95ZFMvwEsAcLlO0YseeRSIeVymXgt66a8qOoTLo1M
+        1zWTIbYw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGg1m-00024J-5E; Fri, 11 Sep 2020 10:11:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E05D03050F0;
+        Fri, 11 Sep 2020 12:11:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C54972B06B004; Fri, 11 Sep 2020 12:11:32 +0200 (CEST)
+Date:   Fri, 11 Sep 2020 12:11:32 +0200
+From:   peterz@infradead.org
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>, cristian.marussi@arm.com,
+        sudeep.holla@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] cpufreq: stats: Defer stats update to
+ cpufreq_stats_record_transition()
+Message-ID: <20200911101132.GC165568@hirez.programming.kicks-ass.net>
+References: <cover.1599031227.git.viresh.kumar@linaro.org>
+ <973bd0536c4957d03f36447398498cfacb2393d9.1599031227.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1599741856-16239-2-git-send-email-mansur@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <973bd0536c4957d03f36447398498cfacb2393d9.1599031227.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 12:54:41PM +0530, Viresh Kumar wrote:
+> +	atomic_t reset_pending;
 
+> +	atomic_set(&stats->reset_pending, 0);
+> +	if (atomic_read(&stats->reset_pending))
+> +	bool pending = atomic_read(&stats->reset_pending);
+> +	atomic_set(&stats->reset_pending, 1);
+> +	bool pending = atomic_read(&stats->reset_pending);
+> +	if (atomic_read(&stats->reset_pending))
 
-On 9/10/20 3:44 PM, Mansur Alisha Shaik wrote:
-> For core ops we are having only write protect but there
-> is no read protect, because of this in multthreading
-> and concurrency, one CPU core is reading without wait
-> which is causing the NULL pointer dereferece crash.
-> 
-> one such scenario is as show below, where in one CPU
-> core, core->ops becoming NULL and in another CPU core
-> calling core->ops->session_init().
-> 
-> CPU: core-7:
-> Call trace:
->  hfi_session_init+0x180/0x1dc [venus_core]
->  vdec_queue_setup+0x9c/0x364 [venus_dec]
->  vb2_core_reqbufs+0x1e4/0x368 [videobuf2_common]
->  vb2_reqbufs+0x4c/0x64 [videobuf2_v4l2]
->  v4l2_m2m_reqbufs+0x50/0x84 [v4l2_mem2mem]
->  v4l2_m2m_ioctl_reqbufs+0x2c/0x38 [v4l2_mem2mem]
->  v4l_reqbufs+0x4c/0x5c
-> __video_do_ioctl+0x2b0/0x39c
-> 
-> CPU: core-0:
-> Call trace:
->  venus_shutdown+0x98/0xfc [venus_core]
->  venus_sys_error_handler+0x64/0x148 [venus_core]
->  process_one_work+0x210/0x3d0
->  worker_thread+0x248/0x3f4
->  kthread+0x11c/0x12c
-> 
-> Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
-> Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
-> Changes in V2:
-> - Addressed review comments by stan by validating on top
-> - of https://lore.kernel.org/patchwork/project/lkml/list/?series=455962
-> 
->  drivers/media/platform/qcom/venus/hfi.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi.c b/drivers/media/platform/qcom/venus/hfi.c
-> index a59022a..3137071 100644
-> --- a/drivers/media/platform/qcom/venus/hfi.c
-> +++ b/drivers/media/platform/qcom/venus/hfi.c
-> @@ -195,7 +195,7 @@ EXPORT_SYMBOL_GPL(hfi_session_create);
->  int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
->  {
->  	struct venus_core *core = inst->core;
-> -	const struct hfi_ops *ops = core->ops;
-> +	const struct hfi_ops *ops;
->  	int ret;
->  
-
-If we are in system error recovery the session_init cannot pass
-successfully, so we exit early in the function.
-
-I'd suggest to make it:
-
-	/* If core shutdown is in progress or we are in system error 	recovery,
-return an error */
-	mutex_lock(&core->lock);
-	if (!core->ops || core->sys_error) {
-		mutex_unclock(&core->lock);
-		return -EIO;
-	}
-	mutex_unclock(&core->lock);
-		
->  	if (inst->state != INST_UNINIT)
-> @@ -204,10 +204,13 @@ int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
->  	inst->hfi_codec = to_codec_type(pixfmt);
->  	reinit_completion(&inst->done);
->  
-> +	mutex_lock(&core->lock);
-> +	ops = core->ops;
->  	ret = ops->session_init(inst, inst->session_type, inst->hfi_codec);
->  	if (ret)
->  		return ret;
->  
-> +	mutex_unlock(&core->lock);
->  	ret = wait_session_msg(inst);
->  	if (ret)
->  		return ret;
-> 
-
--- 
-regards,
-Stan
+What do you think atomic_t is doing for you?
