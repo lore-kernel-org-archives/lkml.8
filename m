@@ -2,150 +2,80 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B066C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45262C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD59B221ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95FC221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841719;
-	bh=gupGZfyCWjzyTybhAS/ra1qQ28eHy8myobsIyy93VJA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PElSGZWmcHdXuyegvUWKThkK2t11YsUUY07WsMBM8yJ9YSakSjbeKbTLaZiaFU2I2
-	 hkX7Wh7zPKYYfI990KOLH5tvirQk9JOgc0pzdRJVpyO1NfSDzTzPjUQSE8+JW0vOTT
-	 zExCH3aGqG4f4QVm8z9T3gtV5Pp36aMNe8qv7Tq8=
+	s=default; t=1599841727;
+	bh=sM+52fCdoYQKtmyuK3xt2Ylu1+kj/bCYKlufyiyrEsY=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=Z0F7rTjVbUa9W80wNINwvOfNBDQCrqjp9HpdJ4gtBtYbXmkB1wtj7SpEsqM8f2z3K
+	 OCS0IEK3Sh58dA7jxc0YngB9s0igoCt6UEjqyn6akgooBY8eHDJzW2Wvh7LMmhaWgP
+	 NppdT/bRQWC2Dgb2O3cyFZUjjLLe+JmbQxv7XXb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgIKQ2e (ORCPT
+        id S1726165AbgIKQ2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:28:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgIKPUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:20:24 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        id S1726459AbgIKPUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:20:30 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5DDC21D81;
-        Fri, 11 Sep 2020 15:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 408FB22286;
+        Fri, 11 Sep 2020 14:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599837460;
-        bh=gupGZfyCWjzyTybhAS/ra1qQ28eHy8myobsIyy93VJA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m0oQPP2XCKYz+rwQfM4O1rdYT4yltshP7twQJqK62UXdUmP7mAN8yidHGu/qxh5wR
-         Yij4F3nIw3qQ22KKyVgxcdpg6bGWact2evoQ35oegTLBfPZJEJ5LnXeQ+DJE8vaGkX
-         teW2jpUmwLifBSRr7/LlebUSQIbQk94yNv2wTGMo=
-Received: by mail-ot1-f49.google.com with SMTP id a2so8597256otr.11;
-        Fri, 11 Sep 2020 08:17:39 -0700 (PDT)
-X-Gm-Message-State: AOAM5329fU0dMKxiltpkEdCwL44njWjCTLPvn4OUDQFPDYfmzv+Hu79G
-        SSBCht3DMXWMVF2GUDd9hzsCJNa9gsNtbPeJj+U=
-X-Google-Smtp-Source: ABdhPJzOyF/HBAXFTBoyNO5I33yKfSijH56wjqNzdZ68h+mmUbhU+Ox68k7PwAF8A8PvXqxLJLUtyECmO01vhMnpYb4=
-X-Received: by 2002:a9d:6193:: with SMTP id g19mr1472882otk.108.1599837459251;
- Fri, 11 Sep 2020 08:17:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200905013107.10457-1-lszubowi@redhat.com>
-In-Reply-To: <20200905013107.10457-1-lszubowi@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 11 Sep 2020 18:17:28 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHOcGiwOT_sNTQRA=G7GCQSKLk2HSNoS2vEQYPzQpn0nw@mail.gmail.com>
-Message-ID: <CAMj1kXHOcGiwOT_sNTQRA=G7GCQSKLk2HSNoS2vEQYPzQpn0nw@mail.gmail.com>
-Subject: Re: [PATCH V2 0/3] integrity: Load certs from EFI MOK config table
-To:     Lenny Szubowicz <lszubowi@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
-        James Morris <jmorris@namei.org>, serge@hallyn.com,
-        Kees Cook <keescook@chromium.org>, zohar@linux.ibm.com,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Jones <pjones@redhat.com>,
-        David Howells <dhowells@redhat.com>, prarit@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1599834777;
+        bh=sM+52fCdoYQKtmyuK3xt2Ylu1+kj/bCYKlufyiyrEsY=;
+        h=From:To:Subject:Date:From;
+        b=cz2/eNZTwDLgFeOW9c6u5D3gvSeoqwD+5eUuOIWcgAU+3IOLeXegOuBm4W5Ez2O3m
+         iqEYIPnDZU76RkPXntpbOrjqqQ/E3NKh6hB7wgiBjRMH0Zg6r7Ot65pgqv7ja3nslL
+         m4hmdEakpN1SMapwPMc1zS32DZoh+mntk2zazxEw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] memory: omap-gpmc: Fix compile test on SPARC
+Date:   Fri, 11 Sep 2020 16:32:51 +0200
+Message-Id: <20200911143251.399-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 5 Sep 2020 at 04:31, Lenny Szubowicz <lszubowi@redhat.com> wrote:
->
-> Because of system-specific EFI firmware limitations, EFI volatile
-> variables may not be capable of holding the required contents of
-> the Machine Owner Key (MOK) certificate store when the certificate
-> list grows above some size. Therefore, an EFI boot loader may pass
-> the MOK certs via a EFI configuration table created specifically for
-> this purpose to avoid this firmware limitation.
->
-> An EFI configuration table is a simpler and more robust mechanism
-> compared to EFI variables and is well suited for one-way passage
-> of static information from a pre-OS environment to the kernel.
->
-> Entries in the MOK variable configuration table are named key/value
-> pairs. Therefore the shim boot loader can create a MokListRT named
-> entry in the MOK configuration table that contains exactly the same
-> data as the MokListRT UEFI variable does or would otherwise contain.
-> As such, the kernel can load certs from the data in the MokListRT
-> configuration table entry data in the same way that it loads certs
-> from the data returned by the EFI GetVariable() runtime call for the
-> MokListRT variable.
->
-> This patch set does not remove the support for loading certs from the
-> EFI MOK variables into the platform key ring. However, if both the EFI
-> MOK configuration table and corresponding EFI MOK variables are present,
-> the MOK table is used as the source of MOK certs.
->
-> The contents of the individual named MOK config table entries are
-> made available to user space as individual sysfs binary files,
-> which are read-only to root, under:
->
->         /sys/firmware/efi/mok-variables/
->
-> This enables an updated mokutil to provide support for:
->
->         mokutil --list-enrolled
->
-> such that it can provide accurate information regardless of whether
-> the MOK configuration table or MOK EFI variables were the source
-> for certs. Note that all modifications of MOK related state are still
-> initiated by mokutil via EFI variables.
->
-> V2: Incorporate feedback from V1
->   Patch 01: efi: Support for MOK variable config table
->   - Minor update to change log; no code changes
->   Patch 02: integrity: Move import of MokListRT certs to a separate routine
->   - Clean up code flow in code moved to load_moklist_certs()
->   - Remove some unnecessary initialization of variables
->   Patch 03: integrity: Load certs from the EFI MOK config table
->   - Update required due to changes in patch 02.
->   - Remove unnecessary init of mokvar_entry in load_moklist_certs()
->
-> V1:
->   https://lore.kernel.org/lkml/20200826034455.28707-1-lszubowi@redhat.com/
->
-> Lenny Szubowicz (3):
->   efi: Support for MOK variable config table
->   integrity: Move import of MokListRT certs to a separate routine
->   integrity: Load certs from the EFI MOK config table
->
->  arch/x86/kernel/setup.c                       |   1 +
->  arch/x86/platform/efi/efi.c                   |   3 +
->  drivers/firmware/efi/Makefile                 |   1 +
->  drivers/firmware/efi/arm-init.c               |   1 +
->  drivers/firmware/efi/efi.c                    |   6 +
->  drivers/firmware/efi/mokvar-table.c           | 360 ++++++++++++++++++
->  include/linux/efi.h                           |  34 ++
->  security/integrity/platform_certs/load_uefi.c |  85 ++++-
->  8 files changed, 472 insertions(+), 19 deletions(-)
->  create mode 100644 drivers/firmware/efi/mokvar-table.c
->
+SPARC comes without CONFIG_OF_ADDRESS thus compile testing fails on
+linking:
 
-Thanks. I have tentatively queued these up in efi/next.
+  /usr/bin/sparc64-linux-gnu-ld: drivers/memory/omap-gpmc.o: in function `gpmc_probe_generic_child':
+  omap-gpmc.c:(.text.unlikely+0x14ec): undefined reference to `of_platform_device_create'
 
-Mimi, please let me know if you have any thoughts on 3/3, and whether
-your R-b on 2/3 [v1] implies that you are ok with the series going
-through the EFI tree.
+Fixes: ea0c0ad6b6eb ("memory: Enable compile testing for most of the drivers")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/memory/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index 8072204bc21a..00e013b14703 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -104,6 +104,7 @@ config TI_EMIF
+ 
+ config OMAP_GPMC
+ 	bool "Texas Instruments OMAP SoC GPMC driver" if COMPILE_TEST
++	depends on OF_ADDRESS
+ 	select GPIOLIB
+ 	help
+ 	  This driver is for the General Purpose Memory Controller (GPMC)
 -- 
-Ard.
+2.17.1
+
