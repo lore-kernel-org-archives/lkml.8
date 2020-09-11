@@ -2,118 +2,65 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC52C2D0E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D56C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26609221E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599799040;
-	bh=JoKwh3qJRTbkpXb29zLQsepECW/mXTdadxrZ5Cy/rWU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=RNssBKn/iTM/DoMd6mxUje7DWpygXsyDXVvZsBeQjzYzDHVziguEwBozD9n8sngN8
-	 Ud4tV9YkoSzKvCJ+5mnxj/a8G0Q29RPWGYuOVo/i73rXIwk7DZ4QG7qSjhZPVWgk4y
-	 pz/oXYdXDUfJrq6tX0O8KQIIAkXgI+zqJAAA7Fqs=
+	by mail.kernel.org (Postfix) with ESMTP id 88123221E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 04:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgIKEhS (ORCPT
+        id S1725794AbgIKEhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 00:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 00:37:54 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58528 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgIKEhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 00:37:10 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E00B221E7;
-        Fri, 11 Sep 2020 04:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599799030;
-        bh=JoKwh3qJRTbkpXb29zLQsepECW/mXTdadxrZ5Cy/rWU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sMmGkDvVrjiz4rR868arhRuUIpkNr7QfTtdszWewk1mHMDVPYU0SvtkVrIi0YzRMU
-         eupPSaIYpZbxuBOIr8PKtAnDb30LSbuf09BaiTdSAt76tMNRNpjtohPHTJ5B7Fd42D
-         hUmTHqi4ojct/WE85x3D9UBqtLZ8gzYnPsVgQ6nE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F09BB3522DD2; Thu, 10 Sep 2020 21:37:09 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 21:37:09 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     rcu@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>, dipankar@in.ibm.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@redhat.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH RFC tip/core/rcu 4/4] rcu-tasks: Shorten per-grace-period
- sleep for RCU Tasks Trace
-Message-ID: <20200911043709.GV29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200910201956.GA24190@paulmck-ThinkPad-P72>
- <20200910202052.5073-4-paulmck@kernel.org>
- <CAADnVQK4Rgrzq+cUKCMkr5anZF+UbHmAc7-FH4BjA23aMM03rQ@mail.gmail.com>
+        id S1725772AbgIKEhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 00:37:51 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kGaoO-0006Ob-Fi; Fri, 11 Sep 2020 14:37:25 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 11 Sep 2020 14:37:24 +1000
+Date:   Fri, 11 Sep 2020 14:37:24 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Atte Tommiska <atte.tommiska@xiphera.com>
+Cc:     Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] hwrng: xiphera-trng: add support for XIP8001B
+ hwrng
+Message-ID: <20200911043724.GA5710@gondor.apana.org.au>
+References: <20200902102817.32172-1-atte.tommiska@xiphera.com>
+ <20200902102817.32172-4-atte.tommiska@xiphera.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQK4Rgrzq+cUKCMkr5anZF+UbHmAc7-FH4BjA23aMM03rQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200902102817.32172-4-atte.tommiska@xiphera.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:18:01PM -0700, Alexei Starovoitov wrote:
-> On Thu, Sep 10, 2020 at 1:20 PM <paulmck@kernel.org> wrote:
-> >
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> >
-> > The various RCU tasks flavors currently wait 100 milliseconds between each
-> > grace period in order to prevent CPU-bound loops and to favor efficiency
-> > over latency.  However, RCU Tasks Trace needs to have a grace-period
-> > latency of roughly 25 milliseconds, which is completely infeasible given
-> > the 100-millisecond per-grace-period sleep.  This commit therefore reduces
-> > this sleep duration to 5 milliseconds (or one jiffy, whichever is longer)
-> > in kernels built with CONFIG_TASKS_TRACE_RCU_READ_MB=y.
+On Wed, Sep 02, 2020 at 01:28:17PM +0300, Atte Tommiska wrote:
+> Xiphera XIP8001B is an FPGA-based True Random Number Generator
+> Intellectual Property (IP) Core which can be instantiated in
+> multiple FPGA families. This driver adds Linux support for it through
+> the hwrng interface.
 > 
-> The commit log is either misleading or wrong?
-> If I read the code correctly in CONFIG_TASKS_TRACE_RCU_READ_MB=y
-> case the existing HZ/10 "paranoid sleep" is preserved.
+> Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
+> Reported-by: kernel test robot <lkp@intel.com>
 
-Yes, for CONFIG_TASKS_TRACE_RCU_READ_MB=y, the previous 100-millisecond
-"paranoid sleep" is preserved.  Preserving previous behavior is of course
-especially important for rcupdate.rcu_task_ipi_delay, given that real-time
-applications are degraded by IPIs.  And given that we are avoiding IPIs
-in this case, speeding up the polling is not all that helpful.
+This Reported-by appears to be superfluous and I'll remove it
+when applying.
 
-> It's for the MB=n case it is reduced to HZ/200.
-
-Yes, that is, to roughly 5 milliseconds for large HZ or to one jiffy
-for HZ<200.  Here, we send IPIs much more aggressively, so polling
-more frequently does help a lot.
-
-> Also I don't understand why you're talking about milliseconds but
-> all numbers are HZ based. HZ/10 gives different number of
-> milliseconds depending on HZ.
-
-As long as HZ is 10 or greater, HZ/10 jiffies is roughly 100 milliseconds.
-In the unlikely event that HZ is less than 10, the code clamps to one
-jiffy.  Since schedule_timeout_idle() sleep time is specified in jiffies,
-it all works out.
-
-							Thanx, Paul
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
