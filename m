@@ -2,118 +2,102 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6E0C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC32CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E0D21D7E
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gSzXJx9q"
+	by mail.kernel.org (Postfix) with ESMTP id 84D6521D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 06:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599804671;
+	bh=R+WQCRWfq/LEeLL9EuGAFD+jyfSl/fjliRW9gC2u17M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V1yX55njTiYrbDYwlRps2IEG2FtXP/1cfOca5j45J9pezqKBkA/6l9WWmpO4bZKpU
+	 YHfjK41GtXrYl1RSlxE1whWEVK+fuktNSJ5P0lnW9W/pNWofDOklGzYE7HMW7Fkwhw
+	 l3kK9G/xk46u6+mmw9UM2msOYUaLElluSSMM7Vec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgIKGKt (ORCPT
+        id S1725813AbgIKGLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 02:10:49 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:40058 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgIKGKo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 02:10:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1599804644; x=1631340644;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Ew6L9puofX2BrE+gc4fVOAW56/4A+Bp1vYL6oL7OEyM=;
-  b=gSzXJx9qB4smiBlSW5qzTJQGfBnCaXyAphJVXyVaYRQeVh2rFNnhU6dm
-   OZklkb3TVTD9yTjMd3tCilOfQnnsfEqh7hRcuFs7qjbbSjuouPqYARuUk
-   ynFUKL1cy3+3NhaZ3lxQyrGAx0AXoQi4P5gpnzER8n/ZGmGt9ne2BFop4
-   Rv46NoGnriMjcOElIKhmGvWeKoLlaUzXE0MHuWdP8FMGuCEqQuQ1WfunQ
-   Sh/ONvRdDn+OqEwf8dXywu+jF8qBC0vYSLgrvy67ve1MvcFN3Ow27KFop
-   HTynY9pGG2IS2oyH4kS6jQykRbRp5GvryCbsI/24Hi05wCYd1lpgH5ycb
-   A==;
-IronPort-SDR: KqmD+Z4XGw/zmsz5iYseYqeCNCJJTmDwq0ozZNYTD2iDltnYoM/xYPDw0/9fhCvYI1VE54euYK
- OnGxiF1+fL9UITXO8K7eAEkOUTn6FhtRwd6pWpOvKKLj6fayJhcohjFrgI4Xi7/MfEOMQ52VHT
- VJABWw08/8QIvz3iGcix+rHJazM5M396XnxhhlwFPXZ4qmWjfXhKea31eHOiyXdAXs2yWR9wfu
- DmC2IxnSZmULqi2KxSk4DUxBCvJOr6NMUoLDaK/uQmzOsCLHEea+u+F7rSR0kCGspVpIGZYkof
- PV4=
-X-IronPort-AV: E=Sophos;i="5.76,414,1592895600"; 
-   d="scan'208";a="88679903"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Sep 2020 23:10:43 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 10 Sep 2020 23:10:02 -0700
-Received: from training-HP-280-G1-MT-PC.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 10 Sep 2020 23:10:40 -0700
-From:   Divya Koppera <Divya.Koppera@microchip.com>
-To:     <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <marex@denx.de>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <UNGLinuxDriver@microchip.com>
-Subject: [PATCH v2 net-next] net: phy: mchp: Add support for LAN8814 QUAD PHY
-Date:   Fri, 11 Sep 2020 11:40:20 +0530
-Message-ID: <20200911061020.22413-1-Divya.Koppera@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200909093419.32102-1-Divya.Koppera@microchip.com>
-References: <20200909093419.32102-1-Divya.Koppera@microchip.com>
+        Fri, 11 Sep 2020 02:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgIKGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 02:11:07 -0400
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E62E0221F1;
+        Fri, 11 Sep 2020 06:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599804667;
+        bh=R+WQCRWfq/LEeLL9EuGAFD+jyfSl/fjliRW9gC2u17M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GHEpjzBiGvtJ1QhOXg4nIsgN5ThSgM00QRJX4Cghvz7A274L7p71V6OwfaBrG1X7J
+         uVyd/7XdH7fhiQhYyOM4eLfnabBhEQ8cFOqAAgpYBXbjJTV7NJ8+LYLGYdNvk7hHE1
+         8odlxiTb6JWeOThhbKMIc1HFWyofHRtn3Q8u/1v8=
+Received: by mail-ej1-f48.google.com with SMTP id gr14so12244485ejb.1;
+        Thu, 10 Sep 2020 23:11:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531kIgp6PQ41zD+x4poHXkcXDayMrLutW1ti6LgVzfaTLQazauxe
+        d0ugZuDx+8NaAQ6H8+Yo1qMazkg61LxFFr414i8=
+X-Google-Smtp-Source: ABdhPJysqYkgvsUB5GiEswkRNNKILHjjgWCeXRVo+QHtk0WCjK+abRX2rEGDEoOCLg/z/tM8wvqyn+iTq0H6F2DGVuc=
+X-Received: by 2002:a17:906:af53:: with SMTP id ly19mr495830ejb.503.1599804665477;
+ Thu, 10 Sep 2020 23:11:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200910175733.11046-1-krzk@kernel.org> <20200910175733.11046-13-krzk@kernel.org>
+ <CACPK8XfmDySpkCw8nkmns-euGQE6JTqZLVO6JhvFJiRqNosRuQ@mail.gmail.com>
+In-Reply-To: <CACPK8XfmDySpkCw8nkmns-euGQE6JTqZLVO6JhvFJiRqNosRuQ@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 11 Sep 2020 08:10:53 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPca3R=LYVws9rYj-iuOx7Z1GMkM2ow2pCQ3CGnv0vSS7Q@mail.gmail.com>
+Message-ID: <CAJKOXPca3R=LYVws9rYj-iuOx7Z1GMkM2ow2pCQ3CGnv0vSS7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 12/15] ARM: dts: aspeed: align GPIO hog names with dtschema
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LAN8814 is a low-power, quad-port triple-speed (10BASE-T/100BASETX/1000BASE-T)
-Ethernet physical layer transceiver (PHY). It supports transmission and
-reception of data on standard CAT-5, as well as CAT-5e and CAT-6, unshielded
-twisted pair (UTP) cables.
+On Fri, 11 Sep 2020 at 02:58, Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Thu, 10 Sep 2020 at 17:59, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > dtschema for pca95xx expects GPIO hogs to end with 'hog' prefix.
+>
+> This is a bit ugly. Do we have to go down this path?
 
-LAN8814 supports industry-standard QSGMII (Quad Serial Gigabit Media
-Independent Interface) and Q-USGMII (Quad Universal Serial Gigabit Media
-Independent Interface) providing chip-to-chip connection to four Gigabit
-Ethernet MACs using a single serialized link (differential pair) in each
-direction.
+No, but please comment on schema (1/15 in this series).
 
-The LAN8814 SKU supports high-accuracy timestamping functions to
-support IEEE-1588 solutions using Microchip Ethernet switches, as well as
-customer solutions based on SoCs and FPGAs.
-
-The LAN8804 SKU has same features as that of LAN8814 SKU except that it does
-not support 1588, SyncE, or Q-USGMII with PCH/MCH.
-
-This adds support for 10BASE-T, 100BASE-TX, and 1000BASE-T,
-QSGMII link with the MAC.
-
-Signed-off-by: Divya Koppera<divya.koppera@microchip.com>
----
-v1 -> v2:
-* Removing get_features and config_init as the Errata mentioned and other
-  functionality related things are not applicable for this phy.
-  Addressed review comments.
----
- drivers/net/phy/micrel.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 9f60865587ea..a7f74b3b97af 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1320,8 +1320,6 @@ static struct phy_driver ksphy_driver[] = {
- 	.name		= "Microchip INDY Gigabit Quad PHY",
- 	.driver_data	= &ksz9021_type,
- 	.probe		= kszphy_probe,
--	.get_features	= ksz9031_get_features,
--	.config_init	= ksz9031_config_init,
- 	.soft_reset	= genphy_soft_reset,
- 	.read_status	= ksz9031_read_status,
- 	.get_sset_count	= kszphy_get_sset_count,
--- 
-2.17.1
-
+Best regards,
+Krzysztof
