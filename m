@@ -2,90 +2,165 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE008C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9D3C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94AAF20575
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55B9208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rqyi/pPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725880AbgIKIF6 (ORCPT
+        id S1725887AbgIKIF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:05:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34250 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbgIKIFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:05:46 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8762F3D7A56EBE70361F;
-        Fri, 11 Sep 2020 16:05:42 +0800 (CST)
-Received: from [127.0.0.1] (10.174.178.16) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 16:05:41 +0800
-Subject: Re: [PATCH] EDAC/mc_sysfs: add missing newlines when printing
- 'max(dimm)_location'
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1599207563-41819-1-git-send-email-wangxiongfeng2@huawei.com>
- <20200910110012.GD8357@zn.tnic>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <ab222053-d4e5-eb0b-a7a3-e8158cac1b88@huawei.com>
-Date:   Fri, 11 Sep 2020 16:05:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 11 Sep 2020 04:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgIKIFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:05:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AB9C061573;
+        Fri, 11 Sep 2020 01:05:50 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id s13so3542427wmh.4;
+        Fri, 11 Sep 2020 01:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=p7ZEqYEXNNDQfZTyyRtEq4ezyf6jRAc/A0d3cWdelG8=;
+        b=Rqyi/pPDFnO111d2wHVM9Tc2uqcMysHCnWXUvkE6Vmna5G8Ok7ekCImU0bFlpVZOXM
+         uW/K98RdI7k26X1gg0pyDNU4luS1UmOvQpTN/1kv9w21xpqK9tgyg/RgF9C9yxwpZ+q4
+         Wgni6Qw1aUaNdEAcu+4grqxdZLZvJpKWZaZNqa0KMjAbFqm/Z7aKg0idCOrEyPnTKTWg
+         5H3kBiT5m+KCmQ0+N09280E1TRBrR2VhgkPZQbGtaKcxN6mi10Ap7XyA4gdNqv7oY7G+
+         4yGt8qMGfM3/8LL+kYay2VDblqSu4o5BCwowidkOuH72ppxrDjvbftLvjtJwLHXZvlzD
+         /1vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p7ZEqYEXNNDQfZTyyRtEq4ezyf6jRAc/A0d3cWdelG8=;
+        b=rbl4liZmVHn0jWJJj9x8mfM3u2Bf/hIVz0GFV2YabobusPhXDt6pbn/+vppohUzUli
+         Lx7GHx+LsIv8MrphAXQJxcVF2MwOEvk7qvsZYh76kcIECM/fuoRVG+jaBuaLEBD4h1iB
+         IwKIHGWe1cu8G2fJgeDg3iO7cv08URkmy5v8AXtdCb6YrK/dqR0Ae3azsGVtkfIUnU8f
+         KP1CWXSyu036W2CTfCcFLYOpPzEW2e6zk6v7o709+JERgXPjqxqEi0g7eX8tctzLE4Hd
+         UrO7gjhQIhcViXFFgh2OHi7E/jZNtE+aHzja/uVqlVi4PpMS37sRKPurMIsdYL1LfG8n
+         0jYw==
+X-Gm-Message-State: AOAM530v3g2Ju7ll10isQGnlOOsbGDBHReWeZ95puRJZq7Z/j6zFLiI8
+        wvIcMa0ewNDzHQUtagW6e9xzDU9mKHs=
+X-Google-Smtp-Source: ABdhPJw1ujdf1sble0/tg5PgTp8ivyNx++2Lik1eKyetzOqWWiCy5wyvWrE0NHaScbVWk2fQtGnUXw==
+X-Received: by 2002:a7b:cf30:: with SMTP id m16mr957729wmg.0.1599811549027;
+        Fri, 11 Sep 2020 01:05:49 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id d190sm2596254wmd.23.2020.09.11.01.05.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 01:05:48 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/24] unix.7: Use sizeof() to get buffer size (instead of
+ hardcoding macro name)
+To:     Alejandro Colomar <colomar.6.4.3@gmail.com>
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-16-colomar.6.4.3@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <5629c8df-7ed7-d825-01d9-7b2ed7fbd042@gmail.com>
+Date:   Fri, 11 Sep 2020 10:05:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200910110012.GD8357@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200910211344.3562-16-colomar.6.4.3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.16]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+
+Thanks, Alex. Patch Applied.
+
+Cheers,
+
+Michael
 
 
-On 2020/9/10 19:00, Borislav Petkov wrote:
-> On Fri, Sep 04, 2020 at 04:19:23PM +0800, Xiongfeng Wang wrote:
->> When I cat 'max_location' and 'dimm_location' by sysfs, it displays as
->> follows. It's better to add a newline for easy reading.
->>
->> [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/max_location
->> memory 3 [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/dimm0/dimm_location
->> memory 0 [root@localhost /]#
+> ---
+>  man7/unix.7 | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 > 
-> Please use this commit message for your next version:
+> diff --git a/man7/unix.7 b/man7/unix.7
+> index f61b51424..50828a5bc 100644
+> --- a/man7/unix.7
+> +++ b/man7/unix.7
+> @@ -991,7 +991,7 @@ main(int argc, char *argv[])
+>  
+>              /* Wait for next data packet. */
+>  
+> -            ret = read(data_socket, buffer, BUFFER_SIZE);
+> +            ret = read(data_socket, buffer, sizeof(buffer));
+>              if (ret == \-1) {
+>                  perror("read");
+>                  exit(EXIT_FAILURE);
+> @@ -999,16 +999,16 @@ main(int argc, char *argv[])
+>  
+>              /* Ensure buffer is 0\-terminated. */
+>  
+> -            buffer[BUFFER_SIZE \- 1] = 0;
+> +            buffer[sizeof(buffer) \- 1] = 0;
+>  
+>              /* Handle commands. */
+>  
+> -            if (!strncmp(buffer, "DOWN", BUFFER_SIZE)) {
+> +            if (!strncmp(buffer, "DOWN", sizeof(buffer))) {
+>                  down_flag = 1;
+>                  break;
+>              }
+>  
+> -            if (!strncmp(buffer, "END", BUFFER_SIZE)) {
+> +            if (!strncmp(buffer, "END", sizeof(buffer))) {
+>                  break;
+>              }
+>  
+> @@ -1020,7 +1020,7 @@ main(int argc, char *argv[])
+>          /* Send result. */
+>  
+>          sprintf(buffer, "%d", result);
+> -        ret = write(data_socket, buffer, BUFFER_SIZE);
+> +        ret = write(data_socket, buffer, sizeof(buffer));
+>          if (ret == \-1) {
+>              perror("write");
+>              exit(EXIT_FAILURE);
+> @@ -1116,7 +1116,7 @@ main(int argc, char *argv[])
+>  
+>      /* Receive result. */
+>  
+> -    ret = read(data_socket, buffer, BUFFER_SIZE);
+> +    ret = read(data_socket, buffer, sizeof(buffer));
+>      if (ret == \-1) {
+>          perror("read");
+>          exit(EXIT_FAILURE);
+> @@ -1124,7 +1124,7 @@ main(int argc, char *argv[])
+>  
+>      /* Ensure buffer is 0\-terminated. */
+>  
+> -    buffer[BUFFER_SIZE \- 1] = 0;
+> +    buffer[sizeof(buffer) \- 1] = 0;
+>  
+>      printf("Result = %s\en", buffer);
+>  
 > 
-> EDAC/mc_sysfs: Add missing newlines when printing {max,dimm}_location
-> 
-> Reading those sysfs entries gives:
-> 
->   [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/max_location
->   memory 3 [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/dimm0/dimm_location
->   memory 0 [root@localhost /]#
-> 
-> Add newlines after the value it prints for better readability.
 
-Thanks for your advice. I will add it in the next version.
 
-> 
->> @@ -821,6 +825,7 @@ static ssize_t mci_max_location_show(struct device *dev,
->>  			     edac_layer_name[mci->layers[i].type],
->>  			     mci->layers[i].size - 1);
->>  	}
->> +	p += sprintf(p, "\n");
-> 
-> No size checking here?
-
-I can check if it's larger than PAGE_SIZE.
-
-Thanks,
-Xiongfeng
-
-> 
-
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
