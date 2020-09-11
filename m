@@ -2,40 +2,37 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01428C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71271C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C31F8221E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 456A6221E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725794AbgIKD67 (ORCPT
+        id S1725811AbgIKD7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:58:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59474 "EHLO huawei.com"
+        Thu, 10 Sep 2020 23:59:04 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59458 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725283AbgIKD64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725781AbgIKD64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 23:58:56 -0400
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 60F004CED601D85B6576;
+        by Forcepoint Email with ESMTP id 5CA0CFAF68D513454F8A;
         Fri, 11 Sep 2020 11:58:54 +0800 (CST)
 Received: from huawei.com (10.90.53.225) by DGGEMS406-HUB.china.huawei.com
  (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
- 11:58:46 +0800
+ 11:58:44 +0800
 From:   Zheng Bin <zhengbin13@huawei.com>
 To:     <sfrench@samba.org>, <linux-cifs@vger.kernel.org>,
         <samba-technical@lists.samba.org>, <linux-kernel@vger.kernel.org>
 CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH -next 4/5] cifs: fix comparison to bool warning in connect.c
-Date:   Fri, 11 Sep 2020 12:05:38 +0800
-Message-ID: <20200911040539.113307-5-zhengbin13@huawei.com>
+Subject: [PATCH -next 0/5] cifs: fix comparison to bool warning
+Date:   Fri, 11 Sep 2020 12:05:34 +0800
+Message-ID: <20200911040539.113307-1-zhengbin13@huawei.com>
 X-Mailer: git-send-email 2.26.0.106.g9fadedd
-In-Reply-To: <20200911040539.113307-1-zhengbin13@huawei.com>
-References: <20200911040539.113307-1-zhengbin13@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -46,48 +43,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+Zheng Bin (5):
+  cifs: fix comparison to bool warning in cifsacl.c
+  cifs: fix comparison to bool warning in file.c
+  cifs: fix comparison to bool warning in smb2misc.c
+  cifs: fix comparison to bool warning in connect.c
+  cifs: fix comparison to bool warning in smb2ops.c
 
-fs/cifs/connect.c:2478:5-16: WARNING: Comparison to bool
-fs/cifs/connect.c:3560:10-35: WARNING: Comparison to bool
-fs/cifs/connect.c:4297:6-21: WARNING: Comparison to bool
+ fs/cifs/cifsacl.c  |  2 +-
+ fs/cifs/connect.c  |  6 +++---
+ fs/cifs/file.c     |  2 +-
+ fs/cifs/smb2misc.c |  2 +-
+ fs/cifs/smb2ops.c  | 10 +++++-----
+ 5 files changed, 11 insertions(+), 11 deletions(-)
 
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
----
- fs/cifs/connect.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index a5731dd6e656..4d2651b9f019 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2475,7 +2475,7 @@ cifs_parse_mount_options(const char *mountdata, const char *devname,
- 	else if (override_gid == 1)
- 		pr_notice("ignoring forcegid mount option specified with no gid= option\n");
-
--	if (got_version == false)
-+	if (!got_version)
- 		pr_warn_once("No dialect specified on mount. Default has changed to a more secure dialect, SMB2.1 or later (e.g. SMB3.1.1), from CIFS (SMB1). To use the less secure SMB1 dialect to access old servers which do not support SMB3.1.1 (or even SMB3 or SMB2.1) specify vers=1.0 on mount.\n");
-
- 	kfree(mountdata_copy);
-@@ -3557,7 +3557,7 @@ cifs_get_tcon(struct cifs_ses *ses, struct smb_vol *volume_info)
- 		}
- 	} else if ((tcon->capabilities & SMB2_SHARE_CAP_CONTINUOUS_AVAILABILITY)
- 	     && (ses->server->capabilities & SMB2_GLOBAL_CAP_PERSISTENT_HANDLES)
--	     && (volume_info->nopersistent == false)) {
-+	     && !volume_info->nopersistent) {
- 		cifs_dbg(FYI, "enabling persistent handles\n");
- 		tcon->use_persistent = true;
- 	} else if (volume_info->resilient) {
-@@ -4294,7 +4294,7 @@ static int mount_get_conns(struct smb_vol *vol, struct cifs_sb_info *cifs_sb,
-
- 	*nses = ses;
-
--	if ((vol->persistent == true) && (!(ses->server->capabilities &
-+	if (vol->persistent && (!(ses->server->capabilities &
- 					    SMB2_GLOBAL_CAP_PERSISTENT_HANDLES))) {
- 		cifs_server_dbg(VFS, "persistent handles not supported by server\n");
- 		return -EOPNOTSUPP;
 --
 2.26.0.106.g9fadedd
 
