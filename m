@@ -2,164 +2,345 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32AEC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3922BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E6E2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D688F2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 02:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="i+cYvdGV";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CLnperrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725796AbgIKCrW (ORCPT
+        id S1725812AbgIKCtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 22:47:22 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30460 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725300AbgIKCrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 22:47:20 -0400
-IronPort-SDR: KJc/wj0yhQXcfwMDSEzEBDeoJzYoj4bu8WfH3RcOqUDhrxMtlKBWgC/PMbUQo2HoqvrJ3yjKC1
- F9KSiVn+baZw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="159625704"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="159625704"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 19:47:19 -0700
-IronPort-SDR: kfKtYPVFdRCywLByMqGTWO99NBy9P4e1zFHCKMCXz1P4n7VRaHNzwCuQPfWtnl9cAqi3LOpoW2
- OYbWnhdx6l3A==
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="506051819"
-Received: from sliu49-mobl1.ccr.corp.intel.com (HELO [10.238.13.173]) ([10.238.13.173])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 19:47:16 -0700
-Subject: Re: [PATCH v3 06/17] virt: acrn: Introduce VM management interfaces
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20200909090836.46762-1-shuo.a.liu@intel.com>
- <20200909090836.46762-7-shuo.a.liu@intel.com>
- <20200909094516.GB607744@kroah.com>
- <20200910061900.GI13723@shuo-intel.sh.intel.com>
- <20200910162810.GB1265411@kroah.com>
-From:   "Liu, Shuo A" <shuo.a.liu@intel.com>
-Message-ID: <5e089ae2-f4b6-17de-2f91-f0c66c70ab78@intel.com>
-Date:   Fri, 11 Sep 2020 10:47:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200910162810.GB1265411@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Sep 2020 22:49:39 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:50725 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725300AbgIKCtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 22:49:36 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 890CD5C00C8;
+        Thu, 10 Sep 2020 22:49:34 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 22:49:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=c6HSkrtTKfINlw/HGLRz2lhc2rwOVfP
+        uL1hDI8lDt7U=; b=i+cYvdGVG53shXCRHyD1vQ8u1ujCCPr5eY1kK7EQYToNz+J
+        AA9iBTCjQz+NRmJURYnog1U27xaGfY3NyipTOWPe2454RBFuTael3OkUln5t2n9I
+        6GSgpEx7J8fOlw0CC6J6PqvoJiJErY6Q8svxxXXDCLvP5cqys5GyzbPBBxcPkb42
+        QIhSrKOq5elMO1uVA8Yv/TuSd14KDteBE8gQsdyXb+aRBgO3UVWhQuYu6+BEwe5y
+        ISgH6nLndpMJDKMk0GEPF+bwOhBjh4//6K4VOqUrf82+wdF9xyCoxXYR8LmCjTe1
+        dNk+6iqUckagvBRY1CF9V3kZCiP2+uQ84TNt0HQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=c6HSkr
+        tTKfINlw/HGLRz2lhc2rwOVfPuL1hDI8lDt7U=; b=CLnperrNN8K6K/UlWaRxxw
+        VyLslnaNvGyFPVwFj9hB5enyU460ugTNHZhsJG5MPFsEu29OcutNFOgYMsKUVRmQ
+        1TufmHI6LDHRjLxB+tQpX9YxbmZldRec3SWUI/Jg8H7Bd3NWDFDPoXDVK/GIcB4f
+        mIJeTIeZKtzYdhOG+dYPFcsfMMpUhP0Gq5ZVdG2DG4oaAPaUKW1tjvmo7VruzRa8
+        e56JJSXrTTZ9HHC+3h1cqXY433GAb2U2chU9uT2Y/fJuvaUEGb0H8a9oCjkm3509
+        EMFPM2oHFkdWZqp2nNXE3c7AWW7sxO1cFLqeSQTiFePe9JAcNPfyFLebK7LYWy9Q
+        ==
+X-ME-Sender: <xms:veVaX9i2zJKbL-rsGu6wDuS392e7ONVJEaK5sVFtYYYdKwcWtdN4JA>
+    <xme:veVaXyAGhpTGhQ2LG_SClz1Fy5TnETvSioVKunfDXC7bq8OXVHryBlN9SqgTjYBj1
+    JlezshzqbJg9wzTIg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehkedgieegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
+    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:veVaX9GzcQP1jyPm9v2lMWIhHGnJ6RJrPVxgHTBXuoSO7BfzfcX9yQ>
+    <xmx:veVaXyTChuYUP85dyIaMFhOkBTkUXsBI1h6k_CGJPVGOfxMCJz-how>
+    <xmx:veVaX6zFQKd-fxpsOWmn0iEQIvyywA6N99rnM0vjzMDroCM46OmXxg>
+    <xmx:vuVaXxmCtWS5yUGdCGGfZw9qVzjbq3uDcSJ0rSrnzyF0zpIiT-cICQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id B3088E00A6; Thu, 10 Sep 2020 22:49:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
+Mime-Version: 1.0
+Message-Id: <57d48d7a-7cea-4be7-92bd-8f3b93f84a06@www.fastmail.com>
+In-Reply-To: <CACPK8Xf-jys=F0Uqg-hYH-eDThmd5yOSNeC7+vLhra3GdOK1Zw@mail.gmail.com>
+References: <20200910105440.3087723-1-andrew@aj.id.au>
+ <20200910105440.3087723-3-andrew@aj.id.au>
+ <CACPK8Xf-jys=F0Uqg-hYH-eDThmd5yOSNeC7+vLhra3GdOK1Zw@mail.gmail.com>
+Date:   Fri, 11 Sep 2020 12:19:12 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/3]_mmc:_sdhci-of-aspeed:_Expose_data_sample_phase?=
+ =?UTF-8?Q?_delay_tuning?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-On 9/11/2020 00:28, Greg Kroah-Hartman wrote:
-> On Thu, Sep 10, 2020 at 02:19:00PM +0800, Shuo A Liu wrote:
->> On Wed  9.Sep'20 at 11:45:16 +0200, Greg Kroah-Hartman wrote:
->>> On Wed, Sep 09, 2020 at 05:08:25PM +0800, shuo.a.liu@intel.com wrote:
->>>> From: Shuo Liu <shuo.a.liu@intel.com>
->>>>
->>>> The VM management interfaces expose several VM operations to ACRN
->>>> userspace via ioctls. For example, creating VM, starting VM, destroying
->>>> VM and so on.
->>>>
->>>> The ACRN Hypervisor needs to exchange data with the ACRN userspace
->>>> during the VM operations. HSM provides VM operation ioctls to the ACRN
->>>> userspace and communicates with the ACRN Hypervisor for VM operations
->>>> via hypercalls.
->>>>
->>>> HSM maintains a list of User VM. Each User VM will be bound to an
->>>> existing file descriptor of /dev/acrn_hsm. The User VM will be
->>>> destroyed when the file descriptor is closed.
->>>>
->>>> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
->>>> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
->>>> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
->>>> Cc: Zhi Wang <zhi.a.wang@intel.com>
->>>> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
->>>> Cc: Yu Wang <yu1.wang@intel.com>
->>>> Cc: Reinette Chatre <reinette.chatre@intel.com>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> ---
->>>>  .../userspace-api/ioctl/ioctl-number.rst      |  1 +
->>>>  MAINTAINERS                                   |  1 +
->>>>  drivers/virt/acrn/Makefile                    |  2 +-
->>>>  drivers/virt/acrn/acrn_drv.h                  | 22 +++++-
->>>>  drivers/virt/acrn/hsm.c                       | 66 ++++++++++++++++
->>>>  drivers/virt/acrn/hypercall.h                 | 78 +++++++++++++++++++
->>>>  drivers/virt/acrn/vm.c                        | 69 ++++++++++++++++
->>>>  include/uapi/linux/acrn.h                     | 56 +++++++++++++
->>>>  8 files changed, 293 insertions(+), 2 deletions(-)
->>>>  create mode 100644 drivers/virt/acrn/hypercall.h
->>>>  create mode 100644 drivers/virt/acrn/vm.c
->>>>  create mode 100644 include/uapi/linux/acrn.h
->>>>
 
-[...]
-
->>>> +	ret = hcall_create_vm(virt_to_phys(vm_param));
->>>> +	if (ret < 0 || vm_param->vmid == ACRN_INVALID_VMID) {
->>>> +		dev_err(vm->dev, "Failed to create VM! Error: %d\n", ret);
->>>> +		return NULL;
->>>> +	}
->>>> +
->>>> +	vm->vmid = vm_param->vmid;
->>>> +	vm->vcpu_num = vm_param->vcpu_num;
->>>> +
->>>> +	write_lock_bh(&acrn_vm_list_lock);
->>>> +	list_add(&vm->list, &acrn_vm_list);
->>>
->>> Wait, why do you have a global list of devices?  Shouldn't that device
->>> be tied to the vm structure?  Who will be iterating this list that does
->>> not have the file handle to start with?
->>
->> Active VMs in this list will be used by the I/O requests dispatching
->> tasklet ioreq_tasklet, whose callback function is ioreq_tasklet_handler()
->> in patch 0009. ioreq_tasklet_handler() currently handles the notification
->> interrupt from the hypervisor and dispatches I/O requests to each VMs.
+On Fri, 11 Sep 2020, at 11:32, Joel Stanley wrote:
+> On Thu, 10 Sep 2020 at 10:55, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > Allow sample phase adjustment to deal with layout or tolerance issues.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  drivers/mmc/host/sdhci-of-aspeed.c | 137 +++++++++++++++++++++++++++--
+> >  1 file changed, 132 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > index 4f008ba3280e..641accbfcde4 100644
+> > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> > @@ -16,9 +16,18 @@
+> >
+> >  #include "sdhci-pltfm.h"
+> >
+> > -#define ASPEED_SDC_INFO                0x00
+> > -#define   ASPEED_SDC_S1MMC8    BIT(25)
+> > -#define   ASPEED_SDC_S0MMC8    BIT(24)
+> > +#define ASPEED_SDC_INFO                        0x00
+> > +#define   ASPEED_SDC_S1_MMC8           BIT(25)
+> > +#define   ASPEED_SDC_S0_MMC8           BIT(24)
+> > +#define ASPEED_SDC_PHASE               0xf4
+> > +#define   ASPEED_SDC_S1_PHASE_IN       GENMASK(25, 21)
+> > +#define   ASPEED_SDC_S0_PHASE_IN       GENMASK(20, 16)
+> > +#define   ASPEED_SDC_S1_PHASE_OUT      GENMASK(15, 11)
+> > +#define   ASPEED_SDC_S1_PHASE_IN_EN    BIT(10)
+> > +#define   ASPEED_SDC_S1_PHASE_OUT_EN   GENMASK(9, 8)
+> > +#define   ASPEED_SDC_S0_PHASE_OUT      GENMASK(7, 3)
+> > +#define   ASPEED_SDC_S0_PHASE_IN_EN    BIT(2)
+> > +#define   ASPEED_SDC_S0_PHASE_OUT_EN   GENMASK(1, 0)
+> >
+> >  struct aspeed_sdc {
+> >         struct clk *clk;
+> > @@ -28,9 +37,21 @@ struct aspeed_sdc {
+> >         void __iomem *regs;
+> >  };
+> >
+> > +struct aspeed_sdhci_phase_desc {
+> > +       u32 value_mask;
+> > +       u32 enable_mask;
+> > +       u8 enable_value;
+> > +};
+> > +
+> > +struct aspeed_sdhci_phase {
+> > +       struct aspeed_sdhci_phase_desc in;
+> > +       struct aspeed_sdhci_phase_desc out;
+> > +};
+> > +
+> >  struct aspeed_sdhci {
+> >         struct aspeed_sdc *parent;
+> >         u32 width_mask;
+> > +       const struct aspeed_sdhci_phase *phase;
+> >  };
+> >
+> >  static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+> > @@ -50,6 +71,25 @@ static void aspeed_sdc_configure_8bit_mode(struct aspeed_sdc *sdc,
+> >         spin_unlock(&sdc->lock);
+> >  }
+> >
+> > +static void
+> > +aspeed_sdc_configure_phase(struct aspeed_sdc *sdc,
+> > +                          const struct aspeed_sdhci_phase_desc *phase,
+> > +                          uint8_t value, bool enable)
+> > +{
+> > +       u32 reg;
+> > +
+> > +       spin_lock(&sdc->lock);
 > 
-> So you need to somehow look through the whole list of devices for every
-> I/O request?  That feels really really wrong, why don't you have that
-> pointer in the first place?
+> What is the lock protecting against?
 > 
-> Again, step back and describe what you need/desire and then think about
-> how to best solve that.  Almost always, a list of objects that you have
-> to iterate over all the time is not the way to do it...
+> We call this in the ->probe, so there should be no concurrent access going on.
 
-Each VM has a shared buffer for I/O requests passing with the
-hypervisor. Currently, the hypervisor doesn't indicate the VMs which has
-pending I/O requests. So when kernel get the notification interrupt, it
-search all VMs' shared buffer and dispatch the pending I/O requests.
-
-The current I/O requests dispatching implementation uses one global
-tasklet (be scheduled in the hypervisor notification interrupt), so it
-needs to iterate all VMs to do the dispatching.
-
-Each VM has a dedicated hypervisor notification interrupt vector might
-be suited (a vector can be linked with a VM). The disadvantage is that
-it might occupy many vectors.
-
-Looking forward to more suggestions. Thanks very much.
+Because the register is in the "global" part of the SD/MMC controller address 
+space (it's not part of the SDHCI), and there are multiple slots that may have 
+a driver probed concurrently.
 
 > 
-> Somedays I think we need an "here's how to do the things you really need
-> to do in a driver" chapter in the Linux Device Driver's book..
-That will be great. :)
+> 
+> > +       reg = readl(sdc->regs + ASPEED_SDC_PHASE);
+> > +       reg &= ~phase->enable_mask;
+> > +       if (enable) {
+> > +               reg &= ~phase->value_mask;
+> > +               reg |= value << __ffs(phase->value_mask);
+> > +               reg |= phase->enable_value << __ffs(phase->enable_mask);
+> > +       }
+> > +       writel(reg, sdc->regs + ASPEED_SDC_PHASE);
+> > +       spin_unlock(&sdc->lock);
+> > +}
+> > +
+> >  static void aspeed_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+> >  {
+> >         struct sdhci_pltfm_host *pltfm_host;
+> > @@ -155,8 +195,58 @@ static inline int aspeed_sdhci_calculate_slot(struct aspeed_sdhci *dev,
+> >         return (delta / 0x100) - 1;
+> >  }
+> >
+> > +static int aspeed_sdhci_configure_of(struct platform_device *pdev,
+> > +                                    struct aspeed_sdhci *sdhci)
+> > +{
+> > +       u32 iphase, ophase;
+> > +       struct device_node *np;
+> > +       struct device *dev;
+> > +       int ret;
+> > +
+> > +       if (!sdhci->phase)
+> > +               return 0;
+> > +
+> > +       dev = &pdev->dev;
+> > +       np = dev->of_node;
+> > +
+> > +       ret = of_property_read_u32(np, "aspeed,input-phase", &iphase);
+> > +       if (ret < 0) {
+> > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->in, 0,
+> > +                                          false);
+> 
+> Will this clear any value that eg. u-boot writes?
 
-Thanks
-shuo
+No, see the 'enable' test in aspeed_sdc_configure_phase()
+
+> 
+> The register should be left alone if the kernel doesn't have a
+> configuration of it's own, otherwise we may end up breaking an
+> otherwise working system.
+
+Right, I can rework that.
+
+> 
+> > +               dev_dbg(dev, "Input phase configuration disabled");
+> > +       } else if (iphase >= (1 << 5)) {
+> > +               dev_err(dev,
+> > +                       "Input phase value exceeds field range (5 bits): %u",
+> > +                       iphase);
+> > +               return -ERANGE;
+> > +       } else {
+> > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->in,
+> > +                                          iphase, true);
+> > +               dev_info(dev, "Input phase relationship: %u", iphase);
+> 
+> Make theis _dbg, on a normal boot we don't need this chatter in the logs.
+> 
+> The same comments apply for the output.
+
+Yes, I actually meant to do this before I sent the patches but clearly forgot :)
+
+> 
+> > +       }
+> > +
+> > +       ret = of_property_read_u32(np, "aspeed,output-phase", &ophase);
+> > +       if (ret < 0) {
+> > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->out, 0,
+> > +                                          false);
+> > +               dev_dbg(dev, "Output phase configuration disabled");
+> > +       } else if (ophase >= (1 << 5)) {
+> > +               dev_err(dev,
+> > +                       "Output phase value exceeds field range (5 bits): %u",
+> > +                       iphase);
+> > +               return -ERANGE;
+> 
+> This will cause the driver to fail to probe. I think skipping setting
+> of the phase is a better option.
+
+Well, maybe? If the phase is specified but invalid then chances are you'll hit 
+system instability by continuing to probe the driver. I think it's better to 
+fail in an obvious way, it's not as if it's incidentally incorrect.
+
+> 
+> 
+> > +       } else {
+> > +               aspeed_sdc_configure_phase(sdhci->parent, &sdhci->phase->out,
+> > +                                          ophase, true);
+> > +               dev_info(dev, "Output phase relationship: %u", ophase);
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  static int aspeed_sdhci_probe(struct platform_device *pdev)
+> >  {
+> > +       const struct aspeed_sdhci_phase *phase;
+> >         struct sdhci_pltfm_host *pltfm_host;
+> >         struct aspeed_sdhci *dev;
+> >         struct sdhci_host *host;
+> > @@ -181,7 +271,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
+> >                 return -EINVAL;
+> >
+> >         dev_info(&pdev->dev, "Configuring for slot %d\n", slot);
+> > -       dev->width_mask = !slot ? ASPEED_SDC_S0MMC8 : ASPEED_SDC_S1MMC8;
+> > +       dev->width_mask = !slot ? ASPEED_SDC_S0_MMC8 : ASPEED_SDC_S1_MMC8;
+> > +       phase = of_device_get_match_data(&pdev->dev);
+> > +       if (phase)
+> > +               dev->phase = &phase[slot];
+> >
+> >         sdhci_get_of_property(pdev);
+> >
+> > @@ -195,6 +288,10 @@ static int aspeed_sdhci_probe(struct platform_device *pdev)
+> >                 goto err_pltfm_free;
+> >         }
+> >
+> > +       ret = aspeed_sdhci_configure_of(pdev, dev);
+> > +       if (ret)
+> > +               goto err_sdhci_add;
+> > +
+> >         ret = mmc_of_parse(host->mmc);
+> >         if (ret)
+> >                 goto err_sdhci_add;
+> > @@ -230,10 +327,40 @@ static int aspeed_sdhci_remove(struct platform_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > +static const struct aspeed_sdhci_phase ast2600_sdhci_phase[] = {
+> > +       /* SDHCI/Slot 0 */
+> > +       [0] = {
+> > +               .in = {
+> > +                       .value_mask = ASPEED_SDC_S0_PHASE_IN,
+> > +                       .enable_mask = ASPEED_SDC_S0_PHASE_IN_EN,
+> > +                       .enable_value = 1,
+> > +               },
+> > +               .out = {
+> > +                       .value_mask = ASPEED_SDC_S0_PHASE_OUT,
+> > +                       .enable_mask = ASPEED_SDC_S0_PHASE_OUT_EN,
+> > +                       .enable_value = 3,
+> > +               },
+> > +       },
+> > +       /* SDHCI/Slot 1 */
+> > +       [1] = {
+> > +               .in = {
+> > +                       .value_mask = ASPEED_SDC_S1_PHASE_IN,
+> > +                       .enable_mask = ASPEED_SDC_S1_PHASE_IN_EN,
+> > +                       .enable_value = 1,
+> > +               },
+> > +               .out = {
+> > +                       .value_mask = ASPEED_SDC_S1_PHASE_OUT,
+> > +                       .enable_mask = ASPEED_SDC_S1_PHASE_OUT_EN,
+> 
+> Is there any value in splitting the input and output phase values
+> up? (instead of taking the property from the device tree and putting
+> it in the hardware).
+
+One register contains both settings for both slots. We can't just blast the 
+full register value for one of the slots into it. Further, the fields for the 
+slots are interleaved, so it's not like we can just associate the top or bottom 
+16 bits with a particular slot.
+
+Cheers,
+
+Andrew
