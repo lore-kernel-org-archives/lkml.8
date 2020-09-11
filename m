@@ -2,82 +2,199 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EECAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8417AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217A0221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A66208FE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599841887;
-	bh=G1H4KBZK6Z5xZfrreS53bo+fWNiN/FdHp8IsoAi5Cf8=;
+	s=default; t=1599841897;
+	bh=H9KAolUqWQVgCsYPLTdOsrxGNRQBT4lkkfDwBjylwu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ubT+XT9wSg26DXbl7xTUv/UIDOWL1M8qbKhi1+6bnqQnJyIbgaxSVPo3j8QboDcNL
-	 iiKc2Suvtk8MJ6aCKIzxrzOSXqTT5aLqhgTySBd6F6LUmHmIAvPAJTlfZYT4ZUNh5v
-	 keyQaSFlGyBStFZcUr8zu42L7UhM/K0JnUuk46AE=
+	b=v5uTbJHDx9RACVTb1gcYUHW2RAunWv9ANPHgUPOCVrzc/WucAWsTjOb0p4nDScwP8
+	 wrSjRlaaRlqfPXRT4daLc+fpO1pzXJOCqjyeW5c7huUKdlGadwL7gmrOIILUhnrKn8
+	 KWeMnSCIPY8lP0nXxhEWEKwzd0R/eXZOBx0Gsn1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgIKQaz (ORCPT
+        id S1726464AbgIKQbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60670 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbgIKQ1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:27:42 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726420AbgIKPTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:19:22 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5263722204;
-        Fri, 11 Sep 2020 16:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE3B72076C;
+        Fri, 11 Sep 2020 13:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599841656;
-        bh=G1H4KBZK6Z5xZfrreS53bo+fWNiN/FdHp8IsoAi5Cf8=;
+        s=default; t=1599829207;
+        bh=H9KAolUqWQVgCsYPLTdOsrxGNRQBT4lkkfDwBjylwu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqjsMpCrIJCJsqErxjAkkQElm0E6h4bYI0AH7V/EZkEJqHnqyx4u2uAenLC0xQ66L
-         TIg4mYICvefovMXVR2X3iycArkuYbYAewzFaz9vBPUbP+AFixi758c62yvgZ0aWK/n
-         3XnvHzGX4v9gRA7S2NI8aC22PaTSkXqFVbuMa9I4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonathan Bakker <xc-racer2@live.ca>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/7] power: supply: bq2515x: fix kerneldoc
-Date:   Fri, 11 Sep 2020 18:27:24 +0200
-Message-Id: <20200911162729.3022-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200911162729.3022-1-krzk@kernel.org>
-References: <20200911162729.3022-1-krzk@kernel.org>
+        b=2cl0JW8XQArezzj6Q3oTZoYXxTQenJI2FiX5sf51GIbO67NNBjZOYPUc31D4A93ae
+         7JFUhtObHw8aAFBvcFTwQXJ2DIL86konTk8cbha74PQGxENB3PXBfWeV8SoTfbaZYH
+         flOTeunkO+00hr0KsAW6RJPzC3bw+NSxbuKeRzZM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 09/16] netlabel: fix problems with mapping removal
+Date:   Fri, 11 Sep 2020 14:47:26 +0200
+Message-Id: <20200911122500.036474277@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
+References: <20200911122459.585735377@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix kerneldoc W=1 warning:
+From: Paul Moore <paul@paul-moore.com>
 
-  drivers/power/supply/bq2515x_charger.c:189: warning:
-    Function parameter or member 'init_data' not described in 'bq2515x_device'
+[ Upstream commit d3b990b7f327e2afa98006e7666fb8ada8ed8683 ]
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This patch fixes two main problems seen when removing NetLabel
+mappings: memory leaks and potentially extra audit noise.
+
+The memory leaks are caused by not properly free'ing the mapping's
+address selector struct when free'ing the entire entry as well as
+not properly cleaning up a temporary mapping entry when adding new
+address selectors to an existing entry.  This patch fixes both these
+problems such that kmemleak reports no NetLabel associated leaks
+after running the SELinux test suite.
+
+The potentially extra audit noise was caused by the auditing code in
+netlbl_domhsh_remove_entry() being called regardless of the entry's
+validity.  If another thread had already marked the entry as invalid,
+but not removed/free'd it from the list of mappings, then it was
+possible that an additional mapping removal audit record would be
+generated.  This patch fixes this by returning early from the removal
+function when the entry was previously marked invalid.  This change
+also had the side benefit of improving the code by decreasing the
+indentation level of large chunk of code by one (accounting for most
+of the diffstat).
+
+Fixes: 63c416887437 ("netlabel: Add network address selectors to the NetLabel/LSM domain mapping")
+Reported-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/power/supply/bq2515x_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netlabel/netlabel_domainhash.c |   59 ++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/supply/bq2515x_charger.c
-index 9dcb61ea4cf2..374b112f712a 100644
---- a/drivers/power/supply/bq2515x_charger.c
-+++ b/drivers/power/supply/bq2515x_charger.c
-@@ -168,7 +168,7 @@ enum bq2515x_id {
-  * @device_id: value of device_id
-  * @mains_online: boolean value indicating power supply online
-  *
-- * @bq2515x_init_data init_data: charger initialization data structure
-+ * @init_data: charger initialization data structure
-  */
- struct bq2515x_device {
- 	struct power_supply *mains;
--- 
-2.17.1
+--- a/net/netlabel/netlabel_domainhash.c
++++ b/net/netlabel/netlabel_domainhash.c
+@@ -85,6 +85,7 @@ static void netlbl_domhsh_free_entry(str
+ 			kfree(netlbl_domhsh_addr6_entry(iter6));
+ 		}
+ #endif /* IPv6 */
++		kfree(ptr->def.addrsel);
+ 	}
+ 	kfree(ptr->domain);
+ 	kfree(ptr);
+@@ -537,6 +538,8 @@ int netlbl_domhsh_add(struct netlbl_dom_
+ 				goto add_return;
+ 		}
+ #endif /* IPv6 */
++		/* cleanup the new entry since we've moved everything over */
++		netlbl_domhsh_free_entry(&entry->rcu);
+ 	} else
+ 		ret_val = -EINVAL;
+ 
+@@ -580,6 +583,12 @@ int netlbl_domhsh_remove_entry(struct ne
+ {
+ 	int ret_val = 0;
+ 	struct audit_buffer *audit_buf;
++	struct netlbl_af4list *iter4;
++	struct netlbl_domaddr4_map *map4;
++#if IS_ENABLED(CONFIG_IPV6)
++	struct netlbl_af6list *iter6;
++	struct netlbl_domaddr6_map *map6;
++#endif /* IPv6 */
+ 
+ 	if (entry == NULL)
+ 		return -ENOENT;
+@@ -597,6 +606,9 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		ret_val = -ENOENT;
+ 	spin_unlock(&netlbl_domhsh_lock);
+ 
++	if (ret_val)
++		return ret_val;
++
+ 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
+ 	if (audit_buf != NULL) {
+ 		audit_log_format(audit_buf,
+@@ -606,40 +618,29 @@ int netlbl_domhsh_remove_entry(struct ne
+ 		audit_log_end(audit_buf);
+ 	}
+ 
+-	if (ret_val == 0) {
+-		struct netlbl_af4list *iter4;
+-		struct netlbl_domaddr4_map *map4;
+-#if IS_ENABLED(CONFIG_IPV6)
+-		struct netlbl_af6list *iter6;
+-		struct netlbl_domaddr6_map *map6;
+-#endif /* IPv6 */
+-
+-		switch (entry->def.type) {
+-		case NETLBL_NLTYPE_ADDRSELECT:
+-			netlbl_af4list_foreach_rcu(iter4,
+-					     &entry->def.addrsel->list4) {
+-				map4 = netlbl_domhsh_addr4_entry(iter4);
+-				cipso_v4_doi_putdef(map4->def.cipso);
+-			}
++	switch (entry->def.type) {
++	case NETLBL_NLTYPE_ADDRSELECT:
++		netlbl_af4list_foreach_rcu(iter4, &entry->def.addrsel->list4) {
++			map4 = netlbl_domhsh_addr4_entry(iter4);
++			cipso_v4_doi_putdef(map4->def.cipso);
++		}
+ #if IS_ENABLED(CONFIG_IPV6)
+-			netlbl_af6list_foreach_rcu(iter6,
+-					     &entry->def.addrsel->list6) {
+-				map6 = netlbl_domhsh_addr6_entry(iter6);
+-				calipso_doi_putdef(map6->def.calipso);
+-			}
++		netlbl_af6list_foreach_rcu(iter6, &entry->def.addrsel->list6) {
++			map6 = netlbl_domhsh_addr6_entry(iter6);
++			calipso_doi_putdef(map6->def.calipso);
++		}
+ #endif /* IPv6 */
+-			break;
+-		case NETLBL_NLTYPE_CIPSOV4:
+-			cipso_v4_doi_putdef(entry->def.cipso);
+-			break;
++		break;
++	case NETLBL_NLTYPE_CIPSOV4:
++		cipso_v4_doi_putdef(entry->def.cipso);
++		break;
+ #if IS_ENABLED(CONFIG_IPV6)
+-		case NETLBL_NLTYPE_CALIPSO:
+-			calipso_doi_putdef(entry->def.calipso);
+-			break;
++	case NETLBL_NLTYPE_CALIPSO:
++		calipso_doi_putdef(entry->def.calipso);
++		break;
+ #endif /* IPv6 */
+-		}
+-		call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 	}
++	call_rcu(&entry->rcu, netlbl_domhsh_free_entry);
+ 
+ 	return ret_val;
+ }
+
 
