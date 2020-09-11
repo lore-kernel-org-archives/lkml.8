@@ -2,121 +2,106 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B80C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5741C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C60BB21D79
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9AA21D79
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 11:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZdBz9q2U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k2uKWpn7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgIKLfF (ORCPT
+        id S1725837AbgIKLgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 07:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        Fri, 11 Sep 2020 07:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbgIKLdz (ORCPT
+        with ESMTP id S1725833AbgIKLfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 07:33:55 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A92C061795;
-        Fri, 11 Sep 2020 04:33:31 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z19so5496415lfr.4;
-        Fri, 11 Sep 2020 04:33:31 -0700 (PDT)
+        Fri, 11 Sep 2020 07:35:50 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723FAC061795
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 04:35:37 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id w7so7127299pfi.4
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 04:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/QE4i4/aazEggX3dg7wr3FT355FkQudm+5WO62dn5fc=;
-        b=ZdBz9q2UwkyiJEi8yLgyEcycOqWOQh+/+A9aVi86GSiibZAQFCBlj/zusrsnNfd1/M
-         kXIxwa7mj0oqdG94vSLwToFrvwADr/MCjfq9iIzPsmIiAvkWAGVhdoacywEQadRQXiOb
-         opqgQNTOTQ1fzKRNhcsOih1rksULZy3Uyk2df/nXamhviLMFUNEHWM4ZHCTGJHc2pyri
-         rRUyZSAHxqEJ0AJ0clqXWmOs6jeY7E7UmV3idy1nrlJ2MMuWcB8USaz+fD97zJoxETSx
-         AJMj1tbywhivTv9xRrUCUjKGz8kPfhZZfxqH+YuholrFYr+m73g1ta1H90NoOL/JKQPV
-         t+RQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KycsOi7S4N/nBLooPbnXXSV4SR9wjUe6iCxexLVUCD0=;
+        b=k2uKWpn7H//jNXvjMwXc7Bg+qjc/gvdqG5U6MePPIbX38khfArh8ol3jLT/BX51pKG
+         1v3YBzNb6OY1HA4cCTarS0p2U+55oNdx8wHzNQNTdywjvXUqeX/T4Qq+Oo0nJdqLEXXv
+         NLFLJmbh7joqZC21BYFlrWwOj8MNI6mtyde2GPs21/0qXrWNq4j5+y0EZV30oAhGjQR8
+         HWyipnRynroPOf5h4JwI4Z1gvd3kOMjgdK7af+zgdR2RTV0cgrTXPRuV3X6PgZDGhgKX
+         qqw3ySvUcUtBVOcxCTYsHvaNH0OODb0Y491W60rm+Pt+6mqkz64QwIHWHFJPou1RbwiX
+         jULw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/QE4i4/aazEggX3dg7wr3FT355FkQudm+5WO62dn5fc=;
-        b=a8mR+vpB5P7+qY5fVVWURKNQUyYhmwv7d5wYexMhpoMsaxkV4XLZw2JXXK7NyKoExs
-         W3v/2PZxlFUdn+6xxgDSlWYhv/fGBqZiJgVVDhcTvpDe7TxOqKyTqH1EL1V3Tav5zqs4
-         eIGjPbRWUnVWO5M9QDiT1zploG2wzZiqVq6O5DZ1BxS+vWVHOnmMJS8N9EgrpV3AJp2i
-         fQK/hwkABMwYe6LK7H3K59j0enkZENaeupCLv2usA8SyRQQhqrNDWLHf53VcyJDE1fj8
-         Z9a0BPNG9JSDRLyL046scw/gpUZEtRVzZ4S1BIs8y+rQKis7BSI7mGiCXHZx6rI6ZAfL
-         mHJw==
-X-Gm-Message-State: AOAM5325qUwxMhmRaIgy1FLilZMAmDOsf2OQf6332YPtTudDud2MGO5v
-        zY4D5Si3SFynq4+p+klD6V0=
-X-Google-Smtp-Source: ABdhPJymzuhfD89a6kmG9I634PfKHVSojkHULfjgBdUyziy+UxX2lJToqR/e6LdP8duHsigYt6lD9w==
-X-Received: by 2002:a05:6512:32b1:: with SMTP id q17mr178582lfe.329.1599824009497;
-        Fri, 11 Sep 2020 04:33:29 -0700 (PDT)
-Received: from wasted.omprussia.ru ([2a00:1fa0:4890:6188:b7d9:478f:6876:19ba])
-        by smtp.gmail.com with ESMTPSA id 189sm483756ljj.54.2020.09.11.04.33.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 04:33:29 -0700 (PDT)
-Subject: Re: [PATCH] media: Kconfig: Update help description VIDEO_RENESAS_FCP
- config
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-References: <20200911101046.20200-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <85d326e2-a73b-fa51-a507-eced71346786@gmail.com>
-Date:   Fri, 11 Sep 2020 14:33:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KycsOi7S4N/nBLooPbnXXSV4SR9wjUe6iCxexLVUCD0=;
+        b=JyH/QVOv9rSv0KypFhGOkyAftwCxRvJHz5bQPDDcWMVNXrrbMdPFGxG0G7+Wmhhk0E
+         1WTMqJsFtvNcZV3B3O7WxKxCS/Dhn7gkTuTa+11A9LzM71fRrqeIxxMAKamvP+nrrKj1
+         VtYYSoyfTDx/fW3H4B2MGf7XViJumEswvCnUgjj81diURkDk74HoHijI0aZzC2q9GHbI
+         xCEgSOdpKR3YF7lO9759fFUJA+roVLqHDkcl1awtgZLRzcgwjdbczIfaQuHhzu8LUX0g
+         JSWNUQzMnkloMNjSGGOpqMCDYRIU77C0KncpC6U6vylZpznKobxuZclEfkrFjpXhyztP
+         7hTQ==
+X-Gm-Message-State: AOAM5313nVkZJnmz+lyCv0BKQKXUEiR1iefQvExIw6N1m/ksEv2+J72S
+        MHo7X97LQZOyzHYe+wyy6qcz7ybJTeRhwQ==
+X-Google-Smtp-Source: ABdhPJyyXvGwFaQdsNQbM6++Ut33lLn/dd07b1UkP/3vxznU7kfEoDReiBe9Y7J9oQkDfJu82o1sSw==
+X-Received: by 2002:a17:902:c151:: with SMTP id 17mr1638319plj.49.1599824136816;
+        Fri, 11 Sep 2020 04:35:36 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id z4sm2109200pfr.197.2020.09.11.04.35.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 11 Sep 2020 04:35:35 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 17:05:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     peterz@infradead.org
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>, cristian.marussi@arm.com,
+        sudeep.holla@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] cpufreq: stats: Defer stats update to
+ cpufreq_stats_record_transition()
+Message-ID: <20200911113532.zq2bou4swixb2ymk@vireshk-i7>
+References: <cover.1599031227.git.viresh.kumar@linaro.org>
+ <973bd0536c4957d03f36447398498cfacb2393d9.1599031227.git.viresh.kumar@linaro.org>
+ <20200911101132.GC165568@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200911101046.20200-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911101132.GC165568@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 9/11/20 1:10 PM, Lad Prabhakar wrote:
-
-> rcar-fcp driver is also used on Renesas RZ/G2 SoC's, update the same
-
-    What same, the driver?
-
-> to reflect help description for VIDEO_RENESAS_FCP config.
+On 11-09-20, 12:11, peterz@infradead.org wrote:
+> On Wed, Sep 02, 2020 at 12:54:41PM +0530, Viresh Kumar wrote:
+> > +	atomic_t reset_pending;
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
->  drivers/media/platform/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > +	atomic_set(&stats->reset_pending, 0);
+> > +	if (atomic_read(&stats->reset_pending))
+> > +	bool pending = atomic_read(&stats->reset_pending);
+> > +	atomic_set(&stats->reset_pending, 1);
+> > +	bool pending = atomic_read(&stats->reset_pending);
+> > +	if (atomic_read(&stats->reset_pending))
 > 
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index bbf32086b607..a5716e9f463a 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -426,8 +426,8 @@ config VIDEO_RENESAS_FCP
->  	help
->  	  This is a driver for the Renesas Frame Compression Processor (FCP).
->  	  The FCP is a companion module of video processing modules in the
-> -	  Renesas R-Car Gen3 SoCs. It handles memory access for the codec,
-> -	  VSP and FDP modules.
-> +	  Renesas R-Car Gen3 and RZ/G2 SoCs. It handles memory access for
-> +	  the codec, VSP and FDP modules.
->  
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called rcar-fcp.
+> What do you think atomic_t is doing for you?
 
-MBR, Sergei
+I was trying to avoid races while two writes are going in parallel,
+but obviously as this isn't a RMW operation, it won't result in
+anything for me.
+
+Maybe what I should be doing is just READ_ONCE()/WRITE_ONCE()? So the
+other side doesn't see any intermediate value that was never meant to
+be set/read ?
+
+-- 
+viresh
