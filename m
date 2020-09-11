@@ -2,126 +2,123 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9946BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418A5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE77206CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uE0t+iaG"
+	by mail.kernel.org (Postfix) with ESMTP id 0C83E221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgIKQGH (ORCPT
+        id S1726591AbgIKQG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:06:07 -0400
-Received: from mail-41103.protonmail.ch ([185.70.41.103]:19890 "EHLO
-        mail-41103.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgIKQDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:03:50 -0400
-Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail-41103.protonmail.ch (Postfix) with ESMTPS id 3D145200BEBF
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 13:36:43 +0000 (UTC)
-Authentication-Results: mail-41103.protonmail.ch;
-        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uE0t+iaG"
-Date:   Fri, 11 Sep 2020 13:34:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1599831274;
-        bh=i1YSY0XyxQ3SaC8ZJ4PtKWoRmK1OW12T7faRuAJSgLY=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=uE0t+iaGURnDMbw/jWB2/rKtG+/t5YOF50uKPjidH1p8qUskaIDjCqT8+5nFqhqtb
-         GCrkrjGxKH+/W80ODPbrO7Lc89E6eWtHknGyZvx2eYmCzaibIiMC0gt9ol14Y1uT7/
-         CzUBAu/y3JcvuYwLO1F/h8MY0d9u+rKIZqFIc6PA=
-To:     Jonathan Corbet <corbet@lwn.net>
-From:   =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-        <nfraprado@protonmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com
-Reply-To: =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
-          <nfraprado@protonmail.com>
-Subject: [PATCH 0/3] docs: Add automatic cross-reference for documentation pages
-Message-ID: <20200911133339.327721-1-nfraprado@protonmail.com>
+        Fri, 11 Sep 2020 12:06:27 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51191 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbgIKQFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:05:21 -0400
+IronPort-SDR: kys1aNcFhmZQPIqPTrk5KaDVrHUYPSrSXKkYEtlyYKFzAq8h38KpklnrtuP71OKO184uPDrl3H
+ /7s7Baih+6Gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9741"; a="158071546"
+X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
+   d="scan'208";a="158071546"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:05:01 -0700
+IronPort-SDR: J+uNvfXjsVKPaULLRObScXcXxC0aGVPmjVazhcEikrkeaQMnXn5rWg+TG/LI7fzWiTyQbwEHmM
+ 2PCEvdVhi3qg==
+X-IronPort-AV: E=Sophos;i="5.76,416,1592895600"; 
+   d="scan'208";a="300969658"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2020 09:04:58 -0700
+Date:   Fri, 11 Sep 2020 09:04:56 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: always allow writing '0' to MSR_KVM_ASYNC_PF_EN
+Message-ID: <20200911160455.GB4344@sjchrist-ice>
+References: <20200911093147.484565-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200911093147.484565-1-vkuznets@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cross-referencing from a documentation page to another can be done using th=
-e
-:doc:`doc-file` directive from Sphinx.
-This however introduces markup that could be avoided to increase readabilit=
-y in
-plain text.
-This patch series adds automatic markup for cross-referencing between
-documentation pages.
+On Fri, Sep 11, 2020 at 11:31:47AM +0200, Vitaly Kuznetsov wrote:
+> Even without in-kernel LAPIC we should allow writing '0' to
+> MSR_KVM_ASYNC_PF_EN as we're not enabling the mechanism. In
+> particular, QEMU with 'kernel-irqchip=off' fails to start
+> a guest with
+> 
+> qemu-system-x86_64: error: failed to set MSR 0x4b564d02 to 0x0
+> 
+> Fixes: 9d3c447c72fb2 ("KVM: X86: Fix async pf caused null-ptr-deref")
+> Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index d39d6cf1d473..44a86f7f2397 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2730,9 +2730,6 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>  	if (data & 0x30)
+>  		return 1;
+>  
+> -	if (!lapic_in_kernel(vcpu))
+> -		return 1;
+> -
+>  	vcpu->arch.apf.msr_en_val = data;
+>  
+>  	if (!kvm_pv_async_pf_enabled(vcpu)) {
+> @@ -2741,6 +2738,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>  		return 0;
+>  	}
+>  
+> +	if (!lapic_in_kernel(vcpu))
 
-This patch series depends on [1].
+This doesn't actually verify that @data == 0.  kvm_pv_async_pf_enabled()
+returns true iff KVM_ASYNC_PF_ENABLED and KVM_ASYNC_PF_DELIVERY_AS_INT are
+set, e.g. this would allow setting one and not the other.  This also allows
+userspace to set vcpu->arch.apf.msr_en_val to an unsupported value, i.e.
+@data has already been propagated to the vcpu and isn't unwound.
 
-The first patch refactors the automarkup script to split regex matching and
-iteration into one function and text markup substitution into another.
-This enables each regex to have its own function that substitutes its match=
-es'
-text for the appropriate markup and is necessary for the automatic markup o=
-f
-documentation pages since it requires slightly different logic from marking=
- up
-C references.
+Why not just pivot on @data when lapic_in_kernel() is false?  vcpu->arch.apic
+is immutable so there's no need to update apf.msr_en_val in either direction.
 
-The second patch adds automatic markup for cross-referencing documentation
-pages by adding an appropriate regex and function to do the markup.
-This enables a text like "See Documentation/doc-guide/sphinx.rst." to be
-substituted by a cross-reference to that document without any additional ma=
-rkup.
-Since this automarkup doesn't work with relative paths (they always need to
-start at Documentation/), it will almost always require more typing than th=
-e
-equivalent :doc:`sphinx`, but it's purpose is to avoid the markup, making i=
-t
-more readable in plain text.
-The .rst extension was left as optional in the regex matching, even though =
-it
-only makes sense for .rst documents, because I thought not specifying the
-extension, like "See Documentation/doc-guide/sphinx." also made sense as a
-cross-reference.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 539ea1cd6020..36969d5ec291 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2735,7 +2735,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+                return 1;
 
-The third patch adds a section about cross-referencing in the "Writing
-Documentation" chapter since there was none (other than the one regarding
-kernel-doc).
-The section describes how to use the new automatic cross-referencing for
-documentation pages, and also how to use the already in place Sphinx doc
-directive.
-It also points to the kernel-doc document for information on cross-referenc=
-ing
-kernel-doc functions and types (using the new automarkup, so it also serves=
- as a
-testcase for it).
+        if (!lapic_in_kernel(vcpu))
+-               return 1;
++               return data ? 1 : 0;
 
-Thanks,
-N=C3=ADcolas
-
-[1]: https://lore.kernel.org/linux-doc/20200903005747.3900333-1-nfraprado@p=
-rotonmail.com/
-
-N=C3=ADcolas F. R. A. Prado (3):
-  docs: Allow multiple automarkup functions
-  docs: Add automatic cross-reference for documentation pages
-  docs: Document cross-referencing between documentation pages
-
- Documentation/doc-guide/sphinx.rst |  17 ++++
- Documentation/sphinx/automarkup.py | 134 ++++++++++++++++++++---------
- 2 files changed, 109 insertions(+), 42 deletions(-)
-
---=20
-2.28.0
+        vcpu->arch.apf.msr_en_val = data;
 
 
+> +		return 1;
+> +
+>  	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
+>  					sizeof(u64)))
+>  		return 1;
+> -- 
+> 2.25.4
+> 
