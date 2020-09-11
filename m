@@ -2,101 +2,116 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5740C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A01221E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:54:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cV7Hkzf3"
+	by mail.kernel.org (Postfix) with ESMTP id 67A8822207
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 03:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgIKDyG (ORCPT
+        id S1725768AbgIKD5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 23:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgIKDyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 23:54:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF45C061573;
-        Thu, 10 Sep 2020 20:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=mPRK05+zdcpW1+sXiJxAOVSCutB8SyY4koqqnEa0WlM=; b=cV7Hkzf3mgL5QuWTwXAgVV+jFj
-        g19ruVvdNHFI7PeRt0vEUQRxo7M9T14yEbHfc79lkx89EkGWek3d9M22co2HHPoiet68dZ5z0IXI7
-        hv14ZM2L2HqutrSTcPtui4bwET4s0QGp+vOUuEfWagxEiNniL09vUH0PwCEJY8NdGhRplRz+F+EbB
-        ghLf2sJT7blMcvzc8cdje3+WLbeynkgb2+b/ojTGs2T1+Pf2b2WIbZKO6oITrTi4ls+FnragxcQrS
-        MsSfxVa+/xma+niz4T5PmokcHFjEf2W1WwXhu4CQkf4ncvsl3NtKEBwDr6IY2qoeTxo70iC+JI0je
-        EUxFyTWQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGa8B-0000Ok-1m; Fri, 11 Sep 2020 03:53:47 +0000
-Subject: Re: [PATCH v2] i2c: virtio: add a virtio i2c frontend driver
-To:     Jie Deng <jie.deng@intel.com>, linux-i2c@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     mst@redhat.com, jasowang@redhat.com,
-        wsa+renesas@sang-engineering.com, wsa@kernel.org,
-        andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
-        jdelvare@suse.de, Sergey.Semin@baikalelectronics.ru,
-        krzk@kernel.org, rppt@kernel.org, loic.poulain@linaro.org,
-        tali.perry1@gmail.com, bjorn.andersson@linaro.org,
-        shuo.a.liu@intel.com, conghui.chen@intel.com, yu1.wang@intel.com
-References: <c4bd4fd56df36864ed34d3572f00b2b838fd833a.1599795029.git.jie.deng@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f235538d-63d6-2c16-4d9e-d913f15cdcf7@infradead.org>
-Date:   Thu, 10 Sep 2020 20:53:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 10 Sep 2020 23:57:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11810 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725283AbgIKD5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 23:57:17 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3389ACA3CCD13B1B6CFA;
+        Fri, 11 Sep 2020 11:57:15 +0800 (CST)
+Received: from [127.0.0.1] (10.57.22.126) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 11:57:06 +0800
+Subject: Re: [PATCH net-next] net: stmmac: Remove unused variable 'ret' at
+ stmmac_rx_buf1_len()
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>,
+        <mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+References: <1599705765-15562-1-git-send-email-luojiaxing@huawei.com>
+ <20200910122912.5792f657@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   luojiaxing <luojiaxing@huawei.com>
+Message-ID: <b81783e5-1c12-e06e-1416-3a8883d21cf1@huawei.com>
+Date:   Fri, 11 Sep 2020 11:57:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <c4bd4fd56df36864ed34d3572f00b2b838fd833a.1599795029.git.jie.deng@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200910122912.5792f657@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.22.126]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 8:48 PM, Jie Deng wrote:
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 293e7a0..70c8e30 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -21,6 +21,17 @@ config I2C_ALI1535
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called i2c-ali1535.
->  
-> +config I2C_VIRTIO
-> +	tristate "Virtio I2C Adapter"
-> +	depends on VIRTIO
-> +	help
-> +	  If you say yes to this option, support will be included for the virtio
-> +	  i2c adapter driver. The hardware can be emulated by any device model
 
-	  I2C
-preferably
+On 2020/9/11 3:29, Jakub Kicinski wrote:
+> On Thu, 10 Sep 2020 10:42:45 +0800 Luo Jiaxing wrote:
+>> Fixes the following warning when using W=1 to build kernel:
+>>
+>> drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:3634:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>> int ret, coe = priv->hw->rx_csum;
+>>
+>> When digging stmmac_get_rx_header_len(), dwmac4_get_rx_header_len() and
+>> dwxgmac2_get_rx_header_len() return 0 by default. Therefore, ret do not
+>> need to check the error value and can be directly deleted.
+>>
+>> Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+>> ---
+>>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> index 89b2b34..7e95412 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> @@ -3631,15 +3631,15 @@ static unsigned int stmmac_rx_buf1_len(struct stmmac_priv *priv,
+>>   				       struct dma_desc *p,
+>>   				       int status, unsigned int len)
+>>   {
+>> -	int ret, coe = priv->hw->rx_csum;
+>>   	unsigned int plen = 0, hlen = 0;
+>> +	int coe = priv->hw->rx_csum;
+>>   
+>>   	/* Not first descriptor, buffer is always zero */
+>>   	if (priv->sph && len)
+>>   		return 0;
+>>   
+>>   	/* First descriptor, get split header length */
+>> -	ret = stmmac_get_rx_header_len(priv, p, &hlen);
+>> +	stmmac_get_rx_header_len(priv, p, &hlen);
+> This function should return void if there never are any errors to
+> report.
 
 
-> +	  software according to the virtio protocol.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called i2c-virtio.
-> +
->  config I2C_ALI1563
->  	tristate "ALI 1563"
->  	depends on PCI
+Yes, you are right. So, if we need to modify the function type , this 
+patch need to be drop.
+
+And I will send a new patch later to redefine get_rx_header_len() to 
+void and delete ret there.
 
 
-thanks.
--- 
-~Randy
+Please check "net: stmmac: set get_rx_header_len() as void for it didn't 
+have any error code to return" later.
+
+
+Thanks
+
+Jiaxing
+
+
+>>   	if (priv->sph && hlen) {
+>>   		priv->xstats.rx_split_hdr_pkt_n++;
+>>   		return hlen;
+>
+> .
+>
 
