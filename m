@@ -2,51 +2,224 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C969C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49092C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C794620758
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE392075A
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:49:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="JniAzZ3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgIKPsk (ORCPT
+        id S1726595AbgIKPt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:48:40 -0400
-Received: from mx2.cyber.ee ([193.40.6.72]:41459 "EHLO mx2.cyber.ee"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgIKPnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:43:40 -0400
-Subject: Re: gcc crashes with general protection faults in
- 5.9.0-rc3-00091-ge28f0104343d
-From:   Meelis Roos <mroos@linux.ee>
-To:     LKML <linux-kernel@vger.kernel.org>
-References: <9883f24e-7ea4-ffe1-e284-8583a3407c94@linux.ee>
- <70778c21-8039-5011-e885-221c2cb06220@linux.ee>
-Message-ID: <95c6539f-1c32-5caa-ce0f-e4a5e9859c56@linux.ee>
-Date:   Fri, 11 Sep 2020 16:44:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 11 Sep 2020 11:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgIKPs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:48:26 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16464C0613ED
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:47:56 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o68so7791321pfg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/FxP5cNAkpu9V91Tg3DKH/Ny09wUejGvsK8pL9rWrkk=;
+        b=JniAzZ3xST4x7XGSyxnitWxVX3bZfGnuePIGwoojCFb46nGadnsTtmipUi/taEv3MZ
+         8zvchl4SSbsvH1ewN5k6YLLaoCxKoT2ohERbw8u/Iyh4b8xrTSrTAYGJrPFCFHkN2bHi
+         /xneXJVPG2IslDGdD76+kwU4WeWb/kq3bcMEEdW5ctkloTqq3o47htr+U5VQ77rOoQik
+         9kHa4Yo6LP/+QnWj1qMZTBUYnehDmJkPbhY5waq1K7lw70HJ0Xr7u3K4xb/fr/H+Opcn
+         drvtiAnFgsStlY6yvGVpTO0v4/Tbdh3VNBjwvpCbOanenPw0kl4oLdu3juldltMPRbQN
+         6WRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FxP5cNAkpu9V91Tg3DKH/Ny09wUejGvsK8pL9rWrkk=;
+        b=Ljur0MeGkqIcf6hmW4kMuWTuQLkrvwHG7NG8ozATuvFl3i+UW6TmM0qKsXKBZi09uF
+         MjTXoAbV2W2xmk3whlcUYSo9KklMTV0sxFpNpwYnh2ocGgXvLaBUJD49hLgfRZ3Da+Tv
+         +jI5axQ1zwU550soJ7rSf2lmLdFEBUOsK1BpSO40NfduZjI6+pksTeSFyy0m9dcHvoPa
+         EXW1Zy+hPEZaHTzxiifRs8Wyu/W8frykFliUBwVcBaWikOErfhkBkfRceUMEq4kD8m4k
+         y4rvV35Vy/R+JxhN+OLP3pat//VsYpQarloqr14QxYVoxQMinYCrKah2jKuDADPuH0/m
+         5phw==
+X-Gm-Message-State: AOAM533GJN2nO7bX9V2w891QvjfrkRL/9B/SnZbfijiXTAnUBWIsGhf3
+        GfQG6mrGQjXfGr+ClF1+uNc+ZDIhSuhhVxL+rjbiMg==
+X-Google-Smtp-Source: ABdhPJxbIsZtozG0G42NrF8x3zqNun6QflXpXiIIl35qSaaCxDs5WOfSPTNN7HAstJIk+HPY/FxyJlS0/gRmPkydrOE=
+X-Received: by 2002:a17:902:a70e:b029:d1:9be4:b49c with SMTP id
+ w14-20020a170902a70eb02900d19be4b49cmr3056458plq.20.1599839275489; Fri, 11
+ Sep 2020 08:47:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <70778c21-8039-5011-e885-221c2cb06220@linux.ee>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200910084258.22293-1-songmuchun@bytedance.com>
+ <CALvZod5JQWGHUAPnj9S0pKFQreLPST441mZnp+h=fue_nnh1yQ@mail.gmail.com>
+ <CAMZfGtUncFZZe2RDb54ALMt1DAVqBxAD1TQrpjei1H5nRbH6jg@mail.gmail.com> <CALvZod5_1nGJ2-QfSnYm4rCB+qvMEKAuVJrCeCyv_vQs7EoYfw@mail.gmail.com>
+In-Reply-To: <CALvZod5_1nGJ2-QfSnYm4rCB+qvMEKAuVJrCeCyv_vQs7EoYfw@mail.gmail.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Fri, 11 Sep 2020 23:47:16 +0800
+Message-ID: <CAMZfGtX7UF7VSNbcutibLu7ZO-cn6jFYHURHG9ycEmkmnjB08Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] mm: memcontrol: Add the missing numa stat
+ of anon and file for cgroup v2
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replying to myself:
->> This is 5.9.0-rc3-00091-ge28f0104343d on Lenovo t460s that has ran fine up to 5.8.0.
-> 
-> Now I reproduced the same problem with 5.9.0-rc3 on a HP desktop with Core2Quad CPU. The call trace is very similar and it's crashing gcc again while compiling 5.9-rc4.
-> 
-> But it seems 5.9-rc4 cures it here as well - whatever the reason might have been.
-Nope, the reason was nondeterminism - it happened on the Core2Quad running 5.9-rc4 while trying to compile todays Linux from git.
+On Fri, Sep 11, 2020 at 10:55 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Thu, Sep 10, 2020 at 8:52 PM Muchun Song <songmuchun@bytedance.com> wrote:
+> >
+> > On Fri, Sep 11, 2020 at 12:02 AM Shakeel Butt <shakeelb@google.com> wrote:
+> > >
+> > > On Thu, Sep 10, 2020 at 1:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > > >
+> > > > In the cgroup v1, we have a numa_stat interface. This is useful for
+> > > > providing visibility into the numa locality information within an
+> > > > memcg since the pages are allowed to be allocated from any physical
+> > > > node. One of the use cases is evaluating application performance by
+> > > > combining this information with the application's CPU allocation.
+> > > > But the cgroup v2 does not. So this patch adds the missing information.
+> > > >
+> > > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > > > ---
+> > >
+> > > I am actually working on exposing this info on v2 as well.
+> > >
+> > > >  mm/memcontrol.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
+> > > >  1 file changed, 44 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > > index 75cd1a1e66c8..c779673f29b2 100644
+> > > > --- a/mm/memcontrol.c
+> > > > +++ b/mm/memcontrol.c
+> > > > @@ -1492,10 +1492,34 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
+> > > >         return false;
+> > > >  }
+> > > >
+> > > > +#ifdef CONFIG_NUMA
+> > > > +static unsigned long memcg_node_page_state(struct mem_cgroup *memcg,
+> > > > +                                          unsigned int nid,
+> > > > +                                          enum node_stat_item idx)
+> > > > +{
+> > > > +       long x;
+> > > > +       struct mem_cgroup_per_node *pn;
+> > > > +       struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
+> > > > +
+> > > > +       VM_BUG_ON(nid >= nr_node_ids);
+> > > > +
+> > > > +       pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+> > > > +       x = atomic_long_read(&pn->lruvec_stat[idx]);
+> > > > +#ifdef CONFIG_SMP
+> > > > +       if (x < 0)
+> > > > +               x = 0;
+> > > > +#endif
+> > > > +       return x;
+> > > > +}
+> > > > +#endif
+> > > > +
+> > > >  static char *memory_stat_format(struct mem_cgroup *memcg)
+> > > >  {
+> > > >         struct seq_buf s;
+> > > >         int i;
+> > > > +#ifdef CONFIG_NUMA
+> > > > +       int nid;
+> > > > +#endif
+> > > >
+> > > >         seq_buf_init(&s, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
+> > > >         if (!s.buffer)
+> > > > @@ -1512,12 +1536,30 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+> > > >          * Current memory state:
+> > > >          */
+> > > >
+> > >
+> > > Let's not break the parsers of memory.stat. I would prefer a separate
+> > > interface like v1 i.e. memory.numa_stat.
+> >
+> > It is also a good idea to expose a new interface like memory.numa_stat.
+> >
+> > >
+> > > > -       seq_buf_printf(&s, "anon %llu\n",
+> > > > +       seq_buf_printf(&s, "anon %llu",
+> > > >                        (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
+> > > >                        PAGE_SIZE);
+> > > > -       seq_buf_printf(&s, "file %llu\n",
+> > > > +#ifdef CONFIG_NUMA
+> > > > +       for_each_node_state(nid, N_MEMORY)
+> > > > +               seq_buf_printf(&s, " N%d=%llu", nid,
+> > > > +                              (u64)memcg_node_page_state(memcg, nid,
+> > > > +                                                         NR_ANON_MAPPED) *
+> > > > +                              PAGE_SIZE);
+> > > > +#endif
+> > > > +       seq_buf_putc(&s, '\n');
+> > > > +
+> > > > +       seq_buf_printf(&s, "file %llu",
+> > > >                        (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
+> > > >                        PAGE_SIZE);
+> > > > +#ifdef CONFIG_NUMA
+> > > > +       for_each_node_state(nid, N_MEMORY)
+> > > > +               seq_buf_printf(&s, " N%d=%llu", nid,
+> > > > +                              (u64)memcg_node_page_state(memcg, nid,
+> > > > +                                                         NR_FILE_PAGES) *
+> > > > +                              PAGE_SIZE);
+> > > > +#endif
+> > > > +       seq_buf_putc(&s, '\n');
+> > > > +
+> > >
+> > > The v1's numa_stat exposes the LRUs, why NR_ANON_MAPPED and NR_FILE_PAGES?
+> >
+> > If we want to expose the anon per node, we need to add inactive anon and
+> > active anon together. Why not use NR_ANON_MAPPED directly?
+> >
+>
+> Active anon plus inactive anon is not equal to NR_ANON_MAPPED. The
+> shmem related memory is on anon LRUs but not accounted in
+> NR_ANON_MAPPED.
+>
+> Similarly file LRU can contain MADV_FREE pages which are not accounted
+> in NR_FILE_PAGES.
+
+I got it, thanks. Because the "state" interface exposes the anon and
+file information. So I think that we also should expose the anon and
+file for "numa_stat" per node instead of the lru statistics. Maybe it is
+better that we expose both of all the information.
+
+>
+> > >
+> > > Also I think exposing slab_[un]reclaimable per node would be beneficial as well.
+> >
+> > Yeah, I agree with you. Maybe kernel_stack and percpu also should
+> > be exposed.
+> >
+> > >
+> > > >         seq_buf_printf(&s, "kernel_stack %llu\n",
+> > > >                        (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
+> > > >                        1024);
+> > > > --
+> > > > 2.20.1
+> > > >
+> >
+> >
+> >
+> > --
+> > Yours,
+> > Muchun
+
+
 
 -- 
-Meelis Roos <mroos@linux.ee>
+Yours,
+Muchun
