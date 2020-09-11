@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E41C2BC11
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8BDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C74208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63073221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599842013;
-	bh=VHEHsFs9eWmEuMzGT3hxFB0fbn9NzjjQntg5CD00oP0=;
+	s=default; t=1599842018;
+	bh=Ri8JwN8tCQ9NDHK7NDYR8XYP5a7ACkHHRW9pL0zYCzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpMp7PFb+aBMqfGrkee0Qw2SniEIxSZnL/rg7PY+1oQxEluFf0s547q4a5+iOj1eN
-	 D4vNG0NyOzQlWEoIN1X60DU0zvx+AhUZf2KhKHmwaLzaDn6Sy7Kxm/n9O/7KuVMz0l
-	 YBLE8iRnRlMnsSbcM0hllQMx9FDRR2xTkYy9cBqc=
+	b=1693fCDjYjCZWHI2OUSmm1VT1voKAeFc3gYUT4gTiQabCVe2Dh8sQMgUeWNqi3FHp
+	 YQoIyGQ1bdUapadPeO3+NPfm/9SYWBlFbn9flEKhod0FNB5/x03qGN2eOkN1EeoFBC
+	 110joc+ADzKC53lqtH74ptXEgSKtyFPNDnAXUmwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725802AbgIKQd0 (ORCPT
+        id S1726438AbgIKQdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53396 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 12:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbgIKPRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:17:39 -0400
+        id S1726417AbgIKPRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 11:17:38 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D536422400;
-        Fri, 11 Sep 2020 12:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2167F204EC;
+        Fri, 11 Sep 2020 13:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829178;
-        bh=VHEHsFs9eWmEuMzGT3hxFB0fbn9NzjjQntg5CD00oP0=;
+        s=default; t=1599829204;
+        bh=Ri8JwN8tCQ9NDHK7NDYR8XYP5a7ACkHHRW9pL0zYCzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=npfiVqhq1ZkE3ntBbh3iaj2efd5Xr/Vei83UjZ7zju20yjxfkCWGgHEiki+FV1SFY
-         //+LXeMYZMSQ5u5F1mNUuaOjBSvw9RnF5b+3NfF7GSTE7tjKGi3DEGO+A/t9Za3CU6
-         wO/rugF6923qVtZEjQGVQTRJDmoE3T6cu98PjMOg=
+        b=v6g9yVYe/bqhu18tb83ZTUTQh7ThQoRLosjt1/PnfDcfCYSJiAdMsowRdRXqocDV1
+         cpH+N/rcNm9uT7VUv0cIAaNPiewTPWKxR2BzYMT4OBChJNUSQd8dZw/gcYy2JMSdZL
+         CgLukEQVTbamk1VPyqrDD1/ifoL1t2U2Y8+Ut238=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@nvidia.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 13/16] tipc: fix shutdown() of connectionless socket
-Date:   Fri, 11 Sep 2020 14:47:30 +0200
-Message-Id: <20200911122500.236937094@linuxfoundation.org>
+Subject: [PATCH 5.8 08/16] ipv6: Fix sysctl max for fib_multipath_hash_policy
+Date:   Fri, 11 Sep 2020 14:47:25 +0200
+Message-Id: <20200911122459.984827826@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
 References: <20200911122459.585735377@linuxfoundation.org>
@@ -61,85 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Ido Schimmel <idosch@nvidia.com>
 
-[ Upstream commit 2a63866c8b51a3f72cea388dfac259d0e14c4ba6 ]
+[ Upstream commit 05d4487197b2b71d5363623c28924fd58c71c0b6 ]
 
-syzbot is reporting hung task at nbd_ioctl() [1], for there are two
-problems regarding TIPC's connectionless socket's shutdown() operation.
+Cited commit added the possible value of '2', but it cannot be set. Fix
+it by adjusting the maximum value to '2'. This is consistent with the
+corresponding IPv4 sysctl.
 
-----------
-#include <fcntl.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <linux/nbd.h>
-#include <unistd.h>
+Before:
 
-int main(int argc, char *argv[])
-{
-        const int fd = open("/dev/nbd0", 3);
-        alarm(5);
-        ioctl(fd, NBD_SET_SOCK, socket(PF_TIPC, SOCK_DGRAM, 0));
-        ioctl(fd, NBD_DO_IT, 0); /* To be interrupted by SIGALRM. */
-        return 0;
-}
-----------
+# sysctl -w net.ipv6.fib_multipath_hash_policy=2
+sysctl: setting key "net.ipv6.fib_multipath_hash_policy": Invalid argument
+net.ipv6.fib_multipath_hash_policy = 2
+# sysctl net.ipv6.fib_multipath_hash_policy
+net.ipv6.fib_multipath_hash_policy = 0
 
-One problem is that wait_for_completion() from flush_workqueue() from
-nbd_start_device_ioctl() from nbd_ioctl() cannot be completed when
-nbd_start_device_ioctl() received a signal at wait_event_interruptible(),
-for tipc_shutdown() from kernel_sock_shutdown(SHUT_RDWR) from
-nbd_mark_nsock_dead() from sock_shutdown() from nbd_start_device_ioctl()
-is failing to wake up a WQ thread sleeping at wait_woken() from
-tipc_wait_for_rcvmsg() from sock_recvmsg() from sock_xmit() from
-nbd_read_stat() from recv_work() scheduled by nbd_start_device() from
-nbd_start_device_ioctl(). Fix this problem by always invoking
-sk->sk_state_change() (like inet_shutdown() does) when tipc_shutdown() is
-called.
+After:
 
-The other problem is that tipc_wait_for_rcvmsg() cannot return when
-tipc_shutdown() is called, for tipc_shutdown() sets sk->sk_shutdown to
-SEND_SHUTDOWN (despite "how" is SHUT_RDWR) while tipc_wait_for_rcvmsg()
-needs sk->sk_shutdown set to RCV_SHUTDOWN or SHUTDOWN_MASK. Fix this
-problem by setting sk->sk_shutdown to SHUTDOWN_MASK (like inet_shutdown()
-does) when the socket is connectionless.
+# sysctl -w net.ipv6.fib_multipath_hash_policy=2
+net.ipv6.fib_multipath_hash_policy = 2
+# sysctl net.ipv6.fib_multipath_hash_policy
+net.ipv6.fib_multipath_hash_policy = 2
 
-[1] https://syzkaller.appspot.com/bug?id=3fe51d307c1f0a845485cf1798aa059d12bf18b2
-
-Reported-by: syzbot <syzbot+e36f41d207137b5d12f7@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Fixes: d8f74f0975d8 ("ipv6: Support multipath hashing on inner IP pkts")
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/socket.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ net/ipv6/sysctl_net_ipv6.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -2773,18 +2773,21 @@ static int tipc_shutdown(struct socket *
+--- a/net/ipv6/sysctl_net_ipv6.c
++++ b/net/ipv6/sysctl_net_ipv6.c
+@@ -21,6 +21,7 @@
+ #include <net/calipso.h>
+ #endif
  
- 	trace_tipc_sk_shutdown(sk, NULL, TIPC_DUMP_ALL, " ");
- 	__tipc_shutdown(sock, TIPC_CONN_SHUTDOWN);
--	sk->sk_shutdown = SEND_SHUTDOWN;
-+	if (tipc_sk_type_connectionless(sk))
-+		sk->sk_shutdown = SHUTDOWN_MASK;
-+	else
-+		sk->sk_shutdown = SEND_SHUTDOWN;
- 
- 	if (sk->sk_state == TIPC_DISCONNECTING) {
- 		/* Discard any unreceived messages */
- 		__skb_queue_purge(&sk->sk_receive_queue);
- 
--		/* Wake up anyone sleeping in poll */
--		sk->sk_state_change(sk);
- 		res = 0;
- 	} else {
- 		res = -ENOTCONN;
- 	}
-+	/* Wake up anyone sleeping in poll. */
-+	sk->sk_state_change(sk);
- 
- 	release_sock(sk);
- 	return res;
++static int two = 2;
+ static int flowlabel_reflect_max = 0x7;
+ static int auto_flowlabels_min;
+ static int auto_flowlabels_max = IP6_AUTO_FLOW_LABEL_MAX;
+@@ -150,7 +151,7 @@ static struct ctl_table ipv6_table_templ
+ 		.mode		= 0644,
+ 		.proc_handler   = proc_rt6_multipath_hash_policy,
+ 		.extra1		= SYSCTL_ZERO,
+-		.extra2		= SYSCTL_ONE,
++		.extra2		= &two,
+ 	},
+ 	{
+ 		.procname	= "seg6_flowlabel",
 
 
