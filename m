@@ -2,120 +2,147 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9676BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B71CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DF1208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D6921D7E
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcDcVXay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725814AbgIKPx0 (ORCPT
+        id S1726517AbgIKPyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:53:26 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:42353 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbgIKPnh (ORCPT
+        Fri, 11 Sep 2020 11:54:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgIKPxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:43:37 -0400
-Received: from methusalix.internal.home.lespocky.de ([109.250.103.56]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1My3Ef-1kRwV22uGl-00zVsj; Fri, 11 Sep 2020 17:40:59 +0200
-Received: from lemmy.internal.home.lespocky.de ([192.168.243.176] helo=lemmy.home.lespocky.de)
-        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <alex@home.lespocky.de>)
-        id 1kGlAW-00012l-Dq; Fri, 11 Sep 2020 17:40:57 +0200
-Received: (nullmailer pid 28446 invoked by uid 2001);
-        Fri, 11 Sep 2020 15:40:55 -0000
-From:   Alexander Dahl <post@lespocky.de>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Alexander Dahl <post@lespocky.de>
-Subject: [PATCH v4 0/3] leds: pwm: Make automatic labels work
-Date:   Fri, 11 Sep 2020 17:40:01 +0200
-Message-Id: <20200911154004.28354-1-post@lespocky.de>
-X-Mailer: git-send-email 2.20.1
+        Fri, 11 Sep 2020 11:53:01 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF39C061757;
+        Fri, 11 Sep 2020 08:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=yNNKD3aSjbTN0xK7a0jESH4osJEkyi0r7WDad6R8Z4M=; b=VcDcVXayb9NLhgWUiavKsddA66
+        wkKREXL7VNw0LFva8kUzh47lmse2StS7H4y3bO9nh4GX5EvGdK2pNAQTHVXfyxE6lxGumhCd7PNJc
+        l/G8NzyUVTnNAvdWVGhtEa5v6n5dXLLlAkmrDI9FBUoKwa1LG1kg9wCROYJa11pT54EcSCQIuoEAb
+        CNju4Z6fhkTwqptCr4JQPn2LSmXN80dtUFCYiXD6Xlo5DjgmbCfruH8jtUCNC09/NvaOZfzWAouEo
+        vDkb0r2um69/xCxAPyja6a4qm0RKuwDNf3sq8J7z1iFcclj5tkl/BrX7bDorWn22Stggs6ifKNGMu
+        R3uis3Nw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGlM1-0001Bq-ST; Fri, 11 Sep 2020 15:52:50 +0000
+Subject: Re: linux-next: Tree for Sep 10 (drivers/media/pci/ttpci/dvb-ttpci)
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>
+References: <20200910174252.0698c743@canb.auug.org.au>
+ <97f03d35-acd3-1c65-0c93-4ca4cabf6613@infradead.org>
+ <20200911093156.15282b69@coco.lan>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1bf30e26-cd8d-a2dd-aaf3-97c2dbc1875a@infradead.org>
+Date:   Fri, 11 Sep 2020 08:52:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scan-Signature: 770cd104049592bdf1705ca88dc38dfa
-X-Provags-ID: V03:K1:e4FvXaQWDj87KwD0kEbtAGIU3u5VS+b8RpwJ8Fxy+7ih3wJ005A
- dC03taXs1FPmBoQuk4ab6GKiSV4FkUwZWKiod2sLL/htRdqmxD3y5vdUgfkknuYJLaSDD1B
- kI6GShk76+2S4ls/wX1LLXWySYA2UdZL1m+00mhsvQhWfN0CpQCRSxQYQn9Kkuix26Jvtna
- NqNUEGcsCyjK6txldsrUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lQ7HEH7Aius=:Isg2qlduxH4oFRIzMuqf/y
- PTLMUjZyz1N4tki5cd+GSBmBii2zrZGs2Tpt2uMjVq9ACNPoyXdo0UxEjzqkf+HyzjHlDwHJK
- quORKXN4pT2SZ+bHf1/uhXxWZCvqayhtqO2LJEOaKK7NQ4GTDNRLayLpSUqrNww8A88NF0XrH
- Wm1qwrM/kQd05rIG+Sp9XszcgNSmIPf48IALqG2WdTzjnRlW9Wzg8HDAaDKd+3dhbJmpkihTY
- JkcYbG4k2M69tkgeu39J+dsAiq1s3I0tD7JxRvxzens+3AwrW0dDvnup57jS95iE4l+FrDKvo
- 8myWL6V9G8fYSDhf6MwIj4iCMUf4iUL45LxMSddEytWjRmdtmmIgNu8BhCB8HVuP+udQI1ENO
- ve+rKjWJkUUfNLrAtrqxOe66f0l6c4MwJmApHZLHjMW39FtgzUJ0zcrgZW8keAkXVGTo5SQHO
- zMWUnO0l6nGOrytQl7yTvd5YS9pOKjEqxQEp9g41ZzwhEcz0mL2oNEFARVvg5+39vsWudCTcU
- C7ekLQI1uJA+TcrkSzq78/Zm5giMBAiISj/xaF6IkkS6a1L5vTVvucOkH8Eo/JUnfOTiksmaz
- T7kC5TlnpTc45PhdeApC2l5Sg9AxBQJQvj37atvBkjCIIeUshXg2C+xoL+L4EgeZLOldTND0k
- OGFGWFSZt+zjzl4sUzZfQzrxh3ux+0moP1DyEmtLPdfI2RAkDr+trS9slk1S/e7Y/wKQaqrmn
- v8ERLp5phHbAOQgjyOQ6t24P0fKz7GYidjKxtOnujli+lj3L0i04MxyK7PX0pSZlcVt28YM5v
- k3Jh3r9t82UQg9s37WuB1iP3b0c7C7JIVX+tr5Bp2VRL4YDMH5DyFQqI2n9LZ5QBuMbNZWI
+In-Reply-To: <20200911093156.15282b69@coco.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hei hei,
+On 9/11/20 12:31 AM, Mauro Carvalho Chehab wrote:
+> Hi Randy,
+> 
+> Em Thu, 10 Sep 2020 09:02:35 -0700
+> Randy Dunlap <rdunlap@infradead.org> escreveu:
+> 
+>> On 9/10/20 12:42 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200909:
+>>>   
+>>
+>>
+>> on i386:
+>>
+>> ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>> ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+>>
+>>
+>> Full randconfig file is attached.
+> 
+> I was unable to reproduce it here with the .config file you sent.
+> 
+> I suspect that the only difference is the compiler version. Here, I'm
+> using:
+> 
+> 	gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008
+> 
+> While you're using:
+> 
+> 	gcc (SUSE Linux) 7.5.0
+> 
+> Yet, the only patch that could possibly have affected it is
+> this changeset 13c129066845 ("media: av7110_v4l: avoid a typecast").
+> 
+> It sounds to me that gcc 7.5.0 only does the right math at compile
+> time if there is a typecast. Could you please check if the enclosed
+> patch fixes it?
 
-for leds-gpio you can use the properties 'function' and 'color' in the
-devicetree node and omit 'label', the label is constructed
-automatically.  This is a common feature supposed to be working for all
-LED drivers.  However it did not yet work for the 'leds-pwm' driver.
+Hi Mauro,
+Yes, this fixes the build for me.  Thanks.
 
-This series changes led-core a bit to add a non-ugly fix for the
-leds-pwm driver and takes the opportunity to update the leds-pwm
-dt-bindings accordingly.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-v4 was tested on a at91 sama5d2 based platform with LEDs connected to
-GPIO and PWM.
+> Thanks,
+> Mauro
+> 
+> [PATCH] media: av7110: don't do float point math
+> 
+> It sounds that earlier versions of GCC have troubles when
+> doing const math at compile time, if no typecast is used:
+> 
+> on i386:
+> 	ERROR: modpost: "__floatunsidf" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> 	ERROR: modpost: "__ltdf2" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> 
+> The warning was generated on gcc (SUSE Linux) 7.5.0.
+> Gcc 9.2 compiles it fine.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> 
+> diff --git a/drivers/media/pci/ttpci/av7110_v4l.c b/drivers/media/pci/ttpci/av7110_v4l.c
+> index 6d9c908be713..c89f536f699c 100644
+> --- a/drivers/media/pci/ttpci/av7110_v4l.c
+> +++ b/drivers/media/pci/ttpci/av7110_v4l.c
+> @@ -160,9 +160,9 @@ static int ves1820_set_tv_freq(struct saa7146_dev *dev, u32 freq)
+>  	buf[1] = div & 0xff;
+>  	buf[2] = 0x8e;
+>  
+> -	if (freq < 16U * 168.25)
+> +	if (freq < 16U * 16825 / 100)
+>  		config = 0xa0;
+> -	else if (freq < 16U * 447.25)
+> +	else if (freq < 16U * 44725 / 100)
+>  		config = 0x90;
+>  	else
+>  		config = 0x30;
+> 
 
-Greets
-Alex
-
-v4:
-- added led-class patch handling fwnode passing differently (patch 1/3)
-- adapted leds-pwm patch to new led-class (patch 2/3)
-- contacted original author of leds-pwm dt binding on license issue
-  (patch 3/3)
-
-v3:
-- series rebased on v5.9-rc4
-- changed license of .yaml file to recommended one (patch 2/2)
-- added Acked-by to both patches
-
-v2:
-- series rebased on v5.9-rc3
-- added the dt-bindings update patch (2/2)
-
-v1:
-- based on v5.9-rc2
-- backport on v5.4.59 tested and working
-
-Alexander Dahl (3):
-  leds: Require valid fwnode pointer for composing name
-  leds: pwm: Allow automatic labels for DT based devices
-  dt-bindings: leds: Convert pwm to yaml
-
- .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
- .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
- drivers/leds/led-class.c                      |  2 +-
- drivers/leds/leds-pwm.c                       |  3 +-
- 4 files changed, 88 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
 
 -- 
-2.20.1
-
+~Randy
