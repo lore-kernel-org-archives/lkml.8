@@ -2,106 +2,83 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2849C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5921321D47
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sutpl+MP"
+	by mail.kernel.org (Postfix) with ESMTP id 77C6921D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgIKQB4 (ORCPT
+        id S1726504AbgIKQDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgIKQBF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:01:05 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53D3C061756;
-        Fri, 11 Sep 2020 09:01:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 16so10340170qkf.4;
-        Fri, 11 Sep 2020 09:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m+iVerlUNqAW5DSLfymFd18Aa+jNaCXhphLLXfU0VIA=;
-        b=Sutpl+MPw6nB+6Wp5lUzwnRnbow90HU9aTTdtIg3LjT1unaleGubj6DLgjH29qJZ0T
-         jMBnugheaGK51H8DSv0rwGMarn7OlqHDc7tXNfLqpKrm7lua3eEOKqIQ4qUWKse+CpMJ
-         wIVx40eC9zpg9bBQBVNJ0Xre4Jvs8cNrkMzgh/6D6HQR4JEj5+tPIRQgbLtbuB5qF4Oi
-         e5atLQkthHa/nAfnDCorJKsNkqIsrmVzGOEXDo5ij+9ZE1QIlj8gAPSKjjuvR7M9JUku
-         t6gAApCIN4TgMEZc1j00NRxC2pTiI06jJF1ATbeDQGPWRlyi03xKmAujKHqcrYIMHpMs
-         7++Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m+iVerlUNqAW5DSLfymFd18Aa+jNaCXhphLLXfU0VIA=;
-        b=DAI0o9EUArYnzD3SPxreVjHcnvJcMa9S6iqtqRPr5ZjMbpSzfhiyJB4ag9FYj732lw
-         J7nteuzh0l4nkZTQ+bPVx/niyfsj6TjRgPhSp34AzxtQmGO1WKUSAWlgTMPb9aeCRYJD
-         TsE9EdQuggExFFJNOcrx8khZQYtky5+iWXWgaW7tiyUKF1JdNtCqv5tze1bcx/bSZ9Ts
-         FSJyiYqUWXmHcvhsLmpkEyoi5A33mvqpcKfgaqZL8jDZAxWweKiah56+F25WHef9Bwu0
-         fLiv12YOZPyX1H0Yuy233rEvPPyzb+ITECIutgLFLfKqB0HrFZObQqfOQVFEzaVx+OUu
-         qU9w==
-X-Gm-Message-State: AOAM530ltPRXTW2w5eQAKoDyBjtrrxjKDJ8R7l2jk1eb8x7oRVHr0+/D
-        fbqtE1GDB2isIPajECERyzw=
-X-Google-Smtp-Source: ABdhPJxtro49hRqMYSXF+EANvHfvT1mDgX5lpY6eqewCbYGFFFco8K3fg4p7mB9jEDuEtQw+QyQlOQ==
-X-Received: by 2002:ae9:f503:: with SMTP id o3mr1925852qkg.447.1599840063843;
-        Fri, 11 Sep 2020 09:01:03 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id g25sm3061622qto.47.2020.09.11.09.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 09:01:03 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 09:01:01 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        David Miller <davem@davemloft.net>, andrew@lunn.ch,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net-next] net: mvpp2: Initialize link in
- mvpp2_isr_handle_{xlg,gmac_internal}
-Message-ID: <20200911160101.GA4061896@ubuntu-n2-xlarge-x86>
-References: <20200910174826.511423-1-natechancellor@gmail.com>
- <20200910.152811.210183159970625640.davem@davemloft.net>
- <20200911003142.GA2469103@ubuntu-n2-xlarge-x86>
- <20200911111158.GF1551@shell.armlinux.org.uk>
- <20200911082236.7dfb7937@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Fri, 11 Sep 2020 12:03:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:37906 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726580AbgIKQAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 12:00:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50DA5106F;
+        Fri, 11 Sep 2020 06:48:54 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F41E53F73C;
+        Fri, 11 Sep 2020 06:48:52 -0700 (PDT)
+References: <20200911081745.214686199@infradead.org> <20200911082536.528661716@infradead.org> <jhjr1r85wye.mognet@arm.com> <20200911122922.GJ1362448@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     peterz@infradead.org
+Cc:     mingo@kernel.org, vincent.guittot@linaro.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bristot@redhat.com, swood@redhat.com,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>
+Subject: Re: [PATCH 2/2] sched/hotplug: Ensure only per-cpu kthreads run during hotplug
+In-reply-to: <20200911122922.GJ1362448@hirez.programming.kicks-ass.net>
+Date:   Fri, 11 Sep 2020 14:48:50 +0100
+Message-ID: <jhjo8mc5sql.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200911082236.7dfb7937@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 08:22:36AM -0700, Jakub Kicinski wrote:
-> On Fri, 11 Sep 2020 12:11:58 +0100 Russell King - ARM Linux admin wrote:
-> > On Thu, Sep 10, 2020 at 05:31:42PM -0700, Nathan Chancellor wrote:
-> > > Ah great, that is indeed cleaner, thank you for letting me know!  
-> > 
-> > Hmm, I'm not sure why gcc didn't find that. Strangely, the 0-day bot
-> > seems to have only picked up on it with clang, not gcc.
-> 
-> May be similar to: https://lkml.org/lkml/2019/2/25/1092
-> 
-> Recent GCC is so bad at catching uninitialized vars I was considering
-> build testing with GCC8 :/
 
-It is even simpler than that, the warning was straight up disabled in
-commit 78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized").
+On 11/09/20 13:29, peterz@infradead.org wrote:
+> On Fri, Sep 11, 2020 at 01:17:45PM +0100, Valentin Schneider wrote:
+>
+>> > @@ -6968,6 +7064,8 @@ int sched_cpu_deactivate(unsigned int cp
+>> >        */
+>> >       synchronize_rcu();
+>> >
+>> > +	balance_push_set(cpu, true);
+>> > +
+>>
+>> IIUC this is going to make every subsequent finish_lock_switch()
+>> migrate the switched-to task if it isn't a pcpu kthread. So this is going
+>> to lead to a dance of
+>>
+>> switch_to(<task0>) -> switch_to(<stopper>) -> switch_to(<task1>) -> switch_to(<stopper>) ...
+>>
+>> Wouldn't it be better to batch all those in a migrate_tasks() sibling that
+>> skips pcpu kthreads?
+>
+> That's 'difficult', this is hotplug, performance is not a consideration.
+>
 
-clang's -Wuninitialized and -Wsometimes-uninitialized are generally more
-accurate but can have some false positives because the semantic analysis
-phase happens before inlining and dead code elimination.
+Aye aye.
 
-Cheers,
-Nathan
+The reason I'm trying to care about this is (don't wince too hard) for that
+CPU pause thing [1]. Vincent's been the one doing all the actual work so I
+should let him pitch in, but TL;DR if we could "relatively quickly" migrate
+all !pcpu tasks after clearing the active bit, we could stop hotplug there
+and have our "CPU pause" thing.
+
+[1]: https://lwn.net/Articles/820825/
+
+> Basically we don't have an iterator for the runqueues, so finding these
+> tasks is hard.
+
+Mmph right, we'd pretty much have to "enjoy" iterating & skipping pcpu
+threads every __pick_migrate_task() call...
