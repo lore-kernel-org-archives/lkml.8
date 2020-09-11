@@ -2,123 +2,70 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BF1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98311C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74FC821D40
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBHsrKDu"
+	by mail.kernel.org (Postfix) with ESMTP id 4C83B21D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbgIKMIE (ORCPT
+        id S1725793AbgIKMIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:08:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35177 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725865AbgIKMGU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:06:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599825964;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tXnXExdfU/LgNFGqrEAIRqusTbjwtKOcyQ9t6Q3DukY=;
-        b=KBHsrKDuZq/W8exCKiF8KsJ7tGIYneZ8Zcj/fudmpLUMNWc5HkIljjcBRXo6dlibAC6N1z
-        vEn1xJJ3b3976URD+XT/LAMe2F+bzJJjLYa7xT7HE/9JXaWJIYe+bYgHUkNfYwuRB6syhZ
-        hcqecGACUidnEWcR4ziIYYkTp7/dVoo=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71-ziCIjw1_NRe2bBKq4cP44Q-1; Fri, 11 Sep 2020 08:06:02 -0400
-X-MC-Unique: ziCIjw1_NRe2bBKq4cP44Q-1
-Received: by mail-ej1-f70.google.com with SMTP id dc22so4437362ejb.21
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 05:06:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tXnXExdfU/LgNFGqrEAIRqusTbjwtKOcyQ9t6Q3DukY=;
-        b=SnrvmNvXdx1S+/SL1EZCjzzQE4PlKRg6GNR3PA/P7HR7GIuadUHKibNyzJPjbGqbvm
-         Pq9TPd2d7xyy6OmtSUtLi0S8BhIo/fjcnj7uY22Lzwupjb2eA5pEmz4NYThebJeE9PgJ
-         FEJ4M90fRDGfcnh61bJSPdDc5tnsoxJV2exGBiTbd0wI0x8wcxjC4dQRVRLPfQEeWovg
-         zZwmhWqvNhQVsvPsi2mfyj/MKSp7MFtuLO5CCZwTaENEpAWnztxgFYvKcJYRiP69xtg6
-         d8rjLHhh3pVTTGzH7FWeCZTLXNKFy61FyfA/abQlSf7xcLY1JMxeJ/ylBgK1SafJ3pTA
-         Vzgw==
-X-Gm-Message-State: AOAM531F0+IZwSzJItFeiq/fs5gt7CF28/tXYh2+Qj4j+0MsAxbnhOye
-        BLp4h7HbIul5+9mn3M6lQW/TNeUkyVCgjcKImS+S99g7zpT/PsXREMU4tIhy1Qh6nhknPfsy/HC
-        yWt4zDoymoNZIfwXd/avuJ7b/
-X-Received: by 2002:aa7:cf05:: with SMTP id a5mr1618678edy.313.1599825961018;
-        Fri, 11 Sep 2020 05:06:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyGeHcc3Seug1HpP+JhTlX1wxV4JWfVvs8nAUaaY4C2YTOgc5vpea65aMg/Gr3DPSBQwzpjEw==
-X-Received: by 2002:aa7:cf05:: with SMTP id a5mr1618654edy.313.1599825960828;
-        Fri, 11 Sep 2020 05:06:00 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id y25sm1474481edv.15.2020.09.11.05.06.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 05:06:00 -0700 (PDT)
-Subject: Re: [PATCH -next] fs: vboxsf: Fix a kernel-doc warning in
- vboxsf_wrappers.c
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200911114339.62308-1-wanghai38@huawei.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <03f07277-d80a-f652-1050-472124db5900@redhat.com>
-Date:   Fri, 11 Sep 2020 14:05:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 11 Sep 2020 08:08:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32768 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbgIKMID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:08:03 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 34660C9AB0915342A1BE;
+        Fri, 11 Sep 2020 20:07:45 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Sep 2020
+ 20:07:40 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <viro@zeniv.linux.org.uk>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] fs_parser: Fix 'name' kernel-doc warning in validate_constant_table()
+Date:   Fri, 11 Sep 2020 20:04:54 +0800
+Message-ID: <20200911120454.70466-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200911114339.62308-1-wanghai38@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fixes the following W=1 kernel build warning(s):
 
-On 9/11/20 1:43 PM, Wang Hai wrote:
-> Fixes the following W=1 kernel build warning(s):
-> 
-> fs/vboxsf/vboxsf_wrappers.c:132: warning: Excess function parameter 'param' description in 'vboxsf_create'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+fs/fs_parser.c:322: warning: Excess function parameter 'name' description in 'validate_constant_table'
 
-Thank you, looks good to me:
+This parameter is not in use. Remove it.
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ fs/fs_parser.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Regards,
-
-Hans
-
-
-> ---
->   fs/vboxsf/vboxsf_wrappers.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/vboxsf/vboxsf_wrappers.c b/fs/vboxsf/vboxsf_wrappers.c
-> index bfc78a097dae..3b6630e2847d 100644
-> --- a/fs/vboxsf/vboxsf_wrappers.c
-> +++ b/fs/vboxsf/vboxsf_wrappers.c
-> @@ -114,7 +114,7 @@ int vboxsf_unmap_folder(u32 root)
->    * vboxsf_create - Create a new file or folder
->    * @root:         Root of the shared folder in which to create the file
->    * @parsed_path:  The path of the file or folder relative to the shared folder
-> - * @param:        create_parms Parameters for file/folder creation.
-> + * @create_parms: create_parms Parameters for file/folder creation.
->    *
->    * Create a new file or folder or open an existing one in a shared folder.
->    * Note this function always returns 0 / success unless an exceptional condition
-> 
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index ab53e42a874..a5bd6ea5a03 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -310,7 +310,6 @@ EXPORT_SYMBOL(fs_param_is_path);
+ #ifdef CONFIG_VALIDATE_FS_PARSER
+ /**
+  * validate_constant_table - Validate a constant table
+- * @name: Name to use in reporting
+  * @tbl: The constant table to validate.
+  * @tbl_size: The size of the table.
+  * @low: The lowest permissible value.
+-- 
+2.17.1
 
