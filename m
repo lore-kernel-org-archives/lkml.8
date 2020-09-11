@@ -2,98 +2,166 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE5EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CFF2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599826918;
-	bh=P+FSpMhRQYWfJVCQ83j/JR1HDo0aoiOL7Q9B8t2+jNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wQ7loxc4VW1xRE2O84OaehGhcgzQJgJ7nLPjKUHw72pbMqKFsyXN5VW92XZOurzi+
-	 QBWHciT0xoTfRiHlWxNIdk9LxGh5QDAIbXVwIYJPA8m/cD0pSb6Ju3DGZrZbmfWjgo
-	 Y39J+oO5uWRbvjd5tBN1ezGEl3273XnuH3OaH4rQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4467C2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725710AbgIKMVv (ORCPT
+        id S1725891AbgIKMWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 08:22:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:33094 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgIKMRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:17:17 -0400
-Received: from localhost (unknown [122.171.196.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71CF821D40;
-        Fri, 11 Sep 2020 12:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599826635;
-        bh=P+FSpMhRQYWfJVCQ83j/JR1HDo0aoiOL7Q9B8t2+jNU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KuAPW/VM1PxpeYQPg625T5U2dtwo563eZiKJULUnSIY+OaDncs2Qn/bs/5fOOxQwY
-         wPhDjn9Az03BJx31K85xL/RIS4ER+CISzvk+6CvaFi7xXBjnZhJpM45l6TJe2m/3ZW
-         YBNDGUItzmLXTGgT23U9Kqo9Ugkv1agJsRZV0Erg=
-Date:   Fri, 11 Sep 2020 17:47:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, lokeshvutla@ti.com, nm@ti.com
-Subject: Re: [PATCH v2] dmaengine: ti: k3-udma: Use soc_device_match() for
- SoC dependent parameters
-Message-ID: <20200911121711.GB77521@vkoul-mobl>
-References: <20200910124329.21206-1-peter.ujfalusi@ti.com>
+        id S1725884AbgIKMRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:17:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99F7A113E;
+        Fri, 11 Sep 2020 05:17:48 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A6333F68F;
+        Fri, 11 Sep 2020 05:17:47 -0700 (PDT)
+References: <20200911081745.214686199@infradead.org> <20200911082536.528661716@infradead.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, vincent.guittot@linaro.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bristot@redhat.com, swood@redhat.com,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>
+Subject: Re: [PATCH 2/2] sched/hotplug: Ensure only per-cpu kthreads run during hotplug
+In-reply-to: <20200911082536.528661716@infradead.org>
+Date:   Fri, 11 Sep 2020 13:17:45 +0100
+Message-ID: <jhjr1r85wye.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910124329.21206-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-09-20, 15:43, Peter Ujfalusi wrote:
-> Use separate data for SoC dependent parameters. These parameters depends
-> on the DMA integration (either in HW or in SYSFW), the DMA controller
-> itself remains compatible with either the am654 or j721e variant.
-> 
-> j7200 have the same DMA as j721e with different number of channels, which
-> can be queried from HW, but SYSFW defines different rchan_oes_offset
-> number for j7200 (0x80) compared to j721e (0x400).
 
-Applied, thanks
+(+Cc VincentD, who's been looking at some of this)
 
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On 11/09/20 09:17, Peter Zijlstra wrote:
+> In preparation for migrate_disable(), make sure only per-cpu kthreads
+> are allowed to run on !active CPUs.
+>
+> This is ran (as one of the very first steps) from the cpu-hotplug
+> task which is a per-cpu kthread and completion of the hotplug
+> operation only requires such tasks.
+>
+> This contraint enables the migrate_disable() implementation to wait
+
+s/contraint/constraint/
+
+> for completion of all migrate_disable regions on this CPU at hotplug
+> time without fear of any new ones starting.
+>
+> This replaces the unlikely(rq->balance_callbacks) test at the tail of
+> context_switch with an unlikely(rq->balance_work), the fast path is
+> not affected.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
-> Hi Vinod,
-> 
-> Changes since v1:
-> - mark the udma_soc_data for am654, j721e and j7200 as static
-> 
-> this patch is going to be needed when the j7200 support is upstream (we already
-> have the psil map in dmaengine/next for the UDMA).
-> 
-> Since the hardware itself is the same (but different number of channels) I
-> wanted to avoid a new set of compatible just becase STSFW is not using the same
-> rchan_oes_offset value for j7200 and j721e.
-> 
-> Vinod: this patch will not apply cleanly on dmaengine/next because it is on top
-> of dmaengine/next + the dmaengine/fixes. This might cause issues.
-> 
-> "dmaengine: ti: k3-udma: Update rchan_oes_offset for am654 SYSFW ABI 3.0" in
-> fixes changes the rchan_oes_offset for am654 from 0x2000 to 0x200 and this patch
-> assumes 0x200...
-> 
-> is there anything I can do to make it easier for you?
+>  kernel/sched/core.c  |  103 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  kernel/sched/sched.h |    5 ++
+>  2 files changed, 106 insertions(+), 2 deletions(-)
+>
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6836,6 +6849,87 @@ static void migrate_tasks(struct rq *dea
+>
+>       rq->stop = stop;
+>  }
+> +
+> +static int __balance_push_stop(void *arg)
 
-No worries, I have merged fixes into next and applied this. That is how
-we typically handle this case
+__balance_push_cpu_stop()? _cpu_stop() seems to be the usual suffix.
 
--- 
-~Vinod
+> +{
+> +	struct task_struct *p = arg;
+> +	struct rq *rq = this_rq();
+> +	struct rq_flags rf;
+> +	int cpu;
+> +
+> +	raw_spin_lock_irq(&p->pi_lock);
+> +	rq_lock(rq, &rf);
+> +
+> +	if (task_rq(p) == rq && task_on_rq_queued(p)) {
+> +		cpu = select_fallback_rq(rq->cpu, p);
+> +		rq = __migrate_task(rq, &rf, p, cpu);
+> +	}
+> +
+> +	rq_unlock(rq, &rf);
+> +	raw_spin_unlock_irq(&p->pi_lock);
+> +
+> +	put_task_struct(p);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct cpu_stop_work, push_work);
+> +
+> +/*
+> + * Ensure we only run per-cpu kthreads once the CPU goes !active.
+> + */
+> +static bool balance_push(struct rq *rq)
+> +{
+> +	struct task_struct *push_task = rq->curr;
+> +
+> +	lockdep_assert_held(&rq->lock);
+> +	SCHED_WARN_ON(rq->cpu != smp_processor_id());
+> +
+> +	/*
+> +	 * Both the cpu-hotplug and stop task are in this class and are
+> +	 * required to complete the hotplug process.
+
+Nit: s/class/case/? I can't not read "class" as "sched_class", and
+those two are *not* in the same sched_class, and confusion ensues.
+
+> +	 */
+> +	if (is_per_cpu_kthread(push_task))
+> +		return false;
+> +
+> +	get_task_struct(push_task);
+> +	/*
+> +	 * Temporarily drop rq->lock such that we can wake-up the stop task.
+> +	 * Both preemption and IRQs are still disabled.
+> +	 */
+> +	raw_spin_unlock(&rq->lock);
+> +	stop_one_cpu_nowait(rq->cpu, __balance_push_stop, push_task,
+> +			    this_cpu_ptr(&push_work));
+> +	/*
+> +	 * At this point need_resched() is true and we'll take the loop in
+> +	 * schedule(). The next pick is obviously going to be the stop task
+> +	 * which is_per_cpu_kthread() and will push this task away.
+> +	 */
+> +	raw_spin_lock(&rq->lock);
+> +
+> +	return true;
+> +}
+> +
+> @@ -6968,6 +7064,8 @@ int sched_cpu_deactivate(unsigned int cp
+>        */
+>       synchronize_rcu();
+>
+> +	balance_push_set(cpu, true);
+> +
+
+IIUC this is going to make every subsequent finish_lock_switch()
+migrate the switched-to task if it isn't a pcpu kthread. So this is going
+to lead to a dance of
+
+switch_to(<task0>) -> switch_to(<stopper>) -> switch_to(<task1>) -> switch_to(<stopper>) ...
+
+Wouldn't it be better to batch all those in a migrate_tasks() sibling that
+skips pcpu kthreads?
+
+>  #ifdef CONFIG_SCHED_SMT
+>       /*
+>        * When going down, decrement the number of cores with SMT present.
