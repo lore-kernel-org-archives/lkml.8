@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F216EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3F1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3010222BA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F982226B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599834900;
-	bh=IdkLrxN9felV/k85cV/tWxYZltvg/docZKXEUelkiME=;
+	s=default; t=1599834949;
+	bh=g0Tx0buTZ4v0lJqs0QvuGVYtuk5Alm9+RarIUFQmvcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GraM/btmHbdAzBlh2G6+cWQqOOfgCKn3B4SJI/kY+mEDSgv1gCg8lugIEXvE13pf+
-	 qfsvZVRI5d5FnDZ3tCjPnloN13feN9f4g+1ARUw2JzqeMcThQL78LYnqdJ6VEoZseE
-	 MtOjajLxtrZHkru/ksX04ql56aYq4V2UWA6LHLcY=
+	b=Vcz00gxjLUwdHnje7L675opKrd2G3zcTrgi51nVOc0AaJIJc9X/wRhHjCFZgId4yT
+	 n5DwbktgxF69DYpVxqLTdjY8/PoR+35J2GFa5vJEtAU9TFDW5NxIF7HdreF7w1LuDQ
+	 Mb+up2HL0RyQ6RWV4qMRd1t8vyGycc96NxUm2y3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgIKOex (ORCPT
+        id S1726228AbgIKOfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57610 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 10:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726155AbgIKNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 09:12:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14B8222472;
-        Fri, 11 Sep 2020 13:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23A5C206A2;
+        Fri, 11 Sep 2020 13:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829251;
-        bh=IdkLrxN9felV/k85cV/tWxYZltvg/docZKXEUelkiME=;
+        s=default; t=1599829230;
+        bh=g0Tx0buTZ4v0lJqs0QvuGVYtuk5Alm9+RarIUFQmvcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gr2ggh4sEFCTOMmPEFEEU318vCX99Dp+c1FU9ndLMvnbqNTXjbLjPBa3VO6+dnHa0
-         SSrbRT9P8OI/m7xWUjefR1p/DDiyxVrTSSLAcFdfiSgfJVTanwaNwmrJ6r/wM9Zg7z
-         ihGdNlcYYEH5G7u0PyUbbaJyMwksG+jY6jWufHis=
+        b=w3TMX521c81c76BBehZVa/HNZ81mxkJIEWjhaqdiW20s9E7pgkxlqiv8Dh2lNrERw
+         2wO/gCCjUm243s56tGE8j06gyttMym/Y+X+wOdaL6ZnC5SQR4FW71+VV8PjpciB/L+
+         zMZ0w4JRgKgiW3jdNQnA9t9Sohh7PR6mF4SQZrp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
         Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 7/8] net: disable netpoll on fresh napis
-Date:   Fri, 11 Sep 2020 14:54:54 +0200
-Message-Id: <20200911125422.055844958@linuxfoundation.org>
+Subject: [PATCH 5.4 8/8] net: disable netpoll on fresh napis
+Date:   Fri, 11 Sep 2020 14:54:46 +0200
+Message-Id: <20200911125420.968741538@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911125421.695645838@linuxfoundation.org>
-References: <20200911125421.695645838@linuxfoundation.org>
+In-Reply-To: <20200911125420.580564179@linuxfoundation.org>
+References: <20200911125420.580564179@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -87,9 +87,9 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/core/dev.c
 +++ b/net/core/dev.c
-@@ -6196,12 +6196,13 @@ void netif_napi_add(struct net_device *d
- 		pr_err_once("netif_napi_add() called with weight %d on device %s\n",
- 			    weight, dev->name);
+@@ -6231,12 +6231,13 @@ void netif_napi_add(struct net_device *d
+ 		netdev_err_once(dev, "%s() called with weight %d\n", __func__,
+ 				weight);
  	napi->weight = weight;
 -	list_add(&napi->dev_list, &dev->napi_list);
  	napi->dev = dev;
