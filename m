@@ -2,106 +2,104 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA7BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1F3221E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E92220665
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qlm5X4kn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0mdWQvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725767AbgIKIqY (ORCPT
+        id S1725783AbgIKIqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:46:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56466 "EHLO
+        Fri, 11 Sep 2020 04:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbgIKIqW (ORCPT
+        with ESMTP id S1725550AbgIKIqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:46:22 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A284C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:46:18 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d9so6793525pfd.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:46:18 -0700 (PDT)
+        Fri, 11 Sep 2020 04:46:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639FAC061573;
+        Fri, 11 Sep 2020 01:46:29 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z1so10653261wrt.3;
+        Fri, 11 Sep 2020 01:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1GkA0UL55bpOzq1799709zbI1L7Jh544dh/Usr44kfY=;
-        b=Qlm5X4knHMrYRafI9yPXpq/lAMmN7kMUumWHzSyktdaHpfYBjRf1L0i48OjrFnD4fM
-         QC5/LOrJI4cjoM4qJqWw9UqmT0WvVcjx03RbQaUbQLjEmaxWdw1M/dcHa0maDsXfUJ0W
-         wM5ZIAfEEoRPx0B/75qP+WTBhhOJylPJkkUHV79aUXsMANVTl3BIpBjXp4ena4YTrf1r
-         3mxNqotZn8thYnV+HLFlVfvzhOmi1AOSCxKWWohGR0wi+6t8I1S4276qyF/Y6m44RkZl
-         jJfGxLqFjGk/gV5j3dHxwjKVa7HqscPsihjNOTSQqVx1Vjca8hPk22xcCdmXm/Jlj+Uy
-         6K+Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eJ0yT3gfPHpaAjung1PNqKo0Lcs/UYE3s1xPfQ/WBMY=;
+        b=B0mdWQvwCU3TIVMqLrIK4juZPymnz9Wkz8pceQZ5YEBCEEJwlWicaEfk5udMeMWRvw
+         S7r8Nxaaf0C5vCYnWyCLwBIdsagVeptymFC2QCCachwK1FIHGip8xa1zFSv/YPfsnht3
+         9En4Gp3csGFrHP4ucwoC2XZy//grYyC7lfycUZmQqgma6vkMvPEvWEX8qGOHgx1Iwou2
+         /DMHRsquF3EGemHq/r7ESwhV504lAGnxm0ruyLn9Qs/BNpiomaI0CHP8YDDJLhw6w02y
+         MTHPGRevdCFil+AW0vBBewAOTiZhhVwk1wWeoF94xJi7Bqzvn6NOCv8fJbnlxCfwB/aO
+         uS6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1GkA0UL55bpOzq1799709zbI1L7Jh544dh/Usr44kfY=;
-        b=PsgD9GOrwSOnS0m15EsX+ChpWrh/HZEK14BWQ96W9AUs1pspfNMpdidh1sC9nYUcTs
-         iOvheBSP29c3IJB4rL9xb0zEM5wwWmeJqua0O3B9BhnezQaiIYxMkD1Vk+DslYRYK4WS
-         fDuzMP8zEjHKbHlUT3ucdFOVAARqmiZAhoYsRHHU7wao5jTyvybseW9Zv8UvfzhibGIP
-         EdguDStJZ7vLq9v1pVJSk97CKMxRa8UUiHLr8ZD3i7JSTee1ndwKu7kDsaq4kW58n4CW
-         tm1nGsxo8uJoCMPI/j6NJcuguwFUx+dg9gPpI5LefClh5y6wu0a/jndsj8pV9phtK7je
-         e60A==
-X-Gm-Message-State: AOAM533mjg86bmztJDtBrlHy6bH7eaB6/oWKlM0ghexr5/Zn5rFab19t
-        PmhW91EKh1PpZfvLx4np0sY=
-X-Google-Smtp-Source: ABdhPJy14gOgqqZY97TQbIkEVgxM3qq0OMF4Cuu0NkODRuyBetn3P5gFLShii+KjF6Qfx1erVNJ0hg==
-X-Received: by 2002:a17:902:fe08:: with SMTP id g8mr1051664plj.122.1599813977903;
-        Fri, 11 Sep 2020 01:46:17 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id k3sm1602956pfp.41.2020.09.11.01.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 01:46:16 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 17:46:13 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     yezengruan <yezengruan@huawei.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>, joelaf@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        suleiman@google.com,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
-Subject: Re: [RFC][PATCH 0/4] arm64:kvm: teach guest sched that VCPUs can be
- preempted
-Message-ID: <20200911084613.GA562@jagdpanzerIV.localdomain>
-References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
- <20200817020310.GA1210848@jagdpanzerIV.localdomain>
- <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eJ0yT3gfPHpaAjung1PNqKo0Lcs/UYE3s1xPfQ/WBMY=;
+        b=foDyAlEOHjjWah6PJI7jYnh8v9YMmzynttHrVm1xru3Af1YX+wWt0vNGnc0vgYNfBj
+         7764WokQOceJ7qOzJVD87XJnV0ST/c7dRctFPYBArC4lDaDHyzdHVujD5RCh67Hv+xoa
+         6qOzCkXLTDiY3jU1Cru26ylCT1NHvikCB12yhCekpl+A1ImXXWiTk8vmtsz+P3+dAGcP
+         11R7psgY3AYpXKSr1b0uc/8kjuoTK7RGGPxzB1qDQ0BkOzm+TJAnDJ0iH4Tm4j04LFDW
+         +Pc7IrXTcRZW/JiNKQUZUrTmnpEQWqhrhvydAnlWA8fCQjHE6q6wZ8rfaDkIyX9kPGWq
+         yruw==
+X-Gm-Message-State: AOAM533thSZNyvdHbciKTAkxs6tFUI4AzBgoEd3ax6nrtjoDDlF2mViq
+        T+3npbZelXatXiq/t+Y51MRfc/Z516E=
+X-Google-Smtp-Source: ABdhPJxbHpJznZI2P6w9ukjTjQI+4WATpoBMFz4rjnF23qsfl4GQLckyNE2ELYFkXhn9qeYK6dLsng==
+X-Received: by 2002:a5d:560d:: with SMTP id l13mr906697wrv.49.1599813987884;
+        Fri, 11 Sep 2020 01:46:27 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id t16sm3201418wrm.57.2020.09.11.01.46.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 01:46:27 -0700 (PDT)
+Subject: Re: [PATCH 23/24] select_tut.2: Use MAX(a, b) from <sys/param.h>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-24-colomar.6.4.3@gmail.com>
+ <ede06e4b-7217-1315-6035-9116df9b02c0@gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <e10294cf-e7fc-6ef4-55e9-c09ba30d995f@gmail.com>
+Date:   Fri, 11 Sep 2020 10:46:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
+In-Reply-To: <ede06e4b-7217-1315-6035-9116df9b02c0@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Michael,
 
-On (20/08/17 20:03), yezengruan wrote:
-> Hi Sergey,
+On 2020-09-11 09:54, Michael Kerrisk (man-pages) wrote:
+> Hi Alex,
 > 
-> I have a set of patches similar to yours.
+> On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+>> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 > 
-> https://lore.kernel.org/lkml/20191226135833.1052-1-yezengruan@huawei.com/
+> I'm reluctant to apply this, because MAX() is not a standard
+> macro. I suppose it may not be present on some other UNIX
+> systems. You thoughts?
 
-I'm sorry for the belated reply.
+I know the BSDs have it; maybe not all of them (I don't know them all), 
+but it is present at least in OpenBSD, libbsd, FreeBSD so I guess it's 
+common enough.
+For other UNIX systems, I have no idea.
+Maybe there's some unicorn UNIX that doesn't have it... impossible to tell.
 
-Right, quite similar, but not exactly, I believe. I deliberately wanted
-to untangle vcpu preemption (which is a characteristics feature) from
-pv-lock, which may be somewhat implementation dependent.
+Cheers,
 
-Perhaps vcpu_is_preempted() should not even be implemented on per-arch
-basis, but instead it can be more of a "core" functionality.
-
-	-ss
+Alex
