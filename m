@@ -2,115 +2,74 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC96EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89DD9221ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jB9cLUPS";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="F4XsXr6K"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4ED221ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 10:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgIKKOv (ORCPT
+        id S1725904AbgIKKOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 06:14:51 -0400
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:57446
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725888AbgIKKOj (ORCPT
+        Fri, 11 Sep 2020 06:14:49 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:59494 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725866AbgIKKOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 06:14:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599819279;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=ZG38KW7Q8h6I6ub1kZvYjpSGKWWslx5w8FqBo4yAbT4=;
-        b=jB9cLUPSHzRC1AbUCZfAsCTxouAg/FfjWi9IVmaW83fpYulhAZIqqClrXDkLhpOl
-        xWiXXQG00L2Eew0/rIJTs6CqYQIUSpANCN0wfziDNDGE2bW5zlJ2khcvlnnzGbuD7JD
-        UXBmxRcC6XexG+sBxETyK7QAZahPrWXBO3FvW2ds=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599819279;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=ZG38KW7Q8h6I6ub1kZvYjpSGKWWslx5w8FqBo4yAbT4=;
-        b=F4XsXr6K5llPCuHsM+p1s4CICY0eZpJ1yChNtAQuml/LSWqAkHt1GSG0FMPoogvh
-        zTL4UDOmgBeNgB3+iE6LFbRnlziziaSQb7/lV+O6o7IQALQoRUw6nqx6nY7kHmUxY3E
-        vYBwXAZgd4f/KfE/b/H8ldC8waRUieJ0MK19R0Vs=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Sep 2020 10:14:39 +0000
-From:   skakit@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V5 1/4] arm64: dts: qcom: sc7180: Improve the pin config
- settings for CTS and TX
-In-Reply-To: <CAD=FV=XYqiGk3QEPxVKCgnYA0FVrizyarSW52HPRGVyAUSugrQ@mail.gmail.com>
-References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
- <1599742438-16811-2-git-send-email-skakit@codeaurora.org>
- <CAD=FV=XYqiGk3QEPxVKCgnYA0FVrizyarSW52HPRGVyAUSugrQ@mail.gmail.com>
-Message-ID: <010101747ca8ea89-168fbb95-b789-4294-81dc-82561c314bf4-000000@us-west-2.amazonses.com>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.11-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Fri, 11 Sep 2020 06:14:37 -0400
+X-IronPort-AV: E=Sophos;i="5.76,414,1592838000"; 
+   d="scan'208";a="57031556"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 11 Sep 2020 19:14:36 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BFE3B4007548;
+        Fri, 11 Sep 2020 19:14:34 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 2/2] media: rcar-vin: Kconfig: Update help description for VIDEO_RCAR_VIN config
+Date:   Fri, 11 Sep 2020 11:14:22 +0100
+Message-Id: <20200911101422.20333-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200911101422.20333-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200911101422.20333-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+rcar-vin driver is also used on Renesas RZ/G{1,2} SoC's, update the same
+to reflect the help description for and VIDEO_RCAR_VIN config.
 
-On 2020-09-10 20:10, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Sep 10, 2020 at 5:55 AM satya priya <skakit@codeaurora.org> 
-> wrote:
->> 
->> Remove output-high from CTS and TX as this is not really required. 
->> During
->> bringup to fix transfer failures this was added to match with console 
->> uart
->> settings. Probably some boot loader config was missing then. As it is
->> working fine now, remove it.
->> 
->> Signed-off-by: satya priya <skakit@codeaurora.org>
->> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->> Changes in V4:
->>  - This is newly added in V4 to separate the improvements in pin 
->> settings
->>    and wakeup related changes.
->> 
->> Changes in V5:
->>  - As per Doug's comment configured pull-down for CTS pin as earlier.
->> 
->>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 10 ++++------
->>  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> Looks fine to me.  Slight nit that this only applies to the IDP board
-> but ${SUBJECT} makes it sound as if this applies to all sc7180.  I
-> wouldn't spin just for that, though.  If Bjorn agrees, he can always
-> adjust the subject when applying.
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ drivers/media/platform/rcar-vin/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for reviewing the patches, i will correct this nit in my next 
-version.
+diff --git a/drivers/media/platform/rcar-vin/Kconfig b/drivers/media/platform/rcar-vin/Kconfig
+index 2669c13a0423..030312d862e7 100644
+--- a/drivers/media/platform/rcar-vin/Kconfig
++++ b/drivers/media/platform/rcar-vin/Kconfig
+@@ -24,7 +24,7 @@ config VIDEO_RCAR_VIN
+ 	select V4L2_FWNODE
+ 	help
+ 	  Support for Renesas R-Car Video Input (VIN) driver.
+-	  Supports R-Car Gen2 and Gen3 SoCs.
++	  Supports R-Car Gen{2,3} and RZ/G{1,2} SoCs.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called rcar-vin.
+-- 
+2.17.1
 
-Thanks,
-Satya Priya
