@@ -7,107 +7,101 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8025CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435982078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1F3221E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzlNb3VS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qlm5X4kn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725800AbgIKInM (ORCPT
+        id S1725767AbgIKIqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
+        Fri, 11 Sep 2020 04:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbgIKInL (ORCPT
+        with ESMTP id S1725550AbgIKIqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:43:11 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1E7C061573;
-        Fri, 11 Sep 2020 01:43:10 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id k15so10615201wrn.10;
-        Fri, 11 Sep 2020 01:43:10 -0700 (PDT)
+        Fri, 11 Sep 2020 04:46:22 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A284C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:46:18 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d9so6793525pfd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=s+k37vDOAFxkHUtEO8otqVl72Kv7/m+MnZOCdDAFY/o=;
-        b=AzlNb3VSLO+m0/csJGC/zbcrwXZ/Q8yGtxKeLXUrKYH3mAPOCycql8VnT1MHofoZcl
-         ABGWV+Ws+/MLt7JL+zrbMncEYeJkqR1IhtC6Yf84dRBpiR1G9g3YE2qwhL21zGCLS13Q
-         r0IcZ0MzlpxrfV6lqz8Jcbp4RLphzw23zwSxyRO8lWGjwyY5/j1xW4nyE7joXJ8wKn5r
-         8DjrG9fv6N+hN55Mk1FP9UWtWvvTtgPfWFZw8CIB6qyBQhDfg8vhIYd1+PdWnWDIyXR9
-         kg6rd6jH88FfJ1amPyTP0RxvSAmOhRRHYWQzQrKtMcub7/xH0I3ayWjooPDQbbeM1KPv
-         C1XQ==
+        bh=1GkA0UL55bpOzq1799709zbI1L7Jh544dh/Usr44kfY=;
+        b=Qlm5X4knHMrYRafI9yPXpq/lAMmN7kMUumWHzSyktdaHpfYBjRf1L0i48OjrFnD4fM
+         QC5/LOrJI4cjoM4qJqWw9UqmT0WvVcjx03RbQaUbQLjEmaxWdw1M/dcHa0maDsXfUJ0W
+         wM5ZIAfEEoRPx0B/75qP+WTBhhOJylPJkkUHV79aUXsMANVTl3BIpBjXp4ena4YTrf1r
+         3mxNqotZn8thYnV+HLFlVfvzhOmi1AOSCxKWWohGR0wi+6t8I1S4276qyF/Y6m44RkZl
+         jJfGxLqFjGk/gV5j3dHxwjKVa7HqscPsihjNOTSQqVx1Vjca8hPk22xcCdmXm/Jlj+Uy
+         6K+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=s+k37vDOAFxkHUtEO8otqVl72Kv7/m+MnZOCdDAFY/o=;
-        b=HiDkJsTcRL0cyYpSfwkDl6TfYzs4xUtS98hh9cn4rrav9wdSd7aAXwX48+rZuzxo7u
-         AVbQ9D0NGMbzevdifVrBOGAH/RmVOnTmqu2T1W9BhyEPNVGXg6S6Emodb75BLFQk14MX
-         CmjF5cFKrOP2TC5vUGlKevVLkNib/9YO5kb5wfkr1zBcqNkWo97mgvPbQNCGZ/0O5G83
-         dOsDOaPOuUZv1+kr2Oe6ca5YjrkoHRKibsP3VbSwSqHV5rFk1VN1/vqXMCMf2ouRH8RB
-         w3ujIPSsVChtdbpUVruA0oQKqFC1+RIxXuOqffG3u85Tz+tGhOPy8ofQcAd4haNa+Ky/
-         NpgA==
-X-Gm-Message-State: AOAM5333tey8+z6J/hcupzKTYa6bTFWvyZmA5GBQUNPbdpcM+tcZy6L3
-        yLsbWnA/3DbZ2srae9LR4eU=
-X-Google-Smtp-Source: ABdhPJyHj/iTMwS1jhMk+VWB9BMRjZplIQFoOmp6Ra5OHrwaFGxVFygbuaFRszGBNJZxurLRRNyk6Q==
-X-Received: by 2002:a5d:6301:: with SMTP id i1mr877075wru.323.1599813789391;
-        Fri, 11 Sep 2020 01:43:09 -0700 (PDT)
-Received: from andrea (userh713.uk.uudial.com. [194.69.103.86])
-        by smtp.gmail.com with ESMTPSA id 92sm3358580wra.19.2020.09.11.01.43.07
+        bh=1GkA0UL55bpOzq1799709zbI1L7Jh544dh/Usr44kfY=;
+        b=PsgD9GOrwSOnS0m15EsX+ChpWrh/HZEK14BWQ96W9AUs1pspfNMpdidh1sC9nYUcTs
+         iOvheBSP29c3IJB4rL9xb0zEM5wwWmeJqua0O3B9BhnezQaiIYxMkD1Vk+DslYRYK4WS
+         fDuzMP8zEjHKbHlUT3ucdFOVAARqmiZAhoYsRHHU7wao5jTyvybseW9Zv8UvfzhibGIP
+         EdguDStJZ7vLq9v1pVJSk97CKMxRa8UUiHLr8ZD3i7JSTee1ndwKu7kDsaq4kW58n4CW
+         tm1nGsxo8uJoCMPI/j6NJcuguwFUx+dg9gPpI5LefClh5y6wu0a/jndsj8pV9phtK7je
+         e60A==
+X-Gm-Message-State: AOAM533mjg86bmztJDtBrlHy6bH7eaB6/oWKlM0ghexr5/Zn5rFab19t
+        PmhW91EKh1PpZfvLx4np0sY=
+X-Google-Smtp-Source: ABdhPJy14gOgqqZY97TQbIkEVgxM3qq0OMF4Cuu0NkODRuyBetn3P5gFLShii+KjF6Qfx1erVNJ0hg==
+X-Received: by 2002:a17:902:fe08:: with SMTP id g8mr1051664plj.122.1599813977903;
+        Fri, 11 Sep 2020 01:46:17 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id k3sm1602956pfp.41.2020.09.11.01.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 01:43:08 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 10:43:01 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V values
-Message-ID: <20200911084301.GA14414@andrea>
-References: <20200910124748.19217-1-parri.andrea@gmail.com>
- <BL0PR2101MB0930659825AD89FF5A8DC2C4CA270@BL0PR2101MB0930.namprd21.prod.outlook.com>
+        Fri, 11 Sep 2020 01:46:16 -0700 (PDT)
+Date:   Fri, 11 Sep 2020 17:46:13 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     yezengruan <yezengruan@huawei.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>, joelaf@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        suleiman@google.com,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
+Subject: Re: [RFC][PATCH 0/4] arm64:kvm: teach guest sched that VCPUs can be
+ preempted
+Message-ID: <20200911084613.GA562@jagdpanzerIV.localdomain>
+References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
+ <20200817020310.GA1210848@jagdpanzerIV.localdomain>
+ <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL0PR2101MB0930659825AD89FF5A8DC2C4CA270@BL0PR2101MB0930.namprd21.prod.outlook.com>
+In-Reply-To: <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > @@ -740,12 +755,45 @@ static void netvsc_send_completion(struct
-> > net_device *ndev,
-> >  				   int budget)
-> >  {
-> >  	const struct nvsp_message *nvsp_packet = hv_pkt_data(desc);
-> > +	u32 msglen = hv_pkt_datalen(desc);
-> > +
-> > +	/* Ensure packet is big enough to read header fields */
-> > +	if (msglen < sizeof(struct nvsp_message_header)) {
-> > +		netdev_err(ndev, "nvsp_message length too small: %u\n",
-> > msglen);
-> > +		return;
-> > +	}
-> > 
-> >  	switch (nvsp_packet->hdr.msg_type) {
-> >  	case NVSP_MSG_TYPE_INIT_COMPLETE:
-> > +		if (msglen < sizeof(struct nvsp_message_init_complete)) {
+Hi,
+
+On (20/08/17 20:03), yezengruan wrote:
+> Hi Sergey,
 > 
-> This and other similar places should include header size:
-> 		if (msglen < sizeof(struct nvsp_message_header) + sizeof(struct nvsp_message_init_complete)) {
+> I have a set of patches similar to yours.
+> 
+> https://lore.kernel.org/lkml/20191226135833.1052-1-yezengruan@huawei.com/
 
-Thanks for pointing this out; fixing for v3...
+I'm sorry for the belated reply.
 
-  Andrea
+Right, quite similar, but not exactly, I believe. I deliberately wanted
+to untangle vcpu preemption (which is a characteristics feature) from
+pv-lock, which may be somewhat implementation dependent.
+
+Perhaps vcpu_is_preempted() should not even be implemented on per-arch
+basis, but instead it can be more of a "core" functionality.
+
+	-ss
