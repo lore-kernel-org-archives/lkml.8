@@ -2,56 +2,76 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E15AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BC7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2012221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9D120731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="V4Nb7efr"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="op4An1Pn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgIKQNq (ORCPT
+        id S1726611AbgIKQOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41066 "EHLO
+        Fri, 11 Sep 2020 12:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgIKQNk (ORCPT
+        with ESMTP id S1726536AbgIKPfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:13:40 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50981C061573;
-        Fri, 11 Sep 2020 09:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mieaiSS+0BhtRy+uP0NJAzxIjFSZGneK1DCisX/Obgo=; b=V4Nb7efrp4tZ78hd7CxB4LTZtN
-        ZA1wbO1uxaQZmTjZuaY4lfGJCUGq8E6fiAsLMfsKEA2W9Dyf9clJ/9FXwJLzAt5uUff0PZgrf4n2s
-        w6Lor6ueydCj6SaT+tdNtGo5jUUSjzr88djKbyGHMn7HYwZN5WrzeahAqliHvXghraM8=;
-Received: from p200300ccff0ce9001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:e900:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGlg1-00023Y-Pa; Fri, 11 Sep 2020 18:13:30 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGlg1-0006dL-3I; Fri, 11 Sep 2020 18:13:29 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     khilman@kernel.org, tony@atomide.com, linux@armlinux.org.uk,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v2] omap3: enable off mode automatically
-Date:   Fri, 11 Sep 2020 18:12:09 +0200
-Message-Id: <20200911161209.25149-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        Fri, 11 Sep 2020 11:35:46 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C1DC061798
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:35 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w12so10264282qki.6
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:35:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
+        b=op4An1PnPRWomDDvrh+nKoYRRdPk4XUQj8HNFNnW+U8+QekwP9q6xgikrq/BQ//LEo
+         xSp2bB6ZSxHQjVzhlPB9qQv/Tl4TNas9t8N0d69UAmYJF/nXeP4NXAJFzpasbEHlvP3U
+         K1jH2pSP3EYY8Xe8IHCXrtIFjDpNPm8CwWXZnKTLqQATrLkFF96/ZFG3BdOe0iL6YoJB
+         XI6kgslrLRJUBTbAKvHu7bXN3MpL40BXlD8fDhv8hIycGToaIbDJjUvtNwHPSxbkOe8+
+         dglYYwtMUaWR7X/ceGAzjEJCv730b5do490qSqzomuAeBWjPFnLOAD/7WYJHPmWhAe1J
+         PEwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Eg1t9In0g5b7CTs/tQIaFcuTzs3vfJs/vuWLC07Pzgc=;
+        b=EPbBFHbP3/PU3X9Zkka+ogRVsh4LoS/weaw+eGh1e7S2moW/p7pVYcYQqiwF99lOzt
+         gRUoLo5zfQUsqS5EPCSEdps5HxTM7evO9Lg6bnhNz1yKQryPtE6jDIJTTP6+CGCyeVis
+         RRoCyxp8AKHlU7+DJpjWKVok0fuAh7djwGWEvi23MOVuVP3PrcA8wYuCAR2sUEbYI2Jb
+         hpdMWn14nbaiTeeMkS81+RctZ9LxlbOC5CEB0SfHk3nhJLBSE6e4jCmVkH+7nx8mTCCF
+         XA+OGat8Ik48+9dvcAEJcowsYyiVu6m8GS0vrofWNc+vOuAwMg6qXHQIDRSv9V4HRxao
+         Cm7Q==
+X-Gm-Message-State: AOAM532Z+5Qayop4dyUKJzEohEPJQi9Z4BtVsq4fgaKp9ipyIZCFcaHl
+        ya0A8YyyzE60IQgKNnDs8VTFMA==
+X-Google-Smtp-Source: ABdhPJyRhekVuX88QAgVrUgs4m14RZILH7ZS5TVfcQSTsYzmRTExFXuX3W4AVFA27DUrko7aR730FA==
+X-Received: by 2002:a37:654b:: with SMTP id z72mr1926935qkb.365.1599838534552;
+        Fri, 11 Sep 2020 08:35:34 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id v16sm3001744qkg.37.2020.09.11.08.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 08:35:34 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 2/7] arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
+Date:   Fri, 11 Sep 2020 11:34:02 -0400
+Message-Id: <20200911153412.21672-3-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200911153412.21672-1-jonathan@marek.ca>
+References: <20200911153412.21672-1-jonathan@marek.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,132 +79,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enabling off mode was only reachable deeply hidden
-in the debugfs. As powersaving is an important feature,
-move the option out of its shady place.
-The debugfs file can still be used to override the default.
+This makes it easier to combine dt bindings for sdm845/sc7180 dispcc.
 
-Use the presence of a device compatible to ti,twl4030-idle or
-ti,twl4030-idle-osc-off as an indicator that the board is wired correctly
-for off mode.
+Note: nothing upstream provides these clocks and the sdm845 dispcc driver
+hasn't switched to using .fw_name for these clocks (these properties are
+ignored), so changing this shouldn't be a problem.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
-An earlier version of this patch was here:
-https://patchwork.kernel.org/patch/10794121/
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-A config option was used instead of the suggested devicetree check.
-
-Changes in v2:
-- fix compile without CONFIG_ARCH_OMAP3
-  The variable enable_off_mode is now always a real one and not
-  a preprocessor constant to avoid trouble with unusual configurations.
-
- arch/arm/mach-omap2/pm-debug.c |  2 --
- arch/arm/mach-omap2/pm.c       |  2 ++
- arch/arm/mach-omap2/pm.h       |  4 ----
- arch/arm/mach-omap2/pm34xx.c   | 25 ++++++++++++++++++++++++-
- 4 files changed, 26 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/pm-debug.c b/arch/arm/mach-omap2/pm-debug.c
-index fceb1e525d26..919d35d5b325 100644
---- a/arch/arm/mach-omap2/pm-debug.c
-+++ b/arch/arm/mach-omap2/pm-debug.c
-@@ -34,8 +34,6 @@
- #include "prm2xxx_3xxx.h"
- #include "pm.h"
- 
--u32 enable_off_mode;
--
- #ifdef CONFIG_DEBUG_FS
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
-index 01ec1ba4878b..da829a90fe8c 100644
---- a/arch/arm/mach-omap2/pm.c
-+++ b/arch/arm/mach-omap2/pm.c
-@@ -28,6 +28,8 @@
- #include "clockdomain.h"
- #include "pm.h"
- 
-+u32 enable_off_mode;
-+
- #ifdef CONFIG_SUSPEND
- /*
-  * omap_pm_suspend: points to a function that does the SoC-specific
-diff --git a/arch/arm/mach-omap2/pm.h b/arch/arm/mach-omap2/pm.h
-index 2a883a0c1fcd..80e84ae66aee 100644
---- a/arch/arm/mach-omap2/pm.h
-+++ b/arch/arm/mach-omap2/pm.h
-@@ -49,11 +49,7 @@ static inline int omap4_opp_init(void)
- extern int omap3_pm_get_suspend_state(struct powerdomain *pwrdm);
- extern int omap3_pm_set_suspend_state(struct powerdomain *pwrdm, int state);
- 
--#ifdef CONFIG_PM_DEBUG
- extern u32 enable_off_mode;
--#else
--#define enable_off_mode 0
--#endif
- 
- #if defined(CONFIG_PM_DEBUG) && defined(CONFIG_DEBUG_FS)
- extern void pm_dbg_update_time(struct powerdomain *pwrdm, int prev);
-diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
-index f5dfddf492e2..925b8efbf46c 100644
---- a/arch/arm/mach-omap2/pm34xx.c
-+++ b/arch/arm/mach-omap2/pm34xx.c
-@@ -25,6 +25,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/omap-gpmc.h>
- 
- #include <trace/events/power.h>
-@@ -410,7 +411,12 @@ static int __init pwrdms_setup(struct powerdomain *pwrdm, void *unused)
- 	if (!pwrst)
- 		return -ENOMEM;
- 	pwrst->pwrdm = pwrdm;
--	pwrst->next_state = PWRDM_POWER_RET;
-+
-+	if (enable_off_mode)
-+		pwrst->next_state = PWRDM_POWER_OFF;
-+	else
-+		pwrst->next_state = PWRDM_POWER_RET;
-+
- 	list_add(&pwrst->node, &pwrst_list);
- 
- 	if (pwrdm_has_hdwr_sar(pwrdm))
-@@ -444,6 +450,21 @@ static void __init pm_errata_configure(void)
- 	}
- }
- 
-+static void __init omap3_pm_check_pmic(void)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_compatible_node(NULL, NULL, "ti,twl4030-power-idle");
-+	if (!np)
-+		np = of_find_compatible_node(NULL, NULL, "ti,twl4030-power-idle-osc-off");
-+
-+	if (np) {
-+		of_node_put(np);
-+		enable_off_mode = 1;
-+	} else
-+		enable_off_mode = 0;
-+}
-+
- int __init omap3_pm_init(void)
- {
- 	struct power_state *pwrst, *tmp;
-@@ -477,6 +498,8 @@ int __init omap3_pm_init(void)
- 		goto err2;
- 	}
- 
-+	omap3_pm_check_pmic();
-+
- 	ret = pwrdm_for_each(pwrdms_setup, NULL);
- 	if (ret) {
- 		pr_err("Failed to setup powerdomains\n");
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..8184d6204b33 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4139,8 +4139,8 @@ dispcc: clock-controller@af00000 {
+ 				      "dsi0_phy_pll_out_dsiclk",
+ 				      "dsi1_phy_pll_out_byteclk",
+ 				      "dsi1_phy_pll_out_dsiclk",
+-				      "dp_link_clk_divsel_ten",
+-				      "dp_vco_divided_clk_src_mux";
++				      "dp_phy_pll_link_clk",
++				      "dp_phy_pll_vco_div_clk";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
 -- 
-2.20.1
+2.26.1
 
