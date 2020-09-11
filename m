@@ -2,102 +2,144 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C640C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B4C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D53DF206CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10495221EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gD9E5MJp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCEJZlPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgIKQJi (ORCPT
+        id S1726643AbgIKQJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
+        Fri, 11 Sep 2020 12:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726569AbgIKPwl (ORCPT
+        with ESMTP id S1726306AbgIKQJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:52:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F44C0617A9
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:53:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a17so11580857wrn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 06:53:34 -0700 (PDT)
+        Fri, 11 Sep 2020 12:09:25 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22CDC061573;
+        Fri, 11 Sep 2020 09:09:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a17so12024196wrn.6;
+        Fri, 11 Sep 2020 09:09:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uSX1220TX4nBv/to4x2cUHJT6pHMGs2wo2XJAzKfPBI=;
-        b=gD9E5MJpoF0egAKojTQ7SebWqO2PTicZS6HeZZoFENGrfKJSaQqSJw3FFcqFNutSso
-         CJWzR0Teb2GUh4MQ0xzJ58fk2CU6kzzfMWK+sewcSNFKy6HJh4SRRkWFmj5XWJnZI1De
-         3EyPfZo+oudgUtG+uy5ZtwaRnA9g2gpEfQn4pFJtEQjSlIT5auKEpxiVmV7+G+iiVnX+
-         khQ6eRVg/EC4EbTn6lI0mqMGckZ1Ms47fik9ofRI/GUy76oyhh98ipBnwR76Ibt3Xf7m
-         Eurhwo68yze9Lu/0k6A7r+crgvLSMovOI00EItyBYiX4fesJYLnp/9PPyx5fEztr5GBG
-         JsnQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=kF3M0VHm/sZfXwfpUGn8gtMPq/WOXn1La3E2HQo2qRw=;
+        b=VCEJZlPMh5mA2vGW4gRyTeLdCCDcyrkFNhS12DFsiIl5+rolnD1UiT/mAe/4gP7jGr
+         hnVn0ci+b+dRkWITbUWPh8EFNvFUcOA0l0zDpSyh8Wj/2nmwtzL1ZWIGNrVtWcEvxakh
+         a3ImdXgytvz4ocdSnmjHVdzakdA0AZ8z3VOzMmnPvtVocpDiuFowH/JOSsS2IUixcwIf
+         VkNZzuEqwOyRY8bEwRe7npCOZIi0B5gkRLVJHBXHvh672gZY4rBLjX60FwG+dPQDc5v5
+         9IfIsRl9P7cNxzO7dpoFS3D8XP5QC+UqO0IYMARNteCcKjSUgoFQUuiWZdV8zsg9ypNZ
+         X2eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uSX1220TX4nBv/to4x2cUHJT6pHMGs2wo2XJAzKfPBI=;
-        b=IE6msgv08aEDgf2dSm76r9yuqMBFvdNH/xSGPa1FI8U8D/wSVBBAazOfgslZb/7rlD
-         GJx+nANQP6asu1WUU1CrFrBO1txjDs6fufp8vC8dzvmTEFNJ5OTW6IgCkVV4SewogbTz
-         lcA7GeMSLIPcxUhLUBEQ3Q/+2wXbX0idM7T25LsuYdf993zeecmbH6gSTuFRc8eUrDWy
-         UpKWUqnGIu7zcOpQlGSuKU0ulrRDJbRC6ctyb+lBQ4ddq2BYEyAPEF7SrGqX1ccOVc8A
-         GDocxP45k6/EgCDMKfU8HQNVaLB2LT6by93b+Mc1k+afs9Xe0KpvxvdVpDu9WtCkri41
-         IMFA==
-X-Gm-Message-State: AOAM533Tx9gNiJfeRt42cVHmS4B1Ko6uxkC9AdDsq0e3cD8TxEq96iIG
-        OY32qSofb1TF5HBTuzyaVXw=
-X-Google-Smtp-Source: ABdhPJwkO+cMwRRtchemIWINqQ+AQixG0xGQoOMNX6Izs0x4b8kITi7lLzWZGJSU0T3L9fVjGmQKvg==
-X-Received: by 2002:adf:f5c1:: with SMTP id k1mr2372918wrp.271.1599832413408;
-        Fri, 11 Sep 2020 06:53:33 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id n21sm4582934wmi.21.2020.09.11.06.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 06:53:32 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=kF3M0VHm/sZfXwfpUGn8gtMPq/WOXn1La3E2HQo2qRw=;
+        b=GDNefyjaofVl6H4mFXkSfa9USG9uhDH0qV2cMEQE0Zq0iob9zLnNKKmWj02G3miRK7
+         34cAyw2U1c/rC8yGaW02h+eaB1ul126UN2WJh13iMMWes2HxdKoFLZ1+smsHOa6avzbt
+         EXG27BHkfRv7crJqEo3ruOdFb+dJDoP8xXIxbwvTlbubuL2xc6AL6KeJqHB7YQcZZ9BK
+         7HeNh0WuxXURkhqQ/lAwhuMEDyiy3gmh4Xc4lFZEuQB2oNlEmDkNYZnBGZigUFre6j9b
+         EsGlznvRYBvtCrhePrHI5JbfJHbOfdb/ZVHW2BfogXIGaLDZcsRl6EEB9w4v8dFG7+os
+         hXWQ==
+X-Gm-Message-State: AOAM5336yXgxMYZ05JXtpEFj7TfObdjA1x/MwqHVEEppJIDj76FHadaH
+        pQJpSHZr6qBk7xsibUpP69TcWk36JXc7PIDm
+X-Google-Smtp-Source: ABdhPJwPSqvu2enCOLMILSViYbHAZKMDV0Qz699kBYQoxBPTIngm0AbKoSXr+gpWwdsHqKjeKG5nBA==
+X-Received: by 2002:a5d:53d1:: with SMTP id a17mr2638483wrw.98.1599840562399;
+        Fri, 11 Sep 2020 09:09:22 -0700 (PDT)
+Received: from [192.168.0.18] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id b187sm5244540wmb.8.2020.09.11.09.09.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 09:09:21 -0700 (PDT)
+Subject: Re: [PATCH] security: keys: Use kvfree_sensitive in a few places
+To:     efremov@linux.com
+Cc:     David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200911114400.82207-1-alex.dewar90@gmail.com>
+ <f97076d2-de8a-4600-ee81-4cf4fcdc3ec1@linux.com>
 From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu: fsl_pamu: Replace use of kzfree with kfree_sensitive
-Date:   Fri, 11 Sep 2020 14:53:25 +0100
-Message-Id: <20200911135325.66156-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+Message-ID: <f0ac74e6-6e33-e736-494c-001e85327fdb@gmail.com>
+Date:   Fri, 11 Sep 2020 17:09:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <f97076d2-de8a-4600-ee81-4cf4fcdc3ec1@linux.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kzfree() is effectively deprecated as of commit 453431a54934 ("mm,
-treewide: rename kzfree() to kfree_sensitive()") and is now simply an
-alias for kfree_sensitive(). So just replace it with kfree_sensitive().
-
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/iommu/fsl_pamu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
-index 099a11a35fb9..b9a974d97831 100644
---- a/drivers/iommu/fsl_pamu.c
-+++ b/drivers/iommu/fsl_pamu.c
-@@ -1174,7 +1174,7 @@ static int fsl_pamu_probe(struct platform_device *pdev)
- 	if (irq != NO_IRQ)
- 		free_irq(irq, data);
- 
--	kzfree(data);
-+	kfree_sensitive(data);
- 
- 	if (pamu_regs)
- 		iounmap(pamu_regs);
--- 
-2.28.0
+On 2020-09-11 17:05, Denis Efremov wrote:
+> Hi,
+>
+> same patch
+>
+> https://lkml.org/lkml/2020/8/27/168
+>
+> Thanks,
+> Denis
+Ah ok. Sorry for the noise!
+>
+> On 9/11/20 2:44 PM, Alex Dewar wrote:
+>> In big_key.c, there are a few places where memzero_explicit + kvfree is
+>> used. It is better to use kvfree_sensitive instead, which is more
+>> readable and also prevents the compiler from eliding the call to
+>> memzero_explicit. Fix this.
+>>
+>> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+>> ---
+>>   security/keys/big_key.c | 9 +++------
+>>   1 file changed, 3 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+>> index 691347dea3c1..d17e5f09eeb8 100644
+>> --- a/security/keys/big_key.c
+>> +++ b/security/keys/big_key.c
+>> @@ -121,8 +121,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+>>   		*path = file->f_path;
+>>   		path_get(path);
+>>   		fput(file);
+>> -		memzero_explicit(buf, enclen);
+>> -		kvfree(buf);
+>> +		kvfree_sensitive(buf, enclen);
+>>   	} else {
+>>   		/* Just store the data in a buffer */
+>>   		void *data = kmalloc(datalen, GFP_KERNEL);
+>> @@ -140,8 +139,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+>>   err_enckey:
+>>   	kfree_sensitive(enckey);
+>>   error:
+>> -	memzero_explicit(buf, enclen);
+>> -	kvfree(buf);
+>> +	kvfree_sensitive(buf, enclen);
+>>   	return ret;
+>>   }
+>>   
+>> @@ -273,8 +271,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+>>   err_fput:
+>>   		fput(file);
+>>   error:
+>> -		memzero_explicit(buf, enclen);
+>> -		kvfree(buf);
+>> +		kvfree_sensitive(buf, enclen);
+>>   	} else {
+>>   		ret = datalen;
+>>   		memcpy(buffer, key->payload.data[big_key_data], datalen);
+>>
 
