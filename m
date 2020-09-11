@@ -2,108 +2,212 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B456BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD512C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740D8221EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B89206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:20:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aqGrYUHz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="KogK6wJV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tfhw29QG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgIKQT7 (ORCPT
+        id S1726202AbgIKQUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:19:59 -0400
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:54180
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726516AbgIKQTQ (ORCPT
+        Fri, 11 Sep 2020 12:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgIKQT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:19:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gbvhytky6xpx7itkhb67ktsxbiwpnxix; d=codeaurora.org; t=1599841153;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=XBT+2F8Be9EUhOk79AkAkxBza69lSFrrfNDtXiYkez8=;
-        b=aqGrYUHzMVKHuSU0ksGRsKHk5f3+HQbmzBV7srIhWvXSU3MnMFfopGf2xRhKKzGW
-        P7z9pzOnga24lmNNL5dAep7SjjgYF3FuoVk3cQ1VkSXvZWqRaY8UsU0BYWU6F1mSAk1
-        F738U9QdrC3Zb3zOJwWa4RJKbg4H0QGfxK9XYjo8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599841153;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=XBT+2F8Be9EUhOk79AkAkxBza69lSFrrfNDtXiYkez8=;
-        b=KogK6wJVFQreN/mETzr9ra1qZ8nX2dQe6QNa2rJ/+xPUvUPRjNxbIcExRPOtBFPW
-        LND6H4YoiB9/JxbMQMyIwX2jhxA49OiK72QTjVmaTQMMOUQDs6jMk8gKo2+fasGs0XF
-        Yq1pzAp2Y7W97jCh8z5/GAq6O4N4mesJeAyeYKIs=
+        Fri, 11 Sep 2020 12:19:56 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407EFC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:19:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k15so12036391wrn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=w1V/6tHjZ1NtUvI5vv0MkTufp8n0QRJxDeDd70OdYyw=;
+        b=Tfhw29QGXarXdouwsB/57WAsUhFtYcqhXgIUhICtddCyqRmUkGdAHYMDQujJx8+MiQ
+         TlGUpADT4u4+S2GpWDMA/+rGRKlh903aGRAhRzNVK6NmnBvEncQ6Jlo5GmpprMXh50V9
+         2VCf1Bd3RdjLTFkdEllDjKGRE3BEOiFXmo6p6KS/89Fudg6i9O11hmKNlTJ9Qkzs1BB2
+         JSs8Ny1auzF602nVZaKGaY83GS7OK6KZnXDAwur6nvZrCzR5fdx+ldvZB/JCXSvHRW3A
+         J/yCA/mPF94VS0mGZPe65dXflZNf4wUnFinjzPLfjRzuoM7JWejtSrKbLpORd5LzC9E9
+         EgjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=w1V/6tHjZ1NtUvI5vv0MkTufp8n0QRJxDeDd70OdYyw=;
+        b=iTsfwom3mOjq+rWqaZOYaQdz8g35tVzVqMO+DMtAK5ogipedp3oYX8DBN81VWeZCR/
+         yTilWjPfpVQwez93gZfaV/Ucf1M30pb4cbxHbX68X3mbngqkYOalwUVYDqo4MA/GnX8a
+         fplT7ySvpsBKK0TBGJAmLIBzMXoLD681UINI2O+eyV/kCaQbcc/iiKEM9gWdb/Q2J84a
+         9Lvcg2Cu5dld8kc1AbzklPbo/XbScErku0p3izcYiST/Y/jtMHbyctlsg5cRoLDFJLnp
+         h6B9TU9EuG8Dgl2yF6TLfGgl8NxQP7Sx/sBVaEoglTjB7gCUiu4ElG3ELsS3sieWeBW4
+         Rr9w==
+X-Gm-Message-State: AOAM533pIEDVTJsBQ7NYnlE6Nhk7HatfuxY2tV0Oaqn31GwloyXy+bRq
+        vhwBjXbFXfaqkXP/lL1Nk7kr0Ht3FhhHi4eR
+X-Google-Smtp-Source: ABdhPJzp43YfOLo6jV1ZtFBCqvOBufenR2xsV1jzYJAYStJ2/OggQv6jtZxhqyyIws001n3c642jNg==
+X-Received: by 2002:adf:e84a:: with SMTP id d10mr3044280wrn.66.1599841194808;
+        Fri, 11 Sep 2020 09:19:54 -0700 (PDT)
+Received: from [192.168.0.18] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id t22sm6521738wmt.1.2020.09.11.09.19.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 09:19:54 -0700 (PDT)
+Subject: Re: [PATCH] scripts: kzfree.cocci: Deprecate use of kzfree
+To:     efremov@linux.com, Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Corbet <corbet@lwn.net>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+References: <20200911134956.60910-1-alex.dewar90@gmail.com>
+ <1486f777-23d9-19c4-d26d-bba1d8704660@linux.com>
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Message-ID: <7045abd9-0512-4274-a368-e80fe04b1e9d@gmail.com>
+Date:   Fri, 11 Sep 2020 17:19:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1486f777-23d9-19c4-d26d-bba1d8704660@linux.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 11 Sep 2020 16:19:13 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCHv4 6/6] iommu: arm-smmu-impl: Remove unwanted extra blank
- lines
-In-Reply-To: <c26b5317-f12d-8be9-be45-3307ce5efbfc@arm.com>
-References: <cover.1599832685.git.saiprakash.ranjan@codeaurora.org>
- <010101747d912d9f-c8050b8d-1e81-4be0-ac35-b221f657b490-000000@us-west-2.amazonses.com>
- <c26b5317-f12d-8be9-be45-3307ce5efbfc@arm.com>
-Message-ID: <010101747df6b106-0fd7caa1-471f-41e6-9f34-8d6eb3380f17-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.11-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-11 21:33, Robin Murphy wrote:
-> On 2020-09-11 15:28, Sai Prakash Ranjan wrote:
->> There are few places in arm-smmu-impl where there are
->> extra blank lines, remove them
-> 
-> FWIW those were deliberate - sometimes I like a bit of subtle space to
-> visually delineate distinct groups of definitions. I suppose it won't
-> be to everyone's taste :/
-> 
+On 2020-09-11 17:08, Denis Efremov wrote:
+> Hi,
+>
+> same patch
+> https://lkml.org/lkml/2020/8/11/130
+>
+> Julia, I've send all the patches to fix existing kfree_sensitive/kvfree_sensitive reports.
+>
+> https://lkml.org/lkml/2020/8/27/168
+> https://lkml.org/lkml/2020/8/27/93
+>
+> Thanks,
+> Denis
+Sorry for yet more noise!
+>
+> On 9/11/20 4:49 PM, Alex Dewar wrote:
+>> kzfree() is effectively deprecated as of commit 453431a54934 ("mm,
+>> treewide: rename kzfree() to kfree_sensitive()"). It is currently just a
+>> legacy alias for kfree_sensitive(), which achieves the same thing.
+>>
+>> Update kzfree.cocci accordingly:
+>> 1) Replace instances of kzfree with kfree_sensitive
+>> 2) Merge different rules for memset/memset_explicit as kzfree and
+>>     kfree_sensitive are now equivalent
+>> 3) Rename script to kfree_sensitive.cocci
+>>
+>> In addition:
+>> 4) Move the script to the free/ subfolder, where it would seem to fit
+>>     better
+>>
+>> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+>> ---
+>>   .../kfree_sensitive.cocci}                    | 38 +++++--------------
+>>   1 file changed, 10 insertions(+), 28 deletions(-)
+>>   rename scripts/coccinelle/{api/kzfree.cocci => free/kfree_sensitive.cocci} (59%)
+>>
+>> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/free/kfree_sensitive.cocci
+>> similarity index 59%
+>> rename from scripts/coccinelle/api/kzfree.cocci
+>> rename to scripts/coccinelle/free/kfree_sensitive.cocci
+>> index 33625bd7cec9..a87f93f2ed5c 100644
+>> --- a/scripts/coccinelle/api/kzfree.cocci
+>> +++ b/scripts/coccinelle/free/kfree_sensitive.cocci
+>> @@ -1,13 +1,13 @@
+>>   // SPDX-License-Identifier: GPL-2.0-only
+>>   ///
+>> -/// Use kzfree, kvfree_sensitive rather than memset or
+>> -/// memzero_explicit followed by kfree
+>> +/// Use k{,v}free_sensitive rather than memset or memzero_explicit followed by
+>> +/// k{,v}free
+>>   ///
+>>   // Confidence: High
+>>   // Copyright: (C) 2020 Denis Efremov ISPRAS
+>>   // Options: --no-includes --include-headers
+>>   //
+>> -// Keywords: kzfree, kvfree_sensitive
+>> +// Keywords: kfree_sensitive, kvfree_sensitive
+>>   //
+>>   
+>>   virtual context
+>> @@ -18,7 +18,7 @@ virtual report
+>>   @initialize:python@
+>>   @@
+>>   # kmalloc_oob_in_memset uses memset to explicitly trigger out-of-bounds access
+>> -filter = frozenset(['kmalloc_oob_in_memset', 'kzfree', 'kvfree_sensitive'])
+>> +filter = frozenset(['kmalloc_oob_in_memset', 'kfree_sensitive', 'kvfree_sensitive'])
+>>   
+>>   def relevant(p):
+>>       return not (filter & {el.current_element for el in p})
+>> @@ -53,34 +53,16 @@ position m != cond.ok;
+>>   type T;
+>>   @@
+>>   
+>> +(
+>>   - memzero_explicit@m((T)E, size);
+>> -  ... when != E
+>> -      when strict
+>> -// TODO: uncomment when kfree_sensitive will be merged.
+>> -// Only this case is commented out because developers
+>> -// may not like patches like this since kzfree uses memset
+>> -// internally (not memzero_explicit).
+>> -//(
+>> -//- kfree(E)@p;
+>> -//+ kfree_sensitive(E);
+>> -//|
+>> -- \(vfree\|kvfree\)(E)@p;
+>> -+ kvfree_sensitive(E, size);
+>> -//)
+>> -
+>> -@rp_memset depends on patch@
+>> -expression E, size;
+>> -position p : script:python() { relevant(p) };
+>> -position m != cond.ok;
+>> -type T;
+>> -@@
+>> -
+>> +|
+>>   - memset@m((T)E, 0, size);
+>> +)
+>>     ... when != E
+>>         when strict
+>>   (
+>>   - kfree(E)@p;
+>> -+ kzfree(E);
+>> ++ kfree_sensitive(E);
+>>   |
+>>   - \(vfree\|kvfree\)(E)@p;
+>>   + kvfree_sensitive(E, size);
+>> @@ -91,11 +73,11 @@ p << r.p;
+>>   @@
+>>   
+>>   coccilib.report.print_report(p[0],
+>> -  "WARNING: opportunity for kzfree/kvfree_sensitive")
+>> +  "WARNING: opportunity for k{,v}free_sensitive")
+>>   
+>>   @script:python depends on org@
+>>   p << r.p;
+>>   @@
+>>   
+>>   coccilib.org.print_todo(p[0],
+>> -  "WARNING: opportunity for kzfree/kvfree_sensitive")
+>> +  "WARNING: opportunity for k{,v}free_sensitive")
+>>
 
-Ah ok, I thought it was not intentional, I can drop it.
-
->> and while at it fix the
->> checkpatch warning for space required before the open
->> parenthesis.
-> 
-> That one, however, was not ;)
-> 
-
-I'll keep this one.
-
-> BTW am I supposed to have received 3 copies of everything? Because I 
-> did...
-> 
-
-Ugh no, I just sent it once but something seems to have gone wrong.
-Apologies again if you receive this message also multiple times.
-I'll check further what's going wrong with my setup.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
