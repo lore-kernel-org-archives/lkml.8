@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12D7C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21800C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF9FC222C2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89A422285
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599829764;
-	bh=pAMpOAnyHqcbatPDSU73E2z9pv/KDTEpLUOtcQTinhY=;
+	s=default; t=1599829796;
+	bh=3Xp9RG7H9f6vJ/0asV5Bznrrs7o5QSHfreAmm28wEZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2m4Xfx50ACLXEzT3EjpCyTloEy0upOKPswHLO1nyAVIrp1ad/flU7l5BpM/yjJjH
-	 ozG7K+WiZx2U8tjob3CEkTzFqzcFKiLCQ1FZW9QtKsFVSOguoIt7ulRaJ8P8KugTgm
-	 ctHKZQMqWggAhCvljGo8etxKmif45aLkbpgbjnOI=
+	b=fvmc9tPmkTB4MLAv0UDtjhIZTK/ldirufBmeJ99pSC+oHq0DwCPBPvpJhww7BiqU3
+	 b5tSYC0qA2Ju3p6fgpICwus28hQ7WkrJdKw/Icohlt51TXhsvCy8vrWtzd5zvV3hJT
+	 S7NIix99BcGQC875NzNHBpv1BqjQkTI7d1NXTVXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbgIKNJJ (ORCPT
+        id S1726221AbgIKNJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgIKM4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725920AbgIKM4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 08:56:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7835E2224A;
-        Fri, 11 Sep 2020 12:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0196C22209;
+        Fri, 11 Sep 2020 12:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599828908;
-        bh=pAMpOAnyHqcbatPDSU73E2z9pv/KDTEpLUOtcQTinhY=;
+        s=default; t=1599828905;
+        bh=3Xp9RG7H9f6vJ/0asV5Bznrrs7o5QSHfreAmm28wEZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZCm+xtcdBqJwQONhjrA9qbPu4LtBna8B31qBJQuoMnv3ohqnM8RViiTId0gpfQjy
-         KtzAVQtIuuFJt+nt7nf36W9z6c6mldHYUm+kec2HY6cqIy3A4YpAcwJMTIul2MHTKO
-         XYYP681oWZvbHclyhzlQuglwec9gGOtCQrXZ5IrA=
+        b=M9+AYMQb/msA8Sw8CGg9ytEhWIVFbBIUiRMe5NzV6DeYqYUDMhXm0EwUI2UfIcTnJ
+         BFSBEGkYxBBja9ap6NdALB3sCXzLoMhjdvbztgrnepSKdfTliCsDZykpMpRMHTzHV+
+         Ftv++MU4gXvzZwwej0kaDFKes9CFLrVkbQCxb/Ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 52/62] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
-Date:   Fri, 11 Sep 2020 14:46:35 +0200
-Message-Id: <20200911122504.985599862@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 25/62] btrfs: set the lockdep class for log tree extent buffers
+Date:   Fri, 11 Sep 2020 14:46:08 +0200
+Message-Id: <20200911122503.652693757@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122502.395450276@linuxfoundation.org>
 References: <20200911122502.395450276@linuxfoundation.org>
@@ -60,111 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit acd46a6b6de88569654567810acad2b0a0a25cea ]
+[ Upstream commit d3beaa253fd6fa40b8b18a216398e6e5376a9d21 ]
 
-Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
-However, as long as he investigated, the design of this model is hardly
-similar to the one of Digi 00x family. It's better to exclude the model
-from modalias of ALSA firewire-digi00x driver.
+These are special extent buffers that get rewound in order to lookup
+the state of the tree at a specific point in time.  As such they do not
+go through the normal initialization paths that set their lockdep class,
+so handle them appropriately when they are created and before they are
+locked.
 
-This commit changes device entries so that the model is excluded.
-
-$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
-404  31333934  bus_name "1394"
-408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
-40c  00a07e01  company_id 00a07e     |
-410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
-
-               root directory
-               -----------------------------------------------------------------
-414  0005d08c  directory_length 5, crc 53388
-418  0300a07e  vendor
-41c  8100000c  --> descriptor leaf at 44c
-420  0c008380  node capabilities
-424  8d000002  --> eui-64 leaf at 42c
-428  d1000004  --> unit directory at 438
-
-               eui-64 leaf at 42c
-               -----------------------------------------------------------------
-42c  0002410f  leaf_length 2, crc 16655
-430  00a07e01  company_id 00a07e     |
-434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
-
-               unit directory at 438
-               -----------------------------------------------------------------
-438  0004d6c9  directory_length 4, crc 54985
-43c  1200a02d  specifier id: 1394 TA
-440  13014001  version: Vender Unique and AV/C
-444  17000001  model
-448  81000009  --> descriptor leaf at 46c
-
-               descriptor leaf at 44c
-               -----------------------------------------------------------------
-44c  00077205  leaf_length 7, crc 29189
-450  00000000  textual descriptor
-454  00000000  minimal ASCII
-458  41766964  "Avid"
-45c  20546563  " Tec"
-460  686e6f6c  "hnol"
-464  6f677900  "ogy"
-468  00000000
-
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  000599a5  leaf_length 5, crc 39333
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  41647265  "Adre"
-47c  6e616c69  "nali"
-480  6e650000  "ne"
-
-Reported-by: Simon Wood <simon@mungewell.org>
-Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
-Cc: <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/firewire/digi00x/digi00x.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/ctree.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/firewire/digi00x/digi00x.c b/sound/firewire/digi00x/digi00x.c
-index 6973a7ff1c503..659e8224a4dee 100644
---- a/sound/firewire/digi00x/digi00x.c
-+++ b/sound/firewire/digi00x/digi00x.c
-@@ -15,6 +15,7 @@ MODULE_LICENSE("GPL v2");
- #define VENDOR_DIGIDESIGN	0x00a07e
- #define MODEL_CONSOLE		0x000001
- #define MODEL_RACK		0x000002
-+#define SPEC_VERSION		0x000001
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index a8660b503bf36..3fa0515d76851 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -1372,6 +1372,8 @@ tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct btrfs_path *path,
+ 	btrfs_tree_read_unlock_blocking(eb);
+ 	free_extent_buffer(eb);
  
- static int name_card(struct snd_dg00x *dg00x)
- {
-@@ -139,14 +140,18 @@ static const struct ieee1394_device_id snd_dg00x_id_table[] = {
- 	/* Both of 002/003 use the same ID. */
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_CONSOLE,
- 	},
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_RACK,
- 	},
- 	{}
++	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb_rewin),
++				       eb_rewin, btrfs_header_level(eb_rewin));
+ 	btrfs_tree_read_lock(eb_rewin);
+ 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
+ 	WARN_ON(btrfs_header_nritems(eb_rewin) >
+@@ -1440,7 +1442,6 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
+ 
+ 	if (!eb)
+ 		return NULL;
+-	btrfs_tree_read_lock(eb);
+ 	if (old_root) {
+ 		btrfs_set_header_bytenr(eb, eb->start);
+ 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
+@@ -1448,6 +1449,9 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
+ 		btrfs_set_header_level(eb, old_root->level);
+ 		btrfs_set_header_generation(eb, old_generation);
+ 	}
++	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb), eb,
++				       btrfs_header_level(eb));
++	btrfs_tree_read_lock(eb);
+ 	if (tm)
+ 		__tree_mod_log_rewind(root->fs_info, eb, time_seq, tm);
+ 	else
 -- 
 2.25.1
 
