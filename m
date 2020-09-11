@@ -2,121 +2,185 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFAFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A850C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F64C221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="qBfjVizj"
+	by mail.kernel.org (Postfix) with ESMTP id 32BFC221E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbgIKQks (ORCPT
+        id S1726445AbgIKQlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
+        Fri, 11 Sep 2020 12:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgIKPLc (ORCPT
+        with ESMTP id S1726294AbgIKQkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:11:32 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 093A9C06179F
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:11:22 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id q63so9394063qkf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 08:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=euZWKDvSLszOg3hns89zvMgi1tbxQv2avHZee3eJ2yI=;
-        b=qBfjVizj8aDJByTIWD3AlHF0vazq0JRzEVHnlyJo5/NIS5vzxEDvesvDkS72qQWYZn
-         NcHjjsrCA9ZrOnv4cdzT1ApxtC9g+Wa0KpngbWvHSEWfCNfWKbE2HwmmNsGCn11In6Dk
-         WFzaFFM0REfbH2QJmlGpa5PHlR93uvWgHAZOV7zqPKT5y0RI5twXPrkHBTGKhxLMp+BN
-         0tn6myKDKpvS+YDQVHVxIoB8JzgE3bACjYysEB+rfFCdsGbBVjc5L+HVhvYjLFN5RQUt
-         hgGyx5kOHUpNaKrCUigwruBDOHKNfvPXy4H8FMUXjNrUmHht2a2Hak+TZCmavDVaS8WR
-         DoNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=euZWKDvSLszOg3hns89zvMgi1tbxQv2avHZee3eJ2yI=;
-        b=Q8yEWDnKZDy6LN6Y/3QH04xxndqO7lNOcVJyOB0ojiIu8YAfJtvunTdvMjJDd1SLdB
-         C2d+bxCbb40EzSo4eKWWwndleiUi88yik1rfdlP5bwfhFnn0TOyuxzDoPDFjaEtAYcgb
-         sdq7jeN74ldA2OXrjrHKLlmOouO1rIDe89GGtwiUbedUjLX5sqTTlDbd8wYP55Csyntb
-         IW1Ifr6yHDUpHiiNfBysavTWy8H+HPydfV+rcTx6HyEk+GWo4qgz+ltf8ZRsqS6yJrl9
-         m4XjnZdqMSv4sdPolUyZFslqooZOJid/xn8x4SGV62hTDR6W8JxOiTQPOyZ/GS77HJqz
-         Ii2w==
-X-Gm-Message-State: AOAM531SqKTsszQQjKDFF4rh49Xre6czmUUmucdXIvPzSjWTXThkM08d
-        QN/f381BpHHu6411UmR/WyLsLA==
-X-Google-Smtp-Source: ABdhPJxfmWCOR7Q2dKc0X3lEWR4RYf+Baz8OuO11f6wPmq3V0V15Oe2aKlOQbU9BaEuSm32pNlc/VQ==
-X-Received: by 2002:a37:bf43:: with SMTP id p64mr1862870qkf.24.1599837081212;
-        Fri, 11 Sep 2020 08:11:21 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id 201sm3216429qkf.103.2020.09.11.08.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 08:11:20 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), Harigovindan P <harigovi@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        linux-kernel@vger.kernel.org (open list),
-        Rob Clark <robdclark@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>,
-        zhengbin <zhengbin13@huawei.com>
-Subject: [PATCH v2 0/3] Add support for SM8150 and SM8250 DSI.
-Date:   Fri, 11 Sep 2020 11:09:36 -0400
-Message-Id: <20200911151001.13156-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Fri, 11 Sep 2020 12:40:36 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46097C061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:40:36 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1kGm62-0003P7-3X; Fri, 11 Sep 2020 18:40:22 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1kGm5y-0001wQ-An; Fri, 11 Sep 2020 18:40:18 +0200
+Date:   Fri, 11 Sep 2020 18:40:18 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        frieder.schrempf@kontron.de, r.schwebel@pengutronix.de,
+        Benjamin.Bara@skidata.com, Richard.Leitner@skidata.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v13 00/12] add ecspi ERR009165 for i.mx6/7 soc family
+Message-ID: <20200911164018.6treqdmywzjhqe3a@pengutronix.de>
+References: <1598889805-30399-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598889805-30399-1-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:59:11 up 301 days,  7:17, 296 users,  load average: 0.20, 0.15,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note I haven't tested SM8150 recently, but DSI is almost identical to SM8250.
+On 20-09-01 00:03, Robin Gong wrote:
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+> The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
+> 
+> PS:
+>    Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-v2:
- - added workaround for 5GHz max_rate overflowing in 32-bit builds
-   (based on robclark's suggestion)
- - Updated Kconfig option to mention SM8250 and not just SM8150
+Hi Robin,
 
-Jonathan Marek (3):
-  drm/msm/dsi: remove unused clk_pre/clk_post in msm_dsi_dphy_timing
-  drm/msm/dsi: add DSI config for sm8150 and sm8250
-  drm/msm/dsi: add support for 7nm DSI PHY/PLL
+I took your patches and did a few test on the mainline available
+fsl,imx6q-sabrelite. I used a vanilla linux version v5.9-rc1 for all my
+tests except the needed SPI-NOR patches [1]. Following are my results:
 
- .../devicetree/bindings/display/msm/dsi.txt   |   6 +-
- drivers/gpu/drm/msm/Kconfig                   |   8 +
- drivers/gpu/drm/msm/Makefile                  |   2 +
- drivers/gpu/drm/msm/dsi/dsi.h                 |   2 +
- drivers/gpu/drm/msm/dsi/dsi.xml.h             | 423 ++++++++
- drivers/gpu/drm/msm/dsi/dsi_cfg.c             |   5 +-
- drivers/gpu/drm/msm/dsi/dsi_cfg.h             |   2 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         | 102 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |   6 +-
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c     | 255 +++++
- drivers/gpu/drm/msm/dsi/pll/dsi_pll.c         |   4 +
- drivers/gpu/drm/msm/dsi/pll/dsi_pll.h         |  10 +
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_7nm.c     | 904 ++++++++++++++++++
- 13 files changed, 1724 insertions(+), 5 deletions(-)
- create mode 100644 drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
- create mode 100644 drivers/gpu/drm/msm/dsi/pll/dsi_pll_7nm.c
+Testcase 1: "Using ROM-FW"
+===
+[OK] Playing Audio (SSI)
+[OK] TX/RX bytes on a different UART (not the serial used for
+     interaction)
+[OK] Writing to the SPI-NOR
+[OK] Doing all at the same time (once for TX and once for RX on UART)
 
--- 
-2.26.1
+Notes:
+- Your Patches adding a maybe noise message "sdma firmware not ready".
+  Maybe we should consider about that if it should be a warning or a info.
 
+- For spi-nor I did run this test:
+  dd if=/dev/urandom of=/var/tmp/test1M bs=1M count=1 && \
+  flashcp -v /var/tmp/test1M /dev/mtd2
+
+  and checked /proc/interrupts:
+  25:    2107169          0          0          0       GPC  31 Level	2008000.spi
+
+Testcase 2: "Using new FW from linux-firmware"
+===
+[OK] Playing Audio (SSI)
+[OK] TX/RX bytes on a different UART (not the serial used for
+     interaction)
+[OK] Writing to the SPI-NOR
+[OK] Doing all at the same time (once for TX and once for RX on UART)
+
+Notes:
+- For spi-nor I did run this test:
+  dd if=/dev/urandom of=/var/tmp/test1M bs=1M count=1 && \
+  flashcp -v /var/tmp/test1M /dev/mtd2
+
+  and checked /proc/interrupts:
+  25:    2107993          0          0          0       GPC  31 Level	2008000.spi
+
+  I saw no SDMA interrupts during this testcase instead I saw only spi
+  controller interrupts.
+
+- According linux-firmware you did a version bump from 3.5 to 4.5 but my
+  dmesg shows:
+  imx-sdma 20ec000.sdma: loaded firmware 3.5
+
+SPI Benchmark:
+===
+flash_erase /dev/mtd2 0 0 && \
+	dd if=/dev/urandom of=/dev/mtd2 bs=1M count=1
+
+- without firmware (ROM-FW)
+  1048576 bytes (1.0 MB, 1.0 MiB) copied, 51.9713 s, 20.2 kB/s
+
+- with firmware
+  1048576 bytes (1.0 MB, 1.0 MiB) copied, 59.4174 s, 17.6 kB/s
+
+Conclusion:
+===
+It seems that we don't have any performance boost with your patchset
+instead we are increasing the complexity and the interrupts...
+
+Pls let me know if I did something wrong during testing or if my test
+setup was wrong. Note: the /dev/mtd2 isn't mainlined yet but if you use
+barebox you only have to add:
+8<---------------------------------------------------------------------
+diff --git a/arch/arm/dts/imx6qdl-sabrelite.dtsi b/arch/arm/dts/imx6qdl-sabrelite.dtsi
+index ec3d364bde..256dd90a0f 100644
+--- a/arch/arm/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/dts/imx6qdl-sabrelite.dtsi
+@@ -38,6 +38,11 @@
+ 		label = "barebox-environment";
+ 		reg = <0xe0000 0x20000>;
+ 	};
++
++	parition@100000 {
++		label = "user-partition";
++		reg = <0x100000 0x100000>;
++	};
+ };
+ 
+ &ocotp {
+8<---------------------------------------------------------------------
+to the barebox device tree.
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2020-September/082099.html 
+
+Regards,
+  Marco
