@@ -2,123 +2,110 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD06C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14B82078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B132078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iGvEp914"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgIKJzG (ORCPT
+        id S1725824AbgIKJzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 05:55:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:12515 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbgIKJzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 05:55:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bnrhf3d4Qz9v1Z1;
-        Fri, 11 Sep 2020 11:54:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1uQtGWb0214J; Fri, 11 Sep 2020 11:54:58 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bnrhf2VxJz9v1Yd;
-        Fri, 11 Sep 2020 11:54:58 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D49728B83B;
-        Fri, 11 Sep 2020 11:54:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 71B-b_lCudje; Fri, 11 Sep 2020 11:54:58 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AF0128B838;
-        Fri, 11 Sep 2020 11:54:55 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/traps: fix recoverability of machine check
- handling on book3s/32
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1c804764d38fb084b420b12ca13e8c1b2dea075e.1548166189.git.christophe.leroy@c-s.fr>
- <20200911091542.GE29521@kitsune.suse.cz>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <69e1863a-468d-55d7-f2b2-e700b22609a3@csgroup.eu>
-Date:   Fri, 11 Sep 2020 11:54:49 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 11 Sep 2020 05:55:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46380 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbgIKJzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:55:39 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08B9taOF078280;
+        Fri, 11 Sep 2020 04:55:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599818136;
+        bh=EL/ugUURzoqjPlTdtI85LUJCZ1gCXjj2E4KpF58WNMQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iGvEp914lBXMTuuLMvZ3c25Q4zypC6hJCm+SZERu/iSt4bjSkFH5VJ6pyHQtRM1c2
+         9AFEoRRBUWlJtOgH1CjJ/l12s04lYzZqetiVaWeQfwqmYiw3S5NIc7Vh0Ww9GEcTMo
+         MVoiHCCC2KZbBSNP1idOyvp55VIkBhssUFK+wcK4=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08B9ta1Z024865
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Sep 2020 04:55:36 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 11
+ Sep 2020 04:55:35 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 11 Sep 2020 04:55:35 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08B9tXbp111244;
+        Fri, 11 Sep 2020 04:55:34 -0500
+Subject: Re: [PATCH next 0/3] ARM: dts: am437x: switch to new cpsw switch drv
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+References: <20200910222508.32417-1-grygorii.strashko@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <c0417a06-4e81-b795-b7c0-9b4bfc046e6d@ti.com>
+Date:   Fri, 11 Sep 2020 12:55:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200911091542.GE29521@kitsune.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910222508.32417-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Le 11/09/2020 à 11:15, Michal Suchánek a écrit :
-> Hello,
-> 
-> does this logic apply to "Unrecoverable System Reset" as well?
 
-I don't know, I don't think I have any way the generate a System Reset 
-on my board to check it.
+On 11/09/2020 01:25, Grygorii Strashko wrote:
+> Hi Tony,
+> 
+> Since Kernel v5.5 commits:
+>   111cf1ab4da3 ("net: ethernet: ti: introduce cpsw switchdev based driver part 2 - switch")
+>   ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+> the new CPSW driver with switchdev support has been introduced and one
+> am571x-idk board was converted to use it. And since that time (Nov 2019) no
+> significant issues were reported for the new CPSW driver.
+> 
+> Therefore it's time to switch all am437x boards to use new cpsw switch
+> driver. Those boards have 1 or 2 Ext. ports wired and configured in dual_mac mode
+> by default. The dual_mac mode has been preserved the same way between
+> legacy and new driver, and one port devices works the same as 1 dual_mac port,
+> so it's safe to switch drivers.
+> 
+> Grygorii Strashko (3):
+>    ARM: dts: am437x-l4: add dt node for new cpsw switchdev driver
+>    ARM: dts: am437x: switch to new cpsw switch drv
+>    ARM: dts: am437x-l4: drop legacy cpsw dt node
+> 
+>   arch/arm/boot/dts/am4372.dtsi        |  4 +-
+>   arch/arm/boot/dts/am437x-cm-t43.dts  | 14 +++--
+>   arch/arm/boot/dts/am437x-gp-evm.dts  | 13 +++--
+>   arch/arm/boot/dts/am437x-idk-evm.dts | 13 +++--
+>   arch/arm/boot/dts/am437x-l4.dtsi     | 77 +++++++++++++++-------------
+>   arch/arm/boot/dts/am437x-sk-evm.dts  | 14 +++--
+>   arch/arm/boot/dts/am43x-epos-evm.dts | 13 +++--
+>   7 files changed, 78 insertions(+), 70 deletions(-)
+> 
 
-Christophe
+Pls, ignore this mail - double send.
 
-> 
-> Thanks
-> 
-> Michal
-> 
-> On Tue, Jan 22, 2019 at 02:11:24PM +0000, Christophe Leroy wrote:
->> Looks like book3s/32 doesn't set RI on machine check, so
->> checking RI before calling die() will always be fatal
->> allthought this is not an issue in most cases.
->>
->> Fixes: b96672dd840f ("powerpc: Machine check interrupt is a non-maskable interrupt")
->> Fixes: daf00ae71dad ("powerpc/traps: restore recoverability of machine_check interrupts")
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> Cc: stable@vger.kernel.org
->> ---
->>   arch/powerpc/kernel/traps.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
->> index 64936b60d521..c740f8bfccc9 100644
->> --- a/arch/powerpc/kernel/traps.c
->> +++ b/arch/powerpc/kernel/traps.c
->> @@ -763,15 +763,15 @@ void machine_check_exception(struct pt_regs *regs)
->>   	if (check_io_access(regs))
->>   		goto bail;
->>   
->> -	/* Must die if the interrupt is not recoverable */
->> -	if (!(regs->msr & MSR_RI))
->> -		nmi_panic(regs, "Unrecoverable Machine check");
->> -
->>   	if (!nested)
->>   		nmi_exit();
->>   
->>   	die("Machine check", regs, SIGBUS);
->>   
->> +	/* Must die if the interrupt is not recoverable */
->> +	if (!(regs->msr & MSR_RI))
->> +		nmi_panic(regs, "Unrecoverable Machine check");
->> +
->>   	return;
->>   
->>   bail:
->> -- 
->> 2.13.3
->>
+-- 
+Best regards,
+grygorii
