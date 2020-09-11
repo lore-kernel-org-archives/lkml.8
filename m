@@ -2,299 +2,128 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DAC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12013C2BC11
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A299F206F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97508206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="syVOVe01"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCz4mf1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgIKIbT (ORCPT
+        id S1725784AbgIKIcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
+        Fri, 11 Sep 2020 04:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbgIKIbO (ORCPT
+        with ESMTP id S1725710AbgIKIcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:31:14 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B712DC061573;
-        Fri, 11 Sep 2020 01:31:14 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gf14so1344111pjb.5;
-        Fri, 11 Sep 2020 01:31:14 -0700 (PDT)
+        Fri, 11 Sep 2020 04:32:52 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ABD7C061573;
+        Fri, 11 Sep 2020 01:32:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z4so10625848wrr.4;
+        Fri, 11 Sep 2020 01:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LbQB3S5x6xx4Jb0zTm7XcQVbWl22yVn5g91syEiS2MQ=;
-        b=syVOVe01zamEEPtzfkERcVBgF2XqcoIOensW1NDs3k5WbB5AycPUJOdgKYPtS37I/i
-         6bk/tCHeeZ1/6Wj97w+BE6rWK6kWU8L9mBUWBdYVr5EQ9zD3ZBqcFaLQZ0RxEzoeUxSf
-         wScWUqf9iiNM/QFLCFFBRe2dg/OtTosjHYCqI4pHSLTgsP41s7FucscOwYt+8gbNFrr9
-         4Ebp0E8JYXJ7vR5wqWtPSIA/sxoKgtdiQnhbJcoxxzjUejFk//H1ajDpmz+u/t2SvSZ6
-         Rs19fFRDDk0HvmrJZwGkVjImUg/9+HSiUGKrFUOGgkZCSnQt02/jcZzjj64k4YwjKmia
-         SwNQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Z1BdTesaiWepAKQgkXe2/VRpo4TMuPhA/hVEY2EsNes=;
+        b=FCz4mf1TvXnhkZPG/EKBmAkSoRy5n5UqUUUpOwRLyvwAtExoj8ag/7DIFuQeT2UIYe
+         9Nvp9Bv6lDlBJ8/DYVSh64kfGwYlCtX5o4u3FB6qTTSlyN6cbbjn0iXF8MkhmZu41HAV
+         x8EHJyqiSpZIDJq2P5xd+uSbehV5X48vfLya8VHaZfWUSN/k1khSA2f9xjVBmIsASwmd
+         3qvX1pK8c+odgguYiVr2a4f/7DNbGQXjvsiQEsmeXgbtgkubn9g0jEQZidJViLIcL1AE
+         mIK5tajmdP9aQbtudrR8hI8eOfZ9lYxKdLiIsi7V8Xm/zQl/qKxS1xpywLR0+j4Ltep5
+         Sw2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LbQB3S5x6xx4Jb0zTm7XcQVbWl22yVn5g91syEiS2MQ=;
-        b=glF+9fUiEKAn1cN4w4jUACANwh/gWBBDP4mheLHVV9KMIsXVCdCtsforZUBZzEHjWS
-         9OLhBQDh7Ub0sFG8Get0uV5dE/etj13htgboH9G7Lv/gGXsXfYyaM2Kqryxzq4qLIiHW
-         99yyWZ1/l+jTFiIGLeeQkRFzDsGd8ZTNgWDWDnEY6/bL1EXMAFuVlkm9QCeo89mpmmIA
-         EkizsvzHLUjq/DcHQH6Bk9lksC84bzXNVCNuqBelxPdLVRoi4x8mP3wUJYuMa+FCWPfx
-         bLegasXO+IglrW7JAYYiWSvrLMcpfxgSPpCzbf2kttvknbB8L/JfCCrlgHgia2piMLhM
-         xkyg==
-X-Gm-Message-State: AOAM530hxytLFCxoQE8P9bzrsBFuyN8SJFQVaBZMyF4dwCwu5nXfagTp
-        9ZMMhVTirv+aVCjDwvqHs1FPkN8EVTMmXQ==
-X-Google-Smtp-Source: ABdhPJzf5Vdy7OT8jta7JYuEdU/QgbIjnz8gLz87+YOYvLHhXECrx3I5CToJgiX7oZFsXO0xmgUP9g==
-X-Received: by 2002:a17:90a:a081:: with SMTP id r1mr1249361pjp.159.1599813073748;
-        Fri, 11 Sep 2020 01:31:13 -0700 (PDT)
-Received: from dhcp-12-153.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x9sm1527084pfj.96.2020.09.11.01.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 01:31:13 -0700 (PDT)
-From:   Hangbin Liu <liuhangbin@gmail.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv3] selftests/run_kselftest.sh: make each test individually selectable
-Date:   Fri, 11 Sep 2020 16:30:53 +0800
-Message-Id: <20200911083053.2816576-1-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200316072626.24037-1-liuhangbin@gmail.com>
-References: <20200316072626.24037-1-liuhangbin@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Z1BdTesaiWepAKQgkXe2/VRpo4TMuPhA/hVEY2EsNes=;
+        b=MMo6uNeec/dCvCdflOEfVjX1hm5gbzT2NrqtKxgjzWUtoWVkJ7awVsJXtg+gLNvjSn
+         cngKDSC25nKvtqMKNNqK+oyWujizNH9so3MmD61vMYt5fuOP5Y7yK3bG23pvcE4XUoz+
+         +2UZyjDXJq/iYJB945m2F7YboBiA8QfskhJs5+Z7cO5aW1MUr+JMc6i3KMoc6Y9L71HV
+         7otCBKLJQklidN3EP9ne6h4TONW7KKaQj4TrpkO3tyhIM6nZno0kTGneU6BUK5YkJWHy
+         dQP7Z/p55DiBcp/SEy8be/dWv1wd3/zc8mV1xUsLLdFYiTDEqaxOFCfT+Y7hQVpe5O4W
+         q/5w==
+X-Gm-Message-State: AOAM530ax1WV76fzrS8NETLlI4OoWORJzNPMfe5q2pwtyMs7QeuZfyAD
+        KYTiIf9iDuPBKoGRTT+dUTvaIuAfZwk=
+X-Google-Smtp-Source: ABdhPJxOWurkA5YX7UdI/LgvTafEOTuVMTm1UKSLu8O3eGKrM5/MNGhlh75KG8ayCguSP3t09Ixgjg==
+X-Received: by 2002:a5d:6a47:: with SMTP id t7mr875493wrw.75.1599813167695;
+        Fri, 11 Sep 2020 01:32:47 -0700 (PDT)
+Received: from [192.168.1.143] ([170.253.60.68])
+        by smtp.gmail.com with ESMTPSA id l16sm3347215wrb.70.2020.09.11.01.32.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Sep 2020 01:32:47 -0700 (PDT)
+Subject: Re: [PATCH 19/24] pthread_setname_np.3: ffix
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+ <20200910211344.3562-20-colomar.6.4.3@gmail.com>
+ <e651f418-ada8-19e1-359e-9906994108eb@gmail.com>
+From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
+Message-ID: <2c2150bc-d4df-e821-1717-6450540b6c71@gmail.com>
+Date:   Fri, 11 Sep 2020 10:32:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e651f418-ada8-19e1-359e-9906994108eb@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, after generating run_kselftest.sh, there is no way to choose
-which test we could run. All the tests are listed together and we have
-to run all every time. This patch enhanced the run_kselftest.sh to make
-the tests individually selectable. e.g.
+Hi Michael,
 
-  $ ./run_kselftest.sh -t "bpf size timers"
+The indentation in the original code was a bit weird (specifically, the 
+'do {' part had one more indentation level than the closing '} while'), 
+so I simply chose something nice.  See the original page, and if you 
+think it's ok keep it, else find something nice :)
 
-Before the patch:
-================
+Cheers,
 
-$ cat run_kselftest.sh
-\#!/bin/sh
-BASE_DIR=$(realpath $(dirname $0))
-cd $BASE_DIR
-. ./kselftest/runner.sh
-ROOT=$PWD
-if [ "$1" = "--summary" ]; then
-  logfile=$BASE_DIR/output.log
-  cat /dev/null > $logfile
-fi
-[ -w /dev/kmsg ] && echo "kselftest: Running tests in android" >> /dev/kmsg
-cd android
-run_many        \
-        "run.sh"
-cd $ROOT
-...<snip>...
-[ -w /dev/kmsg ] && echo "kselftest: Running tests in zram" >> /dev/kmsg
-cd zram
-run_many        \
-        "zram.sh"
-cd $ROOT
+Alex
 
-After the patch:
-===============
-
-$ cat run_kselftest.sh
-\#!/bin/sh
-BASE_DIR=$(realpath $(dirname $0))
-. ./kselftest/runner.sh
-TESTS="android ...<snip>... filesystems/binderfs ...<snip>... zram"
-
-run_android()
-{
-        [ -w /dev/kmsg ] && echo "kselftest: Running tests in android" >> /dev/kmsg
-        cd android
-        run_many        \
-                "run.sh"
-        cd $ROOT
-}
-
-...<snip>...
-
-run_filesystems_binderfs()
-{
-        [ -w /dev/kmsg ] && echo "kselftest: Running tests in filesystems/binderfs" >> /dev/kmsg
-        cd filesystems/binderfs
-        run_many        \
-                "binderfs_test"
-        cd $ROOT
-}
-
-...<snip>...
-
-run_zram()
-{
-        [ -w /dev/kmsg ] && echo "kselftest: Running tests in zram" >> /dev/kmsg
-        cd zram
-        run_many        \
-                "zram.sh"
-        cd $ROOT
-}
-
-usage()
-{
-        cat <<EOF
-usage: ${0##*/} OPTS
-        -s | --summary          Only print summary info and put detailed log in output.log
-        -t | --tests            Test name you want to run specifically
-        -h | --help             Show this usage info
-EOF
-}
-
-while true; do
-        case "$1" in
-        -s | --summary ) logfile=$BASE_DIR/output.log; cat /dev/null > $logfile; shift ;;
-        -t | --tests ) TESTS=$2; shift 2 ;;
-        -h | --help ) usage; exit 0;;
-        "" ) break;;
-        * ) usage; exit 1;;
-        esac
-done
-
-cd $BASE_DIR
-ROOT=$PWD
-for folder in $TESTS; do
-        folder=$(echo $folder | tr -s '/-' '_')
-        run_$folder
-done
-
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-
----
-v3:
-1) rebase the patch to latest code
-2) move `tr -s "/-" "_"` to the for loop at the end so user could use test
-   folder name directly. Before the update, user need to run
-   ./run_kselftest.sh -t 'networking_forwarding'. Now they can just run
-   ./run_kselftest.sh -t 'networking/forwarding' directly.
-
-v2: update document and commit description.
----
- Documentation/dev-tools/kselftest.rst |  4 +++
- tools/testing/selftests/Makefile      | 49 +++++++++++++++++++++------
- tools/testing/selftests/lib.mk        |  2 +-
- 3 files changed, 44 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
-index 469d115a95f1..94da633dd5f8 100644
---- a/Documentation/dev-tools/kselftest.rst
-+++ b/Documentation/dev-tools/kselftest.rst
-@@ -151,6 +151,10 @@ note some tests will require root privileges::
-    $ cd kselftest
-    $ ./run_kselftest.sh
- 
-+Or you can run some specific test cases in the installed Kselftests by::
-+
-+   $ ./run_kselftest.sh -t "bpf size timers"
-+
- Packaging selftests
- ===================
- 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 15c1c1359c50..6b11d5e33019 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -225,13 +225,9 @@ ifdef INSTALL_PATH
- 	@# Ask all targets to emit their test scripts
- 	echo "#!/bin/sh" > $(ALL_SCRIPT)
- 	echo "BASE_DIR=\$$(realpath \$$(dirname \$$0))" >> $(ALL_SCRIPT)
--	echo "cd \$$BASE_DIR" >> $(ALL_SCRIPT)
- 	echo ". ./kselftest/runner.sh" >> $(ALL_SCRIPT)
--	echo "ROOT=\$$PWD" >> $(ALL_SCRIPT)
--	echo "if [ \"\$$1\" = \"--summary\" ]; then" >> $(ALL_SCRIPT)
--	echo "  logfile=\$$BASE_DIR/output.log" >> $(ALL_SCRIPT)
--	echo "  cat /dev/null > \$$logfile" >> $(ALL_SCRIPT)
--	echo "fi" >> $(ALL_SCRIPT)
-+	echo "TESTS=\"$(TARGETS)\"" >> $(ALL_SCRIPT)
-+	echo "" >> $(ALL_SCRIPT);
- 
- 	@# While building run_kselftest.sh skip also non-existent TARGET dirs:
- 	@# they could be the result of a build failure and should NOT be
-@@ -239,15 +235,48 @@ ifdef INSTALL_PATH
- 	for TARGET in $(TARGETS); do \
- 		BUILD_TARGET=$$BUILD/$$TARGET;	\
- 		[ ! -d $(INSTALL_PATH)/$$TARGET ] && echo "Skipping non-existent dir: $$TARGET" && continue; \
--		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
--		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
--		echo -n "run_many" >> $(ALL_SCRIPT); \
-+		echo "run_$$TARGET()" | tr -s "/-" "_" >> $(ALL_SCRIPT); \
-+		echo "{" >> $(ALL_SCRIPT); \
-+		echo -e "\t[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
-+		echo -e "\tcd $$TARGET" >> $(ALL_SCRIPT); \
-+		echo -en "\trun_many" >> $(ALL_SCRIPT); \
- 		echo -n "Emit Tests for $$TARGET\n"; \
- 		$(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
- 		echo "" >> $(ALL_SCRIPT);	    \
--		echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
-+		echo -e "\tcd \$$ROOT" >> $(ALL_SCRIPT); \
-+		echo "}" >> $(ALL_SCRIPT); \
-+		echo "" >> $(ALL_SCRIPT); \
- 	done;
- 
-+	echo "usage()" >> $(ALL_SCRIPT);
-+	echo "{" >> $(ALL_SCRIPT);
-+	echo -e "\tcat <<EOF" >> $(ALL_SCRIPT);
-+	echo "usage: \$${0##*/} OPTS" >> $(ALL_SCRIPT);
-+	echo -e "\t-s | --summary\t\tOnly print summary info and put detailed log in output.log" >> $(ALL_SCRIPT);
-+	echo -e "\t-t | --tests\t\tTest name you want to run specifically" >> $(ALL_SCRIPT);
-+	echo -e "\t-h | --help\t\tShow this usage info" >> $(ALL_SCRIPT);
-+	echo "EOF" >> $(ALL_SCRIPT);
-+	echo "}" >> $(ALL_SCRIPT);
-+	echo "" >> $(ALL_SCRIPT);
-+
-+	echo "while true; do" >> $(ALL_SCRIPT);
-+	echo -e "\tcase \"\$$1\" in" >> $(ALL_SCRIPT);
-+	echo -e "\t-s | --summary ) logfile=\$$BASE_DIR/output.log; cat /dev/null > \$$logfile; shift ;;" >> $(ALL_SCRIPT);
-+	echo -e "\t-t | --tests ) TESTS=\$$2; shift 2 ;;" >> $(ALL_SCRIPT);
-+	echo -e "\t-h | --help ) usage; exit 0;;" >> $(ALL_SCRIPT);
-+	echo -e "\t\"\" ) break;;" >> $(ALL_SCRIPT);
-+	echo -e "\t* ) usage; exit 1;;" >> $(ALL_SCRIPT);
-+	echo -e "\tesac" >> $(ALL_SCRIPT);
-+	echo "done" >> $(ALL_SCRIPT);
-+	echo "" >> $(ALL_SCRIPT);
-+
-+	echo "cd \$$BASE_DIR" >> $(ALL_SCRIPT)
-+	echo "ROOT=\$$PWD" >> $(ALL_SCRIPT)
-+
-+	echo "for folder in \$$TESTS; do" >> $(ALL_SCRIPT); \
-+	echo -e "\tfolder=\$$(echo \$$folder | tr -s '/-' '_')" >> $(ALL_SCRIPT); \
-+	echo -e "\trun_\$$folder" >> $(ALL_SCRIPT); \
-+	echo "done" >> $(ALL_SCRIPT); \
- 	chmod u+x $(ALL_SCRIPT)
- else
- 	$(error Error: set INSTALL_PATH to use install)
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 51124b962d56..3c4c94a5d184 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -108,7 +108,7 @@ emit_tests:
- 	for TEST in $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS); do \
- 		BASENAME_TEST=`basename $$TEST`;	\
- 		echo "	\\";				\
--		echo -n "	\"$$BASENAME_TEST\"";	\
-+		echo -ne "\t\t\"$$BASENAME_TEST\"";	\
- 	done;						\
- 
- # define if isn't already. It is undefined in make O= case.
--- 
-2.25.4
-
+On 2020-09-11 09:58, Michael Kerrisk (man-pages) wrote:
+> Hi Alex,
+> 
+> On 9/10/20 11:13 PM, Alejandro Colomar wrote:
+>> Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
+>> ---
+>>   man3/pthread_setname_np.3 | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> What's the rationale for this patch?
+> 
+> Thanks,
+> 
+> Michael
+>>
+>> diff --git a/man3/pthread_setname_np.3 b/man3/pthread_setname_np.3
+>> index b206f66c0..4dc4960cd 100644
+>> --- a/man3/pthread_setname_np.3
+>> +++ b/man3/pthread_setname_np.3
+>> @@ -164,8 +164,9 @@ THREADFOO
+>>   
+>>   #define NAMELEN 16
+>>   
+>> -#define errExitEN(en, msg) \e
+>> -            do { errno = en; perror(msg); exit(EXIT_FAILURE); \e
+>> +#define errExitEN(en, msg) do \e
+>> +        { \
+>> +            errno = en; perror(msg); exit(EXIT_FAILURE); \e
+>>           } while (0)
+>>   
+>>   static void *
+>>
+> 
+> 
