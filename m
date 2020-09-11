@@ -2,101 +2,156 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C00CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA4AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE845221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hxpb2Uk3"
+	by mail.kernel.org (Postfix) with ESMTP id 15F93221EE
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 09:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599815048;
+	bh=L21rvyv2ND6nwhqTc1FQBgm3D+MpPJUrd6X48OuHPtI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IVkxt4NZA1FsmiWvK+fnf3pJoWhCssafgdaaVVcwBVk14pwbg5ulFV1g111WvisRh
+	 uPXZ1XL53kAzwtG0ZM1hKzFypTYkiYs7YM75BYbBEz9wBGaL4mwp7VpizXrqOq508n
+	 MSY4LolaOG6saaXm2ZE4tOkc0ELWyoAIe0T15pd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgIKI6s (ORCPT
+        id S1725768AbgIKJEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgIKI6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:58:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749FDC061573
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:58:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so6158568pgd.12
-        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 01:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c8nz9oNcqS43/JX3gIjCU/zwWUctvs6c1e4wLHvLc2Y=;
-        b=Hxpb2Uk3qvJAd3R0XfksSYNI8kdRCaccIUM/VdyS2lkhsMLXtOLRME8qLbuhPRhV7y
-         roW/F/u6PTATgscybfZNaRVTOG7YlC66Fa2gylGkaElmNTELAQA87zHgP5W9HZmKY4kG
-         sia/LM9pLookkv7sYkraeIi7fFQ31KlFVIrzmLg16dlNSOTcCroYiyskRO/yjHZnbv7R
-         z29Bg+AdyZGixBqgba5i6ttcQyhAXy54KqdYGJvzHFHmbQG1tVEBDx1raDCT21FKjprb
-         oYqWHsZEzqTjowkA1WkprF/4s4fiLyDEWd2fPD25icFROAkqHGvBCStRHrKWg1xqH6M8
-         2OJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c8nz9oNcqS43/JX3gIjCU/zwWUctvs6c1e4wLHvLc2Y=;
-        b=BHcE1gOj9duu/mQHJjjy4htPCLjkO6XFE/nyFJ+F3VNs0XjeuMscXor7hagevkSS24
-         0qgP1w5aRFtgaeUeLEsCMwm/irioG3+fJ87ErTurgUhdzOeGZ2aeln0irvawArvXhyg8
-         IQWfuJMZEmQTfXlHONP6Dwjf2Qd6Vup6fX5sURhgqYyu5Ge4o/ViHNhqKEZOPHCApphP
-         7hMDA6FFdkUIiz925j4KMeOY3dYsjuTpJ8KkkyID4CEAue9jqOvijHR1yuhPS1iaBa+S
-         OsILFt/6IrWBYHjgNtvBKj+4GgKf6L8AFr2epX+7Yl1KG65vMmh/sXv+Eui55bsYMX1c
-         MBLA==
-X-Gm-Message-State: AOAM530oGKKOv7m1r/zPDCBkTtQ8DAMk46Ozwy8+uZzZlIHwDnd5OKno
-        n6JJG677uRCUfxTQknLRqmk=
-X-Google-Smtp-Source: ABdhPJyoeITgOIN4JjrXohV3LFRjO6CAR/hsMueYMeKLzKIO6N7sKT5jESAJGrqk4eb/udlvx7W2CA==
-X-Received: by 2002:a62:8286:0:b029:13c:1611:6588 with SMTP id w128-20020a6282860000b029013c16116588mr1176188pfd.5.1599814725003;
-        Fri, 11 Sep 2020 01:58:45 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id u10sm1600580pfn.122.2020.09.11.01.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2020 01:58:44 -0700 (PDT)
-Date:   Fri, 11 Sep 2020 17:58:41 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     yezengruan <yezengruan@huawei.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        will@kernel.org, joelaf@google.com, linux-kernel@vger.kernel.org,
-        suleiman@google.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org,
-        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
-Subject: Re: [RFC][PATCH 0/4] arm64:kvm: teach guest sched that VCPUs can be
- preempted
-Message-ID: <20200911085841.GB562@jagdpanzerIV.localdomain>
-References: <20200721041742.197354-1-sergey.senozhatsky@gmail.com>
- <20200817020310.GA1210848@jagdpanzerIV.localdomain>
- <fe72592c-c721-bece-1469-95eebf931299@huawei.com>
- <cbcfb402b7fdb8a2a45b80fbb0e79f3e@kernel.org>
+        Fri, 11 Sep 2020 05:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbgIKJEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 05:04:06 -0400
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4E1D22204
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599815045;
+        bh=L21rvyv2ND6nwhqTc1FQBgm3D+MpPJUrd6X48OuHPtI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KltXo2ISgCT26+CbmmWjkOFG0pEqKwXtsQbYV6p4j8MudO8GeYmkE9SJ9trxJMzs4
+         zdu3u8ryDp1h8AxoSlqaNgnX92qYw99YeT48/PwicXJWbZotih7R+HyNVxq80oJF90
+         igfYEqfh87FFcdjtuQ7gkHaBi8UfhqpKPR103dMs=
+Received: by mail-ed1-f43.google.com with SMTP id w1so9221579edr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 02:04:04 -0700 (PDT)
+X-Gm-Message-State: AOAM531sopeF/NmUeG4HXT9CLq9D5zse1Eo61el25SHGll0U4atoGiw2
+        hvyoVkoa4C6zZFXfXTzTuws7W32zJ8DzeWB3QIs=
+X-Google-Smtp-Source: ABdhPJxr/SlzbK2WyJvZtTXPsPONjb+rVSHvOuvOw9boH8cjPSRqtQepF5LBsQQ0UusvBs5yCBI0Kn8bYrz9xou2OxY=
+X-Received: by 2002:aa7:da16:: with SMTP id r22mr989409eds.132.1599815043378;
+ Fri, 11 Sep 2020 02:04:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbcfb402b7fdb8a2a45b80fbb0e79f3e@kernel.org>
+References: <1599553645-26928-1-git-send-email-yilun.xu@intel.com>
+ <1599553645-26928-2-git-send-email-yilun.xu@intel.com> <20200908100102.GB24693@pi3>
+ <20200911084234.GB7802@yilunxu-OptiPlex-7050>
+In-Reply-To: <20200911084234.GB7802@yilunxu-OptiPlex-7050>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 11 Sep 2020 11:03:50 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfjd99PLH1FBc2NSmc1Z=5PGrxezqPucdvvbDtyjm8jOA@mail.gmail.com>
+Message-ID: <CAJKOXPfjd99PLH1FBc2NSmc1Z=5PGrxezqPucdvvbDtyjm8jOA@mail.gmail.com>
+Subject: Re: [PATCH] memory: dfl-emif: add the DFL EMIF private feature driver
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        trix@redhat.com, matthew.gerlach@linux.intel.com,
+        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My apologies for the slow reply.
-
-On (20/08/17 13:25), Marc Zyngier wrote:
+On Fri, 11 Sep 2020 at 10:46, Xu Yilun <yilun.xu@intel.com> wrote:
 >
-> It really isn't the same thing at all. You are exposing PV spinlocks,
-> while Sergey exposes preemption to vcpus.
+> Sorry I missed one comments, see inline.
 >
+> On Tue, Sep 08, 2020 at 12:01:02PM +0200, Krzysztof Kozlowski wrote:
+> > On Tue, Sep 08, 2020 at 04:27:25PM +0800, Xu Yilun wrote:
+> > > This driver is for the EMIF private feature implemented under FPGA
+> > > Device Feature List (DFL) framework. It is used to expose memory
+> > > interface status information as well as memory clearing control.
+> > >
+> > > The purpose of memory clearing block is to zero out all private memory
+> > > when FPGA is to be reprogrammed. This gives users a reliable method to
+> > > prevent potential data leakage.
+> > >
+> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > > ---
+> > >  .../ABI/testing/sysfs-bus-dfl-devices-emif         |  25 +++
+> > >  drivers/memory/Kconfig                             |   9 +
+> > >  drivers/memory/Makefile                            |   2 +
+> > >  drivers/memory/dfl-emif.c                          | 211 +++++++++++++++++++++
+> > >  4 files changed, 247 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-emif
+> > >  create mode 100644 drivers/memory/dfl-emif.c
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-dfl-devices-emif b/Documentation/ABI/testing/sysfs-bus-dfl-devices-emif
+> > > new file mode 100644
+> > > index 0000000..33d557e
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-dfl-devices-emif
+> > > @@ -0,0 +1,25 @@
+> > > +What:              /sys/bus/dfl/devices/dfl_dev.X/infX_cal_fail
+> > > +Date:              Sep 2020
+> > > +KernelVersion:     5.10
+> > > +Contact:   Xu Yilun <yilun.xu@intel.com>
+> > > +Description:       Read-only. It indicates if the calibration is failed on this
+> > > +           memory interface. "1" for calibration failure, "0" for OK.
+> >
+> > "if the calibration failed"
+> >
+> > > +           Format: %u
+> > > +
+> > > +What:              /sys/bus/dfl/devices/dfl_dev.X/infX_init_done
+> > > +Date:              Sep 2020
+> > > +KernelVersion:     5.10
+> > > +Contact:   Xu Yilun <yilun.xu@intel.com>
+> > > +Description:       Read-only. It indicates if the initialization is complete on
+> > > +           this memory interface. "1" for initialization complete, "0"
+> > > +           for not yet.
+> > > +           Format: %u
+> >
+> > "if the initialization completed"
+> >
+> > > +
+> > > +What:              /sys/bus/dfl/devices/dfl_dev.X/infX_clear
+> > > +Date:              Sep 2020
+> > > +KernelVersion:     5.10
+> > > +Contact:   Xu Yilun <yilun.xu@intel.com>
+> > > +Description:       Write-only. Writing "1" to this file will zero out all memory
+> > > +           data in this memory interface. Writing other values are
+> > > +           invalid.
+> >
+> > "Writing of other values is invalid."
+> >
+> > > +           Format: %u
+> > > diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> > > index 8072204..fb0858f 100644
+> > > --- a/drivers/memory/Kconfig
+> > > +++ b/drivers/memory/Kconfig
+> > > @@ -215,6 +215,15 @@ config STM32_FMC2_EBI
+> > >       devices (like SRAM, ethernet adapters, FPGAs, LCD displays, ...) on
+> > >       SOCs containing the FMC2 External Bus Interface.
+> > >
+> > > +config FPGA_DFL_EMIF
+> > > +   tristate "DFL EMIF private feature support"
+> > > +   depends on FPGA_DFL && HAS_IOMEM
+> >
+> > Cannot be compile tested without FPGA_DFL?
+>
+> We need this FPGA_DFL dependency. The driver will use the
+> __dfl_driver_register(), which is defined in drivers/fpga/dfl.c, and
+> FPGA_DFL enables the compiling of dfl.c
 
-Correct, we see vcpu preemption as a "fundamental" feature, with
-consequences that affect scheduling, which is a core feature :)
+Yeah but the DFL headers provide empty stubs for such case, don't
+they? If they don't, probably they should.
 
-Marc, is there anything in particular that you dislike about this RFC
-patch set? Joel has some ideas, which we may discuss offline if that
-works for you.
-
-	-ss
+Best regards,
+Krzysztof
