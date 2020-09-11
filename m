@@ -2,168 +2,114 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B275C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B87C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353EA221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AACB20731
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Z+A85ZW4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QhEUrtgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgIKQK6 (ORCPT
+        id S1726663AbgIKQLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:10:58 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:48386 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgIKPjo (ORCPT
+        Fri, 11 Sep 2020 12:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgIKQKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 11:39:44 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 272B037;
-        Fri, 11 Sep 2020 17:10:24 +0300 (MSK)
+        Fri, 11 Sep 2020 12:10:54 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E2DAC061756
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:10:53 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id b79so5298255wmb.4
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 09:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599833424;
-        bh=0zFGAei+GfjjVhzN0L9HOpsUBEhyo91hRc7tOpkhXL8=;
-        h=From:To:CC:Subject:Date;
-        b=Z+A85ZW4xt3HbOgoJ4EuSo6/dOBTnk4pWTM1UGLi3IRJ69gzJn3FGYXGMuVYEQ6Jf
-         fioie2GcKMDnRMTQtLYgoD7yCmwyMN4CtHg1Au+x10WpGjqcQAbrpDM0jYYIrRw4/m
-         c0eW90bUBqI22FWNpb9h8MXDlo5Gk2sAhDXFqduU=
-Received: from fsd-lkpg.ufsd.paragon-software.com (172.30.114.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 11 Sep 2020 17:10:23 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     <linux-fsdevel@vger.kernel.org>
-CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
-        <pali@kernel.org>, <dsterba@suse.cz>, <aaptel@suse.com>,
-        <willy@infradead.org>, <rdunlap@infradead.org>, <joe@perches.com>,
-        <mark@harmstone.com>, <nborisov@suse.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH v5 00/10] NTFS read-write driver GPL implementation by Paragon Software
-Date:   Fri, 11 Sep 2020 17:10:08 +0300
-Message-ID: <20200911141018.2457639-1-almaz.alexandrovich@paragon-software.com>
-X-Mailer: git-send-email 2.25.4
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DbxEUQps6vESScXmyaIzM2lV4nvnmCDf4+bKC4mI+8E=;
+        b=QhEUrtgWKj+fZDMyKLwE/BKdNRzvaTQpARmk62ty0kGcVZPcAPywlm22mc9BY1YG2B
+         naOPmTBAF/1xl/fT0oV4GdOE67fzk7jmY3lvaE51nNC69qu9CLGLN8DA8nnA+9ifurXo
+         geXkXHDs/iwILRS0Lzr1OIGz/k1sFbuM45shEKHEjPHiKkhzKj0a53sglfQ+fKH1kjpv
+         4AHTDdt/P4cydao/Lj/hy09u8HvDO982rfjxJfMS54mW6LG4WyGuwx618Hx/kR61E+z1
+         ba7Mbo+1qhX1OOYxxWYCefHJwf71oQXGwvjanwXQajdTADvqIc4Q8XCkOpxDlJcgDxUZ
+         JvyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DbxEUQps6vESScXmyaIzM2lV4nvnmCDf4+bKC4mI+8E=;
+        b=cvBWuFJzFkHB85tDJWb51Rl03gpXQ3DMKIOvbQw7dBUi+NbROhuslHJICFkj8zV5wL
+         MKvx1brWi+hJ7NnovL7pT4dYyUodEBB7SdZyKpPm1lZOnIDDl1NxKrKr+zHA2RaMUiiC
+         Sw0n8n3yGXFJViYA+VLruu2wuqhI97BgCBbFHIhrmH712vND+6MZ9qj7mkFbUZhw/r7X
+         biLFv+JHyz8AcZIFHSJ7u5vT+Jy/REO9pVlG3TXw+TvJA10zf2mDplSqI0a3es25GU0R
+         tN/bT3rj+rD/XkTEk4FYNZZTvtzE1Elk4V6UZoHGMJgE7C0WRkIjRLcXKC5rfUbvlx5m
+         5LJQ==
+X-Gm-Message-State: AOAM533Qjwh06lzHmdIgKdqn8SjQQGjG6Cg2alh2g6QHlrEdt0jy/ze4
+        h24ykkcJZf1obBvOxu1R4yzDMFk0q6M6DY4tHGTR2w==
+X-Google-Smtp-Source: ABdhPJwpsy55MicdcbSdsk7lZoPbb7vZsk90rfIo7W28Aj3HC04QgM46znERfjCsfJQ+KWY8OwY9zlQuMuRiAaiBGyc=
+X-Received: by 2002:a7b:c0c5:: with SMTP id s5mr2898135wmh.152.1599840652329;
+ Fri, 11 Sep 2020 09:10:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.30.114.105]
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+References: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200904155513.282067-1-bjorn.andersson@linaro.org>
+From:   Amit Pundir <amit.pundir@linaro.org>
+Date:   Fri, 11 Sep 2020 21:40:16 +0530
+Message-ID: <CAMi1Hd2CFjQLoXTSuo9wUWWO-hNvuvZr_PffS1NfgP-6agWDOA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] iommu/arm-smmu: Support maintaining bootloader mappings
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu <iommu@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds NTFS Read-Write driver to fs/ntfs3.
+On Fri, 4 Sep 2020 at 21:25, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+>
+> Based on previous attempts and discussions this is the latest attempt at
+> inheriting stream mappings set up by the bootloader, for e.g. boot splash or
+> efifb.
+>
+> Per Will's request this builds on the work by Jordan and Rob for the Adreno
+> SMMU support. It applies cleanly ontop of v16 of their series, which can be
+> found at
+> https://lore.kernel.org/linux-arm-msm/20200901164707.2645413-1-robdclark@gmail.com/
+>
 
-Having decades of expertise in commercial file systems development and huge
-test coverage, we at Paragon Software GmbH want to make our contribution to
-the Open Source Community by providing implementation of NTFS Read-Write
-driver for the Linux Kernel.
+Boot tested the series on Xiaomi Poco F1 phone (sdm845)
 
-This is fully functional NTFS Read-Write driver. Current version works with
-NTFS(including v3.1) and normal/compressed/sparse files and supports journal replaying.
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
 
-We plan to support this version after the codebase once merged, and add new
-features and fix bugs. For example, full journaling support over JBD will be
-added in later updates.
-
-v2:
- - patch splitted to chunks (file-wise)
- - build issues fixed
- - sparse and checkpatch.pl errors fixed
- - NULL pointer dereference on mkfs.ntfs-formatted volume mount fixed
- - cosmetics + code cleanup
-
-v3:
- - added acl, noatime, no_acs_rules, prealloc mount options
- - added fiemap support
- - fixed encodings support
- - removed typedefs
- - adapted Kernel-way logging mechanisms
- - fixed typos and corner-case issues
-
-v4:
- - atomic_open() refactored
- - code style updated
- - bugfixes
-
-v5:
-- nls/nls_alt mount options added
-- Unicode conversion fixes
-- Improved operations with fragmented sparse files
-- logging cometics
-
-Konstantin Komarov (10):
-  fs/ntfs3: Add headers and misc files
-  fs/ntfs3: Add initialization of super block
-  fs/ntfs3: Add bitmap
-  fs/ntfs3: Add file operations and implementation
-  fs/ntfs3: Add attrib operations
-  fs/ntfs3: Add compression
-  fs/ntfs3: Add NTFS journal
-  fs/ntfs3: Add Kconfig, Makefile and doc
-  fs/ntfs3: Add NTFS3 in fs/Kconfig and fs/Makefile
-  fs/ntfs3: Add MAINTAINERS
-
- Documentation/filesystems/ntfs3.rst |  107 +
- MAINTAINERS                         |    7 +
- fs/Kconfig                          |    1 +
- fs/Makefile                         |    1 +
- fs/ntfs3/Kconfig                    |   23 +
- fs/ntfs3/Makefile                   |   11 +
- fs/ntfs3/attrib.c                   | 1300 +++++++
- fs/ntfs3/attrlist.c                 |  462 +++
- fs/ntfs3/bitfunc.c                  |  137 +
- fs/ntfs3/bitmap.c                   | 1516 ++++++++
- fs/ntfs3/debug.h                    |   59 +
- fs/ntfs3/dir.c                      |  631 ++++
- fs/ntfs3/file.c                     | 1224 +++++++
- fs/ntfs3/frecord.c                  | 2363 ++++++++++++
- fs/ntfs3/fslog.c                    | 5222 +++++++++++++++++++++++++++
- fs/ntfs3/fsntfs.c                   | 2210 ++++++++++++
- fs/ntfs3/index.c                    | 2639 ++++++++++++++
- fs/ntfs3/inode.c                    | 2004 ++++++++++
- fs/ntfs3/lznt.c                     |  452 +++
- fs/ntfs3/namei.c                    |  542 +++
- fs/ntfs3/ntfs.h                     | 1256 +++++++
- fs/ntfs3/ntfs_fs.h                  | 1001 +++++
- fs/ntfs3/record.c                   |  612 ++++
- fs/ntfs3/run.c                      | 1156 ++++++
- fs/ntfs3/super.c                    | 1430 ++++++++
- fs/ntfs3/upcase.c                   |   78 +
- fs/ntfs3/xattr.c                    |  996 +++++
- 27 files changed, 27440 insertions(+)
- create mode 100644 Documentation/filesystems/ntfs3.rst
- create mode 100644 fs/ntfs3/Kconfig
- create mode 100644 fs/ntfs3/Makefile
- create mode 100644 fs/ntfs3/attrib.c
- create mode 100644 fs/ntfs3/attrlist.c
- create mode 100644 fs/ntfs3/bitfunc.c
- create mode 100644 fs/ntfs3/bitmap.c
- create mode 100644 fs/ntfs3/debug.h
- create mode 100644 fs/ntfs3/dir.c
- create mode 100644 fs/ntfs3/file.c
- create mode 100644 fs/ntfs3/frecord.c
- create mode 100644 fs/ntfs3/fslog.c
- create mode 100644 fs/ntfs3/fsntfs.c
- create mode 100644 fs/ntfs3/index.c
- create mode 100644 fs/ntfs3/inode.c
- create mode 100644 fs/ntfs3/lznt.c
- create mode 100644 fs/ntfs3/namei.c
- create mode 100644 fs/ntfs3/ntfs.h
- create mode 100644 fs/ntfs3/ntfs_fs.h
- create mode 100644 fs/ntfs3/record.c
- create mode 100644 fs/ntfs3/run.c
- create mode 100644 fs/ntfs3/super.c
- create mode 100644 fs/ntfs3/upcase.c
- create mode 100644 fs/ntfs3/xattr.c
-
--- 
-2.25.4
-
+> Bjorn Andersson (8):
+>   iommu/arm-smmu: Refactor context bank allocation
+>   iommu/arm-smmu: Delay modifying domain during init
+>   iommu/arm-smmu: Consult context bank allocator for identify domains
+>   iommu/arm-smmu-qcom: Emulate bypass by using context banks
+>   iommu/arm-smmu-qcom: Consistently initialize stream mappings
+>   iommu/arm-smmu: Add impl hook for inherit boot mappings
+>   iommu/arm-smmu: Provide helper for allocating identity domain
+>   iommu/arm-smmu-qcom: Setup identity domain for boot mappings
+>
+>  drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 111 ++++++++++++++++++-
+>  drivers/iommu/arm/arm-smmu/arm-smmu.c      | 122 ++++++++++++++-------
+>  drivers/iommu/arm/arm-smmu/arm-smmu.h      |  14 ++-
+>  3 files changed, 205 insertions(+), 42 deletions(-)
+>
+> --
+> 2.28.0
+>
