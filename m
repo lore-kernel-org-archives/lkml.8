@@ -2,843 +2,229 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2224C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C451C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7109F22206
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599827925;
-	bh=iRif6tYG9lH6sF2BTiVslYkjGOYZ9PuRMGMucrM+87g=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=ppI9iSMt0YQUZ6citjz4a8BTykJgwd7JoOht4aHxZIONmsK1L0VQdWstcT2xhJNjq
-	 Ek6WFod7S7mrhtBLwmd5Td4U/7WntgX8sIP67FsPUwIJWKxIUqik+l3MHuM53Saepa
-	 18ay2xE6O7mqcRMf3KVRwVqpZQ9rwxSHF2MZXfEg=
+	by mail.kernel.org (Postfix) with ESMTP id F34DB206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:41:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpdvMpPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725898AbgIKMil (ORCPT
+        id S1725919AbgIKMkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbgIKMRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:17:12 -0400
-Received: from mail.kernel.org (ip5f5ad5a5.dynamic.kabel-deutschland.de [95.90.213.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0582B221ED;
-        Fri, 11 Sep 2020 12:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599826608;
-        bh=iRif6tYG9lH6sF2BTiVslYkjGOYZ9PuRMGMucrM+87g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xRz7VHPDhF2GzObjkxMK48tjo8WXZxlyUhtIyCc6MYMxhxnO3PcSlS0mzODGSDam
-         5FqsK3mX6BtwDb72+jywDIGq4rwZT8BuNJfHSXMhSAvCBhcD6cs+28L9e63J2uo7Yc
-         8HBITqMO2YKU0ayAzzJvg8751CfoCGg7/jrAqDmw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kGhyv-0006WB-So; Fri, 11 Sep 2020 14:16:45 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Yu Chen <chenyu56@huawei.com>,
-        "John Stultz" <john.stultz@linaro.org>,
-        "Manivannan Sadhasivam" <mani@kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 RESEND 1/8] phy: hisilicon: add USB physical layer for Kirin 3670
-Date:   Fri, 11 Sep 2020 14:16:37 +0200
-Message-Id: <2bcc14afcbd1cc8972ab8f1a561a13aae04b881a.1599826421.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599826421.git.mchehab+huawei@kernel.org>
-References: <cover.1599826421.git.mchehab+huawei@kernel.org>
+        Fri, 11 Sep 2020 08:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgIKMcK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:32:10 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596B7C061573;
+        Fri, 11 Sep 2020 05:32:10 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a19so4236131ilq.10;
+        Fri, 11 Sep 2020 05:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ugTNUn8mm2Ku6DfVm6vxHRWJ3JTBU9LWayGqG53mxMw=;
+        b=MpdvMpPqMKWBctHOkuDpfxbTZK3NqQSwG0yCiF+ibrvu2DHy4mZCcuQx8xzubGiltk
+         fXkGxi9AehKRLwp0zIARnb4WngxM54WeeCagnuDxR29D12RJa1RwACdiwe9q5YMfIJYN
+         ZcUEatOXvTiO9nfXsyZEkNS2co1OVbLzgigfJdoFzuimQ1Fn9s8sKghAhXBZQAx/OENo
+         ziWEcXeoXQ1OdBgW99Ypps/x+fb6rEHBfc6A6iBRcPKTcTtOrep0VtJ0hv/Kg6weibPT
+         Wds0+wkvGyF/NhDJYTE+ScXFZX1lSo4xa05qmXHg/0sC/uX7kHss/xGwC1pxVFNmeCA2
+         QpGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ugTNUn8mm2Ku6DfVm6vxHRWJ3JTBU9LWayGqG53mxMw=;
+        b=aFNay7b0dKNebITLYAjLRyKY1KHJAYMPj18w7DsM965BPgUq2AWhZ1Z6L3mV+CYzrs
+         LWRtE4crh7Pa1vHDMrjrFeK7z1QER0Y67lwofE3CZ9a4RYR80XdMZCteSH54zu5bv5MB
+         Clht3l/DZjiSvZV3gy8e6qWRP5hrFkVBjWNThtr20W45usBLQ1d3iOCgJgOcfdUoUXn9
+         KuqlPiVwbrPv4bQPua4Avu0IWZUgHvAWq0bkSZfZFVzoyNacBI2zt7G1oFM1BqX8+glg
+         aQcUNcj9pgJBsKR9LcQ2izWQrOtgHl+gvUince3S5/DwN8BBN3ba/iGDLNf6CZUySFfZ
+         4qxg==
+X-Gm-Message-State: AOAM5327iensW63wa45mvShIVMVl8MoFC8xNe8oPCdt8HisMLBfP9c7T
+        ryZCRi3ptXt86fx2aNeKofZVeXvhMAQ=
+X-Google-Smtp-Source: ABdhPJxl2ZwcqutABattNSET4QKwUd7/IzX1WiTFxtg4ligGakYCwNb+FcHWlik94jksPpHtKPkWvw==
+X-Received: by 2002:a92:9646:: with SMTP id g67mr1536585ilh.116.1599827529114;
+        Fri, 11 Sep 2020 05:32:09 -0700 (PDT)
+Received: from aford-IdeaCentre-A730.lan (mn-10k-dhcp7-1791.dsl.hickorytech.net. [68.232.239.6])
+        by smtp.gmail.com with ESMTPSA id m18sm1144277iln.80.2020.09.11.05.32.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2020 05:32:08 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-pm@vger.kernel.org, linux-omap@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power management
+Date:   Fri, 11 Sep 2020 07:31:56 -0500
+Message-Id: <20200911123157.759379-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+The bandgap sensor can be idled when the processor is too, but it
+isn't currently being done, so the power consumption of OMAP3
+boards can elevated if the bangap sensor is enabled.
 
-Add the Hisilicon Kirin 3670 USB phy driver just after the
-hi3660, using the same namespace.
+This patch attempts to use some additional power management
+to idle the clock to the bandgap when not needed.
 
-This driver was imported from Linaro's official Hikey 970
-tree, from the original patch, removing the addition of
-the dwg3-specific parts.
-
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Tested-by: Andreas Kemnade <andreas@kemnade.info> # GTA04
 ---
- .../bindings/phy/phy-hi3670-usb3.txt          |  25 +
- drivers/phy/hisilicon/Kconfig                 |  10 +
- drivers/phy/hisilicon/Makefile                |   1 +
- drivers/phy/hisilicon/phy-hi3670-usb3.c       | 682 ++++++++++++++++++
- 4 files changed, 718 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3670-usb3.txt
- create mode 100644 drivers/phy/hisilicon/phy-hi3670-usb3.c
+V3:  bandgap_omap_cpu_notifier is only defined when CONFIG_PM_SLEEP
+     is enabled, so make all references to it also depend on
+     CONFIG_PM_SLEEP as well
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-hi3670-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3670-usb3.txt
-new file mode 100644
-index 000000000000..4cb02612ff23
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-hi3670-usb3.txt
-@@ -0,0 +1,25 @@
-+Hisilicon Kirin970 usb PHY
-+-----------------------
-+
-+Required properties:
-+- compatible: should be "hisilicon,kirin970-usb-phy"
-+- #phy-cells: must be 0
-+- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-+- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-+- hisilicon,sctrl-syscon: phandle of syscon used to control phy.
-+- hisilicon,usb31-misc-syscon: phandle of syscon used to control phy.
-+- eye-diagram-param: parameter set for phy
-+- usb3-phy-tx-vboost-lvl: parameter set for phy
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+Example:
-+	usb_phy: usbphy {
-+		compatible = "hisilicon,kirin970-usb-phy";
-+		#phy-cells = <0>;
-+		hisilicon,pericrg-syscon = <&crg_ctrl>;
-+		hisilicon,pctrl-syscon = <&pctrl>;
-+		hisilicon,sctrl-syscon = <&sctrl>;
-+		hisilicon,usb31-misc-syscon = <&usb31_misc>;
-+		eye-diagram-param = <0xFDFEE4>;
-+		usb3-phy-tx-vboost-lvl = <0x5>;
-+	};
-diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
-index 1c73053bcc98..4d008cfc279c 100644
---- a/drivers/phy/hisilicon/Kconfig
-+++ b/drivers/phy/hisilicon/Kconfig
-@@ -23,6 +23,16 @@ config PHY_HI3660_USB
+V2: Fix issue where variable stating the suspend mode isn't being
+    properly set and cleared.
+
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+index ab19ceff6e2a..5e596168ba73 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+@@ -25,10 +25,20 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_irq.h>
+ #include <linux/io.h>
++#include <linux/cpu_pm.h>
++#include <linux/device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
  
- 	  To compile this driver as a module, choose M here.
+ #include "ti-bandgap.h"
  
-+config PHY_HI3670_USB
-+	tristate "hi3670 USB PHY support"
-+	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the HISILICON HI3670 USB PHY.
+ static int ti_bandgap_force_single_read(struct ti_bandgap *bgp, int id);
++#ifdef CONFIG_PM_SLEEP
++static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
++				  unsigned long cmd, void *v);
++#endif
+ 
+ /***   Helper functions to access registers and their bitfields   ***/
+ 
+@@ -1008,6 +1018,11 @@ int ti_bandgap_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++#ifdef CONFIG_PM_SLEEP
++	bgp->nb.notifier_call = bandgap_omap_cpu_notifier;
++	cpu_pm_register_notifier(&bgp->nb);
++#endif
 +
-+	  To compile this driver as a module, choose M here.
+ 	return 0;
+ 
+ remove_last_cooling:
+@@ -1041,7 +1056,9 @@ int ti_bandgap_remove(struct platform_device *pdev)
+ 	struct ti_bandgap *bgp = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	/* First thing is to remove sensor interfaces */
++	cpu_pm_unregister_notifier(&bgp->nb);
 +
- config PHY_HISTB_COMBPHY
- 	tristate "HiSilicon STB SoCs COMBPHY support"
- 	depends on (ARCH_HISI && ARM64) || COMPILE_TEST
-diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
-index 92e874ae9c74..51729868145b 100644
---- a/drivers/phy/hisilicon/Makefile
-+++ b/drivers/phy/hisilicon/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
- obj-$(CONFIG_PHY_HI3660_USB)		+= phy-hi3660-usb3.o
-+obj-$(CONFIG_PHY_HI3670_USB)		+= phy-hi3670-usb3.o
- obj-$(CONFIG_PHY_HISTB_COMBPHY)		+= phy-histb-combphy.o
- obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
- obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
-diff --git a/drivers/phy/hisilicon/phy-hi3670-usb3.c b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-new file mode 100644
-index 000000000000..4e04ac97728d
---- /dev/null
-+++ b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-@@ -0,0 +1,682 @@
-+/*
-+ * Phy provider for USB 3.1 controller on HiSilicon Kirin970 platform
-+ *
-+ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Authors: Yu Chen <chenyu56@huawei.com>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++	/* Remove sensor interfaces */
+ 	for (i = 0; i < bgp->conf->sensor_count; i++) {
+ 		if (bgp->conf->sensors[i].unregister_cooling)
+ 			bgp->conf->sensors[i].unregister_cooling(bgp, i);
+@@ -1150,9 +1167,43 @@ static int ti_bandgap_suspend(struct device *dev)
+ 	if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+ 		clk_disable_unprepare(bgp->fclock);
+ 
++	bgp->is_suspended = true;
 +
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+#include <linux/clk.h>
-+
-+#define SCTRL_SCDEEPSLEEPED		(0x0)
-+#define USB_CLK_SELECTED		BIT(20)
-+
-+#define PERI_CRG_PEREN0			(0x00)
-+#define PERI_CRG_PERDIS0		(0x04)
-+#define PERI_CRG_PEREN4			(0x40)
-+#define PERI_CRG_PERDIS4		(0x44)
-+#define PERI_CRG_PERRSTEN4		(0x90)
-+#define PERI_CRG_PERRSTDIS4		(0x94)
-+#define PERI_CRG_ISODIS			(0x148)
-+#define PERI_CRG_PEREN6			(0x410)
-+#define PERI_CRG_PERDIS6		(0x414)
-+
-+#define USB_REFCLK_ISO_EN		BIT(25)
-+
-+#define GT_CLK_USB2PHY_REF		BIT(19)
-+
-+#define PCTRL_PERI_CTRL3		(0x10)
-+#define PCTRL_PERI_CTRL3_MSK_START	(16)
-+#define USB_TCXO_EN			BIT(1)
-+
-+#define PCTRL_PERI_CTRL24		(0x64)
-+#define SC_CLK_USB3PHY_3MUX1_SEL	BIT(25)
-+
-+#define USB3OTG_CTRL0			(0x00)
-+#define USB3OTG_CTRL3			(0x0C)
-+#define USB3OTG_CTRL4			(0x10)
-+#define USB3OTG_CTRL5			(0x14)
-+#define USB3OTG_CTRL7			(0x1C)
-+#define USB_MISC_CFG50			(0x50)
-+#define USB_MISC_CFG54			(0x54)
-+#define USB_MISC_CFG58			(0x58)
-+#define USB_MISC_CFG5C			(0x5C)
-+#define USB_MISC_CFGA0			(0xA0)
-+#define TCA_CLK_RST			(0x200)
-+#define TCA_INTR_EN			(0x204)
-+#define TCA_INTR_STS			(0x208)
-+#define TCA_GCFG			(0x210)
-+#define TCA_TCPC			(0x214)
-+#define TCA_VBUS_CTRL			(0x240)
-+
-+#define CTRL0_USB3_VBUSVLD		BIT(7)
-+#define CTRL0_USB3_VBUSVLD_SEL		BIT(6)
-+
-+#define CTRL3_USB2_VBUSVLDEXT0		BIT(6)
-+#define CTRL3_USB2_VBUSVLDEXTSEL0	BIT(5)
-+
-+#define CTRL5_USB2_SIDDQ		BIT(0)
-+
-+#define CTRL7_USB2_REFCLKSEL_MASK	(3 << 3)
-+#define CTRL7_USB2_REFCLKSEL_ABB	(3 << 3)
-+#define CTRL7_USB2_REFCLKSEL_PAD	(2 << 3)
-+
-+#define CFG50_USB3_PHY_TEST_POWERDOWN	BIT(23)
-+
-+#define CFG54_USB31PHY_CR_ADDR_MASK	(0xFFFF)
-+#define CFG54_USB31PHY_CR_ADDR_SHIFT	(16)
-+#define CFG54_USB3PHY_REF_USE_PAD	BIT(12)
-+#define CFG54_PHY0_PMA_PWR_STABLE	BIT(11)
-+#define CFG54_PHY0_PCS_PWR_STABLE	BIT(9)
-+#define CFG54_USB31PHY_CR_ACK		BIT(7)
-+#define CFG54_USB31PHY_CR_WR_EN		BIT(5)
-+#define CFG54_USB31PHY_CR_SEL		BIT(4)
-+#define CFG54_USB31PHY_CR_RD_EN		BIT(3)
-+#define CFG54_USB31PHY_CR_CLK		BIT(2)
-+#define CFG54_USB3_PHY0_ANA_PWR_EN	BIT(1)
-+
-+#define CFG58_USB31PHY_CR_DATA_MASK     (0xFFFF)
-+#define CFG58_USB31PHY_CR_DATA_RD_START (16)
-+
-+#define CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN	BIT(1)
-+
-+#define CFGA0_VAUX_RESET		BIT(9)
-+#define CFGA0_USB31C_RESET		BIT(8)
-+#define CFGA0_USB2PHY_REFCLK_SELECT	BIT(4)
-+#define CFGA0_USB3PHY_RESET		BIT(1)
-+#define CFGA0_USB2PHY_POR		BIT(0)
-+
-+#define INTR_EN_XA_TIMEOUT_EVT_EN	BIT(1)
-+#define INTR_EN_XA_ACK_EVT_EN		BIT(0)
-+
-+#define CLK_RST_TCA_REF_CLK_EN		BIT(1)
-+#define CLK_RST_SUSPEND_CLK_EN		BIT(0)
-+
-+#define GCFG_ROLE_HSTDEV		BIT(4)
-+
-+#define TCPC_VALID			BIT(4)
-+#define TCPC_LOW_POWER_EN		BIT(3)
-+#define TCPC_MUX_CONTROL_MASK		(3 << 0)
-+#define TCPC_MUX_CONTROL_USB31		(1 << 0)
-+
-+#define VBUS_CTRL_POWERPRESENT_OVERRD	(3 << 2)
-+#define VBUS_CTRL_VBUSVALID_OVERRD	(3 << 0)
-+
-+#define KIRIN970_USB_DEFAULT_PHY_PARAM	(0xFDFEE4)
-+#define KIRIN970_USB_DEFAULT_PHY_VBOOST	(0x5)
-+
-+#define TX_VBOOST_LVL_REG		(0xf)
-+#define TX_VBOOST_LVL_START		(6)
-+#define TX_VBOOST_LVL_ENABLE		BIT(9)
-+
-+struct kirin970_priv {
-+	struct device *dev;
-+	struct regmap *peri_crg;
-+	struct regmap *pctrl;
-+	struct regmap *sctrl;
-+	struct regmap *usb31misc;
-+
-+	u32 eye_diagram_param;
-+	u32 tx_vboost_lvl;
-+
-+	u32 peri_crg_offset;
-+	u32 pctrl_offset;
-+	u32 usb31misc_offset;
-+};
-+
-+static int kirin970_phy_cr_clk(struct regmap *usb31misc)
+ 	return err;
+ }
+ 
++static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
++				  unsigned long cmd, void *v)
 +{
-+	int ret;
++	struct ti_bandgap *bgp;
 +
-+	/* Clock up */
-+	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_CLK, CFG54_USB31PHY_CR_CLK);
-+	if (ret)
-+		return ret;
++	bgp = container_of(nb, struct ti_bandgap, nb);
 +
-+	/* Clock down */
-+	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_CLK, 0);
-+
-+	return ret;
-+}
-+
-+static int kirin970_phy_cr_set_sel(struct regmap *usb31misc)
-+{
-+	return regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_SEL, CFG54_USB31PHY_CR_SEL);
-+}
-+
-+static int kirin970_phy_cr_start(struct regmap *usb31misc, int direction)
-+{
-+	int ret;
-+
-+	if (direction)
-+		ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_WR_EN, CFG54_USB31PHY_CR_WR_EN);
-+	else
-+		ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_RD_EN, CFG54_USB31PHY_CR_RD_EN);
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_clk(usb31misc);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
-+			CFG54_USB31PHY_CR_RD_EN | CFG54_USB31PHY_CR_WR_EN, 0);
-+
-+	return ret;
-+}
-+
-+static int kirin970_phy_cr_wait_ack(struct regmap *usb31misc)
-+{
-+	u32 reg;
-+	int retry = 100000;
-+	int ret;
-+
-+	while (retry-- > 0) {
-+		ret = regmap_read(usb31misc, USB_MISC_CFG54, &reg);
-+		if (ret)
-+			return ret;
-+		if ((reg & CFG54_USB31PHY_CR_ACK) == CFG54_USB31PHY_CR_ACK)
-+			return 0;
-+
-+		ret = kirin970_phy_cr_clk(usb31misc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static int kirin970_phy_cr_set_addr(struct regmap *usb31misc, u32 addr)
-+{
-+	u32 reg;
-+	int ret;
-+
-+	ret = regmap_read(usb31misc, USB_MISC_CFG54, &reg);
-+	if (ret)
-+		return ret;
-+
-+	reg &= ~(CFG54_USB31PHY_CR_ADDR_MASK << CFG54_USB31PHY_CR_ADDR_SHIFT);
-+	reg |= ((addr & CFG54_USB31PHY_CR_ADDR_MASK) <<
-+			CFG54_USB31PHY_CR_ADDR_SHIFT);
-+	ret = regmap_write(usb31misc, USB_MISC_CFG54, reg);
-+
-+	return ret;
-+}
-+
-+static int kirin970_phy_cr_read(struct regmap *usb31misc, u32 addr, u32 *val)
-+{
-+	int reg;
-+	int i;
-+	int ret;
-+
-+	for (i = 0; i < 100; i++) {
-+		ret = kirin970_phy_cr_clk(usb31misc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = kirin970_phy_cr_set_sel(usb31misc);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_set_addr(usb31misc, addr);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_start(usb31misc, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_wait_ack(usb31misc);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(usb31misc, USB_MISC_CFG58, &reg);
-+	if (ret)
-+		return ret;
-+
-+	*val = (reg >> CFG58_USB31PHY_CR_DATA_RD_START) &
-+		CFG58_USB31PHY_CR_DATA_MASK;
-+
-+	return 0;
-+}
-+
-+static int kirin970_phy_cr_write(struct regmap *usb31misc, u32 addr, u32 val)
-+{
-+	int i;
-+	int ret;
-+
-+	for (i = 0; i < 100; i++) {
-+		ret = kirin970_phy_cr_clk(usb31misc);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = kirin970_phy_cr_set_sel(usb31misc);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_set_addr(usb31misc, addr);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(usb31misc, USB_MISC_CFG58,
-+			val & CFG58_USB31PHY_CR_DATA_MASK);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_start(usb31misc, 1);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin970_phy_cr_wait_ack(usb31misc);
-+
-+	return ret;
-+}
-+
-+static int kirin970_phy_set_params(struct kirin970_priv *priv)
-+{
-+	u32 reg;
-+	int ret;
-+	int retry = 3;
-+
-+	ret = regmap_write(priv->usb31misc, USB3OTG_CTRL4,
-+			priv->eye_diagram_param);
-+	if (ret) {
-+		dev_err(priv->dev, "set USB3OTG_CTRL4 failed\n");
-+		return ret;
-+	}
-+
-+	while (retry-- > 0) {
-+		ret = kirin970_phy_cr_read(priv->usb31misc,
-+				TX_VBOOST_LVL_REG, &reg);
-+		if (!ret)
++	spin_lock(&bgp->lock);
++	switch (cmd) {
++	case CPU_CLUSTER_PM_ENTER:
++		if (bgp->is_suspended)
 +			break;
-+		else if (ret != -ETIMEDOUT) {
-+			dev_err(priv->dev, "read TX_VBOOST_LVL_REG failed\n");
-+			return ret;
-+		}
++		ti_bandgap_save_ctxt(bgp);
++		ti_bandgap_power(bgp, false);
++		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
++			clk_disable(bgp->fclock);
++		break;
++	case CPU_CLUSTER_PM_ENTER_FAILED:
++	case CPU_CLUSTER_PM_EXIT:
++		if (bgp->is_suspended)
++			break;
++		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
++			clk_enable(bgp->fclock);
++		ti_bandgap_power(bgp, true);
++		ti_bandgap_restore_ctxt(bgp);
++		break;
 +	}
-+	if (ret)
-+		return ret;
++	spin_unlock(&bgp->lock);
 +
-+	reg |= (TX_VBOOST_LVL_ENABLE |
-+			(priv->tx_vboost_lvl << TX_VBOOST_LVL_START));
-+	ret = kirin970_phy_cr_write(priv->usb31misc, TX_VBOOST_LVL_REG, reg);
-+	if (ret)
-+		dev_err(priv->dev, "write TX_VBOOST_LVL_REG failed\n");
-+
-+	return ret;
++	return NOTIFY_OK;
 +}
 +
-+static int kirin970_is_abbclk_seleted(struct kirin970_priv *priv)
-+{
-+	u32 reg;
-+
-+	if (!priv->sctrl) {
-+		dev_err(priv->dev, "priv->sctrl is null!\n");
-+		return 1;
-+	}
-+
-+	if (regmap_read(priv->sctrl, SCTRL_SCDEEPSLEEPED, &reg)) {
-+		dev_err(priv->dev, "SCTRL_SCDEEPSLEEPED read failed!\n");
-+		return 1;
-+	}
-+
-+	if ((reg & USB_CLK_SELECTED) == 0)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int kirin970_config_phy_clock(struct kirin970_priv *priv)
-+{
-+	u32 val, mask;
-+	int ret;
-+
-+	if (kirin970_is_abbclk_seleted(priv)) {
-+		/* usb refclk iso disable */
-+		ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS,
-+				USB_REFCLK_ISO_EN);
-+		if (ret)
-+			goto out;
-+
-+		/* select usbphy clk from abb */
-+		mask = SC_CLK_USB3PHY_3MUX1_SEL;
-+		ret = regmap_update_bits(priv->pctrl,
-+				PCTRL_PERI_CTRL24, mask, 0);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0,
-+				CFGA0_USB2PHY_REFCLK_SELECT, 0);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_read(priv->usb31misc, USB3OTG_CTRL7, &val);
-+		if (ret)
-+			goto out;
-+		val &= ~CTRL7_USB2_REFCLKSEL_MASK;
-+		val |= CTRL7_USB2_REFCLKSEL_ABB;
-+		ret = regmap_write(priv->usb31misc, USB3OTG_CTRL7, val);
-+		if (ret)
-+			goto out;
-+	} else {
-+		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG54,
-+				CFG54_USB3PHY_REF_USE_PAD,
-+				CFG54_USB3PHY_REF_USE_PAD);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0,
-+				CFGA0_USB2PHY_REFCLK_SELECT,
-+				CFGA0_USB2PHY_REFCLK_SELECT);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_read(priv->usb31misc, USB3OTG_CTRL7, &val);
-+		if (ret)
-+			goto out;
-+		val &= ~CTRL7_USB2_REFCLKSEL_MASK;
-+		val |= CTRL7_USB2_REFCLKSEL_PAD;
-+		ret = regmap_write(priv->usb31misc, USB3OTG_CTRL7, val);
-+		if (ret)
-+			goto out;
-+
-+		ret = regmap_write(priv->peri_crg,
-+				PERI_CRG_PEREN6, GT_CLK_USB2PHY_REF);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to config phy clock ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static int kirin970_config_tca(struct kirin970_priv *priv)
-+{
-+	u32 val, mask;
-+	int ret;
-+
-+	ret = regmap_write(priv->usb31misc, TCA_INTR_STS, 0xffff);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(priv->usb31misc, TCA_INTR_EN,
-+			INTR_EN_XA_TIMEOUT_EVT_EN | INTR_EN_XA_ACK_EVT_EN);
-+	if (ret)
-+		goto out;
-+
-+	mask = CLK_RST_TCA_REF_CLK_EN | CLK_RST_SUSPEND_CLK_EN;
-+	ret = regmap_update_bits(priv->usb31misc, TCA_CLK_RST, mask, 0);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_update_bits(priv->usb31misc, TCA_GCFG,
-+			GCFG_ROLE_HSTDEV, GCFG_ROLE_HSTDEV);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read(priv->usb31misc, TCA_TCPC, &val);
-+	if (ret)
-+		goto out;
-+	val &= ~(TCPC_VALID | TCPC_LOW_POWER_EN | TCPC_MUX_CONTROL_MASK);
-+	val |= (TCPC_VALID | TCPC_MUX_CONTROL_USB31);
-+	ret = regmap_write(priv->usb31misc, TCA_TCPC, val);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(priv->usb31misc, TCA_VBUS_CTRL,
-+		VBUS_CTRL_POWERPRESENT_OVERRD | VBUS_CTRL_VBUSVALID_OVERRD);
-+	if (ret)
-+		goto out;
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to config phy clock ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static int kirin970_phy_exit(struct phy *phy);
-+
-+static int kirin970_phy_init(struct phy *phy)
-+{
-+	struct kirin970_priv *priv = phy_get_drvdata(phy);
-+	u32 val;
-+	int ret;
-+
-+	kirin970_phy_exit(phy);
-+	dev_info(priv->dev, "%s in\n", __func__);
-+	/* assert controller */
-+	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, 0);
-+	if (ret)
-+		goto out;
-+
-+	ret = kirin970_config_phy_clock(priv);
-+	if (ret)
-+		goto out;
-+
-+	/* Exit from IDDQ mode */
-+	ret = regmap_update_bits(priv->usb31misc, USB3OTG_CTRL5,
-+			CTRL5_USB2_SIDDQ, 0);
-+	if (ret)
-+		goto out;
-+
-+	/* Release USB31 PHY out of TestPowerDown mode */
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG50,
-+			CFG50_USB3_PHY_TEST_POWERDOWN, 0);
-+	if (ret)
-+		goto out;
-+
-+	/* Tell the PHY power is stable */
-+	val = CFG54_USB3_PHY0_ANA_PWR_EN | CFG54_PHY0_PCS_PWR_STABLE |
-+		CFG54_PHY0_PMA_PWR_STABLE;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG54,
-+			val, val);
-+	if (ret)
-+		goto out;
-+
-+	ret = kirin970_config_tca(priv);
-+	if (ret)
-+		goto out;
-+
-+	/* Enable SSC */
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG5C,
-+			CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN,
-+			CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN);
-+	if (ret)
-+		goto out;
-+
-+	/* Deassert phy */
-+	val = CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, val);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
-+	/* Deassert controller */
-+	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, val);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
-+	/* Set fake vbus valid signal */
-+	val = CTRL0_USB3_VBUSVLD | CTRL0_USB3_VBUSVLD_SEL;
-+	ret = regmap_update_bits(priv->usb31misc, USB3OTG_CTRL0, val, val);
-+	if (ret)
-+		goto out;
-+
-+	val = CTRL3_USB2_VBUSVLDEXT0 | CTRL3_USB2_VBUSVLDEXTSEL0;
-+	ret = regmap_update_bits(priv->usb31misc, USB3OTG_CTRL3, val, val);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
-+	ret = kirin970_phy_set_params(priv);
-+	if (ret)
-+		goto out;
-+
-+	{
-+		ret = regmap_read(priv->peri_crg, 0x4c,
-+				&val);
-+		if (!ret)
-+			dev_info(priv->dev, "peri_crg 0x4c %x\n", val);
-+		ret = regmap_read(priv->peri_crg, 0x404,
-+				&val);
-+		if (!ret)
-+			dev_info(priv->dev, "peri_crg 0x404 %x\n", val);
-+		ret = regmap_read(priv->peri_crg, 0xc,
-+				&val);
-+		if (!ret)
-+			dev_info(priv->dev, "peri_crg 0xc %x\n", val);
-+		ret = regmap_read(priv->peri_crg, 0xac,
-+				&val);
-+		if (!ret)
-+			dev_info(priv->dev, "peri_crg 0xac %x\n", val);
-+		ret = regmap_read(priv->pctrl, 0x10,
-+				&val);
-+		if (!ret)
-+			dev_info(priv->dev, "pctrl 0x10 %x\n", val);
-+	}
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static int kirin970_phy_exit(struct phy *phy)
-+{
-+	struct kirin970_priv *priv = phy_get_drvdata(phy);
-+	u32 mask;
-+	int ret;
-+
-+	/* Assert phy */
-+	mask = CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, mask, 0);
-+	if (ret)
-+		goto out;
-+
-+	if (!kirin970_is_abbclk_seleted(priv)) {
-+		ret = regmap_write(priv->peri_crg, PERI_CRG_PERDIS6,
-+				GT_CLK_USB2PHY_REF);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	return 0;
-+out:
-+	dev_err(priv->dev, "failed to exit phy ret: %d\n", ret);
-+	return ret;
-+}
-+
-+static struct phy_ops kirin970_phy_ops = {
-+	.init		= kirin970_phy_init,
-+	.exit		= kirin970_phy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int kirin970_phy_probe(struct platform_device *pdev)
-+{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct phy *phy;
-+	struct kirin970_priv *priv;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pericrg-syscon");
-+	if (IS_ERR(priv->peri_crg)) {
-+		dev_err(dev, "no hisilicon,pericrg-syscon\n");
-+		return PTR_ERR(priv->peri_crg);
-+	}
-+
-+	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,pctrl-syscon");
-+	if (IS_ERR(priv->pctrl)) {
-+		dev_err(dev, "no hisilicon,pctrl-syscon\n");
-+		return PTR_ERR(priv->pctrl);
-+	}
-+
-+	priv->sctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,sctrl-syscon");
-+	if (IS_ERR(priv->sctrl)) {
-+		dev_err(dev, "no hisilicon,sctrl-syscon\n");
-+		return PTR_ERR(priv->sctrl);
-+	}
-+
-+	priv->usb31misc = syscon_regmap_lookup_by_phandle(dev->of_node,
-+					"hisilicon,usb31-misc-syscon");
-+	if (IS_ERR(priv->usb31misc)) {
-+		dev_err(dev, "no hisilicon,usb31-misc-syscon\n");
-+		return PTR_ERR(priv->usb31misc);
-+	}
-+
-+	if (of_property_read_u32(dev->of_node, "eye-diagram-param",
-+				&(priv->eye_diagram_param)))
-+		priv->eye_diagram_param = KIRIN970_USB_DEFAULT_PHY_PARAM;
-+
-+	if (of_property_read_u32(dev->of_node, "usb3-phy-tx-vboost-lvl",
-+				&(priv->tx_vboost_lvl)))
-+		priv->eye_diagram_param = KIRIN970_USB_DEFAULT_PHY_VBOOST;
-+
-+	phy = devm_phy_create(dev, NULL, &kirin970_phy_ops);
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
-+
-+	phy_set_drvdata(phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id kirin970_phy_of_match[] = {
-+	{.compatible = "hisilicon,kirin970-usb-phy",},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, kirin970_phy_of_match);
-+
-+static struct platform_driver kirin970_phy_driver = {
-+	.probe	= kirin970_phy_probe,
-+	.driver = {
-+		.name	= "kirin970-usb-phy",
-+		.of_match_table	= kirin970_phy_of_match,
-+	}
-+};
-+module_platform_driver(kirin970_phy_driver);
-+
-+MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Hilisicon Kirin970 USB31 PHY Driver");
+ static int ti_bandgap_resume(struct device *dev)
+ {
+ 	struct ti_bandgap *bgp = dev_get_drvdata(dev);
+@@ -1161,6 +1212,7 @@ static int ti_bandgap_resume(struct device *dev)
+ 		clk_prepare_enable(bgp->fclock);
+ 
+ 	ti_bandgap_power(bgp, true);
++	bgp->is_suspended = false;
+ 
+ 	return ti_bandgap_restore_ctxt(bgp);
+ }
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+index fce4657e9486..ed0ea4b17b25 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+@@ -12,6 +12,10 @@
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/err.h>
++#include <linux/cpu_pm.h>
++#include <linux/device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm.h>
+ 
+ struct gpio_desc;
+ 
+@@ -203,6 +207,8 @@ struct ti_bandgap {
+ 	int				irq;
+ 	struct gpio_desc		*tshut_gpiod;
+ 	u32				clk_rate;
++	struct notifier_block		nb;
++	unsigned int is_suspended:1;
+ };
+ 
+ /**
 -- 
-2.26.2
+2.25.1
 
