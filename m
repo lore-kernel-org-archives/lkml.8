@@ -2,55 +2,51 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ABC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF8AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B58A4223EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 12:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0249222224
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599829139;
-	bh=oGr46qlLv8X6ikVTrbl44cD9Uet5OSlJxQACmUVeejw=;
+	s=default; t=1599829219;
+	bh=751jnFFiPM7Rz+YvYy29f9LhzmeeTfNIcCziFRBD/40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMrqsLeRlIKneki2pFkxLUUkQGnKklhoF6wrt7DOq7jupGewkir7mT7nmS5TDOzmp
-	 cK6AjZRiLlY5EHpgoR9ie1OcrJ5Qf7Gde0pbqkiLQUYypskJwB4vWw9z2m3fMGHDQ2
-	 tZ2xPZgNZORYK4dz2G7nLmsveup0W7VIF1dsP+24=
+	b=rPDXbDB6JTvltmuPlpg7jMlSJXKKf9pQxqzR1oT1daHFhhLg8pHW2r42XC3uuOiEq
+	 0DF14PhPNQYWgKzAPFpYh4I3aGtxT4tuOwne29nZK/hN7XWZYsKGGlO66J08LmeBxZ
+	 7JrEI8HUbDWsECKEw9+i+0HjocdiJMtfX2JiOzzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgIKM6j (ORCPT
+        id S1726143AbgIKNAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 08:58:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgIKMye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:54:34 -0400
+        id S1726014AbgIKMyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:54:55 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1141E2075E;
-        Fri, 11 Sep 2020 12:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B9D2222B;
+        Fri, 11 Sep 2020 12:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599828831;
-        bh=oGr46qlLv8X6ikVTrbl44cD9Uet5OSlJxQACmUVeejw=;
+        s=default; t=1599828844;
+        bh=751jnFFiPM7Rz+YvYy29f9LhzmeeTfNIcCziFRBD/40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F9i4AChHmpor9FFYhbdtZsrYXOTIRQM7rKzrdZbohrEN/NRdO+uXHXff0FPRMvHb0
-         YZo033JTkMj7jZ6IyCCSqGUeDL0xBzEdkPOVq8MRYz4wy6r3C3pvsIvWw6JonWcpnr
-         FBENyfqAdg8fcKGtGIASBvmur4Y9y3Sc5cvQwEzw=
+        b=a8S4YYZwBmoM16gSK3nqYYpW00eNrTiAMU7kNMNaphllIDgfu4m7Gn4zIoZc6XuLs
+         pJOMrb2nOvIRZBMLIK5cApDWWFEuDBqnNRgJ0CLcGZ1Chy7WY0OoGld2nu/mhUE9rg
+         ADr4MXntVtkKJEY1BxzPZinfeyI5n+b0jFIiivvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH 4.4 04/62] mm, page_alloc: remove unnecessary variable from free_pcppages_bulk
-Date:   Fri, 11 Sep 2020 14:45:47 +0200
-Message-Id: <20200911122502.615839890@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 09/62] dmaengine: of-dma: Fix of_dma_router_xlates of_dma_xlate handling
+Date:   Fri, 11 Sep 2020 14:45:52 +0200
+Message-Id: <20200911122502.855779713@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122502.395450276@linuxfoundation.org>
 References: <20200911122502.395450276@linuxfoundation.org>
@@ -63,61 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit e5b31ac2ca2cd0cf6bf2fcbb708ed01466c89aaa upstream.
+[ Upstream commit 5b2aa9f918f6837ae943557f8cec02c34fcf80e7 ]
 
-The original count is never reused so it can be removed.
+of_dma_xlate callback can return ERR_PTR as well NULL in case of failure.
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[dwagner: update context]
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If error code is returned (not NULL) then the route should be released and
+the router should not be registered for the channel.
 
+Fixes: 56f13c0d9524c ("dmaengine: of_dma: Support for DMA routers")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200806104928.25975-1-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/dma/of-dma.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -835,7 +835,6 @@ static void free_pcppages_bulk(struct zo
- {
- 	int migratetype = 0;
- 	int batch_free = 0;
--	int to_free = count;
- 	unsigned long nr_scanned;
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 1e1f2986eba8f..86c591481dfe9 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -72,12 +72,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
+ 		return NULL;
  
- 	spin_lock(&zone->lock);
-@@ -848,7 +847,7 @@ static void free_pcppages_bulk(struct zo
- 	 * below while (list_empty(list)) loop.
- 	 */
- 	count = min(pcp->count, count);
--	while (to_free) {
-+	while (count) {
- 		struct page *page;
- 		struct list_head *list;
- 
-@@ -868,7 +867,7 @@ static void free_pcppages_bulk(struct zo
- 
- 		/* This is the only non-empty list. Free them all. */
- 		if (batch_free == MIGRATE_PCPTYPES)
--			batch_free = to_free;
-+			batch_free = count;
- 
- 		do {
- 			int mt;	/* migratetype of the to-be-freed page */
-@@ -886,7 +885,7 @@ static void free_pcppages_bulk(struct zo
- 
- 			__free_one_page(page, page_to_pfn(page), zone, 0, mt);
- 			trace_mm_page_pcpu_drain(page, 0, mt);
--		} while (--to_free && --batch_free && !list_empty(list));
-+		} while (--count && --batch_free && !list_empty(list));
+ 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
+-	if (chan) {
+-		chan->router = ofdma->dma_router;
+-		chan->route_data = route_data;
+-	} else {
++	if (IS_ERR_OR_NULL(chan)) {
+ 		ofdma->dma_router->route_free(ofdma->dma_router->dev,
+ 					      route_data);
++	} else {
++		chan->router = ofdma->dma_router;
++		chan->route_data = route_data;
  	}
- 	spin_unlock(&zone->lock);
- }
+ 
+ 	/*
+-- 
+2.25.1
+
 
 
