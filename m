@@ -2,89 +2,154 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F5C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C74C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B0622242
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599833798;
-	bh=/nDaup0sHf4oUzd2UAeg0tErQHDEQTfD4TfGN77pCxE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQdecv6mRL2GG/UqN+F0bPUBHH7R4stjOyQgudn6XaBy6o6BQw7CO7kRusVaNxwsB
-	 BOD0CnRjT0SzH5JF78FKgJlVBCktOo5loRNkcYKJhayVHvuJ+eYcQkl1okwj7w0kkM
-	 VI1hsKJ6SunczJ/HVUFmtAXMvUom3jEPWQVJeYZU=
+	by mail.kernel.org (Postfix) with ESMTP id D48B222276
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 14:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Mymmm7eY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbgIKOQd (ORCPT
+        id S1725860AbgIKOTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 10:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbgIKNVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 09:21:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C07F0222EB;
-        Fri, 11 Sep 2020 12:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829105;
-        bh=/nDaup0sHf4oUzd2UAeg0tErQHDEQTfD4TfGN77pCxE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zmuapuft4jSVjWCuOir3MTeKhPJoN+gs/xUZH8KtybLBBovj5BBvC4CIzl6AQrJKi
-         BNWKvmaxCQFZB8U1Hjvl52x+TkgAGurRv7Y4cvAFZiqM9TtWdXnrBNHBHidSbYSmKZ
-         d2hc9o26pN38NVkwlYsyOBrcQ10J3NeADgE0X6XU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rogan Dawes <rogan@dawes.za.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 39/71] usb: qmi_wwan: add D-Link DWM-222 A2 device ID
-Date:   Fri, 11 Sep 2020 14:46:23 +0200
-Message-Id: <20200911122506.877249043@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200911122504.928931589@linuxfoundation.org>
-References: <20200911122504.928931589@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 11 Sep 2020 10:19:11 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:9457 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgIKNSx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 09:18:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599830332; x=1631366332;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=JQDnu/cuqWy8rA4yBHOvQdV8XzXS1x+7uiyMAqpaxeU=;
+  b=Mymmm7eYQZvxbnX3oxsCVtkGVMkAcG/ug5j7PZU+K3koU2s7bE0cV4lB
+   arqd+ZLjk+aUojEU7hnB0LSBt8Yc/S5KSm9nkIotnYX9TAH2TY00vW8Q7
+   PVWwyz/TmNRuvvCx5EAfzMRf32NRQmRFvTNxUSb1TmdtY5lL34cWs1C3y
+   sUa0QUXh7ldvZ2waDxSngi6QqiNhPbl3CkUDclN1ursP+nGn8q+c0dC+l
+   khPt4JYJP5i3hYOP8tmBys+S+vRauEcBMV7l4Njb4E0xlE40lcyx+NVNC
+   p/g3eTRuKrc2jluU7ntB0+vOn6Qhy4GV+Dm2DLZifGkEuLalBD48H1/A6
+   Q==;
+IronPort-SDR: 69u4SKX5JGjKmVcsUQsAVXQLFrI69qNKRckhU6eCDPYWGPlNRTU5XDo1QFEuHYP00aQGY6aevZ
+ L8DLMur+wXtmEi5uV5FIC9MY1yRXOFdnLJAVbNru1MkcFLHouEEGKoJXIE3Ru/zGP2h0eC2Vam
+ gdjMw+PUzV3Ee5aocY4ZegyKkzE/Zx6RByia7ubnnUDo4tlSbeHRRL4S2nwFRc8KM2FjECXR1d
+ hsyPIbJVTyzd3Lp51EBYFxIF3ZLmjZuHb4vlG5uQUMorx1HKKpbChl1MihR0UhmWZ9CU2UxDyy
+ 1UY=
+X-IronPort-AV: E=Sophos;i="5.76,415,1592895600"; 
+   d="scan'208";a="88733632"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Sep 2020 06:18:50 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 11 Sep 2020 06:18:07 -0700
+Received: from training-HP-280-G1-MT-PC.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Fri, 11 Sep 2020 06:18:44 -0700
+From:   Divya Koppera <Divya.Koppera@microchip.com>
+To:     <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <marex@denx.de>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <UNGLinuxDriver@microchip.com>
+Subject: [PATCH v3 net-next] net: phy: mchp: Add support for LAN8814 QUAD PHY
+Date:   Fri, 11 Sep 2020 18:48:44 +0530
+Message-ID: <20200911131844.24371-1-Divya.Koppera@microchip.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200911061020.22413-1-Divya.Koppera@microchip.com>
+References: <20200911061020.22413-1-Divya.Koppera@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rogan Dawes <rogan@dawes.za.net>
+LAN8814 is a low-power, quad-port triple-speed (10BASE-T/100BASETX/1000BASE-T)
+Ethernet physical layer transceiver (PHY). It supports transmission and
+reception of data on standard CAT-5, as well as CAT-5e and CAT-6, unshielded
+twisted pair (UTP) cables.
 
-[ Upstream commit 7d6053097311643545a8118100175a39bd6fa637 ]
+LAN8814 supports industry-standard QSGMII (Quad Serial Gigabit Media
+Independent Interface) and Q-USGMII (Quad Universal Serial Gigabit Media
+Independent Interface) providing chip-to-chip connection to four Gigabit
+Ethernet MACs using a single serialized link (differential pair) in each
+direction.
 
-Signed-off-by: Rogan Dawes <rogan@dawes.za.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The LAN8814 SKU supports high-accuracy timestamping functions to
+support IEEE-1588 solutions using Microchip Ethernet switches, as well as
+customer solutions based on SoCs and FPGAs.
+
+The LAN8804 SKU has same features as that of LAN8814 SKU except that it does
+not support 1588, SyncE, or Q-USGMII with PCH/MCH.
+
+This adds support for 10BASE-T, 100BASE-TX, and 1000BASE-T,
+QSGMII link with the MAC.
+
+Signed-off-by: Divya Koppera<divya.koppera@microchip.com>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+v1 -> v2:
+* Removing get_features and config_init as the Errata mentioned and other
+  functionality related things are not applicable for this phy.
+  Addressed review comments.
+---
+v2 -> v3:
+* As v2 contains only diff of v1 and v2, correcting mistake and sending
+  whole patch with addressed comments in v2.
+---
+ drivers/net/phy/micrel.c   | 14 ++++++++++++++
+ include/linux/micrel_phy.h |  1 +
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index d812335600212..74c925cd19a93 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -890,6 +890,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
- 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
-+	{QMI_FIXED_INTF(0x2001, 0x7e3d, 4)},	/* D-Link DWM-222 A2 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
- 	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 3fe552675dd2..a7f74b3b97af 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -1314,6 +1314,19 @@ static struct phy_driver ksphy_driver[] = {
+ 	.get_stats	= kszphy_get_stats,
+ 	.suspend	= genphy_suspend,
+ 	.resume		= kszphy_resume,
++}, {
++	.phy_id		= PHY_ID_LAN8814,
++	.phy_id_mask	= MICREL_PHY_ID_MASK,
++	.name		= "Microchip INDY Gigabit Quad PHY",
++	.driver_data	= &ksz9021_type,
++	.probe		= kszphy_probe,
++	.soft_reset	= genphy_soft_reset,
++	.read_status	= ksz9031_read_status,
++	.get_sset_count	= kszphy_get_sset_count,
++	.get_strings	= kszphy_get_strings,
++	.get_stats	= kszphy_get_stats,
++	.suspend	= genphy_suspend,
++	.resume		= kszphy_resume,
+ }, {
+ 	.phy_id		= PHY_ID_KSZ9131,
+ 	.phy_id_mask	= MICREL_PHY_ID_MASK,
+@@ -1387,6 +1400,7 @@ static struct mdio_device_id __maybe_unused micrel_tbl[] = {
+ 	{ PHY_ID_KSZ8081, MICREL_PHY_ID_MASK },
+ 	{ PHY_ID_KSZ8873MLL, MICREL_PHY_ID_MASK },
+ 	{ PHY_ID_KSZ886X, MICREL_PHY_ID_MASK },
++	{ PHY_ID_LAN8814, MICREL_PHY_ID_MASK },
+ 	{ }
+ };
+ 
+diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
+index 75f880c25bb8..416ee6dd2574 100644
+--- a/include/linux/micrel_phy.h
++++ b/include/linux/micrel_phy.h
+@@ -27,6 +27,7 @@
+ #define PHY_ID_KSZ8061		0x00221570
+ #define PHY_ID_KSZ9031		0x00221620
+ #define PHY_ID_KSZ9131		0x00221640
++#define PHY_ID_LAN8814		0x00221660
+ 
+ #define PHY_ID_KSZ886X		0x00221430
+ #define PHY_ID_KSZ8863		0x00221435
 -- 
-2.25.1
-
-
+2.17.1
 
