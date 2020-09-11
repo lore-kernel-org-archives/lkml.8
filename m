@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E229CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E84E22229
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4737E22229
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 13:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599829332;
-	bh=YXvxJU50/o7JM1lhiqRe+v3U3CdBUoWn/IcA6FOdLtY=;
+	s=default; t=1599829346;
+	bh=PzYoJXKrSnqCth4TYncDPbCZXJWhG5/jzJXPUlAr6dE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbesL0VkIv0enm9iDr3k4+kfh/PfQLKegPVRk9XIdOR8crOES8io/13hw0erw0o6v
-	 TmhXmK8aEqaFd6Vtnjl16XwzlyqBMgrgSj/wu3getPdBahr9mDwi1Cxk+V6c535cJB
-	 o9/jtmnz1M/jUhj5kqI0HP04Bj4OafiVFdYfDnhM=
+	b=t9jdZtZw4s4NFYXFRTSjGU8/7MybdLwKVFx+csuuYBlbIY/zNtCttOupLZbiqIzE3
+	 ZSyqzLoAVgLJBt/B4AhMu5slNdwmpIrwbPDuKN8UeiAUdxx84awZ9+d+os2kjPeB/m
+	 hvCSLkfIw9pQ9hJp1UiJIGgTRmB9jyK3L5PLBOj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgIKNBW (ORCPT
+        id S1725808AbgIKNCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 09:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 09:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgIKMzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 08:55:03 -0400
+        id S1726021AbgIKMzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 08:55:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 747A12222C;
-        Fri, 11 Sep 2020 12:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88DC62222E;
+        Fri, 11 Sep 2020 12:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599828849;
-        bh=YXvxJU50/o7JM1lhiqRe+v3U3CdBUoWn/IcA6FOdLtY=;
+        s=default; t=1599828855;
+        bh=PzYoJXKrSnqCth4TYncDPbCZXJWhG5/jzJXPUlAr6dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kayIAgVnjSzg52/+yfMhtFCLplH4sRKNJ+qdKO/8mGfDOR/bk0uYe7zQ1cXuCKBe
-         fZNSGMu4up59QrMnAoWtmlhHHFBMymR4my6zcrSyPw57uKtOTSmZdT87IDr4XubbsO
-         DeGHwW5WaZl4hUPCg7nRys00sI6IDwjXi8mf59S0=
+        b=gERwoZzxJ1XsJJ/JJHER8cIsnBZu914M2DkriOFuHWhfDkdiPjg7stxg0PcZPfcUl
+         PGyEM8uJXObP/4Q20uIh3MOWQ/g93+dHXcz4iPFojgd75/3FAOMOcR3WbzSt9hnEjL
+         S1ql0f1TqhmAxXTiFa5QPAPcprJ5a9GpChH+5MoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Patrik Halfar <patrik_halfar@halfarit.cz>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 23/62] btrfs: Remove redundant extent_buffer_get in get_old_root
-Date:   Fri, 11 Sep 2020 14:46:06 +0200
-Message-Id: <20200911122503.553102172@linuxfoundation.org>
+Subject: [PATCH 4.4 33/62] Add Dell Wireless 5809e Gobi 4G HSPA+ Mobile Broadband Card (rev3) to qmi_wwan
+Date:   Fri, 11 Sep 2020 14:46:16 +0200
+Message-Id: <20200911122504.043662497@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122502.395450276@linuxfoundation.org>
 References: <20200911122502.395450276@linuxfoundation.org>
@@ -60,40 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Patrik Halfar <patrik_halfar@halfarit.cz>
 
-[ Upstream commit 6c122e2a0c515cfb3f3a9cefb5dad4cb62109c78 ]
+[ Upstream commit fb5eb24cdd5cdb83be77d3e4b2f16e92e06bd9e9 ]
 
-get_old_root used used only by btrfs_search_old_slot to initialise the
-path structure. The old root is always a cloned buffer (either via alloc
-dummy or via btrfs_clone_extent_buffer) and its reference count is 2: 1
-from allocation, 1 from extent_buffer_get call in get_old_root.
+New revison of Dell Wireless 5809e Gobi 4G HSPA+ Mobile Broadband Card has new idProduct
 
-This latter explicit ref count acquire operation is in fact unnecessary
-since the semantic is such that the newly allocated buffer is handed
-over to the btrfs_path for lifetime management. Considering this just
-remove the extra extent_buffer_get in get_old_root.
+Bus 002 Device 006: ID 413c:81b3 Dell Computer Corp.
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0
+  bDeviceSubClass         0
+  bDeviceProtocol         0
+  bMaxPacketSize0        64
+  idVendor           0x413c Dell Computer Corp.
+  idProduct          0x81b3
+  bcdDevice            0.06
+  iManufacturer           1 Sierra Wireless, Incorporated
+  iProduct                2 Dell Wireless 5809e Gobi™ 4G HSPA+ Mobile Broadband Card
+  iSerial                 3
+  bNumConfigurations      2
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Patrik Halfar <patrik_halfar@halfarit.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index 8eac5f75bca36..8765312743f16 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1441,7 +1441,6 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
- 
- 	if (!eb)
- 		return NULL;
--	extent_buffer_get(eb);
- 	btrfs_tree_read_lock(eb);
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index f8d00846b4a59..977df611164a6 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -913,6 +913,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x413c, 0x81a8, 8)},	/* Dell Wireless 5808 Gobi(TM) 4G LTE Mobile Broadband Card */
+ 	{QMI_FIXED_INTF(0x413c, 0x81a9, 8)},	/* Dell Wireless 5808e Gobi(TM) 4G LTE Mobile Broadband Card */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b1, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card */
++	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
+ 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+ 	{QMI_FIXED_INTF(0x22de, 0x9061, 3)},	/* WeTelecom WPD-600N */
 -- 
 2.25.1
 
