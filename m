@@ -2,53 +2,52 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E33C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F0D204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205FC2076C
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 15:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599837629;
-	bh=0WWgoPC3qSem1zGC5HZoGN0BJUzM5udXNx895gCMmkk=;
+	s=default; t=1599837710;
+	bh=cQtmOpOnoutgoobVVbzdL9HIMhuV7J7M5jnbYHFYGus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5Yd2M2owFnoBbzkoURDxt6JshvXxcaD+ENTAp4u/xU2eb/+44CLK8qSbNF7D/mHG
-	 dF/XAnz3eJZWIIY0zJTH/CibBj6PTr74ES0znQiSxhxF0DqhQRyuDZyd27duigpexJ
-	 qMaS4rmhpDdqTy+I3c1Ek9m6DGJOPoZYbe7mi2Tc=
+	b=yoWe+w5Xuo0HTaz+e9hq2LVwcP6/idtldskcLVMLlPl9BhiW+uWkZzFz/d2F144Te
+	 VW0hETsBQTG6/efyVXZWt/2xryNa+H/PtgPHsJVvvoNFLI4AfsLl+NIbq6dgqjOMSa
+	 whLKX7BfWyRXAqnptm6DA+rTPlor05TCma/1g6nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgIKPUX (ORCPT
+        id S1726214AbgIKPVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 11:20:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52730 "EHLO mail.kernel.org"
+        Fri, 11 Sep 2020 11:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgIKPPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726444AbgIKPPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 11 Sep 2020 11:15:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFFB52224D;
-        Fri, 11 Sep 2020 12:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9703F2220E;
+        Fri, 11 Sep 2020 12:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599829173;
-        bh=0WWgoPC3qSem1zGC5HZoGN0BJUzM5udXNx895gCMmkk=;
+        s=default; t=1599829191;
+        bh=cQtmOpOnoutgoobVVbzdL9HIMhuV7J7M5jnbYHFYGus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9MdIB0odtRPpKoEqnPXrrD3H4UCt91tGL+l0zp+NCQ8yeFeqSnaemwPc7T9yNtPp
-         oqNDG29ZqbwT/Fqvugo43f9O2X47ZX0E/Bgqky6OjletzSFsFHcGj+5EZui+iZHxZU
-         NFWsucnpVYbgkNwsW7n32swJLp8kj/wY6UxenrgU=
+        b=z9q6Kea61bu+b3P+IYnrTOUtynVrwve/Vh9RD9EJ4lc8iGITWsl9dXY+iAeMRLi1v
+         iMnBXPQ0aC/zrylit0Kq6HVcKpdCycTwVL0nUo62sVrT3vvtuyJIsWL5nZiIlnsbVZ
+         95xno4AvUemBi5L/Py6sLW7Q6BJHTC6na3bp/Ogk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ying Xu <yinxu@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 11/16] sctp: not disable bh in the whole sctp_get_port_local()
-Date:   Fri, 11 Sep 2020 14:47:28 +0200
-Message-Id: <20200911122500.139722863@linuxfoundation.org>
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 03/16] RDMA/cma: Simplify DEVICE_REMOVAL for internal_id
+Date:   Fri, 11 Sep 2020 14:47:20 +0200
+Message-Id: <20200911122459.754211677@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200911122459.585735377@linuxfoundation.org>
 References: <20200911122459.585735377@linuxfoundation.org>
@@ -61,105 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-[ Upstream commit 3106ecb43a05dc3e009779764b9da245a5d082de ]
+[ Upstream commit d54f23c09ec62670901f1a2a4712a5218522ca2b ]
 
-With disabling bh in the whole sctp_get_port_local(), when
-snum == 0 and too many ports have been used, the do-while
-loop will take the cpu for a long time and cause cpu stuck:
+cma_process_remove() triggers an unconditional rdma_destroy_id() for
+internal_id's and skips the event deliver and transition through
+RDMA_CM_DEVICE_REMOVAL.
 
-  [ ] watchdog: BUG: soft lockup - CPU#11 stuck for 22s!
-  [ ] RIP: 0010:native_queued_spin_lock_slowpath+0x4de/0x940
-  [ ] Call Trace:
-  [ ]  _raw_spin_lock+0xc1/0xd0
-  [ ]  sctp_get_port_local+0x527/0x650 [sctp]
-  [ ]  sctp_do_bind+0x208/0x5e0 [sctp]
-  [ ]  sctp_autobind+0x165/0x1e0 [sctp]
-  [ ]  sctp_connect_new_asoc+0x355/0x480 [sctp]
-  [ ]  __sctp_connect+0x360/0xb10 [sctp]
+This is confusing and unnecessary. internal_id always has
+cma_listen_handler() as the handler, have it catch the
+RDMA_CM_DEVICE_REMOVAL event and directly consume it and signal removal.
 
-There's no need to disable bh in the whole function of
-sctp_get_port_local. So fix this cpu stuck by removing
-local_bh_disable() called at the beginning, and using
-spin_lock_bh() instead.
+This way the FSM sequence never skips the DEVICE_REMOVAL case and the
+logic in this hard to test area is simplified.
 
-The same thing was actually done for inet_csk_get_port() in
-Commit ea8add2b1903 ("tcp/dccp: better use of ephemeral
-ports in bind()").
-
-Thanks to Marcelo for pointing the buggy code out.
-
-v1->v2:
-  - use cond_resched() to yield cpu to other tasks if needed,
-    as Eric noticed.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Ying Xu <yinxu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200723070707.1771101-2-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/socket.c |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/infiniband/core/cma.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -8297,8 +8297,6 @@ static int sctp_get_port_local(struct so
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index c30cf5307ce3e..537eeebde5f4d 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2482,6 +2482,10 @@ static int cma_listen_handler(struct rdma_cm_id *id,
+ {
+ 	struct rdma_id_private *id_priv = id->context;
  
- 	pr_debug("%s: begins, snum:%d\n", __func__, snum);
++	/* Listening IDs are always destroyed on removal */
++	if (event->event == RDMA_CM_EVENT_DEVICE_REMOVAL)
++		return -1;
++
+ 	id->context = id_priv->id.context;
+ 	id->event_handler = id_priv->id.event_handler;
+ 	trace_cm_event_handler(id_priv, event);
+@@ -4829,7 +4833,7 @@ static void cma_process_remove(struct cma_device *cma_dev)
+ 		cma_id_get(id_priv);
+ 		mutex_unlock(&lock);
  
--	local_bh_disable();
--
- 	if (snum == 0) {
- 		/* Search for an available port. */
- 		int low, high, remaining, index;
-@@ -8316,20 +8314,21 @@ static int sctp_get_port_local(struct so
- 				continue;
- 			index = sctp_phashfn(net, rover);
- 			head = &sctp_port_hashtable[index];
--			spin_lock(&head->lock);
-+			spin_lock_bh(&head->lock);
- 			sctp_for_each_hentry(pp, &head->chain)
- 				if ((pp->port == rover) &&
- 				    net_eq(net, pp->net))
- 					goto next;
- 			break;
- 		next:
--			spin_unlock(&head->lock);
-+			spin_unlock_bh(&head->lock);
-+			cond_resched();
- 		} while (--remaining > 0);
- 
- 		/* Exhausted local port range during search? */
- 		ret = 1;
- 		if (remaining <= 0)
--			goto fail;
-+			return ret;
- 
- 		/* OK, here is the one we will use.  HEAD (the port
- 		 * hash table list entry) is non-NULL and we hold it's
-@@ -8344,7 +8343,7 @@ static int sctp_get_port_local(struct so
- 		 * port iterator, pp being NULL.
- 		 */
- 		head = &sctp_port_hashtable[sctp_phashfn(net, snum)];
--		spin_lock(&head->lock);
-+		spin_lock_bh(&head->lock);
- 		sctp_for_each_hentry(pp, &head->chain) {
- 			if ((pp->port == snum) && net_eq(pp->net, net))
- 				goto pp_found;
-@@ -8444,10 +8443,7 @@ success:
- 	ret = 0;
- 
- fail_unlock:
--	spin_unlock(&head->lock);
--
--fail:
--	local_bh_enable();
-+	spin_unlock_bh(&head->lock);
- 	return ret;
- }
- 
+-		ret = id_priv->internal_id ? 1 : cma_remove_id_dev(id_priv);
++		ret = cma_remove_id_dev(id_priv);
+ 		cma_id_put(id_priv);
+ 		if (ret)
+ 			rdma_destroy_id(&id_priv->id);
+-- 
+2.25.1
+
 
 
