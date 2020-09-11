@@ -2,123 +2,126 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362DBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9946BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E410121D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE77206CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 16:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HO5og/R7"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uE0t+iaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgIKQFP (ORCPT
+        id S1726596AbgIKQGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 12:05:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57166 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgIKQDx (ORCPT
+        Fri, 11 Sep 2020 12:06:07 -0400
+Received: from mail-41103.protonmail.ch ([185.70.41.103]:19890 "EHLO
+        mail-41103.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgIKQDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 12:03:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BG0CTU107632;
-        Fri, 11 Sep 2020 16:03:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=1w3n2CMiZHvxkG6zJpt/AznDLnSWylpcUPu/2eleBX4=;
- b=HO5og/R7qh/342P5DPHI/Og6bfNp5kU5q/MtvwFb1AaBrxH8dxW0km3hZgYba1/BRaGa
- AG137wdK+nEY0Tj/f/JSDFzZ7+ZVidjVY6QCQ6W/bSC9PwE/zO9iJvSuWzHqxM1o14ba
- Pi8JubAARLaIvp2na1zX6gvY3V56zbjbbl/vpCrDwpy00MkbaQD0f6Y0p3vyLQhVKU1n
- ZbhlLSh+jJ9nJeWMePYf0nF95+MGUZ0+wjNxMVPLhWDtC5ze3+V6R0tQW8T4tFr8YozB
- afZ9PcCiQFHnvBnmfAfqnn0S56aKk2y+i0vdH6hI5Dt/tDEnzJiXQMz5XJvSwiDiZz6t fw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 33c3anf051-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Sep 2020 16:03:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08BG1Eba103298;
-        Fri, 11 Sep 2020 16:03:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33cmkdc657-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 16:03:48 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08BG3kbb004122;
-        Fri, 11 Sep 2020 16:03:47 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Sep 2020 09:03:46 -0700
-Date:   Fri, 11 Sep 2020 09:03:45 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: xfs: support inode btree blockcounts in online repair
-Message-ID: <20200911160345.GT7955@magnolia>
-References: <7c612801-682a-0115-2b37-5d21b933960d@canonical.com>
+        Fri, 11 Sep 2020 12:03:50 -0400
+Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        by mail-41103.protonmail.ch (Postfix) with ESMTPS id 3D145200BEBF
+        for <linux-kernel@vger.kernel.org>; Fri, 11 Sep 2020 13:36:43 +0000 (UTC)
+Authentication-Results: mail-41103.protonmail.ch;
+        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uE0t+iaG"
+Date:   Fri, 11 Sep 2020 13:34:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1599831274;
+        bh=i1YSY0XyxQ3SaC8ZJ4PtKWoRmK1OW12T7faRuAJSgLY=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=uE0t+iaGURnDMbw/jWB2/rKtG+/t5YOF50uKPjidH1p8qUskaIDjCqT8+5nFqhqtb
+         GCrkrjGxKH+/W80ODPbrO7Lc89E6eWtHknGyZvx2eYmCzaibIiMC0gt9ol14Y1uT7/
+         CzUBAu/y3JcvuYwLO1F/h8MY0d9u+rKIZqFIc6PA=
+To:     Jonathan Corbet <corbet@lwn.net>
+From:   =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org, andrealmeid@collabora.com
+Reply-To: =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: [PATCH 0/3] docs: Add automatic cross-reference for documentation pages
+Message-ID: <20200911133339.327721-1-nfraprado@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c612801-682a-0115-2b37-5d21b933960d@canonical.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9741 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009110130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9741 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=1 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009110130
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 12:16:33PM +0100, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity has detected an issue with the following
-> commit:
-> 
-> commit 30deae31eab501f568aadea45cfb3258b9e522f5
-> Author: Darrick J. Wong <darrick.wong@oracle.com>
-> Date:   Wed Aug 26 10:48:50 2020 -0700
-> 
->     xfs: support inode btree blockcounts in online repair
-> 
-> the analysis is as follows:
-> 
-> 830                cur = xfs_inobt_init_cursor(mp, sc->tp, agi_bp,
-> sc->sa.agno,
-> 831                                XFS_BTNUM_FINO);
+Cross-referencing from a documentation page to another can be done using th=
+e
+:doc:`doc-file` directive from Sphinx.
+This however introduces markup that could be avoided to increase readabilit=
+y in
+plain text.
+This patch series adds automatic markup for cross-referencing between
+documentation pages.
 
-xfs_inobt_init_cursor can't return NULL (because we guarantee the
-allocation cannot fail) so all that really needs to be done here is to
-remove the pointless error check in lines 832-833.
+This patch series depends on [1].
 
---D
+The first patch refactors the automarkup script to split regex matching and
+iteration into one function and text markup substitution into another.
+This enables each regex to have its own function that substitutes its match=
+es'
+text for the appropriate markup and is necessary for the automatic markup o=
+f
+documentation pages since it requires slightly different logic from marking=
+ up
+C references.
 
-> const: At condition error, the value of error must be equal to 0.
-> dead_error_condition: The condition error cannot be true.
-> 
->  832                if (error)
-> 
-> CID: Logically dead code (DEADCODE)dead_error_line: Execution cannot
-> reach this statement: goto err;.
-> 
->  833                        goto err;
-> 
-> While it is tempting to change the if (error) check to if (cur), the
-> exit error path uses the errnoeous cur as follows:
-> 
->  842 err:
->  843       xfs_btree_del_cursor(cur, error);
->  844       return error;
-> 
-> so the error exit path needs some sorting out too.
+The second patch adds automatic markup for cross-referencing documentation
+pages by adding an appropriate regex and function to do the markup.
+This enables a text like "See Documentation/doc-guide/sphinx.rst." to be
+substituted by a cross-reference to that document without any additional ma=
+rkup.
+Since this automarkup doesn't work with relative paths (they always need to
+start at Documentation/), it will almost always require more typing than th=
+e
+equivalent :doc:`sphinx`, but it's purpose is to avoid the markup, making i=
+t
+more readable in plain text.
+The .rst extension was left as optional in the regex matching, even though =
+it
+only makes sense for .rst documents, because I thought not specifying the
+extension, like "See Documentation/doc-guide/sphinx." also made sense as a
+cross-reference.
+
+The third patch adds a section about cross-referencing in the "Writing
+Documentation" chapter since there was none (other than the one regarding
+kernel-doc).
+The section describes how to use the new automatic cross-referencing for
+documentation pages, and also how to use the already in place Sphinx doc
+directive.
+It also points to the kernel-doc document for information on cross-referenc=
+ing
+kernel-doc functions and types (using the new automarkup, so it also serves=
+ as a
+testcase for it).
+
+Thanks,
+N=C3=ADcolas
+
+[1]: https://lore.kernel.org/linux-doc/20200903005747.3900333-1-nfraprado@p=
+rotonmail.com/
+
+N=C3=ADcolas F. R. A. Prado (3):
+  docs: Allow multiple automarkup functions
+  docs: Add automatic cross-reference for documentation pages
+  docs: Document cross-referencing between documentation pages
+
+ Documentation/doc-guide/sphinx.rst |  17 ++++
+ Documentation/sphinx/automarkup.py | 134 ++++++++++++++++++++---------
+ 2 files changed, 109 insertions(+), 42 deletions(-)
+
+--=20
+2.28.0
+
+
