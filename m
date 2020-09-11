@@ -2,210 +2,148 @@ Return-Path: <SRS0=qBN/=CU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FD0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7998C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309B9221EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E7A21D40
+	for <linux-kernel@archiver.kernel.org>; Fri, 11 Sep 2020 08:14:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JNkensoR";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="HKJ0xUhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725809AbgIKIOI (ORCPT
+        id S1725818AbgIKIOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 11 Sep 2020 04:14:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725785AbgIKIOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 11 Sep 2020 04:14:01 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3E334A469ACD4CA85A8A;
-        Fri, 11 Sep 2020 16:13:54 +0800 (CST)
-Received: from [10.74.191.121] (10.74.191.121) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 11 Sep 2020 16:13:48 +0800
-Subject: Re: [PATCH v2 net] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Linux Kernel Network Developers" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-References: <1599562954-87257-1-git-send-email-linyunsheng@huawei.com>
- <CAM_iQpX0_mz+McZdzZ7HFTjBihOKz5E6i4qJQSoFbZ=SZkVh=Q@mail.gmail.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <830f85b5-ef29-c68e-c982-de20ac880bd9@huawei.com>
-Date:   Fri, 11 Sep 2020 16:13:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <CAM_iQpX0_mz+McZdzZ7HFTjBihOKz5E6i4qJQSoFbZ=SZkVh=Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        Fri, 11 Sep 2020 04:14:18 -0400
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:43456
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725535AbgIKIN7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:13:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599812038;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=vt3MofETqalwqLZLDx4uPciFAkq5YtO458gX9NcGSGM=;
+        b=JNkensoRoBEAHRExRYkpHx2tWlaTyuELEOqZiJ68Gh83prw+WCudLHg22WAG8ncH
+        HlSt0vUong+tCJrMqRzemS95RnmuMHHyA+4PyAYtZzOVpUiAsRB/GuZXxtDN28F9UW7
+        MqGfkndo0X9wjx2vz0oIB+ZkWAPnAFSMD0UOf5Cg=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599812038;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=vt3MofETqalwqLZLDx4uPciFAkq5YtO458gX9NcGSGM=;
+        b=HKJ0xUhXYgRj/gqy8D3VNvX9cJV+4axGQ1ZzK/ALob9li4gnPTQYx5gyoIF6CMjJ
+        AdS8nH9oo7u5PpNy9yXbM1m12ap24lx/8Z7UtfoDI4QJHKFJmXMLtpE69gjo5FTJWzU
+        gJQe+daKfrTkzTExp2nUvNVWLqpg/mPKCt/bsw0M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84E49C433F0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=hemantk@codeaurora.org
+From:   Hemant Kumar <hemantk@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org,
+        Hemant Kumar <hemantk@codeaurora.org>
+Subject: [PATCH v1] bus: mhi: core: Add const qualifier to MHI config information
+Date:   Fri, 11 Sep 2020 08:13:58 +0000
+Message-ID: <010101747c3a6fdd-33efa632-e20c-476d-9e39-01cb1f2d1cea-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599812017-32680-1-git-send-email-hemantk@codeaurora.org>
+References: <1599812017-32680-1-git-send-email-hemantk@codeaurora.org>
+X-SES-Outgoing: 2020.09.11-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/11 4:07, Cong Wang wrote:
-> On Tue, Sep 8, 2020 at 4:06 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> Currently there is concurrent reset and enqueue operation for the
->> same lockless qdisc when there is no lock to synchronize the
->> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
->> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
->> out-of-bounds access for priv->ring[] in hns3 driver if user has
->> requested a smaller queue num when __dev_xmit_skb() still enqueue a
->> skb with a larger queue_mapping after the corresponding qdisc is
->> reset, and call hns3_nic_net_xmit() with that skb later.
->>
->> Reused the existing synchronize_net() in dev_deactivate_many() to
->> make sure skb with larger queue_mapping enqueued to old qdisc(which
->> is saved in dev_queue->qdisc_sleeping) will always be reset when
->> dev_reset_queue() is called.
->>
->> Fixes: 6b3ba9146fe6 ("net: sched: allow qdiscs to handle locking")
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> ChangeLog V2:
->>         Reuse existing synchronize_net().
->> ---
->>  net/sched/sch_generic.c | 48 +++++++++++++++++++++++++++++++++---------------
->>  1 file changed, 33 insertions(+), 15 deletions(-)
->>
->> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
->> index 265a61d..54c4172 100644
->> --- a/net/sched/sch_generic.c
->> +++ b/net/sched/sch_generic.c
->> @@ -1131,24 +1131,10 @@ EXPORT_SYMBOL(dev_activate);
->>
->>  static void qdisc_deactivate(struct Qdisc *qdisc)
->>  {
->> -       bool nolock = qdisc->flags & TCQ_F_NOLOCK;
->> -
->>         if (qdisc->flags & TCQ_F_BUILTIN)
->>                 return;
->> -       if (test_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state))
->> -               return;
->> -
->> -       if (nolock)
->> -               spin_lock_bh(&qdisc->seqlock);
->> -       spin_lock_bh(qdisc_lock(qdisc));
->>
->>         set_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state);
->> -
->> -       qdisc_reset(qdisc);
->> -
->> -       spin_unlock_bh(qdisc_lock(qdisc));
->> -       if (nolock)
->> -               spin_unlock_bh(&qdisc->seqlock);
->>  }
->>
->>  static void dev_deactivate_queue(struct net_device *dev,
->> @@ -1165,6 +1151,30 @@ static void dev_deactivate_queue(struct net_device *dev,
->>         }
->>  }
->>
->> +static void dev_reset_queue(struct net_device *dev,
->> +                           struct netdev_queue *dev_queue,
->> +                           void *_unused)
->> +{
->> +       struct Qdisc *qdisc;
->> +       bool nolock;
->> +
->> +       qdisc = dev_queue->qdisc_sleeping;
->> +       if (!qdisc)
->> +               return;
->> +
->> +       nolock = qdisc->flags & TCQ_F_NOLOCK;
->> +
->> +       if (nolock)
->> +               spin_lock_bh(&qdisc->seqlock);
->> +       spin_lock_bh(qdisc_lock(qdisc));
-> 
-> 
-> I think you do not need this lock for lockless one.
+MHI channel, event and controller config data needs to be
+treated read only information. Add const qualifier to make
+sure config information passed by MHI controller is not
+modified by MHI core driver.
 
-It seems so.
-Maybe another patch to remove qdisc_lock(qdisc) for lockless
-qdisc?
+Suggested-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+---
+ drivers/bus/mhi/core/init.c | 12 ++++++------
+ include/linux/mhi.h         |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index f69a2f3..d232938 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -562,10 +562,10 @@ int mhi_init_chan_ctxt(struct mhi_controller *mhi_cntrl,
+ }
+ 
+ static int parse_ev_cfg(struct mhi_controller *mhi_cntrl,
+-			struct mhi_controller_config *config)
++			const struct mhi_controller_config *config)
+ {
+ 	struct mhi_event *mhi_event;
+-	struct mhi_event_config *event_cfg;
++	const struct mhi_event_config *event_cfg;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	int i, num;
+ 
+@@ -648,9 +648,9 @@ static int parse_ev_cfg(struct mhi_controller *mhi_cntrl,
+ }
+ 
+ static int parse_ch_cfg(struct mhi_controller *mhi_cntrl,
+-			struct mhi_controller_config *config)
++			const struct mhi_controller_config *config)
+ {
+-	struct mhi_channel_config *ch_cfg;
++	const struct mhi_channel_config *ch_cfg;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	int i;
+ 	u32 chan;
+@@ -766,7 +766,7 @@ static int parse_ch_cfg(struct mhi_controller *mhi_cntrl,
+ }
+ 
+ static int parse_config(struct mhi_controller *mhi_cntrl,
+-			struct mhi_controller_config *config)
++			const struct mhi_controller_config *config)
+ {
+ 	int ret;
+ 
+@@ -803,7 +803,7 @@ static int parse_config(struct mhi_controller *mhi_cntrl,
+ }
+ 
+ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+-			    struct mhi_controller_config *config)
++			    const struct mhi_controller_config *config)
+ {
+ 	struct mhi_event *mhi_event;
+ 	struct mhi_chan *mhi_chan;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 6b987e8..b2c0214 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -280,9 +280,9 @@ struct mhi_controller_config {
+ 	u32 timeout_ms;
+ 	u32 buf_len;
+ 	u32 num_channels;
+-	struct mhi_channel_config *ch_cfg;
++	const struct mhi_channel_config *ch_cfg;
+ 	u32 num_events;
+-	struct mhi_event_config *event_cfg;
++	const struct mhi_event_config *event_cfg;
+ 	bool use_bounce_buf;
+ 	bool m2_no_db;
+ };
+@@ -545,7 +545,7 @@ struct mhi_driver {
+  * @config: Configuration to use for the controller
+  */
+ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+-			    struct mhi_controller_config *config);
++			const struct mhi_controller_config *config);
+ 
+ /**
+  * mhi_unregister_controller - Unregister MHI controller
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> 
->> +
->> +       qdisc_reset(qdisc);
->> +
->> +       spin_unlock_bh(qdisc_lock(qdisc));
->> +       if (nolock)
->> +               spin_unlock_bh(&qdisc->seqlock);
->> +}
->> +
->>  static bool some_qdisc_is_busy(struct net_device *dev)
->>  {
->>         unsigned int i;
->> @@ -1213,12 +1223,20 @@ void dev_deactivate_many(struct list_head *head)
->>                 dev_watchdog_down(dev);
->>         }
->>
->> -       /* Wait for outstanding qdisc-less dev_queue_xmit calls.
->> +       /* Wait for outstanding qdisc-less dev_queue_xmit calls or
->> +        * outstanding qdisc enqueuing calls.
->>          * This is avoided if all devices are in dismantle phase :
->>          * Caller will call synchronize_net() for us
->>          */
->>         synchronize_net();
->>
->> +       list_for_each_entry(dev, head, close_list) {
->> +               netdev_for_each_tx_queue(dev, dev_reset_queue, NULL);
->> +
->> +               if (dev_ingress_queue(dev))
->> +                       dev_reset_queue(dev, dev_ingress_queue(dev), NULL);
->> +       }
->> +
->>         /* Wait for outstanding qdisc_run calls. */
->>         list_for_each_entry(dev, head, close_list) {
->>                 while (some_qdisc_is_busy(dev)) {
-> 
-> Do you want to reset before waiting for TX action?
-> 
-> I think it is safer to do it after, at least prior to commit 759ae57f1b
-> we did after.
-
-The reference to the txq->qdisc is always protected by RCU, so the synchronize_net()
-should be enought to ensure there is no skb enqueued to the old qdisc that is saved
-in the dev_queue->qdisc_sleeping, because __dev_queue_xmit can only see the new qdisc
-after synchronize_net(), which is noop_qdisc, and noop_qdisc will make sure any skb
-enqueued to it will be dropped and freed, right?
-
-If we do any additional reset that is not related to qdisc in dev_reset_queue(), we
-can move it after some_qdisc_is_busy() checking.
-
-Also, it seems the __QDISC_STATE_DEACTIVATED checking in qdisc_run() is unnecessary
-after this patch, because after synchronize_net() qdisc_run() will now see the old
-qdisc.
-
-static inline void qdisc_run(struct Qdisc *q)
-{
-	if (qdisc_run_begin(q)) {
-		/* NOLOCK qdisc must check 'state' under the qdisc seqlock
-		 * to avoid racing with dev_qdisc_reset()
-		 */
-		if (!(q->flags & TCQ_F_NOLOCK) ||
-		    likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state)))
-			__qdisc_run(q);
-		qdisc_run_end(q);
-	}
-}
-
-> 
-> Thanks.
-> .
-> 
